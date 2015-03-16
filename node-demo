@@ -1,0 +1,20 @@
+// file:  node-demo
+//
+// Simple node HTTP server that renders bar code images using
+// bwip-js.
+//
+// See the node-bwipjs file for implementation notes.
+//
+
+var http = require('http');
+var bwipjs = require('./node-bwipjs');
+
+http.createServer(function(req, res) {
+
+	// Send all requests to bwip-js.
+	// In a real http server, you will want to route requests a bit more
+	// intelligently...
+	bwipjs(req, res);
+
+}).listen(3030);
+
