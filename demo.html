@@ -196,8 +196,10 @@ function render() {
 		bw.call(elt.sym);
 		bw.bitmap().show('canvas', rot);
 	} catch(e) {
-		if (e.stack) {
-			alert(e.stack);
+		if (typeof e === 'string') {
+			alert(e);
+		} else if (e.stack) {
+			alert(e.message + '\r\n' + e.stack);
 		} else {
 			var s = '';
 			if (e.fileName)
