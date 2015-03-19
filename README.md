@@ -1,8 +1,10 @@
 # Barcode Writer in Pure JavaScript
 
-Welcome to the new home for bwip-js.  The Google Code Project is shutting down so this repo is the place to get the latest updates.
+Welcome to the new home for bwip-js.  The Google Code Project is shutting down so this is the place to get the latest updates.
 
 Current BWIPP version is 2015-02-18 (the latest as of 14 March 2015).
+
+Current version of bwip-js is v0.7.  If you downloaded v0.6, do not use it.  It had some issues due to a change in the BWIPP renmatrix rendering code.  v0.7 fixes this.
 
 bwip-js is a translation to native JavaScript of the amazing code provided in [Barcode Writer in Pure PostScript](https://github.com/bwipp/postscriptbarcode).  The translated code can run on any browser that natively supports the HTML canvas element or any JavaScript-based server framework that can implement a minimal bitmap graphics interface.
 
