@@ -20,15 +20,25 @@ function BWIPJS() {
 	this.dstk.get = function(id) {
 		for (var i = this.length-1; i >= 0; i--) {
 			if (this[i][id] !== undefined) {
-				//BWIPJS.print('dstk::get=' + BWIPJS.pstostring(this[i][id]) +
-				//	' (' + (this[i][id] instanceof Function) + ')');
 				return this[i][id];
 			}
 		}
+		throw new Error('dict: ' + id + ': undefined');
 	}
 
 	// Initialize the graphics 
 	this.greset();
+
+	// Initialize the error handling
+	var $error = {};
+	this.dict.$error = $error;
+	this.dict.handleerror = function() {
+		// errorinfo is the message
+		// errorname is the name of the function
+		// Do not use an Error() object - makes the message too messy.
+		throw '[' + $error.errorname.toString() + ']\r\n\r\n' +
+			  $error.errorinfo.toString();
+	}
 }
 
 // Objects for globally registering the encoders and fonts
@@ -272,6 +282,11 @@ BWIPJS.prototype.bitmap = function(bmap) {
 	this.bmap = bmap;
 }
 
+// operators print, =, and == are all tied to this
+BWIPJS.prototype.print = function(s) {
+	console.log(''+s);
+}
+
 // Converts a javascript value into a postscript value
 BWIPJS.prototype.value = function(v) {
 	if (v === true || v === false || v === null)
@@ -293,7 +308,7 @@ BWIPJS.prototype.push = function(v) {
 
 BWIPJS.prototype.pop = function() {
 	if (this.ptr <= 0)
-		throw '--underflow--';
+		throw new Error('--underflow--');
 	return this.stk[--this.ptr];
 }
 
@@ -303,7 +318,7 @@ BWIPJS.prototype.call = function(name) {
 		BWIPJS.load('bwipp/' + name + '.js');
 	
 	if (!BWIPJS.bwipp[name])
-		throw name + ': --undefined--';
+		throw new Error(name + ': --undefined--');
 
 	// Load into the dictionary
 	this.dict[name] = BWIPJS.bwipp[name];
@@ -317,7 +332,7 @@ BWIPJS.prototype.call = function(name) {
 BWIPJS.prototype.eval = function(src) {
 	src = src.toString();	// work with a javascript string
 	if (!/^<(([0-9A-F][0-9A-F])*)>$/i.test(src))
-			throw 'eval: not a hex string literal';
+			throw new Error('eval: not a hex string literal');
 
 	var dst = new BWIPJS.psstring((src.length-2)/2);  // the RE above ensures pairs of digits
 	var idx = 0;
@@ -452,7 +467,7 @@ BWIPJS.prototype.arc = function(x,y,r,sa,ea,ccw) {
 
 	// TBD: For now, we only implement full circles...
 	if (sa != 0 && sa != 360 || ea != 0 && ea != 360)
-		throw 'arc: not a full circle (' + sa + ',' + ea + ')';
+		throw new Error('arc: not a full circle (' + sa + ',' + ea + ')');
 
 	// Calculate the bounding rect
 	x = this.g_tdx + this.g_tsx * x;
@@ -531,7 +546,7 @@ BWIPJS.prototype.charpath = function(str, b) {
 }
 BWIPJS.prototype.pathbbox = function() {
 	BWIPJS.logapi('pathbbox', arguments);
-	if (!this.g_path.length)	throw 'pathbbox: --nocurrentpoint--';
+	if (!this.g_path.length)	throw new Error('pathbbox: --nocurrentpoint--');
 	var pth = this.g_path;
 	var llx = pth[0][0];
 	var lly = pth[0][1];
@@ -562,7 +577,7 @@ BWIPJS.prototype.gsave = function() {
 BWIPJS.prototype.grestore = function() {
 	BWIPJS.logapi('grestore', arguments);
 	if (!this.gstk.length)
-		throw 'grestore: stack underflow';
+		throw new Error('grestore: stack underflow');
 	var ctx = this.gstk.pop();
 	for (id in ctx)
 		this[id] = ctx[id];
@@ -591,7 +606,7 @@ BWIPJS.prototype.stroke = function() {
 		case 'c':	// closepath
 			break;
 		default:
-			throw 'stroke: undefined opcode: ' + a[0];
+			throw new Error('stroke: undefined opcode: ' + a[0]);
 		}
 	}
 	this.g_path = [];
@@ -623,7 +638,7 @@ BWIPJS.prototype.fill = function() {
 			this.bmap.fill();
 			break;
 		default:
-			throw 'fill: undefined opcode: ' + a[0];
+			throw new Error('fill: undefined opcode: ' + a[0]);
 		}
 	}
 
@@ -751,7 +766,7 @@ BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 				}
 			}
 		} else
-			throw 'unknown font bitmap encoding: ' + e;
+			throw new Error('unknown font bitmap encoding: ' + e);
 
 		this.g_posx += Math.max(g.l+g.w, fn.w) + Math.floor(fn.w/4) + dx;
 	}
