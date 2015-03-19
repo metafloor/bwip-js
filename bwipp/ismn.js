@@ -17,19 +17,23 @@ BWIPJS.bwipp["ismn"]=function() {
 	this.dict["renlinear"]=BWIPJS.bwipp["renlinear"];
 	this.dict["ean13"]=BWIPJS.bwipp["ean13"];
 	function $f0(){
+		//#line 2040: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
+		//#line 2041: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
+		//#line 2041: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
+		//#line 2040: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -67,6 +71,7 @@ BWIPJS.bwipp["ismn"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
+		//#line 2041: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -83,137 +88,153 @@ BWIPJS.bwipp["ismn"]=function() {
 		}
 	}
 	function $f4(){
+		//#line 2038: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
+		//#line 2039: options {
 		var t=this.dstk.get("options");
-		if (t===undefined) throw new Error("dict: options: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
+		//#line 2042: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
+		//#line 2043: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
-		this.stk[this.ptr++]="options"; //ident
+		this.stk[this.ptr++]="options";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
+		//#line 2045: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		this.stk[this.ptr++]="ismntextxoffset"; //ident
+		//#line 2049: ismntextxoffset (unset) ne {/ismntextxoffset ismntextxoffset cvr def} if
+		this.stk[this.ptr++]="ismntextxoffset";
 		var t=this.dstk.get("ismntextxoffset");
-		if (t===undefined) throw new Error("dict: ismntextxoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f7(){
-		this.stk[this.ptr++]="ismntextyoffset"; //ident
+		//#line 2050: ismntextyoffset (unset) ne {/ismntextyoffset ismntextyoffset cvr def} if
+		this.stk[this.ptr++]="ismntextyoffset";
 		var t=this.dstk.get("ismntextyoffset");
-		if (t===undefined) throw new Error("dict: ismntextyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f8(){
-		this.stk[this.ptr++]="barcode"; //ident
+		//#line 2056: /barcode exch def
+		this.stk[this.ptr++]="barcode";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 2057: pop
 		this.ptr--;
-		this.stk[this.ptr++]="addon"; //ident
+		//#line 2058: /addon exch def
+		this.stk[this.ptr++]="addon";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f9(){
+		//#line 2060: pop
 		this.ptr--;
-		this.stk[this.ptr++]="addon"; //ident
+		//#line 2061: /addon () def
+		this.stk[this.ptr++]="addon";
 		this.stk[this.ptr++]=BWIPJS.psstring("");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f10(){
-		this.stk[this.ptr++]="bwipp.ismnBadLength"; //ident
+		//#line 2067: /bwipp.ismnBadLength (ISMN-13 must be 15 or 17 characters including dashes. ISMN-10 must be 11 or 13 characters including dashes) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismnBadLength";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-13 must be 15 or 17 characters including dashes. ISMN-10 must be 11 or 13 characters including dashes");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f11(){
-		this.stk[this.ptr++]="bwipp.ismnBadAddOnLength"; //ident
+		//#line 2070: /bwipp.ismnBadAddOnLength (Add-on for ISMN must be 2 or 5 digits) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismnBadAddOnLength";
 		this.stk[this.ptr++]=BWIPJS.psstring("Add-on for ISMN must be 2 or 5 digits");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f12(){
-		this.stk[this.ptr++]="bwipp.ismn13badPrefix"; //ident
+		//#line 2074: /bwipp.ismn13badPrefix (ISMN-13 prefix must be 979-) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn13badPrefix";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-13 prefix must be 979-");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f13(){
-		this.stk[this.ptr++]="bwipp.ismn13adjacentDashes"; //ident
+		//#line 2081: /bwipp.ismn13adjacentDashes (ISMN-13 does not permit adjacent dashes) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn13adjacentDashes";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-13 does not permit adjacent dashes");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f14(){
+		//#line 2080: wasdash {
 		var t=this.dstk.get("wasdash");
-		if (t===undefined) throw new Error("dict: wasdash: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f13;
+		//#line 2082: } if
 		var t15=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t15.call(this)==-1) return -1;
 		}
-		this.stk[this.ptr++]="wasdash"; //ident
+		//#line 2083: /wasdash true def
+		this.stk[this.ptr++]="wasdash";
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="numdash"; //ident
+		//#line 2084: /numdash numdash 1 add def
+		this.stk[this.ptr++]="numdash";
 		var t=this.dstk.get("numdash");
-		if (t===undefined) throw new Error("dict: numdash: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f15(){
-		this.stk[this.ptr++]="wasdash"; //ident
+		//#line 2087: /wasdash false def
+		this.stk[this.ptr++]="wasdash";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="numdigit"; //ident
+		//#line 2088: /numdigit numdigit 1 add def
+		this.stk[this.ptr++]="numdigit";
 		var t=this.dstk.get("numdigit");
-		if (t===undefined) throw new Error("dict: numdigit: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f16(){
+		//#line 2078: dup
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
+		//#line 2079: 45 eq {
 		this.stk[this.ptr++]=45;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f14;
+		//#line 2085: } if
 		var t16=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t16.call(this)==-1) return -1;
 		}
+		//#line 2086: dup 48 ge exch 57 le and {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
@@ -224,50 +245,51 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f15;
+		//#line 2089: } if
 		var t17=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t17.call(this)==-1) return -1;
 		}
 	}
 	function $f17(){
-		this.stk[this.ptr++]="bwipp.ismn13numDashesDigits"; //ident
+		//#line 2092: /bwipp.ismn13numDashesDigits (Incorrect number of dashes and digits for ISMN-13) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn13numDashesDigits";
 		this.stk[this.ptr++]=BWIPJS.psstring("Incorrect number of dashes and digits for ISMN-13");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f18(){
-		this.stk[this.ptr++]="bwipp.ismn13character15"; //ident
+		//#line 2095: /bwipp.ismn13character15 (ISMN-13 character 15 must be a digit) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn13character15";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-13 character 15 must be a digit");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f19(){
-		this.stk[this.ptr++]="bwipp.ismn13character16"; //ident
+		//#line 2099: /bwipp.ismn13character16 (ISMN-13 penultimate character must be a dash) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn13character16";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-13 penultimate character must be a dash");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f20(){
-		this.stk[this.ptr++]="bwipp.ismn13character17"; //ident
+		//#line 2102: /bwipp.ismn13character17 (ISMN-13 final character must be a digit) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn13character17";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-13 final character must be a digit");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f21(){
+		//#line 2098: barcode 15 1 getinterval (-) ne {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=15;
 		this.stk[this.ptr++]=1;
@@ -278,12 +300,13 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f19;
+		//#line 2100: } if
 		var t23=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t23.call(this)==-1) return -1;
 		}
+		//#line 2101: barcode 16 get dup 48 lt exch 57 gt or {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=16;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -300,14 +323,15 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f20;
+		//#line 2103: } if
 		var t24=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t24.call(this)==-1) return -1;
 		}
 	}
 	function $f22(){
+		//#line 2073: barcode 0 4 getinterval (979-) ne {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=4;
@@ -318,26 +342,29 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f12;
+		//#line 2075: } if
 		var t14=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t14.call(this)==-1) return -1;
 		}
-		this.stk[this.ptr++]="wasdash"; //ident
+		//#line 2076: /wasdash false def /numdash 0 def /numdigit 0 def
+		this.stk[this.ptr++]="wasdash";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="numdash"; //ident
+		this.stk[this.ptr++]="numdash";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="numdigit"; //ident
+		this.stk[this.ptr++]="numdigit";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 2077: barcode 5 9 getinterval {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr++]=9;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr++]=$f16;
+		//#line 2090: } forall
 		var t20=this.stk[--this.ptr];
 		var t19=this.stk[--this.ptr];
 		for (t18 in t19) {
@@ -350,8 +377,8 @@ BWIPJS.bwipp["ismn"]=function() {
 			}
 			if (t20.call(this)==-1) break;
 		}
+		//#line 2091: numdash 2 ne numdigit 7 ne or {
 		var t=this.dstk.get("numdash");
-		if (t===undefined) throw new Error("dict: numdash: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -359,7 +386,6 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		var t=this.dstk.get("numdigit");
-		if (t===undefined) throw new Error("dict: numdigit: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=7;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -370,12 +396,13 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f17;
+		//#line 2093: } if
 		var t21=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t21.call(this)==-1) return -1;
 		}
+		//#line 2094: barcode 14 get dup 48 lt exch 57 gt or {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=14;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -392,12 +419,13 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f18;
+		//#line 2096: } if
 		var t22=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t22.call(this)==-1) return -1;
 		}
+		//#line 2097: barcode length 17 eq {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -407,82 +435,90 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f21;
+		//#line 2104: } if
 		var t25=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t25.call(this)==-1) return -1;
 		}
 	}
 	function $f23(){
-		this.stk[this.ptr++]="bwipp.ismn10badPrefix"; //ident
+		//#line 2107: /bwipp.ismn10badPrefix (ISMN-10 prefix must be M-) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn10badPrefix";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-10 prefix must be M-");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f24(){
-		this.stk[this.ptr++]="bwipp.ismn10character3"; //ident
+		//#line 2110: /bwipp.ismn10character3 (ISMN-10 character 3 must be a digit) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn10character3";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-10 character 3 must be a digit");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f25(){
-		this.stk[this.ptr++]="bwipp.ismn10adjacentDashes"; //ident
+		//#line 2117: /bwipp.ismn10adjacentDashes (ISMN-10 does not permit adjacent dashes) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn10adjacentDashes";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-10 does not permit adjacent dashes");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f26(){
+		//#line 2116: wasdash {
 		var t=this.dstk.get("wasdash");
-		if (t===undefined) throw new Error("dict: wasdash: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f25;
+		//#line 2118: } if
 		var t28=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t28.call(this)==-1) return -1;
 		}
-		this.stk[this.ptr++]="wasdash"; //ident
+		//#line 2119: /wasdash true def
+		this.stk[this.ptr++]="wasdash";
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="numdash"; //ident
+		//#line 2120: /numdash numdash 1 add def
+		this.stk[this.ptr++]="numdash";
 		var t=this.dstk.get("numdash");
-		if (t===undefined) throw new Error("dict: numdash: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f27(){
-		this.stk[this.ptr++]="wasdash"; //ident
+		//#line 2123: /wasdash false def
+		this.stk[this.ptr++]="wasdash";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="numdigit"; //ident
+		//#line 2124: /numdigit numdigit 1 add def
+		this.stk[this.ptr++]="numdigit";
 		var t=this.dstk.get("numdigit");
-		if (t===undefined) throw new Error("dict: numdigit: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f28(){
+		//#line 2114: dup
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
+		//#line 2115: 45 eq {
 		this.stk[this.ptr++]=45;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f26;
+		//#line 2121: } if
 		var t29=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t29.call(this)==-1) return -1;
 		}
+		//#line 2122: dup 48 ge exch 57 le and {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
@@ -493,50 +529,51 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f27;
+		//#line 2125: } if
 		var t30=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t30.call(this)==-1) return -1;
 		}
 	}
 	function $f29(){
-		this.stk[this.ptr++]="bwipp.ismn10numDashesDigits"; //ident
+		//#line 2128: /bwipp.ismn10numDashesDigits (Incorrect number of dashes and digits for ISMN-10) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn10numDashesDigits";
 		this.stk[this.ptr++]=BWIPJS.psstring("Incorrect number of dashes and digits for ISMN-10");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f30(){
-		this.stk[this.ptr++]="bwipp.ismn10character11"; //ident
+		//#line 2131: /bwipp.ismn10character11 (ISMN-10 character 11 must be a digit) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn10character11";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-10 character 11 must be a digit");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f31(){
-		this.stk[this.ptr++]="bwipp.ismn10character12"; //ident
+		//#line 2135: /bwipp.ismn10character12 (ISMN-10 penultimate character must be a dash) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn10character12";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-10 penultimate character must be a dash");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f32(){
-		this.stk[this.ptr++]="bwipp.ismn10character13"; //ident
+		//#line 2138: /bwipp.ismn10character13 (ISMN-10 final character must be a digit or X) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismn10character13";
 		this.stk[this.ptr++]=BWIPJS.psstring("ISMN-10 final character must be a digit or X");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f33(){
+		//#line 2134: barcode 11 1 getinterval (-) ne {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=11;
 		this.stk[this.ptr++]=1;
@@ -547,12 +584,13 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f31;
+		//#line 2136: } if
 		var t36=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t36.call(this)==-1) return -1;
 		}
+		//#line 2137: barcode 12 get dup dup 48 lt exch 57 gt or exch 88 ne and {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=12;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -579,14 +617,15 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f32;
+		//#line 2139: } if
 		var t37=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t37.call(this)==-1) return -1;
 		}
 	}
 	function $f34(){
+		//#line 2106: barcode 0 2 getinterval (M-) ne {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=2;
@@ -597,12 +636,13 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f23;
+		//#line 2108: } if
 		var t26=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t26.call(this)==-1) return -1;
 		}
+		//#line 2109: barcode 2 get dup 48 lt exch 57 gt or {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -619,26 +659,29 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f24;
+		//#line 2111: } if
 		var t27=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t27.call(this)==-1) return -1;
 		}
-		this.stk[this.ptr++]="wasdash"; //ident
+		//#line 2112: /wasdash false def /numdash 0 def /numdigit 0 def
+		this.stk[this.ptr++]="wasdash";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="numdash"; //ident
+		this.stk[this.ptr++]="numdash";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="numdigit"; //ident
+		this.stk[this.ptr++]="numdigit";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 2113: barcode 3 7 getinterval {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=7;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr++]=$f28;
+		//#line 2126: } forall
 		var t33=this.stk[--this.ptr];
 		var t32=this.stk[--this.ptr];
 		for (t31 in t32) {
@@ -651,8 +694,8 @@ BWIPJS.bwipp["ismn"]=function() {
 			}
 			if (t33.call(this)==-1) break;
 		}
+		//#line 2127: numdash 1 ne numdigit 6 ne or {
 		var t=this.dstk.get("numdash");
-		if (t===undefined) throw new Error("dict: numdash: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -660,7 +703,6 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		var t=this.dstk.get("numdigit");
-		if (t===undefined) throw new Error("dict: numdigit: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=6;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -671,12 +713,13 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f29;
+		//#line 2129: } if
 		var t34=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t34.call(this)==-1) return -1;
 		}
+		//#line 2130: barcode 10 get dup 48 lt exch 57 gt or {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=10;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -693,12 +736,13 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f30;
+		//#line 2132: } if
 		var t35=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t35.call(this)==-1) return -1;
 		}
+		//#line 2133: barcode length 13 eq {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -708,20 +752,21 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f33;
+		//#line 2140: } if
 		var t38=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t38.call(this)==-1) return -1;
 		}
 	}
 	function $f35(){
-		this.stk[this.ptr++]="legacytxt"; //ident
+		//#line 2148: /legacytxt ismntxt def
+		this.stk[this.ptr++]="legacytxt";
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="pad"; //ident
+		//#line 2149: /pad ismntxt length 4 add string def
+		this.stk[this.ptr++]="pad";
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -729,22 +774,20 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 2150: pad 0 (979-0-) putinterval
 		var t=this.dstk.get("pad");
-		if (t===undefined) throw new Error("dict: pad: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=BWIPJS.psstring("979-0-");
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 2151: pad 6 ismntxt 2 ismntxt length 2 sub getinterval putinterval
 		var t=this.dstk.get("pad");
-		if (t===undefined) throw new Error("dict: pad: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=6;
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -752,39 +795,37 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		this.stk[this.ptr++]="ismntxt"; //ident
+		//#line 2152: /ismntxt pad def
+		this.stk[this.ptr++]="ismntxt";
 		var t=this.dstk.get("pad");
-		if (t===undefined) throw new Error("dict: pad: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f36(){
-		this.stk[this.ptr++]="checksum"; //ident
+		//#line 2165: /checksum ismnchar checksum add def
+		this.stk[this.ptr++]="checksum";
 		var t=this.dstk.get("ismnchar");
-		if (t===undefined) throw new Error("dict: ismnchar: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("checksum");
-		if (t===undefined) throw new Error("dict: checksum: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f37(){
-		this.stk[this.ptr++]="checksum"; //ident
+		//#line 2167: /checksum ismnchar 3 mul checksum add def
+		this.stk[this.ptr++]="checksum";
 		var t=this.dstk.get("ismnchar");
-		if (t===undefined) throw new Error("dict: ismnchar: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		var t=this.dstk.get("checksum");
-		if (t===undefined) throw new Error("dict: checksum: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f38(){
+		//#line 2164: n 2 mod 0 eq {
 		var t=this.dstk.get("n");
-		if (t===undefined) throw new Error("dict: n: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
@@ -794,7 +835,9 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f36;
+		//#line 2166: } {
 		this.stk[this.ptr++]=$f37;
+		//#line 2168: } ifelse
 		var t42=this.stk[--this.ptr];
 		var t43=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -804,14 +847,12 @@ BWIPJS.bwipp["ismn"]=function() {
 		}
 	}
 	function $f39(){
+		//#line 2162: ismn n ismnchar 48 add put
 		var t=this.dstk.get("ismn");
-		if (t===undefined) throw new Error("dict: ismn: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("n");
-		if (t===undefined) throw new Error("dict: n: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismnchar");
-		if (t===undefined) throw new Error("dict: ismnchar: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
@@ -819,34 +860,35 @@ BWIPJS.bwipp["ismn"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
+		//#line 2163: n 12 lt {
 		var t=this.dstk.get("n");
-		if (t===undefined) throw new Error("dict: n: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=12;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f38;
+		//#line 2169: } if
 		var t44=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t44.call(this)==-1) return -1;
 		}
-		this.stk[this.ptr++]="n"; //ident
+		//#line 2170: /n n 1 add def
+		this.stk[this.ptr++]="n";
 		var t=this.dstk.get("n");
-		if (t===undefined) throw new Error("dict: n: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f40(){
+		//#line 2173: i ismntxt length eq {exit} if
 		return -1;
 	}
 	function $f41(){
-		this.stk[this.ptr++]="ismnchar"; //ident
+		//#line 2160: /ismnchar ismntxt i get 48 sub def
+		this.stk[this.ptr++]="ismnchar";
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
@@ -855,8 +897,8 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 2161: ismnchar -3 ne {           % Ignore dashes
 		var t=this.dstk.get("ismnchar");
-		if (t===undefined) throw new Error("dict: ismnchar: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=-3;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -864,22 +906,22 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f39;
+		//#line 2171: } if
 		var t45=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t45.call(this)==-1) return -1;
 		}
-		this.stk[this.ptr++]="i"; //ident
+		//#line 2172: /i i 1 add def
+		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 2173: i ismntxt length eq {exit} if
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -894,17 +936,17 @@ BWIPJS.bwipp["ismn"]=function() {
 		}
 	}
 	function $f42(){
-		this.stk[this.ptr++]="bwipp.ismnBadCheckDigit"; //ident
+		//#line 2180: /bwipp.ismnBadCheckDigit (Incorrect ISMN check digit provided) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.ismnBadCheckDigit";
 		this.stk[this.ptr++]=BWIPJS.psstring("Incorrect ISMN check digit provided");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f43(){
+		//#line 2179: barcode dup length 1 sub get checksum ne {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -916,39 +958,41 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		var t=this.dstk.get("checksum");
-		if (t===undefined) throw new Error("dict: checksum: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f42;
+		//#line 2181: } if
 		var t48=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t48.call(this)==-1) return -1;
 		}
 	}
 	function $f44(){
-		this.stk[this.ptr++]="ismntxt"; //ident
+		//#line 2186: /ismntxt legacytxt def
+		this.stk[this.ptr++]="ismntxt";
 		var t=this.dstk.get("legacytxt");
-		if (t===undefined) throw new Error("dict: legacytxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="pad"; //ident
+		//#line 2187: /pad 18 string def
+		this.stk[this.ptr++]="pad";
 		this.stk[this.ptr++]=18;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f45(){
-		this.stk[this.ptr++]="pad"; //ident
+		//#line 2189: /pad 22 string def
+		this.stk[this.ptr++]="pad";
 		this.stk[this.ptr++]=22;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f46(){
+		//#line 2202: 12 addon length add 1 add string 
 		this.stk[this.ptr++]=12;
 		var t=this.dstk.get("addon");
-		if (t===undefined) throw new Error("dict: addon: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -956,36 +1000,40 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
+		//#line 2203: dup 0 barcode putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 2204: dup 12 ( ) putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=12;
 		this.stk[this.ptr++]=BWIPJS.psstring(" ");
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 2205: dup 13 addon putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=13;
 		var t=this.dstk.get("addon");
-		if (t===undefined) throw new Error("dict: addon: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		this.stk[this.ptr++]="barcode"; //ident
+		//#line 2206: /barcode exch def
+		this.stk[this.ptr++]="barcode";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f47(){
+		//#line 2217: /ismntextxoffset ismntxt length 18 eq {-1} {-12} ifelse def
 		this.stk[this.ptr++]=-1;
 	}
 	function $f48(){
+		//#line 2217: /ismntextxoffset ismntxt length 18 eq {-1} {-12} ifelse def
 		this.stk[this.ptr++]=-12;
 	}
 	function $f49(){
-		this.stk[this.ptr++]="ismntextxoffset"; //ident
+		//#line 2217: /ismntextxoffset ismntxt length 18 eq {-1} {-12} ifelse def
+		this.stk[this.ptr++]="ismntextxoffset";
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1006,9 +1054,9 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f50(){
-		this.stk[this.ptr++]="ismntextyoffset"; //ident
+		//#line 2220: /ismntextyoffset height 72 mul 3 add def
+		this.stk[this.ptr++]="ismntextyoffset";
 		var t=this.dstk.get("height");
-		if (t===undefined) throw new Error("dict: height: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=72;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -1017,9 +1065,9 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f51(){
-		this.stk[this.ptr++]="txt"; //ident
+		//#line 2223: /txt args (txt) get def
+		this.stk[this.ptr++]="txt";
 		var t=this.dstk.get("args");
-		if (t===undefined) throw new Error("dict: args: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("txt");
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -1027,9 +1075,9 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="newtxt"; //ident
+		//#line 2224: /newtxt txt length 1 add array def
+		this.stk[this.ptr++]="newtxt";
 		var t=this.dstk.get("txt");
-		if (t===undefined) throw new Error("dict: txt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1037,19 +1085,17 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 2225: newtxt 0 txt putinterval
 		var t=this.dstk.get("newtxt");
-		if (t===undefined) throw new Error("dict: newtxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("txt");
-		if (t===undefined) throw new Error("dict: txt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 2226: newtxt newtxt length 1 sub [ismntxt ismntextxoffset ismntextyoffset ismntextfont ismntextsize] put
 		var t=this.dstk.get("newtxt");
-		if (t===undefined) throw new Error("dict: newtxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("newtxt");
-		if (t===undefined) throw new Error("dict: newtxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1057,19 +1103,14 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntextxoffset");
-		if (t===undefined) throw new Error("dict: ismntextxoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntextyoffset");
-		if (t===undefined) throw new Error("dict: ismntextyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntextfont");
-		if (t===undefined) throw new Error("dict: ismntextfont: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntextsize");
-		if (t===undefined) throw new Error("dict: ismntextsize: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -1080,12 +1121,11 @@ BWIPJS.bwipp["ismn"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
+		//#line 2227: args (txt) newtxt put
 		var t=this.dstk.get("args");
-		if (t===undefined) throw new Error("dict: args: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("txt");
 		var t=this.dstk.get("newtxt");
-		if (t===undefined) throw new Error("dict: newtxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
@@ -1093,26 +1133,21 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.ptr-=3;
 	}
 	function $f52(){
+		//#line 2229: args (txt) [ [ismntxt ismntextxoffset ismntextyoffset ismntextfont ismntextsize] ] put
 		var t=this.dstk.get("args");
-		if (t===undefined) throw new Error("dict: args: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("txt");
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ismntxt");
-		if (t===undefined) throw new Error("dict: ismntxt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntextxoffset");
-		if (t===undefined) throw new Error("dict: ismntextxoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntextyoffset");
-		if (t===undefined) throw new Error("dict: ismntextyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntextfont");
-		if (t===undefined) throw new Error("dict: ismntextfont: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ismntextsize");
-		if (t===undefined) throw new Error("dict: ismntextsize: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -1130,8 +1165,8 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.ptr-=3;
 	}
 	function $f53(){
+		//#line 2216: ismntextxoffset (unset) eq {
 		var t=this.dstk.get("ismntextxoffset");
-		if (t===undefined) throw new Error("dict: ismntextxoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("unset");
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -1139,12 +1174,13 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f49;
+		//#line 2218: } if
 		var t55=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t55.call(this)==-1) return -1;
 		}
+		//#line 2219: ismntextyoffset (unset) eq {
 		var t=this.dstk.get("ismntextyoffset");
-		if (t===undefined) throw new Error("dict: ismntextyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("unset");
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -1152,17 +1188,20 @@ BWIPJS.bwipp["ismn"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f50;
+		//#line 2221: } if
 		var t56=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t56.call(this)==-1) return -1;
 		}
+		//#line 2222: args (txt) known {
 		var t=this.dstk.get("args");
-		if (t===undefined) throw new Error("dict: args: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("txt");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		this.stk[this.ptr++]=$f51;
+		//#line 2228: } {
 		this.stk[this.ptr++]=$f52;
+		//#line 2230: } ifelse
 		var t57=this.stk[--this.ptr];
 		var t58=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -1171,58 +1210,71 @@ BWIPJS.bwipp["ismn"]=function() {
 			if (t57.call(this)==-1) return -1;
 		}
 	}
+	//#line 2021: 20 dict begin
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	this.stk[this.ptr++]="options"; //ident
+	//#line 2023: /options exch def      % We are given an options string
+	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="barcode"; //ident
+	//#line 2024: /barcode exch def      % We are given the ismn text with dashes
+	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="dontdraw"; //ident
+	//#line 2026: /dontdraw false def
+	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="includetext"; //ident
+	//#line 2027: /includetext false def  % Enable/disable ISMN text
+	this.stk[this.ptr++]="includetext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="ismntextfont"; //ident
-	this.stk[this.ptr++]="Courier"; //ident
+	//#line 2028: /ismntextfont /OCR-A def
+	this.stk[this.ptr++]="ismntextfont";
+	this.stk[this.ptr++]="OCR-A";
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="ismntextsize"; //ident
-	this.stk[this.ptr++]=9;
+	//#line 2029: /ismntextsize 8.5 def
+	this.stk[this.ptr++]="ismntextsize";
+	this.stk[this.ptr++]=8.5;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="ismntextxoffset"; //ident
+	//#line 2030: /ismntextxoffset (unset) def
+	this.stk[this.ptr++]="ismntextxoffset";
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="ismntextyoffset"; //ident
+	//#line 2031: /ismntextyoffset (unset) def
+	this.stk[this.ptr++]="ismntextyoffset";
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="height"; //ident
+	//#line 2032: /height 1 def
+	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="addongap"; //ident
+	//#line 2033: /addongap 12 def   
+	this.stk[this.ptr++]="addongap";
 	this.stk[this.ptr++]=12;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="legacy"; //ident
+	//#line 2034: /legacy false def
+	this.stk[this.ptr++]="legacy";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 2037: options type /stringtype eq {
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
-	this.stk[this.ptr++]="stringtype"; //ident
+	this.stk[this.ptr++]="stringtype";
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
+	//#line 2044: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
+	//#line 2045: options {def} forall
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
 	var t7=this.stk[--this.ptr];
@@ -1237,19 +1289,19 @@ BWIPJS.bwipp["ismn"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	this.stk[this.ptr++]="ismntextfont"; //ident
+	//#line 2047: /ismntextfont ismntextfont cvlit def
+	this.stk[this.ptr++]="ismntextfont";
 	var t=this.dstk.get("ismntextfont");
-	if (t===undefined) throw new Error("dict: ismntextfont: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="ismntextsize"; //ident
+	//#line 2048: /ismntextsize ismntextsize cvr def
+	this.stk[this.ptr++]="ismntextsize";
 	var t=this.dstk.get("ismntextsize");
-	if (t===undefined) throw new Error("dict: ismntextsize: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 2049: ismntextxoffset (unset) ne {/ismntextxoffset ismntextxoffset cvr def} if
 	var t=this.dstk.get("ismntextxoffset");
-	if (t===undefined) throw new Error("dict: ismntextxoffset: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -1261,8 +1313,8 @@ BWIPJS.bwipp["ismn"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t8.call(this)==-1) return -1;
 	}
+	//#line 2050: ismntextyoffset (unset) ne {/ismntextyoffset ismntextyoffset cvr def} if
 	var t=this.dstk.get("ismntextyoffset");
-	if (t===undefined) throw new Error("dict: ismntextyoffset: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -1274,20 +1326,20 @@ BWIPJS.bwipp["ismn"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t9.call(this)==-1) return -1;
 	}
-	this.stk[this.ptr++]="height"; //ident
+	//#line 2051: /height height cvr def
+	this.stk[this.ptr++]="height";
 	var t=this.dstk.get("height");
-	if (t===undefined) throw new Error("dict: height: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="addongap"; //ident
+	//#line 2052: /addongap addongap cvr def
+	this.stk[this.ptr++]="addongap";
 	var t=this.dstk.get("addongap");
-	if (t===undefined) throw new Error("dict: addongap: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 2055: barcode ( ) search {
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring(" ");
 	var h=this.stk[this.ptr-2];
@@ -1301,7 +1353,9 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr++]=true;
 	}
 	this.stk[this.ptr++]=$f8;
+	//#line 2059: } {
 	this.stk[this.ptr++]=$f9;
+	//#line 2062: } ifelse
 	var t10=this.stk[--this.ptr];
 	var t11=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -1309,8 +1363,8 @@ BWIPJS.bwipp["ismn"]=function() {
 	} else {
 		if (t10.call(this)==-1) return -1;
 	}
+	//#line 2065: barcode length 15 ne barcode length 17 ne and
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1320,7 +1374,6 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 	this.ptr--;
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1332,8 +1385,8 @@ BWIPJS.bwipp["ismn"]=function() {
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 	this.ptr--;
+	//#line 2066: barcode length 11 ne barcode length 13 ne and and {
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1343,7 +1396,6 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 	this.ptr--;
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1359,12 +1411,13 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f10;
+	//#line 2068: } if
 	var t12=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t12.call(this)==-1) return -1;
 	}
+	//#line 2069: addon length 0 ne addon length 2 ne and addon length 5 ne and {
 	var t=this.dstk.get("addon");
-	if (t===undefined) throw new Error("dict: addon: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1374,7 +1427,6 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 	this.ptr--;
 	var t=this.dstk.get("addon");
-	if (t===undefined) throw new Error("dict: addon: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1387,7 +1439,6 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 	this.ptr--;
 	var t=this.dstk.get("addon");
-	if (t===undefined) throw new Error("dict: addon: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1400,19 +1451,22 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f11;
+	//#line 2071: } if
 	var t13=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t13.call(this)==-1) return -1;
 	}
+	//#line 2072: barcode length 15 ge {  % ISMN-13
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=15;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f22;
+	//#line 2105: } {  % ISMN-10
 	this.stk[this.ptr++]=$f34;
+	//#line 2141: } ifelse
 	var t39=this.stk[--this.ptr];
 	var t40=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -1420,48 +1474,55 @@ BWIPJS.bwipp["ismn"]=function() {
 	} else {
 		if (t39.call(this)==-1) return -1;
 	}
-	this.stk[this.ptr++]="ismntxt"; //ident
+	//#line 2143: /ismntxt barcode def
+	this.stk[this.ptr++]="ismntxt";
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="legacytxt"; //ident
+	//#line 2146: /legacytxt () def
+	this.stk[this.ptr++]="legacytxt";
 	this.stk[this.ptr++]=BWIPJS.psstring("");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 2147: ismntxt length 13 le {
 	var t=this.dstk.get("ismntxt");
-	if (t===undefined) throw new Error("dict: ismntxt: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=13;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]<=this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f35;
+	//#line 2153: } if
 	var t41=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t41.call(this)==-1) return -1;
 	}
-	this.stk[this.ptr++]="ismn"; //ident
+	//#line 2156: /ismn 13 string def
+	this.stk[this.ptr++]="ismn";
 	this.stk[this.ptr++]=13;
 	this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="checksum"; //ident
+	//#line 2157: /checksum 0 def
+	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="i"; //ident
+	//#line 2158: /i 0 def /n 0 def
+	this.stk[this.ptr++]="i";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="n"; //ident
+	this.stk[this.ptr++]="n";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 2159: { % loop
 	this.stk[this.ptr++]=$f41;
+	//#line 2174: } loop
 	var t47=this.stk[--this.ptr];
 	while (true) {
 		if (t47.call(this)==-1) break;
 	}
-	this.stk[this.ptr++]="checksum"; //ident
+	//#line 2175: /checksum 10 checksum 10 mod sub 10 mod 48 add def
+	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=10;
 	var t=this.dstk.get("checksum");
-	if (t===undefined) throw new Error("dict: checksum: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=10;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
@@ -1471,8 +1532,8 @@ BWIPJS.bwipp["ismn"]=function() {
 	this.stk[this.ptr++]=48;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 2178: barcode length 13 eq barcode length 17 eq or {
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1482,7 +1543,6 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1495,15 +1555,15 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f43;
+	//#line 2182: } if
 	var t49=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t49.call(this)==-1) return -1;
 	}
+	//#line 2185: legacy legacytxt () ne and {
 	var t=this.dstk.get("legacy");
-	if (t===undefined) throw new Error("dict: legacy: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("legacytxt");
-	if (t===undefined) throw new Error("dict: legacytxt: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -1514,7 +1574,9 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f44;
+	//#line 2188: } {
 	this.stk[this.ptr++]=$f45;
+	//#line 2190: } ifelse
 	var t50=this.stk[--this.ptr];
 	var t51=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -1522,25 +1584,23 @@ BWIPJS.bwipp["ismn"]=function() {
 	} else {
 		if (t50.call(this)==-1) return -1;
 	}
+	//#line 2191: pad 0 (ISMN ) putinterval
 	var t=this.dstk.get("pad");
-	if (t===undefined) throw new Error("dict: pad: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=BWIPJS.psstring("ISMN ");
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+	//#line 2192: pad 5 ismntxt putinterval
 	var t=this.dstk.get("pad");
-	if (t===undefined) throw new Error("dict: pad: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=5;
 	var t=this.dstk.get("ismntxt");
-	if (t===undefined) throw new Error("dict: ismntxt: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+	//#line 2193: pad pad length 2 sub 45 put
 	var t=this.dstk.get("pad");
-	if (t===undefined) throw new Error("dict: pad: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("pad");
-	if (t===undefined) throw new Error("dict: pad: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1551,38 +1611,36 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 2194: pad pad length 1 sub checksum put
 	var t=this.dstk.get("pad");
-	if (t===undefined) throw new Error("dict: pad: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("pad");
-	if (t===undefined) throw new Error("dict: pad: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	var t=this.dstk.get("checksum");
-	if (t===undefined) throw new Error("dict: checksum: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	this.stk[this.ptr++]="ismntxt"; //ident
+	//#line 2195: /ismntxt pad def
+	this.stk[this.ptr++]="ismntxt";
 	var t=this.dstk.get("pad");
-	if (t===undefined) throw new Error("dict: pad: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="barcode"; //ident
+	//#line 2198: /barcode ismn 0 12 getinterval def 
+	this.stk[this.ptr++]="barcode";
 	var t=this.dstk.get("ismn");
-	if (t===undefined) throw new Error("dict: ismn: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=12;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 2201: addon () ne {
 	var t=this.dstk.get("addon");
-	if (t===undefined) throw new Error("dict: addon: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -1590,12 +1648,13 @@ BWIPJS.bwipp["ismn"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f46;
+	//#line 2207: } if
 	var t52=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t52.call(this)==-1) return -1;
 	}
+	//#line 2210: options (dontdraw) true put
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
 	this.stk[this.ptr++]=true;
@@ -1603,64 +1662,61 @@ BWIPJS.bwipp["ismn"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 2211: options (addongap) addongap put 
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("addongap");
 	var t=this.dstk.get("addongap");
-	if (t===undefined) throw new Error("dict: addongap: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	this.stk[this.ptr++]="args"; //ident
+	//#line 2212: /args barcode options //ean13 exec def
+	this.stk[this.ptr++]="args";
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("ean13");
-	if (t===undefined) throw new Error("//ean13: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 2215: includetext {
 	var t=this.dstk.get("includetext");
-	if (t===undefined) throw new Error("dict: includetext: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f53;
+	//#line 2231: } if
 	var t59=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t59.call(this)==-1) return -1;
 	}
+	//#line 2233: args (opt) options put
 	var t=this.dstk.get("args");
-	if (t===undefined) throw new Error("dict: args: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("opt");
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 2234: args
 	var t=this.dstk.get("args");
-	if (t===undefined) throw new Error("dict: args: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	//#line 2236: dontdraw not //renlinear if
 	var t=this.dstk.get("dontdraw");
-	if (t===undefined) throw new Error("dict: dontdraw: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 	else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
 	var t=this.dstk.get("renlinear");
-	if (t===undefined) throw new Error("//renlinear: undefined");
 	this.stk[this.ptr++]=t;
 	var t60=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t60.call(this)==-1) return -1;
 	}
+	//#line 2238: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

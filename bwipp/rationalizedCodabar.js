@@ -15,19 +15,23 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	this.dict["raiseerror"]=BWIPJS.bwipp["raiseerror"];
 	this.dict["renlinear"]=BWIPJS.bwipp["renlinear"];
 	function $f0(){
+		//#line 7493: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
+		//#line 7494: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
+		//#line 7494: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
+		//#line 7493: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -65,6 +69,7 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
+		//#line 7494: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -81,44 +86,49 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		}
 	}
 	function $f4(){
+		//#line 7491: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
+		//#line 7492: options {
 		var t=this.dstk.get("options");
-		if (t===undefined) throw new Error("dict: options: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
+		//#line 7495: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
+		//#line 7496: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
-		this.stk[this.ptr++]="options"; //ident
+		this.stk[this.ptr++]="options";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
+		//#line 7498: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		this.stk[this.ptr++]="barchars"; //ident
+		//#line 7515: /barchars (0123456789-$:/.+TN*E) def
+		this.stk[this.ptr++]="barchars";
 		this.stk[this.ptr++]=BWIPJS.psstring("0123456789-$:/.+TN*E");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f7(){
-		this.stk[this.ptr++]="barchars"; //ident
+		//#line 7517: /barchars (0123456789-$:/.+ABCD) def
+		this.stk[this.ptr++]="barchars";
 		this.stk[this.ptr++]=BWIPJS.psstring("0123456789-$:/.+ABCD");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f8(){
+		//#line 7520: 0 1 19 {charvals exch dup barchars exch 1 getinterval exch put} for
 		var t=this.dstk.get("charvals");
-		if (t===undefined) throw new Error("dict: charvals: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("barchars");
-		if (t===undefined) throw new Error("dict: barchars: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
@@ -130,13 +140,12 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.ptr-=3;
 	}
 	function $f9(){
+		//#line 7522: 0 1 15 {bodyvals exch dup barchars exch 1 getinterval exch put} for
 		var t=this.dstk.get("bodyvals");
-		if (t===undefined) throw new Error("dict: bodyvals: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("barchars");
-		if (t===undefined) throw new Error("dict: barchars: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
@@ -148,13 +157,12 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.ptr-=3;
 	}
 	function $f10(){
+		//#line 7524: 16 1 19 {ssvals exch dup barchars exch 1 getinterval exch put} for
 		var t=this.dstk.get("ssvals");
-		if (t===undefined) throw new Error("dict: ssvals: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("barchars");
-		if (t===undefined) throw new Error("dict: barchars: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
@@ -166,29 +174,31 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.ptr-=3;
 	}
 	function $f11(){
-		this.stk[this.ptr++]="bwipp.rationalizedCodabarBadAltStartStop"; //ident
+		//#line 7530: /bwipp.rationalizedCodabarBadAltStartStop (Codabar start and stop characters must be one of E N T or *) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.rationalizedCodabarBadAltStartStop";
 		this.stk[this.ptr++]=BWIPJS.psstring("Codabar start and stop characters must be one of E N T or *");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f12(){
-		this.stk[this.ptr++]="bwipp.rationalizedCodabarBadStartStop"; //ident
+		//#line 7532: /bwipp.rationalizedCodabarBadStartStop (Codabar start and stop characters must be one of A B C or D) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.rationalizedCodabarBadStartStop";
 		this.stk[this.ptr++]=BWIPJS.psstring("Codabar start and stop characters must be one of A B C or D");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f13(){
+		//#line 7529: altstartstop {
 		var t=this.dstk.get("altstartstop");
-		if (t===undefined) throw new Error("dict: altstartstop: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f11;
+		//#line 7531: } {
 		this.stk[this.ptr++]=$f12;
+		//#line 7533: } ifelse
 		var t25=this.stk[--this.ptr];
 		var t26=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -198,76 +208,75 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		}
 	}
 	function $f14(){
-		this.stk[this.ptr++]="bwipp.rationalizedCodabarBadCharacter"; //ident
+		//#line 7537: /bwipp.rationalizedCodabarBadCharacter (Codabar body must contain only digits and symbols - $ : / . +) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.rationalizedCodabarBadCharacter";
 		this.stk[this.ptr++]=BWIPJS.psstring("Codabar body must contain only digits and symbols - $ : / . +");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f15(){
+		//#line 7536: barcode exch 1 getinterval bodyvals exch known not {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		var t=this.dstk.get("bodyvals");
-		if (t===undefined) throw new Error("dict: bodyvals: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
 		this.stk[this.ptr++]=$f14;
+		//#line 7538: } if
 		var t28=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t28.call(this)==-1) return -1;
 		}
 	}
 	function $f16(){
+		//#line 7541: /barlen barcode length validatecheck {1 sub} if def
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f17(){
+		//#line 7545: barcode exch 1 getinterval charvals exch get
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		var t=this.dstk.get("charvals");
-		if (t===undefined) throw new Error("dict: charvals: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
+		//#line 7546: checksum add /checksum exch def
 		var t=this.dstk.get("checksum");
-		if (t===undefined) throw new Error("dict: checksum: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]="checksum"; //ident
+		this.stk[this.ptr++]="checksum";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f18(){
-		this.stk[this.ptr++]="bwipp.rationalizedCodabarBadCheckDigit"; //ident
+		//#line 7553: /bwipp.rationalizedCodabarBadCheckDigit (Incorrect Codabar check digit provided) //raiseerror exec
+		this.stk[this.ptr++]="bwipp.rationalizedCodabarBadCheckDigit";
 		this.stk[this.ptr++]=BWIPJS.psstring("Incorrect Codabar check digit provided");
 		var t=this.dstk.get("raiseerror");
-		if (t===undefined) throw new Error("//raiseerror: undefined");
 		this.stk[this.ptr++]=t;
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f19(){
+		//#line 7552: barcode barlen 1 sub get barchars checksum get ne {
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
@@ -276,10 +285,8 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		var t=this.dstk.get("barchars");
-		if (t===undefined) throw new Error("dict: barchars: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("checksum");
-		if (t===undefined) throw new Error("dict: checksum: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
@@ -290,62 +297,64 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f18;
+		//#line 7554: } if
 		var t40=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t40.call(this)==-1) return -1;
 		}
+		//#line 7555: barlen string
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
+		//#line 7556: dup 0 barcode 0 barlen 1 sub getinterval putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 7557: dup barlen 1 sub barcode barlen 1 getinterval putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		this.stk[this.ptr++]="barcode"; //ident
+		//#line 7558: /barcode exch def
+		this.stk[this.ptr++]="barcode";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="includecheck"; //ident
+		//#line 7559: /includecheck true def
+		this.stk[this.ptr++]="includecheck";
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f20(){
+		//#line 7562: /sbs barlen includecheck {1 add} if 8 mul string def
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f21(){
+		//#line 7563: /txt barlen includecheck {1 add} if array def
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f22(){
-		this.stk[this.ptr++]="xpos"; //ident
+		//#line 7573: /xpos exch enc exch get 48 sub xpos add def
+		this.stk[this.ptr++]="xpos";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
-		if (t===undefined) throw new Error("dict: enc: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -355,24 +364,22 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.dstk.get("xpos");
-		if (t===undefined) throw new Error("dict: xpos: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f23(){
-		this.stk[this.ptr++]="i"; //ident
+		//#line 7567: /i exch def
+		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="indx"; //ident
+		//#line 7568: /indx charvals barcode i 1 getinterval get def
+		this.stk[this.ptr++]="indx";
 		var t=this.dstk.get("charvals");
-		if (t===undefined) throw new Error("dict: charvals: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
@@ -381,56 +388,46 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="enc"; //ident
+		//#line 7569: /enc encs indx get def
+		this.stk[this.ptr++]="enc";
 		var t=this.dstk.get("encs");
-		if (t===undefined) throw new Error("dict: encs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("indx");
-		if (t===undefined) throw new Error("dict: indx: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 7570: sbs i 8 mul enc putinterval  % Put encoded digit into sbs
 		var t=this.dstk.get("sbs");
-		if (t===undefined) throw new Error("dict: sbs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		var t=this.dstk.get("enc");
-		if (t===undefined) throw new Error("dict: enc: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 7571: txt i [barcode i 1 getinterval xpos textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
-		if (t===undefined) throw new Error("dict: txt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		var t=this.dstk.get("xpos");
-		if (t===undefined) throw new Error("dict: xpos: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textyoffset");
-		if (t===undefined) throw new Error("dict: textyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textfont");
-		if (t===undefined) throw new Error("dict: textfont: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textsize");
-		if (t===undefined) throw new Error("dict: textsize: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -441,10 +438,12 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
+		//#line 7572: 0 1 7 {       % xpos+=width of the character
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=7;
 		this.stk[this.ptr++]=$f22;
+		//#line 7574: } for
 		var t48=this.stk[--this.ptr];
 		var t46=this.stk[--this.ptr];
 		var t45=this.stk[--this.ptr];
@@ -455,34 +454,27 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		}
 	}
 	function $f24(){
+		//#line 7582: txt barlen 1 sub [barchars checksum 1 getinterval xpos textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
-		if (t===undefined) throw new Error("dict: txt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barchars");
-		if (t===undefined) throw new Error("dict: barchars: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("checksum");
-		if (t===undefined) throw new Error("dict: checksum: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		var t=this.dstk.get("xpos");
-		if (t===undefined) throw new Error("dict: xpos: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textyoffset");
-		if (t===undefined) throw new Error("dict: textyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textfont");
-		if (t===undefined) throw new Error("dict: textfont: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textsize");
-		if (t===undefined) throw new Error("dict: textsize: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -495,27 +487,22 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.ptr-=3;
 	}
 	function $f25(){
+		//#line 7584: txt barlen 1 sub [( ) xpos textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
-		if (t===undefined) throw new Error("dict: txt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=BWIPJS.psstring(" ");
 		var t=this.dstk.get("xpos");
-		if (t===undefined) throw new Error("dict: xpos: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textyoffset");
-		if (t===undefined) throw new Error("dict: textyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textfont");
-		if (t===undefined) throw new Error("dict: textfont: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textsize");
-		if (t===undefined) throw new Error("dict: textsize: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -528,13 +515,12 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.ptr-=3;
 	}
 	function $f26(){
-		this.stk[this.ptr++]="xpos"; //ident
+		//#line 7587: /xpos exch encs checksum get exch get 48 sub xpos add def
+		this.stk[this.ptr++]="xpos";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("encs");
-		if (t===undefined) throw new Error("dict: encs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("checksum");
-		if (t===undefined) throw new Error("dict: checksum: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
@@ -548,38 +534,36 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.dstk.get("xpos");
-		if (t===undefined) throw new Error("dict: xpos: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f27(){
+		//#line 7580: sbs barlen 8 mul 8 sub encs checksum get putinterval
 		var t=this.dstk.get("sbs");
-		if (t===undefined) throw new Error("dict: sbs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.dstk.get("encs");
-		if (t===undefined) throw new Error("dict: encs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("checksum");
-		if (t===undefined) throw new Error("dict: checksum: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 7581: includecheckintext {
 		var t=this.dstk.get("includecheckintext");
-		if (t===undefined) throw new Error("dict: includecheckintext: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f24;
+		//#line 7583: } {
 		this.stk[this.ptr++]=$f25;
+		//#line 7585: } ifelse
 		var t54=this.stk[--this.ptr];
 		var t55=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -587,10 +571,12 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		} else {
 			if (t54.call(this)==-1) return -1;
 		}
+		//#line 7586: 0 1 7 {       % xpos+=width of the character
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=7;
 		this.stk[this.ptr++]=$f26;
+		//#line 7588: } for
 		var t60=this.stk[--this.ptr];
 		var t58=this.stk[--this.ptr];
 		var t57=this.stk[--this.ptr];
@@ -599,15 +585,13 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 			this.stk[this.ptr++]=t59;
 			if (t60.call(this)==-1) break;
 		}
-		this.stk[this.ptr++]="indx"; //ident
+		//#line 7590: /indx charvals barcode barlen 1 sub 1 getinterval get def
+		this.stk[this.ptr++]="indx";
 		var t=this.dstk.get("charvals");
-		if (t===undefined) throw new Error("dict: charvals: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
@@ -618,58 +602,48 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="enc"; //ident
+		//#line 7591: /enc encs indx get def            % Get the indxth encoding
+		this.stk[this.ptr++]="enc";
 		var t=this.dstk.get("encs");
-		if (t===undefined) throw new Error("dict: encs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("indx");
-		if (t===undefined) throw new Error("dict: indx: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 7592: sbs barlen 8 mul enc putinterval  % Put encoded digit into sbs
 		var t=this.dstk.get("sbs");
-		if (t===undefined) throw new Error("dict: sbs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		var t=this.dstk.get("enc");
-		if (t===undefined) throw new Error("dict: enc: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 7593: txt barlen [barcode barlen 1 sub 1 getinterval xpos textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
-		if (t===undefined) throw new Error("dict: txt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		var t=this.dstk.get("xpos");
-		if (t===undefined) throw new Error("dict: xpos: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textyoffset");
-		if (t===undefined) throw new Error("dict: textyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textfont");
-		if (t===undefined) throw new Error("dict: textfont: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textsize");
-		if (t===undefined) throw new Error("dict: textsize: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -682,15 +656,13 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.ptr-=3;
 	}
 	function $f28(){
-		this.stk[this.ptr++]="indx"; //ident
+		//#line 7596: /indx charvals barcode barlen 1 sub 1 getinterval get def
+		this.stk[this.ptr++]="indx";
 		var t=this.dstk.get("charvals");
-		if (t===undefined) throw new Error("dict: charvals: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
@@ -701,62 +673,52 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="enc"; //ident
+		//#line 7597: /enc encs indx get def                  % Get the indxth encoding
+		this.stk[this.ptr++]="enc";
 		var t=this.dstk.get("encs");
-		if (t===undefined) throw new Error("dict: encs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("indx");
-		if (t===undefined) throw new Error("dict: indx: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 7598: sbs barlen 8 mul 8 sub enc putinterval  % Put encoded digit into sbs
 		var t=this.dstk.get("sbs");
-		if (t===undefined) throw new Error("dict: sbs: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.dstk.get("enc");
-		if (t===undefined) throw new Error("dict: enc: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+		//#line 7599: txt barlen 1 sub [barcode barlen 1 sub 1 getinterval xpos textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
-		if (t===undefined) throw new Error("dict: txt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barcode");
-		if (t===undefined) throw new Error("dict: barcode: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
-		if (t===undefined) throw new Error("dict: barlen: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		var t=this.dstk.get("xpos");
-		if (t===undefined) throw new Error("dict: xpos: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textyoffset");
-		if (t===undefined) throw new Error("dict: textyoffset: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textfont");
-		if (t===undefined) throw new Error("dict: textfont: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("textsize");
-		if (t===undefined) throw new Error("dict: textsize: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -769,78 +731,94 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.ptr-=3;
 	}
 	function $f29(){
+		//#line 7605: /sbs [sbs {48 sub} forall]
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f30(){
+		//#line 7606: /bhs [sbs length 1 add 2 idiv {height} repeat]
 		var t=this.dstk.get("height");
-		if (t===undefined) throw new Error("dict: height: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f31(){
+		//#line 7607: /bbs [sbs length 1 add 2 idiv {0} repeat]
 		this.stk[this.ptr++]=0;
 	}
 	function $f32(){
-		this.stk[this.ptr++]="txt"; //ident
+		//#line 7609: /txt txt
+		this.stk[this.ptr++]="txt";
 		var t=this.dstk.get("txt");
-		if (t===undefined) throw new Error("dict: txt: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
+	//#line 7473: 20 dict begin                    % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	this.stk[this.ptr++]="options"; //ident
+	//#line 7475: /options exch def          % We are given an option string
+	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="barcode"; //ident
+	//#line 7476: /barcode exch def          % We are given a barcode string
+	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="dontdraw"; //ident
+	//#line 7478: /dontdraw false def
+	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="altstartstop"; //ident
+	//#line 7479: /altstartstop false def
+	this.stk[this.ptr++]="altstartstop";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="includecheck"; //ident
+	//#line 7480: /includecheck false def     % Enable/disable checkdigit
+	this.stk[this.ptr++]="includecheck";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="validatecheck"; //ident
+	//#line 7481: /validatecheck false def
+	this.stk[this.ptr++]="validatecheck";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="includetext"; //ident
+	//#line 7482: /includetext false def      % Enable/disable text
+	this.stk[this.ptr++]="includetext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="includecheckintext"; //ident
+	//#line 7483: /includecheckintext false def
+	this.stk[this.ptr++]="includecheckintext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="textfont"; //ident
-	this.stk[this.ptr++]="Courier"; //ident
+	//#line 7484: /textfont /Courier def
+	this.stk[this.ptr++]="textfont";
+	this.stk[this.ptr++]="Courier";
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="textsize"; //ident
+	//#line 7485: /textsize 10 def
+	this.stk[this.ptr++]="textsize";
 	this.stk[this.ptr++]=10;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="textyoffset"; //ident
-	this.stk[this.ptr++]=-7;
+	//#line 7486: /textyoffset -8 def
+	this.stk[this.ptr++]="textyoffset";
+	this.stk[this.ptr++]=-8;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="height"; //ident
+	//#line 7487: /height 1 def
+	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 7490: options type /stringtype eq {
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
-	this.stk[this.ptr++]="stringtype"; //ident
+	this.stk[this.ptr++]="stringtype";
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
+	//#line 7497: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
+	//#line 7498: options {def} forall
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
 	var t7=this.stk[--this.ptr];
@@ -855,37 +833,41 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	this.stk[this.ptr++]="textfont"; //ident
+	//#line 7500: /textfont textfont cvlit def
+	this.stk[this.ptr++]="textfont";
 	var t=this.dstk.get("textfont");
-	if (t===undefined) throw new Error("dict: textfont: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="textsize"; //ident
+	//#line 7501: /textsize textsize cvr def
+	this.stk[this.ptr++]="textsize";
 	var t=this.dstk.get("textsize");
-	if (t===undefined) throw new Error("dict: textsize: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="textyoffset"; //ident
+	//#line 7502: /textyoffset textyoffset cvr def
+	this.stk[this.ptr++]="textyoffset";
 	var t=this.dstk.get("textyoffset");
-	if (t===undefined) throw new Error("dict: textyoffset: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="height"; //ident
+	//#line 7503: /height height cvr def
+	this.stk[this.ptr++]="height";
 	var t=this.dstk.get("height");
-	if (t===undefined) throw new Error("dict: height: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="encs"; //ident
+	//#line 7506: /encs
+	this.stk[this.ptr++]="encs";
+	//#line 7507: [ (11111331) (11113311) (11131131) (33111111) (11311311)
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("11111331"),BWIPJS.psstring("11113311"),BWIPJS.psstring("11131131"),BWIPJS.psstring("33111111"),BWIPJS.psstring("11311311"),BWIPJS.psstring("31111311"),BWIPJS.psstring("13111131"),BWIPJS.psstring("13113111"),BWIPJS.psstring("13311111"),BWIPJS.psstring("31131111"),BWIPJS.psstring("11133111"),BWIPJS.psstring("11331111"),BWIPJS.psstring("31113131"),BWIPJS.psstring("31311131"),BWIPJS.psstring("31313111"),BWIPJS.psstring("11313131"),BWIPJS.psstring("11331311"),BWIPJS.psstring("13131131"),BWIPJS.psstring("11131331"),BWIPJS.psstring("11133311")]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 7514: altstartstop {
 	var t=this.dstk.get("altstartstop");
-	if (t===undefined) throw new Error("dict: altstartstop: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f6;
+	//#line 7516: } {
 	this.stk[this.ptr++]=$f7;
+	//#line 7518: } ifelse
 	var t8=this.stk[--this.ptr];
 	var t9=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -893,10 +875,12 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	} else {
 		if (t8.call(this)==-1) return -1;
 	}
-	this.stk[this.ptr++]="charvals"; //ident
+	//#line 7519: /charvals 20 dict def
+	this.stk[this.ptr++]="charvals";
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 7520: 0 1 19 {charvals exch dup barchars exch 1 getinterval exch put} for
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=19;
@@ -909,10 +893,12 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.stk[this.ptr++]=t13;
 		if (t14.call(this)==-1) break;
 	}
-	this.stk[this.ptr++]="bodyvals"; //ident
+	//#line 7521: /bodyvals 16 dict def
+	this.stk[this.ptr++]="bodyvals";
 	this.stk[this.ptr++]=16;
 	this.stk[this.ptr-1]={};
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 7522: 0 1 15 {bodyvals exch dup barchars exch 1 getinterval exch put} for
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=15;
@@ -925,10 +911,12 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.stk[this.ptr++]=t18;
 		if (t19.call(this)==-1) break;
 	}
-	this.stk[this.ptr++]="ssvals"; //ident
+	//#line 7523: /ssvals 4 dict def
+	this.stk[this.ptr++]="ssvals";
 	this.stk[this.ptr++]=4;
 	this.stk[this.ptr-1]={};
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 7524: 16 1 19 {ssvals exch dup barchars exch 1 getinterval exch put} for
 	this.stk[this.ptr++]=16;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=19;
@@ -941,24 +929,22 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.stk[this.ptr++]=t23;
 		if (t24.call(this)==-1) break;
 	}
+	//#line 7527: barcode 0 1 getinterval ssvals exch known not 
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	var t=this.dstk.get("ssvals");
-	if (t===undefined) throw new Error("dict: ssvals: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 	else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
+	//#line 7528: barcode barcode length 1 sub 1 getinterval ssvals exch known not or {
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -967,7 +953,6 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	var t=this.dstk.get("ssvals");
-	if (t===undefined) throw new Error("dict: ssvals: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
@@ -977,20 +962,22 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f13;
+	//#line 7534: } if
 	var t27=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t27.call(this)==-1) return -1;
 	}
+	//#line 7535: 1 1 barcode length 2 sub {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=2;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f15;
+	//#line 7539: } for
 	var t33=this.stk[--this.ptr];
 	var t31=this.stk[--this.ptr];
 	var t30=this.stk[--this.ptr];
@@ -999,14 +986,13 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.stk[this.ptr++]=t32;
 		if (t33.call(this)==-1) break;
 	}
-	this.stk[this.ptr++]="barlen"; //ident
+	//#line 7541: /barlen barcode length validatecheck {1 sub} if def
+	this.stk[this.ptr++]="barlen";
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	var t=this.dstk.get("validatecheck");
-	if (t===undefined) throw new Error("dict: validatecheck: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f16;
 	var t34=this.stk[--this.ptr];
@@ -1014,17 +1000,19 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		if (t34.call(this)==-1) return -1;
 	}
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="checksum"; //ident
+	//#line 7543: /checksum 0 def
+	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 7544: 0 1 barlen 2 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barlen");
-	if (t===undefined) throw new Error("dict: barlen: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=2;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f17;
+	//#line 7547: } for
 	var t39=this.stk[--this.ptr];
 	var t37=this.stk[--this.ptr];
 	var t36=this.stk[--this.ptr];
@@ -1033,11 +1021,10 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.stk[this.ptr++]=t38;
 		if (t39.call(this)==-1) break;
 	}
+	//#line 7548: barcode barcode length 1 sub 1 getinterval charvals exch get
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1046,24 +1033,23 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	var t=this.dstk.get("charvals");
-	if (t===undefined) throw new Error("dict: charvals: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 		this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
+	//#line 7549: checksum add /checksum exch def 
 	var t=this.dstk.get("checksum");
-	if (t===undefined) throw new Error("dict: checksum: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]="checksum"; //ident
+	this.stk[this.ptr++]="checksum";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="checksum"; //ident
+	//#line 7550: /checksum 16 checksum 16 mod sub 16 mod def
+	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=16;
 	var t=this.dstk.get("checksum");
-	if (t===undefined) throw new Error("dict: checksum: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=16;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
@@ -1071,20 +1057,20 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	this.stk[this.ptr++]=16;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 7551: validatecheck {
 	var t=this.dstk.get("validatecheck");
-	if (t===undefined) throw new Error("dict: validatecheck: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f19;
+	//#line 7560: } if
 	var t41=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t41.call(this)==-1) return -1;
 	}
-	this.stk[this.ptr++]="sbs"; //ident
+	//#line 7562: /sbs barlen includecheck {1 add} if 8 mul string def
+	this.stk[this.ptr++]="sbs";
 	var t=this.dstk.get("barlen");
-	if (t===undefined) throw new Error("dict: barlen: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("includecheck");
-	if (t===undefined) throw new Error("dict: includecheck: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f20;
 	var t42=this.stk[--this.ptr];
@@ -1095,12 +1081,11 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="txt"; //ident
+	//#line 7563: /txt barlen includecheck {1 add} if array def
+	this.stk[this.ptr++]="txt";
 	var t=this.dstk.get("barlen");
-	if (t===undefined) throw new Error("dict: barlen: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("includecheck");
-	if (t===undefined) throw new Error("dict: includecheck: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f21;
 	var t43=this.stk[--this.ptr];
@@ -1109,17 +1094,19 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	}
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="xpos"; //ident
+	//#line 7565: /xpos 0 def
+	this.stk[this.ptr++]="xpos";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 7566: 0 1 barlen 2 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barlen");
-	if (t===undefined) throw new Error("dict: barlen: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=2;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f23;
+	//#line 7575: } for
 	var t53=this.stk[--this.ptr];
 	var t51=this.stk[--this.ptr];
 	var t50=this.stk[--this.ptr];
@@ -1128,11 +1115,13 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 		this.stk[this.ptr++]=t52;
 		if (t53.call(this)==-1) break;
 	}
+	//#line 7578: includecheck {
 	var t=this.dstk.get("includecheck");
-	if (t===undefined) throw new Error("dict: includecheck: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f27;
+	//#line 7594: } {
 	this.stk[this.ptr++]=$f28;
+	//#line 7600: } ifelse
 	var t61=this.stk[--this.ptr];
 	var t62=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -1140,15 +1129,16 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	} else {
 		if (t61.call(this)==-1) return -1;
 	}
+	//#line 7603: <<
 	this.stk[this.ptr++]=Infinity;
-	this.stk[this.ptr++]="ren"; //ident
+	//#line 7604: /ren //renlinear
+	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renlinear");
-	if (t===undefined) throw new Error("//renlinear: undefined");
 	this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]="sbs"; //ident
+	//#line 7605: /sbs [sbs {48 sub} forall]
+	this.stk[this.ptr++]="sbs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sbs");
-	if (t===undefined) throw new Error("dict: sbs: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f29;
 	var t65=this.stk[--this.ptr];
@@ -1168,10 +1158,10 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	this.stk[this.ptr++]="bhs"; //ident
+	//#line 7606: /bhs [sbs length 1 add 2 idiv {height} repeat]
+	this.stk[this.ptr++]="bhs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sbs");
-	if (t===undefined) throw new Error("dict: sbs: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1190,10 +1180,10 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	this.stk[this.ptr++]="bbs"; //ident
+	//#line 7607: /bbs [sbs length 1 add 2 idiv {0} repeat]
+	this.stk[this.ptr++]="bbs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sbs");
-	if (t===undefined) throw new Error("dict: sbs: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -1212,18 +1202,20 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
+	//#line 7608: includetext {
 	var t=this.dstk.get("includetext");
-	if (t===undefined) throw new Error("dict: includetext: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f32;
+	//#line 7610: } if
 	var t72=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t72.call(this)==-1) return -1;
 	}
-	this.stk[this.ptr++]="opt"; //ident
+	//#line 7611: /opt options
+	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	//#line 7612: >>
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -1232,18 +1224,18 @@ BWIPJS.bwipp["rationalizedCodabar"]=function() {
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
+	//#line 7614: dontdraw not //renlinear if
 	var t=this.dstk.get("dontdraw");
-	if (t===undefined) throw new Error("dict: dontdraw: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 	else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
 	var t=this.dstk.get("renlinear");
-	if (t===undefined) throw new Error("//renlinear: undefined");
 	this.stk[this.ptr++]=t;
 	var t73=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t73.call(this)==-1) return -1;
 	}
+	//#line 7616: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

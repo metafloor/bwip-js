@@ -21,19 +21,23 @@ BWIPJS.bwipp["ean8composite"]=function() {
 	this.dict["renlinear"]=BWIPJS.bwipp["renlinear"];
 	this.dict["renmatrix"]=BWIPJS.bwipp["renmatrix"];
 	function $f0(){
+		//#line 19067: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
+		//#line 19068: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
+		//#line 19068: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
+		//#line 19067: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,6 +75,7 @@ BWIPJS.bwipp["ean8composite"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
+		//#line 19068: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -87,75 +92,91 @@ BWIPJS.bwipp["ean8composite"]=function() {
 		}
 	}
 	function $f4(){
+		//#line 19065: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
+		//#line 19066: options {
 		var t=this.dstk.get("options");
-		if (t===undefined) throw new Error("dict: options: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
+		//#line 19069: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
+		//#line 19070: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
-		this.stk[this.ptr++]="options"; //ident
+		this.stk[this.ptr++]="options";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
+		//#line 19072: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		this.stk[this.ptr++]="linear"; //ident
+		//#line 19076: /linear exch def
+		this.stk[this.ptr++]="linear";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 19077: pop
 		this.ptr--;
-		this.stk[this.ptr++]="comp"; //ident
+		//#line 19078: /comp exch def
+		this.stk[this.ptr++]="comp";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f7(){
+		//#line 19080: pop
 		this.ptr--;
 	}
 	function $f8(){
+		//#line 19097: 0 1  65 {0} repeat  1 0
 		this.stk[this.ptr++]=0;
 	}
 	function $f9(){
+		//#line 19098: 1 0  65 {0} repeat  0 1
 		this.stk[this.ptr++]=0;
 	}
 	function $f10(){
+		//#line 19099: 0 1  65 {0} repeat  1 0
 		this.stk[this.ptr++]=0;
 	}
+	//#line 19056: 20 dict begin            % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	this.stk[this.ptr++]="options"; //ident
+	//#line 19058: /options exch def
+	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="barcode"; //ident
+	//#line 19059: /barcode exch def
+	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="dontdraw"; //ident
+	//#line 19061: /dontdraw false def
+	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 19064: options type /stringtype eq {
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
-	this.stk[this.ptr++]="stringtype"; //ident
+	this.stk[this.ptr++]="stringtype";
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
+	//#line 19071: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
+	//#line 19072: options {def} forall
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
 	var t7=this.stk[--this.ptr];
@@ -170,8 +191,8 @@ BWIPJS.bwipp["ean8composite"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
+	//#line 19075: barcode (|) search {
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("|");
 	var h=this.stk[this.ptr-2];
@@ -185,7 +206,9 @@ BWIPJS.bwipp["ean8composite"]=function() {
 		this.stk[this.ptr++]=true;
 	}
 	this.stk[this.ptr++]=$f6;
+	//#line 19079: } {
 	this.stk[this.ptr++]=$f7;
+	//#line 19081: } ifelse
 	var t8=this.stk[--this.ptr];
 	var t9=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -193,9 +216,10 @@ BWIPJS.bwipp["ean8composite"]=function() {
 	} else {
 		if (t8.call(this)==-1) return -1;
 	}
+	//#line 19083: gsave
 	this.gsave();
+	//#line 19086: options (lintype) (ean8) put
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("lintype");
 	this.stk[this.ptr++]=BWIPJS.psstring("ean8");
@@ -203,8 +227,8 @@ BWIPJS.bwipp["ean8composite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 19087: options (inkspread) (0) put
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("inkspread");
 	this.stk[this.ptr++]=BWIPJS.psstring("0");
@@ -212,8 +236,8 @@ BWIPJS.bwipp["ean8composite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 19088: options (dontdraw) true put
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
 	this.stk[this.ptr++]=true;
@@ -221,33 +245,33 @@ BWIPJS.bwipp["ean8composite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 19091: linear options //ean8 exec //renlinear exec
 	var t=this.dstk.get("linear");
-	if (t===undefined) throw new Error("dict: linear: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("ean8");
-	if (t===undefined) throw new Error("//ean8: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
 	var t=this.dstk.get("renlinear");
-	if (t===undefined) throw new Error("//renlinear: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
+	//#line 19094: -1 72 rmoveto <<
 	this.stk[this.ptr++]=-1;
 	this.stk[this.ptr++]=72;
 	var y=this.stk[--this.ptr];
 	this.rmoveto(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=Infinity;
-	this.stk[this.ptr++]="ren"; //ident
+	//#line 19095: /ren //renmatrix
+	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renmatrix");
-	if (t===undefined) throw new Error("//renmatrix: undefined");
 	this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]="pixs"; //ident
+	//#line 19096: /pixs [
+	this.stk[this.ptr++]="pixs";
 	this.stk[this.ptr++]=Infinity;
+	//#line 19097: 0 1  65 {0} repeat  1 0
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=65;
@@ -259,6 +283,7 @@ BWIPJS.bwipp["ean8composite"]=function() {
 	}
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=0;
+	//#line 19098: 1 0  65 {0} repeat  0 1
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=65;
@@ -270,6 +295,7 @@ BWIPJS.bwipp["ean8composite"]=function() {
 	}
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
+	//#line 19099: 0 1  65 {0} repeat  1 0
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=65;
@@ -281,27 +307,33 @@ BWIPJS.bwipp["ean8composite"]=function() {
 	}
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=0;
+	//#line 19100: ]
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	this.stk[this.ptr++]="pixx"; //ident
+	//#line 19101: /pixx 69
+	this.stk[this.ptr++]="pixx";
 	this.stk[this.ptr++]=69;
-	this.stk[this.ptr++]="pixy"; //ident
+	//#line 19102: /pixy 3
+	this.stk[this.ptr++]="pixy";
 	this.stk[this.ptr++]=3;
-	this.stk[this.ptr++]="height"; //ident
+	//#line 19103: /height 6 72 div
+	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=6;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]="width"; //ident
+	//#line 19104: /width 69 72 div
+	this.stk[this.ptr++]="width";
 	this.stk[this.ptr++]=69;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]="opt"; //ident
+	//#line 19105: /opt options
+	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	//#line 19106: >> //renmatrix exec
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -311,21 +343,19 @@ BWIPJS.bwipp["ean8composite"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	var t=this.dstk.get("renmatrix");
-	if (t===undefined) throw new Error("//renmatrix: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
+	//#line 19109: comp options //gs1-cc exec
 	var t=this.dstk.get("comp");
-	if (t===undefined) throw new Error("dict: comp: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("gs1-cc");
-	if (t===undefined) throw new Error("//gs1-cc: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
+	//#line 19110: dup (pixx) get 69 exch sub 6 rmoveto
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("pixx");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -338,12 +368,14 @@ BWIPJS.bwipp["ean8composite"]=function() {
 	this.stk[this.ptr++]=6;
 	var y=this.stk[--this.ptr];
 	this.rmoveto(this.stk[--this.ptr],y);
+	//#line 19111: //renmatrix exec
 	var t=this.dstk.get("renmatrix");
-	if (t===undefined) throw new Error("//renmatrix: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
+	//#line 19113: grestore
 	this.grestore();
+	//#line 19115: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

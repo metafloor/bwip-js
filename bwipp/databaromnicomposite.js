@@ -21,19 +21,23 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 	this.dict["renlinear"]=BWIPJS.bwipp["renlinear"];
 	this.dict["renmatrix"]=BWIPJS.bwipp["renmatrix"];
 	function $f0(){
+		//#line 19337: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
+		//#line 19338: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
+		//#line 19338: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
+		//#line 19337: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,6 +75,7 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
+		//#line 19338: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -87,53 +92,63 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		}
 	}
 	function $f4(){
+		//#line 19335: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
+		//#line 19336: options {
 		var t=this.dstk.get("options");
-		if (t===undefined) throw new Error("dict: options: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
+		//#line 19339: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
+		//#line 19340: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
-		this.stk[this.ptr++]="options"; //ident
+		this.stk[this.ptr++]="options";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
+		//#line 19342: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		this.stk[this.ptr++]="linear"; //ident
+		//#line 19346: /linear exch def
+		this.stk[this.ptr++]="linear";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 19347: pop
 		this.ptr--;
-		this.stk[this.ptr++]="comp"; //ident
+		//#line 19348: /comp exch def
+		this.stk[this.ptr++]="comp";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f7(){
+		//#line 19350: pop
 		this.ptr--;
 	}
 	function $f8(){
+		//#line 19373: 1
 		this.stk[this.ptr++]=1;
 	}
 	function $f9(){
+		//#line 19375: sep i 1 sub get 0 eq {1} {0} ifelse
 		this.stk[this.ptr++]=1;
 	}
 	function $f10(){
+		//#line 19375: sep i 1 sub get 0 eq {1} {0} ifelse
 		this.stk[this.ptr++]=0;
 	}
 	function $f11(){
+		//#line 19375: sep i 1 sub get 0 eq {1} {0} ifelse
 		var t=this.dstk.get("sep");
-		if (t===undefined) throw new Error("dict: sep: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
@@ -157,11 +172,10 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		}
 	}
 	function $f12(){
+		//#line 19372: bot i 1 sub get 1 eq {
 		var t=this.dstk.get("bot");
-		if (t===undefined) throw new Error("dict: bot: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
@@ -175,7 +189,9 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f8;
+		//#line 19374: } {
 		this.stk[this.ptr++]=$f11;
+		//#line 19376: } ifelse
 		var t12=this.stk[--this.ptr];
 		var t13=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -185,17 +201,18 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		}
 	}
 	function $f13(){
+		//#line 19378: 0
 		this.stk[this.ptr++]=0;
 	}
 	function $f14(){
-		this.stk[this.ptr++]="i"; //ident
+		//#line 19370: /i exch def
+		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 19371: bot i get 0 eq {
 		var t=this.dstk.get("bot");
-		if (t===undefined) throw new Error("dict: bot: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
@@ -207,7 +224,9 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f12;
+		//#line 19377: } {
 		this.stk[this.ptr++]=$f13;
+		//#line 19379: } ifelse
 		var t14=this.stk[--this.ptr];
 		var t15=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -215,12 +234,11 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		} else {
 			if (t14.call(this)==-1) return -1;
 		}
+		//#line 19380: sep exch i exch put
 		var t=this.dstk.get("sep");
-		if (t===undefined) throw new Error("dict: sep: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("i");
-		if (t===undefined) throw new Error("dict: i: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
@@ -229,13 +247,12 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		this.ptr-=3;
 	}
 	function $f15(){
+		//#line 19383: true 0 1 12 {dup bot exch fp add get exch f3 exch get eq and} for {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("bot");
-		if (t===undefined) throw new Error("dict: bot: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("fp");
-		if (t===undefined) throw new Error("dict: fp: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -244,7 +261,6 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("f3");
-		if (t===undefined) throw new Error("dict: f3: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -260,29 +276,29 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		this.ptr--;
 	}
 	function $f16(){
+		//#line 19385: sep fp [ 0 0 0 0 0 0 0 0 0 0 1 0 0 ] putinterval
 		var t=this.dstk.get("sep");
-		if (t===undefined) throw new Error("dict: sep: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("fp");
-		if (t===undefined) throw new Error("dict: fp: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0,0,0,0,0,0,0,1,0,0]);
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f17(){
-		this.stk[this.ptr++]="fp"; //ident
+		//#line 19368: /fp exch def
+		this.stk[this.ptr++]="fp";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 19369: fp 1 fp 12 add {
 		var t=this.dstk.get("fp");
-		if (t===undefined) throw new Error("dict: fp: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("fp");
-		if (t===undefined) throw new Error("dict: fp: undefined");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=12;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f14;
+		//#line 19381: } for
 		var t20=this.stk[--this.ptr];
 		var t18=this.stk[--this.ptr];
 		var t17=this.stk[--this.ptr];
@@ -291,9 +307,11 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 			this.stk[this.ptr++]=t19;
 			if (t20.call(this)==-1) break;
 		}
-		this.stk[this.ptr++]="f3"; //ident
+		//#line 19382: /f3 [1 1 1 1 1 1 1 1 1 0 1 1 1] def
+		this.stk[this.ptr++]="f3";
 		this.stk[this.ptr++]=BWIPJS.psarray([1,1,1,1,1,1,1,1,1,0,1,1,1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		//#line 19383: true 0 1 12 {dup bot exch fp add get exch f3 exch get eq and} for {
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
@@ -308,24 +326,30 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 			if (t25.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=$f16;
+		//#line 19386: } if
 		var t26=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t26.call(this)==-1) return -1;
 		}
 	}
 	function $f18(){
+		//#line 19389: 0 linsbs {1 index 1 eq {{0}} {{1}} ifelse repeat} forall
 		this.stk[this.ptr++]=0;
 	}
 	function $f19(){
+		//#line 19389: 0 linsbs {1 index 1 eq {{0}} {{1}} ifelse repeat} forall
 		this.stk[this.ptr++]=$f18;
 	}
 	function $f20(){
+		//#line 19389: 0 linsbs {1 index 1 eq {{0}} {{1}} ifelse repeat} forall
 		this.stk[this.ptr++]=1;
 	}
 	function $f21(){
+		//#line 19389: 0 linsbs {1 index 1 eq {{0}} {{1}} ifelse repeat} forall
 		this.stk[this.ptr++]=$f20;
 	}
 	function $f22(){
+		//#line 19389: 0 linsbs {1 index 1 eq {{0}} {{1}} ifelse repeat} forall
 		this.stk[this.ptr++]=1;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
@@ -350,38 +374,44 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		}
 	}
 	function $f23(){
+		//#line 19391: /sep [ bot {1 exch sub} forall ] def
 		this.stk[this.ptr++]=1;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
+	//#line 19326: 20 dict begin            % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	this.stk[this.ptr++]="options"; //ident
+	//#line 19328: /options exch def
+	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="barcode"; //ident
+	//#line 19329: /barcode exch def
+	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]="dontdraw"; //ident
+	//#line 19331: /dontdraw false def
+	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 19334: options type /stringtype eq {
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
-	this.stk[this.ptr++]="stringtype"; //ident
+	this.stk[this.ptr++]="stringtype";
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
+	//#line 19341: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
+	//#line 19342: options {def} forall
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
 	var t7=this.stk[--this.ptr];
@@ -396,8 +426,8 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
+	//#line 19345: barcode (|) search {
 	var t=this.dstk.get("barcode");
-	if (t===undefined) throw new Error("dict: barcode: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("|");
 	var h=this.stk[this.ptr-2];
@@ -411,7 +441,9 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		this.stk[this.ptr++]=true;
 	}
 	this.stk[this.ptr++]=$f6;
+	//#line 19349: } {
 	this.stk[this.ptr++]=$f7;
+	//#line 19351: } ifelse
 	var t8=this.stk[--this.ptr];
 	var t9=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -419,9 +451,10 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 	} else {
 		if (t8.call(this)==-1) return -1;
 	}
+	//#line 19353: gsave
 	this.gsave();
+	//#line 19355: options (lintype) (databaromni) put
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("lintype");
 	this.stk[this.ptr++]=BWIPJS.psstring("databaromni");
@@ -429,8 +462,8 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 19356: options (linkage) true put
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("linkage");
 	this.stk[this.ptr++]=true;
@@ -438,8 +471,8 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 19357: options (inkspread) (0) put
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("inkspread");
 	this.stk[this.ptr++]=BWIPJS.psstring("0");
@@ -447,8 +480,8 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 19358: options (dontdraw) true put
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
 	this.stk[this.ptr++]=true;
@@ -456,26 +489,26 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
+	//#line 19361: linear options //databaromni exec
 	var t=this.dstk.get("linear");
-	if (t===undefined) throw new Error("dict: linear: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("databaromni");
-	if (t===undefined) throw new Error("//databaromni: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
+	//#line 19362: dup (sbs) get /linsbs exch def
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("sbs");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 		this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
-	this.stk[this.ptr++]="linsbs"; //ident
+	this.stk[this.ptr++]="linsbs";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 19363: dup (bhs) get 0 get 72 mul /linheight exch def
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("bhs");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -489,21 +522,24 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 	this.ptr--;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]="linheight"; //ident
+	this.stk[this.ptr++]="linheight";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 19364: //renlinear exec
 	var t=this.dstk.get("renlinear");
-	if (t===undefined) throw new Error("//renlinear: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	this.stk[this.ptr++]="sepfinder"; //ident
+	//#line 19367: /sepfinder {
+	this.stk[this.ptr++]="sepfinder";
 	this.stk[this.ptr++]=$f17;
+	//#line 19387: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 19388: mark
 	this.stk[this.ptr++]=Infinity;
+	//#line 19389: 0 linsbs {1 index 1 eq {{0}} {{1}} ifelse repeat} forall
 	this.stk[this.ptr++]=0;
 	var t=this.dstk.get("linsbs");
-	if (t===undefined) throw new Error("dict: linsbs: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f22;
 	var t34=this.stk[--this.ptr];
@@ -518,6 +554,7 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 		}
 		if (t34.call(this)==-1) break;
 	}
+	//#line 19390: counttomark 1 sub array astore /bot exch def pop pop
 	for (var i=this.ptr-1; i>=0 && this.stk[i]!==Infinity; i--);
 	if (i==-1) throw "counttomark: underflow";
 	this.stk[this.ptr]=this.ptr-i-1;
@@ -530,15 +567,15 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 	var a=this.stk.splice(this.ptr-1-t.length,t.length);
 	t.assign(0,a);
 	this.ptr-=t.length;
-	this.stk[this.ptr++]="bot"; //ident
+	this.stk[this.ptr++]="bot";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.ptr--;
 	this.ptr--;
-	this.stk[this.ptr++]="sep"; //ident
+	//#line 19391: /sep [ bot {1 exch sub} forall ] def
+	this.stk[this.ptr++]="sep";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("bot");
-	if (t===undefined) throw new Error("dict: bot: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f23;
 	var t37=this.stk[--this.ptr];
@@ -559,17 +596,16 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	//#line 19392: sep 0 [0 0 0] putinterval
 	var t=this.dstk.get("sep");
-	if (t===undefined) throw new Error("dict: sep: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=BWIPJS.psarray([0,0,0]);
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+	//#line 19393: sep sep length 4 sub [0 0 0 0] putinterval
 	var t=this.dstk.get("sep");
-	if (t===undefined) throw new Error("dict: sep: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("sep");
-	if (t===undefined) throw new Error("dict: sep: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -577,53 +613,55 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0]);
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
+	//#line 19394: 18 sepfinder 64 sepfinder
 	this.stk[this.ptr++]=18;
 	var t=this.dstk.get("sepfinder");
-	if (t===undefined) throw new Error("dict: sepfinder: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=64;
 	var t=this.dstk.get("sepfinder");
-	if (t===undefined) throw new Error("dict: sepfinder: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	//#line 19395: 0 linheight rmoveto <<
 	this.stk[this.ptr++]=0;
 	var t=this.dstk.get("linheight");
-	if (t===undefined) throw new Error("dict: linheight: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var y=this.stk[--this.ptr];
 	this.rmoveto(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=Infinity;
-	this.stk[this.ptr++]="ren"; //ident
+	//#line 19396: /ren //renmatrix
+	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renmatrix");
-	if (t===undefined) throw new Error("//renmatrix: undefined");
 	this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]="pixs"; //ident
+	//#line 19397: /pixs sep
+	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("sep");
-	if (t===undefined) throw new Error("dict: sep: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]="pixx"; //ident
+	//#line 19398: /pixx sep length
+	this.stk[this.ptr++]="pixx";
 	var t=this.dstk.get("sep");
-	if (t===undefined) throw new Error("dict: sep: undefined");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
-	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
-	this.stk[this.ptr++]="pixy"; //ident
-	this.stk[this.ptr++]=1;
-	this.stk[this.ptr++]="height"; //ident
-	this.stk[this.ptr++]=1;
-	this.stk[this.ptr++]=72;
-	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]="width"; //ident
-	var t=this.dstk.get("sep");
-	if (t===undefined) throw new Error("dict: sep: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
+	//#line 19399: /pixy 1
+	this.stk[this.ptr++]="pixy";
+	this.stk[this.ptr++]=1;
+	//#line 19400: /height 1 72 div
+	this.stk[this.ptr++]="height";
+	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]="opt"; //ident
+	//#line 19401: /width sep length 72 div
+	this.stk[this.ptr++]="width";
+	var t=this.dstk.get("sep");
+	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
+	this.stk[this.ptr++]=72;
+	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
+	//#line 19402: /opt options
+	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	//#line 19403: >> //renmatrix exec
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -633,31 +671,29 @@ BWIPJS.bwipp["databaromnicomposite"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	var t=this.dstk.get("renmatrix");
-	if (t===undefined) throw new Error("//renmatrix: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
+	//#line 19406: -5 1 rmoveto comp options //gs1-cc exec //renmatrix exec
 	this.stk[this.ptr++]=-5;
 	this.stk[this.ptr++]=1;
 	var y=this.stk[--this.ptr];
 	this.rmoveto(this.stk[--this.ptr],y);
 	var t=this.dstk.get("comp");
-	if (t===undefined) throw new Error("dict: comp: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
-	if (t===undefined) throw new Error("dict: options: undefined");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("gs1-cc");
-	if (t===undefined) throw new Error("//gs1-cc: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
 	var t=this.dstk.get("renmatrix");
-	if (t===undefined) throw new Error("//renmatrix: undefined");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
+	//#line 19408: grestore
 	this.grestore();
+	//#line 19410: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
