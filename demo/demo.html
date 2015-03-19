@@ -1,0 +1,248 @@
+<!doctype html>
+<html><head><title>bwip-js - demo</title>
+<!--
+	Copyright (c) 2011-2015 Mark Warren.
+
+	See the LICENSE file in the bwip-js root directory
+	for the extended copyright notice.
+-->
+<!--
+	Notes about making the text fit nicely to your bar code.
+	1. Specify textxalign=center or textxalign=justify.
+	2. Specify the text as the alttext to bypass the built-in formatting.
+	3. If you specify textyalign=above and text has descenders (characters: gjpqy_|,; )
+	   specify textyoffset=1
+-->
+<style type="text/css">
+#menu th {
+	text-align:			right;
+	padding-right:		1.5ex;
+}
+#menu span.button {
+	border:				1px solid #000;
+	background-color:	#eee;
+	display:			inline-block;
+	height:				9px;
+	width:				15px;
+	position:			relative;
+	background-repeat:	no-repeat;
+	background-position:50% 50%;
+}
+#menu span.button.up {
+	top:				-5px;
+	left:				-5px;
+	background-image:	url(lib/up-arrow.gif);
+}
+#menu span.button.dn {
+	top:				6px;
+	left:				-26px;
+	background-image:	url(lib/dn-arrow.gif);
+}
+#menu span.button:hover {
+	background-color:	gold;
+	border:				1px solid orange;
+}
+#scale {
+	height:				16px;
+	width:				3ex;
+}
+</style>
+<script type="text/javascript" src="freetype.js"></script>
+<script type="text/javascript" src="bwip.js"></script>
+<script type="text/javascript" src="lib/jquery-1.4.1.js"></script>
+<script type="text/javascript" src="lib/symdesc.js"></script>
+<script type="text/javascript" src="lib/needyoffset.js"></script>
+<script type="text/javascript" src="lib/canvas.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	// Sort the symbols
+	symdesc.pop();	// remove the null last entry
+	symdesc.sort(function(a,b) {
+			 return (a.desc < b.desc ? -1 : 1);
+		});
+
+	// Create the select list
+	var sel = document.getElementById('symbol');
+	for (var i = 0; i < symdesc.length; i++) {	// last entry is null
+		var opt = document.createElement('option');
+		opt.text = symdesc[i].desc;
+		opt.value = i;
+		sel.add(opt, null);
+
+		if (location.search.indexOf('proofs=1') != -1) { 
+			// Add the images from the BWIPP online demo
+			var img = document.createElement('img');
+			img.src = 'proofs/' + symdesc[i].sym + '.png';
+			img.id  = 'proof-' + symdesc[i].sym;
+			img.style.visibility 	= 'hidden';
+			img.style.position		= 'absolute';
+			img.style.top			= '0px';
+			img.style.left			= '0px';
+			$('#proof').append(img);
+		}
+	}
+
+	$(sel).change(function(ev) {
+			var sym = symdesc[this.selectedIndex];
+			if (sym) {
+				$('#symtext').val(sym.text);
+				$('#symopts').val(sym.opts);
+
+				$('#proof img').css('visibility', 'hidden');
+			} else {
+				$('#symtext').val('');
+				$('#symopts').val('');
+			}
+			$('#symaltx').val('');
+		})
+		.trigger('change')
+		;
+
+
+
+	$('#menu span.button.up')
+		.click(function(ev) {
+			var inp = $('#scale');
+			var val = (parseFloat(inp.val())||1)+1;
+			inp.val(val > 10 ? 10 : val);
+			ev.stopImmediatePropagation();
+			ev.preventDefault();
+		})
+		.dblclick(function(ev) {
+			ev.stopImmediatePropagation();
+			ev.preventDefault();
+		})
+		.mousedown(function(ev) {
+			ev.stopImmediatePropagation();
+			ev.preventDefault();
+		})
+		;
+	$('#menu span.button.dn')
+		.click(function(ev) {
+			var inp = $('#scale');
+			var val = (parseFloat(inp.val())||1)-1;
+			inp.val(val <= 0 ? 1 : val);
+			ev.stopImmediatePropagation();
+			ev.preventDefault();
+		})
+		.dblclick(function(ev) {
+			ev.stopImmediatePropagation();
+			ev.preventDefault();
+		})
+		.mousedown(function(ev) {
+			ev.stopImmediatePropagation();
+			ev.preventDefault();
+		})
+		;
+
+});
+
+function render() {
+	var elt = symdesc[$('#symbol')[0].selectedIndex];
+	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
+
+	var bw = new BWIPJS;
+
+	$('#proof img').css('visibility', 'hidden');
+
+	// Convert the options to a dictionary object, so we can pass alttext with
+	// spaces.
+	var tmp = opts.split(' '); 
+	opts = {};
+	for (var i = 0; i < tmp.length; i++) {
+		if (!tmp[i])
+			continue;
+		var eq = tmp[i].indexOf('=');
+		if (eq == -1)
+			opts[tmp[i]] = bw.value(true);
+		else
+			opts[tmp[i].substr(0, eq)] = bw.value(tmp[i].substr(eq+1));
+	}
+
+	// Add the alternate text
+	if (altx)
+		opts.alttext = bw.value(altx);
+
+	// Add any hard-coded options required to fix problems in the javascript
+	// emulation. 
+	opts.inkspread = bw.value(0);
+
+	var rot  = 'N';
+	var rots = [ 'rotL', 'rotR', 'rotI' ];
+	for (var i = 0; i < rots.length; i++) {
+		if (document.getElementById(rots[i]).checked) {
+			rot = rots[i].charAt(3);
+			break;
+		}
+	}
+
+	bw.bitmap(new Bitmap);
+	
+	var scl = parseInt(document.getElementById('scale').value, 10) || 2;
+	bw.scale(scl,scl);
+
+	var div = document.getElementById('output');
+	if (div)
+		div.innerHTML = '';
+
+	bw.push(text);
+	bw.push(opts);
+
+	try {
+		bw.call(elt.sym);
+		bw.bitmap().show('canvas', rot);
+	} catch(e) {
+		if (typeof e === 'string') {
+			alert(e);
+		} else if (e.stack) {
+			alert(e.message + '\r\n' + e.stack);
+		} else {
+			var s = '';
+			if (e.fileName)
+				s += e.fileName + ' ';
+			if (e.lineNumber)
+				s += '[line ' + e.lineNumber + '] ';
+			alert(s + (s ? ': ' : '') + e.message);
+		}
+		return;
+	}
+
+	var img = document.getElementById('proof-' + elt.sym);
+	if (img && img.offsetWidth > 32) {
+		img.style.visibility = 'visible';
+	}
+}
+</script>
+</head><body>
+<div id="menu">
+<table border=0 cellpading=0 cellspacing=0><tr>
+<td>
+	<table border=0 cellpading=0 cellspacing=0>
+	<tr><th>Bar Code:<td><select id="symbol" style="width:64ex"></select>
+	<tr><th>Bar Text:<td><input id="symtext" type="text" style="width:63ex">
+	<tr><th>Alt Text:<td><input id="symaltx" type="text" style="width:63ex">
+	<tr><th>Options:<td><input id="symopts" type="text" style="width:63ex">
+	</table>
+<td style="padding-left:10mm">
+	<table border=0 cellpading=0 cellspacing=0>
+	<tr><th>Scale:<td><input type="text" id="scale" value=2>
+	<span class="button up"></span>
+	<span class="button dn"></span>
+	<tr><th>Rotate:<td>
+		<label for="rotN"><input type="radio" name="rot" value="N" id="rotN" checked>Normal</label>
+		<label for="rotR"><input type="radio" name="rot" value="R" id="rotR">90 CW</label>
+		<label for="rotL"><input type="radio" name="rot" value="L" id="rotL">90 CCW</label>
+		<label for="rotI"><input type="radio" name="rot" value="I" id="rotI">180</label>
+	<tr><td><br>
+	<tr><td><td><button onclick="render()">Show Barcode</button>
+	</table>
+<tr><td><br>
+</table>
+</div>
+<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+<div id="proof" style="position:relative;border:1px solid #fff"></div>
+<div id="output" style="white-space:pre"></div>
+</body>
+</html>
