@@ -43,16 +43,16 @@
 on previous versions, you must update the code in three areas.
 <ul>
 <li>First, bwip-js now uses fully asynchronous operations for loading the BWIPP modules.  When you call the encoder, you must specify a callback to receive the completion status.  Before:
-<pre><code>
+<pre>
 	try {
 		bw.call('code128')
 		bw.bitmap().show(...);
 	} catch (e) {
 		// handle error
 	}
-</code></pre>
+</pre>
 With the new asynchronous operation, the callback you provide may be invoked during or after the call to the encoder returns:
-<pre><code>
+<pre><
 	bw.call('code128', function (e) {
 			// If e is truthy, an error has occurred.
 			if (e) { 
@@ -61,7 +61,7 @@ With the new asynchronous operation, the callback you provide may be invoked dur
 				bw.bitmap().show(...);
 			}
 		});
-</code><pre>
+<pre>
 </li>
 <li>Second, the BWIPJS.load() function that the host environment must provide can
 choose to load the modules either synchronously or asynchronously.
@@ -71,8 +71,10 @@ Both methods will work with the new asynchronous framework.
 <code>set()</code> method to accept an alpha value as its third parameter.  The
 alpha value is identical to the HTML canvas concept of alpha where 0 is fully off and
 255 is fully on.  The new <code>set()</code> function prototype is:
-<pre><code>function set(x, y, a)</code><pre>
-The <code>x</code>, <code>y</code>, and <code>a</code> are always relative to the
+<pre>
+function set(x, y, a)
+</pre>
+The <var>x</var>, <var>y</var>, and <var>a</var> are always relative to the
 currently set color.
 </li>
 </ul>
@@ -80,18 +82,21 @@ currently set color.
 <h2>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
 
-<p>bwip-js is now pixel-for-pixel identical to using BWIPP with <a href="http://www.ghostscript.com/">ghostscript</a>.  The only significant difference is bwip-js's built-in use of the OCR-A and OCR-B fonts.  Barcodes and the OCR fonts are like chocolate and hazelnut; they were meant to be.  Unfortunately, most PostScript environments do not provide the OCR fonts and must fallback to Courier, Helvetica, and other less-than-ideal type faces.  As an example, take a look at the ISBN barcode on the back cover of any book.  The barcoded digits should be rendered in OCR-B, and the human-readable "ISBN" text above (sometimes below) the barcode is traditionally rendered in OCR-A.</p>
+<p>bwip-js is now pixel-for-pixel identical to using BWIPP with <a href="http://www.ghostscript.com/">ghostscript</a>.  The only significant difference is bwip-js's built-in use of the OCR-A and OCR-B fonts.  Barcodes and OCR fonts are like chocolate and hazelnut; they were meant to be.  Unfortunately, most PostScript environments do not provide the OCR fonts and must fallback to Courier, Helvetica, and other less-than-ideal type faces.  As an example, take a look at the ISBN barcode on the back cover of any book.  The barcode digits should be rendered in OCR-B, and the human-readable "ISBN" text above (sometimes below) the barcode is traditionally rendered in OCR-A.</p>
 
+<p>The new OCR fonts in bwip-js are implemented as follows:</p>
 <ul>
 <li>OCR-B is used as the default font for all barcodes.
 </li>
 <li>OCR-A is used for the human readable components of ISBN, ISMN and ISSN barcodes.
 </li>
 <li>These font choices are the defaults.  You can always override the font selection
-  using the built-in BWIPP options.  The fonts are known to the PostScript emulation
-  as "OCR-A" and "OCR-B".  For example, to use OCR-A as the human readable text with
-  a code128 barcode, you would specify the option:
-<pre><code>textfont=OCR-A</code></pre>
+using the built-in BWIPP options.  The fonts are known to the PostScript emulation
+as "OCR-A" and "OCR-B".  For example, to use OCR-A as the human readable text with
+a code128 barcode, you would specify the option:
+<pre>
+	textfont=OCR-A
+</pre>
 </li>
 </ul>
 
