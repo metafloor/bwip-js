@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>bwip-js</title>
+    <title>bwip-js // Barcode Writer in Pure JavaScript</title>
   </head>
 
   <body>
@@ -18,8 +18,7 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/metafloor/bwip-js">View on GitHub</a>
 
-          <h1 id="project_title">bwip-js</h1>
-          <h2 id="project_tagline">Barcode Writer in Pure JavaScript</h2>
+          <h1 id="project_title">bwip-js // Barcode Writer in Pure JavaScript</h1>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/metafloor/bwip-js/zipball/master">Download this project as a .zip file</a>
@@ -33,18 +32,34 @@
       <section id="main_content" class="inner">
         <p>bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any browser that natively supports the HTML canvas element or any JavaScript-based server framework that can implement a minimal bitmap graphics interface.</p>
 
-<p>An online demo of bwip-js that mirrors the functionality of the <a href="http://www.terryburton.co.uk/barcodewriter/generator/">web-based demo</a> provided by BWIPP is now available:<br><br><a href="demo/demo.html">demo</a></p>
+<p>An online demo of bwip-js that mirrors the functionality of the <a href="http://www.terryburton.co.uk/barcodewriter/generator/">web-based demo</a> provided by BWIPP is now available:<br><br><a href="demo/demo.html">bwip-js demo</a></p>
+
+<h2>
+<a id="new" class="anchor" href="#new"></a>New in bwip-js</h2>
+<p>bwip-js now implements an <a href="http://kripken.github.io/emscripten-site/index.html">emscripten compiled</a> version of the <a href="http://freetype.org">FreeType library</a>.</p>
+<p>Embedded with the FreeType library are open-source versions of the OCR-A and OCR-B fonts provided at the <a href="http://en.sourceforge.jp/projects/tsukurimashou/releases/">tsukurimashou Font Family</a> project.</p>
 
 <h2>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
 
-<p>bwip-js is almost feature complete.  At present, it lacks the following functionality that exists in BWIPP:</p>
+<p>bwip-js is now pixel-for-pixel identical to using BWIPP with <a href="http://www.ghostscript.com/">ghostscript</a>.  The only significant difference is bwip-js's built-in use of the OCR-A and OCR-B fonts.  Barcodes and the OCR fonts are like chocolate and hazelnut; they were meant to be.  Unfortunately, most PostScript environments do not provide the OCR fonts and must fallback to Courier, Helvetica, and other less-than-ideal type faces.  As an example, take a look at the ISBN barcode on the back cover of any book.  The barcoded digits should be rendered in OCR-B, and the human-readable "ISBN" text above (sometimes below) the barcode is traditionally rendered in OCR-A.</p>
 
 <ul>
-<li>Only orthogonal scaling is supported.
-<li>Rotations of 0, 90, 180, and 270 degrees are supported only in the HTML canvas demo.  There are no plans to implement rotation in the PostScript graphics emulation layer.</li>
-<li>Inkspread is currently hard-coded to 0 in the demo.  Setting it to other values may create non-compliant barcodes.</li>
+<li>OCR-B is used as the default font for all barcodes.
+</li>
+<li>OCR-A is used for the human readable components of ISBN, ISMN and ISSN barcodes.
+</li>
+<li>These font choices are the defaults.  You can always override the font selection
+  using the built-in BWIPP options.  The fonts are known to the PostScript emulation
+  as "OCR-A" and "OCR-B".  For example, to use OCR-A as the human readable text with
+  a code128 barcode, you would specify the option:
+<pre><code>
+  	textfont=OCR-A
+</code></pre>
+</li>
 </ul>
+
+<p>bwip-js is now considered feature complete.  Only minor enhancements and code re-gens to match BWIPP releases are planned at this time.</p>
 
 <p>bwip-js does <em>not</em> provide a general purpose PostScript emulation layer.  The emulation supports only the PostScript operators used by BWIPP.  The emulation is implemented as a cross-compiler that converts all non-graphics code to equivalent JavaScript, and converts all graphics operations to calls into a platform-neutral graphics context.  It is up to the host environment to implement the bitmap interface that is exposed by the graphics context.  An example implementation is provided in the demo. </p>
 
