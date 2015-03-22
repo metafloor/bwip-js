@@ -37,7 +37,45 @@
 <h2>
 <a id="new" class="anchor" href="#new"></a>New in bwip-js</h2>
 <p>bwip-js now implements an <a href="http://kripken.github.io/emscripten-site/index.html">emscripten compiled</a> version of the <a href="http://freetype.org">FreeType library</a>.</p>
-<p>Embedded with the FreeType library are open-source versions of the OCR-A and OCR-B fonts provided at the <a href="http://en.sourceforge.jp/projects/tsukurimashou/releases/">tsukurimashou Font Family</a> project.</p>
+<p>Embedded with the FreeType library are open-source versions of the OCR-A and OCR-B fonts provided at the <a href="http://en.sourceforge.jp/projects/tsukurimashou/releases/">Tsukurimashou Font Family</a> project.</p>
+
+<p>bwip-js version 0.8 is an API-breaking release.  If you have implemented code based
+on previous versions, you must update the code in three areas.
+<ul>
+<li>First, bwip-js now uses fully asynchronous operations for loading the BWIPP modules.  When you call the encoder, you must specify a callback to receive the completion status.  Before:
+<pre><code>
+	try {
+		bw.call('code128')
+		bw.bitmap().show(...);
+	} catch (e) {
+		// handle error
+	}
+</code></pre>
+With the new asynchronous operation, the callback you provide may be invoked during or after the call to the encoder returns:
+<pre><code>
+	bw.call('code128', function (e) {
+			// If e is truthy, an error has occurred.
+			if (e) { 
+				// handle error
+			} else {
+				bw.bitmap().show(...);
+			}
+		});
+</code><pre>
+</li>
+<li>Second, the BWIPJS.load() function that the host environment must provide can
+choose to load the modules either synchronously or asynchronously.
+Both methods will work with the new asynchronous framework.
+</li>
+<li>Finally, the Bitmap object provided by the host environment must modify its
+<code>set()</code> method to accept an alpha value as its third parameter.  The
+alpha value is identical to the HTML canvas concept of alpha where 0 is fully off and
+255 is fully on.  The new <code>set()</code> function prototype is:
+<pre><code>function set(x, y, a)</code><pre>
+The <code>x</code>, <code>y</code>, and <code>a</code> are always relative to the
+currently set color.
+</li>
+</ul>
 
 <h2>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -53,9 +91,7 @@
   using the built-in BWIPP options.  The fonts are known to the PostScript emulation
   as "OCR-A" and "OCR-B".  For example, to use OCR-A as the human readable text with
   a code128 barcode, you would specify the option:
-<pre><code>
-  	textfont=OCR-A
-</code></pre>
+<pre><code>textfont=OCR-A</code></pre>
 </li>
 </ul>
 
@@ -73,14 +109,14 @@
 <p>Unzip the download package.  bwip-js will be unpacked into the following directory structure:</p>
 
 <pre><code>bwip-js/
-    bwip.js         # Main bwip-js module
-    demo.html       # The in-browser demo
+	bwip.js         # Main bwip-js module
+	demo.html       # The in-browser demo
 	freetype.js		# The emscripten-compiled freetype library.
 	freetype.mem.js # Demand loaded memory intializer.
-    node-demo       # An example node-js HTTP server application
-    node-bwipjs     # A node-js module that implements bwip-js
-    bwipp/          # The cross-compiled BWIPP encoders and renderers
-    lib/            # Utilities required by the demo
+	node-demo       # An example node-js HTTP server application
+	node-bwipjs     # A node-js module that implements bwip-js
+	bwipp/          # The cross-compiled BWIPP encoders and renderers
+	lib/            # Utilities required by the demo
 </code></pre>
 
 <h2>
