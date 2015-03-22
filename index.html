@@ -42,26 +42,26 @@
 <p>bwip-js version 0.8 is an API-breaking release.  If you have implemented code based
 on previous versions, you must update the code in three areas.
 <ul>
-<li>First, bwip-js now uses fully asynchronous operations for loading the BWIPP modules.  When you call the encoder, you must specify a callback to receive the completion status.  Before:
+<li>First, bwip-js now uses fully asynchronous operations for loading the BWIPP modules.  When you call the encoder, you must specify a callback to receive the completion status.<br>Before:
 <pre>
-	try {
-		bw.call('code128')
-		bw.bitmap().show(...);
-	} catch (e) {
-		// handle error
-	}
+try {
+	bw.call('code128')
+	bw.bitmap().show(...);
+} catch (e) {
+	// handle error
+}
 </pre>
 With the new asynchronous operation, the callback you provide may be invoked during or after the call to the encoder returns:
-<pre><
-	bw.call('code128', function (e) {
-			// If e is truthy, an error has occurred.
-			if (e) { 
-				// handle error
-			} else {
-				bw.bitmap().show(...);
-			}
-		});
 <pre>
+bw.call('code128', function (e) {
+		// If e is truthy, an error has occurred.
+		if (e) { 
+			// handle error
+		} else {
+			bw.bitmap().show(...);
+		}
+	});
+</pre>
 </li>
 <li>Second, the BWIPJS.load() function that the host environment must provide can
 choose to load the modules either synchronously or asynchronously.
@@ -95,7 +95,7 @@ using the built-in BWIPP options.  The fonts are known to the PostScript emulati
 as "OCR-A" and "OCR-B".  For example, to use OCR-A as the human readable text with
 a code128 barcode, you would specify the option:
 <pre>
-	textfont=OCR-A
+textfont=OCR-A
 </pre>
 </li>
 </ul>
@@ -188,14 +188,14 @@ a code128 barcode, you would specify the option:
         <span class="pl-c">// Save as the current color</span>
         ...
     };
-    <span class="pl-s3">this</span>.<span class="pl-en">set</span> <span class="pl-k">=</span> <span class="pl-st">function</span>(<span class="pl-vpf">x</span>, <span class="pl-vpf">y</span>) {
-        <span class="pl-c">// x,y will be floating point values.  Convert to int.</span>
-        x <span class="pl-k">=</span> <span class="pl-s3">Math</span>.<span class="pl-s3">floor</span>(x);
-        y <span class="pl-k">=</span> <span class="pl-s3">Math</span>.<span class="pl-s3">floor</span>(y);
+    this.set = function(x, y, a) {
+        // x,y will be floating point values.  Convert to int.
+        x = Math.floor(x);
+        y = Math.floor(y);
 
-        <span class="pl-c">// Save the coordinates and current color</span>
+        // Save the coordinates, alpha, and current color
         ...
-        <span class="pl-c">// Track the min/max values of x and y</span>
+        // Track the min/max values of x and y
         ...
     };
     <span class="pl-s3">this</span>.<span class="pl-en">render</span> <span class="pl-k">=</span> <span class="pl-st">function</span>( ... ) {
@@ -247,9 +247,15 @@ opts.alttext     <span class="pl-k">=</span> bw.<span class="pl-sc">value</span>
 bw.<span class="pl-s3">push</span>(<span class="pl-s1"><span class="pl-pds">"</span>^FNC1001234567890<span class="pl-pds">"</span></span>);
 bw.<span class="pl-s3">push</span>(opts);
 
-<span class="pl-c">// Invoke the encoder and render the barcode</span>
-bw.<span class="pl-s3">call</span>(<span class="pl-s1"><span class="pl-pds">'</span>code128<span class="pl-pds">'</span></span>);
-bw.bitmap().render();</pre></div>
+// Invoke the encoder and render the barcode
+bw.call('code128', function (e) {
+	if (e) {
+		// handle error
+	} else {
+		bw.bitmap().render();
+	}
+});
+</pre></div>
 
 <h2>
 <a id="nodejs" class="anchor" href="#nodejs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Node.js</h2>
