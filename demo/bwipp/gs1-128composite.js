@@ -6,38 +6,43 @@
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2015 Terry Burton
 //
-// See the LICENSE file in the bwip.js root directory
+// See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 // BEGIN gs1-128composite
-if (!BWIPJS.bwipp["raiseerror"]) BWIPJS.load("bwipp/raiseerror.js");
-if (!BWIPJS.bwipp["gs1-128"]) BWIPJS.load("bwipp/gs1-128.js");
-if (!BWIPJS.bwipp["gs1-cc"]) BWIPJS.load("bwipp/gs1-cc.js");
-if (!BWIPJS.bwipp["renlinear"]) BWIPJS.load("bwipp/renlinear.js");
-if (!BWIPJS.bwipp["renmatrix"]) BWIPJS.load("bwipp/renmatrix.js");
+if (!BWIPJS.bwipp["raiseerror"] && BWIPJS.increfs("gs1-128composite", "raiseerror")) {
+	BWIPJS.load("bwipp/raiseerror.js");
+}
+if (!BWIPJS.bwipp["gs1-128"] && BWIPJS.increfs("gs1-128composite", "gs1-128")) {
+	BWIPJS.load("bwipp/gs1-128.js");
+}
+if (!BWIPJS.bwipp["gs1-cc"] && BWIPJS.increfs("gs1-128composite", "gs1-cc")) {
+	BWIPJS.load("bwipp/gs1-cc.js");
+}
+if (!BWIPJS.bwipp["renlinear"] && BWIPJS.increfs("gs1-128composite", "renlinear")) {
+	BWIPJS.load("bwipp/renlinear.js");
+}
+if (!BWIPJS.bwipp["renmatrix"] && BWIPJS.increfs("gs1-128composite", "renmatrix")) {
+	BWIPJS.load("bwipp/renmatrix.js");
+}
 BWIPJS.bwipp["gs1-128composite"]=function() {
-	this.dict["raiseerror"]=BWIPJS.bwipp["raiseerror"];
-	this.dict["gs1-128"]=BWIPJS.bwipp["gs1-128"];
-	this.dict["gs1-cc"]=BWIPJS.bwipp["gs1-cc"];
-	this.dict["renlinear"]=BWIPJS.bwipp["renlinear"];
-	this.dict["renmatrix"]=BWIPJS.bwipp["renmatrix"];
 	function $f0(){
-		//#line 20085: token false eq {exit} if dup length string cvs (=) search
+		//#line 20090: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 20086: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 20091: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 20086: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 20091: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 20085: token false eq {exit} if dup length string cvs (=) search
+		//#line 20090: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -75,7 +80,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 20086: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 20091: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -92,20 +97,20 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 20083: 1 dict begin
+		//#line 20088: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 20084: options {
+		//#line 20089: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 20087: } loop
+		//#line 20092: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 20088: currentdict end /options exch def
+		//#line 20093: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -113,41 +118,41 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 20090: options {def} forall
+		//#line 20095: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 20094: /linear exch def
+		//#line 20099: /linear exch def
 		this.stk[this.ptr++]="linear";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 20095: pop
+		//#line 20100: pop
 		this.ptr--;
-		//#line 20096: /comp exch def
+		//#line 20101: /comp exch def
 		this.stk[this.ptr++]="comp";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f7(){
-		//#line 20098: pop
+		//#line 20103: pop
 		this.ptr--;
 	}
 	function $f8(){
 	}
 	function $f9(){
-		//#line 20109: (sbs) get 0 exch {add} forall /linwidth exch def
+		//#line 20114: (sbs) get 0 exch {add} forall /linwidth exch def
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f10(){
-		//#line 20115: compsym (pixx) get 99 eq {(a)} {(c)} ifelse /linktype exch def 
+		//#line 20120: compsym (pixx) get 99 eq {(a)} {(c)} ifelse /linktype exch def 
 		this.stk[this.ptr++]=BWIPJS.psstring("a");
 	}
 	function $f11(){
-		//#line 20115: compsym (pixx) get 99 eq {(a)} {(c)} ifelse /linktype exch def 
+		//#line 20120: compsym (pixx) get 99 eq {(a)} {(c)} ifelse /linktype exch def 
 		this.stk[this.ptr++]=BWIPJS.psstring("c");
 	}
 	function $f12(){
-		//#line 20119: options (linkagea) true put
+		//#line 20124: options (linkagea) true put
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("linkagea");
@@ -156,7 +161,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 20120: options (linkagec) false put
+		//#line 20125: options (linkagec) false put
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("linkagec");
@@ -167,7 +172,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.ptr-=3;
 	}
 	function $f13(){
-		//#line 20122: options (linkagea) false put
+		//#line 20127: options (linkagea) false put
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("linkagea");
@@ -176,7 +181,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 20123: options (linkagec) true put
+		//#line 20128: options (linkagec) true put
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("linkagec");
@@ -189,23 +194,23 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	function $f14(){
 	}
 	function $f15(){
-		//#line 20132: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
+		//#line 20137: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
 		this.stk[this.ptr++]=1;
 	}
 	function $f16(){
-		//#line 20132: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
+		//#line 20137: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
 		this.stk[this.ptr++]=$f15;
 	}
 	function $f17(){
-		//#line 20132: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
+		//#line 20137: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
 		this.stk[this.ptr++]=0;
 	}
 	function $f18(){
-		//#line 20132: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
+		//#line 20137: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
 		this.stk[this.ptr++]=$f17;
 	}
 	function $f19(){
-		//#line 20132: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
+		//#line 20137: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
 		this.stk[this.ptr++]=1;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
@@ -230,12 +235,12 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		}
 	}
 	function $f20(){
-		//#line 20148: /x s p sub 1 sub 11 mul 10 add p 0 eq {2 add} if 99 sub def
+		//#line 20153: /x s p sub 1 sub 11 mul 10 add p 0 eq {2 add} if 99 sub def
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f21(){
-		//#line 20146: /s linwidth 2 sub 11 idiv def
+		//#line 20151: /s linwidth 2 sub 11 idiv def
 		this.stk[this.ptr++]="s";
 		var t=this.dstk.get("linwidth");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -244,7 +249,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr++]=11;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 20147: /p s 9 sub 2 idiv def
+		//#line 20152: /p s 9 sub 2 idiv def
 		this.stk[this.ptr++]="p";
 		var t=this.dstk.get("s");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -253,7 +258,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 20148: /x s p sub 1 sub 11 mul 10 add p 0 eq {2 add} if 99 sub def
+		//#line 20153: /x s p sub 1 sub 11 mul 10 add p 0 eq {2 add} if 99 sub def
 		this.stk[this.ptr++]="x";
 		var t=this.dstk.get("s");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -281,7 +286,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr++]=99;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 20149: x 1 rmoveto
+		//#line 20154: x 1 rmoveto
 		var t=this.dstk.get("x");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -289,29 +294,29 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.rmoveto(this.stk[--this.ptr],y);
 	}
 	function $f22(){
-		//#line 20151: -7 1 rmoveto 
+		//#line 20156: -7 1 rmoveto 
 		this.stk[this.ptr++]=-7;
 		this.stk[this.ptr++]=1;
 		var y=this.stk[--this.ptr];
 		this.rmoveto(this.stk[--this.ptr],y);
 	}
-	//#line 20074: 20 dict begin            % Confine variables to local scope
+	//#line 20079: 20 dict begin            % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 20076: /options exch def
+	//#line 20081: /options exch def
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20077: /barcode exch def
+	//#line 20082: /barcode exch def
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20079: /dontdraw false def
+	//#line 20084: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20082: options type /stringtype eq {
+	//#line 20087: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -321,12 +326,12 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 20089: } if
+	//#line 20094: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 20090: options {def} forall
+	//#line 20095: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -342,7 +347,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 20093: barcode (|) search {
+	//#line 20098: barcode (|) search {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("|");
@@ -357,9 +362,9 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr++]=true;
 	}
 	this.stk[this.ptr++]=$f6;
-	//#line 20097: } {
+	//#line 20102: } {
 	this.stk[this.ptr++]=$f7;
-	//#line 20099: } ifelse
+	//#line 20104: } ifelse
 	var t8=this.stk[--this.ptr];
 	var t9=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -367,9 +372,9 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	} else {
 		if (t8.call(this)==-1) return -1;
 	}
-	//#line 20101: gsave
+	//#line 20106: gsave
 	this.gsave();
-	//#line 20103: options (inkspread) (0) put
+	//#line 20108: options (inkspread) (0) put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("inkspread");
@@ -378,7 +383,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20104: options (dontdraw) true put
+	//#line 20109: options (dontdraw) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
@@ -387,7 +392,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20107: options (linkagea) true put
+	//#line 20112: options (linkagea) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("linkagea");
@@ -396,7 +401,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20108: linear << options {} forall >> //gs1-128 exec
+	//#line 20113: linear << options {} forall >> //gs1-128 exec
 	var t=this.dstk.get("linear");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=Infinity;
@@ -427,7 +432,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20109: (sbs) get 0 exch {add} forall /linwidth exch def
+	//#line 20114: (sbs) get 0 exch {add} forall /linwidth exch def
 	this.stk[this.ptr++]=BWIPJS.psstring("sbs");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 		this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
@@ -451,7 +456,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr++]="linwidth";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20112: options (lintype) (gs1-128) put
+	//#line 20117: options (lintype) (gs1-128) put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("lintype");
@@ -460,7 +465,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20113: options (linwidth) linwidth put
+	//#line 20118: options (linwidth) linwidth put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("linwidth");
@@ -470,7 +475,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20114: comp options //gs1-cc exec /compsym exch def
+	//#line 20119: comp options //gs1-cc exec /compsym exch def
 	var t=this.dstk.get("comp");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
@@ -482,7 +487,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr++]="compsym";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20115: compsym (pixx) get 99 eq {(a)} {(c)} ifelse /linktype exch def 
+	//#line 20120: compsym (pixx) get 99 eq {(a)} {(c)} ifelse /linktype exch def 
 	var t=this.dstk.get("compsym");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("pixx");
@@ -507,7 +512,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr++]="linktype";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20118: linktype (a) eq {
+	//#line 20123: linktype (a) eq {
 	var t=this.dstk.get("linktype");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("a");
@@ -516,9 +521,9 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f12;
-	//#line 20121: } {
+	//#line 20126: } {
 	this.stk[this.ptr++]=$f13;
-	//#line 20124: } ifelse
+	//#line 20129: } ifelse
 	var t18=this.stk[--this.ptr];
 	var t19=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -526,7 +531,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	} else {
 		if (t18.call(this)==-1) return -1;
 	}
-	//#line 20125: linear << options {} forall >> //gs1-128 exec
+	//#line 20130: linear << options {} forall >> //gs1-128 exec
 	var t=this.dstk.get("linear");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=Infinity;
@@ -557,7 +562,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20126: dup (sbs) get /linsbs exch def
+	//#line 20131: dup (sbs) get /linsbs exch def
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("sbs");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -567,7 +572,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr++]="linsbs";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20127: dup (bhs) get 0 get 72 mul /linheight exch def
+	//#line 20132: dup (bhs) get 0 get 72 mul /linheight exch def
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("bhs");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -584,14 +589,14 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr++]="linheight";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20128: //renlinear exec
+	//#line 20133: //renlinear exec
 	var t=this.dstk.get("renlinear");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20131: mark
+	//#line 20136: mark
 	this.stk[this.ptr++]=Infinity;
-	//#line 20132: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
+	//#line 20137: 1 linsbs {1 index 0 eq {{1}} {{0}} ifelse repeat} forall
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("linsbs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -608,7 +613,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 		}
 		if (t30.call(this)==-1) break;
 	}
-	//#line 20133: counttomark 1 sub array astore /sep exch def pop pop
+	//#line 20138: counttomark 1 sub array astore /sep exch def pop pop
 	for (var i=this.ptr-1; i>=0 && this.stk[i]!==Infinity; i--);
 	if (i==-1) throw "counttomark: underflow";
 	this.stk[this.ptr]=this.ptr-i-1;
@@ -626,36 +631,36 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.ptr--;
 	this.ptr--;
-	//#line 20134: 0 linheight rmoveto <<
+	//#line 20139: 0 linheight rmoveto <<
 	this.stk[this.ptr++]=0;
 	var t=this.dstk.get("linheight");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var y=this.stk[--this.ptr];
 	this.rmoveto(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=Infinity;
-	//#line 20135: /ren //renmatrix
+	//#line 20140: /ren //renmatrix
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renmatrix");
 	this.stk[this.ptr++]=t;
-	//#line 20136: /pixs sep
+	//#line 20141: /pixs sep
 	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 20137: /pixx sep length
+	//#line 20142: /pixx sep length
 	this.stk[this.ptr++]="pixx";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
-	//#line 20138: /pixy 1
+	//#line 20143: /pixy 1
 	this.stk[this.ptr++]="pixy";
 	this.stk[this.ptr++]=1;
-	//#line 20139: /height 1 72 div
+	//#line 20144: /height 1 72 div
 	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	//#line 20140: /width sep length 72 div
+	//#line 20145: /width sep length 72 div
 	this.stk[this.ptr++]="width";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -663,11 +668,11 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	//#line 20141: /opt options
+	//#line 20146: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 20142: >> //renmatrix exec
+	//#line 20147: >> //renmatrix exec
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -680,7 +685,7 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20145: linktype (a) eq {
+	//#line 20150: linktype (a) eq {
 	var t=this.dstk.get("linktype");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("a");
@@ -689,9 +694,9 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f21;
-	//#line 20150: } {
+	//#line 20155: } {
 	this.stk[this.ptr++]=$f22;
-	//#line 20152: } ifelse
+	//#line 20157: } ifelse
 	var t32=this.stk[--this.ptr];
 	var t33=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -699,17 +704,18 @@ BWIPJS.bwipp["gs1-128composite"]=function() {
 	} else {
 		if (t32.call(this)==-1) return -1;
 	}
-	//#line 20154: compsym //renmatrix exec
+	//#line 20159: compsym //renmatrix exec
 	var t=this.dstk.get("compsym");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("renmatrix");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20156: grestore
+	//#line 20161: grestore
 	this.grestore();
-	//#line 20158: end
+	//#line 20163: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
+BWIPJS.decrefs("gs1-128composite");
 // END OF gs1-128composite

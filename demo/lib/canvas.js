@@ -5,8 +5,14 @@
 // See the COPYRIGHT file in the bwip.js root directory
 // for the extended copyright notice.
 
-// With embedding in the browser, we load the symbols externally
-BWIPJS.load = function(path) {};
+// Dynamically load the script.  Each script has a built-in callback into the
+// BWIPJS object.
+BWIPJS.load = function(path) {
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = path;
+	document.head.appendChild(script);
+};
 
 BWIPJS.print = function(s) {
 	var div = document.getElementById('output');
@@ -14,38 +20,14 @@ BWIPJS.print = function(s) {
 		div.innerHTML += s.replace(/&/g,'&amp;').replace(/</g,'&lt;') + '<br>';
 };
 
-(function() {
-	var head = document.getElementsByTagName('head')[0];
-
-	function emit(s) {
-		var tag = document.createElement('script');
-		tag.type = 'text/javascript';
-		tag.src  = s + '.js';
-		head.appendChild(tag);
-	}
-
-	// Load all the encoders
-	for (var i = 0; i < symdesc.length; i++) {
-		if (!symdesc[i])	// last entry can be null
-			continue;
-		emit('bwipp/' + symdesc[i].sym);
-	}
-
-	// Non encoders
-	emit('bwipp/raiseerror');
-	emit('bwipp/renlinear');
-	emit('bwipp/renmatrix');
-	emit('bwipp/renmaximatrix');
-})();
-
 // Encapsulate the bitmap interface
 function Bitmap() {
 	var clr  = [0, 0, 0];
 	var pts  = [];
-	var minx = Infinity;	// min-x
-	var miny = Infinity;	// min-y
-	var maxx = 0;			// max-x
-	var maxy = 0;			// max-y
+	var minx = 0;	// min-x
+	var miny = 0;	// min-y
+	var maxx = 0;	// max-x
+	var maxy = 0;	// max-y
 
 	this.color = function(r, g, b) {
 		clr = [r, g, b];
@@ -55,8 +37,7 @@ function Bitmap() {
 	this.set = function(x,y,a) {
 		x = Math.floor(x);
 		y = Math.floor(y);
-		a = a === undefined ? 255 : a;
-		pts.push([ x,y,clr,a ]);
+		pts.push([ x, y, clr, a ]);
 		if (minx > x) minx = x;
 		if (miny > y) miny = y;
 		if (maxx < x) maxx = x;

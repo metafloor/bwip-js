@@ -6,7 +6,7 @@
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2015 Terry Burton
 //
-// See the LICENSE file in the bwip.js root directory
+// See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 // BEGIN raiseerror
 BWIPJS.bwipp["raiseerror"]=function() {
@@ -55,4 +55,5 @@ BWIPJS.bwipp["raiseerror"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	psstptr = this.ptr;
 }
+BWIPJS.decrefs("raiseerror");
 // END OF raiseerror

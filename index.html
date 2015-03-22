@@ -33,13 +33,8 @@
       <section id="main_content" class="inner">
         <p>bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any browser that natively supports the HTML canvas element or any JavaScript-based server framework that can implement a minimal bitmap graphics interface.</p>
 
-<p>Test of the online demo<br><br><a href="demo/demo.html">demo</a></p>
-
-<p>An in-browser demo is provided that mirrors the functionality of the <a href="http://www.terryburton.co.uk/barcodewriter/generator/">web-based demo</a> provided by BWIPP.</p>
-
-<p>To use the demo, download bwip-js and unpack it.  The download will install to the directory bwip-js.  Then open the file <code>bwip-js/demo.html</code> in your browser and start making barcodes.</p>
-
-<p>The latest versions - along with many older versions - of Google Chrome, Firefox, Opera and Safari work well with the demo.  Internet Explorer 8 and older will not work as they do not implement the canvas element.</p>
+<p>An online demo of bwip-js that mirrors the functionality of the <a href="http://www.terryburton.co.uk/barcodewriter/generator/">web-based demo</a> provided by BWIPP.</p>
+the is now available:<br><br><a href="demo/demo.html">demo</a></p>
 
 <h2>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -47,18 +42,12 @@
 <p>bwip-js is almost feature complete.  At present, it lacks the following functionality that exists in BWIPP:</p>
 
 <ul>
-<li>Minimal font support.  A public-domain, unencumbered version of the OCR-B typeface has been used to create a series of bitmapped fonts.  These fonts were sized to be compatible with the default 10pt and 12pt font sizes used by BWIPP.</li>
-<li>Only orthogonal scaling is supported.  This restriction is due to the use of bitmapped fonts.</li>
+<li>Only orthogonal scaling is supported.
 <li>Rotations of 0, 90, 180, and 270 degrees are supported only in the HTML canvas demo.  There are no plans to implement rotation in the PostScript graphics emulation layer.</li>
 <li>Inkspread is currently hard-coded to 0 in the demo.  Setting it to other values may create non-compliant barcodes.</li>
-<li>The DataMatrix barcodes do not match the size output by BWIPP (bwip-js barcodes are smaller).  You must use the scale setting to compensate.</li>
 </ul>
 
-<p>bwip-js does <em>not</em> provide a general purpose PostScript emulation layer.  If you came here hoping to find one, you are out of luck.  The PostScript emulation uses a translator that converts all non-graphics code to equivalent JavaScript, and converts all graphics operations to calls into a platform-neutral graphics context.  It is up to the host environment to implement the bitmap interface that is exposed by the graphics context.  An example implementation is provided in the demo. </p>
-
-<p>The PostScript to JavaScript cross-compiler is not included as part of this project; only the translated code is provided.  The cross-compiler is still in its infancy and implements a one-to-one, unoptimized translation of the stack-based PostScript operators.  There is a lot of opportunity to perform peephole optimization and other transforms that convert the code into more efficient JavaScript.</p>
-
-<p>Although the code is not as efficient as it could be, it is still surprisingly fast.  Only with math-intensive symbols (e.g. QRCode with a high level of error correction) is there any appreciable lag.</p>
+<p>bwip-js does <em>not</em> provide a general purpose PostScript emulation layer.  The emulation supports only the PostScript operators used by BWIPP.  The emulation is implemented as a cross-compiler that converts all non-graphics code to equivalent JavaScript, and converts all graphics operations to calls into a platform-neutral graphics context.  It is up to the host environment to implement the bitmap interface that is exposed by the graphics context.  An example implementation is provided in the demo. </p>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -72,10 +61,11 @@
 <pre><code>bwip-js/
     bwip.js         # Main bwip-js module
     demo.html       # The in-browser demo
+	freetype.js		# The emscripten-compiled freetype library.
+	freetype.mem.js # Demand loaded memory intializer.
     node-demo       # An example node-js HTTP server application
     node-bwipjs     # A node-js module that implements bwip-js
     bwipp/          # The cross-compiled BWIPP encoders and renderers
-    fonts/          # JavaScript-encoded font files
     lib/            # Utilities required by the demo
 </code></pre>
 
@@ -213,7 +203,7 @@ bw.bitmap().render();</pre></div>
 I am not a node developer and there are others who are providing npm packages of bwip-js.
 </code></pre>
 
-<p>Due to the asynchronous architecture of <a href="http://nodejs.org">Node.js</a>, integrating bwip-js for use in Node is not a straightforward task.  Included in the bwip-js download (starting with version 0.2) is a fully functional Node module that implements a standard HTTP request handler.  The included example server application demonstrates its usage:</p>
+<p>As of bwip-js version 0.8, fully asynchronous, demand-loading of the BWIPP files is now supported.  Included in the bwip-js download is a fully functional Node module that implements a standard HTTP request handler.  The included example server application demonstrates its usage:</p>
 
 <div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> http <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>);
 <span class="pl-s">var</span> bwipjs <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>./node-bwipjs<span class="pl-pds">'</span></span>);

@@ -6,34 +6,37 @@
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2015 Terry Burton
 //
-// See the LICENSE file in the bwip.js root directory
+// See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 // BEGIN pdf417compact
-if (!BWIPJS.bwipp["raiseerror"]) BWIPJS.load("bwipp/raiseerror.js");
-if (!BWIPJS.bwipp["renmatrix"]) BWIPJS.load("bwipp/renmatrix.js");
-if (!BWIPJS.bwipp["pdf417"]) BWIPJS.load("bwipp/pdf417.js");
+if (!BWIPJS.bwipp["raiseerror"] && BWIPJS.increfs("pdf417compact", "raiseerror")) {
+	BWIPJS.load("bwipp/raiseerror.js");
+}
+if (!BWIPJS.bwipp["renmatrix"] && BWIPJS.increfs("pdf417compact", "renmatrix")) {
+	BWIPJS.load("bwipp/renmatrix.js");
+}
+if (!BWIPJS.bwipp["pdf417"] && BWIPJS.increfs("pdf417compact", "pdf417")) {
+	BWIPJS.load("bwipp/pdf417.js");
+}
 BWIPJS.bwipp["pdf417compact"]=function() {
-	this.dict["raiseerror"]=BWIPJS.bwipp["raiseerror"];
-	this.dict["renmatrix"]=BWIPJS.bwipp["renmatrix"];
-	this.dict["pdf417"]=BWIPJS.bwipp["pdf417"];
 	function $f0(){
-		//#line 13656: token false eq {exit} if dup length string cvs (=) search
+		//#line 13661: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 13657: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 13662: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 13657: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 13662: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 13656: token false eq {exit} if dup length string cvs (=) search
+		//#line 13661: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,7 +74,7 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 13657: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 13662: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -88,20 +91,20 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 13654: 1 dict begin
+		//#line 13659: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 13655: options {
+		//#line 13660: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 13658: } loop
+		//#line 13663: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 13659: currentdict end /options exch def
+		//#line 13664: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -109,26 +112,26 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 13661: options {def} forall
+		//#line 13666: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	//#line 13645: 20 dict begin                 % Confine variables to local scope
+	//#line 13650: 20 dict begin                 % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 13647: /options exch def       % We are given an option string
+	//#line 13652: /options exch def       % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 13648: /barcode exch def       % We are given a barcode string
+	//#line 13653: /barcode exch def       % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 13650: /dontdraw false def
+	//#line 13655: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 13653: options type /stringtype eq {
+	//#line 13658: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -138,12 +141,12 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 13660: } if
+	//#line 13665: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 13661: options {def} forall
+	//#line 13666: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -159,7 +162,7 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 13664: options (dontdraw) true put
+	//#line 13669: options (dontdraw) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
@@ -168,7 +171,7 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 13665: options (compact) true put
+	//#line 13670: options (compact) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("compact");
@@ -177,7 +180,7 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 13667: /args barcode options //pdf417 exec def
+	//#line 13672: /args barcode options //pdf417 exec def
 	this.stk[this.ptr++]="args";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -188,7 +191,7 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 13669: args (opt) options put
+	//#line 13674: args (opt) options put
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("opt");
@@ -198,10 +201,10 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 13670: args
+	//#line 13675: args
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 13672: dontdraw not //renmatrix if
+	//#line 13677: dontdraw not //renmatrix if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -212,8 +215,9 @@ BWIPJS.bwipp["pdf417compact"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t8.call(this)==-1) return -1;
 	}
-	//#line 13674: end
+	//#line 13679: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
+BWIPJS.decrefs("pdf417compact");
 // END OF pdf417compact
