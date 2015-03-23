@@ -6,27 +6,28 @@
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2015 Terry Burton
 //
-// See the LICENSE file in the bwip.js root directory
+// See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 // BEGIN renmaximatrix
-if (!BWIPJS.bwipp["raiseerror"]) BWIPJS.load("bwipp/raiseerror.js");
+if (!BWIPJS.bwipp["raiseerror"] && BWIPJS.increfs("renmaximatrix", "raiseerror")) {
+	BWIPJS.load("bwipp/raiseerror.js");
+}
 BWIPJS.bwipp["renmaximatrix"]=function() {
-	this.dict["raiseerror"]=BWIPJS.bwipp["raiseerror"];
 	function $f0(){
-		//#line 400: args {def} forall
+		//#line 406: args {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f1(){
-		//#line 401: opt {def} forall
+		//#line 407: opt {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 410: (<      >) 8 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setrgbcolor
+		//#line 416: (<      >) 8 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setrgbcolor
 		this.stk[this.ptr++]=255;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f3(){
-		//#line 410: (<      >) 8 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setrgbcolor
+		//#line 416: (<      >) 8 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setrgbcolor
 		this.stk[this.ptr++]=BWIPJS.psstring("<      >");
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
@@ -66,12 +67,12 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f4(){
-		//#line 413: (<        >) 10 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setcmykcolor
+		//#line 419: (<        >) 10 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setcmykcolor
 		this.stk[this.ptr++]=255;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f5(){
-		//#line 413: (<        >) 10 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setcmykcolor
+		//#line 419: (<        >) 10 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setcmykcolor
 		this.stk[this.ptr++]=BWIPJS.psstring("<        >");
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
@@ -111,11 +112,11 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		this.ptr-=4;
 	}
 	function $f6(){
-		//#line 408: /anycolor exch def
+		//#line 414: /anycolor exch def
 		this.stk[this.ptr++]="anycolor";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 409: anycolor length 6 eq {
+		//#line 415: anycolor length 6 eq {
 		var t=this.dstk.get("anycolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -126,12 +127,12 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f3;
-		//#line 411: } if
+		//#line 417: } if
 		var t9=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t9.call(this)==-1) return -1;
 		}
-		//#line 412: anycolor length 8 eq {
+		//#line 418: anycolor length 8 eq {
 		var t=this.dstk.get("anycolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -142,14 +143,14 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f5;
-		//#line 414: } if
+		//#line 420: } if
 		var t13=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t13.call(this)==-1) return -1;
 		}
 	}
 	function $f7(){
-		//#line 424: backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if 
+		//#line 430: backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if 
 		this.gsave();
 		var t=this.dstk.get("backgroundcolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -159,40 +160,40 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		this.grestore();
 	}
 	function $f8(){
-		//#line 425: barcolor (unset) ne { barcolor setanycolor } if
+		//#line 431: barcolor (unset) ne { barcolor setanycolor } if
 		var t=this.dstk.get("barcolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setanycolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f9(){
-		//#line 434: y 2 mod 0 eq {x} {x 0.5 add} ifelse
+		//#line 440: y 2 mod 0 eq {x} {x 0.5 add} ifelse
 		var t=this.dstk.get("x");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f10(){
-		//#line 434: y 2 mod 0 eq {x} {x 0.5 add} ifelse
+		//#line 440: y 2 mod 0 eq {x} {x 0.5 add} ifelse
 		var t=this.dstk.get("x");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0.5;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f11(){
-		//#line 431: dup 
+		//#line 437: dup 
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		//#line 432: /x exch 30 mod def 
+		//#line 438: /x exch 30 mod def 
 		this.stk[this.ptr++]="x";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=30;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 433: /y exch 30 idiv def
+		//#line 439: /y exch 30 idiv def
 		this.stk[this.ptr++]="y";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=30;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 434: y 2 mod 0 eq {x} {x 0.5 add} ifelse
+		//#line 440: y 2 mod 0 eq {x} {x 0.5 add} ifelse
 		var t=this.dstk.get("y");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -211,71 +212,71 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		} else {
 			if (t16.call(this)==-1) return -1;
 		}
-		//#line 435: 32 y sub 0.8661 mul
+		//#line 441: 32 y sub 0.8661 mul
 		this.stk[this.ptr++]=32;
 		var t=this.dstk.get("y");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0.8661;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		//#line 436: moveto
+		//#line 442: moveto
 		var y=this.stk[--this.ptr];
 		this.moveto(this.stk[--this.ptr],y);
-		//#line 437: 0     0.5774 rmoveto
+		//#line 443: 0     0.5774 rmoveto
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=0.5774;
 		var y=this.stk[--this.ptr];
 		this.rmoveto(this.stk[--this.ptr],y);
-		//#line 438: -0.5 -0.2887 rlineto
+		//#line 444: -0.5 -0.2887 rlineto
 		this.stk[this.ptr++]=-0.5;
 		this.stk[this.ptr++]=-0.2887;
 		var y=this.stk[--this.ptr];
 		this.rlineto(this.stk[--this.ptr],y);
-		//#line 439: 0    -0.5774 rlineto
+		//#line 445: 0    -0.5774 rlineto
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=-0.5774;
 		var y=this.stk[--this.ptr];
 		this.rlineto(this.stk[--this.ptr],y);
-		//#line 440: 0.5  -0.2887 rlineto
+		//#line 446: 0.5  -0.2887 rlineto
 		this.stk[this.ptr++]=0.5;
 		this.stk[this.ptr++]=-0.2887;
 		var y=this.stk[--this.ptr];
 		this.rlineto(this.stk[--this.ptr],y);
-		//#line 441: 0.5   0.2887 rlineto
+		//#line 447: 0.5   0.2887 rlineto
 		this.stk[this.ptr++]=0.5;
 		this.stk[this.ptr++]=0.2887;
 		var y=this.stk[--this.ptr];
 		this.rlineto(this.stk[--this.ptr],y);
-		//#line 442: 0     0.5774 rlineto
+		//#line 448: 0     0.5774 rlineto
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=0.5774;
 		var y=this.stk[--this.ptr];
 		this.rlineto(this.stk[--this.ptr],y);
-		//#line 443: -0.5  0.2887 rlineto
+		//#line 449: -0.5  0.2887 rlineto
 		this.stk[this.ptr++]=-0.5;
 		this.stk[this.ptr++]=0.2887;
 		var y=this.stk[--this.ptr];
 		this.rlineto(this.stk[--this.ptr],y);
-		//#line 444: closepath
+		//#line 450: closepath
 		this.closepath();
 	}
-	//#line 391: 20 dict begin
+	//#line 397: 20 dict begin
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 393: /args exch def   % We are given some arguments
+	//#line 399: /args exch def   % We are given some arguments
 	this.stk[this.ptr++]="args";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 396: /barcolor (unset) def
+	//#line 402: /barcolor (unset) def
 	this.stk[this.ptr++]="barcolor";
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 397: /backgroundcolor (unset) def
+	//#line 403: /backgroundcolor (unset) def
 	this.stk[this.ptr++]="backgroundcolor";
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 400: args {def} forall
+	//#line 406: args {def} forall
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f0;
@@ -291,7 +292,7 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		}
 		if (t2.call(this)==-1) break;
 	}
-	//#line 401: opt {def} forall
+	//#line 407: opt {def} forall
 	var t=this.dstk.get("opt");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f1;
@@ -307,35 +308,35 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		}
 		if (t5.call(this)==-1) break;
 	}
-	//#line 403: /barcolor barcolor cvlit def
+	//#line 409: /barcolor barcolor cvlit def
 	this.stk[this.ptr++]="barcolor";
 	var t=this.dstk.get("barcolor");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 404: /backgroundcolor backgroundcolor cvlit def
+	//#line 410: /backgroundcolor backgroundcolor cvlit def
 	this.stk[this.ptr++]="backgroundcolor";
 	var t=this.dstk.get("backgroundcolor");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 407: /setanycolor {
+	//#line 413: /setanycolor {
 	this.stk[this.ptr++]="setanycolor";
 	this.stk[this.ptr++]=$f6;
-	//#line 415: } bind def
+	//#line 421: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 417: gsave
+	//#line 423: gsave
 	this.gsave();
-	//#line 419: currentpoint translate
+	//#line 425: currentpoint translate
 	var t=this.currentpoint();
 	this.stk[this.ptr++]=t.x;
 	this.stk[this.ptr++]=t.y;
 	var y=this.stk[--this.ptr];
 	this.translate(this.stk[--this.ptr],y);
-	//#line 421: 2.4945 dup scale  % from 1pt to 1.88mm
+	//#line 427: 2.4945 dup scale  % from 1pt to 1.88mm
 	this.stk[this.ptr++]=2.4945;
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	var y=this.stk[--this.ptr];
 	this.scale(this.stk[--this.ptr],y);
-	//#line 423: 0 0 moveto 30 0 lineto 30 29 lineto 0 29 lineto closepath
+	//#line 429: 0 0 moveto 30 0 lineto 30 29 lineto 0 29 lineto closepath
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=0;
 	var y=this.stk[--this.ptr];
@@ -353,7 +354,7 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	var y=this.stk[--this.ptr];
 	this.lineto(this.stk[--this.ptr],y);
 	this.closepath();
-	//#line 424: backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if 
+	//#line 430: backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if 
 	var t=this.dstk.get("backgroundcolor");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
@@ -366,7 +367,7 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t14.call(this)==-1) return -1;
 	}
-	//#line 425: barcolor (unset) ne { barcolor setanycolor } if
+	//#line 431: barcolor (unset) ne { barcolor setanycolor } if
 	var t=this.dstk.get("barcolor");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
@@ -379,18 +380,18 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t15.call(this)==-1) return -1;
 	}
-	//#line 427: 0.5 0.5774 translate
+	//#line 433: 0.5 0.5774 translate
 	this.stk[this.ptr++]=0.5;
 	this.stk[this.ptr++]=0.5774;
 	var y=this.stk[--this.ptr];
 	this.translate(this.stk[--this.ptr],y);
-	//#line 429: newpath
+	//#line 435: newpath
 	this.newpath();
-	//#line 430: pixs {
+	//#line 436: pixs {
 	var t=this.dstk.get("pixs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f11;
-	//#line 445: } forall
+	//#line 451: } forall
 	var t20=this.stk[--this.ptr];
 	var t19=this.stk[--this.ptr];
 	for (t18 in t19) {
@@ -403,9 +404,9 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		}
 		if (t20.call(this)==-1) break;
 	}
-	//#line 446: fill
+	//#line 452: fill
 	this.fill();
-	//#line 449: newpath 14 13.8576 0.5774 0 360 arc closepath
+	//#line 455: newpath 14 13.8576 0.5774 0 360 arc closepath
 	this.newpath();
 	this.stk[this.ptr++]=14;
 	this.stk[this.ptr++]=13.8576;
@@ -414,7 +415,7 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	this.stk[this.ptr++]=360;
 	this.arc(this.stk[this.ptr-5],this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1],true); this.ptr-=5;
 	this.closepath();
-	//#line 450: 14 13.8576 1.3359 360 0 arcn closepath fill
+	//#line 456: 14 13.8576 1.3359 360 0 arcn closepath fill
 	this.stk[this.ptr++]=14;
 	this.stk[this.ptr++]=13.8576;
 	this.stk[this.ptr++]=1.3359;
@@ -423,7 +424,7 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	this.arc(this.stk[this.ptr-5],this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1],false); this.ptr-=5;
 	this.closepath();
 	this.fill();
-	//#line 451: newpath 14 13.8576 2.1058 0 360 arc closepath
+	//#line 457: newpath 14 13.8576 2.1058 0 360 arc closepath
 	this.newpath();
 	this.stk[this.ptr++]=14;
 	this.stk[this.ptr++]=13.8576;
@@ -432,7 +433,7 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	this.stk[this.ptr++]=360;
 	this.arc(this.stk[this.ptr-5],this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1],true); this.ptr-=5;
 	this.closepath();
-	//#line 452: 14 13.8576 2.8644 360 0 arcn closepath fill
+	//#line 458: 14 13.8576 2.8644 360 0 arcn closepath fill
 	this.stk[this.ptr++]=14;
 	this.stk[this.ptr++]=13.8576;
 	this.stk[this.ptr++]=2.8644;
@@ -441,7 +442,7 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	this.arc(this.stk[this.ptr-5],this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1],false); this.ptr-=5;
 	this.closepath();
 	this.fill();
-	//#line 453: newpath 14 13.8576 3.6229 0 360 arc closepath
+	//#line 459: newpath 14 13.8576 3.6229 0 360 arc closepath
 	this.newpath();
 	this.stk[this.ptr++]=14;
 	this.stk[this.ptr++]=13.8576;
@@ -450,7 +451,7 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	this.stk[this.ptr++]=360;
 	this.arc(this.stk[this.ptr-5],this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1],true); this.ptr-=5;
 	this.closepath();
-	//#line 454: 14 13.8576 4.3814 360 0 arcn closepath fill
+	//#line 460: 14 13.8576 4.3814 360 0 arcn closepath fill
 	this.stk[this.ptr++]=14;
 	this.stk[this.ptr++]=13.8576;
 	this.stk[this.ptr++]=4.3814;
@@ -459,10 +460,11 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	this.arc(this.stk[this.ptr-5],this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1],false); this.ptr-=5;
 	this.closepath();
 	this.fill();
-	//#line 456: grestore
+	//#line 462: grestore
 	this.grestore();
-	//#line 458: end
+	//#line 464: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
+BWIPJS.decrefs("renmaximatrix");
 // END OF renmaximatrix

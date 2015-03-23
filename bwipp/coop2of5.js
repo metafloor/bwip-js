@@ -6,34 +6,37 @@
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2015 Terry Burton
 //
-// See the LICENSE file in the bwip.js root directory
+// See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 // BEGIN coop2of5
-if (!BWIPJS.bwipp["raiseerror"]) BWIPJS.load("bwipp/raiseerror.js");
-if (!BWIPJS.bwipp["renlinear"]) BWIPJS.load("bwipp/renlinear.js");
-if (!BWIPJS.bwipp["code2of5"]) BWIPJS.load("bwipp/code2of5.js");
+if (!BWIPJS.bwipp["raiseerror"] && BWIPJS.increfs("coop2of5", "raiseerror")) {
+	BWIPJS.load("bwipp/raiseerror.js");
+}
+if (!BWIPJS.bwipp["renlinear"] && BWIPJS.increfs("coop2of5", "renlinear")) {
+	BWIPJS.load("bwipp/renlinear.js");
+}
+if (!BWIPJS.bwipp["code2of5"] && BWIPJS.increfs("coop2of5", "code2of5")) {
+	BWIPJS.load("bwipp/code2of5.js");
+}
 BWIPJS.bwipp["coop2of5"]=function() {
-	this.dict["raiseerror"]=BWIPJS.bwipp["raiseerror"];
-	this.dict["renlinear"]=BWIPJS.bwipp["renlinear"];
-	this.dict["code2of5"]=BWIPJS.bwipp["code2of5"];
 	function $f0(){
-		//#line 7027: token false eq {exit} if dup length string cvs (=) search
+		//#line 7032: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 7028: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 7033: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 7028: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 7033: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 7027: token false eq {exit} if dup length string cvs (=) search
+		//#line 7032: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,7 +74,7 @@ BWIPJS.bwipp["coop2of5"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 7028: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 7033: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -88,20 +91,20 @@ BWIPJS.bwipp["coop2of5"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 7025: 1 dict begin
+		//#line 7030: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 7026: options {
+		//#line 7031: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 7029: } loop
+		//#line 7034: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 7030: currentdict end /options exch def
+		//#line 7035: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -109,50 +112,50 @@ BWIPJS.bwipp["coop2of5"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 7032: options {def} forall
+		//#line 7037: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	//#line 7010: 20 dict begin            % Confine variables to local scope
+	//#line 7015: 20 dict begin            % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 7012: /options exch def  % We are given an option string
+	//#line 7017: /options exch def  % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7013: /barcode exch def  % We are given a barcode string
+	//#line 7018: /barcode exch def  % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7015: /dontdraw false def
+	//#line 7020: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7016: /includetext false def    % Enable/disable text
+	//#line 7021: /includetext false def    % Enable/disable text
 	this.stk[this.ptr++]="includetext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7017: /textfont /Courier def
+	//#line 7022: /textfont /Courier def
 	this.stk[this.ptr++]="textfont";
 	this.stk[this.ptr++]="Courier";
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7018: /textsize 10 def
+	//#line 7023: /textsize 10 def
 	this.stk[this.ptr++]="textsize";
 	this.stk[this.ptr++]=10;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7019: /textxoffset 0 def
+	//#line 7024: /textxoffset 0 def
 	this.stk[this.ptr++]="textxoffset";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7020: /textyoffset -8 def
+	//#line 7025: /textyoffset -8 def
 	this.stk[this.ptr++]="textyoffset";
 	this.stk[this.ptr++]=-8;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7021: /height 1 def
+	//#line 7026: /height 1 def
 	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7024: options type /stringtype eq {
+	//#line 7029: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -162,12 +165,12 @@ BWIPJS.bwipp["coop2of5"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 7031: } if
+	//#line 7036: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 7032: options {def} forall
+	//#line 7037: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -183,36 +186,36 @@ BWIPJS.bwipp["coop2of5"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 7034: /textfont textfont cvlit def
+	//#line 7039: /textfont textfont cvlit def
 	this.stk[this.ptr++]="textfont";
 	var t=this.dstk.get("textfont");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7035: /textsize textsize cvr def
+	//#line 7040: /textsize textsize cvr def
 	this.stk[this.ptr++]="textsize";
 	var t=this.dstk.get("textsize");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7036: /textxoffset textxoffset cvr def
+	//#line 7041: /textxoffset textxoffset cvr def
 	this.stk[this.ptr++]="textxoffset";
 	var t=this.dstk.get("textxoffset");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7037: /textyoffset textyoffset cvr def
+	//#line 7042: /textyoffset textyoffset cvr def
 	this.stk[this.ptr++]="textyoffset";
 	var t=this.dstk.get("textyoffset");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7038: /height height cvr def 
+	//#line 7043: /height height cvr def 
 	this.stk[this.ptr++]="height";
 	var t=this.dstk.get("height");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7041: options (dontdraw) true put
+	//#line 7046: options (dontdraw) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
@@ -221,7 +224,7 @@ BWIPJS.bwipp["coop2of5"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 7042: options (version) (coop) put
+	//#line 7047: options (version) (coop) put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("version");
@@ -230,7 +233,7 @@ BWIPJS.bwipp["coop2of5"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 7044: /args barcode options //code2of5 exec def
+	//#line 7049: /args barcode options //code2of5 exec def
 	this.stk[this.ptr++]="args";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -241,7 +244,7 @@ BWIPJS.bwipp["coop2of5"]=function() {
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 7046: args (opt) options put
+	//#line 7051: args (opt) options put
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("opt");
@@ -251,10 +254,10 @@ BWIPJS.bwipp["coop2of5"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 7047: args
+	//#line 7052: args
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 7049: dontdraw not //renlinear if
+	//#line 7054: dontdraw not //renlinear if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -265,8 +268,9 @@ BWIPJS.bwipp["coop2of5"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t8.call(this)==-1) return -1;
 	}
-	//#line 7051: end
+	//#line 7056: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
+BWIPJS.decrefs("coop2of5");
 // END OF coop2of5

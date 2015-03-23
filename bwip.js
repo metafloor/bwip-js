@@ -1,4 +1,4 @@
-// file: bwip.js
+// file: bwip.js)
 //
 // Copyright (c) 2011-2015 Mark Warren
 //
@@ -6,7 +6,7 @@
 // for the extended copyright notice.
 
 // The one and only global - our class constructor
-function BWIPJS() {
+var BWIPJS = function() {
 	
 	// PostScript state
 	this.ptr	= 0;				// operand stack pointer
@@ -23,7 +23,9 @@ function BWIPJS() {
 				return this[i][id];
 			}
 		}
-		throw new Error('dict: ' + id + ': undefined');
+		if (BWIPJS.bwipp[id])
+			return BWIPJS.bwipp[id];
+		throw new Error('dict: ' + id + ': --undefined--');
 	}
 
 	// Initialize the graphics 
@@ -35,19 +37,65 @@ function BWIPJS() {
 	this.dict.handleerror = function() {
 		// errorinfo is the message
 		// errorname is the name of the function
-		// Do not use an Error() object - makes the message too messy.
+		// Don't use an Error object - keeps the message cleaner
 		throw '[' + $error.errorname.toString() + ']\r\n\r\n' +
 			  $error.errorinfo.toString();
 	}
+
 }
 
-// Objects for globally registering the encoders and fonts
-BWIPJS.bwipp = {};
-BWIPJS.fonts = {};
+BWIPJS.bwipp = {};		// BWIPP encoders and renderers
+BWIPJS.queue = {};		// Instances waiting for loading to finish
+
+BWIPJS.increfs = function(module, depend) {
+	if (BWIPJS.queue[depend] && BWIPJS.queue[depend].length)
+		return false;
+	if (!BWIPJS.queue[depend])
+		BWIPJS.queue[depend] = [];
+	if (BWIPJS.queue[module]) {
+		// Queue entries are [ refs, encoder, this, callback ]
+		var queue = BWIPJS.queue[module];
+		for (var i = 0; i < queue.length; i++) {
+			queue[i][0]++;
+			BWIPJS.queue[depend].push(queue[i]);
+		}
+	}
+	return true;
+}
+BWIPJS.decrefs = function(module) {
+	if (BWIPJS.queue[module]) {
+		var queue = BWIPJS.queue[module];
+		for (var i = 0; i < queue.length; i++) {
+			if (--queue[i][0] == 0) {
+				var name = queue[i][1];
+				var that = queue[i][2];
+
+				// Call the encoder
+				try {
+					BWIPJS.bwipp[name].call(that);
+					if (queue[i][3])
+						queue[i][3]();
+				} catch (e) {
+					if (queue[i][3])
+						queue[i][3](e);
+					continue;
+				}
+			}
+		}
+		delete BWIPJS.queue[module];
+	}
+}
+
+// FreeType interface
+BWIPJS.ft_bitmap = Module.cwrap("get_bitmap", 'number', ['number','number','number']);
+BWIPJS.ft_width	 = Module.cwrap("get_width", 'number', []);
+BWIPJS.ft_height = Module.cwrap("get_height", 'number', []);
+BWIPJS.ft_left	 = Module.cwrap("get_left", 'number', []);
+BWIPJS.ft_top    = Module.cwrap("get_top", 'number', []);
+BWIPJS.ft_advance= Module.cwrap("get_advance", 'number', []);
 
 // Host-specific overrides
-BWIPJS.print = function(s) {};
-BWIPJS.debug = function(s) { /*console.log(''+s);*/ };
+BWIPJS.debug = function(s) { return; console.log(''+s); };
 BWIPJS.logapi = function(fn, args) {
 	return;
 	var s = fn + '(';
@@ -281,11 +329,10 @@ BWIPJS.prototype.bitmap = function(bmap) {
 		return this.bmap;
 	this.bmap = bmap;
 }
-
 // operators print, =, and == are all tied to this
 BWIPJS.prototype.print = function(s) {
 	console.log(''+s);
-}
+};
 
 // Converts a javascript value into a postscript value
 BWIPJS.prototype.value = function(v) {
@@ -312,19 +359,27 @@ BWIPJS.prototype.pop = function() {
 	return this.stk[--this.ptr];
 }
 
-BWIPJS.prototype.call = function(name) {
+BWIPJS.prototype.call = function(name, callback) {
 	// Make sure the encoder is loaded
-	if (!BWIPJS.bwipp[name])
+	if (!BWIPJS.bwipp[name]) {
+		if (!BWIPJS.queue[name])
+			BWIPJS.queue[name] = [ [ 1, name, this, callback] ];
+		else
+			BWIPJS.queue[name].push([1, name, this, callback]);
 		BWIPJS.load('bwipp/' + name + '.js');
+		return;
+	}
 	
-	if (!BWIPJS.bwipp[name])
-		throw new Error(name + ': --undefined--');
-
-	// Load into the dictionary
-	this.dict[name] = BWIPJS.bwipp[name];
-
-	// Make the call
-	BWIPJS.bwipp[name].call(this);
+	// Call the encoder
+	try {
+		BWIPJS.bwipp[name].call(this);
+		if (callback)
+			callback();
+	} catch (e) {
+		if (callback)
+			callback(e);
+		return;
+	}
 }
 // eval on a psstring - emulates postscript '<string> exec'.
 // BWIPP only requires support for two forms of eval; hex string literals in
@@ -433,13 +488,11 @@ BWIPJS.prototype.moveto = function(x,y) {
 	BWIPJS.logapi('moveto', arguments);
 	this.g_posx = this.g_tdx + this.g_tsx * x;
 	this.g_posy = this.g_tdy + this.g_tsy * y;
-	BWIPJS.debug('moveto: posx,posy=(' + this.g_posx + ',' + this.g_posy + ')');
 }
 BWIPJS.prototype.rmoveto = function(x,y) {
 	BWIPJS.logapi('rmoveto', arguments);
 	this.g_posx += this.g_tsx * x;
 	this.g_posy += this.g_tsy * y;
-	BWIPJS.debug('rmoveto: posx,posy=(' + this.g_posx + ',' + this.g_posy + ')');
 }
 BWIPJS.prototype.lineto = function(x,y) {
 	BWIPJS.logapi('lineto', arguments);
@@ -448,7 +501,6 @@ BWIPJS.prototype.lineto = function(x,y) {
 	this.g_posx = this.g_tdx + this.g_tsx * x;
 	this.g_posy = this.g_tdy + this.g_tsy * y;
 	this.g_path.push([this.g_posx, this.g_posy]);
-	BWIPJS.debug('lineto: posx,posy=(' + this.g_posx + ',' + this.g_posy + ')');
 }
 BWIPJS.prototype.rlineto = function(x,y) {
 	BWIPJS.logapi('rlineto', arguments);
@@ -457,7 +509,6 @@ BWIPJS.prototype.rlineto = function(x,y) {
 	this.g_posx += this.g_tsx * x;
 	this.g_posy += this.g_tsy * y;
 	this.g_path.push([this.g_posx, this.g_posy]);
-	BWIPJS.debug('rlineto: posx,posy=(' + this.g_posx + ',' + this.g_posy + ')');
 }
 // implements both arc and arcn
 BWIPJS.prototype.arc = function(x,y,r,sa,ea,ccw) {
@@ -480,69 +531,44 @@ BWIPJS.prototype.arc = function(x,y,r,sa,ea,ccw) {
 	this.g_path.push([ 'a', { x:x, y:y, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw } ]);
 	this.g_path.push([ x+rx, y+ry ]);
 }
-// We don't have detailed font metrics to use for calculating correct
-// font size.  Therefore, out bitmaps are multiples of the base sizes
-// used in barcode.ps:  10pt and 12pt
+// This is an internal method
 BWIPJS.prototype.getfont = function() {
 	BWIPJS.logapi('getfont', arguments);
-	var fs = Math.floor(this.g_tsx);
-	if (fs < 1)
-		fs = 1;
-	else if (fs > 10)
-		fs = 10;
-
-	// We only have two font sizes
-	var size = +this.g_font.FontSize || 10;
-	if (size < 10)
-		size = 10;
-	else if (size > 10)
-		size = 12;
-
-	var key = size + (fs < 10 ? '-0' : '-') + fs;
-
-	// Has the font been loaded?
-	if (!BWIPJS.fonts.OCRB || !BWIPJS.fonts.OCRB[key])
-		// Invoke the file loader
-		BWIPJS.load('fonts/ocrb' + key + '.js');
-
-	return !BWIPJS.fonts.OCRB ? undefined : BWIPJS.fonts.OCRB[key];
+	var name = this.g_font.FontName.toString().toLowerCase();
+	// Default is OCR-B unless OCR-A is specified
+	if (/ocr.?a/.test(name))
+		return 0;	// OCR-A
+	return 1;		// OCR-B
 }
 BWIPJS.prototype.stringwidth = function(str) {
 	BWIPJS.logapi('stringwidth', arguments);
-	var fn = this.getfont();
-	if (!fn) return { w:0, h:0 };
+	var font = this.getfont();
+	var size = (+this.g_font.FontSize || 10) * this.g_tsx * 0.90;
 
 	// width, ascent, and descent of the char-path
 	var w = 0, a = 0, d = 0;
 	for (var i = 0; i < str.length; i++) {
-		var ch = String.fromCharCode(str.get(i));
-		var g  = fn.g[ch];	// The glyph
-		if (!g) {
-			w += fn.w;		// Normalized char width
-		} else {
-			w += Math.max(g.l + g.w, fn.w);
-			if (g.t < 0) {
-				if (d < g.h - g.t)
-					d = g.h - g.t;
-			} else {
-				if (a < g.t)
-					a = g.t;
-				if (d < g.h - g.t)
-					d = g.h - g.t;
-			}
-		}
+		var offset = BWIPJS.ft_bitmap(font, size, str.get(i));
+		w += BWIPJS.ft_advance();
+		if (!offset)
+			continue;
+		var h = BWIPJS.ft_height();
+		var t = BWIPJS.ft_top();
+		a = Math.max(a, t);
+		d = Math.max(d, h-t);
 	}
-	w += (str.length-1) * Math.floor(fn.w/4);	// interchar gap
-	return { w:w/this.g_tsx, h:(a+d)/this.g_tsy };
+	return { w:w/this.g_tsx, h:(a+d)/this.g_tsy,
+		 a:a/this.g_tsy, d:d/this.g_tsy };
 }
 BWIPJS.prototype.charpath = function(str, b) {
 	BWIPJS.logapi('charpath', arguments);
 	var sw = this.stringwidth(str);
 
 	// Emulate the char-path by placing a rectangle around it
+	this.rlineto(0, sw.a);
 	this.rlineto(sw.w, 0);
-	this.rlineto(0, sw.h);
-	this.rlineto(-sw.w, 0);
+	this.rlineto(0, -sw.h);
+	BWIPJS.debug('charpath(' + sw.a + ',' + sw.h + ')');
 }
 BWIPJS.prototype.pathbbox = function() {
 	BWIPJS.logapi('pathbbox', arguments);
@@ -561,8 +587,12 @@ BWIPJS.prototype.pathbbox = function() {
 	}
 
 	// Convert to user-space coordinates
-	return { llx:(llx-this.g_tdx)/this.g_tsx, lly:(lly-this.g_tdy)/this.g_tsy,
-			 urx:(urx-this.g_tdx)/this.g_tsx, ury:(ury-this.g_tdy)/this.g_tsy };
+	var rv = {	llx:(llx-this.g_tdx)/this.g_tsx,
+				lly:(lly-this.g_tdy)/this.g_tsy,
+				urx:(urx-this.g_tdx)/this.g_tsx,
+				ury:(ury-this.g_tdy)/this.g_tsy };
+	BWIPJS.debug('pathbox'  + JSON.stringify(rv));
+	return rv;
 }
 BWIPJS.prototype.gsave = function() {
 	BWIPJS.logapi('gsave', arguments);
@@ -587,6 +617,8 @@ BWIPJS.prototype.grestore = function() {
 }
 BWIPJS.prototype.stroke = function() {
 	BWIPJS.logapi('stroke', arguments);
+	if (this.__miny === undefined)
+		this.__miny = Infinity;
 	var penx = this.g_penw*this.g_tsx;
 	var peny = this.g_penw*this.g_tsy;
 	var segs = this.g_path.length / 3;	// number of line segments
@@ -596,6 +628,10 @@ BWIPJS.prototype.stroke = function() {
 		var s = this.g_path[i++];	// start point
 		var a = this.g_path[i++];	// args
 		var e = this.g_path[i++];	// end point
+		if (this.__miny > s[1])
+			this.__miny = s[1];
+		if (this.__miny > e[1])
+			this.__miny = e[1];
 		switch (a[0]) {
 		case 'l':	// line
 			this.drawline(true, s[0], s[1], e[0], e[1], penx, peny, segs > 1);
@@ -681,7 +717,7 @@ BWIPJS.prototype.imagemask = function(width, height, polarity, matrix, source) {
 			var y1 = Math.floor(y0 + sy/height);
 			for (var j = y0; j < y1; j++) {
 				for (var i = x0; i < x1; i++)
-					this.bmap.set(i,j);
+					this.bmap.set(i,j,255);
 			}
 		}
 	}
@@ -689,13 +725,8 @@ BWIPJS.prototype.imagemask = function(width, height, polarity, matrix, source) {
 // dx,dy are inter-character gaps
 BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 	BWIPJS.logapi('show', arguments);
-	// The bitmap fonts were crafted to correspond to the scaling factor.
-	// Specifically to render correctly with the UPC/EAN text segments.
-	// Since UPC/EAN is a rather narrow code (in terms of modules/symbol),
-	// the scaling factor works for the other codes as well, including
-	// code128 in numeric mode with two digits per symbol.
-	var fn = this.getfont();
-	if (!fn) return;
+	var font = this.getfont();
+	var size = (+this.g_font.FontSize || 10) * this.g_tsx * 0.90;
 
 	// Convert dx,dy to device space
 	dx = this.g_tsx * dx;
@@ -703,86 +734,50 @@ BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 
 	// PostScript renders bottom-up, so we must render the glyphs inverted.
 	for (var i = 0; i < str.length; i++) {
-		var ch = String.fromCharCode(str.get(i));
-		var g  = fn.g[ch];	// The glyph
-		if (!g) {
-			this.g_posx += fn.w + Math.floor(fn.w/4) + dx;	// w + interchar-gap
+		var ch = str.get(i);
+		var offset = BWIPJS.ft_bitmap(font, size, ch);
+		if (!offset) {
+			this.g_posx += BWIPJS.ft_advance() + dx;
 			continue;
 		}
-		var bm = g.m; 		// The bitmap
 
-		// Adjust for the glyph's metrics
-		// The -2: -1 for the usual height-1 accounting;
-		//		   -1 because the bitmap generator has an off-by-one bug
-		//		      that we aren't going to fix.
-		var l = this.g_posx + g.l;
-		var t = this.g_posy + g.t + dy - 2;
+		// The OCR digits seem to be about a half-point right compared to
+		// the font metrics hard-coded into by BWIPP.  This is especially seen
+		// in the EAN and UPC codes where the bars mix with the text.
+		var l = this.g_posx + BWIPJS.ft_left();
+		if (ch >= 48 && ch <= 57)
+			l -= 0.5 * this.g_tsx;
 
-		var e    = bm.charAt(0);	// encoding
-		var tmin = t - g.h;
-		var lmax = l + g.w;
-		var bx   = 1;		// bitmap index
-		var by;				// current bitmap byte
-		var rl;				// run-length
+		var t = this.g_posy + BWIPJS.ft_top() + dy;
+		var w = BWIPJS.ft_width();
+		var h = BWIPJS.ft_height();
+		var b = Module.HEAPU8.subarray(offset, offset + w * h);
+		var a;  // alpha
 
-		if (e == 'b') {
-			// uncompressed bit-map
-			for (var y = t; y > tmin; y--)
-				for (var x = 0; x < g.w; x++) {
-					if (!(x % 8)) {
-						by = (parseInt(bm.charAt(bx),16) << 4) | parseInt(bm.charAt(bx+1),16);
-						bx += 2;
-					}
-					if (by & 0x80)
-						this.bmap.set(l+x, y);
-					by <<= 1;
-				}
-		} else if (e == 'x') {
-			// x-run encoding
-			for (var y = t; y > tmin; y--) {
-				for (var x = l; x < lmax; ) {
-					by = (parseInt(bm.charAt(bx),16) << 4) | parseInt(bm.charAt(bx+1),16);
-					rl = by >> 1;
-					bx += 2;
-					if (by & 1) {
-						while (rl--)
-							this.bmap.set(x++, y);
-					} else
-						x += rl;
-				}
+		for (var x = 0; x < w; x++) {
+			for (var y = 0; y < h; y++) {
+				a = b[y * w + x];
+				if (a)
+					this.bmap.set(l+x, t-y, a);
 			}
-		} else if (e == 'y') {
-			// y-run encoding
-			for (var x = l; x < lmax; x++) {
-				for (var y = t; y > tmin; ) {
-					by = (parseInt(bm.charAt(bx),16) << 4) | parseInt(bm.charAt(bx+1),16);
-					rl = by >> 1;
-					bx += 2;
-					if (by & 1) {
-						while (rl--)
-							this.bmap.set(x, y--);
-					} else
-						y -= rl;
-				}
-			}
-		} else
-			throw new Error('unknown font bitmap encoding: ' + e);
+		}
 
-		this.g_posx += Math.max(g.l+g.w, fn.w) + Math.floor(fn.w/4) + dx;
+		this.g_posx += BWIPJS.ft_advance() + dx;
 	}
 }
 
 // Perform a deep clone of the graphics state properties
 BWIPJS.prototype.gclone = function(o) {
 	//BWIPJS.logapi('gclone', arguments);
+	if (o instanceof BWIPJS.psstring)
+		return new BWIPJS.psstring(o);
+
 	if (o instanceof Array) {
 		var t = [];
 		for (var i = 0; i < o.length; i++)
 			t[i] = this.gclone(o[i]);
 		return t;
 	}
-	//if (o instanceof Function)
-	//	return o;
 
 	if (o instanceof Object) {
 		var t = {};
@@ -830,7 +825,7 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 		}
 		for (var y = y1; y < y2; y++)
 			for (var x = x1; x < x2; x++)
-				this.bmap.set(x,y);
+				this.bmap.set(x,y,255);
 
 		return;
 	}
@@ -858,7 +853,7 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 		// Increment on x
 		while (x != x2) {
 			for (var j = 0; j < pixh; j++)
-				this.bmap.set(x, y+j);
+				this.bmap.set(x, y+j, 255);
 			d += dv;
 			if (d >= du) {
 				d -= du;
@@ -867,12 +862,12 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 			x += kx;
 		}
 		for (var j = 0; j < pixh; j++)
-			this.bmap.set(x, y+j);
+			this.bmap.set(x, y+j, 255);
 	} else {
 		// Increment on y
 		while (y != y2) {
 			for (var j = 0; j < pixw; j++)
-				this.bmap.set(x+j, y);
+				this.bmap.set(x+j, y, 255);
 			d += du;
 			if (d >= dv) {
 				d -= dv;
@@ -881,7 +876,7 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 			y += ky;
 		}
 		for (var j = 0; j < pixw; j++)
-			this.bmap.set(x+j, y);
+			this.bmap.set(x+j, y, 255);
 	}
 } // end of drawline()
 
@@ -902,20 +897,20 @@ BWIPJS.prototype.drawarc = function(x0, y0, x1, y1, sa, se, penx, peny) {
 	a *= 8*a; b1 = 8*b*b;
 
 	do {
-		this.bmap.set(x1, y0);		// 1st quadrant
-		this.bmap.set(x0, y0);		// 2nd quadrant
-		this.bmap.set(x0, y1);		// 3rd quadrant
-		this.bmap.set(x1, y1);		// 4th quadrant
+		this.bmap.set(x1, y0, 255);		// 1st quadrant
+		this.bmap.set(x0, y0, 255);		// 2nd quadrant
+		this.bmap.set(x0, y1, 255);		// 3rd quadrant
+		this.bmap.set(x1, y1, 255);		// 4th quadrant
 		e2 = 2*err;
 		if (e2 >= dx) { x0++; x1--; dx += b1; err += dx; }
 		if (e2 <= dy) { y0++; y1--; dy += a;  err += dy; }
 	} while (x0 <= x1);
 
 	while (y0-y1 < b) {	// too early stop of flat ellipse
-		this.bmap.set(x0-1, y0);
-		this.bmap.set(x1+1, y0++);
-		this.bmap.set(x0-1, y1);
-		this.bmap.set(x1+1, y1--);
+		this.bmap.set(x0-1, y0, 255);
+		this.bmap.set(x1+1, y0++, 255);
+		this.bmap.set(x0-1, y1, 255);
+		this.bmap.set(x1+1, y1--, 255);
 	}
 }
 
@@ -997,7 +992,7 @@ BWIPJS.fillmap = function() {
 		for (var y = y0; y <= y1; y++) {
 			for (var x = x0; x <= x1; x++) {
 				if (get(x,y) === 1)
-					bmap.set(x,y);
+					bmap.set(x,y,255);
 				out += get(x,y) === 1 ? 'X' : '0';
 			}
 			out += '\r\n';

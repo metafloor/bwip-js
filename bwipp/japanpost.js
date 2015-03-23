@@ -6,32 +6,34 @@
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2015 Terry Burton
 //
-// See the LICENSE file in the bwip.js root directory
+// See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 // BEGIN japanpost
-if (!BWIPJS.bwipp["raiseerror"]) BWIPJS.load("bwipp/raiseerror.js");
-if (!BWIPJS.bwipp["renlinear"]) BWIPJS.load("bwipp/renlinear.js");
+if (!BWIPJS.bwipp["raiseerror"] && BWIPJS.increfs("japanpost", "raiseerror")) {
+	BWIPJS.load("bwipp/raiseerror.js");
+}
+if (!BWIPJS.bwipp["renlinear"] && BWIPJS.increfs("japanpost", "renlinear")) {
+	BWIPJS.load("bwipp/renlinear.js");
+}
 BWIPJS.bwipp["japanpost"]=function() {
-	this.dict["raiseerror"]=BWIPJS.bwipp["raiseerror"];
-	this.dict["renlinear"]=BWIPJS.bwipp["renlinear"];
 	function $f0(){
-		//#line 8804: token false eq {exit} if dup length string cvs (=) search
+		//#line 8809: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 8805: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 8810: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 8805: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 8810: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 8804: token false eq {exit} if dup length string cvs (=) search
+		//#line 8809: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -69,7 +71,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 8805: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 8810: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -86,20 +88,20 @@ BWIPJS.bwipp["japanpost"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 8802: 1 dict begin
+		//#line 8807: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 8803: options {
+		//#line 8808: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 8806: } loop
+		//#line 8811: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 8807: currentdict end /options exch def
+		//#line 8812: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -107,15 +109,15 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 8809: options {def} forall
+		//#line 8814: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 8844: j 18 gt {exit} if                % Should fit in 20 chars
+		//#line 8849: j 18 gt {exit} if                % Should fit in 20 chars
 		return -1;
 	}
 	function $f7(){
-		//#line 8844: j 18 gt {exit} if                % Should fit in 20 chars
+		//#line 8849: j 18 gt {exit} if                % Should fit in 20 chars
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=18;
@@ -125,7 +127,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t8.call(this)==-1) return -1;
 		}
-		//#line 8848: /digit indx 1 sub 10 idiv 10 add def
+		//#line 8853: /digit indx 1 sub 10 idiv 10 add def
 		this.stk[this.ptr++]="digit";
 		var t=this.dstk.get("indx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -136,7 +138,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8849: encstr j 3 mul 2 add encs digit get putinterval
+		//#line 8854: encstr j 3 mul 2 add encs digit get putinterval
 		var t=this.dstk.get("encstr");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -154,7 +156,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 8850: /checksum checksum digit add def
+		//#line 8855: /checksum checksum digit add def
 		this.stk[this.ptr++]="checksum";
 		var t=this.dstk.get("checksum");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -162,7 +164,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8851: digits j digit put
+		//#line 8856: digits j digit put
 		var t=this.dstk.get("digits");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -173,7 +175,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 8852: /j j 1 add def
+		//#line 8857: /j j 1 add def
 		this.stk[this.ptr++]="j";
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -182,17 +184,17 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f8(){
-		//#line 8854: j 19 gt {exit} if                    % Should fit in 20 chars
+		//#line 8859: j 19 gt {exit} if                    % Should fit in 20 chars
 		return -1;
 	}
 	function $f9(){
-		//#line 8857: /digit 14 def                    % space (C14)
+		//#line 8862: /digit 14 def                    % space (C14)
 		this.stk[this.ptr++]="digit";
 		this.stk[this.ptr++]=14;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f10(){
-		//#line 8860: /digit indx 1 sub 10 mod def
+		//#line 8865: /digit indx 1 sub 10 mod def
 		this.stk[this.ptr++]="digit";
 		var t=this.dstk.get("indx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -203,18 +205,18 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f11(){
-		//#line 8863: /digit indx def
+		//#line 8868: /digit indx def
 		this.stk[this.ptr++]="digit";
 		var t=this.dstk.get("indx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f12(){
-		//#line 8838: /i exch def
+		//#line 8843: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8839: barcode i 1 getinterval barchars exch search
+		//#line 8844: barcode i 1 getinterval barchars exch search
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -234,18 +236,18 @@ BWIPJS.bwipp["japanpost"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 8840: pop                                  % Discard true leaving pre
+		//#line 8845: pop                                  % Discard true leaving pre
 		this.ptr--;
-		//#line 8841: length /indx exch def                % indx is the length of pre
+		//#line 8846: length /indx exch def                % indx is the length of pre
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]="indx";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8842: pop pop                              % Discard match and post
+		//#line 8847: pop pop                              % Discard match and post
 		this.ptr--;
 		this.ptr--;
-		//#line 8843: indx 11 ge indx 37 lt and {          % Insert escape
+		//#line 8848: indx 11 ge indx 37 lt and {          % Insert escape
 		var t=this.dstk.get("indx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=11;
@@ -258,12 +260,12 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f7;
-		//#line 8853: } if
+		//#line 8858: } if
 		var t9=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t9.call(this)==-1) return -1;
 		}
-		//#line 8854: j 19 gt {exit} if                    % Should fit in 20 chars
+		//#line 8859: j 19 gt {exit} if                    % Should fit in 20 chars
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=19;
@@ -273,11 +275,11 @@ BWIPJS.bwipp["japanpost"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t10.call(this)==-1) return -1;
 		}
-		//#line 8855: /digit 0 def
+		//#line 8860: /digit 0 def
 		this.stk[this.ptr++]="digit";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8856: indx 37 eq {
+		//#line 8861: indx 37 eq {
 		var t=this.dstk.get("indx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=37;
@@ -286,12 +288,12 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f9;
-		//#line 8858: } if
+		//#line 8863: } if
 		var t11=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t11.call(this)==-1) return -1;
 		}
-		//#line 8859: indx 11 ge indx 37 lt and {
+		//#line 8864: indx 11 ge indx 37 lt and {
 		var t=this.dstk.get("indx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=11;
@@ -304,23 +306,23 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f10;
-		//#line 8861: } if
+		//#line 8866: } if
 		var t12=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t12.call(this)==-1) return -1;
 		}
-		//#line 8862: indx 11 lt {
+		//#line 8867: indx 11 lt {
 		var t=this.dstk.get("indx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=11;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f11;
-		//#line 8864: } if
+		//#line 8869: } if
 		var t13=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t13.call(this)==-1) return -1;
 		}
-		//#line 8865: encstr j 3 mul 2 add encs digit get putinterval % space
+		//#line 8870: encstr j 3 mul 2 add encs digit get putinterval % space
 		var t=this.dstk.get("encstr");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -338,7 +340,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 8866: /checksum checksum digit add def
+		//#line 8871: /checksum checksum digit add def
 		this.stk[this.ptr++]="checksum";
 		var t=this.dstk.get("checksum");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -346,7 +348,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8867: digits j digit put
+		//#line 8872: digits j digit put
 		var t=this.dstk.get("digits");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -357,7 +359,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 8868: txt i [barcode i 1 getinterval j 3 mul 2 add 3.312 mul textyoffset textfont textsize] put
+		//#line 8873: txt i [barcode i 1 getinterval j 3 mul 2 add 3.312 mul textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -392,7 +394,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 8869: /j j 1 add def
+		//#line 8874: /j j 1 add def
 		this.stk[this.ptr++]="j";
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -401,11 +403,11 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f13(){
-		//#line 8874: /k exch def
+		//#line 8879: /k exch def
 		this.stk[this.ptr++]="k";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8875: encstr k 3 mul 2 add encs 14 get putinterval
+		//#line 8880: encstr k 3 mul 2 add encs 14 get putinterval
 		var t=this.dstk.get("encstr");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("k");
@@ -422,14 +424,14 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 8876: /checksum checksum 14 add def
+		//#line 8881: /checksum checksum 14 add def
 		this.stk[this.ptr++]="checksum";
 		var t=this.dstk.get("checksum");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=14;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8877: digits k 14 put
+		//#line 8882: digits k 14 put
 		var t=this.dstk.get("digits");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("k");
@@ -441,7 +443,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.ptr-=3;
 	}
 	function $f14(){
-		//#line 8888: /checkdigit barchars checksum 1 getinterval def
+		//#line 8893: /checkdigit barchars checksum 1 getinterval def
 		this.stk[this.ptr++]="checkdigit";
 		var t=this.dstk.get("barchars");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -452,51 +454,51 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f15(){
-		//#line 8903: /bunit 3 def
+		//#line 8908: /bunit 3 def
 		this.stk[this.ptr++]="bunit";
 		this.stk[this.ptr++]=3;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8904: /hunit 2 def
+		//#line 8909: /hunit 2 def
 		this.stk[this.ptr++]="hunit";
 		this.stk[this.ptr++]=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f16(){
-		//#line 8907: /bunit 0 def
+		//#line 8912: /bunit 0 def
 		this.stk[this.ptr++]="bunit";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8908: /hunit 5 def
+		//#line 8913: /hunit 5 def
 		this.stk[this.ptr++]="hunit";
 		this.stk[this.ptr++]=5;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f17(){
-		//#line 8911: /bunit 3 def
+		//#line 8916: /bunit 3 def
 		this.stk[this.ptr++]="bunit";
 		this.stk[this.ptr++]=3;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8912: /hunit 5 def
+		//#line 8917: /hunit 5 def
 		this.stk[this.ptr++]="hunit";
 		this.stk[this.ptr++]=5;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f18(){
-		//#line 8915: /bunit 0 def
+		//#line 8920: /bunit 0 def
 		this.stk[this.ptr++]="bunit";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8916: /hunit 8 def
+		//#line 8921: /hunit 8 def
 		this.stk[this.ptr++]="hunit";
 		this.stk[this.ptr++]=8;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f19(){
-		//#line 8898: /i exch def
+		//#line 8903: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8899: /enc encstr i 1 getinterval def
+		//#line 8904: /enc encstr i 1 getinterval def
 		this.stk[this.ptr++]="enc";
 		var t=this.dstk.get("encstr");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -505,15 +507,15 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8900: /bunit 0 def
+		//#line 8905: /bunit 0 def
 		this.stk[this.ptr++]="bunit";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8901: /hunit 0 def
+		//#line 8906: /hunit 0 def
 		this.stk[this.ptr++]="hunit";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8902: enc (0) eq {
+		//#line 8907: enc (0) eq {
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("0");
@@ -522,12 +524,12 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f15;
-		//#line 8905: } if
+		//#line 8910: } if
 		var t25=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t25.call(this)==-1) return -1;
 		}
-		//#line 8906: enc (1) eq {
+		//#line 8911: enc (1) eq {
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("1");
@@ -536,12 +538,12 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f16;
-		//#line 8909: } if
+		//#line 8914: } if
 		var t26=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t26.call(this)==-1) return -1;
 		}
-		//#line 8910: enc (2) eq {
+		//#line 8915: enc (2) eq {
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("2");
@@ -550,12 +552,12 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f17;
-		//#line 8913: } if
+		//#line 8918: } if
 		var t27=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t27.call(this)==-1) return -1;
 		}
-		//#line 8914: enc (3) eq {
+		//#line 8919: enc (3) eq {
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("3");
@@ -564,12 +566,12 @@ BWIPJS.bwipp["japanpost"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f18;
-		//#line 8917: } if
+		//#line 8922: } if
 		var t28=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t28.call(this)==-1) return -1;
 		}
-		//#line 8918: bbs i bunit height mul 8 div put
+		//#line 8923: bbs i bunit height mul 8 div put
 		var t=this.dstk.get("bbs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -585,7 +587,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 8919: bhs i hunit height mul 8 div put
+		//#line 8924: bhs i hunit height mul 8 div put
 		var t=this.dstk.get("bhs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -603,57 +605,57 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.ptr-=3;
 	}
 	function $f20(){
-		//#line 8927: /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
+		//#line 8932: /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
 		this.stk[this.ptr++]=1.44;
 		this.stk[this.ptr++]=1.872;
 	}
 	function $f21(){
-		//#line 8929: /txt txt
+		//#line 8934: /txt txt
 		this.stk[this.ptr++]="txt";
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	//#line 8787: 20 dict begin
+	//#line 8792: 20 dict begin
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 8789: /options exch def              % We are given an option string
+	//#line 8794: /options exch def              % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8790: /barcode exch def              % We are given a barcode string
+	//#line 8795: /barcode exch def              % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8792: /dontdraw false def
+	//#line 8797: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8793: /includetext false def          % Enable/disable text
+	//#line 8798: /includetext false def          % Enable/disable text
 	this.stk[this.ptr++]="includetext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8794: /includecheckintext false def
+	//#line 8799: /includecheckintext false def
 	this.stk[this.ptr++]="includecheckintext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8795: /textfont /Courier def
+	//#line 8800: /textfont /Courier def
 	this.stk[this.ptr++]="textfont";
 	this.stk[this.ptr++]="Courier";
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8796: /textsize 10 def
+	//#line 8801: /textsize 10 def
 	this.stk[this.ptr++]="textsize";
 	this.stk[this.ptr++]=10;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8797: /textyoffset -8 def
+	//#line 8802: /textyoffset -8 def
 	this.stk[this.ptr++]="textyoffset";
 	this.stk[this.ptr++]=-8;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8798: /height 0.175 def
+	//#line 8803: /height 0.175 def
 	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=0.175;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8801: options type /stringtype eq {
+	//#line 8806: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -663,12 +665,12 @@ BWIPJS.bwipp["japanpost"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 8808: } if
+	//#line 8813: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 8809: options {def} forall
+	//#line 8814: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -684,46 +686,46 @@ BWIPJS.bwipp["japanpost"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 8811: /textfont textfont cvlit def
+	//#line 8816: /textfont textfont cvlit def
 	this.stk[this.ptr++]="textfont";
 	var t=this.dstk.get("textfont");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8812: /textsize textsize cvr def
+	//#line 8817: /textsize textsize cvr def
 	this.stk[this.ptr++]="textsize";
 	var t=this.dstk.get("textsize");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8813: /textyoffset textyoffset cvr def
+	//#line 8818: /textyoffset textyoffset cvr def
 	this.stk[this.ptr++]="textyoffset";
 	var t=this.dstk.get("textyoffset");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8814: /height height cvr def
+	//#line 8819: /height height cvr def
 	this.stk[this.ptr++]="height";
 	var t=this.dstk.get("height");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8818: /encs
+	//#line 8823: /encs
 	this.stk[this.ptr++]="encs";
-	//#line 8819: [ (300) (330) (312) (132) (321) (303) (123) (231) (213) (033) (030)
+	//#line 8824: [ (300) (330) (312) (132) (321) (303) (123) (231) (213) (033) (030)
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("300"),BWIPJS.psstring("330"),BWIPJS.psstring("312"),BWIPJS.psstring("132"),BWIPJS.psstring("321"),BWIPJS.psstring("303"),BWIPJS.psstring("123"),BWIPJS.psstring("231"),BWIPJS.psstring("213"),BWIPJS.psstring("033"),BWIPJS.psstring("030"),BWIPJS.psstring("120"),BWIPJS.psstring("102"),BWIPJS.psstring("210"),BWIPJS.psstring("012"),BWIPJS.psstring("201"),BWIPJS.psstring("021"),BWIPJS.psstring("003"),BWIPJS.psstring("333"),BWIPJS.psstring("31"),BWIPJS.psstring("13")]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8825: /barchars (0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZ) def
+	//#line 8830: /barchars (0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZ) def
 	this.stk[this.ptr++]="barchars";
 	this.stk[this.ptr++]=BWIPJS.psstring("0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8826: /barlen barcode length def
+	//#line 8831: /barlen barcode length def
 	this.stk[this.ptr++]="barlen";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8828: /encstr 20 1 add 3 mul 4 add string def
+	//#line 8833: /encstr 20 1 add 3 mul 4 add string def
 	this.stk[this.ptr++]="encstr";
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr++]=1;
@@ -734,12 +736,12 @@ BWIPJS.bwipp["japanpost"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8829: /digits 20 array def
+	//#line 8834: /digits 20 array def
 	this.stk[this.ptr++]="digits";
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8830: /txt barlen 1 add array def
+	//#line 8835: /txt barlen 1 add array def
 	this.stk[this.ptr++]="txt";
 	var t=this.dstk.get("barlen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -747,7 +749,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8833: encstr 0 encs 19 get putinterval
+	//#line 8838: encstr 0 encs 19 get putinterval
 	var t=this.dstk.get("encstr");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
@@ -759,18 +761,18 @@ BWIPJS.bwipp["japanpost"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 8835: /checksum 0 def
+	//#line 8840: /checksum 0 def
 	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8836: /j 0 def /i 0 def
+	//#line 8841: /j 0 def /i 0 def
 	this.stk[this.ptr++]="j";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="i";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8837: 0 1 barlen 1 sub {
+	//#line 8842: 0 1 barlen 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barlen");
@@ -778,7 +780,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f12;
-	//#line 8870: } for
+	//#line 8875: } for
 	var t18=this.stk[--this.ptr];
 	var t16=this.stk[--this.ptr];
 	var t15=this.stk[--this.ptr];
@@ -787,7 +789,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.stk[this.ptr++]=t17;
 		if (t18.call(this)==-1) break;
 	}
-	//#line 8873: j 1 20 1 sub {
+	//#line 8878: j 1 20 1 sub {
 	var t=this.dstk.get("j");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=1;
@@ -795,7 +797,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f13;
-	//#line 8878: } for
+	//#line 8883: } for
 	var t23=this.stk[--this.ptr];
 	var t21=this.stk[--this.ptr];
 	var t20=this.stk[--this.ptr];
@@ -804,7 +806,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.stk[this.ptr++]=t22;
 		if (t23.call(this)==-1) break;
 	}
-	//#line 8881: /checksum checksum 19 mod 19 exch sub def
+	//#line 8886: /checksum checksum 19 mod 19 exch sub def
 	this.stk[this.ptr++]="checksum";
 	var t=this.dstk.get("checksum");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -814,7 +816,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8882: encstr 2 20 3 mul add encs checksum get putinterval
+	//#line 8887: encstr 2 20 3 mul add encs checksum get putinterval
 	var t=this.dstk.get("encstr");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=2;
@@ -831,7 +833,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 8885: encstr 2 21 3 mul add encs 20 get putinterval
+	//#line 8890: encstr 2 21 3 mul add encs 20 get putinterval
 	var t=this.dstk.get("encstr");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=2;
@@ -847,20 +849,20 @@ BWIPJS.bwipp["japanpost"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 8886: /checkdigit ( ) def
+	//#line 8891: /checkdigit ( ) def
 	this.stk[this.ptr++]="checkdigit";
 	this.stk[this.ptr++]=BWIPJS.psstring(" ");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8887: includecheckintext {
+	//#line 8892: includecheckintext {
 	var t=this.dstk.get("includecheckintext");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f14;
-	//#line 8889: } if
+	//#line 8894: } if
 	var t24=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t24.call(this)==-1) return -1;
 	}
-	//#line 8890: txt i 1 add [ checkdigit 20 3 mul 2 add 3.312 mul textyoffset textfont textsize] put
+	//#line 8895: txt i 1 add [ checkdigit 20 3 mul 2 add 3.312 mul textyoffset textfont textsize] put
 	var t=this.dstk.get("txt");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("i");
@@ -892,7 +894,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 8893: encstr 20 1 add 3 mul 2 add encs 20 get putinterval
+	//#line 8898: encstr 20 1 add 3 mul 2 add encs 20 get putinterval
 	var t=this.dstk.get("encstr");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=20;
@@ -910,7 +912,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 8895: /bbs 21 3 mul 4 add array def
+	//#line 8900: /bbs 21 3 mul 4 add array def
 	this.stk[this.ptr++]="bbs";
 	this.stk[this.ptr++]=21;
 	this.stk[this.ptr++]=3;
@@ -919,7 +921,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8896: /bhs bbs length array def
+	//#line 8901: /bhs bbs length array def
 	this.stk[this.ptr++]="bhs";
 	var t=this.dstk.get("bbs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -927,7 +929,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8897: 0 1 bbs length 1 sub {
+	//#line 8902: 0 1 bbs length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("bbs");
@@ -937,7 +939,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f19;
-	//#line 8920: } for
+	//#line 8925: } for
 	var t33=this.stk[--this.ptr];
 	var t31=this.stk[--this.ptr];
 	var t30=this.stk[--this.ptr];
@@ -946,21 +948,21 @@ BWIPJS.bwipp["japanpost"]=function() {
 		this.stk[this.ptr++]=t32;
 		if (t33.call(this)==-1) break;
 	}
-	//#line 8923: <<
+	//#line 8928: <<
 	this.stk[this.ptr++]=Infinity;
-	//#line 8924: /ren //renlinear
+	//#line 8929: /ren //renlinear
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renlinear");
 	this.stk[this.ptr++]=t;
-	//#line 8925: /bbs bbs
+	//#line 8930: /bbs bbs
 	this.stk[this.ptr++]="bbs";
 	var t=this.dstk.get("bbs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 8926: /bhs bhs
+	//#line 8931: /bhs bhs
 	this.stk[this.ptr++]="bhs";
 	var t=this.dstk.get("bhs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 8927: /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
+	//#line 8932: /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
 	this.stk[this.ptr++]="sbs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("bhs");
@@ -981,20 +983,20 @@ BWIPJS.bwipp["japanpost"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 8928: includetext {
+	//#line 8933: includetext {
 	var t=this.dstk.get("includetext");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f21;
-	//#line 8930: } if
+	//#line 8935: } if
 	var t37=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t37.call(this)==-1) return -1;
 	}
-	//#line 8931: /opt options
+	//#line 8936: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 8932: >>
+	//#line 8937: >>
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -1003,7 +1005,7 @@ BWIPJS.bwipp["japanpost"]=function() {
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
-	//#line 8934: dontdraw not //renlinear if
+	//#line 8939: dontdraw not //renlinear if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -1014,8 +1016,9 @@ BWIPJS.bwipp["japanpost"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t38.call(this)==-1) return -1;
 	}
-	//#line 8936: end
+	//#line 8941: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
+BWIPJS.decrefs("japanpost");
 // END OF japanpost

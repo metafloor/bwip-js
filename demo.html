@@ -8,49 +8,53 @@
 -->
 <!--
 	Notes about making the text fit nicely to your bar code.
-	 1.	Specify textxalign=center or textxalign=justify.
-	 2.	Specify the text as the alttext to bypass the built-in formatting.
-	 3.	If you specify textyalign=above and text has descenders
-		(characters: gjpqy_|,; ) specify textyoffset=1
+	1. Specify textxalign=center or textxalign=justify.
+	2. Specify the text as the alttext to bypass the built-in formatting.
+	3. If you specify textyalign=above and text has descenders
+		(characters: gjpqy_|,; ) add option textyoffset=1
 -->
 <style type="text/css">
-#menu th {
+body {
+	font-size:			11pt;
+}
+h1 {
+	font-size:			1.5em;
+	font-family:		Verdana, Arial, san-serif;
+	background-color:	#212121;
+	color:				#fff;
+	padding:			2ex;
+	margin-top:			0px;
+}
+body {
+	margin:				0px;
+}
+input, select, label {
+	font-family:		Verdana, Arial, san-serif;
+	font-size:			10.5pt;
+}
+#params {
+	margin-left:		12px;
+}
+#content {
+	margin-left:		20px;
+}
+#params th {
 	text-align:			right;
 	padding-right:		1.5ex;
 }
-#menu span.button {
-	border:				1px solid #000;
-	background-color:	#eee;
-	display:			inline-block;
-	height:				9px;
-	width:				15px;
-	position:			relative;
-	background-repeat:	no-repeat;
-	background-position:50% 50%;
-}
-#menu span.button.up {
-	top:				-5px;
-	left:				-5px;
-	background-image:	url(lib/up-arrow.gif);
-}
-#menu span.button.dn {
-	top:				6px;
-	left:				-26px;
-	background-image:	url(lib/dn-arrow.gif);
-}
-#menu span.button:hover {
-	background-color:	gold;
-	border:				1px solid orange;
-}
 #scale {
-	height:				16px;
 	width:				3ex;
+	font-size:			10.5pt;
 }
 </style>
+<link rel="stylesheet" href="lib/jquery-ui.min.css">
+<link rel="stylesheet" href="lib/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="lib/jquery-ui.theme.min.css">
+<script type="text/javascript" src="freetype.js"></script>
 <script type="text/javascript" src="bwip.js"></script>
-<script type="text/javascript" src="lib/jquery-1.4.1.js"></script>
+<script type="text/javascript" src="lib/jquery.js"></script>
+<script type="text/javascript" src="lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="lib/symdesc.js"></script>
-<script type="text/javascript" src="lib/needyoffset.js"></script>
 <script type="text/javascript" src="lib/canvas.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -98,41 +102,8 @@ $(document).ready(function() {
 		;
 
 
-
-	$('#menu span.button.up')
-		.click(function(ev) {
-			var inp = $('#scale');
-			var val = (parseFloat(inp.val())||1)+1;
-			inp.val(val > 10 ? 10 : val);
-			ev.stopImmediatePropagation();
-			ev.preventDefault();
-		})
-		.dblclick(function(ev) {
-			ev.stopImmediatePropagation();
-			ev.preventDefault();
-		})
-		.mousedown(function(ev) {
-			ev.stopImmediatePropagation();
-			ev.preventDefault();
-		})
-		;
-	$('#menu span.button.dn')
-		.click(function(ev) {
-			var inp = $('#scale');
-			var val = (parseFloat(inp.val())||1)-1;
-			inp.val(val <= 0 ? 1 : val);
-			ev.stopImmediatePropagation();
-			ev.preventDefault();
-		})
-		.dblclick(function(ev) {
-			ev.stopImmediatePropagation();
-			ev.preventDefault();
-		})
-		.mousedown(function(ev) {
-			ev.stopImmediatePropagation();
-			ev.preventDefault();
-		})
-		;
+	$('#scale').spinner({ min:1 });
+	$('#render').button().click(render);
 
 });
 
@@ -167,9 +138,6 @@ function render() {
 	// Add any hard-coded options required to fix problems in the javascript
 	// emulation. 
 	opts.inkspread = bw.value(0);
-	if (needyoffset[elt.sym] && !opts.textxalign && !opts.textyalign &&
-			!opts.alttext && opts.textyoffset === undefined)
-		opts.textyoffset = bw.value(-10);
 
 	var rot  = 'N';
 	var rots = [ 'rotL', 'rotR', 'rotI' ];
@@ -192,33 +160,34 @@ function render() {
 	bw.push(text);
 	bw.push(opts);
 
-	try {
-		bw.call(elt.sym);
-		bw.bitmap().show('canvas', rot);
-	} catch(e) {
-		if (typeof e === 'string') {
-			alert(e);
-		} else if (e.stack) {
-			alert(e.message + '\r\n' + e.stack);
-		} else {
-			var s = '';
-			if (e.fileName)
-				s += e.fileName + ' ';
-			if (e.lineNumber)
-				s += '[line ' + e.lineNumber + '] ';
-			alert(s + (s ? ': ' : '') + e.message);
-		}
-		return;
-	}
+	bw.call(elt.sym, function(e) {
+			if (e) {
+				if (typeof e === 'string') {
+					alert(e);
+				} else if (e.stack) {
+					alert(e.message + '\r\n' + e.stack);
+				} else {
+					var s = '';
+					if (e.fileName)
+						s += e.fileName + ' ';
+					if (e.lineNumber)
+						s += '[line ' + e.lineNumber + '] ';
+					alert(s + (s ? ': ' : '') + e.message);
+				}
+			} else {
+				bw.bitmap().show('canvas', rot);
 
-	var img = document.getElementById('proof-' + elt.sym);
-	if (img && img.offsetWidth > 32) {
-		img.style.visibility = 'visible';
-	}
+				var img = document.getElementById('proof-' + elt.sym);
+				if (img && img.offsetWidth > 32) {
+					img.style.visibility = 'visible';
+				}
+			}
+		});
 }
 </script>
 </head><body>
-<div id="menu">
+<h1>bwip-js // Barcode Writer in Pure JavaScript</h1>
+<div id="params">
 <table border=0 cellpading=0 cellspacing=0><tr>
 <td>
 	<table border=0 cellpading=0 cellspacing=0>
@@ -228,23 +197,22 @@ function render() {
 	<tr><th>Options:<td><input id="symopts" type="text" style="width:63ex">
 	</table>
 <td style="padding-left:10mm">
-	<table border=0 cellpading=0 cellspacing=0>
+	<table border=0 cellpading=0 cellspacing=5>
 	<tr><th>Scale:<td><input type="text" id="scale" value=2>
-	<span class="button up"></span>
-	<span class="button dn"></span>
 	<tr><th>Rotate:<td>
 		<label for="rotN"><input type="radio" name="rot" value="N" id="rotN" checked>Normal</label>
 		<label for="rotR"><input type="radio" name="rot" value="R" id="rotR">90 CW</label>
 		<label for="rotL"><input type="radio" name="rot" value="L" id="rotL">90 CCW</label>
 		<label for="rotI"><input type="radio" name="rot" value="I" id="rotI">180</label>
-	<tr><td><br>
-	<tr><td><td><button onclick="render()">Show Barcode</button>
+	<tr><td><td><button id="render">Show Barcode</button>
 	</table>
 <tr><td><br>
 </table>
 </div>
+<div id="content">
 <canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
 <div id="proof" style="position:relative;border:1px solid #fff"></div>
 <div id="output" style="white-space:pre"></div>
+</div>
 </body>
 </html>

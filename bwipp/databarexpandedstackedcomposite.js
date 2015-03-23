@@ -6,36 +6,40 @@
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2015 Terry Burton
 //
-// See the LICENSE file in the bwip.js root directory
+// See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 // BEGIN databarexpandedstackedcomposite
-if (!BWIPJS.bwipp["raiseerror"]) BWIPJS.load("bwipp/raiseerror.js");
-if (!BWIPJS.bwipp["databarexpandedstacked"]) BWIPJS.load("bwipp/databarexpandedstacked.js");
-if (!BWIPJS.bwipp["gs1-cc"]) BWIPJS.load("bwipp/gs1-cc.js");
-if (!BWIPJS.bwipp["renmatrix"]) BWIPJS.load("bwipp/renmatrix.js");
+if (!BWIPJS.bwipp["raiseerror"] && BWIPJS.increfs("databarexpandedstackedcomposite", "raiseerror")) {
+	BWIPJS.load("bwipp/raiseerror.js");
+}
+if (!BWIPJS.bwipp["databarexpandedstacked"] && BWIPJS.increfs("databarexpandedstackedcomposite", "databarexpandedstacked")) {
+	BWIPJS.load("bwipp/databarexpandedstacked.js");
+}
+if (!BWIPJS.bwipp["gs1-cc"] && BWIPJS.increfs("databarexpandedstackedcomposite", "gs1-cc")) {
+	BWIPJS.load("bwipp/gs1-cc.js");
+}
+if (!BWIPJS.bwipp["renmatrix"] && BWIPJS.increfs("databarexpandedstackedcomposite", "renmatrix")) {
+	BWIPJS.load("bwipp/renmatrix.js");
+}
 BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
-	this.dict["raiseerror"]=BWIPJS.bwipp["raiseerror"];
-	this.dict["databarexpandedstacked"]=BWIPJS.bwipp["databarexpandedstacked"];
-	this.dict["gs1-cc"]=BWIPJS.bwipp["gs1-cc"];
-	this.dict["renmatrix"]=BWIPJS.bwipp["renmatrix"];
 	function $f0(){
-		//#line 19977: token false eq {exit} if dup length string cvs (=) search
+		//#line 19982: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 19978: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 19983: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 19978: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 19983: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 19977: token false eq {exit} if dup length string cvs (=) search
+		//#line 19982: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -73,7 +77,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 19978: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 19983: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -90,20 +94,20 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 19975: 1 dict begin
+		//#line 19980: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 19976: options {
+		//#line 19981: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 19979: } loop
+		//#line 19984: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 19980: currentdict end /options exch def
+		//#line 19985: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -111,39 +115,39 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 19982: options {def} forall
+		//#line 19987: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 19986: /linear exch def
+		//#line 19991: /linear exch def
 		this.stk[this.ptr++]="linear";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 19987: pop
+		//#line 19992: pop
 		this.ptr--;
-		//#line 19988: /comp exch def
+		//#line 19993: /comp exch def
 		this.stk[this.ptr++]="comp";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f7(){
-		//#line 19990: pop
+		//#line 19995: pop
 		this.ptr--;
 	}
 	function $f8(){
-		//#line 20013: 1
+		//#line 20018: 1
 		this.stk[this.ptr++]=1;
 	}
 	function $f9(){
-		//#line 20015: sep i 1 sub get 0 eq {1} {0} ifelse
+		//#line 20020: sep i 1 sub get 0 eq {1} {0} ifelse
 		this.stk[this.ptr++]=1;
 	}
 	function $f10(){
-		//#line 20015: sep i 1 sub get 0 eq {1} {0} ifelse
+		//#line 20020: sep i 1 sub get 0 eq {1} {0} ifelse
 		this.stk[this.ptr++]=0;
 	}
 	function $f11(){
-		//#line 20015: sep i 1 sub get 0 eq {1} {0} ifelse
+		//#line 20020: sep i 1 sub get 0 eq {1} {0} ifelse
 		var t=this.dstk.get("sep");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -170,7 +174,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		}
 	}
 	function $f12(){
-		//#line 20012: bot i 1 sub get 1 eq {
+		//#line 20017: bot i 1 sub get 1 eq {
 		var t=this.dstk.get("bot");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -187,9 +191,9 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f8;
-		//#line 20014: } {
+		//#line 20019: } {
 		this.stk[this.ptr++]=$f11;
-		//#line 20016: } ifelse
+		//#line 20021: } ifelse
 		var t12=this.stk[--this.ptr];
 		var t13=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -199,15 +203,15 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		}
 	}
 	function $f13(){
-		//#line 20018: 0
+		//#line 20023: 0
 		this.stk[this.ptr++]=0;
 	}
 	function $f14(){
-		//#line 20010: /i exch def
+		//#line 20015: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 20011: bot i get 0 eq {
+		//#line 20016: bot i get 0 eq {
 		var t=this.dstk.get("bot");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -222,9 +226,9 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f12;
-		//#line 20017: } {
+		//#line 20022: } {
 		this.stk[this.ptr++]=$f13;
-		//#line 20019: } ifelse
+		//#line 20024: } ifelse
 		var t14=this.stk[--this.ptr];
 		var t15=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -232,7 +236,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		} else {
 			if (t14.call(this)==-1) return -1;
 		}
-		//#line 20020: sep exch i exch put
+		//#line 20025: sep exch i exch put
 		var t=this.dstk.get("sep");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -245,11 +249,11 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.ptr-=3;
 	}
 	function $f15(){
-		//#line 20008: /fp exch def
+		//#line 20013: /fp exch def
 		this.stk[this.ptr++]="fp";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 20009: fp 1 fp 12 add {
+		//#line 20014: fp 1 fp 12 add {
 		var t=this.dstk.get("fp");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -258,7 +262,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.stk[this.ptr++]=12;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f14;
-		//#line 20021: } for
+		//#line 20026: } for
 		var t20=this.stk[--this.ptr];
 		var t18=this.stk[--this.ptr];
 		var t17=this.stk[--this.ptr];
@@ -269,7 +273,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		}
 	}
 	function $f16(){
-		//#line 20023: /sep [ bot {1 exch sub} forall ] def
+		//#line 20028: /sep [ bot {1 exch sub} forall ] def
 		this.stk[this.ptr++]=1;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
@@ -279,35 +283,35 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	function $f18(){
 	}
 	function $f19(){
-		//#line 20029: ] {sepfinder} forall 
+		//#line 20034: ] {sepfinder} forall 
 		var t=this.dstk.get("sepfinder");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f20(){
-		//#line 20041: bot 0 get 0 eq {2} {0} ifelse 1 rmoveto
+		//#line 20046: bot 0 get 0 eq {2} {0} ifelse 1 rmoveto
 		this.stk[this.ptr++]=2;
 	}
 	function $f21(){
-		//#line 20041: bot 0 get 0 eq {2} {0} ifelse 1 rmoveto
+		//#line 20046: bot 0 get 0 eq {2} {0} ifelse 1 rmoveto
 		this.stk[this.ptr++]=0;
 	}
-	//#line 19966: 20 dict begin            % Confine variables to local scope
+	//#line 19971: 20 dict begin            % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 19968: /options exch def
+	//#line 19973: /options exch def
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19969: /barcode exch def
+	//#line 19974: /barcode exch def
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19971: /dontdraw false def
+	//#line 19976: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19974: options type /stringtype eq {
+	//#line 19979: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -317,12 +321,12 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 19981: } if
+	//#line 19986: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 19982: options {def} forall
+	//#line 19987: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -338,7 +342,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 19985: barcode (|) search {
+	//#line 19990: barcode (|) search {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("|");
@@ -353,9 +357,9 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.stk[this.ptr++]=true;
 	}
 	this.stk[this.ptr++]=$f6;
-	//#line 19989: } {
+	//#line 19994: } {
 	this.stk[this.ptr++]=$f7;
-	//#line 19991: } ifelse
+	//#line 19996: } ifelse
 	var t8=this.stk[--this.ptr];
 	var t9=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -363,9 +367,9 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	} else {
 		if (t8.call(this)==-1) return -1;
 	}
-	//#line 19993: gsave
+	//#line 19998: gsave
 	this.gsave();
-	//#line 19995: options (lintype) (databarexpandedstacked) put
+	//#line 20000: options (lintype) (databarexpandedstacked) put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("lintype");
@@ -374,7 +378,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 19996: options (linkage) true put
+	//#line 20001: options (linkage) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("linkage");
@@ -383,7 +387,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 19997: options (inkspread) (0) put
+	//#line 20002: options (inkspread) (0) put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("inkspread");
@@ -392,7 +396,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 19998: options (dontdraw) true put
+	//#line 20003: options (dontdraw) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
@@ -401,7 +405,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20001: linear options //databarexpandedstacked exec
+	//#line 20006: linear options //databarexpandedstacked exec
 	var t=this.dstk.get("linear");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
@@ -410,7 +414,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20002: dup (pixs) get 0 2 index (pixx) get getinterval /bot exch def
+	//#line 20007: dup (pixs) get 0 2 index (pixx) get getinterval /bot exch def
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("pixs");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -430,7 +434,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.stk[this.ptr++]="bot";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20003: dup (pixy) get /linheight exch def
+	//#line 20008: dup (pixy) get /linheight exch def
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("pixy");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -440,17 +444,17 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.stk[this.ptr++]="linheight";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20004: //renmatrix exec
+	//#line 20009: //renmatrix exec
 	var t=this.dstk.get("renmatrix");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20007: /sepfinder {
+	//#line 20012: /sepfinder {
 	this.stk[this.ptr++]="sepfinder";
 	this.stk[this.ptr++]=$f15;
-	//#line 20022: } bind def
+	//#line 20027: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20023: /sep [ bot {1 exch sub} forall ] def
+	//#line 20028: /sep [ bot {1 exch sub} forall ] def
 	this.stk[this.ptr++]="sep";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("bot");
@@ -474,13 +478,13 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20024: sep 0 [ 0 0 0 ] putinterval
+	//#line 20029: sep 0 [ 0 0 0 ] putinterval
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=BWIPJS.psarray([0,0,0]);
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 20025: sep sep length 4 sub [ 0 0 0 0 ] putinterval
+	//#line 20030: sep sep length 4 sub [ 0 0 0 0 ] putinterval
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("sep");
@@ -491,9 +495,9 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0]);
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 20026: [  % Finder pattern module positions
+	//#line 20031: [  % Finder pattern module positions
 	this.stk[this.ptr++]=Infinity;
-	//#line 20027: 19 98 bot length 13 sub {} for
+	//#line 20032: 19 98 bot length 13 sub {} for
 	this.stk[this.ptr++]=19;
 	this.stk[this.ptr++]=98;
 	var t=this.dstk.get("bot");
@@ -511,7 +515,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.stk[this.ptr++]=t27;
 		if (t28.call(this)==-1) break;
 	}
-	//#line 20028: 70 98 bot length 13 sub {} for
+	//#line 20033: 70 98 bot length 13 sub {} for
 	this.stk[this.ptr++]=70;
 	this.stk[this.ptr++]=98;
 	var t=this.dstk.get("bot");
@@ -529,7 +533,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		this.stk[this.ptr++]=t32;
 		if (t33.call(this)==-1) break;
 	}
-	//#line 20029: ] {sepfinder} forall 
+	//#line 20034: ] {sepfinder} forall 
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
 	var t = this.stk.splice(i+1, this.ptr-1-i);
@@ -548,36 +552,36 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 		}
 		if (t36.call(this)==-1) break;
 	}
-	//#line 20030: 0 linheight rmoveto <<
+	//#line 20035: 0 linheight rmoveto <<
 	this.stk[this.ptr++]=0;
 	var t=this.dstk.get("linheight");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var y=this.stk[--this.ptr];
 	this.rmoveto(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=Infinity;
-	//#line 20031: /ren //renmatrix
+	//#line 20036: /ren //renmatrix
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renmatrix");
 	this.stk[this.ptr++]=t;
-	//#line 20032: /pixs sep
+	//#line 20037: /pixs sep
 	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 20033: /pixx sep length
+	//#line 20038: /pixx sep length
 	this.stk[this.ptr++]="pixx";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
-	//#line 20034: /pixy 1
+	//#line 20039: /pixy 1
 	this.stk[this.ptr++]="pixy";
 	this.stk[this.ptr++]=1;
-	//#line 20035: /height 1 72 div
+	//#line 20040: /height 1 72 div
 	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	//#line 20036: /width sep length 72 div
+	//#line 20041: /width sep length 72 div
 	this.stk[this.ptr++]="width";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -585,11 +589,11 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	//#line 20037: /opt options
+	//#line 20042: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 20038: >> //renmatrix exec
+	//#line 20043: >> //renmatrix exec
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -602,7 +606,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20041: bot 0 get 0 eq {2} {0} ifelse 1 rmoveto
+	//#line 20046: bot 0 get 0 eq {2} {0} ifelse 1 rmoveto
 	var t=this.dstk.get("bot");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
@@ -627,7 +631,7 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.stk[this.ptr++]=1;
 	var y=this.stk[--this.ptr];
 	this.rmoveto(this.stk[--this.ptr],y);
-	//#line 20042: comp options //gs1-cc exec //renmatrix exec
+	//#line 20047: comp options //gs1-cc exec //renmatrix exec
 	var t=this.dstk.get("comp");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
@@ -640,10 +644,11 @@ BWIPJS.bwipp["databarexpandedstackedcomposite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 20044: grestore
+	//#line 20049: grestore
 	this.grestore();
-	//#line 20046: end
+	//#line 20051: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
+BWIPJS.decrefs("databarexpandedstackedcomposite");
 // END OF databarexpandedstackedcomposite
