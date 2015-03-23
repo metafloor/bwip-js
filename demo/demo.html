@@ -55,7 +55,6 @@ input, select, label {
 <script type="text/javascript" src="lib/jquery.js"></script>
 <script type="text/javascript" src="lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="lib/symdesc.js"></script>
-<script type="text/javascript" src="lib/needyoffset.js"></script>
 <script type="text/javascript" src="lib/canvas.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -162,8 +161,8 @@ function render() {
 	bw.push(opts);
 
 	bw.call(elt.sym, function(e) {
-				if (e) {
-					if (typeof e === 'string') {
+			if (e) {
+				if (typeof e === 'string') {
 					alert(e);
 				} else if (e.stack) {
 					alert(e.message + '\r\n' + e.stack);
