@@ -1,9 +1,9 @@
 %!PS
 
-% Barcode Writer in Pure PostScript - Version 2015-02-18
+% Barcode Writer in Pure PostScript - Version 2015-03-24
 % http://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2015 Terry Burton
+% Copyright (c) 2004-2014 Terry Burton
 %
 % Permission is hereby granted, free of charge, to any
 % person obtaining a copy of this software and associated
@@ -32,7 +32,7 @@
 % --BEGIN TEMPLATE--
 
 % --BEGIN RESOURCE preamble--
-%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2015021800 31191 34576
+%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2015032400 31191 34576
 %%BeginData:          6 ASCII Lines
 currentglobal
 true setglobal
@@ -46,7 +46,7 @@ setglobal
 
 % --BEGIN RESOURCE raiseerror--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2015021800 44890 44440
+%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2015032400 44890 44440
 %%BeginData:         13 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -67,7 +67,7 @@ end
 
 % --BEGIN RENDERER renlinear--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2015021800 76908 76502
+%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2015032400 76908 76502
 %%BeginData:        237 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -91,7 +91,7 @@ begin
     /textyalign (unset) def
     /textfont (Courier) def
     /textsize 10 def
-    /textxoffset -0.5 def	% MRW was 0
+    /textxoffset 0 def
     /textyoffset 0 def
     /textgaps 0 def
     /alttext () def
@@ -312,7 +312,7 @@ end
 
 % --BEGIN RENDERER renmatrix--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2015021800 54074 54076
+%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2015032400 54074 54076
 %%BeginData:         66 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -386,7 +386,7 @@ end
 
 % --BEGIN RENDERER renmaximatrix--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2015021800 55426 55272
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2015032400 55426 55272
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -477,7 +477,7 @@ end
 % --EXAM: 90200
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2015021800 62897 62576
+%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2015032400 62897 62576
 %%BeginData:        135 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -624,7 +624,7 @@ end
 % --EXAM: 05
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2015021800 61678 61382
+%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2015032400 61678 61382
 %%BeginData:        120 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -756,7 +756,7 @@ end
 % --EXAM: 2112345678900
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2015021800 84460 87603
+%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2015032400 84460 87603
 %%BeginData:        215 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -983,7 +983,7 @@ end
 % --EXAM: 02345673
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2015021800 81954 85278
+%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2015032400 81954 85278
 %%BeginData:        196 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -1191,7 +1191,7 @@ end
 % --EXAM: 416000336108
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2015021800 89013 91922
+%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2015032400 89013 91922
 %%BeginData:        248 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -1451,7 +1451,7 @@ end
 % --EXAM: 00123457
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2015021800 92938 99490
+%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2015032400 92938 99490
 %%BeginData:        287 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -1750,7 +1750,7 @@ end
 % --EXAM: 978-1-56581-231-4 52250
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2015021800 97266 100181
+%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2015032400 97266 100181
 %%BeginData:        252 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -2014,7 +2014,7 @@ end
 % --EXAM: 979-0-2605-3211-3
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2015021800 94206 93526
+%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2015032400 94206 93526
 %%BeginData:        231 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -2257,7 +2257,7 @@ end
 % --EXAM: 0311-175X 00 17
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2015021800 85135 81376
+%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2015032400 85135 81376
 %%BeginData:        177 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -2446,7 +2446,7 @@ end
 % --EXAM: Count01234567^FNC2!
 % --EXOP: includetext parsefnc
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2015021800 112448 118940
+%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2015032400 112448 118940
 %%BeginData:        421 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -2879,7 +2879,7 @@ end
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2015021800 77611 77161
+%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2015032400 77611 77161
 %%BeginData:        157 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3045,11 +3045,11 @@ end
 % --BEGIN ENCODER ean14--
 % --REQUIRES preamble raiseerror renlinear code128--
 % --DESC: GS1-14
-% --EXAM: (01)04601234567893
+% --EXAM: (01) 0 46 01234 56789 3
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2015021800 67048 66736
-%%BeginData:         93 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2015032400 69977 69481
+%%BeginData:        105 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -3070,7 +3070,7 @@ begin
     /textxoffset 0 def
     /textyoffset -7 def
     /height 1 def
- 
+
     % Parse the input options
     options type /stringtype eq {
         1 dict begin
@@ -3088,6 +3088,13 @@ begin
     /textyoffset textyoffset cvr def
     /height height cvr def 
 
+    % Strip spaces from the given data
+    /text barcode def
+    barcode dup length string exch 0 exch
+    {dup 32 ne {3 copy put pop 1 add} {pop} ifelse} forall
+    0 exch getinterval /barcode exch def
+    /hasspace text length barcode length ne def
+ 
     % Validate the input
     barcode 0 4 getinterval (\(01\)) ne {
         /bwipp.ean14badAI (GS1-14 must begin with (01) application identifier) //raiseerror exec
@@ -3112,15 +3119,20 @@ begin
         barcode 17 get checksum 48 add ne {
             /bwipp.ean14badCheckDigit (Incorrect GS1-14 check digit provided) //raiseerror exec
         } if
-    } if
-    18 string
-    dup 0 barcode putinterval
-    dup 17 checksum 48 add put
-    /barcode exch def
+    } {
+        18 string
+        dup 0 barcode putinterval
+        dup 17 checksum 48 add put
+        /barcode exch def
+        text length hasspace {2} {1} ifelse add string
+        dup dup length 2 sub ( ) putinterval
+        dup dup length 1 sub checksum 48 add put
+        dup 0 text putinterval
+        /text exch def
+    } ifelse
     /gtin barcode 4 14 getinterval def
 
     % Compose input to code128
-    /text barcode def
     /barcode 21 string def
     barcode 0 (^FNC101) putinterval
     barcode 7 gtin putinterval
@@ -3150,11 +3162,11 @@ end
 % --BEGIN ENCODER sscc18--
 % --REQUIRES preamble raiseerror renlinear code128--
 % --DESC: SSCC-18
-% --EXAM: (00)006141411234567890
+% --EXAM: (00) 0 0614141 123456789 0
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2015021800 67060 66743
-%%BeginData:         93 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2015032400 69989 69488
+%%BeginData:        105 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -3193,6 +3205,13 @@ begin
     /textyoffset textyoffset cvr def
     /height height cvr def 
 
+    % Strip spaces from the given data
+    /text barcode def
+    barcode dup length string exch 0 exch
+    {dup 32 ne {3 copy put pop 1 add} {pop} ifelse} forall
+    0 exch getinterval /barcode exch def
+    /hasspace text length barcode length ne def
+
     % Validate the input
     barcode 0 4 getinterval (\(00\)) ne {
         /bwipp.sscc18badAI (SSCC-18 must begin with (00) application identifier) //raiseerror exec
@@ -3217,15 +3236,20 @@ begin
         barcode 21 get checksum 48 add ne {
             /bwipp.sscc18badCheckDigit (Incorrect SSCC-18 check digit provided) //raiseerror exec
         } if
-    } if
-    22 string
-    dup 0 barcode putinterval
-    dup 21 checksum 48 add put
-    /barcode exch def
+    } {
+        22 string
+        dup 0 barcode putinterval
+        dup 21 checksum 48 add put
+        /barcode exch def
+        text length hasspace {2} {1} ifelse add string
+        dup dup length 2 sub ( ) putinterval
+        dup dup length 1 sub checksum 48 add put
+        dup 0 text putinterval
+        /text exch def
+    } ifelse
     /sscc barcode 4 18 getinterval def
 
     % Compose input to code128
-    /text barcode def
     /barcode 25 string def
     barcode 0 (^FNC100) putinterval
     barcode 7 sscc putinterval
@@ -3258,7 +3282,7 @@ end
 % --EXAM: THIS IS CODE 39
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2015021800 67013 66837
+%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2015032400 67013 66837
 %%BeginData:        141 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3411,7 +3435,7 @@ end
 % --EXAM: Code39 Ext!
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2015021800 65652 65486
+%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2015032400 65652 65486
 %%BeginData:        110 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3533,7 +3557,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2015021800 63549 63380
+%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2015032400 63549 63380
 %%BeginData:         99 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3644,7 +3668,7 @@ end
 % --EXAM: 123456
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2015021800 63596 63384
+%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2015032400 63596 63384
 %%BeginData:        100 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3756,7 +3780,7 @@ end
 % --EXAM: THIS IS CODE 93
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2015021800 65852 65716
+%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2015032400 65852 65716
 %%BeginData:        148 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3916,7 +3940,7 @@ end
 % --EXAM: Code93 Ext!
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2015021800 65941 65711
+%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2015032400 65941 65711
 %%BeginData:        114 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4042,7 +4066,7 @@ end
 % --EXAM: 2401234567
 % --EXOP: height=0.5 includecheck includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2015021800 65832 65492
+%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2015032400 65832 65492
 %%BeginData:        150 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4201,11 +4225,11 @@ end
 % --BEGIN ENCODER itf14--
 % --REQUIRES preamble raiseerror renlinear interleaved2of5--
 % --DESC: ITF-14
-% --EXAM: 04601234567893
+% --EXAM: 0 46 01234 56789 3
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2015021800 62725 62567
-%%BeginData:         95 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2015032400 65819 65737
+%%BeginData:        109 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -4225,7 +4249,7 @@ begin
     /textfont /Courier def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -10 def
+    /textyoffset 3 def
     /height 0.5 def
     /showborder true def
     /borderwidth 4 def
@@ -4252,6 +4276,13 @@ begin
     /borderleft borderleft cvr def
     /borderright borderright cvr def
 
+    % Strip spaces from the given data
+    /text barcode def
+    barcode dup length string exch 0 exch
+    {dup 32 ne {3 copy put pop 1 add} {pop} ifelse} forall
+    0 exch getinterval /barcode exch def
+    /hasspace text length barcode length ne def
+
     % Validate the input
     barcode length 13 ne barcode length 14 ne and {
         /bwipp.itf14badLength (ITF-14 must be 13 or 14 digits) //raiseerror exec
@@ -4273,11 +4304,17 @@ begin
         barcode 13 get checksum 48 add ne {
             /bwipp.itf14badCheckDigit (Incorrect ITF-14 check digit provided) //raiseerror exec
         } if
-    } if
-    14 string
-    dup 0 barcode putinterval
-    dup 13 checksum 48 add put
-    /barcode exch def
+    } {
+        14 string
+        dup 0 barcode putinterval
+        dup 13 checksum 48 add put
+        /barcode exch def
+        text length hasspace {2} {1} ifelse add string
+        dup dup length 2 sub ( ) putinterval
+        dup dup length 1 sub checksum 48 add put
+        dup 0 text putinterval
+        /text exch def
+    } ifelse
 
     % Get the result of encoding with interleaved2of5
     options (dontdraw) true put
@@ -4287,9 +4324,10 @@ begin
     options (borderright) borderright put
     options (height) height put
     options (textyoffset) textyoffset put
-    options (includecheckintext) includecheckintext put
     /args barcode options //interleaved2of5 exec def
 
+    args (txt) [ [text textxoffset textyoffset textfont textsize] ] put
+    args (textxalign) (center) put
     args (opt) options put
     args
  
@@ -4311,7 +4349,7 @@ end
 % --EXAM: 563102430313
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2015021800 62754 62576
+%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2015032400 62754 62576
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4414,7 +4452,7 @@ end
 % --EXAM: 21348075016401
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2015021800 62746 62572
+%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2015032400 62746 62572
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4517,7 +4555,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2015021800 112081 118257
+%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2015032400 112081 118257
 %%BeginData:        418 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4947,7 +4985,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2015021800 67872 71029
+%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2015032400 67872 71029
 %%BeginData:         73 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5032,7 +5070,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2015021800 67972 71109
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2015032400 67972 71109
 %%BeginData:         73 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5117,7 +5155,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2015021800 67898 71045
+%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2015032400 67898 71045
 %%BeginData:         73 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5202,7 +5240,7 @@ end
 % --EXAM: (01)15012345678907
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2015021800 83260 86093
+%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2015032400 83260 86093
 %%BeginData:        276 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5490,7 +5528,7 @@ end
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2015021800 197224 210202
+%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2015032400 197224 210202
 %%BeginData:        871 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6373,7 +6411,7 @@ end
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: segments=4
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2015021800 63589 66857
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2015032400 63589 66857
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6428,7 +6466,7 @@ end
 % --EXAM: 117480
 % --EXOP: showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2015021800 60269 60124
+%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2015032400 60269 60124
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6531,7 +6569,7 @@ end
 % --EXAM: 117480
 % --EXOP: includetext showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2015021800 60956 60646
+%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2015032400 60956 60646
 %%BeginData:         96 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6639,7 +6677,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2015021800 67430 67109
+%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2015032400 67430 67109
 %%BeginData:        150 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6801,7 +6839,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2015021800 57882 57606
+%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2015032400 57882 57606
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6868,7 +6906,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2015021800 57852 57582
+%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2015032400 57852 57582
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6935,7 +6973,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2015021800 57862 57590
+%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2015032400 57862 57590
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7002,7 +7040,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2015021800 57852 57582
+%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2015032400 57852 57582
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7069,7 +7107,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2015021800 57877 57602
+%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2015032400 57877 57602
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7136,7 +7174,7 @@ end
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2015021800 69086 68582
+%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2015032400 69086 68582
 %%BeginData:        158 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7306,7 +7344,7 @@ end
 % --EXAM: BC412
 % --EXOP: semi includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2015021800 64995 64541
+%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2015032400 64995 64541
 %%BeginData:        148 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7466,7 +7504,7 @@ end
 % --EXAM: A0123456789B
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2015021800 69398 68906
+%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2015032400 69398 68906
 %%BeginData:        156 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7634,7 +7672,7 @@ end
 % --EXAM: 0123456709498765432101234567891
 % --EXOP: barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2015021800 101896 104906
+%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2015032400 101896 104906
 %%BeginData:        335 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7981,7 +8019,7 @@ end
 % --EXAM: 01234
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2015021800 65689 65439
+%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2015032400 65689 65439
 %%BeginData:        140 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8133,7 +8171,7 @@ end
 % --EXAM: 01234567890
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2015021800 65565 65215
+%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2015032400 65565 65215
 %%BeginData:        141 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8286,7 +8324,7 @@ end
 % --EXAM: LE28HS9Z
 % --EXOP: includetext barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2015021800 66136 65853
+%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2015032400 66136 65853
 %%BeginData:        145 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8443,7 +8481,7 @@ end
 % --EXAM: 5956439111ABA 9
 % --EXOP: includetext custinfoenc=character
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2015021800 75628 75331
+%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2015032400 75628 75331
 %%BeginData:        202 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8657,7 +8695,7 @@ end
 % --EXAM: 1231FZ13XHS
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2015021800 61942 61672
+%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2015032400 61942 61672
 %%BeginData:        111 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8780,7 +8818,7 @@ end
 % --EXAM: 6540123789-A-K-Z
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2015021800 66345 66129
+%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2015032400 66345 66129
 %%BeginData:        162 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8954,7 +8992,7 @@ end
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2015021800 71052 70834
+%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2015032400 71052 70834
 %%BeginData:        139 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9105,7 +9143,7 @@ end
 % --EXAM: 01234ABCD
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2015021800 67754 67457
+%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2015032400 67754 67457
 %%BeginData:        146 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9263,7 +9301,7 @@ end
 % --EXAM: ABCDEF
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2015021800 68624 68368
+%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2015032400 68624 68368
 %%BeginData:        173 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9448,7 +9486,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2015021800 57870 57594
+%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2015032400 57870 57594
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9515,7 +9553,7 @@ end
 % --EXAM: ABC123
 % --EXOP: version=b inkspread=-0.5 parsefnc includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2015021800 101857 104871
+%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2015032400 101857 104871
 %%BeginData:        389 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9916,7 +9954,7 @@ end
 % --EXAM: CODABLOCK F 34567890123456789010040digit
 % --EXOP: columns=8
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2015021800 125044 131468
+%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2015032400 125044 131468
 %%BeginData:        512 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -10440,7 +10478,7 @@ end
 % --EXAM: Abcd-1234567890-wxyZ
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2015021800 142769 155916
+%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2015032400 142769 155916
 %%BeginData:        710 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -11162,7 +11200,7 @@ end
 % --EXAM: MULTIPLE ROWS IN CODE 49
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2015021800 218104 234960
+%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2015032400 218104 234960
 %%BeginData:       1076 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12250,7 +12288,7 @@ end
 % --EXAM: 3493
 % --EXOP: height=0.5 includetext 
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2015021800 68302 68105
+%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2015032400 68302 68105
 %%BeginData:        149 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12411,7 +12449,7 @@ end
 % --EXAM: 11099
 % --EXOP: inkspread=-0.25 showborder borderleft=0 borderright=0
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2015021800 59248 59148
+%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2015032400 59248 59148
 %%BeginData:         93 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12516,7 +12554,7 @@ end
 % --EXAM: 331132131313411122131311333213114131131221323
 % --EXOP: height=0.5
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2015021800 55514 55371
+%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2015032400 55514 55371
 %%BeginData:         52 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12580,7 +12618,7 @@ end
 % --EXAM: FATDAFTDAD
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2015021800 58288 58222
+%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2015032400 58288 58222
 %%BeginData:         76 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12668,7 +12706,7 @@ end
 % --EXAM: fima
 % --EXOP: backgroundcolor=DD000011
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2015021800 58044 57965
+%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2015032400 58044 57965
 %%BeginData:         72 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12752,7 +12790,7 @@ end
 % --EXAM: This is PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2015021800 188276 197810
+%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2015032400 188276 197810
 %%BeginData:        873 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -13637,7 +13675,7 @@ end
 % --EXAM: This is compact PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2015021800 60668 60355
+%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2015032400 60668 60355
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -13692,7 +13730,7 @@ end
 % --EXAM: MicroPDF417
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2015021800 200331 213151
+%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2015032400 200331 213151
 %%BeginData:        952 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -14656,7 +14694,7 @@ end
 % --EXAM: This is Data Matrix!
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2015021800 189975 216544
+%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2015032400 189975 216544
 %%BeginData:        844 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -15512,7 +15550,7 @@ end
 % --EXAM: http://goo.gl/0bis
 % --EXOP: eclevel=M
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2015021800 265291 275512
+%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2015032400 265291 275512
 %%BeginData:       1004 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -16528,7 +16566,7 @@ end
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2015021800 60576 60353
+%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2015032400 60576 60353
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -16583,7 +16621,7 @@ end
 % --EXAM: [)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004
 % --EXOP: mode=2 parse
 % --RNDR: renmaximatrix
-%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2015021800 116961 123452
+%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2015032400 116961 123452
 %%BeginData:        564 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -17159,7 +17197,7 @@ end
 % --EXAM: This is Aztec Code
 % --EXOP: format=full
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2015021800 163082 186690
+%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2015032400 163082 186690
 %%BeginData:        679 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -17850,7 +17888,7 @@ end
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2015021800 60604 60376
+%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2015032400 60604 60376
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -17905,7 +17943,7 @@ end
 % --EXAM: 1
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2015021800 60573 60352
+%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2015032400 60573 60352
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -17960,7 +17998,7 @@ end
 % --EXAM: Code One
 % --EXOP: version=B
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2015021800 98768 101958
+%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2015032400 98768 101958
 %%BeginData:        328 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -18300,7 +18338,7 @@ end
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: ccversion=b cccolumns=4
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2015021800 201765 192297
+%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2015032400 201765 192297
 %%BeginData:        650 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -18962,7 +19000,7 @@ end
 % --EXAM: 2112345678900|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2015021800 84039 84015
+%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2015032400 84039 84015
 %%BeginData:         72 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -19046,7 +19084,7 @@ end
 % --EXAM: 02345673|(21)A12345678
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2015021800 84340 84317
+%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2015032400 84340 84317
 %%BeginData:         75 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -19133,7 +19171,7 @@ end
 % --EXAM: 416000336108|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2015021800 84017 84082
+%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2015032400 84017 84082
 %%BeginData:         72 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -19217,7 +19255,7 @@ end
 % --EXAM: 00123457|(15)021231
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2015021800 88475 84857
+%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2015032400 88475 84857
 %%BeginData:         87 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -19316,7 +19354,7 @@ end
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2015021800 83884 87420
+%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2015032400 83884 87420
 %%BeginData:        100 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -19428,7 +19466,7 @@ end
 % --EXAM: (01)03412345678900|(17)010200
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2015021800 89818 86093
+%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2015032400 89818 86093
 %%BeginData:         96 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -19536,7 +19574,7 @@ end
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2015021800 89894 86165
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2015032400 89894 86165
 %%BeginData:         96 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -19644,7 +19682,7 @@ end
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2015021800 90784 87051
+%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2015032400 90784 87051
 %%BeginData:        100 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -19756,7 +19794,7 @@ end
 % --EXAM: (01)03512345678907|(21)abcdefghijklmnopqrstuv
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2015021800 80661 80522
+%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2015032400 80661 80522
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -19847,7 +19885,7 @@ end
 % --EXAM: (01)93712345678904(3103)001234|(91)1A2B3C4D5E
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2015021800 86979 83324
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2015032400 86979 83324
 %%BeginData:         98 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -19957,7 +19995,7 @@ end
 % --EXAM: (01)00012345678905(10)ABCDEF|(21)12345678
 % --EXOP: segments=4 
 % --RNDR: renmatrix renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2015021800 89645 89413
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2015032400 89645 89413
 %%BeginData:         95 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -20064,7 +20102,7 @@ end
 % --EXAM: (00)030123456789012340|(02)13012345678909(37)24(10)1234567ABCDEFG
 % --EXOP: ccversion=c
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2015021800 86884 89985
+%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2015032400 86884 89985
 %%BeginData:        100 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -20176,7 +20214,7 @@ end
 % --EXAM: (01)03453120000011(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2015021800 78248 77990
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2015032400 78248 77990
 %%BeginData:        134 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20322,7 +20360,7 @@ end
 % --EXAM: (01)03453120000011(8200)http://www.abc.net(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2015021800 78280 77938
+%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2015032400 78280 77938
 %%BeginData:        133 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20467,7 +20505,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2015021800 63169 62924
+%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2015032400 63169 62924
 %%BeginData:         92 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20571,7 +20609,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2015021800 67220 66909
+%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2015032400 67220 66909
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20674,7 +20712,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2015021800 68711 64879
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2015032400 68711 64879
 %%BeginData:         74 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20760,7 +20798,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2015021800 65468 65072
+%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2015032400 65468 65072
 %%BeginData:         78 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20850,7 +20888,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2015021800 65606 65195
+%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2015032400 65606 65195
 %%BeginData:         78 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20940,7 +20978,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2015021800 64983 68179
+%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2015032400 64983 68179
 %%BeginData:         74 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -21026,7 +21064,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2015021800 60823 64313
+%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2015032400 60823 64313
 %%BeginData:         74 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
