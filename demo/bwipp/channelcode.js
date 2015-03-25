@@ -1,10 +1,10 @@
 // file: bwipp/channelcode.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-02-18
+// Barcode Writer in Pure PostScript - Version 2015-03-24
 //
 // Copyright (c) 2011-2015 Mark Warren
-// Copyright (c) 2004-2015 Terry Burton
+// Copyright (c) 2004-2014 Terry Burton
 //
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
@@ -17,23 +17,23 @@ if (!BWIPJS.bwipp["renlinear"] && BWIPJS.increfs("channelcode", "renlinear")) {
 }
 BWIPJS.bwipp["channelcode"]=function() {
 	function $f0(){
-		//#line 12277: token false eq {exit} if dup length string cvs (=) search
+		//#line 12315: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 12278: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 12316: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 12278: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 12316: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 12277: token false eq {exit} if dup length string cvs (=) search
+		//#line 12315: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,7 +71,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 12278: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 12316: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -88,20 +88,20 @@ BWIPJS.bwipp["channelcode"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 12275: 1 dict begin
+		//#line 12313: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 12276: options {
+		//#line 12314: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 12279: } loop
+		//#line 12317: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 12280: currentdict end /options exch def
+		//#line 12318: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -109,11 +109,11 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 12282: options {def} forall
+		//#line 12320: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 12288: /bwipp.channelcodeBadLength (Channel Code must be 2 to 7 digits) //raiseerror exec
+		//#line 12326: /bwipp.channelcodeBadLength (Channel Code must be 2 to 7 digits) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.channelcodeBadLength";
 		this.stk[this.ptr++]=BWIPJS.psstring("Channel Code must be 2 to 7 digits");
 		var t=this.dstk.get("raiseerror");
@@ -122,7 +122,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f7(){
-		//#line 12292: /bwipp.channelcodeBadCharacter (Channel Code must contain only digits) //raiseerror exec
+		//#line 12330: /bwipp.channelcodeBadCharacter (Channel Code must contain only digits) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.channelcodeBadCharacter";
 		this.stk[this.ptr++]=BWIPJS.psstring("Channel Code must contain only digits");
 		var t=this.dstk.get("raiseerror");
@@ -131,7 +131,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f8(){
-		//#line 12291: dup 48 lt exch 57 gt or {
+		//#line 12329: dup 48 lt exch 57 gt or {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
@@ -142,14 +142,14 @@ BWIPJS.bwipp["channelcode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f7;
-		//#line 12293: } if
+		//#line 12331: } if
 		var t9=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t9.call(this)==-1) return -1;
 		}
 	}
 	function $f9(){
-		//#line 12296: /bwipp.channelcodeTooBig (The Channel Code value is too big for the number of channels) //raiseerror exec
+		//#line 12334: /bwipp.channelcodeTooBig (The Channel Code value is too big for the number of channels) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.channelcodeTooBig";
 		this.stk[this.ptr++]=BWIPJS.psstring("The Channel Code value is too big for the number of channels");
 		var t=this.dstk.get("raiseerror");
@@ -158,15 +158,15 @@ BWIPJS.bwipp["channelcode"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f10(){
-		//#line 12305: add add add 4 gt {1} {2} ifelse
+		//#line 12343: add add add 4 gt {1} {2} ifelse
 		this.stk[this.ptr++]=1;
 	}
 	function $f11(){
-		//#line 12305: add add add 4 gt {1} {2} ifelse
+		//#line 12343: add add add 4 gt {1} {2} ifelse
 		this.stk[this.ptr++]=2;
 	}
 	function $f12(){
-		//#line 12308: b 3 index 2 index put
+		//#line 12346: b 3 index 2 index put
 		var t=this.dstk.get("b");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
@@ -179,7 +179,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 12309: 3 index exch sub 1 add 4 index 3 index 1 add nexts
+		//#line 12347: 3 index exch sub 1 add 4 index 3 index 1 add nexts
 		this.stk[this.ptr++]=3;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
@@ -199,14 +199,14 @@ BWIPJS.bwipp["channelcode"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f13(){
-		//#line 12307: dup 1 4 index {
+		//#line 12345: dup 1 4 index {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=4;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 		this.stk[this.ptr++]=$f12;
-		//#line 12310: } for
+		//#line 12348: } for
 		var t20=this.stk[--this.ptr];
 		var t18=this.stk[--this.ptr];
 		var t17=this.stk[--this.ptr];
@@ -217,7 +217,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		}
 	}
 	function $f14(){
-		//#line 12316: 3 1 10 {dup s exch get exch b exch get} for
+		//#line 12354: 3 1 10 {dup s exch get exch b exch get} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("s");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -236,10 +236,10 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.ptr--;
 	}
 	function $f15(){
-		//#line 12315: /out [ 
+		//#line 12353: /out [ 
 		this.stk[this.ptr++]="out";
 		this.stk[this.ptr++]=Infinity;
-		//#line 12316: 3 1 10 {dup s exch get exch b exch get} for
+		//#line 12354: 3 1 10 {dup s exch get exch b exch get} for
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=10;
@@ -252,7 +252,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 			this.stk[this.ptr++]=t24;
 			if (t25.call(this)==-1) break;
 		}
-		//#line 12317: ] 0 chan 2 mul getinterval def 
+		//#line 12355: ] 0 chan 2 mul getinterval def 
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
@@ -267,7 +267,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f16(){
-		//#line 12313: b 2 index 4 index put
+		//#line 12351: b 2 index 4 index put
 		var t=this.dstk.get("b");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -280,7 +280,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 12314: value target eq {
+		//#line 12352: value target eq {
 		var t=this.dstk.get("value");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("target");
@@ -290,12 +290,12 @@ BWIPJS.bwipp["channelcode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f15;
-		//#line 12318: } if
+		//#line 12356: } if
 		var t26=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t26.call(this)==-1) return -1;
 		}
-		//#line 12319: /value value 1 add def
+		//#line 12357: /value value 1 add def
 		this.stk[this.ptr++]="value";
 		var t=this.dstk.get("value");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -304,23 +304,23 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f17(){
-		//#line 12312: dup 3 index le {
+		//#line 12350: dup 3 index le {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=3;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f16;
-		//#line 12320: } if
+		//#line 12358: } if
 		var t27=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t27.call(this)==-1) return -1;
 		}
 	}
 	function $f18(){
-		//#line 12300: dup
+		//#line 12338: dup
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		//#line 12301: dup s exch get exch
+		//#line 12339: dup s exch get exch
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("s");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -330,7 +330,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 12302: dup b exch 1 sub get exch
+		//#line 12340: dup b exch 1 sub get exch
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("b");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -342,7 +342,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 12303: dup s exch 1 sub get exch
+		//#line 12341: dup s exch 1 sub get exch
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("s");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -354,7 +354,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 12304: b exch 2 sub get exch
+		//#line 12342: b exch 2 sub get exch
 		var t=this.dstk.get("b");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -365,7 +365,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 12305: add add add 4 gt {1} {2} ifelse
+		//#line 12343: add add add 4 gt {1} {2} ifelse
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
@@ -380,7 +380,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		} else {
 			if (t14.call(this)==-1) return -1;
 		}
-		//#line 12306: 1 index chan 2 add lt {
+		//#line 12344: 1 index chan 2 add lt {
 		this.stk[this.ptr++]=1;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
@@ -390,9 +390,9 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f13;
-		//#line 12311: } {
+		//#line 12349: } {
 		this.stk[this.ptr++]=$f17;
-		//#line 12321: } ifelse 
+		//#line 12359: } ifelse 
 		var t28=this.stk[--this.ptr];
 		var t29=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -400,24 +400,24 @@ BWIPJS.bwipp["channelcode"]=function() {
 		} else {
 			if (t28.call(this)==-1) return -1;
 		}
-		//#line 12322: pop pop pop pop
+		//#line 12360: pop pop pop pop
 		this.ptr--;
 		this.ptr--;
 		this.ptr--;
 		this.ptr--;
 	}
 	function $f19(){
-		//#line 12326: dup chan 2 add lt {1} {1 index} ifelse 1 3 index {
+		//#line 12364: dup chan 2 add lt {1} {1 index} ifelse 1 3 index {
 		this.stk[this.ptr++]=1;
 	}
 	function $f20(){
-		//#line 12326: dup chan 2 add lt {1} {1 index} ifelse 1 3 index {
+		//#line 12364: dup chan 2 add lt {1} {1 index} ifelse 1 3 index {
 		this.stk[this.ptr++]=1;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 	}
 	function $f21(){
-		//#line 12327: s 2 index 2 index put
+		//#line 12365: s 2 index 2 index put
 		var t=this.dstk.get("s");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -430,7 +430,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 12328: 2 index exch sub 1 add 3 index 2 index nextb
+		//#line 12366: 2 index exch sub 1 add 3 index 2 index nextb
 		this.stk[this.ptr++]=2;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
@@ -448,7 +448,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f22(){
-		//#line 12326: dup chan 2 add lt {1} {1 index} ifelse 1 3 index {
+		//#line 12364: dup chan 2 add lt {1} {1 index} ifelse 1 3 index {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("chan");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -469,7 +469,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 		this.stk[this.ptr++]=$f21;
-		//#line 12329: } for
+		//#line 12367: } for
 		var t36=this.stk[--this.ptr];
 		var t34=this.stk[--this.ptr];
 		var t33=this.stk[--this.ptr];
@@ -478,57 +478,57 @@ BWIPJS.bwipp["channelcode"]=function() {
 			this.stk[this.ptr++]=t35;
 			if (t36.call(this)==-1) break;
 		}
-		//#line 12330: pop pop pop
+		//#line 12368: pop pop pop
 		this.ptr--;
 		this.ptr--;
 		this.ptr--;
 	}
 	function $f23(){
-		//#line 12334: /chan exch def
+		//#line 12372: /chan exch def
 		this.stk[this.ptr++]="chan";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12335: /target exch def
+		//#line 12373: /target exch def
 		this.stk[this.ptr++]="target";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12336: /value 0 def
+		//#line 12374: /value 0 def
 		this.stk[this.ptr++]="value";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12337: /out -1 def
+		//#line 12375: /out -1 def
 		this.stk[this.ptr++]="out";
 		this.stk[this.ptr++]=-1;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12338: /b [ 1 1 1 0 0 0 0 0 0 0 0 ] def
+		//#line 12376: /b [ 1 1 1 0 0 0 0 0 0 0 0 ] def
 		this.stk[this.ptr++]="b";
 		this.stk[this.ptr++]=BWIPJS.psarray([1,1,1,0,0,0,0,0,0,0,0]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12339: /s [ 0 1 1 0 0 0 0 0 0 0 0 ] def
+		//#line 12377: /s [ 0 1 1 0 0 0 0 0 0 0 0 ] def
 		this.stk[this.ptr++]="s";
 		this.stk[this.ptr++]=BWIPJS.psarray([0,1,1,0,0,0,0,0,0,0,0]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12340: chan dup 3 nexts
+		//#line 12378: chan dup 3 nexts
 		var t=this.dstk.get("chan");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=3;
 		var t=this.dstk.get("nexts");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 12341: out
+		//#line 12379: out
 		var t=this.dstk.get("out");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f24(){
-		//#line 12347: /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
+		//#line 12385: /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
 		this.stk[this.ptr++]=BWIPJS.psarray([1,1,1,1,1]);
 	}
 	function $f25(){
-		//#line 12347: /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
+		//#line 12385: /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
 		this.stk[this.ptr++]=BWIPJS.psarray([1,1,1,1,1,1,1,1,1]);
 	}
 	function $f26(){
-		//#line 12366: dup data exch get 1 sub exch mod23 exch get mul add
+		//#line 12404: dup data exch get 1 sub exch mod23 exch get mul add
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("data");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -551,25 +551,25 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f27(){
-		//#line 12355: /mod23 [
+		//#line 12393: /mod23 [
 		this.stk[this.ptr++]="mod23";
 		this.stk[this.ptr++]=Infinity;
-		//#line 12356: [] []
+		//#line 12394: [] []
 		this.stk[this.ptr++]=BWIPJS.psarray([]);
 		this.stk[this.ptr++]=BWIPJS.psarray([]);
-		//#line 12357: [ 13 12  4  9  3  1 ]
+		//#line 12395: [ 13 12  4  9  3  1 ]
 		this.stk[this.ptr++]=BWIPJS.psarray([13,12,4,9,3,1]);
-		//#line 12358: [ 13  2 12  3 18 16  4  1 ]
+		//#line 12396: [ 13  2 12  3 18 16  4  1 ]
 		this.stk[this.ptr++]=BWIPJS.psarray([13,2,12,3,18,16,4,1]);
-		//#line 12359: [ 11 16 17  8 20  4 10  2  5  1 ]
+		//#line 12397: [ 11 16 17  8 20  4 10  2  5  1 ]
 		this.stk[this.ptr++]=BWIPJS.psarray([11,16,17,8,20,4,10,2,5,1]);
-		//#line 12360: [  1  4 16 18  3 12  2  8  9 13  6  1 ]
+		//#line 12398: [  1  4 16 18  3 12  2  8  9 13  6  1 ]
 		this.stk[this.ptr++]=BWIPJS.psarray([1,4,16,18,3,12,2,8,9,13,6,1]);
-		//#line 12361: [ 20 16 22 13 15 12  5  4  8  9 21  3  7  1 ]
+		//#line 12399: [ 20 16 22 13 15 12  5  4  8  9 21  3  7  1 ]
 		this.stk[this.ptr++]=BWIPJS.psarray([20,16,22,13,15,12,5,4,8,9,21,3,7,1]);
-		//#line 12362: [  2  6 18  8  1  3  9  4 12 13 16  2  6 18  8  1 ]
+		//#line 12400: [  2  6 18  8  1  3  9  4 12 13 16  2  6 18  8  1 ]
 		this.stk[this.ptr++]=BWIPJS.psarray([2,6,18,8,1,3,9,4,12,13,16,2,6,18,8,1]);
-		//#line 12363: ] barlen get def
+		//#line 12401: ] barlen get def
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
@@ -582,9 +582,9 @@ BWIPJS.bwipp["channelcode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12364: 0
+		//#line 12402: 0
 		this.stk[this.ptr++]=0;
-		//#line 12365: 0 1 data length 1 sub {
+		//#line 12403: 0 1 data length 1 sub {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("data");
@@ -594,7 +594,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f26;
-		//#line 12367: } for
+		//#line 12405: } for
 		var t43=this.stk[--this.ptr];
 		var t41=this.stk[--this.ptr];
 		var t40=this.stk[--this.ptr];
@@ -603,7 +603,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 			this.stk[this.ptr++]=t42;
 			if (t43.call(this)==-1) break;
 		}
-		//#line 12368: 23 mod 3 encode /check exch def
+		//#line 12406: 23 mod 3 encode /check exch def
 		this.stk[this.ptr++]=23;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=3;
@@ -614,11 +614,11 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f28(){
-		//#line 12381: /i exch def
+		//#line 12419: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12382: txt i [barcode i 1 getinterval 0 0 () 0] put
+		//#line 12420: txt i [barcode i 1 getinterval 0 0 () 0] put
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -645,47 +645,47 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.ptr-=3;
 	}
 	function $f29(){
-		//#line 12389: /bhs [sbs length 1 add 2 idiv {height} repeat]
+		//#line 12427: /bhs [sbs length 1 add 2 idiv {height} repeat]
 		var t=this.dstk.get("height");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f30(){
-		//#line 12390: /bbs [sbs length 1 add 2 idiv {0} repeat]
+		//#line 12428: /bbs [sbs length 1 add 2 idiv {0} repeat]
 		this.stk[this.ptr++]=0;
 	}
-	//#line 12262: 20 dict begin                 % Confine variables to local scope
+	//#line 12300: 20 dict begin                 % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 12264: /options exch def       % We are given an option string
+	//#line 12302: /options exch def       % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12265: /barcode exch def       % We are given a barcode string
+	//#line 12303: /barcode exch def       % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12267: /dontdraw false def
+	//#line 12305: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12268: /shortfinder false def
+	//#line 12306: /shortfinder false def
 	this.stk[this.ptr++]="shortfinder";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12269: /includetext false def
+	//#line 12307: /includetext false def
 	this.stk[this.ptr++]="includetext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12270: /includecheck false def
+	//#line 12308: /includecheck false def
 	this.stk[this.ptr++]="includecheck";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12271: /height 1 def
+	//#line 12309: /height 1 def
 	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12274: options type /stringtype eq {
+	//#line 12312: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -695,12 +695,12 @@ BWIPJS.bwipp["channelcode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 12281: } if
+	//#line 12319: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 12282: options {def} forall
+	//#line 12320: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -716,13 +716,13 @@ BWIPJS.bwipp["channelcode"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 12284: /height height cvr def
+	//#line 12322: /height height cvr def
 	this.stk[this.ptr++]="height";
 	var t=this.dstk.get("height");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12287: barcode length 2 lt barcode length 7 gt or {
+	//#line 12325: barcode length 2 lt barcode length 7 gt or {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -739,16 +739,16 @@ BWIPJS.bwipp["channelcode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f6;
-	//#line 12289: } if
+	//#line 12327: } if
 	var t8=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t8.call(this)==-1) return -1;
 	}
-	//#line 12290: barcode {
+	//#line 12328: barcode {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f8;
-	//#line 12294: } forall
+	//#line 12332: } forall
 	var t12=this.stk[--this.ptr];
 	var t11=this.stk[--this.ptr];
 	for (t10 in t11) {
@@ -761,7 +761,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		}
 		if (t12.call(this)==-1) break;
 	}
-	//#line 12295: barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {
+	//#line 12333: barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
@@ -778,34 +778,34 @@ BWIPJS.bwipp["channelcode"]=function() {
 	this.ptr--;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f9;
-	//#line 12297: } if
+	//#line 12335: } if
 	var t13=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t13.call(this)==-1) return -1;
 	}
-	//#line 12299: /nextb {
+	//#line 12337: /nextb {
 	this.stk[this.ptr++]="nextb";
 	this.stk[this.ptr++]=$f18;
-	//#line 12323: } bind def
+	//#line 12361: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12325: /nexts {
+	//#line 12363: /nexts {
 	this.stk[this.ptr++]="nexts";
 	this.stk[this.ptr++]=$f22;
-	//#line 12331: } bind def
+	//#line 12369: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12333: /encode {
+	//#line 12371: /encode {
 	this.stk[this.ptr++]="encode";
 	this.stk[this.ptr++]=$f23;
-	//#line 12342: } bind def
+	//#line 12380: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12344: /barlen barcode length def
+	//#line 12382: /barlen barcode length def
 	this.stk[this.ptr++]="barlen";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12347: /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
+	//#line 12385: /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
 	this.stk[this.ptr++]="finder";
 	var t=this.dstk.get("shortfinder");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -819,7 +819,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 		if (t37.call(this)==-1) return -1;
 	}
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12350: /data barcode cvi barlen 1 add encode def
+	//#line 12388: /data barcode cvi barlen 1 add encode def
 	this.stk[this.ptr++]="data";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -831,23 +831,23 @@ BWIPJS.bwipp["channelcode"]=function() {
 	var t=this.dstk.get("encode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12353: /check [] def
+	//#line 12391: /check [] def
 	this.stk[this.ptr++]="check";
 	this.stk[this.ptr++]=BWIPJS.psarray([]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12354: includecheck {
+	//#line 12392: includecheck {
 	var t=this.dstk.get("includecheck");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f27;
-	//#line 12369: } if
+	//#line 12407: } if
 	var t44=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t44.call(this)==-1) return -1;
 	}
-	//#line 12372: /sbs [
+	//#line 12410: /sbs [
 	this.stk[this.ptr++]="sbs";
 	this.stk[this.ptr++]=Infinity;
-	//#line 12373: finder aload pop
+	//#line 12411: finder aload pop
 	var t=this.dstk.get("finder");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-1];
@@ -855,7 +855,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	//#line 12374: data aload pop
+	//#line 12412: data aload pop
 	var t=this.dstk.get("data");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-1];
@@ -863,7 +863,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	//#line 12375: check aload pop
+	//#line 12413: check aload pop
 	var t=this.dstk.get("check");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-1];
@@ -871,20 +871,20 @@ BWIPJS.bwipp["channelcode"]=function() {
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	//#line 12376: ] def
+	//#line 12414: ] def
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12379: /txt barlen array def
+	//#line 12417: /txt barlen array def
 	this.stk[this.ptr++]="txt";
 	var t=this.dstk.get("barlen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12380: 0 1 barlen 1 sub {
+	//#line 12418: 0 1 barlen 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barlen");
@@ -892,7 +892,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f28;
-	//#line 12383: } for
+	//#line 12421: } for
 	var t49=this.stk[--this.ptr];
 	var t47=this.stk[--this.ptr];
 	var t46=this.stk[--this.ptr];
@@ -901,17 +901,17 @@ BWIPJS.bwipp["channelcode"]=function() {
 		this.stk[this.ptr++]=t48;
 		if (t49.call(this)==-1) break;
 	}
-	//#line 12386: <<
+	//#line 12424: <<
 	this.stk[this.ptr++]=Infinity;
-	//#line 12387: /ren //renlinear
+	//#line 12425: /ren //renlinear
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renlinear");
 	this.stk[this.ptr++]=t;
-	//#line 12388: /sbs sbs
+	//#line 12426: /sbs sbs
 	this.stk[this.ptr++]="sbs";
 	var t=this.dstk.get("sbs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 12389: /bhs [sbs length 1 add 2 idiv {height} repeat]
+	//#line 12427: /bhs [sbs length 1 add 2 idiv {height} repeat]
 	this.stk[this.ptr++]="bhs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sbs");
@@ -933,7 +933,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 12390: /bbs [sbs length 1 add 2 idiv {0} repeat]
+	//#line 12428: /bbs [sbs length 1 add 2 idiv {0} repeat]
 	this.stk[this.ptr++]="bbs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sbs");
@@ -955,18 +955,18 @@ BWIPJS.bwipp["channelcode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 12391: /txt txt
+	//#line 12429: /txt txt
 	this.stk[this.ptr++]="txt";
 	var t=this.dstk.get("txt");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 12392: /textxalign (center)
+	//#line 12430: /textxalign (center)
 	this.stk[this.ptr++]="textxalign";
 	this.stk[this.ptr++]=BWIPJS.psstring("center");
-	//#line 12393: /opt options
+	//#line 12431: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 12394: >>
+	//#line 12432: >>
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -975,7 +975,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
-	//#line 12396: dontdraw not //renlinear if
+	//#line 12434: dontdraw not //renlinear if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -986,7 +986,7 @@ BWIPJS.bwipp["channelcode"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t56.call(this)==-1) return -1;
 	}
-	//#line 12398: end
+	//#line 12436: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

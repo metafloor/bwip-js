@@ -1,10 +1,10 @@
 // file: bwipp/hibcdatamatrix.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-02-18
+// Barcode Writer in Pure PostScript - Version 2015-03-24
 //
 // Copyright (c) 2011-2015 Mark Warren
-// Copyright (c) 2004-2015 Terry Burton
+// Copyright (c) 2004-2014 Terry Burton
 //
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
@@ -20,23 +20,23 @@ if (!BWIPJS.bwipp["datamatrix"] && BWIPJS.increfs("hibcdatamatrix", "datamatrix"
 }
 BWIPJS.bwipp["hibcdatamatrix"]=function() {
 	function $f0(){
-		//#line 20699: token false eq {exit} if dup length string cvs (=) search
+		//#line 20737: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 20700: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 20738: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 20700: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 20738: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 20699: token false eq {exit} if dup length string cvs (=) search
+		//#line 20737: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -74,7 +74,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 20700: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 20738: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -91,20 +91,20 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 20697: 1 dict begin
+		//#line 20735: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 20698: options {
+		//#line 20736: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 20701: } loop
+		//#line 20739: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 20702: currentdict end /options exch def
+		//#line 20740: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -112,11 +112,11 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 20704: options {def} forall
+		//#line 20742: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 20709: 0 1 42 {charvals exch dup barchars exch 1 getinterval exch put} for
+		//#line 20747: 0 1 42 {charvals exch dup barchars exch 1 getinterval exch put} for
 		var t=this.dstk.get("charvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -133,7 +133,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f7(){
-		//#line 20714: /bwipp.hibcdatamatrixBadCharacter (HIBC Data Matrix must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+		//#line 20752: /bwipp.hibcdatamatrixBadCharacter (HIBC Data Matrix must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.hibcdatamatrixBadCharacter";
 		this.stk[this.ptr++]=BWIPJS.psstring("HIBC Data Matrix must contain only digits, capital letters, spaces and the symbols -.$/+%");
 		var t=this.dstk.get("raiseerror");
@@ -142,7 +142,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f8(){
-		//#line 20713: barcode exch 1 getinterval charvals exch known not {
+		//#line 20751: barcode exch 1 getinterval charvals exch known not {
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -155,19 +155,19 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
 		this.stk[this.ptr++]=$f7;
-		//#line 20715: } if
+		//#line 20753: } if
 		var t13=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t13.call(this)==-1) return -1;
 		}
 	}
 	function $f9(){
-		//#line 20718: /barlen barcode length validatecheck {1 sub} if def
+		//#line 20756: /barlen barcode length validatecheck {1 sub} if def
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f10(){
-		//#line 20722: barcode exch 1 getinterval charvals exch get
+		//#line 20760: barcode exch 1 getinterval charvals exch get
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -180,7 +180,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
-		//#line 20723: checksum add /checksum exch def
+		//#line 20761: checksum add /checksum exch def
 		var t=this.dstk.get("checksum");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
@@ -189,7 +189,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f11(){
-		//#line 20728: /bwipp.hibcdatamatrixBadCheckDigit (Incorrect HIBC Data Matrix check digit provided) //raiseerror exec
+		//#line 20766: /bwipp.hibcdatamatrixBadCheckDigit (Incorrect HIBC Data Matrix check digit provided) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.hibcdatamatrixBadCheckDigit";
 		this.stk[this.ptr++]=BWIPJS.psstring("Incorrect HIBC Data Matrix check digit provided");
 		var t=this.dstk.get("raiseerror");
@@ -198,7 +198,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f12(){
-		//#line 20727: barcode barlen get barchars checksum get ne {
+		//#line 20765: barcode barlen get barchars checksum get ne {
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
@@ -220,12 +220,12 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f11;
-		//#line 20729: } if
+		//#line 20767: } if
 		var t25=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t25.call(this)==-1) return -1;
 		}
-		//#line 20730: /barcode barcode 0 barlen getinterval def
+		//#line 20768: /barcode barcode 0 barlen getinterval def
 		this.stk[this.ptr++]="barcode";
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -235,27 +235,27 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	//#line 20687: 20 dict begin                 % Confine variables to local scope
+	//#line 20725: 20 dict begin                 % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 20689: /options exch def       % We are given an option string
+	//#line 20727: /options exch def       % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20690: /barcode exch def       % We are given a barcode string
+	//#line 20728: /barcode exch def       % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20692: /dontdraw false def
+	//#line 20730: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20693: /validatecheck false def
+	//#line 20731: /validatecheck false def
 	this.stk[this.ptr++]="validatecheck";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20696: options type /stringtype eq {
+	//#line 20734: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -265,12 +265,12 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 20703: } if
+	//#line 20741: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 20704: options {def} forall
+	//#line 20742: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -286,16 +286,16 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 20707: /barchars (0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%) def
+	//#line 20745: /barchars (0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%) def
 	this.stk[this.ptr++]="barchars";
 	this.stk[this.ptr++]=BWIPJS.psstring("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20708: /charvals 43 dict def
+	//#line 20746: /charvals 43 dict def
 	this.stk[this.ptr++]="charvals";
 	this.stk[this.ptr++]=43;
 	this.stk[this.ptr-1]={};
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20709: 0 1 42 {charvals exch dup barchars exch 1 getinterval exch put} for
+	//#line 20747: 0 1 42 {charvals exch dup barchars exch 1 getinterval exch put} for
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=42;
@@ -308,7 +308,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr++]=t11;
 		if (t12.call(this)==-1) break;
 	}
-	//#line 20712: 0 1 barcode length 1 sub {
+	//#line 20750: 0 1 barcode length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barcode");
@@ -318,7 +318,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f8;
-	//#line 20716: } for
+	//#line 20754: } for
 	var t18=this.stk[--this.ptr];
 	var t16=this.stk[--this.ptr];
 	var t15=this.stk[--this.ptr];
@@ -327,7 +327,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr++]=t17;
 		if (t18.call(this)==-1) break;
 	}
-	//#line 20718: /barlen barcode length validatecheck {1 sub} if def
+	//#line 20756: /barlen barcode length validatecheck {1 sub} if def
 	this.stk[this.ptr++]="barlen";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -341,11 +341,11 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		if (t19.call(this)==-1) return -1;
 	}
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20720: /checksum 41 def
+	//#line 20758: /checksum 41 def
 	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=41;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20721: 0 1 barlen 1 sub {
+	//#line 20759: 0 1 barlen 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barlen");
@@ -353,7 +353,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f10;
-	//#line 20724: } for
+	//#line 20762: } for
 	var t24=this.stk[--this.ptr];
 	var t22=this.stk[--this.ptr];
 	var t21=this.stk[--this.ptr];
@@ -362,23 +362,23 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr++]=t23;
 		if (t24.call(this)==-1) break;
 	}
-	//#line 20725: /checksum checksum 43 mod def
+	//#line 20763: /checksum checksum 43 mod def
 	this.stk[this.ptr++]="checksum";
 	var t=this.dstk.get("checksum");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=43;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20726: validatecheck {
+	//#line 20764: validatecheck {
 	var t=this.dstk.get("validatecheck");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f12;
-	//#line 20731: } if
+	//#line 20769: } if
 	var t26=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t26.call(this)==-1) return -1;
 	}
-	//#line 20733: /barcode barlen 2 add string dup 1 barcode putinterval def
+	//#line 20771: /barcode barlen 2 add string dup 1 barcode putinterval def
 	this.stk[this.ptr++]="barcode";
 	var t=this.dstk.get("barlen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -391,7 +391,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20734: barcode 0 43 put
+	//#line 20772: barcode 0 43 put
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
@@ -400,7 +400,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20735: barcode barlen 1 add barchars checksum get put
+	//#line 20773: barcode barlen 1 add barchars checksum get put
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("barlen");
@@ -419,7 +419,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20738: options (dontdraw) true put
+	//#line 20776: options (dontdraw) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
@@ -428,7 +428,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20739: options (validatecheck) false put
+	//#line 20777: options (validatecheck) false put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("validatecheck");
@@ -437,7 +437,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20740: /args barcode options //datamatrix exec def
+	//#line 20778: /args barcode options //datamatrix exec def
 	this.stk[this.ptr++]="args";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -448,7 +448,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 20742: args (opt) options put
+	//#line 20780: args (opt) options put
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("opt");
@@ -458,10 +458,10 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 20743: args
+	//#line 20781: args
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 20745: dontdraw not //renmatrix if
+	//#line 20783: dontdraw not //renmatrix if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -472,7 +472,7 @@ BWIPJS.bwipp["hibcdatamatrix"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t27.call(this)==-1) return -1;
 	}
-	//#line 20747: end
+	//#line 20785: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

@@ -19,7 +19,7 @@ body {
 }
 h1 {
 	font-size:			1.5em;
-	font-family:		Verdana, Arial, san-serif;
+	font-family: 		"Lucida Grande","Calibri",Helvetica,Arial,sans-serif;
 	background-color:	#212121;
 	color:				#fff;
 	padding:			2ex;
@@ -50,6 +50,19 @@ input, select, label {
 <link rel="stylesheet" href="lib/jquery-ui.min.css">
 <link rel="stylesheet" href="lib/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="lib/jquery-ui.theme.min.css">
+<script type="text/javascript">
+var Module = {
+	preRun:[ function() {
+			Module.FS_createPreloadedFile("/", "Inconsolata.otf",
+										 "Inconsolata.otf", true, false);
+	} ],
+	postRun:[ function() {
+			var load_font = Module.cwrap("load_font", 'number',
+										['string','string','number']);
+			load_font("Inconsolata.otf", "INCONSOLATA", 108);
+	} ]
+};
+</script>
 <script type="text/javascript" src="freetype.js"></script>
 <script type="text/javascript" src="bwip.js"></script>
 <script type="text/javascript" src="lib/jquery.js"></script>
@@ -71,18 +84,6 @@ $(document).ready(function() {
 		opt.text = symdesc[i].desc;
 		opt.value = i;
 		sel.add(opt, null);
-
-		if (location.search.indexOf('proofs=1') != -1) { 
-			// Add the images from the BWIPP online demo
-			var img = document.createElement('img');
-			img.src = 'proofs/' + symdesc[i].sym + '.png';
-			img.id  = 'proof-' + symdesc[i].sym;
-			img.style.visibility 	= 'hidden';
-			img.style.position		= 'absolute';
-			img.style.top			= '0px';
-			img.style.left			= '0px';
-			$('#proof').append(img);
-		}
 	}
 
 	$(sel).change(function(ev) {
@@ -91,7 +92,7 @@ $(document).ready(function() {
 				$('#symtext').val(sym.text);
 				$('#symopts').val(sym.opts);
 
-				$('#proof img').css('visibility', 'hidden');
+				$('#proof-img').css('visibility', 'hidden');
 			} else {
 				$('#symtext').val('');
 				$('#symopts').val('');
@@ -105,6 +106,16 @@ $(document).ready(function() {
 	$('#scale').spinner({ min:1 });
 	$('#render').button().click(render);
 
+	if (location.search.indexOf('proofs=1') != -1) { 
+		// Show the images from the BWIPP online demo
+		var img = document.createElement('img');
+		img.id					= 'proof-img';
+		img.style.visibility 	= 'hidden';
+		img.style.position		= 'absolute';
+		img.style.top			= '0px';
+		img.style.left			= '0px';
+		$('#proof').append(img);
+	}
 });
 
 function render() {
@@ -115,7 +126,7 @@ function render() {
 
 	var bw = new BWIPJS;
 
-	$('#proof img').css('visibility', 'hidden');
+	$('#proof-img').css('visibility', 'hidden');
 
 	// Convert the options to a dictionary object, so we can pass alttext with
 	// spaces.
@@ -177,9 +188,12 @@ function render() {
 			} else {
 				bw.bitmap().show('canvas', rot);
 
-				var img = document.getElementById('proof-' + elt.sym);
-				if (img && img.offsetWidth > 32) {
-					img.style.visibility = 'visible';
+				if (location.search.indexOf('proofs=1') != -1) { 
+					var img = document.getElementById('proof-img');
+					if (img) {
+						img.src = 'proofs/' + elt.sym + '.png';
+						img.style.visibility = 'visible';
+					}
 				}
 			}
 		});

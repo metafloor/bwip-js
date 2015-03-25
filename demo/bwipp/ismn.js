@@ -1,10 +1,10 @@
 // file: bwipp/ismn.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-02-18
+// Barcode Writer in Pure PostScript - Version 2015-03-24
 //
 // Copyright (c) 2011-2015 Mark Warren
-// Copyright (c) 2004-2015 Terry Burton
+// Copyright (c) 2004-2014 Terry Burton
 //
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.

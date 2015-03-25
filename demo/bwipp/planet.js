@@ -1,10 +1,10 @@
 // file: bwipp/planet.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-02-18
+// Barcode Writer in Pure PostScript - Version 2015-03-24
 //
 // Copyright (c) 2011-2015 Mark Warren
-// Copyright (c) 2004-2015 Terry Burton
+// Copyright (c) 2004-2014 Terry Burton
 //
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
@@ -17,23 +17,23 @@ if (!BWIPJS.bwipp["renlinear"] && BWIPJS.increfs("planet", "renlinear")) {
 }
 BWIPJS.bwipp["planet"]=function() {
 	function $f0(){
-		//#line 8163: token false eq {exit} if dup length string cvs (=) search
+		//#line 8201: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 8164: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 8202: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 8164: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 8202: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 8163: token false eq {exit} if dup length string cvs (=) search
+		//#line 8201: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,7 +71,7 @@ BWIPJS.bwipp["planet"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 8164: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 8202: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -88,20 +88,20 @@ BWIPJS.bwipp["planet"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 8161: 1 dict begin
+		//#line 8199: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 8162: options {
+		//#line 8200: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 8165: } loop
+		//#line 8203: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 8166: currentdict end /options exch def
+		//#line 8204: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -109,16 +109,16 @@ BWIPJS.bwipp["planet"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 8168: options {def} forall
+		//#line 8206: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 8175: /barlen barcode length validatecheck {1 sub} if def
+		//#line 8213: /barlen barcode length validatecheck {1 sub} if def
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f7(){
-		//#line 8179: /bwipp.planetBadLength (USPS PLANET must be 11 or 13 digits excluding check digit) //raiseerror exec
+		//#line 8217: /bwipp.planetBadLength (USPS PLANET must be 11 or 13 digits excluding check digit) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.planetBadLength";
 		this.stk[this.ptr++]=BWIPJS.psstring("USPS PLANET must be 11 or 13 digits excluding check digit");
 		var t=this.dstk.get("raiseerror");
@@ -127,7 +127,7 @@ BWIPJS.bwipp["planet"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f8(){
-		//#line 8183: /bwipp.planetBadCharacter (USPS PLANET must contain only digits) //raiseerror exec
+		//#line 8221: /bwipp.planetBadCharacter (USPS PLANET must contain only digits) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.planetBadCharacter";
 		this.stk[this.ptr++]=BWIPJS.psstring("USPS PLANET must contain only digits");
 		var t=this.dstk.get("raiseerror");
@@ -136,7 +136,7 @@ BWIPJS.bwipp["planet"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f9(){
-		//#line 8182: dup 48 lt exch 57 gt or {
+		//#line 8220: dup 48 lt exch 57 gt or {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
@@ -147,18 +147,18 @@ BWIPJS.bwipp["planet"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f8;
-		//#line 8184: } if
+		//#line 8222: } if
 		var t10=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t10.call(this)==-1) return -1;
 		}
 	}
 	function $f10(){
-		//#line 8193: /i exch def
+		//#line 8231: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8194: /checksum checksum barcode i get 48 sub add def
+		//#line 8232: /checksum checksum barcode i get 48 sub add def
 		this.stk[this.ptr++]="checksum";
 		var t=this.dstk.get("checksum");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -176,7 +176,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f11(){
-		//#line 8199: /bwipp.planetBadCheckDigit (Incorrect USPS PLANET check digit provided) //raiseerror exec
+		//#line 8237: /bwipp.planetBadCheckDigit (Incorrect USPS PLANET check digit provided) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.planetBadCheckDigit";
 		this.stk[this.ptr++]=BWIPJS.psstring("Incorrect USPS PLANET check digit provided");
 		var t=this.dstk.get("raiseerror");
@@ -185,7 +185,7 @@ BWIPJS.bwipp["planet"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f12(){
-		//#line 8198: barcode barlen get barchars checksum get ne {
+		//#line 8236: barcode barlen get barchars checksum get ne {
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
@@ -207,12 +207,12 @@ BWIPJS.bwipp["planet"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f11;
-		//#line 8200: } if
+		//#line 8238: } if
 		var t19=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t19.call(this)==-1) return -1;
 		}
-		//#line 8201: /barcode barcode 0 barlen getinterval def
+		//#line 8239: /barcode barcode 0 barlen getinterval def
 		this.stk[this.ptr++]="barcode";
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -223,11 +223,11 @@ BWIPJS.bwipp["planet"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f13(){
-		//#line 8218: /j exch def
+		//#line 8256: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8219: heights j enc j 1 getinterval cvi height mul 5 div put
+		//#line 8257: heights j enc j 1 getinterval cvi height mul 5 div put
 		var t=this.dstk.get("heights");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -250,11 +250,11 @@ BWIPJS.bwipp["planet"]=function() {
 		this.ptr-=3;
 	}
 	function $f14(){
-		//#line 8228: /j exch def
+		//#line 8266: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8229: heights j enc j 1 getinterval cvi height mul 5 div put
+		//#line 8267: heights j enc j 1 getinterval cvi height mul 5 div put
 		var t=this.dstk.get("heights");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -277,11 +277,11 @@ BWIPJS.bwipp["planet"]=function() {
 		this.ptr-=3;
 	}
 	function $f15(){
-		//#line 8224: /i exch def
+		//#line 8262: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8225: /enc encs barcode i get 48 sub get def
+		//#line 8263: /enc encs barcode i get 48 sub get def
 		this.stk[this.ptr++]="enc";
 		var t=this.dstk.get("encs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -300,7 +300,7 @@ BWIPJS.bwipp["planet"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8226: /heights enc length array def
+		//#line 8264: /heights enc length array def
 		this.stk[this.ptr++]="heights";
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -308,7 +308,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8227: 0 1 enc length 1 sub {
+		//#line 8265: 0 1 enc length 1 sub {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("enc");
@@ -318,7 +318,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f14;
-		//#line 8230: } for
+		//#line 8268: } for
 		var t30=this.stk[--this.ptr];
 		var t28=this.stk[--this.ptr];
 		var t27=this.stk[--this.ptr];
@@ -327,7 +327,7 @@ BWIPJS.bwipp["planet"]=function() {
 			this.stk[this.ptr++]=t29;
 			if (t30.call(this)==-1) break;
 		}
-		//#line 8231: bhs i 5 mul 1 add heights putinterval   % Put encoded digit into sbs
+		//#line 8269: bhs i 5 mul 1 add heights putinterval   % Put encoded digit into sbs
 		var t=this.dstk.get("bhs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -339,7 +339,7 @@ BWIPJS.bwipp["planet"]=function() {
 		var t=this.dstk.get("heights");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 8232: txt i [barcode i 1 getinterval i 5 mul 1 add 3.312 mul textyoffset textfont textsize] put
+		//#line 8270: txt i [barcode i 1 getinterval i 5 mul 1 add 3.312 mul textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -376,11 +376,11 @@ BWIPJS.bwipp["planet"]=function() {
 		this.ptr-=3;
 	}
 	function $f16(){
-		//#line 8239: /j exch def
+		//#line 8277: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8240: heights j enc j 1 getinterval cvi height mul 5 div put
+		//#line 8278: heights j enc j 1 getinterval cvi height mul 5 div put
 		var t=this.dstk.get("heights");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -403,7 +403,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.ptr-=3;
 	}
 	function $f17(){
-		//#line 8245: txt barlen [barchars checksum 1 getinterval barlen 5 mul 1 add 3.312 mul textyoffset textfont textsize] put
+		//#line 8283: txt barlen [barchars checksum 1 getinterval barlen 5 mul 1 add 3.312 mul textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
@@ -440,7 +440,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.ptr-=3;
 	}
 	function $f18(){
-		//#line 8247: txt barlen [( ) barlen 5 mul 1 add 72 mul 25 div textyoffset textfont textsize] put
+		//#line 8285: txt barlen [( ) barlen 5 mul 1 add 72 mul 25 div textyoffset textfont textsize] put
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
@@ -474,11 +474,11 @@ BWIPJS.bwipp["planet"]=function() {
 		this.ptr-=3;
 	}
 	function $f19(){
-		//#line 8254: /j exch def
+		//#line 8292: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 8255: heights j enc j 1 getinterval cvi height mul 5 div put
+		//#line 8293: heights j enc j 1 getinterval cvi height mul 5 div put
 		var t=this.dstk.get("heights");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -501,65 +501,65 @@ BWIPJS.bwipp["planet"]=function() {
 		this.ptr-=3;
 	}
 	function $f20(){
-		//#line 8263: /bbs [bhs length {0} repeat]
+		//#line 8301: /bbs [bhs length {0} repeat]
 		this.stk[this.ptr++]=0;
 	}
 	function $f21(){
-		//#line 8264: /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
+		//#line 8302: /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
 		this.stk[this.ptr++]=1.44;
 		this.stk[this.ptr++]=1.872;
 	}
 	function $f22(){
-		//#line 8266: /txt txt
+		//#line 8304: /txt txt
 		this.stk[this.ptr++]="txt";
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	//#line 8145: 20 dict begin
+	//#line 8183: 20 dict begin
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 8147: /options exch def              % We are given an option string
+	//#line 8185: /options exch def              % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8148: /barcode exch def              % We are given a barcode string
+	//#line 8186: /barcode exch def              % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8150: /dontdraw false def
+	//#line 8188: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8151: /includetext false def          % Enable/disable text
+	//#line 8189: /includetext false def          % Enable/disable text
 	this.stk[this.ptr++]="includetext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8152: /validatecheck false def
+	//#line 8190: /validatecheck false def
 	this.stk[this.ptr++]="validatecheck";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8153: /includecheckintext false def
+	//#line 8191: /includecheckintext false def
 	this.stk[this.ptr++]="includecheckintext";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8154: /textfont /Courier def
+	//#line 8192: /textfont /Courier def
 	this.stk[this.ptr++]="textfont";
 	this.stk[this.ptr++]="Courier";
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8155: /textsize 10 def
+	//#line 8193: /textsize 10 def
 	this.stk[this.ptr++]="textsize";
 	this.stk[this.ptr++]=10;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8156: /textyoffset -8 def
+	//#line 8194: /textyoffset -8 def
 	this.stk[this.ptr++]="textyoffset";
 	this.stk[this.ptr++]=-8;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8157: /height 0.125 def
+	//#line 8195: /height 0.125 def
 	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=0.125;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8160: options type /stringtype eq {
+	//#line 8198: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -569,12 +569,12 @@ BWIPJS.bwipp["planet"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 8167: } if
+	//#line 8205: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 8168: options {def} forall
+	//#line 8206: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -590,30 +590,30 @@ BWIPJS.bwipp["planet"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 8170: /textfont textfont cvlit def
+	//#line 8208: /textfont textfont cvlit def
 	this.stk[this.ptr++]="textfont";
 	var t=this.dstk.get("textfont");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8171: /textsize textsize cvr def
+	//#line 8209: /textsize textsize cvr def
 	this.stk[this.ptr++]="textsize";
 	var t=this.dstk.get("textsize");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8172: /textyoffset textyoffset cvr def
+	//#line 8210: /textyoffset textyoffset cvr def
 	this.stk[this.ptr++]="textyoffset";
 	var t=this.dstk.get("textyoffset");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8173: /height height cvr def
+	//#line 8211: /height height cvr def
 	this.stk[this.ptr++]="height";
 	var t=this.dstk.get("height");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8175: /barlen barcode length validatecheck {1 sub} if def
+	//#line 8213: /barlen barcode length validatecheck {1 sub} if def
 	this.stk[this.ptr++]="barlen";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -627,7 +627,7 @@ BWIPJS.bwipp["planet"]=function() {
 		if (t8.call(this)==-1) return -1;
 	}
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8178: barlen 11 ne barlen 13 ne and {
+	//#line 8216: barlen 11 ne barlen 13 ne and {
 	var t=this.dstk.get("barlen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=11;
@@ -646,16 +646,16 @@ BWIPJS.bwipp["planet"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f7;
-	//#line 8180: } if
+	//#line 8218: } if
 	var t9=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t9.call(this)==-1) return -1;
 	}
-	//#line 8181: barcode {
+	//#line 8219: barcode {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f9;
-	//#line 8185: } forall
+	//#line 8223: } forall
 	var t13=this.stk[--this.ptr];
 	var t12=this.stk[--this.ptr];
 	for (t11 in t12) {
@@ -668,15 +668,15 @@ BWIPJS.bwipp["planet"]=function() {
 		}
 		if (t13.call(this)==-1) break;
 	}
-	//#line 8188: /barchars (0123456789) def
+	//#line 8226: /barchars (0123456789) def
 	this.stk[this.ptr++]="barchars";
 	this.stk[this.ptr++]=BWIPJS.psstring("0123456789");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8191: /checksum 0 def
+	//#line 8229: /checksum 0 def
 	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8192: 0 1 barlen 1 sub {
+	//#line 8230: 0 1 barlen 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barlen");
@@ -684,7 +684,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f10;
-	//#line 8195: } for
+	//#line 8233: } for
 	var t18=this.stk[--this.ptr];
 	var t16=this.stk[--this.ptr];
 	var t15=this.stk[--this.ptr];
@@ -693,7 +693,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.stk[this.ptr++]=t17;
 		if (t18.call(this)==-1) break;
 	}
-	//#line 8196: /checksum 10 checksum 10 mod sub 10 mod def
+	//#line 8234: /checksum 10 checksum 10 mod sub 10 mod def
 	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=10;
 	var t=this.dstk.get("checksum");
@@ -704,21 +704,21 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr++]=10;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8197: validatecheck {
+	//#line 8235: validatecheck {
 	var t=this.dstk.get("validatecheck");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f12;
-	//#line 8202: } if
+	//#line 8240: } if
 	var t20=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t20.call(this)==-1) return -1;
 	}
-	//#line 8205: /encs
+	//#line 8243: /encs
 	this.stk[this.ptr++]="encs";
-	//#line 8206: [ (22555) (55522) (55252) (55225) (52552)
+	//#line 8244: [ (22555) (55522) (55252) (55225) (52552)
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("22555"),BWIPJS.psstring("55522"),BWIPJS.psstring("55252"),BWIPJS.psstring("55225"),BWIPJS.psstring("52552"),BWIPJS.psstring("52525"),BWIPJS.psstring("52255"),BWIPJS.psstring("25552"),BWIPJS.psstring("25525"),BWIPJS.psstring("25255"),BWIPJS.psstring("5"),BWIPJS.psstring("5")]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8211: /bhs barlen 5 mul 7 add array def
+	//#line 8249: /bhs barlen 5 mul 7 add array def
 	this.stk[this.ptr++]="bhs";
 	var t=this.dstk.get("barlen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -728,7 +728,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8212: /txt barlen 1 add array def
+	//#line 8250: /txt barlen 1 add array def
 	this.stk[this.ptr++]="txt";
 	var t=this.dstk.get("barlen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -736,7 +736,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8215: /enc encs 10 get def
+	//#line 8253: /enc encs 10 get def
 	this.stk[this.ptr++]="enc";
 	var t=this.dstk.get("encs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -746,7 +746,7 @@ BWIPJS.bwipp["planet"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8216: /heights enc length array def
+	//#line 8254: /heights enc length array def
 	this.stk[this.ptr++]="heights";
 	var t=this.dstk.get("enc");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -754,7 +754,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8217: 0 1 enc length 1 sub {
+	//#line 8255: 0 1 enc length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("enc");
@@ -764,7 +764,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f13;
-	//#line 8220: } for
+	//#line 8258: } for
 	var t25=this.stk[--this.ptr];
 	var t23=this.stk[--this.ptr];
 	var t22=this.stk[--this.ptr];
@@ -773,14 +773,14 @@ BWIPJS.bwipp["planet"]=function() {
 		this.stk[this.ptr++]=t24;
 		if (t25.call(this)==-1) break;
 	}
-	//#line 8221: bhs 0 heights putinterval   % Put encoded digit into sbs
+	//#line 8259: bhs 0 heights putinterval   % Put encoded digit into sbs
 	var t=this.dstk.get("bhs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
 	var t=this.dstk.get("heights");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 8223: 0 1 barlen 1 sub {
+	//#line 8261: 0 1 barlen 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("barlen");
@@ -788,7 +788,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f15;
-	//#line 8233: } for
+	//#line 8271: } for
 	var t35=this.stk[--this.ptr];
 	var t33=this.stk[--this.ptr];
 	var t32=this.stk[--this.ptr];
@@ -797,7 +797,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.stk[this.ptr++]=t34;
 		if (t35.call(this)==-1) break;
 	}
-	//#line 8236: /enc encs checksum get def
+	//#line 8274: /enc encs checksum get def
 	this.stk[this.ptr++]="enc";
 	var t=this.dstk.get("encs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -808,7 +808,7 @@ BWIPJS.bwipp["planet"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8237: /heights enc length array def
+	//#line 8275: /heights enc length array def
 	this.stk[this.ptr++]="heights";
 	var t=this.dstk.get("enc");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -816,7 +816,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8238: 0 1 enc length 1 sub {
+	//#line 8276: 0 1 enc length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("enc");
@@ -826,7 +826,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f16;
-	//#line 8241: } for
+	//#line 8279: } for
 	var t40=this.stk[--this.ptr];
 	var t38=this.stk[--this.ptr];
 	var t37=this.stk[--this.ptr];
@@ -835,7 +835,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.stk[this.ptr++]=t39;
 		if (t40.call(this)==-1) break;
 	}
-	//#line 8242: bhs barlen 5 mul 1 add heights putinterval  
+	//#line 8280: bhs barlen 5 mul 1 add heights putinterval  
 	var t=this.dstk.get("bhs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("barlen");
@@ -847,13 +847,13 @@ BWIPJS.bwipp["planet"]=function() {
 	var t=this.dstk.get("heights");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 8244: includecheckintext {
+	//#line 8282: includecheckintext {
 	var t=this.dstk.get("includecheckintext");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f17;
-	//#line 8246: } {
+	//#line 8284: } {
 	this.stk[this.ptr++]=$f18;
-	//#line 8248: } ifelse
+	//#line 8286: } ifelse
 	var t41=this.stk[--this.ptr];
 	var t42=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -861,7 +861,7 @@ BWIPJS.bwipp["planet"]=function() {
 	} else {
 		if (t41.call(this)==-1) return -1;
 	}
-	//#line 8251: /enc encs 11 get def
+	//#line 8289: /enc encs 11 get def
 	this.stk[this.ptr++]="enc";
 	var t=this.dstk.get("encs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -871,7 +871,7 @@ BWIPJS.bwipp["planet"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8252: /heights enc length array def
+	//#line 8290: /heights enc length array def
 	this.stk[this.ptr++]="heights";
 	var t=this.dstk.get("enc");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -879,7 +879,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 8253: 0 1 enc length 1 sub {
+	//#line 8291: 0 1 enc length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("enc");
@@ -889,7 +889,7 @@ BWIPJS.bwipp["planet"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f19;
-	//#line 8256: } for
+	//#line 8294: } for
 	var t47=this.stk[--this.ptr];
 	var t45=this.stk[--this.ptr];
 	var t44=this.stk[--this.ptr];
@@ -898,7 +898,7 @@ BWIPJS.bwipp["planet"]=function() {
 		this.stk[this.ptr++]=t46;
 		if (t47.call(this)==-1) break;
 	}
-	//#line 8257: bhs barlen 5 mul 6 add heights putinterval  
+	//#line 8295: bhs barlen 5 mul 6 add heights putinterval  
 	var t=this.dstk.get("bhs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("barlen");
@@ -910,17 +910,17 @@ BWIPJS.bwipp["planet"]=function() {
 	var t=this.dstk.get("heights");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 8260: <<
+	//#line 8298: <<
 	this.stk[this.ptr++]=Infinity;
-	//#line 8261: /ren //renlinear
+	//#line 8299: /ren //renlinear
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renlinear");
 	this.stk[this.ptr++]=t;
-	//#line 8262: /bhs bhs
+	//#line 8300: /bhs bhs
 	this.stk[this.ptr++]="bhs";
 	var t=this.dstk.get("bhs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 8263: /bbs [bhs length {0} repeat]
+	//#line 8301: /bbs [bhs length {0} repeat]
 	this.stk[this.ptr++]="bbs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("bhs");
@@ -938,7 +938,7 @@ BWIPJS.bwipp["planet"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 8264: /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
+	//#line 8302: /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
 	this.stk[this.ptr++]="sbs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("bhs");
@@ -959,20 +959,20 @@ BWIPJS.bwipp["planet"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 8265: includetext {
+	//#line 8303: includetext {
 	var t=this.dstk.get("includetext");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f22;
-	//#line 8267: } if
+	//#line 8305: } if
 	var t54=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t54.call(this)==-1) return -1;
 	}
-	//#line 8268: /opt options
+	//#line 8306: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 8269: >>
+	//#line 8307: >>
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -981,7 +981,7 @@ BWIPJS.bwipp["planet"]=function() {
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
-	//#line 8271: dontdraw not //renlinear if
+	//#line 8309: dontdraw not //renlinear if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -992,7 +992,7 @@ BWIPJS.bwipp["planet"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t55.call(this)==-1) return -1;
 	}
-	//#line 8273: end
+	//#line 8311: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
