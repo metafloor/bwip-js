@@ -1,4 +1,4 @@
-# bwip-js // Barcode Writer in Pure JavaScript
+# // Barcode Writer in Pure JavaScript
 
 Welcome to the new home for bwip-js.  The Google Code Project is shutting down so
 this is where you will find the latest updates.
