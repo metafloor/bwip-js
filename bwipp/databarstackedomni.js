@@ -1,10 +1,10 @@
 // file: bwipp/databarstackedomni.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-02-18
+// Barcode Writer in Pure PostScript - Version 2015-03-24
 //
 // Copyright (c) 2011-2015 Mark Warren
-// Copyright (c) 2004-2015 Terry Burton
+// Copyright (c) 2004-2014 Terry Burton
 //
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
@@ -20,23 +20,23 @@ if (!BWIPJS.bwipp["databaromni"] && BWIPJS.increfs("databarstackedomni", "databa
 }
 BWIPJS.bwipp["databarstackedomni"]=function() {
 	function $f0(){
-		//#line 5056: token false eq {exit} if dup length string cvs (=) search
+		//#line 5094: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 5057: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 5095: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 5057: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 5095: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 5056: token false eq {exit} if dup length string cvs (=) search
+		//#line 5094: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -74,7 +74,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 5057: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+		//#line 5095: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -91,20 +91,20 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 5054: 1 dict begin
+		//#line 5092: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 5055: options {
+		//#line 5093: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 5058: } loop
+		//#line 5096: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 5059: currentdict end /options exch def
+		//#line 5097: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -112,11 +112,11 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 5061: options {def} forall
+		//#line 5099: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 5065: /bwipp.databarstackedomniBadAI (GS1 DataBar Stacked Omnidirectional must begin with (01) application identifier) //raiseerror exec
+		//#line 5103: /bwipp.databarstackedomniBadAI (GS1 DataBar Stacked Omnidirectional must begin with (01) application identifier) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.databarstackedomniBadAI";
 		this.stk[this.ptr++]=BWIPJS.psstring("GS1 DataBar Stacked Omnidirectional must begin with (01) application identifier");
 		var t=this.dstk.get("raiseerror");
@@ -125,7 +125,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f7(){
-		//#line 5068: /bwipp.databarstackedomniBadLength (GS1 DataBar Stacked Omnidirectional must be 13 or 14 digits) //raiseerror exec
+		//#line 5106: /bwipp.databarstackedomniBadLength (GS1 DataBar Stacked Omnidirectional must be 13 or 14 digits) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.databarstackedomniBadLength";
 		this.stk[this.ptr++]=BWIPJS.psstring("GS1 DataBar Stacked Omnidirectional must be 13 or 14 digits");
 		var t=this.dstk.get("raiseerror");
@@ -134,7 +134,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f8(){
-		//#line 5072: /bwipp.databarstackedomniBadCharacter (GS1 DataBar Stacked Omnidirectional must contain only digits) //raiseerror exec
+		//#line 5110: /bwipp.databarstackedomniBadCharacter (GS1 DataBar Stacked Omnidirectional must contain only digits) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.databarstackedomniBadCharacter";
 		this.stk[this.ptr++]=BWIPJS.psstring("GS1 DataBar Stacked Omnidirectional must contain only digits");
 		var t=this.dstk.get("raiseerror");
@@ -143,7 +143,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f9(){
-		//#line 5071: dup 48 lt exch 57 gt or {
+		//#line 5109: dup 48 lt exch 57 gt or {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
@@ -154,23 +154,23 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f8;
-		//#line 5073: } if
+		//#line 5111: } if
 		var t10=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t10.call(this)==-1) return -1;
 		}
 	}
 	function $f10(){
-		//#line 5080: /checksum checksum barcode i 4 add get 48 sub i 2 mod 0 eq {3 mul} if add def
+		//#line 5118: /checksum checksum barcode i 4 add get 48 sub i 2 mod 0 eq {3 mul} if add def
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f11(){
-		//#line 5079: /i exch def
+		//#line 5117: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 5080: /checksum checksum barcode i 4 add get 48 sub i 2 mod 0 eq {3 mul} if add def
+		//#line 5118: /checksum checksum barcode i 4 add get 48 sub i 2 mod 0 eq {3 mul} if add def
 		this.stk[this.ptr++]="checksum";
 		var t=this.dstk.get("checksum");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -204,7 +204,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f12(){
-		//#line 5085: /bwipp.databarstackedomniBadCheckDigit (Incorrect GS1 DataBar Stacked Omnidirectional check digit provided) //raiseerror exec
+		//#line 5123: /bwipp.databarstackedomniBadCheckDigit (Incorrect GS1 DataBar Stacked Omnidirectional check digit provided) //raiseerror exec
 		this.stk[this.ptr++]="bwipp.databarstackedomniBadCheckDigit";
 		this.stk[this.ptr++]=BWIPJS.psstring("Incorrect GS1 DataBar Stacked Omnidirectional check digit provided");
 		var t=this.dstk.get("raiseerror");
@@ -213,7 +213,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f13(){
-		//#line 5084: barcode 17 get checksum 48 add ne {
+		//#line 5122: barcode 17 get checksum 48 add ne {
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=17;
@@ -230,29 +230,29 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f12;
-		//#line 5086: } if
+		//#line 5124: } if
 		var t20=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t20.call(this)==-1) return -1;
 		}
 	}
-	//#line 5045: 20 dict begin                 % Confine variables to local scope
+	//#line 5083: 20 dict begin                 % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 5047: /options exch def       % We are given an option string
+	//#line 5085: /options exch def       % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 5048: /barcode exch def       % We are given a barcode string
+	//#line 5086: /barcode exch def       % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 5050: /dontdraw false def
+	//#line 5088: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 5053: options type /stringtype eq {
+	//#line 5091: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -262,12 +262,12 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 5060: } if
+	//#line 5098: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 5061: options {def} forall
+	//#line 5099: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -283,7 +283,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 5064: barcode 0 4 getinterval (\(01\)) ne {
+	//#line 5102: barcode 0 4 getinterval (\(01\)) ne {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
@@ -295,12 +295,12 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f6;
-	//#line 5066: } if
+	//#line 5104: } if
 	var t8=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t8.call(this)==-1) return -1;
 	}
-	//#line 5067: barcode length 17 ne barcode length 18 ne and {
+	//#line 5105: barcode length 17 ne barcode length 18 ne and {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -323,12 +323,12 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f7;
-	//#line 5069: } if
+	//#line 5107: } if
 	var t9=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t9.call(this)==-1) return -1;
 	}
-	//#line 5070: barcode 4 barcode length 4 sub getinterval {
+	//#line 5108: barcode 4 barcode length 4 sub getinterval {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=4;
@@ -340,7 +340,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	this.stk[this.ptr++]=$f9;
-	//#line 5074: } forall
+	//#line 5112: } forall
 	var t13=this.stk[--this.ptr];
 	var t12=this.stk[--this.ptr];
 	for (t11 in t12) {
@@ -353,16 +353,16 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		}
 		if (t13.call(this)==-1) break;
 	}
-	//#line 5077: /checksum 0 def
+	//#line 5115: /checksum 0 def
 	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 5078: 0 1 12 {
+	//#line 5116: 0 1 12 {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=12;
 	this.stk[this.ptr++]=$f11;
-	//#line 5081: } for
+	//#line 5119: } for
 	var t19=this.stk[--this.ptr];
 	var t17=this.stk[--this.ptr];
 	var t16=this.stk[--this.ptr];
@@ -371,7 +371,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		this.stk[this.ptr++]=t18;
 		if (t19.call(this)==-1) break;
 	}
-	//#line 5082: /checksum 10 checksum 10 mod sub 10 mod def
+	//#line 5120: /checksum 10 checksum 10 mod sub 10 mod def
 	this.stk[this.ptr++]="checksum";
 	this.stk[this.ptr++]=10;
 	var t=this.dstk.get("checksum");
@@ -382,7 +382,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 	this.stk[this.ptr++]=10;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 5083: barcode length 18 eq {
+	//#line 5121: barcode length 18 eq {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -393,21 +393,21 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f13;
-	//#line 5087: } if
+	//#line 5125: } if
 	var t21=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t21.call(this)==-1) return -1;
 	}
-	//#line 5088: 18 string
+	//#line 5126: 18 string
 	this.stk[this.ptr++]=18;
 	this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
-	//#line 5089: dup 0 barcode putinterval
+	//#line 5127: dup 0 barcode putinterval
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=0;
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 5090: dup 17 checksum 48 add put
+	//#line 5128: dup 17 checksum 48 add put
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=17;
 	var t=this.dstk.get("checksum");
@@ -418,11 +418,11 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 5091: /barcode exch def
+	//#line 5129: /barcode exch def
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 5094: options (dontdraw) true put
+	//#line 5132: options (dontdraw) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
@@ -431,7 +431,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 5095: options (format) (stackedomni) put
+	//#line 5133: options (format) (stackedomni) put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("format");
@@ -440,7 +440,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 5097: /args barcode options //databaromni exec def
+	//#line 5135: /args barcode options //databaromni exec def
 	this.stk[this.ptr++]="args";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -451,7 +451,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 5099: args (opt) options put
+	//#line 5137: args (opt) options put
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("opt");
@@ -461,10 +461,10 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 5100: args
+	//#line 5138: args
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 5102: dontdraw not //renmatrix if
+	//#line 5140: dontdraw not //renmatrix if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -475,7 +475,7 @@ BWIPJS.bwipp["databarstackedomni"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t22.call(this)==-1) return -1;
 	}
-	//#line 5104: end
+	//#line 5142: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

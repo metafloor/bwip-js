@@ -87,6 +87,7 @@ BWIPJS.decrefs = function(module) {
 }
 
 // FreeType interface
+BWIPJS.ft_lookup = Module.cwrap("find_font", 'number', ['string']);
 BWIPJS.ft_bitmap = Module.cwrap("get_bitmap", 'number', ['number','number','number']);
 BWIPJS.ft_width	 = Module.cwrap("get_width", 'number', []);
 BWIPJS.ft_height = Module.cwrap("get_height", 'number', []);
@@ -534,16 +535,12 @@ BWIPJS.prototype.arc = function(x,y,r,sa,ea,ccw) {
 // This is an internal method
 BWIPJS.prototype.getfont = function() {
 	BWIPJS.logapi('getfont', arguments);
-	var name = this.g_font.FontName.toString().toLowerCase();
-	// Default is OCR-B unless OCR-A is specified
-	if (/ocr.?a/.test(name))
-		return 0;	// OCR-A
-	return 1;		// OCR-B
+	return BWIPJS.ft_lookup(this.g_font.FontName.toString());
 }
 BWIPJS.prototype.stringwidth = function(str) {
 	BWIPJS.logapi('stringwidth', arguments);
 	var font = this.getfont();
-	var size = (+this.g_font.FontSize || 10) * this.g_tsx * 0.90;
+	var size = (+this.g_font.FontSize || 10) * this.g_tsx;
 
 	// width, ascent, and descent of the char-path
 	var w = 0, a = 0, d = 0;
@@ -726,7 +723,7 @@ BWIPJS.prototype.imagemask = function(width, height, polarity, matrix, source) {
 BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 	BWIPJS.logapi('show', arguments);
 	var font = this.getfont();
-	var size = (+this.g_font.FontSize || 10) * this.g_tsx * 0.90;
+	var size = (+this.g_font.FontSize || 10) * this.g_tsx;
 
 	// Convert dx,dy to device space
 	dx = this.g_tsx * dx;
@@ -741,11 +738,11 @@ BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 			continue;
 		}
 
-		// The OCR digits seem to be about a half-point right compared to
-		// the font metrics hard-coded into by BWIPP.  This is especially seen
+		// The OCR digits seem to be about a half-point right compared to the
+		// font metrics hard-coded into BWIPP.  This is especially apparent
 		// in the EAN and UPC codes where the bars mix with the text.
 		var l = this.g_posx + BWIPJS.ft_left();
-		if (ch >= 48 && ch <= 57)
+		if (font <= 1 && ch >= 48 && ch <= 57)
 			l -= 0.5 * this.g_tsx;
 
 		var t = this.g_posy + BWIPJS.ft_top() + dy;
