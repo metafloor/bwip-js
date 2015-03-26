@@ -29,8 +29,8 @@
 <p>bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any browser that natively supports the HTML canvas element or any JavaScript-based server framework that can implement a minimal bitmap graphics interface.</p>
 
 <ul>
-<li>Current BWIPP version is 2015-03-23 (the latest as of 24 March 2015).</li>
-<li>Current version of bwip-js is v0.8.a.</li>
+<li>Current BWIPP version is 2015-03-24.</li>
+<li>Current version of bwip-js is v0.8.b.</li>
 </ul>
 
 <p>bwip-js links:</p>
@@ -41,12 +41,6 @@
 <li><a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP documentation</a></li>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies">Symbologies supported by BWIPP/bwip-js</a></li>
 </ul>
-
-<p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online demo</a> of bwip-js is
-now available.  The demo mirrors the functionality of the
-BWIPP <a href="http://www.terryburton.co.uk/barcodewriter/generator/">online demo</a>.</p>
-
-<p>The latest browser versions - along with many older versions - of Google Chrome, Firefox, Opera and Safari work well with the demo.  Internet Explorer 8 and older will not work as they do not implement the canvas element.</p>
 
 <h2>
 <a id="user-content-new-in-bwip-js-v08" class="anchor" href="#new-in-bwip-js-v08" aria-hidden="true"><span class="octicon octicon-link"></span></a>New in bwip-js v0.8</h2>
@@ -69,6 +63,17 @@ project.</p>
 
 <p>A description of how FreeType was compiled for use with bwip-js can be found at:
 <a href="https://github.com/metafloor/bwip-js/wiki/Compiling-FreeType">Compiling FreeType with Emscripten</a>.</p>
+
+<h2>
+<a id="user-content-online-demo" class="anchor" href="#online-demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Online Demo</h2>
+
+<p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online demo</a> of bwip-js is
+now available.  It showcases the new font rendering provided by the FreeType library,
+and allows you to use your own fonts.</p>
+
+<p>The demo is tested on the latest versions of Firefox and Chrome, along with IE10.
+IE11+ should work, and so should the latest versions of Opera and Safari,
+but they are all untested.</p>
 
 <h2>
 <a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -103,15 +108,18 @@ BWIPP options.  The fonts are known to the PostScript emulation as "OCR-A" and
 <pre><code>textfont=OCR-A
 </code></pre>
 </li>
-<li>
-<p>The demo also shows how to load your own font into bwip-js.  See this
-<a href="https://github.com/metafloor/bwip-js/wiki/Using-Your-Own-Fonts">wiki page</a> for
-details.  The demo pre-loads the <a href="http://www.levien.com/type/myfonts/inconsolata.html">Inconsolata font</a>, which can be seen using the option:</p>
-
-<pre><code>textfont=Inconsolata
-</code></pre>
-</li>
+<li><p>The file <code>demo.html</code> shows how to load your own fonts into bwip-js.  See 
+<a href="https://github.com/metafloor/bwip-js/wiki/Preloading-Fonts-Into-FreeType">Preloading Fonts Into FreeType</a>
+and <a href="https://github.com/metafloor/bwip-js/wiki/Loading-Fonts-During-Runtime">Loading Fonts During Runtime</a>
+for descriptions of the two techniques your code can use.</p></li>
 </ul>
+
+<p>The online demo pre-loads the <a href="http://www.levien.com/type/myfonts/inconsolata.html">Inconsolata font</a>, which can be seen using the option:</p>
+
+<pre><code>```
+textfont=Inconsolata
+```
+</code></pre>
 
 <p>bwip-js is nearly feature complete.  There are only two planned
 enhancements at this time.</p>
