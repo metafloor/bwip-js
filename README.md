@@ -78,16 +78,17 @@ BWIPP options.  The fonts are known to the PostScript emulation as "OCR-A" and
 	textfont=OCR-A
 	```
 
-* The file `demo.html` shows how to load your own fonts into bwip-js.  See 
+The file `demo.html` contains code that shows how to load your own fonts into
+bwip-js.  See 
 [Preloading Fonts Into FreeType](https://github.com/metafloor/bwip-js/wiki/Preloading-Fonts-Into-FreeType)
 and [Loading Fonts During Runtime](https://github.com/metafloor/bwip-js/wiki/Loading-Fonts-During-Runtime)
-for descriptions of the two techniques your code can use.
+for descriptions of the two techniques.
 
 The online demo pre-loads the [Inconsolata font](http://www.levien.com/type/myfonts/inconsolata.html), which can be seen using the option:
 
-	```
-	textfont=Inconsolata
-	```
+```
+textfont=Inconsolata
+```
 
 bwip-js is nearly feature complete.  There are only two planned
 enhancements at this time.
@@ -262,6 +263,11 @@ bw.call('code128', function (e) {
 	}
 });
 ```
+
+## Supported Barcode Types
+
+\[AusPost 4 State Customer Code] \[Aztec Code] \[Aztec Runes] \[BC412] \[Channel Code] \[Codabar] \[Codablock F] \[Code 11] \[Code 128] \[Code 16K] \[Code 25] \[Code 39] \[Code 39 Extended] \[Code 49] \[Code 93] \[Code 93 Extended] \[Code One] \[Compact Aztec Code] \[Compact PDF417] \[COOP 2 of 5] \[Custom 1D symbology] \[Custom 4 state symbology] \[Data Matrix] \[Datalogic 2 of 5] \[Deutsche Post Identcode] \[Deutsche Post Leitcode] \[EAN-13] \[EAN-13 Composite] \[EAN-2 (2 digit addon)] \[EAN-5 (5 digit addon)] \[EAN-8] \[EAN-8 Composite] \[Flattermarken] \[GS1 Composite 2D Component] \[GS1 Data Matrix] \[GS1 DataBar Expanded] \[GS1 DataBar Expanded Composite] \[GS1 DataBar Expanded Stacked] \[GS1 DataBar Expanded Stacked Composite] \[GS1 DataBar Limited] \[GS1 DataBar Limited Composite] \[GS1 DataBar Omnidirectional] \[GS1 DataBar Omnidirectional Composite] \[GS1 DataBar Stacked] \[GS1 DataBar Stacked Composite] \[GS1 DataBar Stacked Omnidirectional] \[GS1 DataBar Stacked Omnidirectional Composite] \[GS1 DataBar Truncated] \[GS1 DataBar Truncated Composite] \[GS1 QR Code] \[GS1-128] \[GS1-128 Composite] \[GS1-14] \[HIBC Codablock F] \[HIBC Code 128] \[HIBC Code 39] \[HIBC Data Matrix] \[HIBC MicroPDF417] \[HIBC PDF417] \[HIBC QR Code] \[IATA 2 of 5] \[Industrial 2 of 5] \[Interleaved 2 of 5 (ITF)] \[ISBN] \[ISMN] \[ISSN] \[Italian Pharmacode] \[ITF-14] \[Japan Post 4 State Customer Code] \[Matrix 2 of 5] \[MaxiCode] \[Micro QR Code] \[MicroPDF417] \[Miscellaneous symbols] \[MSI Modified Plessey] \[PDF417] \[Pharmaceutical Binary Code] \[Pharmazentralnummer (PZN)] \[Plessey UK] \[PosiCode] \[QR Code] \[Royal Dutch TPG Post KIX] \[Royal Mail 4 State Customer Code] \[SSCC-18] \[Telepen] \[Telepen Numeric] \[Two-track Pharmacode] \[UPC-A] \[UPC-A Composite] \[UPC-E] \[UPC-E Composite] \[USPS Intelligent Mail] \[USPS PLANET] \[USPS POSTNET]
+
 
 ## Node.js
 
