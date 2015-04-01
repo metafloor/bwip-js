@@ -6,134 +6,8 @@
 	See the LICENSE file in the bwip-js root directory
 	for the extended copyright notice.
 -->
-<!--
-	Notes about making the text fit nicely to your bar code.
-	1. Specify textxalign=center or textxalign=justify.
-	2. Specify the text as the alttext to bypass the built-in formatting.
-	3. If you specify textyalign=above and text has descenders
-		(characters: gjpqy_|,; ) add option textyoffset=1
--->
-<style type="text/css">
-body {
-	font-size:			11pt;
-	margin:				0px;
-}
-#header {
-	position:			relative;
-	background-color:	#212121;
-	color:				#fff;
-	height:				48px;
-	padding-left:		21px;
-	padding-top:		0px;
-	padding-bottom:		20px;
-	margin-bottom:		17px;
-}
-#header #bwipjs {
-	font-size:			25px;
-	font-family: 		"Lucida Grande","Calibri",Helvetica,Arial,sans-serif;
-	font-weight:		bold;
-	position:			absolute;
-	bottom:				21px;
-}
-input, select, label {
-	font-family:		Verdana, Arial, san-serif;
-	font-size:			10.5pt;
-}
-#fonthdr {
-	position:			absolute;
-	bottom:				0px;
-	left:				556px;
-	width:				16ex;
-	padding-left:		2ex;
-	padding-top:		1ex;
-	padding-bottom:		1ex;
-	background-color:			#0090ff;
-	border-top-left-radius:		4px;
-	border-top-right-radius:	4px;
-	color:				white;
-	font-family:		Verdana, Arial, san-serif;
-	font-weight:		bold;
-	cursor:				default;
-}
-#fonthdr:hover {
-	background-color:	#32aaff;
-}
-#fontdiv {
-	z-index:			999;
-	position:			absolute;
-	top:				68px;
-	left:				556px;
-	padding:			0px;
-	margin:				0px;
-	border:				0px;
-}
-#fontdiv div.inner {
-	border:				1px solid #b9c3ff;
-	border-top:			0px;
-	border-bottom-left-radius:	3px;
-	border-bottom-right-radius:	3px;
-	padding:			16px;
-	color:				#000;
-	background-color:	#e3eeff;
-	font-family:		Verdana, Arial, san-serif;
-	x-box-shadow:			2px 2px 3px #ddd;
-}
-#dropzone {
-	width:				472px;
-	text-align:			center;
-	border:				1px dashed #999;
-	background-color:	#e7e7e7;
-	color:				#777;
-	overflow:			hidden;
-}
-#dropzone:hover {
-	border:				1px dashed #777;
-	color:				#555;
-	background-color:	#eeeeee;
-}
-#dropzone div.content {
-	padding:			32px 96px;
-}
-#dropzone .fd-file {
-	opacity:			0;
-	font-size:			72px;
-	position:			absolute;
-	right:				0px;
-	top:				0px;
-	width:				1000px;
-}
-#fontlist.visible {
-	margin-top:			20px;
-	border-top:			1px solid #bbb;
-	padding-top:		20px;
-}
-#fontlist td, #fontlist th {
-	text-align:			left;
-	padding:			3px 1ex;
-	border-bottom:		1px solid #999;
-}
-#fontlist td.delete span {
-	opacity:			.4;
-}
-#fontlist td.delete:hover span {
-	opacity:			1;
-}
-#params {
-	margin-left:		12px;
-}
-#content {
-	margin-left:		20px;
-}
-#params th {
-	text-align:			right;
-	padding-right:		1.5ex;
-}
-#scale {
-	width:				3ex;
-	font-size:			10.5pt;
-}
-</style>
-<link rel="stylesheet" href="lib/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="lib/demo.css">
+<link rel="stylesheet" type="text/css" href="lib/jquery-ui.min.css">
 <script type="text/javascript">
 var Module = {
 	preRun:[ function() {
@@ -176,6 +50,7 @@ var Module = {
 <script type="text/javascript" src="lib/symdesc.js"></script>
 <script type="text/javascript" src="lib/canvas.js"></script>
 <script type="text/javascript" src="lib/filedrop-min.js"></script>
+<script type="text/javascript" src="lib/fonts.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	// Sort the symbols
@@ -209,7 +84,6 @@ $(document).ready(function() {
 		.trigger('change')
 		;
 
-
 	$('#scale').spinner({ min:1 });
 	$('#render').button().click(render);
 	$('#fonthdr').click(fontClick);
@@ -234,180 +108,9 @@ $(document).ready(function() {
 		$('#dropzone div.dropfile').css('display', 'block').text(file.name);
 		$('#dropzone input.fd-file')[0].title = file.name;
 
-		fontRead.file = file.nativeFile;		// Native browser File object
+		fontSelected(file.nativeFile);		// Native browser File object
 	});
 });
-
-function fontClick() {
-	var hdr = document.getElementById('fonthdr');
-	var div = document.getElementById('fontdiv');
-	if (div.style.visibility == 'visible') {
-		hdr.innerHTML  = '&#x25bc' + hdr.innerHTML.substr(1);
-		$(div).animate({ height:0 }, {
-					complete:function() {
-						div.style.visibility = 'hidden';
-						div.style.height	 = 'auto';
-					}
-				});
-	} else {
-		var hgt = div.offsetHeight;
-		div.style.height = '0px';
-		div.style.visibility = 'visible';
-		hdr.innerHTML  = '&#x25b2' + hdr.innerHTML.substr(1);
-		$(div).animate({ height:hgt }, {
-					complete:function() {
-					}
-				});
-	}
-}
-function fontRead() {
-	var name = document.getElementById('fontname').value.trim();
-	var mult = +document.getElementById('fontmult').value.trim();
-	var file = fontRead.file;
-	if (!name || !mult || !file)
-		return;
-	if (/[^a-zA-Z0-9-]/.test(name))
-		return alert('Only alphanumeric and dash allowed in font-name.');
-	
-	// Clear the file - on error the user must re-select it.
-	fontRead.file = null;
-	$('#dropzone div.droptext').css('display', 'block');
-	$('#dropzone div.dropfile').css('display', 'none').text('');
-	$('#dropzone input.fd-file')[0].title = '';
-
-	var reader = new FileReader();
-
-	// Freaking IE10 doesn't support readAsBinaryString() and emscripten
-	// only excepts Strings and standard Arrays, not ArrayBuffers.
-	if (reader.readAsBinaryString) {
-		reader.onloadend = function() { done(reader.result); }
-		reader.readAsBinaryString(file);
-	} else {
-		reader.onloadend = function() {
-			// Strategy : break the arraybuffer into 16k segments and concat
-			var $16k = 16 * 1024;
-			var result = '';
-			var length = reader.result.byteLength;
-			for (var i = 0; i < length; i += $16k) {
-				var seg = new Uint8Array(reader.result, i, Math.min(length-i, $16k));
-				result += String.fromCharCode.apply(null, seg);
-			}
-			done(result);
-		}
-		reader.readAsArrayBuffer(file);
-	}
-
-	function done(result) {
-		try {
-			fontLoad(name, file.name, mult, result);
-			fontSave(name, file.name, mult, result);
-			fontShow(name, file.name, mult);
-		} catch (e) {
-			return alert(name + ': ' + file.name + ': ' + e);
-		}
-
-		document.getElementById('fontname').value = '';
-		document.getElementById('fontmult').value = '100';
-	}
-}
-
-// Loads a file into emscripten and freetype
-function fontLoad(fontname, filename, sizemult, fontfile) {
-	Module.FS_createDataFile('/', filename, fontfile, true, false);
-
-	var load_font = Module.cwrap("load_font", 'number',
-								['string','string','number']);
-	var rv = load_font(filename, fontname, sizemult);
-	if (rv != 0) {
-		FS.unlink('/' + filename);
-		throw 'Error: font load failed [' + rv + ']';
-	}
-}
-
-// Saves the font to localStorage
-function fontSave(fontname, filename, sizemult, fontfile) {
-	// Find a free slot - first check for existing name
-	for (var i = 0; i < 8; i++) {
-		var name = localStorage.getItem('bwipjsFontName' + i);
-		if (name && name.toLowerCase() == fontname.toLowerCase())
-			break;
-	}
-	if (i == 8) {
-		for (var i = 0; i < 8 && localStorage.getItem('bwipjsFontName' + i); i++)
-			;
-		if (i == 8)
-			throw 'No more room in local-storage';
-	}
-	try {
-		localStorage.setItem('bwipjsFontName' + i, fontname);
-		localStorage.setItem('bwipjsFileName' + i, filename);
-		localStorage.setItem('bwipjsSizeMult' + i, sizemult);
-		localStorage.setItem('bwipjsFontFile' + i, btoa(fontfile));
-	} catch (e) {
-		localStorage.removeItem('bwipjsFontName' + i);
-		localStorage.removeItem('bwipjsFileName' + i);
-		localStorage.removeItem('bwipjsSizeMult' + i);
-		localStorage.removeItem('bwipjsFontFile' + i);
-		throw 'No more room in local-storage';
-	}
-}
-
-// Adds the font to the list of existing
-function fontShow(fontname, filename, sizemult) {
-	var div = $('#fontlist');
-	if (div.hasClass('empty')) {
-		div.html(
-			'<table border=0 cellpadding=0 cellspacing=0><tbody>' +
-			'<tr><th>Font Name<th>File Name<th>Mult<th><br>' +
-			'</table>')
-			.removeClass('empty').addClass('visible');
-	}
-
-	var row = $('#fontlist tr.' + fontname);
-	if (!row.length) {
-		$('#fontlist tr:last')
-			.after('<tr class="' + fontname + '"><td><td><td>' +
-						'<td class="delete">' +
-						'<span class="ui-icon ui-icon-trash"></span>');
-		row = $('#fontlist tr.' + fontname);
-		row.find('td.delete').click(function(ev) {
-			fontRemove($(ev.target).closest('tr').find('td:first-child').text());
-		});
-	}
-	$(row[0].children[0]).text(fontname);
-	$(row[0].children[1]).text(filename);
-	$(row[0].children[2]).text(sizemult);
-}
-
-function fontRemove(fontname) {
-	for (var i = 0; i < 8; i++) {
-		var name = localStorage.getItem('bwipjsFontName' + i);
-		if (name && name.toLowerCase() == fontname.toLowerCase())
-			break;
-	}
-	if (i == 8)
-		return;
-
-	// Unload from freetype
-	var close_font = Module.cwrap("close_font", 'number', ['string']);
-	var rv = close_font(fontname);
-
-	// Delete from emscripten
-	var filename = localStorage.getItem('bwipjsFileName' + i);
-	if (filename) {
-		FS.unlink(filename);
-	}
-
-	// Delete from persistent storage
-	localStorage.removeItem('bwipjsFontName' + i);
-	localStorage.removeItem('bwipjsFileName' + i);
-	localStorage.removeItem('bwipjsSizeMult' + i);
-	localStorage.removeItem('bwipjsFontFile' + i);
-
-	$('#fontlist tr.' + fontname).remove();
-	if ($('#fontlist tr').length == 1)
-		$('#fontlist').html('').removeClass('visible').addClass('empty');
-}
 
 function render() {
 	var elt = symdesc[$('#symbol')[0].selectedIndex];
@@ -449,6 +152,10 @@ function render() {
 			break;
 		}
 	}
+
+	// Anti-aliased or monochrome fonts?
+	// This hooks directly into the FreeType library.
+	BWIPJS.ft_monochrome(document.getElementById('fontAnti').checked ? 0 : 1);
 
 	bw.bitmap(new Bitmap);
 	
@@ -526,11 +233,20 @@ function render() {
 <td style="padding-left:10mm">
 	<table border=0 cellpading=0 cellspacing=5>
 	<tr><th>Scale:<td><input type="text" id="scale" value=2>
-	<tr><th>Rotate:<td>
-		<label for="rotN"><input type="radio" name="rot" value="N" id="rotN" checked>Normal</label>
-		<label for="rotR"><input type="radio" name="rot" value="R" id="rotR">90 CW</label>
-		<label for="rotL"><input type="radio" name="rot" value="L" id="rotL">90 CCW</label>
-		<label for="rotI"><input type="radio" name="rot" value="I" id="rotI">180</label>
+	<tr><th>Image Rotation:<td>
+		<label for="rotN"><input type="radio" name="rot" value="N"
+			id="rotN" checked>Normal</label>
+		<label for="rotR"><input type="radio" name="rot" value="R"
+			id="rotR">90 CW</label>
+		<label for="rotL"><input type="radio" name="rot" value="L"
+			id="rotL">90 CCW</label>
+		<label for="rotI"><input type="radio" name="rot" value="I"
+			id="rotI">180</label>
+	<tr><th>Font Rendering:<td>
+		<label for="fontAnti"><input type="radio" name="font" value="A"
+			id="fontAnti" checked>Anti-Aliased</label>
+		<label for="fontMono"><input type="radio" name="font" value="M"
+			id="fontMono">Monochrome</label>
 	<tr><td><td><button id="render">Show Barcode</button>
 	</table>
 <tr><td><br>

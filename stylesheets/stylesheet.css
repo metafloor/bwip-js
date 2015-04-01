@@ -97,6 +97,10 @@ p {
   margin: 10px 0 15px 0;
 }
 
+li p:first-child {
+  margin-top: 0px;
+}
+
 footer p {
   color: #f2f2f2;
 }

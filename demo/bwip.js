@@ -87,6 +87,7 @@ BWIPJS.decrefs = function(module) {
 }
 
 // FreeType interface
+BWIPJS.ft_monochrome = Module.cwrap("monochrome", 'number', ['number']);
 BWIPJS.ft_lookup = Module.cwrap("find_font", 'number', ['string']);
 BWIPJS.ft_bitmap = Module.cwrap("get_bitmap", 'number', ['number','number','number']);
 BWIPJS.ft_width	 = Module.cwrap("get_width", 'number', []);
