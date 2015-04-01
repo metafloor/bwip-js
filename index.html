@@ -127,6 +127,14 @@ which can be seen using the option:</p>
 <pre><code>textfont=Inconsolata
 </code></pre>
 
+<p>For example, we can render an alternate version of the ISBN barcodes shown above
+with the Inconsolata font using the BWIPP options:</p>
+
+<pre><code>includetext guardwhitespace textfont=Inconsolata isbntextfont=Inconsolata isbntextsize=11
+</code></pre>
+
+<p><a href="https://camo.githubusercontent.com/adda62aa0732b8b613d4ffef6559d64dd6c2803b/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f6973626e2d696e636f6e736f6c6174612e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/adda62aa0732b8b613d4ffef6559d64dd6c2803b/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f6973626e2d696e636f6e736f6c6174612e706e673f7261773d74727565" alt="ISBN Using Inconsolata" data-canonical-src="http://metafloor.github.io/bwip-js/images/isbn-inconsolata.png?raw=true" style="max-width:100%;"></a></p>
+
 <h2>
 <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
@@ -252,7 +260,7 @@ browser's URL bar.  Firefox supports XHR with <code>file://</code>, Chrome and I
 
 <p>Once the host framework is implemented, it's time to invoke an encoder.  You must remember that this is a PostScript emulation, so the calling conventions have a PostScript feel to them.  </p>
 
-<p>BWIPP (the PostScript library) uses a two-parameter calling convention.  The first parameter is always the barcode text to be encoded.  The second parameter is the options that govern how the barcode is generated.  This second parameter can be either a string or a PostScript dictionary object.  This author recommends using a dictionary object for the options, as they provide more flexibility. </p>
+<p>BWIPP (the PostScript library) uses a two-parameter calling convention.  The first parameter is always the barcode text to be encoded.  The second parameter is the options that govern how the barcode is generated.  This second parameter can be either a string or a PostScript dictionary object.  It is recommended to use a dictionary object for the options, as they provide more flexibility. </p>
 
 <p>For example, one of the standard options available for linear/one-dimensional barcodes is the <code>alttext</code> option.  This option allows overriding what is printed as the human readable component of the barcode.  If the options are specified as a string, no spaces can occur in the <code>alttext</code> value.  This restriction does not exist if a dictionary object is used.</p>
 
@@ -269,8 +277,8 @@ browser's URL bar.  Firefox supports XHR with <code>file://</code>, Chrome and I
 
 <p>The following example calls the <code>code128</code> encoder using the <code>parsefnc</code> option to specify the FNC1 character as part of the barcode text, and provides an alternate, human readable text.</p>
 
-<div class="highlight highlight-javascript"><pre><span class="pl-c">// Select monochrome or anti-aliased fonts.  You can change the selection between</span>
-<span class="pl-c">// calls.</span>
+<div class="highlight highlight-javascript"><pre><span class="pl-c">// Select monochrome or anti-aliased fonts.  You can change the selection</span>
+<span class="pl-c">// between calls.</span>
 <span class="pl-c">// 0 == anti-aliased.  1 == monochrome.  Default is 0.</span>
 BWIPJS.ft_monochrome(<span class="pl-c1">0</span>);    <span class="pl-c">// anti-aliased</span>
 
