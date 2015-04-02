@@ -98,6 +98,15 @@ which can be seen using the option:
 textfont=Inconsolata
 ```
 
+For example, we can render an alternate version of the ISBN barcodes shown above
+with the Inconsolata font using the BWIPP options:
+
+```
+includetext guardwhitespace textfont=Inconsolata isbntextfont=Inconsolata isbntextsize=11
+```
+
+![ISBN Using Inconsolata](http://metafloor.github.io/bwip-js/images/isbn-inconsolata.png?raw=true)
+
 ## Installation
 
 You can download the latest package at:
@@ -218,7 +227,7 @@ function Bitmap() {
 
 Once the host framework is implemented, it's time to invoke an encoder.  You must remember that this is a PostScript emulation, so the calling conventions have a PostScript feel to them.  
 
-BWIPP (the PostScript library) uses a two-parameter calling convention.  The first parameter is always the barcode text to be encoded.  The second parameter is the options that govern how the barcode is generated.  This second parameter can be either a string or a PostScript dictionary object.  This author recommends using a dictionary object for the options, as they provide more flexibility. 
+BWIPP (the PostScript library) uses a two-parameter calling convention.  The first parameter is always the barcode text to be encoded.  The second parameter is the options that govern how the barcode is generated.  This second parameter can be either a string or a PostScript dictionary object.  It is recommended to use a dictionary object for the options, as they provide more flexibility. 
 
 For example, one of the standard options available for linear/one-dimensional barcodes is the `alttext` option.  This option allows overriding what is printed as the human readable component of the barcode.  If the options are specified as a string, no spaces can occur in the `alttext` value.  This restriction does not exist if a dictionary object is used.
 
@@ -234,8 +243,8 @@ To invoke a barcode encoder/renderer, you do the following:
 The following example calls the `code128` encoder using the `parsefnc` option to specify the FNC1 character as part of the barcode text, and provides an alternate, human readable text.
 
 ```javascript
-// Select monochrome or anti-aliased fonts.  You can change the selection between
-// calls.
+// Select monochrome or anti-aliased fonts.  You can change the selection
+// between calls.
 // 0 == anti-aliased.  1 == monochrome.  Default is 0.
 BWIPJS.ft_monochrome(0);	// anti-aliased
 
