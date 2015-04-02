@@ -8,6 +8,8 @@
 -->
 <link rel="stylesheet" type="text/css" href="lib/demo.css">
 <link rel="stylesheet" type="text/css" href="lib/jquery-ui.min.css">
+<script type="text/javascript" src="lib/fonts.js"></script>
+<script type="text/javascript" src="lib/filedrop-min.js"></script>
 <script type="text/javascript">
 var Module = {
 	preRun:[ function() {
@@ -49,8 +51,6 @@ var Module = {
 <script type="text/javascript" src="lib/jquery-ui.min.js"></script>
 <script type="text/javascript" src="lib/symdesc.js"></script>
 <script type="text/javascript" src="lib/canvas.js"></script>
-<script type="text/javascript" src="lib/filedrop-min.js"></script>
-<script type="text/javascript" src="lib/fonts.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	// Sort the symbols
@@ -59,9 +59,15 @@ $(document).ready(function() {
 			 return (a.desc < b.desc ? -1 : 1);
 		});
 
+	var lastIndex;
+	try {
+		lastIndex = +localStorage.getItem('bwipjsLastIndex');
+	} catch (e) {
+	}
+
 	// Create the select list
 	var sel = document.getElementById('symbol');
-	for (var i = 0; i < symdesc.length; i++) {	// last entry is null
+	for (var i = 0; i < symdesc.length; i++) {
 		var opt = document.createElement('option');
 		opt.text = symdesc[i].desc;
 		opt.value = i;
@@ -75,14 +81,22 @@ $(document).ready(function() {
 				$('#symopts').val(sym.opts);
 
 				$('#proof-img').css('visibility', 'hidden');
+
+				try {
+					localStorage.setItem('bwipjsLastIndex', this.selectedIndex);
+				} catch (e) {
+				}
 			} else {
 				$('#symtext').val('');
 				$('#symopts').val('');
 			}
 			$('#symaltx').val('');
-		})
-		.trigger('change')
-		;
+		});
+
+	if (lastIndex >= 0 && lastIndex < symdesc.length) {
+		$(sel).prop('selectedIndex', lastIndex);
+	}
+	$(sel).trigger('change');
 
 	$('#scale').spinner({ min:1 });
 	$('#render').button().click(render);
@@ -225,7 +239,7 @@ function render() {
 <table border=0 cellpading=0 cellspacing=0><tr>
 <td>
 	<table border=0 cellpading=0 cellspacing=0>
-	<tr><th>Bar Code:<td><select id="symbol" style="width:64ex"></select>
+	<tr><th>Barcode Type:<td><select id="symbol" style="width:64ex"></select>
 	<tr><th>Bar Text:<td><input id="symtext" type="text" style="width:63ex">
 	<tr><th>Alt Text:<td><input id="symaltx" type="text" style="width:63ex">
 	<tr><th>Options:<td><input id="symopts" type="text" style="width:63ex">
