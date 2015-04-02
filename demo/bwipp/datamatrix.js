@@ -17,23 +17,19 @@ if (!BWIPJS.bwipp["renmatrix"] && BWIPJS.increfs("datamatrix", "renmatrix")) {
 }
 BWIPJS.bwipp["datamatrix"]=function() {
 	function $f0(){
-		//#line 14721: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 14722: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 14722: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 14721: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,7 +67,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 14722: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -88,20 +83,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 14719: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 14720: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 14723: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 14724: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -109,11 +100,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 14726: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 14738: dup msg exch j exch putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -122,7 +111,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 14739: length j add 1 add /j exch def
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		var t=this.dstk.get("j");
@@ -133,9 +121,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14740: pop
 		this.ptr--;
-		//#line 14741: dup 0 3 getinterval cvi msg exch j 1 sub exch put
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=3;
@@ -153,7 +139,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 14742: dup length 3 sub 3 exch getinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -164,7 +149,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
 	function $f7(){
-		//#line 14744: dup msg exch j exch putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -173,7 +157,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 14745: length j add /j exch def
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		var t=this.dstk.get("j");
@@ -182,7 +165,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14746: /barcode msg 0 j getinterval def
 		this.stk[this.ptr++]="barcode";
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -191,11 +173,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14747: exit
 		return -1;
 	}
 	function $f8(){
-		//#line 14737: (^) search {
 		this.stk[this.ptr++]=BWIPJS.psstring("^");
 		var h=this.stk[this.ptr-2];
 		var t=h.indexOf(this.stk[this.ptr-1]);
@@ -208,9 +188,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr++]=true;
 		}
 		this.stk[this.ptr++]=$f6;
-		//#line 14743: } {
 		this.stk[this.ptr++]=$f7;
-		//#line 14748: } ifelse 
 		var t8=this.stk[--this.ptr];
 		var t9=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -220,7 +198,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f9(){
-		//#line 14733: /msg barcode length string def
 		this.stk[this.ptr++]="msg";
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -228,27 +205,21 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14734: /j 0 def
 		this.stk[this.ptr++]="j";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14735: barcode
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 14736: { % loop
 		this.stk[this.ptr++]=$f8;
-		//#line 14749: } loop
 		var t10=this.stk[--this.ptr];
 		while (true) {
 			if (t10.call(this)==-1) break;
 		}
 	}
 	function $f10(){
-		//#line 14764: i barlen eq {exit} if
 		return -1;
 	}
 	function $f11(){
-		//#line 14768: /char fncvals barcode i 1 add 4 getinterval get def
 		this.stk[this.ptr++]="char";
 		var t=this.dstk.get("fncvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -265,7 +236,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14769: /i i 4 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -274,7 +244,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f12(){
-		//#line 14771: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -283,7 +252,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f13(){
-		//#line 14767: barcode i 1 add get 94 ne {
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -300,9 +268,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f11;
-		//#line 14770: } {
 		this.stk[this.ptr++]=$f12;
-		//#line 14772: } ifelse
 		var t13=this.stk[--this.ptr];
 		var t14=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -312,7 +278,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f14(){
-		//#line 14764: i barlen eq {exit} if
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
@@ -326,7 +291,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t12.call(this)==-1) return -1;
 		}
-		//#line 14765: /char barcode i get def
 		this.stk[this.ptr++]="char";
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -337,7 +301,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14766: parsefnc char 94 eq and i barlen 4 sub lt and {
 		var t=this.dstk.get("parsefnc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char");
@@ -361,12 +324,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f13;
-		//#line 14773: } if
 		var t15=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t15.call(this)==-1) return -1;
 		}
-		//#line 14774: msg j char put
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -377,14 +338,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 14775: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14776: /j j 1 add def
 		this.stk[this.ptr++]="j";
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -393,25 +352,21 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f15(){
-		//#line 14834: urows 0 ne urows rows ne and {/okay false def} if
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f16(){
-		//#line 14835: ucols 0 ne ucols cols ne and {/okay false def} if
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f17(){
-		//#line 14836: urows 0 eq ucols 0 eq or rows cols ne and {/okay false def} if
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f18(){
-		//#line 14837: okay {/fullcws [ fullcws aload pop ncws ] def} if
 		this.stk[this.ptr++]="fullcws";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("fullcws");
@@ -431,11 +386,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f19(){
-		//#line 14823: /m exch def
 		this.stk[this.ptr++]="m";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14824: /rows m 0 get def                          % Rows in symbol
 		this.stk[this.ptr++]="rows";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -445,7 +398,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14825: /cols m 1 get def                          % Columns in symbol
 		this.stk[this.ptr++]="cols";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -455,7 +407,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14826: /regh m 2 get def                          % Horizontal regions
 		this.stk[this.ptr++]="regh";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -465,7 +416,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14827: /regv m 3 get def                          % Vertical regions
 		this.stk[this.ptr++]="regv";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -475,7 +425,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14828: /rscw m 4 get def                          % Error correction codewords
 		this.stk[this.ptr++]="rscw";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -485,7 +434,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14829: /rsbl m 5 get def                          % Error correction blocks
 		this.stk[this.ptr++]="rsbl";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -495,7 +443,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14830: /mrows rows 2 regh mul sub def             % Rows in the mapping matrix
 		this.stk[this.ptr++]="mrows";
 		var t=this.dstk.get("rows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -505,7 +452,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14831: /mcols cols 2 regv mul sub def             % Columns in the mapping matrix
 		this.stk[this.ptr++]="mcols";
 		var t=this.dstk.get("cols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -515,7 +461,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14832: /ncws mrows mcols mul 8 idiv rscw sub def  % Data codewords
 		this.stk[this.ptr++]="ncws";
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -528,11 +473,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14833: /okay true def
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14834: urows 0 ne urows rows ne and {/okay false def} if
 		var t=this.dstk.get("urows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -556,7 +499,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t17.call(this)==-1) return -1;
 		}
-		//#line 14835: ucols 0 ne ucols cols ne and {/okay false def} if
 		var t=this.dstk.get("ucols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -580,7 +522,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t18.call(this)==-1) return -1;
 		}
-		//#line 14836: urows 0 eq ucols 0 eq or rows cols ne and {/okay false def} if
 		var t=this.dstk.get("urows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -614,7 +555,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t19.call(this)==-1) return -1;
 		}
-		//#line 14837: okay {/fullcws [ fullcws aload pop ncws ] def} if
 		var t=this.dstk.get("okay");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f18;
@@ -624,11 +564,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f20(){
-		//#line 14839: /numremcws [ 1558 {10000} repeat ] def
 		this.stk[this.ptr++]=10000;
 	}
 	function $f21(){
-		//#line 14840: fullcws {numremcws exch 1 sub 1 put} forall
 		var t=this.dstk.get("numremcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -641,7 +579,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f22(){
-		//#line 14844: numremcws i numremcws i 1 add get 1 add put
 		var t=this.dstk.get("numremcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -664,11 +601,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f23(){
-		//#line 14842: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14843: numremcws i get 1 ne {
 		var t=this.dstk.get("numremcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -683,20 +618,17 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f22;
-		//#line 14845: } if
 		var t30=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t30.call(this)==-1) return -1;
 		}
 	}
 	function $f24(){
-		//#line 14854: 0 1 128 {dup 1 add} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f25(){
-		//#line 14857: dup 10 2 string cvrs (00) 2 string copy dup 2 3 index length sub 4 -1 roll putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr++]=2;
@@ -736,20 +668,17 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else var t=this.stk.splice(this.ptr-a, a-b);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 14858: exch 130 add
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=130;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f26(){
-		//#line 14860: 229 [ lC lB fnc1 sapp prog usft m05 m06 lX lT lE eci ] {exch 1 add dup} forall pop
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	}
 	function $f27(){
-		//#line 14863: Avals {[exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -759,47 +688,39 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f28(){
-		//#line 14871: 48 1 57 {dup 44 sub} for  % 0-9
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=44;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f29(){
-		//#line 14872: 65 1 90 {dup 51 sub} for  % A-Z
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=51;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f30(){
-		//#line 14874: /C1vals << 0 1 31 {dup} for >> def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	}
 	function $f31(){
-		//#line 14876: 33 1 47 {dup 33 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=33;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f32(){
-		//#line 14877: 58 1 64 {dup 43 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=43;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f33(){
-		//#line 14878: 91 1 95 {dup 69 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=69;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f34(){
-		//#line 14882: /C3vals << 96 1 127 {dup 96 sub} for >> def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=96;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f35(){
-		//#line 14884: CNvals {[exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -809,7 +730,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f36(){
-		//#line 14885: C1vals {[exch CNvals sft1 get exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("CNvals");
@@ -828,7 +748,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f37(){
-		//#line 14886: C2vals {[exch CNvals sft2 get exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("CNvals");
@@ -847,7 +766,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f38(){
-		//#line 14887: C3vals {[exch CNvals sft3 get exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("CNvals");
@@ -866,53 +784,44 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f39(){
-		//#line 14895: 48 1  57 {dup 44 sub} for  % 0-9
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=44;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f40(){
-		//#line 14896: 97 1 122 {dup 83 sub} for  % a-z
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=83;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f41(){
-		//#line 14898: /T1vals << 0 1 31 {dup} for >> def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	}
 	function $f42(){
-		//#line 14900: 33 1 47 {dup 33 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=33;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f43(){
-		//#line 14901: 58 1 64 {dup 43 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=43;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f44(){
-		//#line 14902: 91 1 95 {dup 69 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=69;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f45(){
-		//#line 14908: 65 1  90 {dup 64 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=64;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f46(){
-		//#line 14909: 123 1 127 {dup 96 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=96;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f47(){
-		//#line 14912: TNvals {[exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -922,7 +831,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f48(){
-		//#line 14913: T1vals {[exch TNvals sft1 get exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("TNvals");
@@ -941,7 +849,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f49(){
-		//#line 14914: T2vals {[exch TNvals sft2 get exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("TNvals");
@@ -960,7 +867,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f50(){
-		//#line 14915: T3vals {[exch TNvals sft3 get exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("TNvals");
@@ -979,11 +885,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f51(){
-		//#line 14920: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14921: Avals i [ Avals usft get aload pop Avals i 128 sub get aload pop ] put
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1026,7 +930,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 14922: Cvals i [ Cvals usft get aload pop Cvals i 128 sub get aload pop ] put
 		var t=this.dstk.get("Cvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1069,7 +972,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 14923: Tvals i [ Tvals usft get aload pop Tvals i 128 sub get aload pop ] put
 		var t=this.dstk.get("Tvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1114,19 +1016,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f52(){
-		//#line 14931: 48 1 57 {dup 44 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=44;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f53(){
-		//#line 14932: 65 1 90 {dup 51 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=51;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f54(){
-		//#line 14935: Xvals {[exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -1136,17 +1035,14 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f55(){
-		//#line 14939: 64 1 94 {dup 64 sub} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=64;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f56(){
-		//#line 14941: 32 1 63 {dup} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	}
 	function $f57(){
-		//#line 14944: Evals {[exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -1156,11 +1052,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f58(){
-		//#line 14948: 0 1 255 {dup} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	}
 	function $f59(){
-		//#line 14951: Bvals {[exch]} forall
 		this.stk[this.ptr++]=Infinity;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -1170,19 +1064,15 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 	}
 	function $f60(){
-		//#line 14956: /numD [ msglen {0} repeat 0 ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f61(){
-		//#line 14957: /nextXterm [ msglen {0} repeat 9999 ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f62(){
-		//#line 14958: /nextNonX  [ msglen {0} repeat 9999 ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f63(){
-		//#line 14963: numD i numD i 1 add get 1 add put
 		var t=this.dstk.get("numD");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1205,7 +1095,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f64(){
-		//#line 14966: nextXterm i 0 put
 		var t=this.dstk.get("nextXterm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1217,7 +1106,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f65(){
-		//#line 14968: nextXterm i nextXterm i 1 add get 1 add put
 		var t=this.dstk.get("nextXterm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1240,7 +1128,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f66(){
-		//#line 14971: nextNonX i 0 put
 		var t=this.dstk.get("nextNonX");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1252,7 +1139,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f67(){
-		//#line 14973: nextNonX i nextNonX i 1 add get 1 add put
 		var t=this.dstk.get("nextNonX");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1275,11 +1161,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f68(){
-		//#line 14960: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14961: /barchar msg i get def
 		this.stk[this.ptr++]="barchar";
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1290,7 +1174,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14962: barchar 48 ge barchar 57 le and {
 		var t=this.dstk.get("barchar");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=48;
@@ -1303,12 +1186,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f63;
-		//#line 14964: } if
 		var t199=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t199.call(this)==-1) return -1;
 		}
-		//#line 14965: barchar 13 eq barchar 42 eq or barchar 62 eq or {
 		var t=this.dstk.get("barchar");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=13;
@@ -1337,9 +1218,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f64;
-		//#line 14967: } {
 		this.stk[this.ptr++]=$f65;
-		//#line 14969: } ifelse
 		var t200=this.stk[--this.ptr];
 		var t201=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -1347,7 +1226,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		} else {
 			if (t200.call(this)==-1) return -1;
 		}
-		//#line 14970: Xvals barchar known not {
 		var t=this.dstk.get("Xvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barchar");
@@ -1356,9 +1234,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
 		this.stk[this.ptr++]=$f66;
-		//#line 14972: } {
 		this.stk[this.ptr++]=$f67;
-		//#line 14974: } ifelse
 		var t202=this.stk[--this.ptr];
 		var t203=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -1368,12 +1244,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f69(){
-		//#line 14976: /nextXterm [nextXterm {dup 10000 gt {pop 10000} if} forall] def
 		this.ptr--;
 		this.stk[this.ptr++]=10000;
 	}
 	function $f70(){
-		//#line 14976: /nextXterm [nextXterm {dup 10000 gt {pop 10000} if} forall] def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=10000;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
@@ -1384,12 +1258,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f71(){
-		//#line 14977: /nextNonX  [nextNonX  {dup 10000 gt {pop 10000} if} forall] def
 		this.ptr--;
 		this.stk[this.ptr++]=10000;
 	}
 	function $f72(){
-		//#line 14977: /nextNonX  [nextNonX  {dup 10000 gt {pop 10000} if} forall] def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=10000;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
@@ -1400,7 +1272,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f73(){
-		//#line 14979: /isD  {char 48 ge char 57 le and} bind def
 		var t=this.dstk.get("char");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=48;
@@ -1414,7 +1285,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f74(){
-		//#line 14980: /isC  {CNvals char known} bind def
 		var t=this.dstk.get("CNvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char");
@@ -1422,7 +1292,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 	}
 	function $f75(){
-		//#line 14981: /isT  {TNvals char known} bind def
 		var t=this.dstk.get("TNvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char");
@@ -1430,7 +1299,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 	}
 	function $f76(){
-		//#line 14982: /isX  {Xvals char known} bind def
 		var t=this.dstk.get("Xvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char");
@@ -1438,7 +1306,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 	}
 	function $f77(){
-		//#line 14983: /isE  {Evals char known} bind def
 		var t=this.dstk.get("Evals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char");
@@ -1446,21 +1313,18 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 	}
 	function $f78(){
-		//#line 14984: /isEA {char 127 gt} bind def
 		var t=this.dstk.get("char");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=127;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f79(){
-		//#line 14985: /isFN {char 0 lt} bind def
 		var t=this.dstk.get("char");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f80(){
-		//#line 14986: /XtermFirst {dup nextXterm exch get exch nextNonX exch get lt} bind def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("nextXterm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1480,7 +1344,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f81(){
-		//#line 14992: mode A eq {/ac 0 def /cc 1 def /tc 1 def /xc 1 def /ec 1 def /bc 1.25 def} if
 		this.stk[this.ptr++]="ac";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1501,37 +1364,31 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f82(){
-		//#line 14993: mode C eq {/cc 0 def} if
 		this.stk[this.ptr++]="cc";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f83(){
-		//#line 14994: mode T eq {/tc 0 def} if
 		this.stk[this.ptr++]="tc";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f84(){
-		//#line 14995: mode X eq {/xc 0 def} if
 		this.stk[this.ptr++]="xc";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f85(){
-		//#line 14996: mode E eq {/ec 0 def} if
 		this.stk[this.ptr++]="ec";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f86(){
-		//#line 14997: mode B eq {/bc 0 def} if
 		this.stk[this.ptr++]="bc";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f87(){
-		//#line 15001: [/ac /cc /tc /xc /ec /bc] {dup load ceiling def} forall
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=t;
@@ -1539,7 +1396,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f88(){
-		//#line 15002: true [   cc tc xc ec bc] {ac exch le and} forall {A exit} if
 		var t=this.dstk.get("ac");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -1549,13 +1405,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f89(){
-		//#line 15002: true [   cc tc xc ec bc] {ac exch le and} forall {A exit} if
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f90(){
-		//#line 15003: true [ac cc tc xc ec   ] {bc exch lt and} forall {B exit} if
 		var t=this.dstk.get("bc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -1565,13 +1419,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f91(){
-		//#line 15003: true [ac cc tc xc ec   ] {bc exch lt and} forall {B exit} if
 		var t=this.dstk.get("B");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f92(){
-		//#line 15004: true [ac cc tc xc    bc] {ec exch lt and} forall {E exit} if
 		var t=this.dstk.get("ec");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -1581,13 +1433,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f93(){
-		//#line 15004: true [ac cc tc xc    bc] {ec exch lt and} forall {E exit} if
 		var t=this.dstk.get("E");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f94(){
-		//#line 15005: true [ac cc    xc ec bc] {tc exch lt and} forall {T exit} if
 		var t=this.dstk.get("tc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -1597,13 +1447,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f95(){
-		//#line 15005: true [ac cc    xc ec bc] {tc exch lt and} forall {T exit} if
 		var t=this.dstk.get("T");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f96(){
-		//#line 15006: true [ac cc tc    ec bc] {xc exch lt and} forall {X exit} if
 		var t=this.dstk.get("xc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -1613,13 +1461,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f97(){
-		//#line 15006: true [ac cc tc    ec bc] {xc exch lt and} forall {X exit} if
 		var t=this.dstk.get("X");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f98(){
-		//#line 15001: [/ac /cc /tc /xc /ec /bc] {dup load ceiling def} forall
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]="ac";
 		this.stk[this.ptr++]="cc";
@@ -1645,7 +1491,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			}
 			if (t225.call(this)==-1) break;
 		}
-		//#line 15002: true [   cc tc xc ec bc] {ac exch le and} forall {A exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("cc");
@@ -1681,7 +1526,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t229.call(this)==-1) return -1;
 		}
-		//#line 15003: true [ac cc tc xc ec   ] {bc exch lt and} forall {B exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ac");
@@ -1717,7 +1561,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t233.call(this)==-1) return -1;
 		}
-		//#line 15004: true [ac cc tc xc    bc] {ec exch lt and} forall {E exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ac");
@@ -1753,7 +1596,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t237.call(this)==-1) return -1;
 		}
-		//#line 15005: true [ac cc    xc ec bc] {tc exch lt and} forall {T exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ac");
@@ -1789,7 +1631,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t241.call(this)==-1) return -1;
 		}
-		//#line 15006: true [ac cc tc    ec bc] {xc exch lt and} forall {X exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ac");
@@ -1825,31 +1666,26 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t245.call(this)==-1) return -1;
 		}
-		//#line 15007: C exit
 		var t=this.dstk.get("C");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f99(){
-		//#line 15010: /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {1 add       } ifelse} ifelse def
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f100(){
-		//#line 15010: /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {1 add       } ifelse} ifelse def
 		this.stk[this.ptr-1]=Math.ceil(this.stk[this.ptr-1]);
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f101(){
-		//#line 15010: /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {1 add       } ifelse} ifelse def
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f102(){
-		//#line 15010: /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {1 add       } ifelse} ifelse def
 		var t=this.dstk.get("isEA");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f100;
@@ -1863,28 +1699,24 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f103(){
-		//#line 15011: /cc cc isC {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f104(){
-		//#line 15011: /cc cc isC {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f105(){
-		//#line 15011: /cc cc isC {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f106(){
-		//#line 15011: /cc cc isC {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		var t=this.dstk.get("isEA");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f104;
@@ -1898,28 +1730,24 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f107(){
-		//#line 15012: /tc tc isT {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f108(){
-		//#line 15012: /tc tc isT {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f109(){
-		//#line 15012: /tc tc isT {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f110(){
-		//#line 15012: /tc tc isT {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		var t=this.dstk.get("isEA");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f108;
@@ -1933,28 +1761,24 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f111(){
-		//#line 15013: /xc xc isX {2 3 div add} {isEA {13 3 div add } {10 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f112(){
-		//#line 15013: /xc xc isX {2 3 div add} {isEA {13 3 div add } {10 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=13;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f113(){
-		//#line 15013: /xc xc isX {2 3 div add} {isEA {13 3 div add } {10 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f114(){
-		//#line 15013: /xc xc isX {2 3 div add} {isEA {13 3 div add } {10 3 div add} ifelse} ifelse def
 		var t=this.dstk.get("isEA");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f112;
@@ -1968,28 +1792,24 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f115(){
-		//#line 15014: /ec ec isE {3 4 div add} {isEA {17 4 div add } {13 4 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f116(){
-		//#line 15014: /ec ec isE {3 4 div add} {isEA {17 4 div add } {13 4 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=17;
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f117(){
-		//#line 15014: /ec ec isE {3 4 div add} {isEA {17 4 div add } {13 4 div add} ifelse} ifelse def
 		this.stk[this.ptr++]=13;
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f118(){
-		//#line 15014: /ec ec isE {3 4 div add} {isEA {17 4 div add } {13 4 div add} ifelse} ifelse def
 		var t=this.dstk.get("isEA");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f116;
@@ -2003,17 +1823,14 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f119(){
-		//#line 15015: /bc bc isFN {4 add} {1 add} ifelse def
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f120(){
-		//#line 15015: /bc bc isFN {4 add} {1 add} ifelse def
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f121(){
-		//#line 15017: true [   cc tc xc ec bc] {ac 1 add exch le and} forall {A exit} if
 		var t=this.dstk.get("ac");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -2025,19 +1842,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f122(){
-		//#line 15017: true [   cc tc xc ec bc] {ac 1 add exch le and} forall {A exit} if
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f123(){
-		//#line 15018: bc 1 add ac le {B exit} if
 		var t=this.dstk.get("B");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f124(){
-		//#line 15019: true [   cc tc xc ec   ] {bc 1 add exch lt and} forall {B exit} if
 		var t=this.dstk.get("bc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -2049,13 +1863,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f125(){
-		//#line 15019: true [   cc tc xc ec   ] {bc 1 add exch lt and} forall {B exit} if
 		var t=this.dstk.get("B");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f126(){
-		//#line 15020: true [ac cc tc xc    bc] {ec 1 add exch lt and} forall {E exit} if
 		var t=this.dstk.get("ec");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -2067,13 +1879,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f127(){
-		//#line 15020: true [ac cc tc xc    bc] {ec 1 add exch lt and} forall {E exit} if
 		var t=this.dstk.get("E");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f128(){
-		//#line 15021: true [ac cc    xc ec bc] {tc 1 add exch lt and} forall {T exit} if
 		var t=this.dstk.get("tc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -2085,13 +1895,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f129(){
-		//#line 15021: true [ac cc    xc ec bc] {tc 1 add exch lt and} forall {T exit} if
 		var t=this.dstk.get("T");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f130(){
-		//#line 15022: true [ac cc tc    ec bc] {xc 1 add exch lt and} forall {X exit} if
 		var t=this.dstk.get("xc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -2103,13 +1911,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f131(){
-		//#line 15022: true [ac cc tc    ec bc] {xc 1 add exch lt and} forall {X exit} if
 		var t=this.dstk.get("X");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f132(){
-		//#line 15023: true [ac    tc    ec bc] {cc 1 add exch lt and} forall {
 		var t=this.dstk.get("cc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -2121,25 +1927,21 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f133(){
-		//#line 15024: cc xc lt {C exit} if
 		var t=this.dstk.get("C");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f134(){
-		//#line 15025: cc xc eq {i k add 1 add XtermFirst {X exit} {C exit} ifelse} if
 		var t=this.dstk.get("X");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f135(){
-		//#line 15025: cc xc eq {i k add 1 add XtermFirst {X exit} {C exit} ifelse} if
 		var t=this.dstk.get("C");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		return -1;
 	}
 	function $f136(){
-		//#line 15025: cc xc eq {i k add 1 add XtermFirst {X exit} {C exit} ifelse} if
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("k");
@@ -2160,7 +1962,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f137(){
-		//#line 15024: cc xc lt {C exit} if
 		var t=this.dstk.get("cc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("xc");
@@ -2171,7 +1972,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t293.call(this)==-1) return -1;
 		}
-		//#line 15025: cc xc eq {i k add 1 add XtermFirst {X exit} {C exit} ifelse} if
 		var t=this.dstk.get("cc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("xc");
@@ -2187,7 +1987,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f138(){
-		//#line 15017: true [   cc tc xc ec bc] {ac 1 add exch le and} forall {A exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("cc");
@@ -2223,7 +2022,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t272.call(this)==-1) return -1;
 		}
-		//#line 15018: bc 1 add ac le {B exit} if
 		var t=this.dstk.get("bc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -2236,7 +2034,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t273.call(this)==-1) return -1;
 		}
-		//#line 15019: true [   cc tc xc ec   ] {bc 1 add exch lt and} forall {B exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("cc");
@@ -2270,7 +2067,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t277.call(this)==-1) return -1;
 		}
-		//#line 15020: true [ac cc tc xc    bc] {ec 1 add exch lt and} forall {E exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ac");
@@ -2306,7 +2102,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t281.call(this)==-1) return -1;
 		}
-		//#line 15021: true [ac cc    xc ec bc] {tc 1 add exch lt and} forall {T exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ac");
@@ -2342,7 +2137,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t285.call(this)==-1) return -1;
 		}
-		//#line 15022: true [ac cc tc    ec bc] {xc 1 add exch lt and} forall {X exit} if
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ac");
@@ -2378,7 +2172,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t289.call(this)==-1) return -1;
 		}
-		//#line 15023: true [ac    tc    ec bc] {cc 1 add exch lt and} forall {
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ac");
@@ -2408,14 +2201,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			if (t292.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=$f137;
-		//#line 15026: } if
 		var t297=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t297.call(this)==-1) return -1;
 		}
 	}
 	function $f139(){
-		//#line 15000: i k add msglen eq {
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("k");
@@ -2428,12 +2219,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f98;
-		//#line 15008: } if
 		var t246=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t246.call(this)==-1) return -1;
 		}
-		//#line 15009: /char msg i k add get def
 		this.stk[this.ptr++]="char";
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2447,7 +2236,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15010: /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {1 add       } ifelse} ifelse def
 		this.stk[this.ptr++]="ac";
 		var t=this.dstk.get("ac");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2463,7 +2251,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			if (t249.call(this)==-1) return -1;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15011: /cc cc isC {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]="cc";
 		var t=this.dstk.get("cc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2479,7 +2266,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			if (t253.call(this)==-1) return -1;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15012: /tc tc isT {2 3 div add} {isEA { 8 3 div add } { 4 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]="tc";
 		var t=this.dstk.get("tc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2495,7 +2281,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			if (t257.call(this)==-1) return -1;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15013: /xc xc isX {2 3 div add} {isEA {13 3 div add } {10 3 div add} ifelse} ifelse def
 		this.stk[this.ptr++]="xc";
 		var t=this.dstk.get("xc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2511,7 +2296,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			if (t261.call(this)==-1) return -1;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15014: /ec ec isE {3 4 div add} {isEA {17 4 div add } {13 4 div add} ifelse} ifelse def
 		this.stk[this.ptr++]="ec";
 		var t=this.dstk.get("ec");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2527,7 +2311,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			if (t265.call(this)==-1) return -1;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15015: /bc bc isFN {4 add} {1 add} ifelse def
 		this.stk[this.ptr++]="bc";
 		var t=this.dstk.get("bc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2543,18 +2326,15 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			if (t267.call(this)==-1) return -1;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15016: k 4 ge {
 		var t=this.dstk.get("k");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f138;
-		//#line 15027: } if
 		var t298=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t298.call(this)==-1) return -1;
 		}
-		//#line 15028: /k k 1 add def
 		this.stk[this.ptr++]="k";
 		var t=this.dstk.get("k");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2563,19 +2343,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f140(){
-		//#line 14999: /k 0 def {  % loop
 		this.stk[this.ptr++]="k";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=$f139;
-		//#line 15029: } loop
 		var t299=this.stk[--this.ptr];
 		while (true) {
 			if (t299.call(this)==-1) break;
 		}
 	}
 	function $f141(){
-		//#line 14991: /ac 1 def /cc 2 def /tc 2 def /xc 2 def /ec 2 def /bc 2.25 def
 		this.stk[this.ptr++]="ac";
 		this.stk[this.ptr++]=1;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -2594,7 +2371,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]="bc";
 		this.stk[this.ptr++]=2.25;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 14992: mode A eq {/ac 0 def /cc 1 def /tc 1 def /xc 1 def /ec 1 def /bc 1.25 def} if
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("A");
@@ -2608,7 +2384,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t217.call(this)==-1) return -1;
 		}
-		//#line 14993: mode C eq {/cc 0 def} if
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("C");
@@ -2622,7 +2397,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t218.call(this)==-1) return -1;
 		}
-		//#line 14994: mode T eq {/tc 0 def} if
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("T");
@@ -2636,7 +2410,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t219.call(this)==-1) return -1;
 		}
-		//#line 14995: mode X eq {/xc 0 def} if
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("X");
@@ -2650,7 +2423,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t220.call(this)==-1) return -1;
 		}
-		//#line 14996: mode E eq {/ec 0 def} if
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("E");
@@ -2664,7 +2436,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t221.call(this)==-1) return -1;
 		}
-		//#line 14997: mode B eq {/bc 0 def} if
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("B");
@@ -2678,10 +2449,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t222.call(this)==-1) return -1;
 		}
-		//#line 14998: 1 {  % common exit
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=$f140;
-		//#line 15030: } repeat
 		var t302=this.stk[--this.ptr];
 		var t300=this.stk[--this.ptr];
 		for (var t301=0; t301<t300; t301++) {
@@ -2689,7 +2458,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f142(){
-		//#line 15034: dup cws exch j exch putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2698,7 +2466,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 15035: /j exch length j add def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -2709,7 +2476,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f143(){
-		//#line 15041: 2 string dup 0 msg i get put dup 1 msg i 1 add get put Avals exch get addtocws
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
@@ -2751,18 +2517,15 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15042: /i i 2 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15043: exit
 		return -1;
 	}
 	function $f144(){
-		//#line 15047: Avals [-1 lC lT lX lE lB] newmode get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=Infinity;
@@ -2794,16 +2557,13 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15048: /mode newmode def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("newmode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15049: exit
 		return -1;
 	}
 	function $f145(){
-		//#line 15040: numD i get 2 ge {
 		var t=this.dstk.get("numD");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -2815,17 +2575,14 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f143;
-		//#line 15044: } if
 		var t303=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t303.call(this)==-1) return -1;
 		}
-		//#line 15045: /newmode lookup def
 		this.stk[this.ptr++]="newmode";
 		var t=this.dstk.get("lookup");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15046: newmode mode ne {
 		var t=this.dstk.get("newmode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mode");
@@ -2835,12 +2592,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f144;
-		//#line 15050: } if
 		var t304=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t304.call(this)==-1) return -1;
 		}
-		//#line 15051: Avals msg i get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -2857,21 +2612,17 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15052: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15053: exit
 		return -1;
 	}
 	function $f146(){
-		//#line 15039: 1 {  % Common exit
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=$f145;
-		//#line 15054: } repeat
 		var t307=this.stk[--this.ptr];
 		var t305=this.stk[--this.ptr];
 		for (var t306=0; t306<t305; t306++) {
@@ -2879,13 +2630,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f147(){
-		//#line 15061: in exch 3 getinterval 0 exch {add 40 mul} forall 40 idiv 1 add
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=40;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f148(){
-		//#line 15061: in exch 3 getinterval 0 exch {add 40 mul} forall 40 idiv 1 add
 		var t=this.dstk.get("in");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -2910,7 +2659,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		//#line 15062: dup 256 idiv exch 256 mod
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=256;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
@@ -2919,13 +2667,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f149(){
-		//#line 15058: /in exch def
 		this.stk[this.ptr++]="in";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15059: mark
 		this.stk[this.ptr++]=Infinity;
-		//#line 15060: 0 3 in length 1 sub {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=3;
 		var t=this.dstk.get("in");
@@ -2935,7 +2680,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f148;
-		//#line 15063: } for
 		var t315=this.stk[--this.ptr];
 		var t313=this.stk[--this.ptr];
 		var t312=this.stk[--this.ptr];
@@ -2944,7 +2688,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr++]=t314;
 			if (t315.call(this)==-1) break;
 		}
-		//#line 15064: counttomark array astore exch pop
 		for (var i=this.ptr-1; i>=0 && this.stk[i]!==Infinity; i--);
 		if (i==-1) throw "counttomark: underflow";
 		this.stk[this.ptr]=this.ptr-i-1;
@@ -2959,15 +2702,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f150(){
-		//#line 15073: i msglen eq {exit} if
 		return -1;
 	}
 	function $f151(){
-		//#line 15074: encvals mode get msg i get known not {exit} if
 		return -1;
 	}
 	function $f152(){
-		//#line 15077: ctxvals 0 p getinterval CTXvalstocws addtocws
 		var t=this.dstk.get("ctxvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -2978,7 +2718,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15078: [unlcw] addtocws
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("unlcw");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2989,16 +2728,13 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15079: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15080: exit
 		return -1;
 	}
 	function $f153(){
-		//#line 15087: encvals mode get exch get aload pop
 		var t=this.dstk.get("encvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mode");
@@ -3019,7 +2755,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f154(){
-		//#line 15089: pop -1 -1 -1 -1
 		this.ptr--;
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=-1;
@@ -3027,7 +2762,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=-1;
 	}
 	function $f155(){
-		//#line 15086: dup encvals mode get exch known {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("encvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3040,9 +2774,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		this.stk[this.ptr++]=$f153;
-		//#line 15088: } {  % Unencodable X12 characters
 		this.stk[this.ptr++]=$f154;
-		//#line 15090: } ifelse
 		var t319=this.stk[--this.ptr];
 		var t320=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -3052,9 +2784,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f156(){
-		//#line 15095: [
 		this.stk[this.ptr++]=Infinity;
-		//#line 15096: ctxvals 0 p getinterval aload pop
 		var t=this.dstk.get("ctxvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -3066,7 +2796,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		//#line 15097: remvals aload pop
 		var t=this.dstk.get("remvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-1];
@@ -3074,7 +2803,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		//#line 15098: ] CTXvalstocws addtocws
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
@@ -3084,23 +2812,18 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15099: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15100: /i msglen def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("msglen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15101: exit
 		return -1;
 	}
 	function $f157(){
-		//#line 15105: [
 		this.stk[this.ptr++]=Infinity;
-		//#line 15106: ctxvals 0 p getinterval aload pop
 		var t=this.dstk.get("ctxvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -3112,7 +2835,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		//#line 15107: remvals aload pop
 		var t=this.dstk.get("remvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-1];
@@ -3120,7 +2842,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		//#line 15108: encvals mode get sft1 get aload pop
 		var t=this.dstk.get("encvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mode");
@@ -3140,7 +2861,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		//#line 15109: ] CTXvalstocws addtocws
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
@@ -3150,21 +2870,17 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15110: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15111: /i msglen def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("msglen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15112: exit
 		return -1;
 	}
 	function $f158(){
-		//#line 15116: ctxvals 0 p getinterval CTXvalstocws addtocws
 		var t=this.dstk.get("ctxvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -3175,7 +2891,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15117: [unlcw] addtocws
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("unlcw");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3186,7 +2901,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15118: Avals msg i get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -3203,21 +2917,17 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15119: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15120: /i msglen def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("msglen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15121: exit
 		return -1;
 	}
 	function $f159(){
-		//#line 15125: ctxvals 0 p getinterval CTXvalstocws addtocws
 		var t=this.dstk.get("ctxvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -3228,7 +2938,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15126: Avals msg i get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -3245,21 +2954,17 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15127: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15128: /i msglen def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("msglen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15129: exit
 		return -1;
 	}
 	function $f160(){
-		//#line 15083: /remcws numremcws j p 3 idiv 2 mul add get def
 		this.stk[this.ptr++]="remcws";
 		var t=this.dstk.get("numremcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3277,10 +2982,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15084: /remvals [
 		this.stk[this.ptr++]="remvals";
 		this.stk[this.ptr++]=Infinity;
-		//#line 15085: msg i msglen i sub getinterval {
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -3292,7 +2995,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr++]=$f155;
-		//#line 15091: } forall
 		var t323=this.stk[--this.ptr];
 		var t322=this.stk[--this.ptr];
 		for (t321 in t322) {
@@ -3305,14 +3007,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			}
 			if (t323.call(this)==-1) break;
 		}
-		//#line 15092: ] def
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15093: remcws 2 eq remvals length 3 eq and {
 		var t=this.dstk.get("remcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -3333,12 +3033,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f156;
-		//#line 15102: } if
 		var t324=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t324.call(this)==-1) return -1;
 		}
-		//#line 15103: remcws 2 eq remvals length 2 eq and mode X ne and {
 		var t=this.dstk.get("remcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -3370,12 +3068,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f157;
-		//#line 15113: } if
 		var t325=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t325.call(this)==-1) return -1;
 		}
-		//#line 15114: remcws 2 eq remvals length 1 eq and {
 		var t=this.dstk.get("remcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -3396,12 +3092,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f158;
-		//#line 15122: } if
 		var t326=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t326.call(this)==-1) return -1;
 		}
-		//#line 15123: remcws 1 eq remvals length 1 eq and {
 		var t=this.dstk.get("remcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -3422,14 +3116,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f159;
-		//#line 15130: } if
 		var t327=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t327.call(this)==-1) return -1;
 		}
 	}
 	function $f161(){
-		//#line 15076: lookup mode ne {
 		var t=this.dstk.get("lookup");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mode");
@@ -3439,12 +3131,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f152;
-		//#line 15081: } if
 		var t318=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t318.call(this)==-1) return -1;
 		}
-		//#line 15082: msglen i sub 3 le {  % Check end of data conditions
 		var t=this.dstk.get("msglen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -3453,14 +3143,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f160;
-		//#line 15131: } if
 		var t328=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t328.call(this)==-1) return -1;
 		}
 	}
 	function $f162(){
-		//#line 15073: i msglen eq {exit} if
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msglen");
@@ -3474,7 +3162,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t316.call(this)==-1) return -1;
 		}
-		//#line 15074: encvals mode get msg i get known not {exit} if
 		var t=this.dstk.get("encvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mode");
@@ -3499,7 +3186,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t317.call(this)==-1) return -1;
 		}
-		//#line 15075: p 3 mod 0 eq {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
@@ -3510,12 +3196,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f161;
-		//#line 15132: } if
 		var t329=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t329.call(this)==-1) return -1;
 		}
-		//#line 15133: encvals mode get msg i get get
 		var t=this.dstk.get("encvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mode");
@@ -3536,7 +3220,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
-		//#line 15134: dup ctxvals exch p exch putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("ctxvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3545,7 +3228,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 15135: /p exch length p add def
 		this.stk[this.ptr++]="p";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -3554,7 +3236,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15136: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3563,11 +3244,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f163(){
-		//#line 15142: p 3 mod 0 eq {exit} if
 		return -1;
 	}
 	function $f164(){
-		//#line 15142: p 3 mod 0 eq {exit} if
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
@@ -3582,14 +3261,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t331.call(this)==-1) return -1;
 		}
-		//#line 15143: /i i 1 sub def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15144: /p p encvals mode get msg i get get length sub def
 		this.stk[this.ptr++]="p";
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3619,7 +3296,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f165(){
-		//#line 15154: 2 string dup 0 msg i get put dup 1 msg i 1 add get put Avals exch get addtocws
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
@@ -3661,7 +3337,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15155: /i i 2 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3670,7 +3345,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f166(){
-		//#line 15157: Avals msg i get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -3687,7 +3361,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15158: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3696,7 +3369,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f167(){
-		//#line 15153: numD i get 2 ge {
 		var t=this.dstk.get("numD");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -3708,9 +3380,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f165;
-		//#line 15156: } {
 		this.stk[this.ptr++]=$f166;
-		//#line 15159: } ifelse
 		var t333=this.stk[--this.ptr];
 		var t334=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -3720,16 +3390,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f168(){
-		//#line 15141: {
 		this.stk[this.ptr++]=$f164;
-		//#line 15145: } loop
 		var t332=this.stk[--this.ptr];
 		while (true) {
 			if (t332.call(this)==-1) break;
 		}
-		//#line 15146: [
 		this.stk[this.ptr++]=Infinity;
-		//#line 15147: ctxvals 0 p getinterval aload pop
 		var t=this.dstk.get("ctxvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -3741,7 +3407,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		//#line 15148: ] CTXvalstocws addtocws
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
@@ -3751,7 +3416,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15149: [unlcw] addtocws
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("unlcw");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3762,12 +3426,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15150: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15152: i msglen ne {
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msglen");
@@ -3777,30 +3439,24 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f167;
-		//#line 15160: } if
 		var t335=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t335.call(this)==-1) return -1;
 		}
 	}
 	function $f169(){
-		//#line 15068: /p 0 def
 		this.stk[this.ptr++]="p";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15069: /ctxvals 2500 array def
 		this.stk[this.ptr++]="ctxvals";
 		this.stk[this.ptr++]=2500;
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15072: {
 		this.stk[this.ptr++]=$f162;
-		//#line 15137: } loop
 		var t330=this.stk[--this.ptr];
 		while (true) {
 			if (t330.call(this)==-1) break;
 		}
-		//#line 15140: mode A ne {
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("A");
@@ -3810,14 +3466,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f168;
-		//#line 15161: } if
 		var t336=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t336.call(this)==-1) return -1;
 		}
 	}
 	function $f170(){
-		//#line 15172: in exch 4 getinterval 0 exch {or 6 bitshift} forall -6 bitshift
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]||this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
@@ -3827,7 +3481,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f171(){
-		//#line 15172: in exch 4 getinterval 0 exch {or 6 bitshift} forall -6 bitshift
 		var t=this.dstk.get("in");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -3852,7 +3505,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[this.ptr-1]<0) this.stk[this.ptr-2]>>>=-this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]<<=this.stk[this.ptr-1];
 		this.ptr--;
-		//#line 15173: dup -16 bitshift 255 and exch
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=-16;
 		if (this.stk[this.ptr-1]<0) this.stk[this.ptr-2]>>>=-this.stk[this.ptr-1];
@@ -3863,7 +3515,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 15174: dup -8 bitshift 255 and exch
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=-8;
 		if (this.stk[this.ptr-1]<0) this.stk[this.ptr-2]>>>=-this.stk[this.ptr-1];
@@ -3874,25 +3525,21 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 15175: 255 and
 		this.stk[this.ptr++]=255;
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 	}
 	function $f172(){
-		//#line 15166: /in exch def
 		this.stk[this.ptr++]="in";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15167: /inlen in length def
 		this.stk[this.ptr++]="inlen";
 		var t=this.dstk.get("in");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15168: /outlen in length 4 div 3 mul ceiling cvi def
 		this.stk[this.ptr++]="outlen";
 		var t=this.dstk.get("in");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3905,7 +3552,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-1]=Math.ceil(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15169: /in [ in aload pop 0 0 0 ] def
 		this.stk[this.ptr++]="in";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("in");
@@ -3924,9 +3570,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15170: mark
 		this.stk[this.ptr++]=Infinity;
-		//#line 15171: 0 4 inlen 1 sub {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=4;
 		var t=this.dstk.get("inlen");
@@ -3934,7 +3578,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f171;
-		//#line 15176: } for
 		var t344=this.stk[--this.ptr];
 		var t342=this.stk[--this.ptr];
 		var t341=this.stk[--this.ptr];
@@ -3943,7 +3586,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr++]=t343;
 			if (t344.call(this)==-1) break;
 		}
-		//#line 15177: counttomark array astore exch pop
 		for (var i=this.ptr-1; i>=0 && this.stk[i]!==Infinity; i--);
 		if (i==-1) throw "counttomark: underflow";
 		this.stk[this.ptr]=this.ptr-i-1;
@@ -3956,26 +3598,21 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=t.length;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
-		//#line 15178: 0 outlen getinterval
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("outlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
 	function $f173(){
-		//#line 15187: i msglen eq {exit} if
 		return -1;
 	}
 	function $f174(){
-		//#line 15188: Evals msg i get known not {exit} if
 		return -1;
 	}
 	function $f175(){
-		//#line 15190: lookup mode ne {exit} if
 		return -1;
 	}
 	function $f176(){
-		//#line 15196: Evals exch get aload pop
 		var t=this.dstk.get("Evals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -3990,7 +3627,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f177(){
-		//#line 15198: pop -1 -1 -1 -1 -1
 		this.ptr--;
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=-1;
@@ -3999,16 +3635,13 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=-1;
 	}
 	function $f178(){
-		//#line 15195: dup Evals exch known {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("Evals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		this.stk[this.ptr++]=$f176;
-		//#line 15197: } {  % Unencodable EDIFACT characters
 		this.stk[this.ptr++]=$f177;
-		//#line 15199: } ifelse
 		var t348=this.stk[--this.ptr];
 		var t349=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -4018,7 +3651,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f179(){
-		//#line 15204: edifactvals 0 p getinterval Evalstocws addtocws
 		var t=this.dstk.get("edifactvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -4029,7 +3661,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15205: Avals msg i get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -4046,7 +3677,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15206: Avals msg i 1 add get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -4065,21 +3695,17 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15207: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15208: /i msglen def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("msglen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15209: exit
 		return -1;
 	}
 	function $f180(){
-		//#line 15213: edifactvals 0 p getinterval Evalstocws addtocws
 		var t=this.dstk.get("edifactvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -4090,7 +3716,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15214: Avals msg i get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -4107,21 +3732,17 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15215: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15216: /i msglen def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("msglen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15217: exit
 		return -1;
 	}
 	function $f181(){
-		//#line 15192: /remcws numremcws j p 4 idiv 3 mul add get def
 		this.stk[this.ptr++]="remcws";
 		var t=this.dstk.get("numremcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4139,10 +3760,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15193: /remvals [
 		this.stk[this.ptr++]="remvals";
 		this.stk[this.ptr++]=Infinity;
-		//#line 15194: msg i msglen i sub getinterval {
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -4154,7 +3773,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr++]=$f178;
-		//#line 15200: } forall
 		var t352=this.stk[--this.ptr];
 		var t351=this.stk[--this.ptr];
 		for (t350 in t351) {
@@ -4167,14 +3785,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			}
 			if (t352.call(this)==-1) break;
 		}
-		//#line 15201: ] def
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15202: remcws 2 eq remvals length 2 eq and {
 		var t=this.dstk.get("remcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -4195,12 +3811,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f179;
-		//#line 15210: } if
 		var t353=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t353.call(this)==-1) return -1;
 		}
-		//#line 15211: remcws 2 eq remcws 1 eq or remvals length 1 eq and {
 		var t=this.dstk.get("remcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -4231,14 +3845,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f180;
-		//#line 15218: } if
 		var t354=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t354.call(this)==-1) return -1;
 		}
 	}
 	function $f182(){
-		//#line 15190: lookup mode ne {exit} if
 		var t=this.dstk.get("lookup");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mode");
@@ -4252,7 +3864,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t347.call(this)==-1) return -1;
 		}
-		//#line 15191: msglen i sub 2 le {  % Check end of data conditions
 		var t=this.dstk.get("msglen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -4261,14 +3872,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f181;
-		//#line 15219: } if
 		var t355=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t355.call(this)==-1) return -1;
 		}
 	}
 	function $f183(){
-		//#line 15187: i msglen eq {exit} if
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msglen");
@@ -4282,7 +3891,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t345.call(this)==-1) return -1;
 		}
-		//#line 15188: Evals msg i get known not {exit} if
 		var t=this.dstk.get("Evals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -4301,7 +3909,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t346.call(this)==-1) return -1;
 		}
-		//#line 15189: p 4 mod 0 eq {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=4;
@@ -4312,12 +3919,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f182;
-		//#line 15220: } if
 		var t356=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t356.call(this)==-1) return -1;
 		}
-		//#line 15221: Evals msg i get get
 		var t=this.dstk.get("Evals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -4332,7 +3937,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
-		//#line 15222: dup edifactvals exch p exch putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("edifactvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4341,7 +3945,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 15223: /p exch length p add def
 		this.stk[this.ptr++]="p";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -4350,7 +3953,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15224: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4359,7 +3961,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f184(){
-		//#line 15231: Evals unl get
 		var t=this.dstk.get("Evals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("unl");
@@ -4368,7 +3969,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
-		//#line 15232: dup edifactvals exch p exch putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("edifactvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4377,7 +3977,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 15233: /p exch length p add def
 		this.stk[this.ptr++]="p";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -4388,7 +3987,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f185(){
-		//#line 15240: 2 string dup 0 msg i get put dup 1 msg i 1 add get put Avals exch get addtocws
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
@@ -4430,7 +4028,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15241: /i i 2 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4439,7 +4036,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f186(){
-		//#line 15243: Avals msg i get get addtocws
 		var t=this.dstk.get("Avals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msg");
@@ -4456,7 +4052,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15244: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4465,7 +4060,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f187(){
-		//#line 15239: numD i get 2 ge {
 		var t=this.dstk.get("numD");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -4477,9 +4071,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f185;
-		//#line 15242: } {
 		this.stk[this.ptr++]=$f186;
-		//#line 15245: } ifelse
 		var t359=this.stk[--this.ptr];
 		var t360=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -4489,7 +4081,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f188(){
-		//#line 15229: /remcws numremcws j p 4 idiv 3 mul add 1 sub get 1 sub def
 		this.stk[this.ptr++]="remcws";
 		var t=this.dstk.get("numremcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4511,7 +4102,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15230: remcws 0 ne {  % Unlatch if we haven't filled symbol
 		var t=this.dstk.get("remcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -4520,12 +4110,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f184;
-		//#line 15234: } if
 		var t358=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t358.call(this)==-1) return -1;
 		}
-		//#line 15235: edifactvals 0 p getinterval Evalstocws addtocws
 		var t=this.dstk.get("edifactvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -4536,12 +4124,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15236: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15238: i msglen ne {
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msglen");
@@ -4551,30 +4137,24 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f187;
-		//#line 15246: } if
 		var t361=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t361.call(this)==-1) return -1;
 		}
 	}
 	function $f189(){
-		//#line 15182: /p 0 def
 		this.stk[this.ptr++]="p";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15183: /edifactvals 2100 array def
 		this.stk[this.ptr++]="edifactvals";
 		this.stk[this.ptr++]=2100;
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15186: {
 		this.stk[this.ptr++]=$f183;
-		//#line 15225: } loop
 		var t357=this.stk[--this.ptr];
 		while (true) {
 			if (t357.call(this)==-1) break;
 		}
-		//#line 15228: mode A ne {
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("A");
@@ -4584,22 +4164,18 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f188;
-		//#line 15247: } if
 		var t362=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t362.call(this)==-1) return -1;
 		}
 	}
 	function $f190(){
-		//#line 15253: i msglen eq {exit} if
 		return -1;
 	}
 	function $f191(){
-		//#line 15254: lookup mode ne {exit} if
 		return -1;
 	}
 	function $f192(){
-		//#line 15253: i msglen eq {exit} if
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msglen");
@@ -4613,7 +4189,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t363.call(this)==-1) return -1;
 		}
-		//#line 15254: lookup mode ne {exit} if
 		var t=this.dstk.get("lookup");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mode");
@@ -4627,7 +4202,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t364.call(this)==-1) return -1;
 		}
-		//#line 15255: bvals p msg i get put
 		var t=this.dstk.get("bvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("p");
@@ -4644,14 +4218,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 15256: /p p 1 add def
 		this.stk[this.ptr++]="p";
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15257: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4660,16 +4232,13 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f193(){
-		//#line 15262: 0
 		this.stk[this.ptr++]=0;
 	}
 	function $f194(){
-		//#line 15264: p 250 lt {p} {p 250 idiv 249 add p 250 mod} ifelse
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f195(){
-		//#line 15264: p 250 lt {p} {p 250 idiv 249 add p 250 mod} ifelse
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=250;
@@ -4682,7 +4251,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f196(){
-		//#line 15264: p 250 lt {p} {p 250 idiv 249 add p 250 mod} ifelse
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=250;
@@ -4698,16 +4266,13 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f197(){
-		//#line 15271: dup 256 ge {256 sub} if
 		this.stk[this.ptr++]=256;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f198(){
-		//#line 15269: /p exch def
 		this.stk[this.ptr++]="p";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15270: j p add 1 add 149 mul 255 mod 1 add bvals p get add
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("p");
@@ -4730,7 +4295,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		//#line 15271: dup 256 ge {256 sub} if
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=256;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
@@ -4739,7 +4303,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t370.call(this)==-1) return -1;
 		}
-		//#line 15272: bvals exch p exch put
 		var t=this.dstk.get("bvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -4752,7 +4315,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f199(){
-		//#line 15252: /p 0 def /bvals 1558 array def {
 		this.stk[this.ptr++]="p";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4761,12 +4323,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=$f192;
-		//#line 15258: } loop
 		var t365=this.stk[--this.ptr];
 		while (true) {
 			if (t365.call(this)==-1) break;
 		}
-		//#line 15259: /remcws numremcws j p add get 1 sub def
 		this.stk[this.ptr++]="remcws";
 		var t=this.dstk.get("numremcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4782,10 +4342,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15260: /bvals [
 		this.stk[this.ptr++]="bvals";
 		this.stk[this.ptr++]=Infinity;
-		//#line 15261: remcws 0 eq i msglen eq and {  % Terminates symbol
 		var t=this.dstk.get("remcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -4805,9 +4363,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f193;
-		//#line 15263: } {
 		this.stk[this.ptr++]=$f196;
-		//#line 15265: } ifelse
 		var t368=this.stk[--this.ptr];
 		var t369=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -4815,7 +4371,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		} else {
 			if (t368.call(this)==-1) return -1;
 		}
-		//#line 15266: bvals 0 p getinterval aload pop
 		var t=this.dstk.get("bvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -4827,14 +4382,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		//#line 15267: ] def
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15268: 0 1 bvals length 1 sub {  % Pseudo-randomise based on codeword position
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("bvals");
@@ -4844,7 +4397,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f198;
-		//#line 15273: } for
 		var t375=this.stk[--this.ptr];
 		var t373=this.stk[--this.ptr];
 		var t372=this.stk[--this.ptr];
@@ -4853,23 +4405,19 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr++]=t374;
 			if (t375.call(this)==-1) break;
 		}
-		//#line 15274: bvals addtocws
 		var t=this.dstk.get("bvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 15275: /mode A def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f200(){
-		//#line 15281: i msglen ge {exit} if
 		return -1;
 	}
 	function $f201(){
-		//#line 15281: i msglen ge {exit} if
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msglen");
@@ -4880,7 +4428,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t376.call(this)==-1) return -1;
 		}
-		//#line 15282: [ /encA /encCTX /encCTX /encCTX /encE /encB ] mode get load exec
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]="encA";
 		this.stk[this.ptr++]="encCTX";
@@ -4905,20 +4452,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
 	function $f202(){
-		//#line 15290: /cws [ cws aload pop remcws {129} repeat ] def
 		this.stk[this.ptr++]=129;
 	}
 	function $f203(){
-		//#line 15294: dup 254 gt {254 sub} if
 		this.stk[this.ptr++]=254;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f204(){
-		//#line 15292: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15293: i 1 add 149 mul 253 mod 1 add 129 add
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -4931,7 +4474,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=129;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		//#line 15294: dup 254 gt {254 sub} if
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=254;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
@@ -4940,7 +4482,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t381.call(this)==-1) return -1;
 		}
-		//#line 15295: cws exch i exch put
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -4953,7 +4494,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f205(){
-		//#line 15290: /cws [ cws aload pop remcws {129} repeat ] def
 		this.stk[this.ptr++]="cws";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("cws");
@@ -4977,7 +4517,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15291: datlen 1 add 1 datlen remcws add 1 sub {
 		var t=this.dstk.get("datlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -4991,7 +4530,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f204;
-		//#line 15296: } for
 		var t386=this.stk[--this.ptr];
 		var t384=this.stk[--this.ptr];
 		var t383=this.stk[--this.ptr];
@@ -5002,29 +4540,24 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f206(){
-		//#line 15314: cws length ncws ne           {/okay false def} if
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f207(){
-		//#line 15315: urows 0 ne urows rows ne and {/okay false def} if
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f208(){
-		//#line 15316: ucols 0 ne ucols cols ne and {/okay false def} if
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f209(){
-		//#line 15317: okay {exit} if
 		return -1;
 	}
 	function $f210(){
-		//#line 15301: /m metrics i get def
 		this.stk[this.ptr++]="m";
 		var t=this.dstk.get("metrics");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5035,7 +4568,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15302: /rows m 0 get def                          % Rows in symbol
 		this.stk[this.ptr++]="rows";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5045,7 +4577,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15303: /cols m 1 get def                          % Columns in symbol
 		this.stk[this.ptr++]="cols";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5055,7 +4586,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15304: /regh m 2 get def                          % Horizontal regions
 		this.stk[this.ptr++]="regh";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5065,7 +4595,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15305: /regv m 3 get def                          % Vertical regions
 		this.stk[this.ptr++]="regv";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5075,7 +4604,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15306: /rscw m 4 get def                          % Error correction codewords
 		this.stk[this.ptr++]="rscw";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5085,7 +4613,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15307: /rsbl m 5 get def                          % Error correction blocks
 		this.stk[this.ptr++]="rsbl";
 		var t=this.dstk.get("m");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5095,7 +4622,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15308: /mrows rows 2 regh mul sub def             % Rows in the mapping matrix
 		this.stk[this.ptr++]="mrows";
 		var t=this.dstk.get("rows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5105,7 +4631,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15309: /mcols cols 2 regv mul sub def             % Columns in the mapping matrix
 		this.stk[this.ptr++]="mcols";
 		var t=this.dstk.get("cols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5115,7 +4640,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15310: /rrows mrows regh idiv def                 % Rows per region
 		this.stk[this.ptr++]="rrows";
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5123,7 +4647,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15311: /rcols mcols regv idiv def                 % Columns per region
 		this.stk[this.ptr++]="rcols";
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5131,7 +4654,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15312: /ncws mrows mcols mul 8 idiv rscw sub def  % Data codewords
 		this.stk[this.ptr++]="ncws";
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5144,11 +4666,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15313: /okay true def
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15314: cws length ncws ne           {/okay false def} if
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -5164,7 +4684,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t388.call(this)==-1) return -1;
 		}
-		//#line 15315: urows 0 ne urows rows ne and {/okay false def} if
 		var t=this.dstk.get("urows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -5188,7 +4707,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t389.call(this)==-1) return -1;
 		}
-		//#line 15316: ucols 0 ne ucols cols ne and {/okay false def} if
 		var t=this.dstk.get("ucols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -5212,7 +4730,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t390.call(this)==-1) return -1;
 		}
-		//#line 15317: okay {exit} if
 		var t=this.dstk.get("okay");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f209;
@@ -5220,7 +4737,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t391.call(this)==-1) return -1;
 		}
-		//#line 15318: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5229,7 +4745,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f211(){
-		//#line 15327: /cwbsize cws length rsbl idiv def
 		this.stk[this.ptr++]="cwbsize";
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5241,19 +4756,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f212(){
-		//#line 15329: i 7 le {/cwbsize 156 def} {/cwbsize 155 def} ifelse
 		this.stk[this.ptr++]="cwbsize";
 		this.stk[this.ptr++]=156;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f213(){
-		//#line 15329: i 7 le {/cwbsize 156 def} {/cwbsize 155 def} ifelse
 		this.stk[this.ptr++]="cwbsize";
 		this.stk[this.ptr++]=155;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f214(){
-		//#line 15329: i 7 le {/cwbsize 156 def} {/cwbsize 155 def} ifelse
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=7;
@@ -5269,11 +4781,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f215(){
-		//#line 15333: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15334: cwb j cws j rsbl mul i add get put
 		var t=this.dstk.get("cwb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -5298,15 +4808,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f216(){
-		//#line 15337: ecbs i [ rscw rsbl idiv {0} repeat ] put
 		this.stk[this.ptr++]=0;
 	}
 	function $f217(){
-		//#line 15325: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15326: cws length 1558 ne {
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -5317,9 +4824,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f211;
-		//#line 15328: } {
 		this.stk[this.ptr++]=$f214;
-		//#line 15330: } ifelse
 		var t395=this.stk[--this.ptr];
 		var t396=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -5327,13 +4832,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		} else {
 			if (t395.call(this)==-1) return -1;
 		}
-		//#line 15331: /cwb cwbsize array def 
 		this.stk[this.ptr++]="cwb";
 		var t=this.dstk.get("cwbsize");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15332: 0 1 cwbsize 1 sub {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("cwbsize");
@@ -5341,7 +4844,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f215;
-		//#line 15335: } for 
 		var t401=this.stk[--this.ptr];
 		var t399=this.stk[--this.ptr];
 		var t398=this.stk[--this.ptr];
@@ -5350,7 +4852,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr++]=t400;
 			if (t401.call(this)==-1) break;
 		}
-		//#line 15336: cwbs i cwb put
 		var t=this.dstk.get("cwbs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -5361,7 +4862,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 15337: ecbs i [ rscw rsbl idiv {0} repeat ] put
 		var t=this.dstk.get("ecbs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -5389,7 +4889,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f218(){
-		//#line 15341: /rsalog [ 1 255 { dup 2 mul dup 256 ge {301 xor} if } repeat ] def
 		this.stk[this.ptr++]=301;
 		if (typeof(this.stk[this.ptr-1])=="boolean")
 			this.stk[this.ptr-2]=!this.stk[this.ptr-2]&&this.stk[this.ptr-1] || this.stk[this.ptr-2]&&!this.stk[this.ptr-1];
@@ -5397,7 +4896,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f219(){
-		//#line 15341: /rsalog [ 1 255 { dup 2 mul dup 256 ge {301 xor} if } repeat ] def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -5411,7 +4909,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f220(){
-		//#line 15343: 1 1 255 {dup rsalog exch get exch rslog 3 1 roll put} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("rsalog");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5436,7 +4933,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f221(){
-		//#line 15348: rslog exch get exch rslog exch get add 255 mod rsalog exch get
 		var t=this.dstk.get("rslog");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -5464,13 +4960,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f222(){
-		//#line 15350: pop pop 0
 		this.ptr--;
 		this.ptr--;
 		this.stk[this.ptr++]=0;
 	}
 	function $f223(){
-		//#line 15347: 2 copy 0 ne exch 0 ne and { 
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -5499,9 +4993,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f221;
-		//#line 15349: } {
 		this.stk[this.ptr++]=$f222;
-		//#line 15351: } ifelse
 		var t419=this.stk[--this.ptr];
 		var t420=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -5511,15 +5003,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f224(){
-		//#line 15355: /coeffs [ 1 rscw rsbl idiv {0} repeat ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f225(){
-		//#line 15360: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15361: coeffs j coeffs j 1 sub get coeffs j get rsalog i get rsprod xor put
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -5562,11 +5051,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f226(){
-		//#line 15357: /i exch def 
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15358: coeffs i coeffs i 1 sub get put
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -5585,7 +5072,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 15359: i 1 sub -1 1 {
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -5593,7 +5079,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=$f225;
-		//#line 15362: } for 
 		var t428=this.stk[--this.ptr];
 		var t426=this.stk[--this.ptr];
 		var t425=this.stk[--this.ptr];
@@ -5602,7 +5087,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr++]=t427;
 			if (t428.call(this)==-1) break;
 		}
-		//#line 15363: coeffs 0 coeffs 0 get rsalog i get rsprod put
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -5629,7 +5113,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f227(){
-		//#line 15378: j 0 gt { ecb p ecb p 1 add get ecb p get xor put } if
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("p");
@@ -5662,11 +5145,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f228(){
-		//#line 15375: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15376: /p ecb length j sub 1 sub def
 		this.stk[this.ptr++]="p";
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5678,7 +5159,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15377: ecb p t coeffs j get rsprod put
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("p");
@@ -5699,7 +5179,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 15378: j 0 gt { ecb p ecb p 1 add get ecb p get xor put } if
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -5711,7 +5190,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f229(){
-		//#line 15373: /t exch cwb exch get ecb 0 get xor def 
 		this.stk[this.ptr++]="t";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("cwb");
@@ -5733,7 +5211,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]^this.stk[this.ptr-1];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15374: ecb length 1 sub -1 0 {
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -5743,7 +5220,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=$f228;
-		//#line 15379: } for 
 		var t439=this.stk[--this.ptr];
 		var t437=this.stk[--this.ptr];
 		var t436=this.stk[--this.ptr];
@@ -5754,11 +5230,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f230(){
-		//#line 15369: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15370: /cwb cwbs i get def
 		this.stk[this.ptr++]="cwb";
 		var t=this.dstk.get("cwbs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5769,7 +5243,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15371: /ecb ecbs i get def
 		this.stk[this.ptr++]="ecb";
 		var t=this.dstk.get("ecbs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5780,7 +5253,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15372: 0 1 cwb length 1 sub {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("cwb");
@@ -5790,7 +5262,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f229;
-		//#line 15380: } for
 		var t444=this.stk[--this.ptr];
 		var t442=this.stk[--this.ptr];
 		var t441=this.stk[--this.ptr];
@@ -5805,7 +5276,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	function $f232(){
 	}
 	function $f233(){
-		//#line 15385: /ecbs [ ecbs 8 2 getinterval {} forall ecbs 0 8 getinterval {} forall ] def
 		this.stk[this.ptr++]="ecbs";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("ecbs");
@@ -5854,15 +5324,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	function $f234(){
 	}
 	function $f235(){
-		//#line 15389: /cws [ cws {} forall rscw {0} repeat ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f236(){
-		//#line 15391: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15392: cws ncws i add ecbs i rsbl mod get i rsbl idiv get put
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ncws");
@@ -5896,7 +5363,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f237(){
-		//#line 15401: 7 -1 0 {1 index exch get 48 sub exch} for pop
 		this.stk[this.ptr++]=1;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
@@ -5910,13 +5376,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f238(){
-		//#line 15407: exch mrows add exch
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 15408: 4 mrows 4 add 8 mod sub add
 		this.stk[this.ptr++]=4;
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5928,12 +5392,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f239(){
-		//#line 15411: mcols add exch
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 15412: 4 mcols 4 add 8 mod sub add exch
 		this.stk[this.ptr++]=4;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5946,38 +5408,31 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f240(){
-		//#line 15405: exec
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
-		//#line 15406: 1 index 0 lt {
 		this.stk[this.ptr++]=1;
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f238;
-		//#line 15409: } if
 		var t473=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t473.call(this)==-1) return -1;
 		}
-		//#line 15410: dup 0 lt {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f239;
-		//#line 15413: } if
 		var t474=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t474.call(this)==-1) return -1;
 		}
-		//#line 15414: exch mcols mul add
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		//#line 15415: mmat exch 5 -1 roll put
 		var t=this.dstk.get("mmat");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -5994,7 +5449,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f241(){
-		//#line 15398: 4 -1 roll 
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr++]=-1;
 		var b=this.stk[--this.ptr]; var a=this.stk[--this.ptr];
@@ -6002,7 +5456,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (b < 0) var t=this.stk.splice(this.ptr-a, -b);
 		else var t=this.stk.splice(this.ptr-a, a-b);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
-		//#line 15399: (00000000) 8 string copy dup 3 -1 roll 2 8 string cvrs 
 		this.stk[this.ptr++]=BWIPJS.psstring("00000000");
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
@@ -6033,7 +5486,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-1].assign(0,t);
 		this.stk[this.ptr-3]=this.stk[this.ptr-1].subset(0,t.length);
 		this.ptr-=2;
-		//#line 15400: dup length 8 exch sub exch putinterval 
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -6042,7 +5494,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 15401: 7 -1 0 {1 index exch get 48 sub exch} for pop
 		this.stk[this.ptr++]=7;
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=0;
@@ -6056,7 +5507,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			if (t472.call(this)==-1) break;
 		}
 		this.ptr--;
-		//#line 15402: 11 -3 roll
 		this.stk[this.ptr++]=11;
 		this.stk[this.ptr++]=-3;
 		var b=this.stk[--this.ptr]; var a=this.stk[--this.ptr];
@@ -6064,9 +5514,7 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (b < 0) var t=this.stk.splice(this.ptr-a, -b);
 		else var t=this.stk.splice(this.ptr-a, a-b);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
-		//#line 15404: {  % Place each bit of the codeword in the shape, MSB first
 		this.stk[this.ptr++]=$f240;
-		//#line 15416: } forall
 		var t477=this.stk[--this.ptr];
 		var t476=this.stk[--this.ptr];
 		for (t475 in t476) {
@@ -6081,7 +5529,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f242(){
-		//#line 15421: { 2 copy 2 sub exch 2 sub exch } bind  { 2 copy 1 sub exch 2 sub exch } bind
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6103,7 +5550,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f243(){
-		//#line 15421: { 2 copy 2 sub exch 2 sub exch } bind  { 2 copy 1 sub exch 2 sub exch } bind
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6125,7 +5571,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f244(){
-		//#line 15422: { 2 copy 2 sub exch 1 sub exch } bind  { 2 copy 1 sub exch 1 sub exch } bind
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6147,7 +5592,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f245(){
-		//#line 15422: { 2 copy 2 sub exch 1 sub exch } bind  { 2 copy 1 sub exch 1 sub exch } bind
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6169,7 +5613,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f246(){
-		//#line 15423: { 2 copy exch 1 sub exch } bind        { 2 copy 2 sub } bind
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6189,7 +5632,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f247(){
-		//#line 15423: { 2 copy exch 1 sub exch } bind        { 2 copy 2 sub } bind
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6207,7 +5649,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f248(){
-		//#line 15424: { 2 copy 1 sub } bind                  { 2 copy } bind
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6225,7 +5666,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f249(){
-		//#line 15424: { 2 copy 1 sub } bind                  { 2 copy } bind
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6241,7 +5681,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f250(){
-		//#line 15428: { mrows 1 sub 0 } bind  { mrows 1 sub 1 } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -6249,7 +5688,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f251(){
-		//#line 15428: { mrows 1 sub 0 } bind  { mrows 1 sub 1 } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -6257,7 +5695,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 	}
 	function $f252(){
-		//#line 15429: { mrows 1 sub 2 } bind  { 0 mcols 2 sub } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -6265,7 +5702,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=2;
 	}
 	function $f253(){
-		//#line 15429: { mrows 1 sub 2 } bind  { 0 mcols 2 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6273,7 +5709,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f254(){
-		//#line 15430: { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6281,7 +5716,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f255(){
-		//#line 15430: { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6289,7 +5723,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f256(){
-		//#line 15431: { 2 mcols 1 sub } bind  { 3 mcols 1 sub } bind
 		this.stk[this.ptr++]=2;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6297,7 +5730,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f257(){
-		//#line 15431: { 2 mcols 1 sub } bind  { 3 mcols 1 sub } bind
 		this.stk[this.ptr++]=3;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6305,7 +5737,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f258(){
-		//#line 15435: { mrows 3 sub 0 } bind  { mrows 2 sub 0 } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
@@ -6313,7 +5744,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f259(){
-		//#line 15435: { mrows 3 sub 0 } bind  { mrows 2 sub 0 } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -6321,7 +5751,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f260(){
-		//#line 15436: { mrows 1 sub 0 } bind  { 0 mcols 4 sub } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -6329,7 +5758,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f261(){
-		//#line 15436: { mrows 1 sub 0 } bind  { 0 mcols 4 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6337,7 +5765,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f262(){
-		//#line 15437: { 0 mcols 3 sub } bind  { 0 mcols 2 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6345,7 +5772,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f263(){
-		//#line 15437: { 0 mcols 3 sub } bind  { 0 mcols 2 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6353,7 +5779,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f264(){
-		//#line 15438: { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6361,7 +5786,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f265(){
-		//#line 15438: { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6369,7 +5793,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f266(){
-		//#line 15442: { mrows 3 sub 0 } bind  { mrows 2 sub 0 } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
@@ -6377,7 +5800,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f267(){
-		//#line 15442: { mrows 3 sub 0 } bind  { mrows 2 sub 0 } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -6385,7 +5807,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f268(){
-		//#line 15443: { mrows 1 sub 0 } bind  { 0 mcols 2 sub } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -6393,7 +5814,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f269(){
-		//#line 15443: { mrows 1 sub 0 } bind  { 0 mcols 2 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6401,7 +5821,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f270(){
-		//#line 15444: { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6409,7 +5828,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f271(){
-		//#line 15444: { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6417,7 +5835,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f272(){
-		//#line 15445: { 2 mcols 1 sub } bind  { 3 mcols 1 sub } bind
 		this.stk[this.ptr++]=2;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6425,7 +5842,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f273(){
-		//#line 15445: { 2 mcols 1 sub } bind  { 3 mcols 1 sub } bind
 		this.stk[this.ptr++]=3;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6433,7 +5849,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f274(){
-		//#line 15449: { mrows 1 sub 0 } bind  { mrows 1 sub mcols 1 sub } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -6441,7 +5856,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f275(){
-		//#line 15449: { mrows 1 sub 0 } bind  { mrows 1 sub mcols 1 sub } bind
 		var t=this.dstk.get("mrows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -6452,7 +5866,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f276(){
-		//#line 15450: { 0 mcols 3 sub } bind  { 0 mcols 2 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6460,7 +5873,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f277(){
-		//#line 15450: { 0 mcols 3 sub } bind  { 0 mcols 2 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6468,7 +5880,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f278(){
-		//#line 15451: { 0 mcols 1 sub } bind  { 1 mcols 3 sub } bind
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6476,7 +5887,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f279(){
-		//#line 15451: { 0 mcols 1 sub } bind  { 1 mcols 3 sub } bind
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6484,7 +5894,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f280(){
-		//#line 15452: { 1 mcols 2 sub } bind  { 1 mcols 1 sub } bind
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6492,7 +5901,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f281(){
-		//#line 15452: { 1 mcols 2 sub } bind  { 1 mcols 1 sub } bind
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("mcols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -6500,11 +5908,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f282(){
-		//#line 15455: /mmat [ mrows mcols mul {-1} repeat ] def
 		this.stk[this.ptr++]=-1;
 	}
 	function $f283(){
-		//#line 15456: cws length 1 sub -1 0 {cws exch get} for  % Reverse cws onto stack
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -6514,42 +5920,36 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr--;
 	}
 	function $f284(){
-		//#line 15460: dmc1 module
 		var t=this.dstk.get("dmc1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("module");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f285(){
-		//#line 15463: dmc2 module
 		var t=this.dstk.get("dmc2");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("module");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f286(){
-		//#line 15466: dmc3 module
 		var t=this.dstk.get("dmc3");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("module");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f287(){
-		//#line 15469: dmc4 module
 		var t=this.dstk.get("dmc4");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("module");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f288(){
-		//#line 15475: dmn module
 		var t=this.dstk.get("dmn");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("module");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f289(){
-		//#line 15474: 2 copy exch mcols mul add mmat exch get -1 eq {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6581,18 +5981,15 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f288;
-		//#line 15476: } if
 		var t490=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t490.call(this)==-1) return -1;
 		}
 	}
 	function $f290(){
-		//#line 15479: 2 copy mcols lt exch 0 ge and not {exit} if
 		return -1;
 	}
 	function $f291(){
-		//#line 15473: 2 copy 0 ge exch mrows lt and {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6616,19 +6013,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f289;
-		//#line 15477: } if
 		var t491=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t491.call(this)==-1) return -1;
 		}
-		//#line 15478: 2 add exch 2 sub exch
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 15479: 2 copy mcols lt exch 0 ge and not {exit} if
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6660,14 +6054,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f292(){
-		//#line 15486: dmn module
 		var t=this.dstk.get("dmn");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("module");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f293(){
-		//#line 15485: 2 copy exch mcols mul add mmat exch get -1 eq {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6699,18 +6091,15 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f292;
-		//#line 15487: } if
 		var t494=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t494.call(this)==-1) return -1;
 		}
 	}
 	function $f294(){
-		//#line 15490: 2 copy 0 ge exch mrows lt and not {exit} if
 		return -1;
 	}
 	function $f295(){
-		//#line 15484: 2 copy mcols lt exch 0 ge and {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6734,19 +6123,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f293;
-		//#line 15488: } if
 		var t495=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t495.call(this)==-1) return -1;
 		}
-		//#line 15489: 2 sub exch 2 add exch
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 15490: 2 copy 0 ge exch mrows lt and not {exit} if
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6778,13 +6164,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f296(){
-		//#line 15494: 2 copy mcols lt exch mrows lt or not {pop pop exit} if
 		this.ptr--;
 		this.ptr--;
 		return -1;
 	}
 	function $f297(){
-		//#line 15459: 2 copy 0 eq exch mrows eq and {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6814,12 +6198,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f284;
-		//#line 15461: } if
 		var t486=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t486.call(this)==-1) return -1;
 		}
-		//#line 15462: 2 copy 0 eq exch mrows 2 sub eq and mcols 4 mod 0 ne and {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6863,12 +6245,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f285;
-		//#line 15464: } if
 		var t487=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t487.call(this)==-1) return -1;
 		}
-		//#line 15465: 2 copy 0 eq exch mrows 2 sub eq and mcols 8 mod 4 eq and {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6912,12 +6292,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f286;
-		//#line 15467: } if
 		var t488=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t488.call(this)==-1) return -1;
 		}
-		//#line 15468: 2 copy 2 eq exch mrows 4 add eq and mcols 8 mod 0 eq and {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -6961,40 +6339,32 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f287;
-		//#line 15470: } if
 		var t489=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t489.call(this)==-1) return -1;
 		}
-		//#line 15472: { % loop for sweeping upwards
 		this.stk[this.ptr++]=$f291;
-		//#line 15480: } loop
 		var t493=this.stk[--this.ptr];
 		while (true) {
 			if (t493.call(this)==-1) break;
 		}
-		//#line 15481: 3 add exch 1 add exch
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 15483: { % loop for sweeping downwards
 		this.stk[this.ptr++]=$f295;
-		//#line 15491: } loop
 		var t497=this.stk[--this.ptr];
 		while (true) {
 			if (t497.call(this)==-1) break;
 		}
-		//#line 15492: 1 add exch 3 add exch
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		//#line 15494: 2 copy mcols lt exch mrows lt or not {pop pop exit} if
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -7027,7 +6397,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f298(){
-		//#line 15500: mmat mrows mcols 1 sub mul 2 sub [1 0] putinterval
 		var t=this.dstk.get("mmat");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mrows");
@@ -7041,7 +6410,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=BWIPJS.psarray([1,0]);
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 15501: mmat mrows mcols mul 2 sub [0 1] putinterval
 		var t=this.dstk.get("mmat");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("mrows");
@@ -7055,12 +6423,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f299(){
-		//#line 15509: i rrows 2 add mod 0 eq { pixs i cols mul [ cols 2 idiv {1 0} repeat ] putinterval } if  
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=0;
 	}
 	function $f300(){
-		//#line 15509: i rrows 2 add mod 0 eq { pixs i cols mul [ cols 2 idiv {1 0} repeat ] putinterval } if  
 		var t=this.dstk.get("pixs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -7087,11 +6453,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f301(){
-		//#line 15510: i rrows 2 add mod rrows 1 add eq { pixs i cols mul [ cols {1} repeat ] putinterval } if 
 		this.stk[this.ptr++]=1;
 	}
 	function $f302(){
-		//#line 15510: i rrows 2 add mod rrows 1 add eq { pixs i cols mul [ cols {1} repeat ] putinterval } if 
 		var t=this.dstk.get("pixs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -7116,7 +6480,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f303(){
-		//#line 15514: j rcols 2 add mod 0 eq { pixs i cols mul j add 1 put } if
 		var t=this.dstk.get("pixs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -7134,7 +6497,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f304(){
-		//#line 15515: j rcols 2 add mod rcols 1 add eq { pixs i cols mul j add i 2 mod put } if
 		var t=this.dstk.get("pixs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -7155,7 +6517,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f305(){
-		//#line 15517: pixs i cols mul j add mmat cwpos get put
 		var t=this.dstk.get("pixs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -7178,7 +6539,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 15518: /cwpos cwpos 1 add def
 		this.stk[this.ptr++]="cwpos";
 		var t=this.dstk.get("cwpos");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -7187,11 +6547,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f306(){
-		//#line 15513: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15514: j rcols 2 add mod 0 eq { pixs i cols mul j add 1 put } if
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("rcols");
@@ -7209,7 +6567,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t509.call(this)==-1) return -1;
 		}
-		//#line 15515: j rcols 2 add mod rcols 1 add eq { pixs i cols mul j add i 2 mod put } if
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("rcols");
@@ -7230,7 +6587,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t510.call(this)==-1) return -1;
 		}
-		//#line 15516: j rcols 2 add mod 0 ne j rcols 2 add mod rcols 1 add ne and {
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("rcols");
@@ -7262,14 +6618,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f305;
-		//#line 15519: } if
 		var t511=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t511.call(this)==-1) return -1;
 		}
 	}
 	function $f307(){
-		//#line 15512: 0 1 cols 1 sub {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("cols");
@@ -7277,7 +6631,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f306;
-		//#line 15520: } for
 		var t516=this.stk[--this.ptr];
 		var t514=this.stk[--this.ptr];
 		var t513=this.stk[--this.ptr];
@@ -7288,11 +6641,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 	}
 	function $f308(){
-		//#line 15508: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 15509: i rrows 2 add mod 0 eq { pixs i cols mul [ cols 2 idiv {1 0} repeat ] putinterval } if  
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("rrows");
@@ -7310,7 +6661,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t504.call(this)==-1) return -1;
 		}
-		//#line 15510: i rrows 2 add mod rrows 1 add eq { pixs i cols mul [ cols {1} repeat ] putinterval } if 
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("rrows");
@@ -7331,7 +6681,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t508.call(this)==-1) return -1;
 		}
-		//#line 15511: i rrows 2 add mod 0 ne i rrows 2 add mod rrows 1 add ne and {
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("rrows");
@@ -7363,45 +6712,35 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f307;
-		//#line 15521: } if 
 		var t517=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t517.call(this)==-1) return -1;
 		}
 	}
-	//#line 14706: 20 dict begin
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 14708: /options exch def
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14709: /barcode exch def
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14711: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14712: /columns 0 def
 	this.stk[this.ptr++]="columns";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14713: /rows 0 def
 	this.stk[this.ptr++]="rows";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14714: /parse false def
 	this.stk[this.ptr++]="parse";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14715: /parsefnc false def
 	this.stk[this.ptr++]="parsefnc";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14718: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -7411,12 +6750,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 14725: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 14726: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -7432,35 +6769,29 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 14728: /columns columns cvi def
 	this.stk[this.ptr++]="columns";
 	var t=this.dstk.get("columns");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14729: /rows rows cvi def
 	this.stk[this.ptr++]="rows";
 	var t=this.dstk.get("rows");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14732: parse {
 	var t=this.dstk.get("parse");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f9;
-	//#line 14750: } if
 	var t11=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t11.call(this)==-1) return -1;
 	}
-	//#line 14752: /barlen barcode length def
 	this.stk[this.ptr++]="barlen";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14755: /fnc1 -1 def  /prog -2 def  /m05 -3 def  /m06 -4 def
 	this.stk[this.ptr++]="fnc1";
 	this.stk[this.ptr++]=-1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -7473,26 +6804,20 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]="m06";
 	this.stk[this.ptr++]=-4;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14756: /fncvals <<
 	this.stk[this.ptr++]="fncvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14757: (FNC1) fnc1
 	this.stk[this.ptr++]=BWIPJS.psstring("FNC1");
 	var t=this.dstk.get("fnc1");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 14758: (PROG) prog
 	this.stk[this.ptr++]=BWIPJS.psstring("PROG");
 	var t=this.dstk.get("prog");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 14759: (MAC5) m05
 	this.stk[this.ptr++]=BWIPJS.psstring("MAC5");
 	var t=this.dstk.get("m05");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 14760: (MAC6) m06
 	this.stk[this.ptr++]=BWIPJS.psstring("MAC6");
 	var t=this.dstk.get("m06");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 14761: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -7502,13 +6827,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14762: /msg barlen array def
 	this.stk[this.ptr++]="msg";
 	var t=this.dstk.get("barlen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14763: /i 0 def /j 0 def {
 	this.stk[this.ptr++]="i";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -7516,12 +6839,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=$f14;
-	//#line 14777: } loop
 	var t16=this.stk[--this.ptr];
 	while (true) {
 		if (t16.call(this)==-1) break;
 	}
-	//#line 14778: /msg msg 0 j getinterval def
 	this.stk[this.ptr++]="msg";
 	var t=this.dstk.get("msg");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -7530,102 +6851,64 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14779: /msglen msg length def
 	this.stk[this.ptr++]="msglen";
 	var t=this.dstk.get("msg");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14783: /metrics [
 	this.stk[this.ptr++]="metrics";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14785: [  10    10     1     1     5     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([10,10,1,1,5,1]);
-	//#line 14786: [  12    12     1     1     7     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([12,12,1,1,7,1]);
-	//#line 14787: [  14    14     1     1    10     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([14,14,1,1,10,1]);
-	//#line 14788: [  16    16     1     1    12     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([16,16,1,1,12,1]);
-	//#line 14789: [  18    18     1     1    14     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([18,18,1,1,14,1]);
-	//#line 14790: [  20    20     1     1    18     1 ] 
 	this.stk[this.ptr++]=BWIPJS.psarray([20,20,1,1,18,1]);
-	//#line 14791: [  22    22     1     1    20     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([22,22,1,1,20,1]);
-	//#line 14792: [  24    24     1     1    24     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([24,24,1,1,24,1]);
-	//#line 14793: [  26    26     1     1    28     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([26,26,1,1,28,1]);
-	//#line 14794: [  32    32     2     2    36     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([32,32,2,2,36,1]);
-	//#line 14795: [  36    36     2     2    42     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([36,36,2,2,42,1]);
-	//#line 14796: [  40    40     2     2    48     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([40,40,2,2,48,1]);
-	//#line 14797: [  44    44     2     2    56     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([44,44,2,2,56,1]);
-	//#line 14798: [  48    48     2     2    68     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([48,48,2,2,68,1]);
-	//#line 14799: [  52    52     2     2    84     2 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([52,52,2,2,84,2]);
-	//#line 14800: [  64    64     4     4   112     2 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([64,64,4,4,112,2]);
-	//#line 14801: [  72    72     4     4   144     4 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([72,72,4,4,144,4]);
-	//#line 14802: [  80    80     4     4   192     4 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([80,80,4,4,192,4]);
-	//#line 14803: [  88    88     4     4   224     4 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([88,88,4,4,224,4]);
-	//#line 14804: [  96    96     4     4   272     4 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([96,96,4,4,272,4]);
-	//#line 14805: [ 104   104     4     4   336     6 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([104,104,4,4,336,6]);
-	//#line 14806: [ 120   120     6     6   408     6 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([120,120,6,6,408,6]);
-	//#line 14807: [ 132   132     6     6   496     8 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([132,132,6,6,496,8]);
-	//#line 14808: [ 144   144     6     6   620    10 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([144,144,6,6,620,10]);
-	//#line 14810: [   8    18     1     1     7     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([8,18,1,1,7,1]);
-	//#line 14811: [   8    32     1     2    11     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([8,32,1,2,11,1]);
-	//#line 14812: [  12    26     1     1    14     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([12,26,1,1,14,1]);
-	//#line 14813: [  12    36     1     2    18     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([12,36,1,2,18,1]);
-	//#line 14814: [  16    36     1     2    24     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([16,36,1,2,24,1]);
-	//#line 14815: [  16    48     1     2    28     1 ]
 	this.stk[this.ptr++]=BWIPJS.psarray([16,48,1,2,28,1]);
-	//#line 14816: ] def
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14819: /urows rows def
 	this.stk[this.ptr++]="urows";
 	var t=this.dstk.get("rows");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14820: /ucols columns def
 	this.stk[this.ptr++]="ucols";
 	var t=this.dstk.get("columns");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14821: /fullcws [] def
 	this.stk[this.ptr++]="fullcws";
 	this.stk[this.ptr++]=BWIPJS.psarray([]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14822: metrics {
 	var t=this.dstk.get("metrics");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f19;
-	//#line 14838: } forall
 	var t23=this.stk[--this.ptr];
 	var t22=this.stk[--this.ptr];
 	for (t21 in t22) {
@@ -7638,7 +6921,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t23.call(this)==-1) break;
 	}
-	//#line 14839: /numremcws [ 1558 {10000} repeat ] def
 	this.stk[this.ptr++]="numremcws";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1558;
@@ -7654,7 +6936,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14840: fullcws {numremcws exch 1 sub 1 put} forall
 	var t=this.dstk.get("fullcws");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f21;
@@ -7670,12 +6951,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t29.call(this)==-1) break;
 	}
-	//#line 14841: 1556 -1 0 {
 	this.stk[this.ptr++]=1556;
 	this.stk[this.ptr++]=-1;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=$f23;
-	//#line 14846: } for
 	var t35=this.stk[--this.ptr];
 	var t33=this.stk[--this.ptr];
 	var t32=this.stk[--this.ptr];
@@ -7684,7 +6963,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t34;
 		if (t35.call(this)==-1) break;
 	}
-	//#line 14849: /lC    -5 def  /lB    -6 def  /lX    -7 def  /lT    -8 def  /lE    -9 def  /unl -10 def
 	this.stk[this.ptr++]="lC";
 	this.stk[this.ptr++]=-5;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -7703,7 +6981,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]="unl";
 	this.stk[this.ptr++]=-10;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14850: /sapp -11 def  /usft -12 def  /sft1 -13 def  /sft2 -14 def  /sft3 -15 def  /eci -16 def  /pad -17 def
 	this.stk[this.ptr++]="sapp";
 	this.stk[this.ptr++]=-11;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -7725,14 +7002,11 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]="pad";
 	this.stk[this.ptr++]=-17;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14851: /unlcw 254 def
 	this.stk[this.ptr++]="unlcw";
 	this.stk[this.ptr++]=254;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14853: /Avals <<
 	this.stk[this.ptr++]="Avals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14854: 0 1 128 {dup 1 add} for
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=128;
@@ -7745,16 +7019,13 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t39;
 		if (t40.call(this)==-1) break;
 	}
-	//#line 14855: pad 129
 	var t=this.dstk.get("pad");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=129;
-	//#line 14856: 0 1 99 {  % Double digits
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=99;
 	this.stk[this.ptr++]=$f25;
-	//#line 14859: } for
 	var t45=this.stk[--this.ptr];
 	var t43=this.stk[--this.ptr];
 	var t42=this.stk[--this.ptr];
@@ -7763,7 +7034,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t44;
 		if (t45.call(this)==-1) break;
 	}
-	//#line 14860: 229 [ lC lB fnc1 sapp prog usft m05 m06 lX lT lE eci ] {exch 1 add dup} forall pop
 	this.stk[this.ptr++]=229;
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("lC");
@@ -7809,7 +7079,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		if (t48.call(this)==-1) break;
 	}
 	this.ptr--;
-	//#line 14861: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -7819,10 +7088,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14862: /Avals <<
 	this.stk[this.ptr++]="Avals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14863: Avals {[exch]} forall
 	var t=this.dstk.get("Avals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f27;
@@ -7838,7 +7105,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t51.call(this)==-1) break;
 	}
-	//#line 14864: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -7848,25 +7114,19 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14866: /CNvals <<
 	this.stk[this.ptr++]="CNvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14867: sft1 0
 	var t=this.dstk.get("sft1");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
-	//#line 14868: sft2 1
 	var t=this.dstk.get("sft2");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=1;
-	//#line 14869: sft3 2
 	var t=this.dstk.get("sft3");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=2;
-	//#line 14870: 32   3
 	this.stk[this.ptr++]=32;
 	this.stk[this.ptr++]=3;
-	//#line 14871: 48 1 57 {dup 44 sub} for  % 0-9
 	this.stk[this.ptr++]=48;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=57;
@@ -7879,7 +7139,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t55;
 		if (t56.call(this)==-1) break;
 	}
-	//#line 14872: 65 1 90 {dup 51 sub} for  % A-Z
 	this.stk[this.ptr++]=65;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=90;
@@ -7892,7 +7151,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t60;
 		if (t61.call(this)==-1) break;
 	}
-	//#line 14873: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -7902,7 +7160,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14874: /C1vals << 0 1 31 {dup} for >> def
 	this.stk[this.ptr++]="C1vals";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=0;
@@ -7926,10 +7183,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14875: /C2vals <<
 	this.stk[this.ptr++]="C2vals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14876: 33 1 47 {dup 33 sub} for
 	this.stk[this.ptr++]=33;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=47;
@@ -7942,7 +7197,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t70;
 		if (t71.call(this)==-1) break;
 	}
-	//#line 14877: 58 1 64 {dup 43 sub} for
 	this.stk[this.ptr++]=58;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=64;
@@ -7955,7 +7209,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t75;
 		if (t76.call(this)==-1) break;
 	}
-	//#line 14878: 91 1 95 {dup 69 sub} for
 	this.stk[this.ptr++]=91;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=95;
@@ -7968,15 +7221,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t80;
 		if (t81.call(this)==-1) break;
 	}
-	//#line 14879: fnc1 27
 	var t=this.dstk.get("fnc1");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=27;
-	//#line 14880: usft 30
 	var t=this.dstk.get("usft");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=30;
-	//#line 14881: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -7986,7 +7236,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14882: /C3vals << 96 1 127 {dup 96 sub} for >> def
 	this.stk[this.ptr++]="C3vals";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=96;
@@ -8010,10 +7259,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14883: /Cvals <<
 	this.stk[this.ptr++]="Cvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14884: CNvals {[exch]} forall
 	var t=this.dstk.get("CNvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f35;
@@ -8029,7 +7276,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t89.call(this)==-1) break;
 	}
-	//#line 14885: C1vals {[exch CNvals sft1 get exch]} forall
 	var t=this.dstk.get("C1vals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f36;
@@ -8045,7 +7291,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t92.call(this)==-1) break;
 	}
-	//#line 14886: C2vals {[exch CNvals sft2 get exch]} forall
 	var t=this.dstk.get("C2vals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f37;
@@ -8061,7 +7306,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t95.call(this)==-1) break;
 	}
-	//#line 14887: C3vals {[exch CNvals sft3 get exch]} forall
 	var t=this.dstk.get("C3vals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f38;
@@ -8077,7 +7321,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t98.call(this)==-1) break;
 	}
-	//#line 14888: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8087,25 +7330,19 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14890: /TNvals <<
 	this.stk[this.ptr++]="TNvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14891: sft1 0
 	var t=this.dstk.get("sft1");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
-	//#line 14892: sft2 1
 	var t=this.dstk.get("sft2");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=1;
-	//#line 14893: sft3 2
 	var t=this.dstk.get("sft3");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=2;
-	//#line 14894: 32   3
 	this.stk[this.ptr++]=32;
 	this.stk[this.ptr++]=3;
-	//#line 14895: 48 1  57 {dup 44 sub} for  % 0-9
 	this.stk[this.ptr++]=48;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=57;
@@ -8118,7 +7355,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t102;
 		if (t103.call(this)==-1) break;
 	}
-	//#line 14896: 97 1 122 {dup 83 sub} for  % a-z
 	this.stk[this.ptr++]=97;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=122;
@@ -8131,7 +7367,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t107;
 		if (t108.call(this)==-1) break;
 	}
-	//#line 14897: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8141,7 +7376,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14898: /T1vals << 0 1 31 {dup} for >> def
 	this.stk[this.ptr++]="T1vals";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=0;
@@ -8165,10 +7399,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14899: /T2vals <<
 	this.stk[this.ptr++]="T2vals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14900: 33 1 47 {dup 33 sub} for
 	this.stk[this.ptr++]=33;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=47;
@@ -8181,7 +7413,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t117;
 		if (t118.call(this)==-1) break;
 	}
-	//#line 14901: 58 1 64 {dup 43 sub} for
 	this.stk[this.ptr++]=58;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=64;
@@ -8194,7 +7425,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t122;
 		if (t123.call(this)==-1) break;
 	}
-	//#line 14902: 91 1 95 {dup 69 sub} for
 	this.stk[this.ptr++]=91;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=95;
@@ -8207,15 +7437,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t127;
 		if (t128.call(this)==-1) break;
 	}
-	//#line 14903: fnc1 27
 	var t=this.dstk.get("fnc1");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=27;
-	//#line 14904: usft 30
 	var t=this.dstk.get("usft");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=30;
-	//#line 14905: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8225,13 +7452,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14906: /T3vals <<
 	this.stk[this.ptr++]="T3vals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14907: 96 0
 	this.stk[this.ptr++]=96;
 	this.stk[this.ptr++]=0;
-	//#line 14908: 65 1  90 {dup 64 sub} for
 	this.stk[this.ptr++]=65;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=90;
@@ -8244,7 +7468,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t132;
 		if (t133.call(this)==-1) break;
 	}
-	//#line 14909: 123 1 127 {dup 96 sub} for
 	this.stk[this.ptr++]=123;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=127;
@@ -8257,7 +7480,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t137;
 		if (t138.call(this)==-1) break;
 	}
-	//#line 14910: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8267,10 +7489,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14911: /Tvals <<
 	this.stk[this.ptr++]="Tvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14912: TNvals {[exch]} forall
 	var t=this.dstk.get("TNvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f47;
@@ -8286,7 +7506,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t141.call(this)==-1) break;
 	}
-	//#line 14913: T1vals {[exch TNvals sft1 get exch]} forall
 	var t=this.dstk.get("T1vals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f48;
@@ -8302,7 +7521,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t144.call(this)==-1) break;
 	}
-	//#line 14914: T2vals {[exch TNvals sft2 get exch]} forall
 	var t=this.dstk.get("T2vals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f49;
@@ -8318,7 +7536,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t147.call(this)==-1) break;
 	}
-	//#line 14915: T3vals {[exch TNvals sft3 get exch]} forall
 	var t=this.dstk.get("T3vals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f50;
@@ -8334,7 +7551,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t150.call(this)==-1) break;
 	}
-	//#line 14916: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8344,12 +7560,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14919: 128 1 255 {
 	this.stk[this.ptr++]=128;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=255;
 	this.stk[this.ptr++]=$f51;
-	//#line 14924: } for
 	var t155=this.stk[--this.ptr];
 	var t153=this.stk[--this.ptr];
 	var t152=this.stk[--this.ptr];
@@ -8358,22 +7572,16 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t154;
 		if (t155.call(this)==-1) break;
 	}
-	//#line 14926: /Xvals <<
 	this.stk[this.ptr++]="Xvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14927: 13 0
 	this.stk[this.ptr++]=13;
 	this.stk[this.ptr++]=0;
-	//#line 14928: 42 1
 	this.stk[this.ptr++]=42;
 	this.stk[this.ptr++]=1;
-	//#line 14929: 62 2
 	this.stk[this.ptr++]=62;
 	this.stk[this.ptr++]=2;
-	//#line 14930: 32 3
 	this.stk[this.ptr++]=32;
 	this.stk[this.ptr++]=3;
-	//#line 14931: 48 1 57 {dup 44 sub} for
 	this.stk[this.ptr++]=48;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=57;
@@ -8386,7 +7594,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t159;
 		if (t160.call(this)==-1) break;
 	}
-	//#line 14932: 65 1 90 {dup 51 sub} for
 	this.stk[this.ptr++]=65;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=90;
@@ -8399,7 +7606,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t164;
 		if (t165.call(this)==-1) break;
 	}
-	//#line 14933: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8409,10 +7615,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14934: /Xvals <<
 	this.stk[this.ptr++]="Xvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14935: Xvals {[exch]} forall
 	var t=this.dstk.get("Xvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f54;
@@ -8428,7 +7632,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t168.call(this)==-1) break;
 	}
-	//#line 14936: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8438,10 +7641,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14938: /Evals <<
 	this.stk[this.ptr++]="Evals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14939: 64 1 94 {dup 64 sub} for
 	this.stk[this.ptr++]=64;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=94;
@@ -8454,11 +7655,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t172;
 		if (t173.call(this)==-1) break;
 	}
-	//#line 14940: unl 31
 	var t=this.dstk.get("unl");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=31;
-	//#line 14941: 32 1 63 {dup} for
 	this.stk[this.ptr++]=32;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=63;
@@ -8471,7 +7670,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t177;
 		if (t178.call(this)==-1) break;
 	}
-	//#line 14942: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8481,10 +7679,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14943: /Evals <<
 	this.stk[this.ptr++]="Evals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14944: Evals {[exch]} forall
 	var t=this.dstk.get("Evals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f57;
@@ -8500,7 +7696,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t181.call(this)==-1) break;
 	}
-	//#line 14945: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8510,10 +7705,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14947: /Bvals <<
 	this.stk[this.ptr++]="Bvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14948: 0 1 255 {dup} for
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=255;
@@ -8526,7 +7719,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t185;
 		if (t186.call(this)==-1) break;
 	}
-	//#line 14949: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8536,10 +7728,8 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14950: /Bvals <<
 	this.stk[this.ptr++]="Bvals";
 	this.stk[this.ptr++]=Infinity;
-	//#line 14951: Bvals {[exch]} forall
 	var t=this.dstk.get("Bvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f59;
@@ -8555,7 +7745,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		}
 		if (t189.call(this)==-1) break;
 	}
-	//#line 14952: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -8565,7 +7754,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14954: /encvals [ Avals Cvals Tvals Xvals Evals Bvals ] def
 	this.stk[this.ptr++]="encvals";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("Avals");
@@ -8586,7 +7774,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14956: /numD [ msglen {0} repeat 0 ] def
 	this.stk[this.ptr++]="numD";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("msglen");
@@ -8604,7 +7791,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14957: /nextXterm [ msglen {0} repeat 9999 ] def
 	this.stk[this.ptr++]="nextXterm";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("msglen");
@@ -8622,7 +7808,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14958: /nextNonX  [ msglen {0} repeat 9999 ] def
 	this.stk[this.ptr++]="nextNonX";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("msglen");
@@ -8640,7 +7825,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14959: msglen 1 sub -1 0 {
 	var t=this.dstk.get("msglen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=1;
@@ -8648,7 +7832,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]=-1;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=$f68;
-	//#line 14975: } for
 	var t208=this.stk[--this.ptr];
 	var t206=this.stk[--this.ptr];
 	var t205=this.stk[--this.ptr];
@@ -8657,7 +7840,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t207;
 		if (t208.call(this)==-1) break;
 	}
-	//#line 14976: /nextXterm [nextXterm {dup 10000 gt {pop 10000} if} forall] def
 	this.stk[this.ptr++]="nextXterm";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("nextXterm");
@@ -8681,7 +7863,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14977: /nextNonX  [nextNonX  {dup 10000 gt {pop 10000} if} forall] def
 	this.stk[this.ptr++]="nextNonX";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("nextNonX");
@@ -8705,39 +7886,30 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14979: /isD  {char 48 ge char 57 le and} bind def
 	this.stk[this.ptr++]="isD";
 	this.stk[this.ptr++]=$f73;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14980: /isC  {CNvals char known} bind def
 	this.stk[this.ptr++]="isC";
 	this.stk[this.ptr++]=$f74;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14981: /isT  {TNvals char known} bind def
 	this.stk[this.ptr++]="isT";
 	this.stk[this.ptr++]=$f75;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14982: /isX  {Xvals char known} bind def
 	this.stk[this.ptr++]="isX";
 	this.stk[this.ptr++]=$f76;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14983: /isE  {Evals char known} bind def
 	this.stk[this.ptr++]="isE";
 	this.stk[this.ptr++]=$f77;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14984: /isEA {char 127 gt} bind def
 	this.stk[this.ptr++]="isEA";
 	this.stk[this.ptr++]=$f78;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14985: /isFN {char 0 lt} bind def
 	this.stk[this.ptr++]="isFN";
 	this.stk[this.ptr++]=$f79;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14986: /XtermFirst {dup nextXterm exch get exch nextNonX exch get lt} bind def
 	this.stk[this.ptr++]="XtermFirst";
 	this.stk[this.ptr++]=$f80;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14988: /A 0 def  /C 1 def  /T 2 def  /X 3 def  /E 4 def  /B 5 def
 	this.stk[this.ptr++]="A";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -8756,52 +7928,34 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]="B";
 	this.stk[this.ptr++]=5;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 14990: /lookup {
 	this.stk[this.ptr++]="lookup";
 	this.stk[this.ptr++]=$f141;
-	//#line 15031: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15033: /addtocws {
 	this.stk[this.ptr++]="addtocws";
 	this.stk[this.ptr++]=$f142;
-	//#line 15036: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15038: /encA {
 	this.stk[this.ptr++]="encA";
 	this.stk[this.ptr++]=$f146;
-	//#line 15055: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15057: /CTXvalstocws {
 	this.stk[this.ptr++]="CTXvalstocws";
 	this.stk[this.ptr++]=$f149;
-	//#line 15065: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15067: /encCTX {
 	this.stk[this.ptr++]="encCTX";
 	this.stk[this.ptr++]=$f169;
-	//#line 15163: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15165: /Evalstocws {
 	this.stk[this.ptr++]="Evalstocws";
 	this.stk[this.ptr++]=$f172;
-	//#line 15179: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15181: /encE {
 	this.stk[this.ptr++]="encE";
 	this.stk[this.ptr++]=$f189;
-	//#line 15249: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15251: /encB {
 	this.stk[this.ptr++]="encB";
 	this.stk[this.ptr++]=$f199;
-	//#line 15276: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15279: /cws 1558 array def
 	this.stk[this.ptr++]="cws";
 	this.stk[this.ptr++]=1558;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15280: /mode A def /i 0 def /j 0 def {
 	this.stk[this.ptr++]="mode";
 	var t=this.dstk.get("A");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -8813,12 +7967,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=$f201;
-	//#line 15283: } loop
 	var t377=this.stk[--this.ptr];
 	while (true) {
 		if (t377.call(this)==-1) break;
 	}
-	//#line 15284: /cws cws 0 j getinterval def
 	this.stk[this.ptr++]="cws";
 	var t=this.dstk.get("cws");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -8827,14 +7979,12 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15287: /datlen cws length def
 	this.stk[this.ptr++]="datlen";
 	var t=this.dstk.get("cws");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15288: /remcws numremcws j 1 sub get 1 sub def
 	this.stk[this.ptr++]="remcws";
 	var t=this.dstk.get("numremcws");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -8849,40 +7999,33 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15289: remcws 0 gt {
 	var t=this.dstk.get("remcws");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f205;
-	//#line 15297: } if
 	var t387=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t387.call(this)==-1) return -1;
 	}
-	//#line 15300: /i 0 def { % loop
 	this.stk[this.ptr++]="i";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=$f210;
-	//#line 15319: } loop
 	var t392=this.stk[--this.ptr];
 	while (true) {
 		if (t392.call(this)==-1) break;
 	}
-	//#line 15322: /cwbs rsbl array def  % Array of data codeword blocks
 	this.stk[this.ptr++]="cwbs";
 	var t=this.dstk.get("rsbl");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15323: /ecbs rsbl array def  % Array of error correction blocks
 	this.stk[this.ptr++]="ecbs";
 	var t=this.dstk.get("rsbl");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15324: 0 1 rsbl 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("rsbl");
@@ -8890,7 +8033,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f217;
-	//#line 15338: } for
 	var t409=this.stk[--this.ptr];
 	var t407=this.stk[--this.ptr];
 	var t406=this.stk[--this.ptr];
@@ -8899,7 +8041,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t408;
 		if (t409.call(this)==-1) break;
 	}
-	//#line 15341: /rsalog [ 1 255 { dup 2 mul dup 256 ge {301 xor} if } repeat ] def
 	this.stk[this.ptr++]="rsalog";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1;
@@ -8916,12 +8057,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15342: /rslog 256 array def
 	this.stk[this.ptr++]="rslog";
 	this.stk[this.ptr++]=256;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15343: 1 1 255 {dup rsalog exch get exch rslog 3 1 roll put} for
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=255;
@@ -8934,12 +8073,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t417;
 		if (t418.call(this)==-1) break;
 	}
-	//#line 15346: /rsprod {
 	this.stk[this.ptr++]="rsprod";
 	this.stk[this.ptr++]=$f223;
-	//#line 15352: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15355: /coeffs [ 1 rscw rsbl idiv {0} repeat ] def
 	this.stk[this.ptr++]="coeffs";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1;
@@ -8960,7 +8096,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15356: 1 1 rscw rsbl idiv {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("rscw");
@@ -8969,7 +8104,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 	this.stk[this.ptr++]=$f226;
-	//#line 15364: } for
 	var t433=this.stk[--this.ptr];
 	var t431=this.stk[--this.ptr];
 	var t430=this.stk[--this.ptr];
@@ -8978,7 +8112,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t432;
 		if (t433.call(this)==-1) break;
 	}
-	//#line 15365: /coeffs coeffs 0 coeffs length 1 sub getinterval def
 	this.stk[this.ptr++]="coeffs";
 	var t=this.dstk.get("coeffs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -8991,7 +8124,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15368: 0 1 cwbs length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("cwbs");
@@ -9001,7 +8133,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f230;
-	//#line 15381: } for
 	var t449=this.stk[--this.ptr];
 	var t447=this.stk[--this.ptr];
 	var t446=this.stk[--this.ptr];
@@ -9010,7 +8141,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t448;
 		if (t449.call(this)==-1) break;
 	}
-	//#line 15384: ncws 1558 eq {
 	var t=this.dstk.get("ncws");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=1558;
@@ -9019,12 +8149,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f233;
-	//#line 15386: } if
 	var t456=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t456.call(this)==-1) return -1;
 	}
-	//#line 15389: /cws [ cws {} forall rscw {0} repeat ] def
 	this.stk[this.ptr++]="cws";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("cws");
@@ -9056,7 +8184,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15390: 0 1 rscw 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("rscw");
@@ -9064,7 +8191,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f236;
-	//#line 15393: } for
 	var t467=this.stk[--this.ptr];
 	var t465=this.stk[--this.ptr];
 	var t464=this.stk[--this.ptr];
@@ -9073,32 +8199,24 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t466;
 		if (t467.call(this)==-1) break;
 	}
-	//#line 15396: /module {
 	this.stk[this.ptr++]="module";
 	this.stk[this.ptr++]=$f241;
-	//#line 15417: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15420: /dmn [
 	this.stk[this.ptr++]="dmn";
 	this.stk[this.ptr++]=BWIPJS.psarray([$f242,$f243,$f244,$f245,$f246,$f247,$f248,$f249]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15427: /dmc1 [
 	this.stk[this.ptr++]="dmc1";
 	this.stk[this.ptr++]=BWIPJS.psarray([$f250,$f251,$f252,$f253,$f254,$f255,$f256,$f257]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15434: /dmc2 [
 	this.stk[this.ptr++]="dmc2";
 	this.stk[this.ptr++]=BWIPJS.psarray([$f258,$f259,$f260,$f261,$f262,$f263,$f264,$f265]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15441: /dmc3 [
 	this.stk[this.ptr++]="dmc3";
 	this.stk[this.ptr++]=BWIPJS.psarray([$f266,$f267,$f268,$f269,$f270,$f271,$f272,$f273]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15448: /dmc4 [
 	this.stk[this.ptr++]="dmc4";
 	this.stk[this.ptr++]=BWIPJS.psarray([$f274,$f275,$f276,$f277,$f278,$f279,$f280,$f281]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15455: /mmat [ mrows mcols mul {-1} repeat ] def
 	this.stk[this.ptr++]="mmat";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("mrows");
@@ -9118,7 +8236,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15456: cws length 1 sub -1 0 {cws exch get} for  % Reverse cws onto stack
 	var t=this.dstk.get("cws");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -9136,17 +8253,13 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t484;
 		if (t485.call(this)==-1) break;
 	}
-	//#line 15457: 4 0  % Starting row and column
 	this.stk[this.ptr++]=4;
 	this.stk[this.ptr++]=0;
-	//#line 15458: { % loop
 	this.stk[this.ptr++]=$f297;
-	//#line 15496: } loop
 	var t499=this.stk[--this.ptr];
 	while (true) {
 		if (t499.call(this)==-1) break;
 	}
-	//#line 15499: mmat mrows mcols mul 1 sub get -1 eq {
 	var t=this.dstk.get("mmat");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("mrows");
@@ -9166,12 +8279,10 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f298;
-	//#line 15502: } if
 	var t500=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t500.call(this)==-1) return -1;
 	}
-	//#line 15505: /pixs rows cols mul array def
 	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("rows");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -9180,11 +8291,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15506: /cwpos 0 def
 	this.stk[this.ptr++]="cwpos";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 15507: 0 1 rows 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("rows");
@@ -9192,7 +8301,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f308;
-	//#line 15522: } for
 	var t522=this.stk[--this.ptr];
 	var t520=this.stk[--this.ptr];
 	var t519=this.stk[--this.ptr];
@@ -9201,25 +8309,19 @@ BWIPJS.bwipp["datamatrix"]=function() {
 		this.stk[this.ptr++]=t521;
 		if (t522.call(this)==-1) break;
 	}
-	//#line 15525: <<
 	this.stk[this.ptr++]=Infinity;
-	//#line 15526: /ren //renmatrix
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renmatrix");
 	this.stk[this.ptr++]=t;
-	//#line 15527: /pixs pixs
 	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("pixs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 15528: /pixx cols
 	this.stk[this.ptr++]="pixx";
 	var t=this.dstk.get("cols");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 15529: /pixy rows
 	this.stk[this.ptr++]="pixy";
 	var t=this.dstk.get("rows");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 15530: /height rows 2 mul 72 div
 	this.stk[this.ptr++]="height";
 	var t=this.dstk.get("rows");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -9227,7 +8329,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	//#line 15531: /width cols 2 mul 72 div
 	this.stk[this.ptr++]="width";
 	var t=this.dstk.get("cols");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -9235,11 +8336,9 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	//#line 15532: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 15533: >>
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -9248,7 +8347,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
-	//#line 15535: dontdraw not //renmatrix if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -9259,7 +8357,6 @@ BWIPJS.bwipp["datamatrix"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t523.call(this)==-1) return -1;
 	}
-	//#line 15537: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

@@ -23,23 +23,19 @@ if (!BWIPJS.bwipp["renmatrix"] && BWIPJS.increfs("databarstackedcomposite", "ren
 }
 BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	function $f0(){
-		//#line 19491: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 19492: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 19492: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 19491: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -77,7 +73,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 19492: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -94,20 +89,16 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 19489: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 19490: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 19493: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 19494: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -115,39 +106,30 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 19496: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 19500: /linear exch def
 		this.stk[this.ptr++]="linear";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 19501: pop
 		this.ptr--;
-		//#line 19502: /comp exch def
 		this.stk[this.ptr++]="comp";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f7(){
-		//#line 19504: pop
 		this.ptr--;
 	}
 	function $f8(){
-		//#line 19527: 1
 		this.stk[this.ptr++]=1;
 	}
 	function $f9(){
-		//#line 19529: sep i 1 sub get 0 eq {1} {0} ifelse
 		this.stk[this.ptr++]=1;
 	}
 	function $f10(){
-		//#line 19529: sep i 1 sub get 0 eq {1} {0} ifelse
 		this.stk[this.ptr++]=0;
 	}
 	function $f11(){
-		//#line 19529: sep i 1 sub get 0 eq {1} {0} ifelse
 		var t=this.dstk.get("sep");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -174,7 +156,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		}
 	}
 	function $f12(){
-		//#line 19526: bot i 1 sub get 1 eq {
 		var t=this.dstk.get("bot");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -191,9 +172,7 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f8;
-		//#line 19528: } {
 		this.stk[this.ptr++]=$f11;
-		//#line 19530: } ifelse
 		var t12=this.stk[--this.ptr];
 		var t13=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -203,15 +182,12 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		}
 	}
 	function $f13(){
-		//#line 19532: 0
 		this.stk[this.ptr++]=0;
 	}
 	function $f14(){
-		//#line 19524: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 19525: bot i get 0 eq {
 		var t=this.dstk.get("bot");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -226,9 +202,7 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f12;
-		//#line 19531: } {
 		this.stk[this.ptr++]=$f13;
-		//#line 19533: } ifelse
 		var t14=this.stk[--this.ptr];
 		var t15=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -236,7 +210,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		} else {
 			if (t14.call(this)==-1) return -1;
 		}
-		//#line 19534: sep exch i exch put
 		var t=this.dstk.get("sep");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -249,7 +222,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.ptr-=3;
 	}
 	function $f15(){
-		//#line 19537: true 0 1 12 {dup bot exch fp add get exch f3 exch get eq and} for {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("bot");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -278,7 +250,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.ptr--;
 	}
 	function $f16(){
-		//#line 19539: sep fp [ 0 0 0 0 0 0 0 0 0 0 1 0 0 ] putinterval
 		var t=this.dstk.get("sep");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("fp");
@@ -287,11 +258,9 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f17(){
-		//#line 19522: /fp exch def
 		this.stk[this.ptr++]="fp";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 19523: fp 1 fp 12 add {
 		var t=this.dstk.get("fp");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -300,7 +269,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.stk[this.ptr++]=12;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f14;
-		//#line 19535: } for
 		var t20=this.stk[--this.ptr];
 		var t18=this.stk[--this.ptr];
 		var t17=this.stk[--this.ptr];
@@ -309,11 +277,9 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 			this.stk[this.ptr++]=t19;
 			if (t20.call(this)==-1) break;
 		}
-		//#line 19536: /f3 [1 1 1 1 1 1 1 1 1 0 1 1 1] def
 		this.stk[this.ptr++]="f3";
 		this.stk[this.ptr++]=BWIPJS.psarray([1,1,1,1,1,1,1,1,1,0,1,1,1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 19537: true 0 1 12 {dup bot exch fp add get exch f3 exch get eq and} for {
 		this.stk[this.ptr++]=true;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
@@ -328,35 +294,28 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 			if (t25.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=$f16;
-		//#line 19540: } if
 		var t26=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t26.call(this)==-1) return -1;
 		}
 	}
 	function $f18(){
-		//#line 19542: /sep [ bot {1 exch sub} forall ] def
 		this.stk[this.ptr++]=1;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
-	//#line 19480: 20 dict begin            % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 19482: /options exch def
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19483: /barcode exch def
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19485: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19488: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -366,12 +325,10 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 19495: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 19496: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -387,7 +344,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 19499: barcode (|) search {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("|");
@@ -402,9 +358,7 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.stk[this.ptr++]=true;
 	}
 	this.stk[this.ptr++]=$f6;
-	//#line 19503: } {
 	this.stk[this.ptr++]=$f7;
-	//#line 19505: } ifelse
 	var t8=this.stk[--this.ptr];
 	var t9=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
@@ -412,9 +366,7 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	} else {
 		if (t8.call(this)==-1) return -1;
 	}
-	//#line 19507: gsave
 	this.gsave();
-	//#line 19509: options (lintype) (databarstacked) put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("lintype");
@@ -423,7 +375,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 19510: options (linkage) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("linkage");
@@ -432,7 +383,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 19511: options (inkspread) (0) put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("inkspread");
@@ -441,7 +391,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 19512: options (dontdraw) true put
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("dontdraw");
@@ -450,7 +399,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 		this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 	else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 	this.ptr-=3;
-	//#line 19515: linear options //databarstacked exec
 	var t=this.dstk.get("linear");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("options");
@@ -459,7 +407,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 19516: dup (pixs) get 0 2 index (pixx) get getinterval /bot exch def
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("pixs");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -479,7 +426,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	this.stk[this.ptr++]="bot";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19517: dup (pixy) get /linheight exch def
 	this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	this.stk[this.ptr++]=BWIPJS.psstring("pixy");
 	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
@@ -489,17 +435,13 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	this.stk[this.ptr++]="linheight";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19518: //renmatrix exec
 	var t=this.dstk.get("renmatrix");
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 19521: /sepfinder {
 	this.stk[this.ptr++]="sepfinder";
 	this.stk[this.ptr++]=$f17;
-	//#line 19541: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19542: /sep [ bot {1 exch sub} forall ] def
 	this.stk[this.ptr++]="sep";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("bot");
@@ -523,13 +465,11 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 19543: sep 0 [ 0 0 0 0 ] putinterval
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0]);
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 19544: sep sep length 4 sub [ 0 0 0 0 ] putinterval
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("sep");
@@ -540,40 +480,32 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0]);
 	this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-	//#line 19545: 18 sepfinder
 	this.stk[this.ptr++]=18;
 	var t=this.dstk.get("sepfinder");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 19546: 0 linheight rmoveto <<
 	this.stk[this.ptr++]=0;
 	var t=this.dstk.get("linheight");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var y=this.stk[--this.ptr];
 	this.rmoveto(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=Infinity;
-	//#line 19547: /ren //renmatrix
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renmatrix");
 	this.stk[this.ptr++]=t;
-	//#line 19548: /pixs sep
 	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 19549: /pixx sep length
 	this.stk[this.ptr++]="pixx";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
-	//#line 19550: /pixy 1
 	this.stk[this.ptr++]="pixy";
 	this.stk[this.ptr++]=1;
-	//#line 19551: /height 1 72 div
 	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	//#line 19552: /width sep length 72 div
 	this.stk[this.ptr++]="width";
 	var t=this.dstk.get("sep");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -581,11 +513,9 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-	//#line 19553: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 19554: >> //renmatrix exec
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -598,7 +528,6 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 19557: 1 1 rmoveto comp options //gs1-cc exec //renmatrix exec
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=1;
 	var y=this.stk[--this.ptr];
@@ -615,9 +544,7 @@ BWIPJS.bwipp["databarstackedcomposite"]=function() {
 	this.stk[this.ptr++]=t;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 19559: grestore
 	this.grestore();
-	//#line 19561: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

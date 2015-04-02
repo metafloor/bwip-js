@@ -17,23 +17,19 @@ if (!BWIPJS.bwipp["renmaximatrix"] && BWIPJS.increfs("maxicode", "renmaximatrix"
 }
 BWIPJS.bwipp["maxicode"]=function() {
 	function $f0(){
-		//#line 16647: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 16648: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 16648: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 16647: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,7 +67,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 16648: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -88,20 +83,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 16645: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 16646: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 16649: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 16650: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -109,11 +100,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 16652: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 16664: dup msg exch j exch putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -122,7 +111,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16665: length j add 1 add /j exch def
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		var t=this.dstk.get("j");
@@ -133,9 +121,7 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16666: pop
 		this.ptr--;
-		//#line 16667: dup 0 3 getinterval cvi msg exch j 1 sub exch put
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=3;
@@ -153,7 +139,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 16668: dup length 3 sub 3 exch getinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -164,7 +149,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
 	function $f7(){
-		//#line 16670: dup msg exch j exch putinterval
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -173,7 +157,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16671: length j add /j exch def
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		var t=this.dstk.get("j");
@@ -182,7 +165,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16672: /barcode msg 0 j getinterval def
 		this.stk[this.ptr++]="barcode";
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -191,11 +173,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16673: exit
 		return -1;
 	}
 	function $f8(){
-		//#line 16663: (^) search {
 		this.stk[this.ptr++]=BWIPJS.psstring("^");
 		var h=this.stk[this.ptr-2];
 		var t=h.indexOf(this.stk[this.ptr-1]);
@@ -208,9 +188,7 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr++]=true;
 		}
 		this.stk[this.ptr++]=$f6;
-		//#line 16669: } {
 		this.stk[this.ptr++]=$f7;
-		//#line 16674: } ifelse 
 		var t8=this.stk[--this.ptr];
 		var t9=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -220,7 +198,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f9(){
-		//#line 16659: /msg barcode length string def
 		this.stk[this.ptr++]="msg";
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -228,23 +205,18 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16660: /j 0 def
 		this.stk[this.ptr++]="j";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16661: barcode
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16662: { % loop
 		this.stk[this.ptr++]=$f8;
-		//#line 16675: } loop
 		var t10=this.stk[--this.ptr];
 		while (true) {
 			if (t10.call(this)==-1) break;
 		}
 	}
 	function $f10(){
-		//#line 16686: /fid msg 0 9 getinterval def
 		this.stk[this.ptr++]="fid";
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -252,7 +224,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=9;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16687: /msg msg 9 msglen 9 sub getinterval def 
 		this.stk[this.ptr++]="msg";
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -265,13 +236,11 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f11(){
-		//#line 16689: /fid () def
 		this.stk[this.ptr++]="fid";
 		this.stk[this.ptr++]=BWIPJS.psstring("");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f12(){
-		//#line 16685: msg 0 7 getinterval <5b293e1e30311d> eq {
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -283,9 +252,7 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f10;
-		//#line 16688: } {
 		this.stk[this.ptr++]=$f11;
-		//#line 16690: } ifelse
 		var t12=this.stk[--this.ptr];
 		var t13=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -293,7 +260,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		} else {
 			if (t12.call(this)==-1) return -1;
 		}
-		//#line 16693: msg <1d> search pop /pcode exch def
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("\x1d");
@@ -311,7 +277,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]="pcode";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16694: pop <1d> search pop /ccode exch def
 		this.ptr--;
 		this.stk[this.ptr++]=BWIPJS.psstring("\x1d");
 		var h=this.stk[this.ptr-2];
@@ -328,7 +293,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]="ccode";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16695: pop <1d> search pop /scode exch def
 		this.ptr--;
 		this.stk[this.ptr++]=BWIPJS.psstring("\x1d");
 		var h=this.stk[this.ptr-2];
@@ -345,12 +309,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]="scode";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16696: pop /msg exch def
 		this.ptr--;
 		this.stk[this.ptr++]="msg";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16699: msg length fid length add string dup
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -362,13 +324,11 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		//#line 16700: 0 fid putinterval dup 
 		this.stk[this.ptr++]=0;
 		var t=this.dstk.get("fid");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		//#line 16701: fid length msg putinterval
 		var t=this.dstk.get("fid");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -376,11 +336,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16702: /msg exch def
 		this.stk[this.ptr++]="msg";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16703: /msglen msg length def
 		this.stk[this.ptr++]="msglen";
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -389,7 +347,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f13(){
-		//#line 16791: encs j get dup type /stringtype eq {0 get} if  % convert string to ASCII if required
 		this.stk[this.ptr++]=0;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
@@ -397,11 +354,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f14(){
-		//#line 16790: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16791: encs j get dup type /stringtype eq {0 get} if  % convert string to ASCII if required
 		var t=this.dstk.get("encs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -422,7 +377,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t15.call(this)==-1) return -1;
 		}
-		//#line 16792: charvals j get exch i put 
 		var t=this.dstk.get("charvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -440,11 +394,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f15(){
-		//#line 16787: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16788: /encs charmaps i get def
 		this.stk[this.ptr++]="encs";
 		var t=this.dstk.get("charmaps");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -455,12 +407,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16789: 0 1 4 {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr++]=$f14;
-		//#line 16793: } for
 		var t20=this.stk[--this.ptr];
 		var t18=this.stk[--this.ptr];
 		var t17=this.stk[--this.ptr];
@@ -471,11 +421,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f16(){
-		//#line 16802: /nseq [ msglen 1 add {0} repeat ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f17(){
-		//#line 16806: nseq i nseq i 1 add get 1 add put
 		var t=this.dstk.get("nseq");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -498,7 +446,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f18(){
-		//#line 16808: nseq i 0 put
 		var t=this.dstk.get("nseq");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -510,11 +457,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f19(){
-		//#line 16804: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16805: msg i get dup 48 ge exch 57 le and {
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -533,9 +478,7 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f17;
-		//#line 16807: } {
 		this.stk[this.ptr++]=$f18;
-		//#line 16809: } ifelse
 		var t29=this.stk[--this.ptr];
 		var t30=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -545,20 +488,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f20(){
-		//#line 16816: 2 copy exch length ge {exit} if 
 		return -1;
 	}
 	function $f21(){
-		//#line 16817: 2 copy get 3 index exch known {1 add} {exit} ifelse
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f22(){
-		//#line 16817: 2 copy get 3 index exch known {1 add} {exit} ifelse
 		return -1;
 	}
 	function $f23(){
-		//#line 16816: 2 copy exch length ge {exit} if 
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -581,7 +520,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t36.call(this)==-1) return -1;
 		}
-		//#line 16817: 2 copy get 3 index exch known {1 add} {exit} ifelse
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -615,22 +553,18 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f24(){
-		//#line 16815: 0 {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=$f23;
-		//#line 16818: } loop
 		var t39=this.stk[--this.ptr];
 		while (true) {
 			if (t39.call(this)==-1) break;
 		}
-		//#line 16819: exch pop exch pop
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 	}
 	function $f25(){
-		//#line 16823: exch get out exch j exch put
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
@@ -646,7 +580,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 16824: /j j 1 add def
 		this.stk[this.ptr++]="j";
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -655,7 +588,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f26(){
-		//#line 16833: la cset load enc
 		var t=this.dstk.get("la");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -664,13 +596,11 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16834: /cset (seta) def
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("seta");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f27(){
-		//#line 16832: cset (seta) ne cset (setb) ne and {
 		var t=this.dstk.get("cset");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("seta");
@@ -689,16 +619,13 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f26;
-		//#line 16835: } if
 		var t40=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t40.call(this)==-1) return -1;
 		}
-		//#line 16836: exit
 		return -1;
 	}
 	function $f28(){
-		//#line 16842: msg i 9 getinterval cvi 4 { dup 63 and exch -6 bitshift } repeat cset load ns get
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=63;
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
@@ -711,16 +638,13 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f29(){
-		//#line 16843: 0 2 10 {index} for 6 array astore 7 1 roll 6 {pop} repeat
 		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 	}
 	function $f30(){
-		//#line 16843: 0 2 10 {index} for 6 array astore 7 1 roll 6 {pop} repeat
 		this.ptr--;
 	}
 	function $f31(){
-		//#line 16842: msg i 9 getinterval cvi 4 { dup 63 and exch -6 bitshift } repeat cset load ns get
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -745,7 +669,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
-		//#line 16843: 0 2 10 {index} for 6 array astore 7 1 roll 6 {pop} repeat
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=10;
@@ -779,7 +702,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		for (var t51=0; t51<t50; t51++) {
 			if (t52.call(this)==-1) break;
 		}
-		//#line 16844: out exch j exch putinterval
 		var t=this.dstk.get("out");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -787,25 +709,21 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16845: /i i 9 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=9;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16846: /j j 6 add def
 		this.stk[this.ptr++]="j";
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16847: exit
 		return -1;
 	}
 	function $f32(){
-		//#line 16852: /char2 i 1 add msglen lt {msg i 1 add get} {-99} ifelse def
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -818,11 +736,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f33(){
-		//#line 16852: /char2 i 1 add msglen lt {msg i 1 add get} {-99} ifelse def
 		this.stk[this.ptr++]=-99;
 	}
 	function $f34(){
-		//#line 16853: /char3 i 2 add msglen lt {msg i 2 add get} {-99} ifelse def
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -835,11 +751,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f35(){
-		//#line 16853: /char3 i 2 add msglen lt {msg i 2 add get} {-99} ifelse def
 		this.stk[this.ptr++]=-99;
 	}
 	function $f36(){
-		//#line 16857: char1 cset load enc
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -848,45 +762,38 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16858: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16859: exit
 		return -1;
 	}
 	function $f37(){
-		//#line 16865: lb seta enc
 		var t=this.dstk.get("lb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16866: /cset (setb) def
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setb");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f38(){
-		//#line 16868: sb seta enc
 		var t=this.dstk.get("sb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16869: char1 setb enc
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16870: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -895,16 +802,13 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f39(){
-		//#line 16864: setb char2 known {
 		var t=this.dstk.get("setb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char2");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		this.stk[this.ptr++]=$f37;
-		//#line 16867: } {
 		this.stk[this.ptr++]=$f38;
-		//#line 16871: } ifelse
 		var t59=this.stk[--this.ptr];
 		var t60=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -912,29 +816,24 @@ BWIPJS.bwipp["maxicode"]=function() {
 		} else {
 			if (t59.call(this)==-1) return -1;
 		}
-		//#line 16872: exit
 		return -1;
 	}
 	function $f40(){
-		//#line 16877: /p seta msg i 4 msglen i sub 2 copy gt {exch} if pop getinterval prefixinset def
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f41(){
-		//#line 16879: sa setb enc
 		var t=this.dstk.get("sa");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16880: char1 seta enc
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16881: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -943,28 +842,24 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f42(){
-		//#line 16884: sa2 setb enc
 		var t=this.dstk.get("sa2");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16885: char1 seta enc
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16886: char2 seta enc
 		var t=this.dstk.get("char2");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16887: /i i 2 add def 
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -973,35 +868,30 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f43(){
-		//#line 16890: sa3 setb enc
 		var t=this.dstk.get("sa3");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16891: char1 seta enc
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16892: char2 seta enc
 		var t=this.dstk.get("char2");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16893: char3 seta enc
 		var t=this.dstk.get("char3");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16894: /i i 3 add def 
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1010,20 +900,17 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f44(){
-		//#line 16897: la setb enc
 		var t=this.dstk.get("la");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16898: /cset (seta) def
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("seta");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f45(){
-		//#line 16877: /p seta msg i 4 msglen i sub 2 copy gt {exch} if pop getinterval prefixinset def
 		this.stk[this.ptr++]="p";
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1061,7 +948,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		var t=this.dstk.get("prefixinset");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16878: p 1 eq {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -1070,12 +956,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f41;
-		//#line 16882: } if
 		var t63=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t63.call(this)==-1) return -1;
 		}
-		//#line 16883: p 2 eq {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -1084,12 +968,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f42;
-		//#line 16888: } if
 		var t64=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t64.call(this)==-1) return -1;
 		}
-		//#line 16889: p 3 eq {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
@@ -1098,27 +980,22 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f43;
-		//#line 16895: } if
 		var t65=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t65.call(this)==-1) return -1;
 		}
-		//#line 16896: p 4 ge {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f44;
-		//#line 16899: } if
 		var t66=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t66.call(this)==-1) return -1;
 		}
-		//#line 16900: exit
 		return -1;
 	}
 	function $f46(){
-		//#line 16905: la cset load enc
 		var t=this.dstk.get("la");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1127,15 +1004,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16906: /cset (seta) def
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("seta");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16907: exit
 		return -1;
 	}
 	function $f47(){
-		//#line 16910: lb cset load enc
 		var t=this.dstk.get("lb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1144,15 +1018,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16911: /cset (setb) def
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setb");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16912: exit
 		return -1;
 	}
 	function $f48(){
-		//#line 16916: setc char1 known {/setx (setc) def /sx sc def /lkx lkc def} if
 		this.stk[this.ptr++]="setx";
 		this.stk[this.ptr++]=BWIPJS.psstring("setc");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1166,7 +1037,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f49(){
-		//#line 16917: setd char1 known {/setx (setd) def /sx sd def /lkx lkd def} if
 		this.stk[this.ptr++]="setx";
 		this.stk[this.ptr++]=BWIPJS.psstring("setd");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1180,7 +1050,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f50(){
-		//#line 16918: sete char1 known {/setx (sete) def /sx se def /lkx lke def} if
 		this.stk[this.ptr++]="setx";
 		this.stk[this.ptr++]=BWIPJS.psstring("sete");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1194,11 +1063,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f51(){
-		//#line 16921: /p setx load msg i 4 msglen i sub 2 copy gt {exch} if pop getinterval prefixinset def
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
 	function $f52(){
-		//#line 16923: sx cset load enc
 		var t=this.dstk.get("sx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1207,7 +1074,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16924: char1 setx load enc
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setx");
@@ -1216,7 +1082,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16925: /i i 1 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1225,7 +1090,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f53(){
-		//#line 16928: sx cset load enc
 		var t=this.dstk.get("sx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1234,7 +1098,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16929: char1 setx load enc
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setx");
@@ -1243,7 +1106,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16930: sx cset load enc
 		var t=this.dstk.get("sx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1252,7 +1114,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16931: char2 setx load enc
 		var t=this.dstk.get("char2");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setx");
@@ -1261,7 +1122,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16932: /i i 2 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1270,7 +1130,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f54(){
-		//#line 16935: sx cset load enc
 		var t=this.dstk.get("sx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1279,7 +1138,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16936: char1 setx load enc
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setx");
@@ -1288,7 +1146,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16937: sx cset load enc
 		var t=this.dstk.get("sx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1297,7 +1154,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16938: char2 setx load enc
 		var t=this.dstk.get("char2");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setx");
@@ -1306,7 +1162,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16939: sx cset load enc
 		var t=this.dstk.get("sx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1315,7 +1170,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16940: char3 setx load enc
 		var t=this.dstk.get("char3");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setx");
@@ -1324,7 +1178,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16941: /i i 3 add def
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1333,7 +1186,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f55(){
-		//#line 16944: sx cset load enc
 		var t=this.dstk.get("sx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("cset");
@@ -1342,7 +1194,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16945: lkx setx load enc
 		var t=this.dstk.get("lkx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setx");
@@ -1351,14 +1202,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("enc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		//#line 16946: /cset setx def 
 		this.stk[this.ptr++]="cset";
 		var t=this.dstk.get("setx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f56(){
-		//#line 16841: nseq i get 9 ge {
 		var t=this.dstk.get("nseq");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -1370,12 +1219,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=9;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f31;
-		//#line 16848: } if
 		var t53=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t53.call(this)==-1) return -1;
 		}
-		//#line 16851: /char1 msg i get def
 		this.stk[this.ptr++]="char1";
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1386,7 +1233,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16852: /char2 i 1 add msglen lt {msg i 1 add get} {-99} ifelse def
 		this.stk[this.ptr++]="char2";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1405,7 +1251,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			if (t54.call(this)==-1) return -1;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16853: /char3 i 2 add msglen lt {msg i 2 add get} {-99} ifelse def
 		this.stk[this.ptr++]="char3";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1424,7 +1269,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			if (t56.call(this)==-1) return -1;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16856: cset load char1 known { 
 		var t=this.dstk.get("cset");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get(this.stk[this.ptr-1]);
@@ -1433,12 +1277,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		this.stk[this.ptr++]=$f36;
-		//#line 16860: } if
 		var t58=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t58.call(this)==-1) return -1;
 		}
-		//#line 16863: cset (seta) eq setb char1 known and {
 		var t=this.dstk.get("cset");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("seta");
@@ -1455,12 +1297,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f39;
-		//#line 16873: } if
 		var t61=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t61.call(this)==-1) return -1;
 		}
-		//#line 16876: cset (setb) eq seta char1 known and {
 		var t=this.dstk.get("cset");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=BWIPJS.psstring("setb");
@@ -1477,36 +1317,30 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f45;
-		//#line 16901: } if
 		var t67=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t67.call(this)==-1) return -1;
 		}
-		//#line 16904: seta char1 known {
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		this.stk[this.ptr++]=$f46;
-		//#line 16908: } if      
 		var t68=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t68.call(this)==-1) return -1;
 		}
-		//#line 16909: setb char1 known {
 		var t=this.dstk.get("setb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char1");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		this.stk[this.ptr++]=$f47;
-		//#line 16913: } if      
 		var t69=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t69.call(this)==-1) return -1;
 		}
-		//#line 16916: setc char1 known {/setx (setc) def /sx sc def /lkx lkc def} if
 		var t=this.dstk.get("setc");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char1");
@@ -1517,7 +1351,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t70.call(this)==-1) return -1;
 		}
-		//#line 16917: setd char1 known {/setx (setd) def /sx sd def /lkx lkd def} if
 		var t=this.dstk.get("setd");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char1");
@@ -1528,7 +1361,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t71.call(this)==-1) return -1;
 		}
-		//#line 16918: sete char1 known {/setx (sete) def /sx se def /lkx lke def} if
 		var t=this.dstk.get("sete");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("char1");
@@ -1539,7 +1371,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t72.call(this)==-1) return -1;
 		}
-		//#line 16921: /p setx load msg i 4 msglen i sub 2 copy gt {exch} if pop getinterval prefixinset def
 		this.stk[this.ptr++]="p";
 		var t=this.dstk.get("setx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1579,7 +1410,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		var t=this.dstk.get("prefixinset");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16922: p 1 eq {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -1588,12 +1418,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f52;
-		//#line 16926: } if
 		var t74=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t74.call(this)==-1) return -1;
 		}
-		//#line 16927: p 2 eq {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -1602,12 +1430,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f53;
-		//#line 16933: } if
 		var t75=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t75.call(this)==-1) return -1;
 		}
-		//#line 16934: p 3 eq {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=3;
@@ -1616,27 +1442,22 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f54;
-		//#line 16942: } if
 		var t76=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t76.call(this)==-1) return -1;
 		}
-		//#line 16943: p 4 ge {
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f55;
-		//#line 16947: } if
 		var t77=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t77.call(this)==-1) return -1;
 		}
-		//#line 16949: exit
 		return -1;
 	}
 	function $f57(){
-		//#line 16831: i msglen eq {
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("msglen");
@@ -1646,26 +1467,21 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f27;
-		//#line 16837: } if
 		var t41=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t41.call(this)==-1) return -1;
 		}
-		//#line 16838: { % not a loop but common exit point
 		this.stk[this.ptr++]=$f56;
-		//#line 16950: } loop  % out
 		var t78=this.stk[--this.ptr];
 		while (true) {
 			if (t78.call(this)==-1) break;
 		}
 	}
 	function $f58(){
-		//#line 16958: /sami 2 array def
 		this.stk[this.ptr++]="sami";
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16959: sami 0 seta pad get put 
 		var t=this.dstk.get("sami");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -1681,7 +1497,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 16960: sami 1 sam 10 idiv 1 sub 8 mul sam 10 mod 1 sub add put
 		var t=this.dstk.get("sami");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -1706,7 +1521,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f59(){
-		//#line 16974: pcb pcode length 2 6 string cvrs dup length 6 exch sub exch putinterval
 		var t=this.dstk.get("pcb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("pcode");
@@ -1728,7 +1542,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16975: pcb pcode cvi 2 30 string cvrs dup length 36 exch sub exch putinterval
 		var t=this.dstk.get("pcb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("pcode");
@@ -1751,7 +1564,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f60(){
-		//#line 16979: (      ) 6 string copy dup 0 pcode length 6 gt {pcode 0 6 getinterval} {pcode} ifelse putinterval 
 		var t=this.dstk.get("pcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -1759,12 +1571,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
 	function $f61(){
-		//#line 16979: (      ) 6 string copy dup 0 pcode length 6 gt {pcode 0 6 getinterval} {pcode} ifelse putinterval 
 		var t=this.dstk.get("pcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f62(){
-		//#line 16980: {seta exch get} forall
 		var t=this.dstk.get("seta");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -1774,11 +1584,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f63(){
-		//#line 16983: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16984: pcb pccw i get 2 6 string cvrs dup length 6 i mul 6 add exch sub exch putinterval
 		var t=this.dstk.get("pcb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("pccw");
@@ -1811,10 +1619,8 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f64(){
-		//#line 16978: /pccw [ 
 		this.stk[this.ptr++]="pccw";
 		this.stk[this.ptr++]=Infinity;
-		//#line 16979: (      ) 6 string copy dup 0 pcode length 6 gt {pcode 0 6 getinterval} {pcode} ifelse putinterval 
 		this.stk[this.ptr++]=BWIPJS.psstring("      ");
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
@@ -1848,7 +1654,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			if (t81.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16980: {seta exch get} forall
 		this.stk[this.ptr++]=$f62;
 		var t85=this.stk[--this.ptr];
 		var t84=this.stk[--this.ptr];
@@ -1862,19 +1667,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 			}
 			if (t85.call(this)==-1) break;
 		}
-		//#line 16981: ] def
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16982: 0 1 5 {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr++]=$f63;
-		//#line 16985: } for
 		var t90=this.stk[--this.ptr];
 		var t88=this.stk[--this.ptr];
 		var t87=this.stk[--this.ptr];
@@ -1885,18 +1687,15 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f65(){
-		//#line 17007: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17008: /ps i 6 idiv def
 		this.stk[this.ptr++]="ps";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17009: /ep 2 5 i 6 mod sub exp cvi scm i get 48 sub mul def
 		this.stk[this.ptr++]="ep";
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=5;
@@ -1919,7 +1718,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17010: pri ps pri ps get ep add put
 		var t=this.dstk.get("pri");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("ps");
@@ -1941,12 +1739,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f66(){
-		//#line 17014: /sec [ 84 {padval} repeat ] def
 		var t=this.dstk.get("padval");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f67(){
-		//#line 16968: /mdb (0000) 4 string copy dup mode cvi 2 4 string cvrs dup length 4 exch sub exch putinterval def
 		this.stk[this.ptr++]="mdb";
 		this.stk[this.ptr++]=BWIPJS.psstring("0000");
 		this.stk[this.ptr++]=4;
@@ -1983,7 +1779,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16969: /ccb (0000000000) 10 string copy dup ccode cvi 2 10 string cvrs dup length 10 exch sub exch putinterval def
 		this.stk[this.ptr++]="ccb";
 		this.stk[this.ptr++]=BWIPJS.psstring("0000000000");
 		this.stk[this.ptr++]=10;
@@ -2020,7 +1815,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16970: /scb (0000000000) 10 string copy dup scode cvi 2 10 string cvrs dup length 10 exch sub exch putinterval def
 		this.stk[this.ptr++]="scb";
 		this.stk[this.ptr++]=BWIPJS.psstring("0000000000");
 		this.stk[this.ptr++]=10;
@@ -2057,7 +1851,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16971: /pcb (000000000000000000000000000000000000) 36 string copy def
 		this.stk[this.ptr++]="pcb";
 		this.stk[this.ptr++]=BWIPJS.psstring("000000000000000000000000000000000000");
 		this.stk[this.ptr++]=36;
@@ -2075,7 +1868,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.ptr--;
 		}
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16972: mode 2 eq {
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
@@ -2084,9 +1876,7 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f59;
-		//#line 16976: } {  % mode=3
 		this.stk[this.ptr++]=$f64;
-		//#line 16986: } ifelse
 		var t91=this.stk[--this.ptr];
 		var t92=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -2094,19 +1884,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 		} else {
 			if (t91.call(this)==-1) return -1;
 		}
-		//#line 16989: /scm 60 string def
 		this.stk[this.ptr++]="scm";
 		this.stk[this.ptr++]=60;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 16990: scm 2  mdb putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
 		var t=this.dstk.get("mdb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16991: scm 38 pcb 0  4 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=38;
@@ -2116,7 +1903,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16992: scm 30 pcb 4  6 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=30;
@@ -2126,7 +1912,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16993: scm 24 pcb 10 6 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=24;
@@ -2136,7 +1921,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16994: scm 18 pcb 16 6 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=18;
@@ -2146,7 +1930,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16995: scm 12 pcb 22 6 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=12;
@@ -2156,7 +1939,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16996: scm 6  pcb 28 6 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=6;
@@ -2166,7 +1948,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16997: scm 0  pcb 34 2 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -2176,7 +1957,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16998: scm 52 ccb 0  2 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=52;
@@ -2186,7 +1966,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 16999: scm 42 ccb 2  6 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=42;
@@ -2196,7 +1975,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 17000: scm 36 ccb 8  2 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=36;
@@ -2206,7 +1984,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 17001: scm 54 scb 0  6 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=54;
@@ -2216,7 +1993,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 17002: scm 48 scb 6  4 getinterval putinterval
 		var t=this.dstk.get("scm");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=48;
@@ -2226,16 +2002,13 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 17005: /pri [ 0 0 0 0 0 0 0 0 0 0 ] def
 		this.stk[this.ptr++]="pri";
 		this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0,0,0,0,0,0,0]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17006: 0 1 59 { 
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=59;
 		this.stk[this.ptr++]=$f65;
-		//#line 17011: } for
 		var t97=this.stk[--this.ptr];
 		var t95=this.stk[--this.ptr];
 		var t94=this.stk[--this.ptr];
@@ -2244,7 +2017,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr++]=t96;
 			if (t97.call(this)==-1) break;
 		}
-		//#line 17014: /sec [ 84 {padval} repeat ] def
 		this.stk[this.ptr++]="sec";
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=84;
@@ -2260,7 +2032,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17015: sec 0 encmsg putinterval
 		var t=this.dstk.get("sec");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -2269,15 +2040,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f68(){
-		//#line 17024: /mode encmsg length 77 le {5} {4} ifelse def
 		this.stk[this.ptr++]=5;
 	}
 	function $f69(){
-		//#line 17024: /mode encmsg length 77 le {5} {4} ifelse def
 		this.stk[this.ptr++]=4;
 	}
 	function $f70(){
-		//#line 17024: /mode encmsg length 77 le {5} {4} ifelse def
 		this.stk[this.ptr++]="mode";
 		var t=this.dstk.get("encmsg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2297,20 +2065,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f71(){
-		//#line 17028: /cws [ mode 5 eq {78} {94} ifelse {padval} repeat ] def
 		this.stk[this.ptr++]=78;
 	}
 	function $f72(){
-		//#line 17028: /cws [ mode 5 eq {78} {94} ifelse {padval} repeat ] def
 		this.stk[this.ptr++]=94;
 	}
 	function $f73(){
-		//#line 17028: /cws [ mode 5 eq {78} {94} ifelse {padval} repeat ] def
 		var t=this.dstk.get("padval");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f74(){
-		//#line 17023: mode -1 eq {
 		var t=this.dstk.get("mode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=-1;
@@ -2319,12 +2083,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f70;
-		//#line 17025: } if
 		var t104=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t104.call(this)==-1) return -1;
 		}
-		//#line 17028: /cws [ mode 5 eq {78} {94} ifelse {padval} repeat ] def
 		this.stk[this.ptr++]="cws";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("mode");
@@ -2355,7 +2117,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17029: cws 0 mode put
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -2365,14 +2126,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 17030: cws 1 encmsg putinterval
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("encmsg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		//#line 17033: /pri cws 0 10 getinterval def
 		this.stk[this.ptr++]="pri";
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2380,7 +2139,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17034: /sec cws 10 cws length 10 sub getinterval def
 		this.stk[this.ptr++]="sec";
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2395,7 +2153,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f75(){
-		//#line 17039: /rsalog [ 1 63 { dup 2 mul dup 64 ge {67 xor} if } repeat ] def
 		this.stk[this.ptr++]=67;
 		if (typeof(this.stk[this.ptr-1])=="boolean")
 			this.stk[this.ptr-2]=!this.stk[this.ptr-2]&&this.stk[this.ptr-1] || this.stk[this.ptr-2]&&!this.stk[this.ptr-1];
@@ -2403,7 +2160,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f76(){
-		//#line 17039: /rsalog [ 1 63 { dup 2 mul dup 64 ge {67 xor} if } repeat ] def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -2417,7 +2173,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f77(){
-		//#line 17041: 1 1 63 {dup rsalog exch get exch rslog 3 1 roll put} for
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("rsalog");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2442,7 +2197,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f78(){
-		//#line 17046: rslog exch get exch rslog exch get add 63 mod rsalog exch get
 		var t=this.dstk.get("rslog");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -2470,13 +2224,11 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f79(){
-		//#line 17048: pop pop 0
 		this.ptr--;
 		this.ptr--;
 		this.stk[this.ptr++]=0;
 	}
 	function $f80(){
-		//#line 17045: 2 copy 0 ne exch 0 ne and {
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -2505,9 +2257,7 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f78;
-		//#line 17047: } {
 		this.stk[this.ptr++]=$f79;
-		//#line 17049: } ifelse
 		var t120=this.stk[--this.ptr];
 		var t121=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -2517,15 +2267,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f81(){
-		//#line 17059: /coeffs [ 1 rsnum {0} repeat ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f82(){
-		//#line 17064: /j exch def
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17065: coeffs j coeffs j 1 sub get coeffs j get rsalog i get rsprod xor put
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -2568,11 +2315,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f83(){
-		//#line 17061: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17062: coeffs i coeffs i 1 sub get put
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -2591,7 +2336,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 17063: i 1 sub -1 1 {
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
@@ -2599,7 +2343,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=$f82;
-		//#line 17066: } for
 		var t129=this.stk[--this.ptr];
 		var t127=this.stk[--this.ptr];
 		var t126=this.stk[--this.ptr];
@@ -2608,7 +2351,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr++]=t128;
 			if (t129.call(this)==-1) break;
 		}
-		//#line 17067: coeffs 0 coeffs 0 get rsalog i get rsprod put
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -2635,11 +2377,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f84(){
-		//#line 17072: /ecb [ rsnum {0} repeat ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f85(){
-		//#line 17079: i 0 gt { ecb p ecb p 1 add get ecb p get xor put } if
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("p");
@@ -2672,11 +2412,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr-=3;
 	}
 	function $f86(){
-		//#line 17076: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17077: /p ecb length i sub 1 sub def
 		this.stk[this.ptr++]="p";
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2688,7 +2426,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17078: ecb p t coeffs i get rsprod put
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("p");
@@ -2709,7 +2446,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 17079: i 0 gt { ecb p ecb p 1 add get ecb p get xor put } if
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=0;
@@ -2721,7 +2457,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f87(){
-		//#line 17074: /t exch cwb exch get ecb 0 get xor def
 		this.stk[this.ptr++]="t";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("cwb");
@@ -2743,7 +2478,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]^this.stk[this.ptr-1];
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17075: ecb length 1 sub -1 0 {
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -2753,7 +2487,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=$f86;
-		//#line 17080: } for
 		var t143=this.stk[--this.ptr];
 		var t141=this.stk[--this.ptr];
 		var t140=this.stk[--this.ptr];
@@ -2764,15 +2497,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 	}
 	function $f88(){
-		//#line 17055: /rsnum exch def
 		this.stk[this.ptr++]="rsnum";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17056: /cwb exch def
 		this.stk[this.ptr++]="cwb";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17059: /coeffs [ 1 rsnum {0} repeat ] def
 		this.stk[this.ptr++]="coeffs";
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=1;
@@ -2790,13 +2520,11 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17060: 1 1 rsnum {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("rsnum");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f83;
-		//#line 17068: } for
 		var t134=this.stk[--this.ptr];
 		var t132=this.stk[--this.ptr];
 		var t131=this.stk[--this.ptr];
@@ -2805,7 +2533,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr++]=t133;
 			if (t134.call(this)==-1) break;
 		}
-		//#line 17069: /coeffs coeffs 0 coeffs length 1 sub getinterval def
 		this.stk[this.ptr++]="coeffs";
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2818,7 +2545,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17072: /ecb [ rsnum {0} repeat ] def
 		this.stk[this.ptr++]="ecb";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("rsnum");
@@ -2835,7 +2561,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17073: 0 1 cwb length 1 sub {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		var t=this.dstk.get("cwb");
@@ -2845,7 +2570,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f87;
-		//#line 17081: } for
 		var t148=this.stk[--this.ptr];
 		var t146=this.stk[--this.ptr];
 		var t145=this.stk[--this.ptr];
@@ -2854,12 +2578,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr++]=t147;
 			if (t148.call(this)==-1) break;
 		}
-		//#line 17083: ecb
 		var t=this.dstk.get("ecb");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f89(){
-		//#line 17088: /seco [ 0 2 sec length 1 sub { sec exch get } for ] def
 		var t=this.dstk.get("sec");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -2869,7 +2591,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f90(){
-		//#line 17089: /sece [ 1 2 sec length 1 sub { sec exch get } for ] def
 		var t=this.dstk.get("sec");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -2879,15 +2600,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f91(){
-		//#line 17092: /scodes sec length 84 eq {20} {28} ifelse def  % SEC/EEC mode
 		this.stk[this.ptr++]=20;
 	}
 	function $f92(){
-		//#line 17092: /scodes sec length 84 eq {20} {28} ifelse def  % SEC/EEC mode
 		this.stk[this.ptr++]=28;
 	}
 	function $f93(){
-		//#line 17097: /secchk [ 0 1 scodes 1 sub { dup secochk exch get exch secechk exch get } for ] def
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("secochk");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2906,20 +2624,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr--;
 	}
 	function $f94(){
-		//#line 17108: /mods [ 864 {0} repeat ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f95(){
-		//#line 17111: /cw [ codewords i get 2 6 string cvrs {48 sub} forall ] def
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f96(){
-		//#line 17110: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17111: /cw [ codewords i get 2 6 string cvrs {48 sub} forall ] def
 		this.stk[this.ptr++]="cw";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("codewords");
@@ -2956,7 +2670,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17112: mods 6 i mul 6 cw length sub add cw putinterval
 		var t=this.dstk.get("mods");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=6;
@@ -2975,7 +2688,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f97(){
-		//#line 17169: pixs j modmap i get put
 		var t=this.dstk.get("pixs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("j");
@@ -2992,7 +2704,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
-		//#line 17170: /j j 1 add def
 		this.stk[this.ptr++]="j";
 		var t=this.dstk.get("j");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3001,11 +2712,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f98(){
-		//#line 17167: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 17168: mods i get 1 eq {
 		var t=this.dstk.get("mods");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -3020,7 +2729,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f97;
-		//#line 17171: } if
 		var t177=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t177.call(this)==-1) return -1;
@@ -3028,35 +2736,27 @@ BWIPJS.bwipp["maxicode"]=function() {
 	}
 	function $f99(){
 	}
-	//#line 16633: 20 dict begin
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 16635: /options exch def        % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16636: /barcode exch def        % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16638: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16639: /mode -1 def
 	this.stk[this.ptr++]="mode";
 	this.stk[this.ptr++]=-1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16640: /sam -1 def
 	this.stk[this.ptr++]="sam";
 	this.stk[this.ptr++]=-1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16641: /parse false def
 	this.stk[this.ptr++]="parse";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16644: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -3066,12 +2766,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 16651: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 16652: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -3087,40 +2785,33 @@ BWIPJS.bwipp["maxicode"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 16654: /mode mode cvi def
 	this.stk[this.ptr++]="mode";
 	var t=this.dstk.get("mode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16655: /sam sam cvi def
 	this.stk[this.ptr++]="sam";
 	var t=this.dstk.get("sam");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16658: parse {
 	var t=this.dstk.get("parse");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f9;
-	//#line 16676: } if
 	var t11=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t11.call(this)==-1) return -1;
 	}
-	//#line 16678: /msg barcode def
 	this.stk[this.ptr++]="msg";
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16679: /msglen msg length def
 	this.stk[this.ptr++]="msglen";
 	var t=this.dstk.get("msg");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16682: mode 2 eq mode 3 eq or {
 	var t=this.dstk.get("mode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=2;
@@ -3139,12 +2830,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f12;
-	//#line 16705: } if
 	var t14=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t14.call(this)==-1) return -1;
 	}
-	//#line 16708: /eci -1 def  /pad -2 def  /ns -3 def
 	this.stk[this.ptr++]="eci";
 	this.stk[this.ptr++]=-1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3154,14 +2843,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.stk[this.ptr++]="ns";
 	this.stk[this.ptr++]=-3;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16709: /la  -4 def  /lb  -5 def
 	this.stk[this.ptr++]="la";
 	this.stk[this.ptr++]=-4;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="lb";
 	this.stk[this.ptr++]=-5;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16710: /sa  -6 def  /sb  -7 def  /sc -8 def  /sd -9 def  /se -10 def
 	this.stk[this.ptr++]="sa";
 	this.stk[this.ptr++]=-6;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3177,14 +2864,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.stk[this.ptr++]="se";
 	this.stk[this.ptr++]=-10;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16711: /sa2 -11 def /sa3 -12 def  
 	this.stk[this.ptr++]="sa2";
 	this.stk[this.ptr++]=-11;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="sa3";
 	this.stk[this.ptr++]=-12;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16712: /lkc -13 def /lkd -14 def /lke -15 def
 	this.stk[this.ptr++]="lkc";
 	this.stk[this.ptr++]=-13;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3194,71 +2879,41 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.stk[this.ptr++]="lke";
 	this.stk[this.ptr++]=-15;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16713: /pd2 -16 def /pd3 -17 def 
 	this.stk[this.ptr++]="pd2";
 	this.stk[this.ptr++]=-16;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="pd3";
 	this.stk[this.ptr++]=-17;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16716: /charmaps [
 	this.stk[this.ptr++]="charmaps";
 	this.stk[this.ptr++]=Infinity;
-	//#line 16718: [  13  (`)  192  224    0 ]  % 0
 	this.stk[this.ptr++]=BWIPJS.psarray([13,BWIPJS.psstring("`"),192,224,0]);
-	//#line 16719: [ (A)  (a)  193  225    1 ]  % 1
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("A"),BWIPJS.psstring("a"),193,225,1]);
-	//#line 16720: [ (B)  (b)  194  226    2 ]  % 2
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("B"),BWIPJS.psstring("b"),194,226,2]);
-	//#line 16721: [ (C)  (c)  195  227    3 ]  % 3
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("C"),BWIPJS.psstring("c"),195,227,3]);
-	//#line 16722: [ (D)  (d)  196  228    4 ]  % 4
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("D"),BWIPJS.psstring("d"),196,228,4]);
-	//#line 16723: [ (E)  (e)  197  229    5 ]  % 5
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("E"),BWIPJS.psstring("e"),197,229,5]);
-	//#line 16724: [ (F)  (f)  198  230    6 ]  % 6
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("F"),BWIPJS.psstring("f"),198,230,6]);
-	//#line 16725: [ (G)  (g)  199  231    7 ]  % 7
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("G"),BWIPJS.psstring("g"),199,231,7]);
-	//#line 16726: [ (H)  (h)  200  232    8 ]  % 8
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("H"),BWIPJS.psstring("h"),200,232,8]);
-	//#line 16727: [ (I)  (i)  201  233    9 ]  % 9 
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("I"),BWIPJS.psstring("i"),201,233,9]);
-	//#line 16728: [ (J)  (j)  202  234   10 ]  % 10
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("J"),BWIPJS.psstring("j"),202,234,10]);
-	//#line 16729: [ (K)  (k)  203  235   11 ]  % 11
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("K"),BWIPJS.psstring("k"),203,235,11]);
-	//#line 16730: [ (L)  (l)  204  236   12 ]  % 12
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("L"),BWIPJS.psstring("l"),204,236,12]);
-	//#line 16731: [ (M)  (m)  205  237   13 ]  % 13
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("M"),BWIPJS.psstring("m"),205,237,13]);
-	//#line 16732: [ (N)  (n)  206  238   14 ]  % 14
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("N"),BWIPJS.psstring("n"),206,238,14]);
-	//#line 16733: [ (O)  (o)  207  239   15 ]  % 15
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("O"),BWIPJS.psstring("o"),207,239,15]);
-	//#line 16734: [ (P)  (p)  208  240   16 ]  % 16
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("P"),BWIPJS.psstring("p"),208,240,16]);
-	//#line 16735: [ (Q)  (q)  209  241   17 ]  % 17
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("Q"),BWIPJS.psstring("q"),209,241,17]);
-	//#line 16736: [ (R)  (r)  210  242   18 ]  % 18
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("R"),BWIPJS.psstring("r"),210,242,18]);
-	//#line 16737: [ (S)  (s)  211  243   19 ]  % 19
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("S"),BWIPJS.psstring("s"),211,243,19]);
-	//#line 16738: [ (T)  (t)  212  244   20 ]  % 20
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("T"),BWIPJS.psstring("t"),212,244,20]);
-	//#line 16739: [ (U)  (u)  213  245   21 ]  % 21
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("U"),BWIPJS.psstring("u"),213,245,21]);
-	//#line 16740: [ (V)  (v)  214  246   22 ]  % 22
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("V"),BWIPJS.psstring("v"),214,246,22]);
-	//#line 16741: [ (W)  (w)  215  247   23 ]  % 23
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("W"),BWIPJS.psstring("w"),215,247,23]);
-	//#line 16742: [ (X)  (x)  216  248   24 ]  % 24
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("X"),BWIPJS.psstring("x"),216,248,24]);
-	//#line 16743: [ (Y)  (y)  217  249   25 ]  % 25
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("Y"),BWIPJS.psstring("y"),217,249,25]);
-	//#line 16744: [ (Z)  (z)  218  250   26 ]  % 26
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("Z"),BWIPJS.psstring("z"),218,250,26]);
-	//#line 16745: [ eci  eci  eci  eci  eci ]  % 27
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("eci");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3275,7 +2930,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16746: [  28   28   28   28  pad ]  % 28
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=28;
 	this.stk[this.ptr++]=28;
@@ -3288,7 +2942,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16747: [  29   29   29   29  pad ]  % 29
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=29;
 	this.stk[this.ptr++]=29;
@@ -3301,9 +2954,7 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16748: [  30   30   30   30   27 ]  % 30
 	this.stk[this.ptr++]=BWIPJS.psarray([30,30,30,30,27]);
-	//#line 16749: [  ns   ns   ns   ns   ns ]  % 31
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("ns");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3320,9 +2971,7 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16750: [ ( )  ({)  219  251   28 ]  % 32
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring(" "),BWIPJS.psstring("{"),219,251,28]);
-	//#line 16751: [ pad  pad  220  252   29 ]  % 33
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("pad");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3336,49 +2985,27 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16752: [ (")  (})  221  253   30 ]  % 34
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("\""),BWIPJS.psstring("}"),221,253,30]);
-	//#line 16753: [ (#)  (~)  222  254   31 ]  % 35
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("#"),BWIPJS.psstring("~"),222,254,31]);
-	//#line 16754: [ ($)  127  223  255  159 ]  % 36
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("$"),127,223,255,159]);
-	//#line 16755: [ (%)  (;)  170  161  160 ]  % 37
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("%"),BWIPJS.psstring(";"),170,161,160]);
-	//#line 16756: [ (&)  (<)  172  168  162 ]  % 38
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("&"),BWIPJS.psstring("<"),172,168,162]);
-	//#line 16757: [ (')  (=)  177  171  163 ]  % 39
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("'"),BWIPJS.psstring("="),177,171,163]);
-	//#line 16758: [  40  (>)  178  175  164 ]  % 40
 	this.stk[this.ptr++]=BWIPJS.psarray([40,BWIPJS.psstring(">"),178,175,164]);
-	//#line 16759: [  41  (?)  179  176  165 ]  % 41
 	this.stk[this.ptr++]=BWIPJS.psarray([41,BWIPJS.psstring("?"),179,176,165]);
-	//#line 16760: [ (*)  ([)  181  180  166 ]  % 42
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("*"),BWIPJS.psstring("["),181,180,166]);
-	//#line 16761: [ (+)   92  185  183  167 ]  % 43
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("+"),92,185,183,167]);
-	//#line 16762: [ (,)  (])  186  184  169 ]  % 44
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring(","),BWIPJS.psstring("]"),186,184,169]);
-	//#line 16763: [ (-)  (^)  188  187  173 ]  % 45
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("-"),BWIPJS.psstring("^"),188,187,173]);
-	//#line 16764: [ (.)  (_)  189  191  174 ]  % 46
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("."),BWIPJS.psstring("_"),189,191,174]);
-	//#line 16765: [ (/)  ( )  190  138  182 ]  % 47
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("/"),BWIPJS.psstring(" "),190,138,182]);
-	//#line 16766: [ (0)  (,)  128  139  149 ]  % 48
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("0"),BWIPJS.psstring(","),128,139,149]);
-	//#line 16767: [ (1)  (.)  129  140  150 ]  % 49
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("1"),BWIPJS.psstring("."),129,140,150]);
-	//#line 16768: [ (2)  (/)  130  141  151 ]  % 50
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("2"),BWIPJS.psstring("/"),130,141,151]);
-	//#line 16769: [ (3)  (:)  131  142  152 ]  % 51
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("3"),BWIPJS.psstring(":"),131,142,152]);
-	//#line 16770: [ (4)  (@)  132  143  153 ]  % 52
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("4"),BWIPJS.psstring("@"),132,143,153]);
-	//#line 16771: [ (5)  (!)  133  144  154 ]  % 53
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("5"),BWIPJS.psstring("!"),133,144,154]);
-	//#line 16772: [ (6)  (|)  134  145  155 ]  % 54
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("6"),BWIPJS.psstring("|"),134,145,155]);
-	//#line 16773: [ (7)  pd2  135  146  156 ]  % 55
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=BWIPJS.psstring("7");
 	var t=this.dstk.get("pd2");
@@ -3391,7 +3018,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16774: [ (8)  sa2  136  147  157 ]  % 56
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=BWIPJS.psstring("8");
 	var t=this.dstk.get("sa2");
@@ -3404,7 +3030,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16775: [ (9)  sa3  137  148  158 ]  % 57
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=BWIPJS.psstring("9");
 	var t=this.dstk.get("sa3");
@@ -3417,7 +3042,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16776: [ (:)  pd3   la   la   la ]  % 58
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=BWIPJS.psstring(":");
 	var t=this.dstk.get("pd3");
@@ -3433,7 +3057,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16777: [  sb   sa  ( )  ( )  ( ) ]  % 59
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sb");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3447,7 +3070,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16778: [  sc   sc  lkc   sc   sc ]  % 60
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sc");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3464,7 +3086,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16779: [  sd   sd   sd  lkd   sd ]  % 61
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sd");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3481,7 +3102,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16780: [  se   se   se   se  lke ]  % 62
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("se");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3498,7 +3118,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16781: [  lb   la   lb   lb   lb ]  % 63
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("lb");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3515,14 +3134,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
-	//#line 16782: ] def 
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16785: /charvals [ 64 dict 64 dict 64 dict 64 dict 64 dict ] def
 	this.stk[this.ptr++]="charvals";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=64;
@@ -3541,7 +3158,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16786: 0 1 charmaps length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("charmaps");
@@ -3551,7 +3167,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f15;
-	//#line 16794: } for
 	var t25=this.stk[--this.ptr];
 	var t23=this.stk[--this.ptr];
 	var t22=this.stk[--this.ptr];
@@ -3560,7 +3175,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=t24;
 		if (t25.call(this)==-1) break;
 	}
-	//#line 16795: /seta charvals 0 get def
 	this.stk[this.ptr++]="seta";
 	var t=this.dstk.get("charvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3570,7 +3184,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16796: /setb charvals 1 get def
 	this.stk[this.ptr++]="setb";
 	var t=this.dstk.get("charvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3580,7 +3193,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16797: /setc charvals 2 get def
 	this.stk[this.ptr++]="setc";
 	var t=this.dstk.get("charvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3590,7 +3202,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16798: /setd charvals 3 get def
 	this.stk[this.ptr++]="setd";
 	var t=this.dstk.get("charvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3600,7 +3211,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16799: /sete charvals 4 get def
 	this.stk[this.ptr++]="sete";
 	var t=this.dstk.get("charvals");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3610,7 +3220,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16802: /nseq [ msglen 1 add {0} repeat ] def
 	this.stk[this.ptr++]="nseq";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("msglen");
@@ -3629,7 +3238,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16803: msglen 1 sub -1 0 {
 	var t=this.dstk.get("msglen");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=1;
@@ -3637,7 +3245,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.stk[this.ptr++]=-1;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=$f19;
-	//#line 16810: } for
 	var t35=this.stk[--this.ptr];
 	var t33=this.stk[--this.ptr];
 	var t32=this.stk[--this.ptr];
@@ -3646,7 +3253,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=t34;
 		if (t35.call(this)==-1) break;
 	}
-	//#line 16811: /nseq nseq 0 msglen getinterval def
 	this.stk[this.ptr++]="nseq";
 	var t=this.dstk.get("nseq");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3655,22 +3261,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16814: /prefixinset {
 	this.stk[this.ptr++]="prefixinset";
 	this.stk[this.ptr++]=$f24;
-	//#line 16820: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16822: /enc {
 	this.stk[this.ptr++]="enc";
 	this.stk[this.ptr++]=$f25;
-	//#line 16825: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16827: /out 144 array def
 	this.stk[this.ptr++]="out";
 	this.stk[this.ptr++]=144;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16828: /i 0 def /j 0 def /cset (seta) def
 	this.stk[this.ptr++]="i";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3680,14 +3280,11 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.stk[this.ptr++]="cset";
 	this.stk[this.ptr++]=BWIPJS.psstring("seta");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16829: { % loop
 	this.stk[this.ptr++]=$f57;
-	//#line 16951: } loop
 	var t79=this.stk[--this.ptr];
 	while (true) {
 		if (t79.call(this)==-1) break;
 	}
-	//#line 16952: /encmsg out 0 j getinterval def
 	this.stk[this.ptr++]="encmsg";
 	var t=this.dstk.get("out");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3696,7 +3293,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16953: /padval cset load pad get def 
 	this.stk[this.ptr++]="padval";
 	var t=this.dstk.get("cset");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3709,11 +3305,9 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16956: /sami [] def
 	this.stk[this.ptr++]="sami";
 	this.stk[this.ptr++]=BWIPJS.psarray([]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16957: sam -1 ne {
 	var t=this.dstk.get("sam");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=-1;
@@ -3722,12 +3316,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f58;
-	//#line 16961: } if
 	var t80=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t80.call(this)==-1) return -1;
 	}
-	//#line 16962: /encmsg [ sami aload pop encmsg aload pop ] def
 	this.stk[this.ptr++]="encmsg";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("sami");
@@ -3750,7 +3342,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 16965: mode 2 eq mode 3 eq or {
 	var t=this.dstk.get("mode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=2;
@@ -3769,12 +3360,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f67;
-	//#line 17017: } if
 	var t101=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t101.call(this)==-1) return -1;
 	}
-	//#line 17020: mode 4 eq mode 5 eq or mode 6 eq or mode -1 eq or {
 	var t=this.dstk.get("mode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=4;
@@ -3813,12 +3402,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f74;
-	//#line 17036: } if
 	var t110=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t110.call(this)==-1) return -1;
 	}
-	//#line 17039: /rsalog [ 1 63 { dup 2 mul dup 64 ge {67 xor} if } repeat ] def
 	this.stk[this.ptr++]="rsalog";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1;
@@ -3835,12 +3422,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17040: /rslog 64 array def
 	this.stk[this.ptr++]="rslog";
 	this.stk[this.ptr++]=64;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17041: 1 1 63 {dup rsalog exch get exch rslog 3 1 roll put} for
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=63;
@@ -3853,17 +3438,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=t118;
 		if (t119.call(this)==-1) break;
 	}
-	//#line 17044: /rsprod {
 	this.stk[this.ptr++]="rsprod";
 	this.stk[this.ptr++]=$f80;
-	//#line 17050: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17053: /rscodes {
 	this.stk[this.ptr++]="rscodes";
 	this.stk[this.ptr++]=$f88;
-	//#line 17085: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17088: /seco [ 0 2 sec length 1 sub { sec exch get } for ] def
 	this.stk[this.ptr++]="seco";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=0;
@@ -3889,7 +3469,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17089: /sece [ 1 2 sec length 1 sub { sec exch get } for ] def
 	this.stk[this.ptr++]="sece";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1;
@@ -3915,7 +3494,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17092: /scodes sec length 84 eq {20} {28} ifelse def  % SEC/EEC mode
 	this.stk[this.ptr++]="scodes";
 	var t=this.dstk.get("sec");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3936,7 +3514,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		if (t159.call(this)==-1) return -1;
 	}
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17093: /secochk seco scodes rscodes def
 	this.stk[this.ptr++]="secochk";
 	var t=this.dstk.get("seco");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3945,7 +3522,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t=this.dstk.get("rscodes");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17094: /secechk sece scodes rscodes def
 	this.stk[this.ptr++]="secechk";
 	var t=this.dstk.get("sece");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3954,7 +3530,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	var t=this.dstk.get("rscodes");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17097: /secchk [ 0 1 scodes 1 sub { dup secochk exch get exch secechk exch get } for ] def
 	this.stk[this.ptr++]="secchk";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=0;
@@ -3978,10 +3553,8 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17100: /codewords [
 	this.stk[this.ptr++]="codewords";
 	this.stk[this.ptr++]=Infinity;
-	//#line 17101: pri aload pop 
 	var t=this.dstk.get("pri");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-1];
@@ -3989,7 +3562,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	//#line 17102: pri 10 rscodes aload pop
 	var t=this.dstk.get("pri");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=10;
@@ -4000,7 +3572,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	//#line 17103: sec aload pop 
 	var t=this.dstk.get("sec");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-1];
@@ -4008,7 +3579,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	//#line 17104: secchk aload pop
 	var t=this.dstk.get("secchk");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.stk[this.ptr-1];
@@ -4016,14 +3586,12 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	//#line 17105: ] def
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
 	var t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17108: /mods [ 864 {0} repeat ] def
 	this.stk[this.ptr++]="mods";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=864;
@@ -4039,12 +3607,10 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17109: 0 1 143 {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=143;
 	this.stk[this.ptr++]=$f96;
-	//#line 17113: } for
 	var t176=this.stk[--this.ptr];
 	var t174=this.stk[--this.ptr];
 	var t173=this.stk[--this.ptr];
@@ -4053,20 +3619,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=t175;
 		if (t176.call(this)==-1) break;
 	}
-	//#line 17116: /modmap [
 	this.stk[this.ptr++]="modmap";
 	this.stk[this.ptr++]=BWIPJS.psarray([469,529,286,316,347,346,673,672,703,702,647,676,283,282,313,312,370,610,618,379,378,409,408,439,705,704,559,589,588,619,458,518,640,701,675,674,285,284,315,314,310,340,531,289,288,319,349,348,456,486,517,516,471,470,369,368,399,398,429,428,549,548,579,578,609,608,649,648,679,678,709,708,639,638,669,668,699,698,279,278,309,308,339,338,381,380,411,410,441,440,561,560,591,590,621,620,547,546,577,576,607,606,367,366,397,396,427,426,291,290,321,320,351,350,651,650,681,680,711,710,1,0,31,30,61,60,3,2,33,32,63,62,5,4,35,34,65,64,7,6,37,36,67,66,9,8,39,38,69,68,11,10,41,40,71,70,13,12,43,42,73,72,15,14,45,44,75,74,17,16,47,46,77,76,19,18,49,48,79,78,21,20,51,50,81,80,23,22,53,52,83,82,25,24,55,54,85,84,27,26,57,56,87,86,117,116,147,146,177,176,115,114,145,144,175,174,113,112,143,142,173,172,111,110,141,140,171,170,109,108,139,138,169,168,107,106,137,136,167,166,105,104,135,134,165,164,103,102,133,132,163,162,101,100,131,130,161,160,99,98,129,128,159,158,97,96,127,126,157,156,95,94,125,124,155,154,93,92,123,122,153,152,91,90,121,120,151,150,181,180,211,210,241,240,183,182,213,212,243,242,185,184,215,214,245,244,187,186,217,216,247,246,189,188,219,218,249,248,191,190,221,220,251,250,193,192,223,222,253,252,195,194,225,224,255,254,197,196,227,226,257,256,199,198,229,228,259,258,201,200,231,230,261,260,203,202,233,232,263,262,205,204,235,234,265,264,207,206,237,236,267,266,297,296,327,326,357,356,295,294,325,324,355,354,293,292,323,322,353,352,277,276,307,306,337,336,275,274,305,304,335,334,273,272,303,302,333,332,271,270,301,300,331,330,361,360,391,390,421,420,363,362,393,392,423,422,365,364,395,394,425,424,383,382,413,412,443,442,385,384,415,414,445,444,387,386,417,416,447,446,477,476,507,506,537,536,475,474,505,504,535,534,473,472,503,502,533,532,455,454,485,484,515,514,453,452,483,482,513,512,451,450,481,480,511,510,541,540,571,570,601,600,543,542,573,572,603,602,545,544,575,574,605,604,563,562,593,592,623,622,565,564,595,594,625,624,567,566,597,596,627,626,657,656,687,686,717,716,655,654,685,684,715,714,653,652,683,682,713,712,637,636,667,666,697,696,635,634,665,664,695,694,633,632,663,662,693,692,631,630,661,660,691,690,721,720,751,750,781,780,723,722,753,752,783,782,725,724,755,754,785,784,727,726,757,756,787,786,729,728,759,758,789,788,731,730,761,760,791,790,733,732,763,762,793,792,735,734,765,764,795,794,737,736,767,766,797,796,739,738,769,768,799,798,741,740,771,770,801,800,743,742,773,772,803,802,745,744,775,774,805,804,747,746,777,776,807,806,837,836,867,866,897,896,835,834,865,864,895,894,833,832,863,862,893,892,831,830,861,860,891,890,829,828,859,858,889,888,827,826,857,856,887,886,825,824,855,854,885,884,823,822,853,852,883,882,821,820,851,850,881,880,819,818,849,848,879,878,817,816,847,846,877,876,815,814,845,844,875,874,813,812,843,842,873,872,811,810,841,840,871,870,901,900,931,930,961,960,903,902,933,932,963,962,905,904,935,934,965,964,907,906,937,936,967,966,909,908,939,938,969,968,911,910,941,940,971,970,913,912,943,942,973,972,915,914,945,944,975,974,917,916,947,946,977,976,919,918,949,948,979,978,921,920,951,950,981,980,923,922,953,952,983,982,925,924,955,954,985,984,927,926,957,956,987,986,58,89,88,118,149,148,178,209,208,238,269,268,298,329,328,358,389,388,418,449,448,478,509,508,538,569,568,598,629,628,658,689,688,718,749,748,778,809,808,838,869,868,898,929,928,958,989,988]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17164: /pixs 864 array def
 	this.stk[this.ptr++]="pixs";
 	this.stk[this.ptr++]=864;
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17165: /j 0 def
 	this.stk[this.ptr++]="j";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17166: 0 1 mods length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("mods");
@@ -4076,7 +3638,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f98;
-	//#line 17172: } for
 	var t182=this.stk[--this.ptr];
 	var t180=this.stk[--this.ptr];
 	var t179=this.stk[--this.ptr];
@@ -4085,7 +3646,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 		this.stk[this.ptr++]=t181;
 		if (t182.call(this)==-1) break;
 	}
-	//#line 17173: /pixs [ pixs 0 j getinterval {} forall 28 29 280 281 311 457 488 500 530 670 700 677 707 ] def
 	this.stk[this.ptr++]="pixs";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("pixs");
@@ -4126,21 +3686,16 @@ BWIPJS.bwipp["maxicode"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 17176: <<
 	this.stk[this.ptr++]=Infinity;
-	//#line 17177: /ren //renmaximatrix
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renmaximatrix");
 	this.stk[this.ptr++]=t;
-	//#line 17178: /pixs pixs
 	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("pixs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 17179: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 17180: >>
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -4149,7 +3704,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
-	//#line 17182: dontdraw not //renmaximatrix if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -4160,7 +3714,6 @@ BWIPJS.bwipp["maxicode"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t186.call(this)==-1) return -1;
 	}
-	//#line 17184: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

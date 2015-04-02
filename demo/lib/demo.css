@@ -113,7 +113,7 @@ input, select, label {
 	text-align:			right;
 	padding-right:		1.5ex;
 }
-#scale {
+#scaleX, #scaleY {
 	width:				3ex;
 	font-size:			10.5pt;
 }

@@ -17,23 +17,19 @@ if (!BWIPJS.bwipp["renlinear"] && BWIPJS.increfs("symbol", "renlinear")) {
 }
 BWIPJS.bwipp["symbol"]=function() {
 	function $f0(){
-		//#line 12729: token false eq {exit} if dup length string cvs (=) search
 		return -1;
 	}
 	function $f1(){
-		//#line 12730: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 12730: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f3(){
-		//#line 12729: token false eq {exit} if dup length string cvs (=) search
 		var a=/^\s*([^\s]+)(\s+.*)?$/.exec(this.stk[this.ptr-1]);
 		if (a) {
 			this.stk[this.ptr-1]=BWIPJS.psstring(a[2]===undefined?"":a[2]);
@@ -71,7 +67,6 @@ BWIPJS.bwipp["symbol"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		//#line 12730: true eq {cvlit exch pop exch def} {cvlit true def} ifelse
 		this.stk[this.ptr++]=true;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -88,20 +83,16 @@ BWIPJS.bwipp["symbol"]=function() {
 		}
 	}
 	function $f4(){
-		//#line 12727: 1 dict begin
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		//#line 12728: options {
 		var t=this.dstk.get("options");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f3;
-		//#line 12731: } loop
 		var t3=this.stk[--this.ptr];
 		while (true) {
 			if (t3.call(this)==-1) break;
 		}
-		//#line 12732: currentdict end /options exch def
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
@@ -109,67 +100,53 @@ BWIPJS.bwipp["symbol"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
-		//#line 12734: options {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
-		//#line 12738: /sbs [2.25 2.25 2.25 11.25 2.25 11.25 2.25 2.25 2.25] def
 		this.stk[this.ptr++]="sbs";
 		this.stk[this.ptr++]=BWIPJS.psarray([2.25,2.25,2.25,11.25,2.25,11.25,2.25,2.25,2.25]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12739: /bhs [.625 .625 .625 .625 .625] def
 		this.stk[this.ptr++]="bhs";
 		this.stk[this.ptr++]=BWIPJS.psarray([0.625,0.625,0.625,0.625,0.625]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12740: /bbs [0 0 0 0 0] def
 		this.stk[this.ptr++]="bbs";
 		this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0,0]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f7(){
-		//#line 12743: /sbs [2.25 6.75 2.25 2.25 2.25 6.25 2.25 2.25 2.25 6.75 2.25] def
 		this.stk[this.ptr++]="sbs";
 		this.stk[this.ptr++]=BWIPJS.psarray([2.25,6.75,2.25,2.25,2.25,6.25,2.25,2.25,2.25,6.75,2.25]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12744: /bhs [.625 .625 .625 .625 .625 .625] def
 		this.stk[this.ptr++]="bhs";
 		this.stk[this.ptr++]=BWIPJS.psarray([0.625,0.625,0.625,0.625,0.625,0.625]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12745: /bbs [0 0 0 0 0 0] def
 		this.stk[this.ptr++]="bbs";
 		this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0,0,0]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f8(){
-		//#line 12748: /sbs [2.25 2.25 2.25 6.75 2.25 6.75 2.25 6.75 2.25 2.25 2.25] def
 		this.stk[this.ptr++]="sbs";
 		this.stk[this.ptr++]=BWIPJS.psarray([2.25,2.25,2.25,6.75,2.25,6.75,2.25,6.75,2.25,2.25,2.25]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12749: /bhs [.625 .625 .625 .625 .625 .625] def
 		this.stk[this.ptr++]="bhs";
 		this.stk[this.ptr++]=BWIPJS.psarray([0.625,0.625,0.625,0.625,0.625,0.625]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12750: /bbs [0 0 0 0 0 0] def
 		this.stk[this.ptr++]="bbs";
 		this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0,0,0]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f9(){
-		//#line 12753: /sbs [2.25 2.25 2.25 2.25 2.25 6.75 2.25 6.75 2.25 2.25 2.25 2.25 2.25] def
 		this.stk[this.ptr++]="sbs";
 		this.stk[this.ptr++]=BWIPJS.psarray([2.25,2.25,2.25,2.25,2.25,6.75,2.25,6.75,2.25,2.25,2.25,2.25,2.25]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12754: /bhs [.625 .625 .625 .625 .625 .625 .625] def
 		this.stk[this.ptr++]="bhs";
 		this.stk[this.ptr++]=BWIPJS.psarray([0.625,0.625,0.625,0.625,0.625,0.625,0.625]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 12755: /bbs [0 0 0 0 0 0 0] def
 		this.stk[this.ptr++]="bbs";
 		this.stk[this.ptr++]=BWIPJS.psarray([0,0,0,0,0,0,0]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f10(){
-		//#line 12761: /bwipp.symbolUnknownSymbol (Unknown symbol name provided) //raiseerror exec 
 		this.stk[this.ptr++]="bwipp.symbolUnknownSymbol";
 		this.stk[this.ptr++]=BWIPJS.psstring("Unknown symbol name provided");
 		var t=this.dstk.get("raiseerror");
@@ -177,23 +154,18 @@ BWIPJS.bwipp["symbol"]=function() {
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 	}
-	//#line 12718: 20 dict begin            % Confine variables to local scope
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 12720: /options exch def  % We are given an option string
 	this.stk[this.ptr++]="options";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12721: /barcode exch def  % We are given a barcode string
 	this.stk[this.ptr++]="barcode";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12723: /dontdraw false def
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12726: options type /stringtype eq {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -203,12 +175,10 @@ BWIPJS.bwipp["symbol"]=function() {
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 12733: } if
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	//#line 12734: options {def} forall
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
@@ -224,26 +194,16 @@ BWIPJS.bwipp["symbol"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
-	//#line 12736: /symbols <<
 	this.stk[this.ptr++]="symbols";
 	this.stk[this.ptr++]=Infinity;
-	//#line 12737: /fima {
 	this.stk[this.ptr++]="fima";
 	this.stk[this.ptr++]=$f6;
-	//#line 12741: } bind
-	//#line 12742: /fimb {
 	this.stk[this.ptr++]="fimb";
 	this.stk[this.ptr++]=$f7;
-	//#line 12746: } bind
-	//#line 12747: /fimc {
 	this.stk[this.ptr++]="fimc";
 	this.stk[this.ptr++]=$f8;
-	//#line 12751: } bind
-	//#line 12752: /fimd {
 	this.stk[this.ptr++]="fimd";
 	this.stk[this.ptr++]=$f9;
-	//#line 12756: } bind
-	//#line 12757: >> def
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -253,7 +213,6 @@ BWIPJS.bwipp["symbol"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 12760: symbols barcode known not {
 	var t=this.dstk.get("symbols");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("barcode");
@@ -262,12 +221,10 @@ BWIPJS.bwipp["symbol"]=function() {
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 	else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
 	this.stk[this.ptr++]=$f10;
-	//#line 12762: } if
 	var t8=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t8.call(this)==-1) return -1;
 	}
-	//#line 12764: symbols barcode get exec
 	var t=this.dstk.get("symbols");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("barcode");
@@ -278,29 +235,22 @@ BWIPJS.bwipp["symbol"]=function() {
 	this.ptr--;
 	var t=this.stk[--this.ptr];
 	if (t instanceof Function) t.call(this); else this.eval(t);
-	//#line 12767: <<
 	this.stk[this.ptr++]=Infinity;
-	//#line 12768: /ren //renlinear
 	this.stk[this.ptr++]="ren";
 	var t=this.dstk.get("renlinear");
 	this.stk[this.ptr++]=t;
-	//#line 12769: /sbs sbs
 	this.stk[this.ptr++]="sbs";
 	var t=this.dstk.get("sbs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 12770: /bhs bhs
 	this.stk[this.ptr++]="bhs";
 	var t=this.dstk.get("bhs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 12771: /bbs bbs
 	this.stk[this.ptr++]="bbs";
 	var t=this.dstk.get("bbs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 12772: /opt options
 	this.stk[this.ptr++]="opt";
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	//#line 12773: >>
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
@@ -309,7 +259,6 @@ BWIPJS.bwipp["symbol"]=function() {
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
-	//#line 12775: dontdraw not //renlinear if
 	var t=this.dstk.get("dontdraw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
@@ -320,7 +269,6 @@ BWIPJS.bwipp["symbol"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t9.call(this)==-1) return -1;
 	}
-	//#line 12777: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }
