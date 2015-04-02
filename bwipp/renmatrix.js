@@ -11,23 +11,18 @@
 // BEGIN renmatrix
 BWIPJS.bwipp["renmatrix"]=function() {
 	function $f0(){
-		//#line 21404: args {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f1(){
-		//#line 21405: opt {def} forall
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
-		//#line 21414: /pixs8 [ pixx8 pixy mul {0} repeat ] def
 		this.stk[this.ptr++]=0;
 	}
 	function $f3(){
-		//#line 21416: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 21417: pixs8 pixx8 i mul pixs pixx i mul pixx getinterval putinterval
 		var t=this.dstk.get("pixs8");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("pixx8");
@@ -48,11 +43,9 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f4(){
-		//#line 21424: /i exch def
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 21425: imgstr i 8 idiv 2 copy get 2 7 i 8 mod sub exp cvi pixs i get mul add put
 		var t=this.dstk.get("imgstr");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -101,12 +94,10 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f5(){
-		//#line 21432: (<      >) 8 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setrgbcolor
 		this.stk[this.ptr++]=255;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f6(){
-		//#line 21432: (<      >) 8 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setrgbcolor
 		this.stk[this.ptr++]=BWIPJS.psstring("<      >");
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
@@ -146,12 +137,10 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		this.ptr-=3;
 	}
 	function $f7(){
-		//#line 21435: (<        >) 10 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setcmykcolor
 		this.stk[this.ptr++]=255;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f8(){
-		//#line 21435: (<        >) 10 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setcmykcolor
 		this.stk[this.ptr++]=BWIPJS.psstring("<        >");
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
@@ -191,11 +180,9 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		this.ptr-=4;
 	}
 	function $f9(){
-		//#line 21430: /anycolor exch def
 		this.stk[this.ptr++]="anycolor";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		//#line 21431: anycolor length 6 eq {
 		var t=this.dstk.get("anycolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -206,12 +193,10 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f6;
-		//#line 21433: } if
 		var t22=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t22.call(this)==-1) return -1;
 		}
-		//#line 21434: anycolor length 8 eq {
 		var t=this.dstk.get("anycolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -222,14 +207,12 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
 		this.stk[this.ptr++]=$f8;
-		//#line 21436: } if
 		var t26=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t26.call(this)==-1) return -1;
 		}
 	}
 	function $f10(){
-		//#line 21444: backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if 
 		this.gsave();
 		var t=this.dstk.get("backgroundcolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -239,42 +222,33 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		this.grestore();
 	}
 	function $f11(){
-		//#line 21445: color (unset) ne { color setanycolor } if
 		var t=this.dstk.get("color");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("setanycolor");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
 	function $f12(){
-		//#line 21446: pixx pixy true [ pixx 0 0 pixy neg 0 pixy ] {imgstr} imagemask
 		var t=this.dstk.get("imgstr");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	//#line 21393: 20 dict begin
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-	//#line 21395: /args exch def
 	this.stk[this.ptr++]="args";
 	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21398: /width 1 def
 	this.stk[this.ptr++]="width";
 	this.stk[this.ptr++]=1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21399: /height 1 def
 	this.stk[this.ptr++]="height";
 	this.stk[this.ptr++]=1;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21400: /color (unset) def
 	this.stk[this.ptr++]="color";
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21401: /backgroundcolor (unset) def
 	this.stk[this.ptr++]="backgroundcolor";
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21404: args {def} forall
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f0;
@@ -290,7 +264,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		}
 		if (t2.call(this)==-1) break;
 	}
-	//#line 21405: opt {def} forall
 	var t=this.dstk.get("opt");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f1;
@@ -306,29 +279,24 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		}
 		if (t5.call(this)==-1) break;
 	}
-	//#line 21407: /width width cvr def
 	this.stk[this.ptr++]="width";
 	var t=this.dstk.get("width");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21408: /height height cvr def
 	this.stk[this.ptr++]="height";
 	var t=this.dstk.get("height");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21409: /color color cvlit def
 	this.stk[this.ptr++]="color";
 	var t=this.dstk.get("color");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21410: /backgroundcolor backgroundcolor cvlit def
 	this.stk[this.ptr++]="backgroundcolor";
 	var t=this.dstk.get("backgroundcolor");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21413: /pixx8 pixx 8 div ceiling cvi 8 mul def
 	this.stk[this.ptr++]="pixx8";
 	var t=this.dstk.get("pixx");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -339,7 +307,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.stk[this.ptr++]=8;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21414: /pixs8 [ pixx8 pixy mul {0} repeat ] def
 	this.stk[this.ptr++]="pixs8";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("pixx8");
@@ -359,7 +326,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21415: 0 1 pixy 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("pixy");
@@ -367,7 +333,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f3;
-	//#line 21418: } for
 	var t13=this.stk[--this.ptr];
 	var t11=this.stk[--this.ptr];
 	var t10=this.stk[--this.ptr];
@@ -376,12 +341,10 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		this.stk[this.ptr++]=t12;
 		if (t13.call(this)==-1) break;
 	}
-	//#line 21419: /pixs pixs8 def
 	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("pixs8");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21422: /imgstr pixs length 8 idiv string def
 	this.stk[this.ptr++]="imgstr";
 	var t=this.dstk.get("pixs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -391,7 +354,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 	this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21423: 0 1 pixs length 1 sub {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("pixs");
@@ -401,7 +363,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	//#line 21426: } for
 	var t18=this.stk[--this.ptr];
 	var t16=this.stk[--this.ptr];
 	var t15=this.stk[--this.ptr];
@@ -410,20 +371,15 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		this.stk[this.ptr++]=t17;
 		if (t18.call(this)==-1) break;
 	}
-	//#line 21429: /setanycolor {
 	this.stk[this.ptr++]="setanycolor";
 	this.stk[this.ptr++]=$f9;
-	//#line 21437: } bind def
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	//#line 21440: gsave
 	this.gsave();
-	//#line 21441: currentpoint translate
 	var t=this.currentpoint();
 	this.stk[this.ptr++]=t.x;
 	this.stk[this.ptr++]=t.y;
 	var y=this.stk[--this.ptr];
 	this.translate(this.stk[--this.ptr],y);
-	//#line 21442: 72 width mul 72 height mul scale
 	this.stk[this.ptr++]=72;
 	var t=this.dstk.get("width");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -434,7 +390,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	var y=this.stk[--this.ptr];
 	this.scale(this.stk[--this.ptr],y);
-	//#line 21443: .0001 .0001 moveto .9999 .0001 lineto .9999 .9999 lineto .0001 .9999 lineto closepath
 	this.stk[this.ptr++]=0.0001;
 	this.stk[this.ptr++]=0.0001;
 	var y=this.stk[--this.ptr];
@@ -452,7 +407,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	var y=this.stk[--this.ptr];
 	this.lineto(this.stk[--this.ptr],y);
 	this.closepath();
-	//#line 21444: backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if 
 	var t=this.dstk.get("backgroundcolor");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
@@ -465,7 +419,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t27.call(this)==-1) return -1;
 	}
-	//#line 21445: color (unset) ne { color setanycolor } if
 	var t=this.dstk.get("color");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
@@ -478,7 +431,6 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	if (this.stk[--this.ptr]) {
 		if (t28.call(this)==-1) return -1;
 	}
-	//#line 21446: pixx pixy true [ pixx 0 0 pixy neg 0 pixy ] {imgstr} imagemask
 	var t=this.dstk.get("pixx");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("pixy");
@@ -504,9 +456,7 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.stk[--this.ptr].call(this);
 	this.imagemask(this.stk[this.ptr-5],this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 	this.ptr-=5;
-	//#line 21447: grestore
 	this.grestore();
-	//#line 21449: end
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
 }

@@ -1,5 +1,9 @@
 <!doctype html>
-<html><head><title>bwip-js - demo</title>
+<html><head><title>bwip-js - JavaScript Barcode Generator</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta charset="utf-8" />
+<meta name="keywords" content="bar code, barcode generator, online barcode generator, free barcode generator, javascript, javascript library, nodejs, QR Code, EAN, EAN 13, Code 128, UPC, ISBN, ITF 14, Code 39, GS1, GS1 128, PDF417, HIBC, DataMatrix, Data Matrix, DataBar, OCR, OCR B, OCR font, Aztec Code, PostNet, USPS, Pharmacode" />
+<meta name="description" content="JavaScript barcode generator and library.  Create any barcode in your browser." />
 <!--
 	Copyright (c) 2011-2015 Mark Warren.
 
@@ -53,37 +57,23 @@ var Module = {
 <script type="text/javascript" src="lib/symdesc.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-	// Sort the symbols
-	symdesc.pop();	// remove the null last entry
-	symdesc.sort(function(a,b) {
-			 return (a.desc < b.desc ? -1 : 1);
-		});
-
-	var lastIndex;
+	var lastSymbol;
 	try {
-		lastIndex = +localStorage.getItem('bwipjsLastIndex');
+		lastSymbol = localStorage.getItem('bwipjsLastSymbol');
 	} catch (e) {
 	}
 
-	// Create the select list
-	var sel = document.getElementById('symbol');
-	for (var i = 0; i < symdesc.length; i++) {
-		var opt = document.createElement('option');
-		opt.text = symdesc[i].desc;
-		opt.value = i;
-		sel.add(opt, null);
-	}
-
-	$(sel).change(function(ev) {
-			var sym = symdesc[this.selectedIndex];
-			if (sym) {
-				$('#symtext').val(sym.text);
-				$('#symopts').val(sym.opts);
+	var $sel = $('#symbol')
+		.change(function(ev) {
+			var desc = symdesc[$(this).val()];
+			if (desc) {
+				$('#symtext').val(desc.text);
+				$('#symopts').val(desc.opts);
 
 				$('#proof-img').css('visibility', 'hidden');
 
 				try {
-					localStorage.setItem('bwipjsLastIndex', this.selectedIndex);
+					localStorage.setItem('bwipjsLastSymbol', desc.sym);
 				} catch (e) {
 				}
 			} else {
@@ -93,18 +83,23 @@ $(document).ready(function() {
 			$('#symaltx').val('');
 		});
 
-	if (lastIndex >= 0 && lastIndex < symdesc.length) {
-		$(sel).prop('selectedIndex', lastIndex);
-	}
-	$(sel).trigger('change');
+	if (lastSymbol)
+		$sel.val(lastSymbol);
+	else 
+		$sel.prop('selectedIndex', 0);
+	$sel.trigger('change');
 
-	$('#scale').spinner({ min:1 });
+	$('#scaleX').spinner({ min:1 })
+		.on("spinstop", function(ev) {
+			$('#scaleY').val(this.value);
+		});
+	$('#scaleY').spinner({ min:1 });
 	$('#render').button().click(render);
 	$('#fonthdr').click(fontClick);
 	$('#addfont').button().click(fontRead);
 
 	if (location.search.indexOf('proofs=1') != -1) { 
-		// Show the images from the BWIPP online demo
+		// Show the images from BWIPP with Ghostscript
 		var img = document.createElement('img');
 		img.id					= 'proof-img';
 		img.style.visibility 	= 'hidden';
@@ -127,7 +122,7 @@ $(document).ready(function() {
 });
 
 function render() {
-	var elt = symdesc[$('#symbol')[0].selectedIndex];
+	var elt  = symdesc[$('#symbol').val()];
 	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
 	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
 	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
@@ -173,8 +168,9 @@ function render() {
 
 	bw.bitmap(new Bitmap);
 	
-	var scl = parseInt(document.getElementById('scale').value, 10) || 2;
-	bw.scale(scl,scl);
+	var scaleX = +document.getElementById('scaleX').value || 2;
+	var scaleY = +document.getElementById('scaleY').value || 2;
+	bw.scale(scaleX, scaleY);
 
 	var div = document.getElementById('output');
 	if (div)
@@ -239,14 +235,112 @@ function render() {
 <table border=0 cellpading=0 cellspacing=0><tr>
 <td>
 	<table border=0 cellpading=0 cellspacing=0>
-	<tr><th>Barcode Type:<td><select id="symbol" style="width:64ex"></select>
+	<tr><th>Barcode Type:
+		<td><select id="symbol" style="width:63.5ex">
+			<option value="auspost">AusPost 4 State Customer Code</option>
+			<option value="azteccode">Aztec Code</option>
+			<option value="aztecrune">Aztec Runes</option>
+			<option value="bc412">BC412</option>
+			<option value="channelcode">Channel Code</option>
+			<option value="rationalizedCodabar">Codabar</option>
+			<option value="codablockf">Codablock F</option>
+			<option value="code11">Code 11</option>
+			<option value="code128">Code 128</option>
+			<option value="code16k">Code 16K</option>
+			<option value="code2of5">Code 25</option>
+			<option value="code39">Code 39</option>
+			<option value="code39ext">Code 39 Extended</option>
+			<option value="code49">Code 49</option>
+			<option value="code93">Code 93</option>
+			<option value="code93ext">Code 93 Extended</option>
+			<option value="codeone">Code One</option>
+			<option value="azteccodecompact">Compact Aztec Code</option>
+			<option value="pdf417compact">Compact PDF417</option>
+			<option value="coop2of5">COOP 2 of 5</option>
+			<option value="raw">Custom 1D symbology</option>
+			<option value="daft">Custom 4 state symbology</option>
+			<option value="datamatrix">Data Matrix</option>
+			<option value="datalogic2of5">Datalogic 2 of 5</option>
+			<option value="identcode">Deutsche Post Identcode</option>
+			<option value="leitcode">Deutsche Post Leitcode</option>
+			<option value="ean13">EAN-13</option>
+			<option value="ean13composite">EAN-13 Composite</option>
+			<option value="ean2">EAN-2 (2 digit addon)</option>
+			<option value="ean5">EAN-5 (5 digit addon)</option>
+			<option value="ean8">EAN-8</option>
+			<option value="ean8composite">EAN-8 Composite</option>
+			<option value="flattermarken">Flattermarken</option>
+			<option value="gs1-cc">GS1 Composite 2D Component</option>
+			<option value="gs1datamatrix">GS1 Data Matrix</option>
+			<option value="databarexpanded">GS1 DataBar Expanded</option>
+			<option value="databarexpandedcomposite">GS1 DataBar Expanded Composite</option>
+			<option value="databarexpandedstacked">GS1 DataBar Expanded Stacked</option>
+			<option value="databarexpandedstackedcomposite">GS1 DataBar Expanded Stacked Composite</option>
+			<option value="databarlimited">GS1 DataBar Limited</option>
+			<option value="databarlimitedcomposite">GS1 DataBar Limited Composite</option>
+			<option value="databaromni">GS1 DataBar Omnidirectional</option>
+			<option value="databaromnicomposite">GS1 DataBar Omnidirectional Composite</option>
+			<option value="databarstacked">GS1 DataBar Stacked</option>
+			<option value="databarstackedcomposite">GS1 DataBar Stacked Composite</option>
+			<option value="databarstackedomni">GS1 DataBar Stacked Omnidirectional</option>
+			<option value="databarstackedomnicomposite">GS1 DataBar Stacked Omnidirectional Composite</option>
+			<option value="databartruncated">GS1 DataBar Truncated</option>
+			<option value="databartruncatedcomposite">GS1 DataBar Truncated Composite</option>
+			<option value="gs1qrcode">GS1 QR Code</option>
+			<option value="gs1-128">GS1-128</option>
+			<option value="gs1-128composite">GS1-128 Composite</option>
+			<option value="ean14">GS1-14</option>
+			<option value="hibccodablockf">HIBC Codablock F</option>
+			<option value="hibccode128">HIBC Code 128</option>
+			<option value="hibccode39">HIBC Code 39</option>
+			<option value="hibcdatamatrix">HIBC Data Matrix</option>
+			<option value="hibcmicropdf417">HIBC MicroPDF417</option>
+			<option value="hibcpdf417">HIBC PDF417</option>
+			<option value="hibcqrcode">HIBC QR Code</option>
+			<option value="iata2of5">IATA 2 of 5</option>
+			<option value="industrial2of5">Industrial 2 of 5</option>
+			<option value="interleaved2of5">Interleaved 2 of 5 (ITF)</option>
+			<option value="isbn">ISBN</option>
+			<option value="ismn">ISMN</option>
+			<option value="issn">ISSN</option>
+			<option value="code32">Italian Pharmacode</option>
+			<option value="itf14">ITF-14</option>
+			<option value="japanpost">Japan Post 4 State Customer Code</option>
+			<option value="matrix2of5">Matrix 2 of 5</option>
+			<option value="maxicode">MaxiCode</option>
+			<option value="microqrcode">Micro QR Code</option>
+			<option value="micropdf417">MicroPDF417</option>
+			<option value="symbol">Miscellaneous symbols</option>
+			<option value="msi">MSI Modified Plessey</option>
+			<option value="pdf417">PDF417</option>
+			<option value="pharmacode">Pharmaceutical Binary Code</option>
+			<option value="pzn">Pharmazentralnummer (PZN)</option>
+			<option value="plessey">Plessey UK</option>
+			<option value="posicode">PosiCode</option>
+			<option value="qrcode">QR Code</option>
+			<option value="kix">Royal Dutch TPG Post KIX</option>
+			<option value="royalmail">Royal Mail 4 State Customer Code</option>
+			<option value="sscc18">SSCC-18</option>
+			<option value="telepen">Telepen</option>
+			<option value="telepennumeric">Telepen Numeric</option>
+			<option value="pharmacode2">Two-track Pharmacode</option>
+			<option value="upca">UPC-A</option>
+			<option value="upcacomposite">UPC-A Composite</option>
+			<option value="upce">UPC-E</option>
+			<option value="upcecomposite">UPC-E Composite</option>
+			<option value="onecode">USPS Intelligent Mail</option>
+			<option value="planet">USPS PLANET</option>
+			<option value="postnet">USPS POSTNET</option>
+			</select>
 	<tr><th>Bar Text:<td><input id="symtext" type="text" style="width:63ex">
 	<tr><th>Alt Text:<td><input id="symaltx" type="text" style="width:63ex">
 	<tr><th>Options:<td><input id="symopts" type="text" style="width:63ex">
 	</table>
 <td style="padding-left:10mm">
 	<table border=0 cellpading=0 cellspacing=5>
-	<tr><th>Scale:<td><input type="text" id="scale" value=2>
+	<tr><th>Scale X,Y:<td>
+		<input type="text" id="scaleX" value=2>
+		<input type="text" id="scaleY" value=2>
 	<tr><th>Image Rotation:<td>
 		<label for="rotN"><input type="radio" name="rot" value="N"
 			id="rotN" checked>Normal</label>

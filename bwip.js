@@ -89,7 +89,7 @@ BWIPJS.decrefs = function(module) {
 // FreeType interface
 BWIPJS.ft_monochrome = Module.cwrap("monochrome", 'number', ['number']);
 BWIPJS.ft_lookup = Module.cwrap("find_font", 'number', ['string']);
-BWIPJS.ft_bitmap = Module.cwrap("get_bitmap", 'number', ['number','number','number']);
+BWIPJS.ft_bitmap = Module.cwrap("get_bitmap", 'number', ['number','number','number','number']);
 BWIPJS.ft_width	 = Module.cwrap("get_width", 'number', []);
 BWIPJS.ft_height = Module.cwrap("get_height", 'number', []);
 BWIPJS.ft_left	 = Module.cwrap("get_left", 'number', []);
@@ -541,12 +541,12 @@ BWIPJS.prototype.getfont = function() {
 BWIPJS.prototype.stringwidth = function(str) {
 	BWIPJS.logapi('stringwidth', arguments);
 	var font = this.getfont();
-	var size = (+this.g_font.FontSize || 10) * this.g_tsx;
+	var size = +this.g_font.FontSize || 10;
 
 	// width, ascent, and descent of the char-path
 	var w = 0, a = 0, d = 0;
 	for (var i = 0; i < str.length; i++) {
-		var offset = BWIPJS.ft_bitmap(font, size, str.get(i));
+		var offset = BWIPJS.ft_bitmap(font, str.get(i), size*this.g_tsx, size*this.g_tsy);
 		w += BWIPJS.ft_advance();
 		if (!offset)
 			continue;
@@ -724,7 +724,7 @@ BWIPJS.prototype.imagemask = function(width, height, polarity, matrix, source) {
 BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 	BWIPJS.logapi('show', arguments);
 	var font = this.getfont();
-	var size = (+this.g_font.FontSize || 10) * this.g_tsx;
+	var size = +this.g_font.FontSize || 10;
 
 	// Convert dx,dy to device space
 	dx = this.g_tsx * dx;
@@ -733,7 +733,7 @@ BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 	// PostScript renders bottom-up, so we must render the glyphs inverted.
 	for (var i = 0; i < str.length; i++) {
 		var ch = str.get(i);
-		var offset = BWIPJS.ft_bitmap(font, size, ch);
+		var offset = BWIPJS.ft_bitmap(font, ch, size*this.g_tsx, size*this.g_tsy);
 		if (!offset) {
 			this.g_posx += BWIPJS.ft_advance() + dx;
 			continue;

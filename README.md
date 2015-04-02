@@ -58,7 +58,7 @@ chocolate and hazelnut; they were meant to go together.  Unfortunately, most
 PostScript environments do not provide the OCR fonts and must fallback to Courier,
 Helvetica, and other less-than-ideal typefaces.
 
-The following two images show the differences due to typeface.
+The following two images show the differences in typeface.
 The image below was rendered by bwip-js:
 
 ![bwip-js ISBN](http://metafloor.github.io/bwip-js/images/bwip-js-isbn.png?raw=true)
