@@ -117,3 +117,9 @@ input, select, label {
 	width:				3ex;
 	font-size:			10.5pt;
 }
+a.saveas {
+	color:				blue;
+}
+a.saveas:visited {
+	color:				blue;
+}

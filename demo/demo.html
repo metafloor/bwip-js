@@ -55,6 +55,8 @@ var Module = {
 <script type="text/javascript" src="bwip.js"></script>
 <script type="text/javascript" src="lib/canvas.js"></script>
 <script type="text/javascript" src="lib/symdesc.js"></script>
+<script type="text/javascript" src="lib/canvas-toblob.js"></script>
+<script type="text/javascript" src="lib/filesaver.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	var lastSymbol;
@@ -81,6 +83,7 @@ $(document).ready(function() {
 				$('#symopts').val('');
 			}
 			$('#symaltx').val('');
+			$('.saveas').css('visibility', 'hidden');
 		});
 
 	if (lastSymbol)
@@ -97,6 +100,7 @@ $(document).ready(function() {
 	$('#render').button().click(render);
 	$('#fonthdr').click(fontClick);
 	$('#addfont').button().click(fontRead);
+	$('.saveas').css('visibility', 'hidden');
 
 	if (location.search.indexOf('proofs=1') != -1) { 
 		// Show the images from BWIPP with Ghostscript
@@ -130,6 +134,7 @@ function render() {
 	var bw = new BWIPJS;
 
 	$('#proof-img').css('visibility', 'hidden');
+	$('.saveas').css('visibility', 'hidden');
 
 	// Convert the options to a dictionary object, so we can pass alttext with
 	// spaces.
@@ -148,10 +153,6 @@ function render() {
 	// Add the alternate text
 	if (altx)
 		opts.alttext = bw.value(altx);
-
-	// Add any hard-coded options required to fix problems in the javascript
-	// emulation. 
-	opts.inkspread = bw.value(0);
 
 	var rot  = 'N';
 	var rots = [ 'rotL', 'rotR', 'rotI' ];
@@ -196,6 +197,10 @@ function render() {
 			} else {
 				bw.bitmap().show('canvas', rot);
 
+				$('.saveas').css('visibility', 'visible');
+				saveCanvas.basename = elt.sym + '-' +
+						text.replace(/[^a-zA-Z0-9._]+/g, '-');
+
 				if (location.search.indexOf('proofs=1') != -1) { 
 					var img = document.getElementById('proof-img');
 					if (img) {
@@ -205,6 +210,10 @@ function render() {
 				}
 			}
 		});
+}
+function saveCanvas(type, ext) {
+	var canvas = document.getElementById('canvas');
+	canvas.toBlob(function (blob) { saveAs(blob, saveCanvas.basename + ext); }, type, 1);
 }
 </script>
 </head><body>
@@ -335,6 +344,11 @@ function render() {
 	<tr><th>Bar Text:<td><input id="symtext" type="text" style="width:63ex">
 	<tr><th>Alt Text:<td><input id="symaltx" type="text" style="width:63ex">
 	<tr><th>Options:<td><input id="symopts" type="text" style="width:63ex">
+	<tr><td><td>
+		<a class="saveas" href="javascript:saveCanvas('image/png','.png')">Save As PNG</a>
+		&nbsp;&nbsp;
+		<a class="saveas" href="javascript:saveCanvas('image/jpeg','.jpg')">Save As JPEG</a>
+		&nbsp;&nbsp;
 	</table>
 <td style="padding-left:10mm">
 	<table border=0 cellpading=0 cellspacing=5>

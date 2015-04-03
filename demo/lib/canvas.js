@@ -78,7 +78,7 @@ function Bitmap() {
 			var x = pts[i][0] - minx;
 			var y = pts[i][1] - miny;
 			var c = pts[i][2];
-			var a = pts[i][3];
+			var a = pts[i][3] / 255;
 
 			if (rot == 'N') {
 				y = h - y - 1; 	// Invert y
@@ -98,10 +98,10 @@ function Bitmap() {
 			}
 
 			var idx = (y * id.width + x) * 4
-			dat[idx++] = c[0] ;	// r
-			dat[idx++] = c[1];	// g
-			dat[idx++] = c[2];	// b
-			dat[idx]   = a;
+			dat[idx+0] = (dat[idx+0] * (1 - a) + c[0] * a)|0;
+			dat[idx+1] = (dat[idx+1] * (1 - a) + c[1] * a)|0;
+			dat[idx+2] = (dat[idx+2] * (1 - a) + c[2] * a)|0;
+			dat[idx+3] = 255;
 		}
 		ctx.putImageData(id, 0, 0);
 		cvs.style.visibility = 'visible';
