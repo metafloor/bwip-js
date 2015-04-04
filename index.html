@@ -32,7 +32,6 @@
 
 <ul>
 <li>Current BWIPP version is 2015-03-24.</li>
-<li>Current version of bwip-js is 0.9.</li>
 </ul>
 
 <p>bwip-js links:</p>
@@ -41,7 +40,7 @@
 <li><a href="http://metafloor.github.io/bwip-js/">Home Page</a></li>
 <li><a href="https://github.com/metafloor/bwip-js">Repository</a></li>
 <li><a href="http://metafloor.github.io/bwip-js/demo/demo.html">Free Online Barcode Generator</a></li>
-<li><a href="https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API">Barcode API Documentation</a></li>
+<li><a href="https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API">Online Barcode API</a></li>
 <li><a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP Documentation</a></li>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies">Symbologies Supported by BWIPP/bwip-js</a></li>
 </ul>
@@ -101,13 +100,13 @@ be a lot more performant.)</p>
 <p>The online barcode service is implemented as a node.js application.  The code used
 for the service is available as part of the bwip-js source code.</p>
 
-<p>See the file <code>node-demo</code> for example usage of how to use bwip-js in a node
-HTTP server application.  See the
+<p>See the file <code>node-demo</code> for example usage of how to invoke bwip-js in a node
+application.  See the
 <a href="https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API">Barcode API</a> for details on how the URL query parameters must be structured.</p>
 
 <p>The bwip-js module is designed to operate only on the URL query parameters and
-ignores all URL path information.  Your application is free to structure the URL
-path as needed to implement the correct HTTP request handling and routing.</p>
+ignores all path information.  Your application is free to structure the URL
+path as needed to implement the desired HTTP request routing.</p>
 
 <p>At present, there are no <code>npm</code> dependencies on the module.  This will 
 change in the future.  The current code implements the PNG file format in
