@@ -11,11 +11,12 @@ bwip-js is a translation to native JavaScript of the amazing code provided in [B
 
 bwip-js links:
 
-* [Home page](http://metafloor.github.io/bwip-js/)
+* [Home Page](http://metafloor.github.io/bwip-js/)
 * [Repository](https://github.com/metafloor/bwip-js)
-* [Online Barcode Generator](http://metafloor.github.io/bwip-js/demo/demo.html)
-* [BWIPP documentation](https://github.com/bwipp/postscriptbarcode/wiki)
-* [Symbologies supported by BWIPP/bwip-js](https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies)
+* [Free Online Barcode Generator](http://metafloor.github.io/bwip-js/demo/demo.html)
+* [Barcode API Documentation](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API)
+* [BWIPP Documentation](https://github.com/bwipp/postscriptbarcode/wiki)
+* [Symbologies Supported by BWIPP/bwip-js](https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies)
 
 ## New in bwip-js
 
@@ -41,12 +42,43 @@ A description of how FreeType was compiled for use with bwip-js can be found at:
 An [online barcode generator](http://metafloor.github.io/bwip-js/demo/demo.html)
 demonstrates all of the features of bwip-js.
 It showcases the new font rendering provided by the FreeType library,
-and allows using your own fonts.
+and allows using your own fonts.  All fonts are stored locally on your computer;
+the generator is 100% client-side JavaScript.
 
 The demo is tested on the latest versions of Firefox and Chrome, along with IE10.
 IE11+ should work, and so should the latest versions of Opera and Safari,
 but they are untested.
 
+## Online Barcode API
+
+A bwip-js barcode service is available online, ready to serve up barcode images
+on demand.
+
+You can generate barcodes from anywhere on the web.  Embed the URLs in your
+HTML documents or retrieve the barcode images directly from your non-JavaScript
+server.  (JavaScript-based servers should use the bwip-js code directly - it will
+be a lot more performant.)
+
+For details on how to use this service, see 
+[Online Barcode Generator API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API).
+
+## Node.js
+
+The online barcode service is implemented as a node.js application.  The code used
+for the service is available as part of the bwip-js source code.
+
+See the file `node-demo` for example usage of how to use bwip-js in a node
+HTTP server application.  See the
+[Barcode API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API) for details on how the URL query parameters must be structured.
+
+The bwip-js module is designed to operate only on the URL query parameters and
+ignores all URL path information.  Your application is free to structure the URL
+path as needed to implement the correct HTTP request handling and routing.
+
+At present, there are no `npm` dependencies on the module.  This will 
+change in the future.  The current code implements the PNG file format in
+JavaScript with no deflate compression.  The next release of the module will use
+a graphics module (likely GD) with PNG compression.
 
 ## Features
 
@@ -280,16 +312,6 @@ bw.call('code128', function (e) {
 ## Supported Barcode Types
 
 &#x2022; AusPost 4 State Customer Code &#x2022; Aztec Code &#x2022; Aztec Runes &#x2022; BC412 &#x2022; Channel Code &#x2022; Codabar &#x2022; Codablock F &#x2022; Code 11 &#x2022; Code 128 &#x2022; Code 16K &#x2022; Code 25 &#x2022; Code 39 &#x2022; Code 39 Extended &#x2022; Code 49 &#x2022; Code 93 &#x2022; Code 93 Extended &#x2022; Code One &#x2022; Compact Aztec Code &#x2022; Compact PDF417 &#x2022; COOP 2 of 5 &#x2022; Custom 1D symbology &#x2022; Custom 4 state symbology &#x2022; Data Matrix &#x2022; Datalogic 2 of 5 &#x2022; Deutsche Post Identcode &#x2022; Deutsche Post Leitcode &#x2022; EAN-13 &#x2022; EAN-13 Composite &#x2022; EAN-2 (2 digit addon) &#x2022; EAN-5 (5 digit addon) &#x2022; EAN-8 &#x2022; EAN-8 Composite &#x2022; Flattermarken &#x2022; GS1 Composite 2D Component &#x2022; GS1 Data Matrix &#x2022; GS1 DataBar Expanded &#x2022; GS1 DataBar Expanded Composite &#x2022; GS1 DataBar Expanded Stacked &#x2022; GS1 DataBar Expanded Stacked Composite &#x2022; GS1 DataBar Limited &#x2022; GS1 DataBar Limited Composite &#x2022; GS1 DataBar Omnidirectional &#x2022; GS1 DataBar Omnidirectional Composite &#x2022; GS1 DataBar Stacked &#x2022; GS1 DataBar Stacked Composite &#x2022; GS1 DataBar Stacked Omnidirectional &#x2022; GS1 DataBar Stacked Omnidirectional Composite &#x2022; GS1 DataBar Truncated &#x2022; GS1 DataBar Truncated Composite &#x2022; GS1 QR Code &#x2022; GS1-128 &#x2022; GS1-128 Composite &#x2022; GS1-14 &#x2022; HIBC Codablock F &#x2022; HIBC Code 128 &#x2022; HIBC Code 39 &#x2022; HIBC Data Matrix &#x2022; HIBC MicroPDF417 &#x2022; HIBC PDF417 &#x2022; HIBC QR Code &#x2022; IATA 2 of 5 &#x2022; Industrial 2 of 5 &#x2022; Interleaved 2 of 5 (ITF) &#x2022; ISBN &#x2022; ISMN &#x2022; ISSN &#x2022; Italian Pharmacode &#x2022; ITF-14 &#x2022; Japan Post 4 State Customer Code &#x2022; Matrix 2 of 5 &#x2022; MaxiCode &#x2022; Micro QR Code &#x2022; MicroPDF417 &#x2022; Miscellaneous symbols &#x2022; MSI Modified Plessey &#x2022; PDF417 &#x2022; Pharmaceutical Binary Code &#x2022; Pharmazentralnummer (PZN) &#x2022; Plessey UK &#x2022; PosiCode &#x2022; QR Code &#x2022; Royal Dutch TPG Post KIX &#x2022; Royal Mail 4 State Customer Code &#x2022; SSCC-18 &#x2022; Telepen &#x2022; Telepen Numeric &#x2022; Two-track Pharmacode &#x2022; UPC-A &#x2022; UPC-A Composite &#x2022; UPC-E &#x2022; UPC-E Composite &#x2022; USPS Intelligent Mail &#x2022; USPS PLANET &#x2022; USPS POSTNET &#x2022;
-
-
-## Node.js
-
-> As of March 2015, the node-bwipjs port is not being actively maintained.
-> I am not a node developer and do not have the resources to upgrade and
-> test the code.
-> 
-> If you would like to volunteer to work on the node module,
-> please let me know.
 
 
 ## Emulator Notes

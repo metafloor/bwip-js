@@ -1,7 +1,6 @@
 // file:  node-demo
 //
-// Simple node HTTP server that renders bar code images using
-// bwip-js.
+// Simple node HTTP server that renders bar code images using bwip-js.
 //
 // See the node-bwipjs file for implementation notes.
 //

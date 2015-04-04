@@ -17,7 +17,8 @@
 // Usage:
 //		var bwipjs = require('./node-bwipjs');
 //
-// bwipjs is a request handler with the standard node HTTP prototype:
+// bwipjs is a request handler with the standard node HTTP server request
+// prototype:
 //
 //		function bwipjs(request, response)
 //
@@ -26,15 +27,17 @@
 //
 // Possible values to specify in the query string are:
 //
-// `bcid' is the name of the bwip-js barcode rendering function e.g.
+// `bcid` is the name of the bwip-js barcode rendering function e.g.
 //
 //		bcid=code128
 //
-// `text' is the text to be bar coded.
+// `text` is the text to be bar coded.
 //
-// `scale' is an integer value from 1 .. 10.  Default is 2.
+// `scaleX` is the x-axis multiplier.  Should be an integer > 0.
+// `scaleY` is the y-axis multiplier.  Should be an integer > 0. 
+// `scale` is shorthand for specifying the same value for scaleX and scaleY.
 //
-// `rotate' takes the values: 
+// `rotate` takes the values: 
 //		N	normal, unrotated (the default)
 //		R	clockwise, 90 rotation
 //		L	counter-clockwise, 90 rotation
@@ -45,33 +48,30 @@
 // For example:
 //
 //		http://127.0.0.1:3030/?bcid=code128&text=^FNC1011234567890&scale=4&
-//					rotate=L&parsefnc&alttext=(01)01234567890
+//					rotate=L&parsefnc&alttext=(01)1234567890
 //
-// A complete list of the bcid's can be determined from the bwipp directory.
-// Valid bcid's are the same as the names of the files, minus the .js
-// extension.  For example:
+// For a complete list of encoder bcid names, see:
 //
-//		bcid=code128	-->  bwipp/code128.js
-//
-// Omit the file names beginning with 'ren'; they contain the postscript
-// rendering logic.
+//  https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies
 //
 // This module uses a simple PNG encoding library based on the work
 // by Robert Eisele (PNGlib).  No compression is used, which makes the
 // rendered images much larger than necessary.
 //
-var url = require('url');
-var fs  = require('fs');
-var vm  = require('vm');
+var url	= require('url');
+var fs	= require('fs');
+var vm	= require('vm');
 
+var Module  = require('./freetype.js');
+var sandbox = vm.createContext({ Module:Module });
 
+// Set the hook for demand-loading the remaining bwip-js files
 function load(path) {
 	var text = fs.readFileSync(path);
 	if (!text)
 		throw new Error(path + ": could not read file");
 
-	console.log('loading: ' + path);
-	vm.runInThisContext(text, path);
+	vm.runInContext(text, sandbox, { filename:path });
 }
 
 function error(res, status, message) {
@@ -79,14 +79,14 @@ function error(res, status, message) {
 	res.end(message, 'ascii');
 }
 
-// Load the primary bwip-js script
-load('bwip.js');
-
-// Set the hook for demand-loading the remaining bwip-js files
-BWIPJS.load = load;
-
 // This module exports a single function - the bwip-js request handler
 module.exports = function(req, res) {
+	if (typeof sandbox.BWIPJS === 'undefined') {
+		// Finish loading bwip-js, after freetype is done.
+		load('./bwip.js');
+		sandbox.BWIPJS.load = load;
+	}
+
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
 	// returning 400 on requests like favicon.ico.
 	if (req.url.indexOf('/?bcid=') != 0)
@@ -95,10 +95,12 @@ module.exports = function(req, res) {
 	var args = url.parse(req.url, true).query;
 
 	// Set the defaults
-	var scale = parseInt(args.scale, 10) || 2;
-	var rot   = args.rotate || 'N';
-	var bcid  = args.bcid;
-	var text  = args.text;
+	var scale	= args.scale || 2;
+	var scaleX	= +args.scaleX || scale;
+	var scaleY	= +args.scaleY || scale;
+	var rot		= args.rotate || 'N';
+	var bcid	= args.bcid;
+	var text	= args.text;
 
 	if (!text)
 		return error(res, 400, 'Bar code text not specified.\r\n');
@@ -109,12 +111,14 @@ module.exports = function(req, res) {
 
 	// Remove the non-BWIPP options
 	delete args.scale;
+	delete args.scaleX;
+	delete args.scaleY;
 	delete args.rotate;
 	delete args.text;
 	delete args.bcid;
 
 	// Initialize a barcode writer object
-	var bw = new BWIPJS;
+	var bw = new sandbox.BWIPJS;
 
 	// Set the options
 	var opts = {};
@@ -126,22 +130,28 @@ module.exports = function(req, res) {
 			opts[id] = bw.value(args[id]);
 	}
 
-	// Manually zero-out ink-spread and any other options, as needed.
-	opts.inkspread = bw.value(0);
-
 	// Fix a disconnect in the BWIPP rendering logic
 	if (opts.alttext)
 		opts.includetext = bw.value(true);
 
 	// Render the bar code
 	bw.bitmap(new Bitmap);
-	bw.scale(scale, scale);
+	bw.scale(scaleX, scaleY);
 	bw.push(text);
 	bw.push(opts);
-	bw.call(bcid);
+
+	// We load synchronously, so the callback is only needed for error handling...
+	bw.call(bcid, function(e) {
+		if (e) {
+			return error(res, 400, 'BWIP-JS ERROR: ' + e + '\r\n');
+		}
+	});
 
 	// Return a PNG-encoded image
 	var png = bw.bitmap().getPNG(rot);
+	if (!png)
+		return error(res, 400, 'Too many colors.\r\n');
+		
 	res.writeHead(200, { 'Content-Type':'image/png' });
 	res.end(png, 'binary');
 };
@@ -149,23 +159,25 @@ module.exports = function(req, res) {
 
 // bwip-js bitmap interface
 function Bitmap() {
-	var _clr  = 0;					// currently active color
+	var _clrr = 0;					// current red
+	var _clrg = 0;					// current green
+	var _clrb = 0;					// current blue
+
 	var _clrs = {};					// color map
-	var _nclr = 0;					// color count
-	var _bits = [];					// the x,y,c bits
+	var _nclr = 1;					// color count - non-zero truthy
+	var _pixs = {};					// x,y = rgb
 	var _minx = Infinity;
 	var _miny = Infinity;
 	var _maxx = 0;
 	var _maxy = 0;
 
 	this.color = function(r,g,b) {
-		var rgb = (r<<16) | (g<<8) | b;
-		if (!_clrs[rgb])
-			_clrs[rgb] = { n:_nclr++ };
-		_clr = rgb;
+		_clrr = r;
+		_clrg = g;
+		_clrb = b;
 	}
 
-	this.set = function(x, y, b) {
+	this.set = function(x, y, a) {
 		// postscript graphics work with floating-pt numbers
 		x = Math.floor(x);
 		y = Math.floor(y);
@@ -174,11 +186,45 @@ function Bitmap() {
 		if (_maxx < x) _maxx = x;
 		if (_miny > y) _miny = y;
 		if (_maxy < y) _maxy = y;
+		
+		var xy	= x + ',' + y;
+		var cx	= _pixs[xy];
+		var r, g, b;
+		if (cx === undefined) {
+			r = _clrr;
+			g = _clrg;
+			b = _clrb;
+		} else {
+			// alpha-blend with the existing color
+			// dst is the existing "background" color
+			// src is the new color
+			var dsta = (cx >>> 24) / 255;
+			var dstb = (cx >>> 16) & 0xff;
+			var dstg = (cx >>>  8) & 0xff;
+			var dstb = cx & 0xff;
+			var srca = a / 255;
+			var newa = srca + dsta * (1 - srca);	// new alpha 0.0 - 1.0
+			if (!newa) {
+				r = g = b = a = 0;
+			} else {
+				r = ((_clrr * srca + dstr * dsta * (1 - srca)) / newa)|0;
+				g = ((_clrg * srca + dstg * dsta * (1 - srca)) / newa)|0;
+				b = ((_clrb * srca + dstb * dsta * (1 - srca)) / newa)|0;
+				a = (newa * 255)|0;
+			}
+		}
 
-		_bits.push([x,y,_clr]);
+		var argb = (a << 24) | (r << 16) | (g << 8) | b;
+		if (!_clrs[argb]) {
+			_clrs[argb] = _nclr++;
+		}
+		_pixs[xy] = argb;
 	}
 
 	this.getPNG = function(rot) {
+		if (_nclr > 256)
+			return null;
+
 		// determine image width and height
 		if (rot == 'R' || rot == 'L') {
 			var h = _maxx-_minx+1;
@@ -190,20 +236,22 @@ function Bitmap() {
 
 		var png = new PNGlib(w, h, 256);
 
-		// make sure the default color (index 0) is white
-		png.color(255,255,255,255);
+		// Background is fully transparent
+		png.color(0, 0, 0, 0);
 
 		// map the colors
 		var cmap = [];
-		for (rgb in _clrs)
-			cmap[rgb] = png.color(rgb>>16, (rgb>>8)&0xff, (rgb&0xff), 255);
+		for (argb in _clrs) {
+			cmap[argb] = png.color((argb>>16)&0xff, (argb>>8)&0xff, (argb&0xff),
+									argb>>>24);
+		}
 
-		for (var i = 0; i < _bits.length; i++) {
+		for (var xy in _pixs) {
+			var pts = xy.split(',');
+			var x	= +pts[0] - _minx;
+			var y	= +pts[1] - _miny;
+
 			// PostScript builds bottom-up, we build top-down.
-			var x = _bits[i][0] - _minx;
-			var y = _bits[i][1] - _miny;
-			var c = cmap[_bits[i][2]];
-
 			if (rot == 'N') {
 				y = h - y - 1; 	// Invert y
 			} else if (rot == 'I') {
@@ -220,8 +268,7 @@ function Bitmap() {
 					y = t;
 				}
 			}
-
-			png.set(x, y, c);
+			png.set(x, y, cmap[_pixs[xy]]);
 		}
 
 		return png.render();
