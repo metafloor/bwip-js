@@ -7,14 +7,13 @@ this is where you will find the latest updates.
 bwip-js is a translation to native JavaScript of the amazing code provided in [Barcode Writer in Pure PostScript](https://github.com/bwipp/postscriptbarcode).  The translated code can run on any browser that natively supports the HTML canvas element or any JavaScript-based server framework that can implement a minimal bitmap graphics interface.
 
 * Current BWIPP version is 2015-03-24.
-* Current version of bwip-js is 0.9.
 
 bwip-js links:
 
 * [Home Page](http://metafloor.github.io/bwip-js/)
 * [Repository](https://github.com/metafloor/bwip-js)
 * [Free Online Barcode Generator](http://metafloor.github.io/bwip-js/demo/demo.html)
-* [Barcode API Documentation](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API)
+* [Online Barcode API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API)
 * [BWIPP Documentation](https://github.com/bwipp/postscriptbarcode/wiki)
 * [Symbologies Supported by BWIPP/bwip-js](https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies)
 
@@ -67,13 +66,13 @@ For details on how to use this service, see
 The online barcode service is implemented as a node.js application.  The code used
 for the service is available as part of the bwip-js source code.
 
-See the file `node-demo` for example usage of how to use bwip-js in a node
-HTTP server application.  See the
+See the file `node-demo` for example usage of how to invoke bwip-js in a node
+application.  See the
 [Barcode API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API) for details on how the URL query parameters must be structured.
 
 The bwip-js module is designed to operate only on the URL query parameters and
-ignores all URL path information.  Your application is free to structure the URL
-path as needed to implement the correct HTTP request handling and routing.
+ignores all path information.  Your application is free to structure the URL
+path as needed to implement the desired HTTP request routing.
 
 At present, there are no `npm` dependencies on the module.  This will 
 change in the future.  The current code implements the PNG file format in
