@@ -1,0 +1,32 @@
+{
+  "name": "bwip-js",
+  "version": "0.10.0",
+  "description": "Barcode Writer in Pure JavaScript",
+  "main": "bwip-js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metafloor/bwip-js.git"
+  },
+  "keywords": [
+    "barcode",
+    "generator",
+    "code 39",
+    "code 128",
+    "QR code",
+	"data matrix",
+	"PDF417",
+    "EAN",
+    "UPC",
+    "GS1",
+    "databar"
+  ],
+  "author": "Mark Warren <mwarren@metafloor.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/metafloor/bwip-js/issues"
+  },
+  "homepage": "https://github.com/metafloor/bwip-js"
+}

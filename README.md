@@ -66,7 +66,7 @@ For details on how to use this service, see
 The online barcode service is implemented as a node.js application.  The code used
 for the service is available as part of the bwip-js source code.
 
-See the file `node-demo` for example usage of how to invoke bwip-js in a node
+See the file `server.js` for example usage of how to invoke bwip-js in a node
 application.  See the
 [Barcode API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API) for details on how the URL query parameters must be structured.
 
@@ -148,11 +148,11 @@ Unzip the download package.  bwip-js will be unpacked into the following directo
 
 	bwip-js/
 		bwip.js			# Main bwip-js module
+		bwip-js			# Node.js module
 		freetype.js		# The Emscripten-compiled FreeType library
 		freetype.js.mem	# Demand loaded memory image
 		demo.html		# The bwip-js demo
-		node-demo		# An example node-js HTTP server application
-		node-bwipjs		# A node-js module that implements bwip-js
+		server.js		# An example node-js HTTP server application
 		bwipp/			# The cross-compiled BWIPP encoders and renderers
 		lib/			# Utilities required by the demo
 
@@ -175,29 +175,13 @@ Using bwip-js in your code involves the following steps:
 * Implement two host-specific interfaces.
 * Create a BWIPJS instance and make a barcode.
 
-Loading `freetype.js` and `bwip.js` into your JavaScript environment tends to be very platform specific.  If you are working with a CommonJS architecture, then you will likely need to implement a runtime JavaScript loader.  The node-bwipjs file gives an example implementation for node-js: 
+Loading `freetype.js` and `bwip.js` into your JavaScript environment tends to be very platform specific.  If you are working with a CommonJS architecture, then you will likely need to implement a runtime JavaScript loader.  The `bwip-js` file gives an example implementation for node-js.
 
-```javascript
-var fs = require('fs');
-var vm = require('vm');
-
-function load(path) {
-    var text = fs.readFileSync(path);
-    if (!text)
-        throw new Error(path + ": could not read file");
-    vm.runInThisContext(text, path);
-}
-
-// These calls only work if the modules load synchronously.
-load('freetype.js');
-load('bwip.js');
-```
-
-After the two modules are loaded and the BWIPJS global is accessible, you must implement two interfaces:
+After the two modules are loaded, you must implement two interfaces:
  * Load and execute bwip-js files on demand.  Many of the encoders rely on additional/secondary encoders.  These dependencies are implemented in the PostScript cross-compile as on-demand loading.  Your host implementation must be able to load and execute bwip-js files after the primary encoder has been invoked.
  * Provide a bitmap graphics interface.  One gotcha here is that you won't know the size of the bitmap until after the encoders have run.  To make it more interesting, you will routinely see negative values for the `x,y` coordinates.  Therefore, creating a barcode image is always a two step process.  First run the encoder/renderer and record each pixel's coordinates, along with the min/max values for x and y.  Once the encoder has returned, you can determine the bitmap dimensions and render the final image.
 
-Also to keep in mind is that typical graphics environments (HTML canvas, PHP GD, etc.) set their origin (0,0) to the upper left-hand corner.  PostScript uses a page-up orientation and the origin is in the lower left-hand corner.  Since bwip-js implements a direct mapping to the PostScript graphics primitives, the coordinates your bitmap implementation will see have an origin set in the lower left-hand corner.  See the files lib/canvas.js and node-bwipjs for bitmap implementations that convert between the two origin conventions.
+Also to keep in mind is that typical graphics environments (HTML canvas, PHP GD, etc.) set their origin (0,0) to the upper left-hand corner.  PostScript uses a page-up orientation and the origin is in the lower left-hand corner.  Since bwip-js implements a direct mapping to the PostScript graphics primitives, the coordinates your bitmap implementation will see have an origin set in the lower left-hand corner.  See the files `lib/canvas.js` and `bwip-js` for bitmap implementations that convert between the two origin conventions.
 
 Below are the function and object prototypes for the interfaces to implement:
 
@@ -235,6 +219,7 @@ function Bitmap() {
 	};
 	this.set = function(x, y, a) {
 		// x,y will be floating point values.  Convert to int.
+		// a is an alpha value between 0 (fully off) and 255 (fully on).
 		x = Math.floor(x);
 		y = Math.floor(y);
 		
