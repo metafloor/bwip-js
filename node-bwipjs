@@ -199,7 +199,7 @@ function Bitmap() {
 			// dst is the existing "background" color
 			// src is the new color
 			var dsta = (cx >>> 24) / 255;
-			var dstb = (cx >>> 16) & 0xff;
+			var dstr = (cx >>> 16) & 0xff;
 			var dstg = (cx >>>  8) & 0xff;
 			var dstb = cx & 0xff;
 			var srca = a / 255;
