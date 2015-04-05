@@ -62,19 +62,42 @@ For details on how to use this service, see
 
 The online barcode service is implemented as a node.js application.  The code used
 for the service is available as part of the bwip-js source code.
-
-See the file `server.js` for example usage of how to invoke bwip-js in a node
-application.  See the
+See the
 [Barcode API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API) for details on how the URL query parameters must be structured.
+
+The following is a minimal example of how to use the node module:
+
+```javascript
+// Simple HTTP server that renders bar code images using bwip-js.
+var http   = require('http');
+var bwipjs = require('bwipjs');
+
+http.createServer(function(req, res) {
+	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
+	// returning 400 on requests like favicon.ico.
+	if (req.url.indexOf('/?bcid=') != 0) {
+	    res.writeHead(404, { 'Content-Type':'text/plain' });
+		res.end('BWIP-JS: Unknown request format.', 'utf8');
+	} else {
+		bwipjs(req, res);
+	}
+
+}).listen(3030);
+```
+
+If you use the above server code with node, test with the following URL:
+
+```
+http://localhost:3030/?bcid=isbn&text=978-1-56581-231-4+52250&includetext&guardwhitespace
+```
 
 The bwip-js module is designed to operate only on the URL query parameters and
 ignores all path information.  Your application is free to structure the URL
 path as needed to implement the desired HTTP request routing.
 
-At present, there are no `npm` dependencies on the module.  This will 
-change in the future.  The current code implements the PNG file format in
-JavaScript with no deflate compression.  The next release of the module will use
-a graphics module (likely GD) with PNG compression.
+There are no `npm` dependencies on the module.  The PNG encoder is implemented
+entirely in JavaScript using the built-in `zlib` module.  See the file
+`node-zlibPNG` for details.
 
 ## Features
 
@@ -145,11 +168,11 @@ Unzip the download package.  bwip-js will be unpacked into the following directo
 
 	bwip-js/
 		bwip.js			# Main bwip-js code.
-		bwip-js			# Node.js module
+		demo.html		# The bwip-js demo
 		freetype.js		# The Emscripten-compiled FreeType library
 		freetype.js.mem	# Demand loaded memory image
-		demo.html		# The bwip-js demo
-		server.js		# An example node-js HTTP server application
+		node-bwipjs		# Node.js module
+		node-zlibPNG	# Node.js module that implements a PNG encoder
 		bwipp/			# The cross-compiled BWIPP encoders and renderers
 		lib/			# Utilities required by the demo
 
@@ -170,7 +193,7 @@ Unzip the download package.  bwip-js will be unpacked into the following directo
 bwip-js was designed to run in both client-side and server-side JavaScript environments.  For server-side environments that do not provide a graphics API, there are freely available pure-JavaScript implementations of image file formats like PNG and BMP.  A quick search of the web turns up several possibilities that can be adapted for server-side usage. 
 
 The file `demo.html` provides a detailed example of how to use bwip-js in the browser.
-The file `server.js` shows how to use it as a node-js module.
+The file `server.js` shows how to use it as a node.js module.
 
 If you would like to implement your own interface to bwip-js, see [Integrating bwip.js Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code).
 

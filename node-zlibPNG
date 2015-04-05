@@ -1,0 +1,251 @@
+// file: node-zlibPNG
+//
+// Implements a PNG encoder using only the built-in zlib module.
+// No other dependencies.
+//
+// This is part of the bwip-js project available at:
+//
+// 		http://metafloor.github.io/bwip-js
+//
+// Copyright (c) 2011-2015 Mark Warren
+//
+// The MIT License
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+var zlib = require('zlib');
+
+// Statically calculate the crc lookup table
+var crcCalc = [];
+(function() {
+	for (var i = 0; i < 256; i++) {
+		var c = i;
+		for (var j = 0; j < 8; j++) {
+			if (c & 1) {
+				c = 0xedb88320 ^ (c >>> 1);
+			} else {
+				c = c >>> 1;
+			}
+		}
+		crcCalc[i] = c;
+	}
+})();
+
+
+
+// PNG constructor that implements ARGB 8-bit depth, using either a palette
+// or TrueColor.
+module.exports = function (width, height) {
+	width	= width | 0;
+	height	= height | 0;
+
+	var TEXT   		= "Software\0bwip-js.metafloor.com";
+	var _buffer  	= [];
+	var _palette 	= { 0:0 };	// palette[0] is always argb(0,0,0,0)
+	var _ncolors	= 1;		
+	var _cmap		= [];		// only if ncolors <= 256
+
+	// Set a pixel to the given ARGB color
+	this.set = function(x, y, c) {
+		_buffer[y * width + x] = c;
+
+		// If we exceed 256 unique colors, we automatically switch to 32-bit
+		// PNG (TrueColor with alpha)
+		if (_ncolors <= 256 && _palette[c] === undefined)
+			_palette[c] = _ncolors++;
+	}
+	this.get = function(x, y) {
+		return _buffer[y * width + x] || 0;
+	}
+
+	// Return a PNG in a Buffer
+	// callback(e, png)
+	this.render = function(callback) {
+		// DEFLATE the image data based on color depth
+		var image;
+		if (_ncolors <= 256)
+			image = toPalette();
+		else
+			image = toTrueColor();
+
+		zlib.deflate(image, {
+				chunkSize: 32 * 1024,
+				level : zlib.Z_DEFAULT_COMPRESSION,
+				strategy: zlib.Z_DEFAULT_STRATEGY
+			}, returnPNG);
+
+		function returnPNG(e, data) {
+			if (e) {
+				return callback(e, null);
+			}
+
+			var length = 8 + 12 + 13 + 			// PNG Header + IDHR chunk
+						 //12 + TEXT.length +		// tEXt
+						 12 + data.length +		// IDAT
+						 12;					// IEND
+			if (_ncolors <= 256)
+				length += 12 + 3*_ncolors +		// PLTE
+						  12 + _ncolors;		// tRNS		
+				
+
+			// Emulate a byte-stream
+			var png = new Buffer(length);
+			var pngoff = 0;	// running offset into the png buffer
+
+			write('\x89PNG\x0d\x0a\x1a\x0a'); // PNG file header
+			writeIHDR();
+			//writeTEXT();
+			if (_ncolors <= 256) {
+				writePLTE();
+				writeTRNS();
+			}
+			writeIDAT();
+			writeIEND();
+
+			// Success
+			callback(null, png);
+
+			function writeIHDR() {
+				write32(13);	// chunk length
+				var crcoff = pngoff;
+
+				write('IHDR');
+				write32(width);
+				write32(height);
+				write8(8);		// bit depth
+				if (_ncolors <= 256)
+					write8(3);	// palette used, rgb used
+				else
+					write8(6);	// rgb used, alpha used
+				write8(0);		// compression default
+				write8(0);		// filter default
+				write8(0);		// no interlace
+
+				writeCRC(crcoff);
+			}
+			function writeTEXT() {
+				write32(TEXT.length);	// chunk length
+				var crcoff = pngoff;
+
+				write('tEXt');
+				write(TEXT);
+				writeCRC(crcoff);
+			}
+			function writePLTE() {
+				write32(_ncolors*3);	// chunk length
+				var crcoff = pngoff;
+
+				write('PLTE');
+				for (var i = 0; i < _cmap.length; i++) {
+					var c = _cmap[i];
+					write8((c >>> 16) & 0xff);
+					write8((c >>>  8) & 0xff);
+					write8(c & 0xff);
+				}
+				writeCRC(crcoff);
+			}
+			function writeTRNS() {
+				write32(_ncolors);		// chunk length
+				var crcoff = pngoff;
+
+				write('tRNS');
+				for (var i = 0; i < _cmap.length; i++) {
+					write8((_cmap[i] >>> 24) & 0xff);
+				}
+				writeCRC(crcoff);
+			}
+			function writeIDAT() {
+				write32(data.length);	// chunk length
+				var crcoff = pngoff;
+
+				write('IDAT');
+				data.copy(png, pngoff);
+				pngoff += data.length;
+				writeCRC(crcoff);
+			}
+			function writeIEND() {
+				write32(0);				// chunk length;
+				var crcoff = pngoff;
+
+				write('IEND');
+				writeCRC(crcoff);
+			}
+
+			function write(s) {
+				png.write(s, pngoff, 'binary');
+				pngoff += s.length;
+			}
+			function write32(v) {
+				png.writeUInt32BE(v, pngoff);
+				pngoff += 4;
+			}
+			function write16(v) {
+				png.writeUInt16BE(v, pngoff);
+				pngoff += 2;
+			}
+			function write8(v) {
+				png[pngoff++] = v;
+			}
+			function writeCRC(off) {
+				var crc = -1;
+				while (off < pngoff) {
+					crc = crcCalc[(crc ^ png[off++]) & 0xff] ^ (crc >>> 8);
+				}
+				write32((crc ^ -1) >>> 0);	// >>> 0 casts to Uint32
+			}
+		}
+
+	}
+
+	// Convert the image data to indexed palette
+	function toPalette() {
+		// Convert the palette object to the color map
+		for (var color in _palette) {
+			_cmap[_palette[color]] = color;
+		}
+
+		// One extra byte per row for the filter type
+		var buf = new Buffer((width + 1) * height);
+		var pos = 0;
+		for (var y = 0; y < height; y++) {
+			var row = y * width;
+			buf[pos++] = 0;		// Row filters not implemented
+			for (var x = 0; x < width; x++) {
+				buf[pos++] = _palette[_buffer[row + x] || 0];
+			}
+		}
+		return buf;
+	}
+	// Convert the image data to TrueColor with alpha
+	function toTrueColor() {
+		var buf = new Buffer(width * height * 4);
+		var pos = 0;
+		for (var y = 0; y < height; y++) {
+			var row	= y * width;
+			for (var x = 0; x < width; x++) {
+				var c = _buffer[row + x] || 0;
+				buf[pos++] = (c >>> 16) & 0xff;		// red
+				buf[pos++] = (c >>>  8) & 0xff;		// green
+				buf[pos++] = c & 0xff;				// blue
+				buf[pos++] = (c >>> 24) & 0xff;		// alpha
+			}
+		}
+		return buf;
+	}
+}
