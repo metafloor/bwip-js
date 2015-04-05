@@ -70,7 +70,7 @@ The following is a minimal example of how to use the node module:
 ```javascript
 // Simple HTTP server that renders bar code images using bwip-js.
 var http   = require('http');
-var bwipjs = require('bwipjs');
+var bwipjs = require('bwip-js');
 
 http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
