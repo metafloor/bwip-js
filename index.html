@@ -98,20 +98,40 @@ be a lot more performant.)</p>
 <a id="user-content-nodejs" class="anchor" href="#nodejs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Node.js</h2>
 
 <p>The online barcode service is implemented as a node.js application.  The code used
-for the service is available as part of the bwip-js source code.</p>
-
-<p>See the file <code>server.js</code> for example usage of how to invoke bwip-js in a node
-application.  See the
+for the service is available as part of the bwip-js source code.
+See the
 <a href="https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API">Barcode API</a> for details on how the URL query parameters must be structured.</p>
+
+<p>The following is a minimal example of how to use the node module:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">// Simple HTTP server that renders bar code images using bwip-js.</span>
+<span class="pl-k">var</span> http   <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> bwipjs <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>bwipjs<span class="pl-pds">'</span></span>);
+
+http.createServer(<span class="pl-k">function</span>(<span class="pl-smi">req</span>, <span class="pl-smi">res</span>) {
+    <span class="pl-c">// If the url does not begin /?bcid= then 404.  Otherwise, we end up</span>
+    <span class="pl-c">// returning 400 on requests like favicon.ico.</span>
+    <span class="pl-k">if</span> (req.url.<span class="pl-c1">indexOf</span>(<span class="pl-s"><span class="pl-pds">'</span>/?bcid=<span class="pl-pds">'</span></span>) <span class="pl-k">!=</span> <span class="pl-c1">0</span>) {
+        res.writeHead(<span class="pl-c1">404</span>, { <span class="pl-s"><span class="pl-pds">'</span>Content-Type<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>text/plain<span class="pl-pds">'</span></span> });
+        res.end(<span class="pl-s"><span class="pl-pds">'</span>BWIP-JS: Unknown request format.<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>utf8<span class="pl-pds">'</span></span>);
+    } <span class="pl-k">else</span> {
+        bwipjs(req, res);
+    }
+
+}).listen(<span class="pl-c1">3030</span>);</pre></div>
+
+<p>If you use the above server code with node, test with the following URL:</p>
+
+<pre><code>http://localhost:3030/?bcid=isbn&amp;text=978-1-56581-231-4+52250&amp;includetext&amp;guardwhitespace
+</code></pre>
 
 <p>The bwip-js module is designed to operate only on the URL query parameters and
 ignores all path information.  Your application is free to structure the URL
 path as needed to implement the desired HTTP request routing.</p>
 
-<p>At present, there are no <code>npm</code> dependencies on the module.  This will 
-change in the future.  The current code implements the PNG file format in
-JavaScript with no deflate compression.  The next release of the module will use
-a graphics module (likely GD) with PNG compression.</p>
+<p>There are no <code>npm</code> dependencies on the module.  The PNG encoder is implemented
+entirely in JavaScript using the built-in <code>zlib</code> module.  See the file
+<code>node-zlibPNG</code> for details.</p>
 
 <h2>
 <a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -182,11 +202,11 @@ with the Inconsolata font using the BWIPP options:</p>
 
 <pre><code>bwip-js/
     bwip.js         # Main bwip-js code.
-    bwip-js         # Node.js module
+    demo.html       # The bwip-js demo
     freetype.js     # The Emscripten-compiled FreeType library
     freetype.js.mem # Demand loaded memory image
-    demo.html       # The bwip-js demo
-    server.js       # An example node-js HTTP server application
+    node-bwipjs     # Node.js module
+    node-zlibPNG    # Node.js module that implements a PNG encoder
     bwipp/          # The cross-compiled BWIPP encoders and renderers
     lib/            # Utilities required by the demo
 </code></pre>
@@ -210,7 +230,7 @@ files, if necessary.  Then navigate your browser to the <code>bwip-js/demo.html<
 <p>bwip-js was designed to run in both client-side and server-side JavaScript environments.  For server-side environments that do not provide a graphics API, there are freely available pure-JavaScript implementations of image file formats like PNG and BMP.  A quick search of the web turns up several possibilities that can be adapted for server-side usage. </p>
 
 <p>The file <code>demo.html</code> provides a detailed example of how to use bwip-js in the browser.
-The file <code>server.js</code> shows how to use it as a node-js module.</p>
+The file <code>server.js</code> shows how to use it as a node.js module.</p>
 
 <p>If you would like to implement your own interface to bwip-js, see <a href="https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code">Integrating bwip.js Into Your Code</a>.</p>
 
