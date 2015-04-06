@@ -1,6 +1,6 @@
 {
   "name": "bwip-js",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "Barcode Writer in Pure JavaScript",
   "main": "node-bwipjs",
   "scripts": {
