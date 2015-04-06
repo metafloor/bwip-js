@@ -234,10 +234,12 @@ module.exports = function (width, height) {
 	}
 	// Convert the image data to TrueColor with alpha
 	function toTrueColor() {
-		var buf = new Buffer(width * height * 4);
+		// One extra byte per row for the filter type
+		var buf = new Buffer((width * 4 + 1) * height);
 		var pos = 0;
 		for (var y = 0; y < height; y++) {
 			var row	= y * width;
+			buf[pos++] = 0;		// Row filters not implemented
 			for (var x = 0; x < width; x++) {
 				var c = _buffer[row + x] || 0;
 				buf[pos++] = (c >>> 16) & 0xff;		// red
