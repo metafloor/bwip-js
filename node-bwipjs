@@ -257,3 +257,24 @@ function Bitmap() {
 	}
 }
 
+module.exports.loadFont = function (fontname, sizemult, fontfile) {
+	sandbox.Module.FS_createDataFile('/', fontname, fontfile, true, false);
+
+	var load_font = sandbox.Module.cwrap("load_font", 'number',
+										['string','string','number']);
+	var rv = load_font('/' + fontname, fontname, sizemult);
+	if (rv != 0) {
+		sandbox.FS.unlink('/' + fontname);
+		throw 'Error: font load failed [' + rv + ']';
+	}
+}
+
+module.exports.unloadFont = function (fontname) {
+	// Unload from freetype
+	var close_font = sandbox.Module.cwrap("close_font", 'number', ['string']);
+	close_font(fontname);
+
+	// Delete from emscripten
+	sandbox.FS.unlink('/' + fontname);
+}
+

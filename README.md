@@ -3,6 +3,7 @@
 
 bwip-js is a translation to native JavaScript of the amazing code provided in [Barcode Writer in Pure PostScript](https://github.com/bwipp/postscriptbarcode).  The translated code can run on any browser that natively supports the HTML canvas element or any JavaScript-based server framework that can implement a minimal bitmap graphics interface.
 
+* Current bwipjs version is 0.10.4
 * Current BWIPP version is 2015-03-24.
 
 bwip-js links:
@@ -71,6 +72,15 @@ The following is a minimal example of how to use the node module:
 // Simple HTTP server that renders bar code images using bwip-js.
 var http   = require('http');
 var bwipjs = require('bwip-js');
+
+// Example of how to load a font into bwipjs. 
+//	bwipjs.loadFont(fontname, sizemult, fontdata)
+//
+// To unload a font (and free up space for another):
+//	bwipjs.unloadFont(fontname)
+//
+bwipjs.loadFont('Inconsolata', 108,
+            require('fs').readFileSync('Inconsolata.otf', 'binary'));
 
 http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
