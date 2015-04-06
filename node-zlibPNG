@@ -96,7 +96,7 @@ module.exports = function (width, height) {
 			}
 
 			var length = 8 + 12 + 13 + 			// PNG Header + IDHR chunk
-						 //12 + TEXT.length +		// tEXt
+						 12 + TEXT.length +		// tEXt
 						 12 + data.length +		// IDAT
 						 12;					// IEND
 			if (_ncolors <= 256)
@@ -110,7 +110,7 @@ module.exports = function (width, height) {
 
 			write('\x89PNG\x0d\x0a\x1a\x0a'); // PNG file header
 			writeIHDR();
-			//writeTEXT();
+			writeTEXT();
 			if (_ncolors <= 256) {
 				writePLTE();
 				writeTRNS();
