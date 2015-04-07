@@ -49,15 +49,13 @@ var crcCalc = [];
 
 
 
-// PNG constructor that implements ARGB 8-bit depth, using either a palette
-// or TrueColor.
 module.exports = function (width, height) {
 	width	= width | 0;
 	height	= height | 0;
 
 	var TEXT   		= "Software\0bwip-js.metafloor.com";
 	var _pixels  	= [];
-	var _palette 	= { 0:0 };	// Palette-0 is always black/background-color
+	var _palette 	= { 0:0 };
 	var _ncolors	= 1;		
 	var _cmap		= [];		// Only if ncolors <= 256
 	var _trans		= false;	// Has transparency?
@@ -70,17 +68,20 @@ module.exports = function (width, height) {
 	}
 	// Set a pixel to the given ARGB color
 	this.set = function(x, y, c) {
-		_pixels[y * width + x] = c;
+		if (_pixels[y * width + x] == undefined) {
+			_nset++;
+			if (((c >> 16) & 0xff) == (c & 0xff) && ((c >> 8) & 0xff) == (c & 0xff))
+				_ngray++;
+		}
 
-		_nset++;
-		if (((c >> 16) & 0xff) == (c & 0xff) && ((c >> 8) & 0xff) == (c & 0xff))
-			_ngray++;
 		_trans = _trans || (c >>> 24) < 255;
 
 		// If we exceed 256 unique colors, we automatically switch to 32-bit
 		// PNG (TrueColor with alpha)
 		if (_ncolors <= 256 && _palette[c] === undefined)
 			_palette[c] = _ncolors++;
+
+		_pixels[y * width + x] = c;
 	}
 	this.get = function(x, y) {
 		return _pixels[y * width + x] || 0;
@@ -89,6 +90,9 @@ module.exports = function (width, height) {
 	// Return a PNG in a Buffer
 	// callback(e, png)
 	this.render = function(callback) {
+		// If not all pixels were set, the 0-alpha background shows through
+		_trans = _trans || _nset < width * height;
+
 		// DEFLATE the image data based on color depth
 		var image;
 		if (_ngray == _nset && !_trans) {

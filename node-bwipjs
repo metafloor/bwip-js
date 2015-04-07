@@ -7,7 +7,7 @@
 //
 // ----------------------------------------------------------------------
 // Usage:
-//		var bwipjs = require('bwipjs');
+//		var bwipjs = require('bwip-js');
 //
 // The returned `bwipjs` object is a request handler that implemetns the
 // standard node HTTP server request prototype:

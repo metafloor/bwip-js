@@ -3,7 +3,7 @@
 
 bwip-js is a translation to native JavaScript of the amazing code provided in [Barcode Writer in Pure PostScript](https://github.com/bwipp/postscriptbarcode).  The translated code can run on any browser that natively supports the HTML canvas element or any JavaScript-based server framework that can implement a minimal bitmap graphics interface.
 
-* Current bwipjs version is 0.10.5
+* Current bwipjs version is 0.10.6
 * Current BWIPP version is 2015-03-24.
 
 >
