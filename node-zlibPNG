@@ -59,7 +59,7 @@ module.exports = function (width, height) {
 	var _ncolors	= 1;		
 	var _cmap		= [];		// Only if ncolors <= 256
 	var _trans		= false;	// Has transparency?
-	var _ngray		= 0;		// Number of gray-set pixels
+	var _gray		= false;	// Has only grays?
 	var _nset		= 0;		// Number of set pixels
 
 	// Set a pixel to the given RGB color
@@ -68,12 +68,10 @@ module.exports = function (width, height) {
 	}
 	// Set a pixel to the given ARGB color
 	this.set = function(x, y, c) {
-		if (_pixels[y * width + x] == undefined) {
+		if (_pixels[y * width + x] == undefined)
 			_nset++;
-			if (((c >> 16) & 0xff) == (c & 0xff) && ((c >> 8) & 0xff) == (c & 0xff))
-				_ngray++;
-		}
-
+		_gray = _gray && 
+			((c >> 16) & 0xff) == (c & 0xff) && ((c >> 8) & 0xff) == (c & 0xff);
 		_trans = _trans || (c >>> 24) < 255;
 
 		// If we exceed 256 unique colors, we automatically switch to 32-bit
@@ -95,11 +93,11 @@ module.exports = function (width, height) {
 
 		// DEFLATE the image data based on color depth
 		var image;
-		if (_ngray == _nset && !_trans) {
+		if (_gray && !_trans) {
 			image = toGrayScale();
 		} else if (_ncolors <= 256) {
 			image = toPalette();
-		} else if (_ngray == _nset) {
+		} else if (_gray) {
 			image = toGrayAlpha();
 		} else {
 			image = _trans ? toTrueAlpha() : toTrueColor();
@@ -128,7 +126,7 @@ module.exports = function (width, height) {
 						 12 + TEXT.length +		// tEXt
 						 12 + data.length +		// IDAT
 						 12;					// IEND
-			if (_ngray == _nset && !_trans) {
+			if (_gray && !_trans) {
 				// no extra chunks
 			} else if (_ncolors <= 256) {
 				length += 12 + 3*_ncolors;		// PLTE
@@ -143,7 +141,7 @@ module.exports = function (width, height) {
 			write('\x89PNG\x0d\x0a\x1a\x0a'); // PNG file header
 			writeIHDR();
 			writeTEXT();
-			if (_ngray == _nset && !_trans) {
+			if (_gray && !_trans) {
 				// no extra chunks
 			} else if (_ncolors <= 256) {
 				writePLTE();
@@ -164,11 +162,11 @@ module.exports = function (width, height) {
 				write32(width);
 				write32(height);
 				write8(8);		// bit depth
-				if (_ngray == _nset && !_trans) {
+				if (_gray && !_trans) {
 					write8(0);	// grayscale
 				} else if (_ncolors <= 256) {
 					write8(3);	// rgb palette
-				} else if (_ngrap == _nset) {
+				} else if (_gray) {
 					write8(4);	// grayscale with alpha
 				} else if (_trans) {
 					write8(6);	// truecolor with alpha

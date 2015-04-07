@@ -1,6 +1,6 @@
 {
   "name": "bwip-js",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "Barcode Writer in Pure JavaScript",
   "main": "node-bwipjs",
   "scripts": {
@@ -12,16 +12,22 @@
   },
   "keywords": [
     "barcode",
+	"bar",
+	"code",
     "generator",
-    "code 39",
-    "code 128",
-    "QR code",
-	"data matrix",
+    "code39",
+	"code93",
+    "code128",
+    "databar",
+	"qrcode",
+	"data",
+	"matrix",
 	"PDF417",
     "EAN",
     "UPC",
     "GS1",
-    "databar"
+	"ITF",
+    "QR"
   ],
   "author": "Mark Warren <mwarren@metafloor.com>",
   "license": "MIT",
