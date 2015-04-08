@@ -5,60 +5,13 @@
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 //
-// ----------------------------------------------------------------------
-// Usage:
-//		var bwipjs = require('bwip-js');
-//
-// The returned `bwipjs` object is a request handler that implemetns the
-// standard node HTTP server request prototype:
-//
-//		function bwipjs(request, response)
-//
-// `bwipjs()` is asynchronous.
-//
-// The bar code parameters are encoded entirely as URL query strings.
-// The file path and other attributes of the URL are ignored.
-//
-// Possible values to specify in the query string are:
-//
-// `bcid` is the name of the bwip-js barcode rendering function e.g.
-//
-//		bcid=code128
-//
-// `text` is the text to be bar coded.
-//
-// `scaleX` is the x-axis multiplier.  Should be an integer > 0.
-// `scaleY` is the y-axis multiplier.  Should be an integer > 0. 
-// `scale` is shorthand for specifying the same value for scaleX and scaleY.
-//
-// `rotate` takes the values: 
-//		N	normal, unrotated (the default)
-//		R	clockwise, 90 rotation
-//		L	counter-clockwise, 90 rotation
-//		I	inverted, 180 rotation
-//
-// Plus any of the bar code options defined in the BWIPP documentation.
-//
-// For example:
-//
-//		http://127.0.0.1:3030/?bcid=code128&text=^FNC1011234567890&scale=4&
-//					rotate=L&parsefnc&alttext=(01)1234567890
-//
-// For a complete list of encoder bcid names, see:
-//
-//  https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies
-//
-// This module uses a simple PNG encoding library based on the work
-// by Robert Eisele (PNGlib).  No compression is used, which makes the
-// rendered images much larger than necessary.
-//
 var url	= require('url'),
 	fs	= require('fs'),
 	vm	= require('vm'),
 	zlibPNG	= require(__dirname + '/node-zlibPNG')
 	;
 
-// The global inside a sandboxed context appears almost useless.  None of
+// The global inside a sandboxed context is virtually useless.  None of
 // the goodies available in a primary context.
 // Emscripten uses the existence of require() and process to decide whether it is
 // running in node.  And console is really nice to have.  
@@ -80,7 +33,8 @@ var sandbox = vm.createContext({
 
 load('freetype.js');
 
-// Set the hook for demand-loading the remaining bwip-js files
+// We will use a synchronous demand-loader as each module's load-cost is
+// a one-time hit and it prevents any potential race conditions.
 function load(path) {
 	var text = fs.readFileSync(__dirname + '/' + path);
 	if (!text)
@@ -89,20 +43,41 @@ function load(path) {
 	vm.runInContext(text, sandbox, { filename:path });
 }
 
-function error(res, status, message) {
-	res.writeHead(status, { 'Content-Type':'text/plain' });
-	res.end(message, 'ascii');
+
+// This module's primary export is the bwip-js HTTP request handler
+module.exports = function(req, res) {
+	var args = url.parse(req.url, true).query;
+
+	module.exports.toBuffer(args, function(err, png) {
+		if (err) {
+			res.writeHead(400, { 'Content-Type':'text/plain' });
+			res.end(err, 'ascii');
+		} else {
+			res.writeHead(200, { 'Content-Type':'image/png' });
+			res.end(png, 'binary');
+		}
+	});
 }
 
-// This module exports a single function - the bwip-js request handler
-module.exports = function(req, res) {
+//
+// bwipjs.toBuffer(options, callback)
+//
+// Generates a PNG-encoded image in a buffer.
+//
+// `options` are the bwip-js/BWIPP options wrapped in an object.
+// `callback` is an event handler with prototype:
+//
+// 		function callback(err, png)
+//
+// 		`err` is an Error object or string.  If `err` is set, `png` is null.
+// 		`png` is a node Buffer containing the PNG image.
+//
+module.exports.toBuffer = function(args, callback) {
+	// Finish loading bwip-js?
 	if (typeof sandbox.BWIPJS === 'undefined') {
-		// Finish loading bwip-js, after freetype is done.
 		load('bwip.js');
 		sandbox.BWIPJS.load = load;
 	}
-
-	var args = url.parse(req.url, true).query;
 
 	// Set the defaults
 	var scale	= args.scale || 2;
@@ -113,11 +88,11 @@ module.exports = function(req, res) {
 	var text	= args.text;
 
 	if (!text)
-		return error(res, 400, 'Bar code text not specified.\r\n');
+		return callback('Bar code text not specified.');
 	if (!bcid)
-		return error(res, 400, 'Bar code type not specified.\r\n');
+		return callback('Bar code type not specified.');
 	if (!fs.existsSync(__dirname + '/bwipp/' + bcid + '.js'))
-		return error(res, 400, 'Bar code type "' + bcid + '" unknown.\r\n');
+		return callback('Bar code type "' + bcid + '" unknown.');
 
 	// Remove the non-BWIPP options
 	delete args.scale;
@@ -144,36 +119,57 @@ module.exports = function(req, res) {
 	if (opts.alttext)
 		opts.includetext = bw.value(true);
 
+	// We use mm rather than inches for height
+	if (opts.height)
+		opts.height = opts.height / 25.4 || 0.5;
+
 	// Render the bar code
 	bw.bitmap(new Bitmap);
 	bw.scale(scaleX, scaleY);
 	bw.push(text);
 	bw.push(opts);
 
-	// We load synchronously, so the callback is only needed for error handling...
 	bw.call(bcid, function(e) {
 		if (e) {
-			return error(res, 400, 'BWIP-JS ERROR: ' + e + '\r\n');
+			callback('BWIP-JS ERROR: ' + e);
+		} else {
+			bw.bitmap().getPNG(rot, callback);
 		}
 	});
+}
 
-	// Return a PNG-encoded image
-	bw.bitmap().getPNG(rot, function(e, png) {
-		if (e)
-			return error(res, 400, 'BWIP-JS: PNG ERROR: ' + e);
-		
-		res.writeHead(200, { 'Content-Type':'image/png' });
-		res.end(png, 'binary');
-	});
-};
+module.exports.loadFont = function(fontname, sizemult, fontfile) {
+	sandbox.Module.FS_createDataFile('/', fontname, fontfile, true, false);
+
+	var load_font = sandbox.Module.cwrap("load_font", 'number',
+										['string','string','number']);
+	var rv = load_font('/' + fontname, fontname, sizemult);
+	if (rv != 0) {
+		sandbox.FS.unlink('/' + fontname);
+		throw 'Error: font load failed [' + rv + ']';
+	}
+}
+
+module.exports.unloadFont = function(fontname) {
+	// Unload from freetype
+	var close_font = sandbox.Module.cwrap("close_font", 'number', ['string']);
+	close_font(fontname);
+
+	// Delete from emscripten
+	sandbox.FS.unlink('/' + fontname);
+}
 
 
 // bwip-js bitmap interface
+// Must export to the PostScript emulation:
+//		this.color(r, g, b)		## The color to use for subsequent set()'s.
+//		this.set(x, y, a)		## Sets the pixel at (x,y) using the current
+//								## color with alpha-a.
 function Bitmap() {
 	var _clrr = 0;					// current red
 	var _clrg = 0;					// current green
 	var _clrb = 0;					// current blue
-	var _pixs = {};					// x,y = rgb
+	var _pixs = {};					// x,y = argb
 	var _minx = Infinity;
 	var _miny = Infinity;
 	var _maxx = 0;
@@ -225,7 +221,8 @@ function Bitmap() {
 		_pixs[xy] = (a << 24) | (r << 16) | (g << 8) | b;
 	}
 
-	// callback(e, png)
+	// `rot` is the desired image rotation
+	// `callback` prototype: function(err, png)
 	this.getPNG = function(rot, callback) {
 		// determine image width and height
 		if (rot == 'R' || rot == 'L') {
@@ -264,26 +261,5 @@ function Bitmap() {
 
 		return png.render(callback);
 	}
-}
-
-module.exports.loadFont = function (fontname, sizemult, fontfile) {
-	sandbox.Module.FS_createDataFile('/', fontname, fontfile, true, false);
-
-	var load_font = sandbox.Module.cwrap("load_font", 'number',
-										['string','string','number']);
-	var rv = load_font('/' + fontname, fontname, sizemult);
-	if (rv != 0) {
-		sandbox.FS.unlink('/' + fontname);
-		throw 'Error: font load failed [' + rv + ']';
-	}
-}
-
-module.exports.unloadFont = function (fontname) {
-	// Unload from freetype
-	var close_font = sandbox.Module.cwrap("close_font", 'number', ['string']);
-	close_font(fontname);
-
-	// Delete from emscripten
-	sandbox.FS.unlink('/' + fontname);
 }
 

@@ -5,15 +5,19 @@
 <a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="http://metafloor.github.io/bwip-js/images/bwip-js.png"></a>
 bwip-js is a translation to native JavaScript of the amazing code provided in [Barcode Writer in Pure PostScript](https://github.com/bwipp/postscriptbarcode).  The translated code can run on any modern browser or JavaScript-based server framework.
 
-* Current bwip-js version is 0.10.7
-* Current BWIPP version is 2015-03-24.
+The software has encoding modules for over 90 different barcode types and standards.
+All linear and two-dimensional barcodes in common use (and many uncommon
+ones) are available.  An exhaustive list of supported barcode types can be found at
+the end of this document.
 
->
-> 6-April-2015: The Node.js module is compatible with versions 0.10 and 0.12.
->
+## Status 
 
+* Current bwip-js version is 0.11.0
+* Current BWIPP version is 2015-03-24
+* Node.js compatibility >= v0.10
+* npm dependencies: none
 
-bwip-js links:
+## Links
 
 * [Home Page](http://metafloor.github.io/bwip-js/)
 * [Repository](https://github.com/metafloor/bwip-js)
@@ -22,25 +26,6 @@ bwip-js links:
 * [Node.js npm Page](https://www.npmjs.com/package/bwip-js)
 * [BWIPP Documentation](https://github.com/bwipp/postscriptbarcode/wiki)
 * [Symbologies Supported by BWIPP/bwip-js](https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies)
-
-## New in bwip-js
-
-Scalable fonts, finally!  An
-[Emscripten compiled](http://kripken.github.io/emscripten-site/index.html)
-version of the [FreeType library](http://freetype.org/) is now integrated into bwip-js.
-
-> **Version 0.8 is an API-breaking release.**  If you have implemented code based on 
-> previous versions, you must update your code in three areas.  This 
-> [wiki page](https://github.com/metafloor/bwip-js/wiki/v0.8-API-Changes) describes
-> the changes.
-
-Embedded in the FreeType library are open-source versions of the OCR-A and OCR-B
-fonts provided by the
-[Tsukurimashou Font Family](http://en.sourceforge.jp/projects/tsukurimashou/releases/)
-project.
-
-A description of how FreeType was compiled for use with bwip-js can be found at:
-[Compiling FreeType with Emscripten](https://github.com/metafloor/bwip-js/wiki/Compiling-FreeType).
 
 ## Online Barcode Generator
 
@@ -67,14 +52,14 @@ be a lot more performant.)
 For details on how to use this service, see 
 [Online Barcode Generator API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API).
 
-## Node.js
+## Node.js Request Handler
 
-The online barcode service is implemented as a node.js application.  The code used
+The online barcode service is implemented as a Node.js application.  The code used
 for the service is available as part of the bwip-js source code.
 See the
 [Barcode API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API) for details on how the URL query parameters must be structured.
 
-The following is a minimal example of how to use the node module:
+The following is a minimal example of how to use the request handler:
 
 ```javascript
 // Simple HTTP server that renders bar code images using bwip-js.
@@ -103,25 +88,72 @@ http.createServer(function(req, res) {
 }).listen(3030);
 ```
 
-If you use the above server code with node, test with the following URL:
+If you run the above code on your local machine, you can test with the following URL:
 
 ```
 http://localhost:3030/?bcid=isbn&text=978-1-56581-231-4+52250&includetext&guardwhitespace
 ```
 
-The bwip-js module is designed to operate only on the URL query parameters and
+The bwip-js request handler only operates on the URL query parameters and
 ignores all path information.  Your application is free to structure the URL
 path as needed to implement the desired HTTP request routing.
 
-There are no `npm` dependencies on the module.  The PNG encoder is implemented
-entirely in JavaScript using the built-in `zlib` module.  See the file
-`node-zlibPNG` for details.
+## Node.js Image Generator
+
+You can also use bwip-js to generate PNG images directly.
+
+```javascript
+var bwipjs = require('bwip-js');
+
+// Optionally load some custom fonts.  Maximum 8.
+// OpenType and TrueType are supported.
+bwipjs.loadFont('Inconsolata', 108,
+            require('fs').readFileSync('Inconsolata.otf', 'binary'));
+
+bwipjs.toBuffer({
+		bcid:			'code128',		// Barcode type
+		text:			'0123456789',	// Text to encode
+		height:			10,				// Bar height, in millimeters
+		includetext:	true,			// Show human-readable text
+		textxalign:		'center',		// Always good to set this
+		textfont:		'Inconsolata',	// Use your custom font
+		textsize:		13				// Font size, in points
+	}, function (err, png) {
+		if (err) {
+			// Decide how to handle the error
+			// `err` may be a string or Error object
+		} else {
+			// `png` is a Buffer
+			// png.length 			: PNG file length
+			// png.readUInt32BE(16)	: PNG image width
+			// png.readUInt32BE(20)	: PNG image height
+		}
+	});
+```
+
+Only the first two options `bcid` and `text` are required.
+
+You will need to consult the
+[BWIPP documentation](https://github.com/bwipp/postscriptbarcode/wiki)
+to determine what options are available for each barcode type.
 
 ## Features
 
+An
+[Emscripten compiled](http://kripken.github.io/emscripten-site/index.html)
+version of the [FreeType library](http://freetype.org/) is integrated into bwip-js.
+
+Embedded in the FreeType library are open-source versions of the OCR-A and OCR-B
+fonts provided by the
+[Tsukurimashou Font Family](http://en.sourceforge.jp/projects/tsukurimashou/releases/)
+project.
+
+A description of how FreeType was compiled for use with bwip-js can be found at:
+[Compiling FreeType with Emscripten](https://github.com/metafloor/bwip-js/wiki/Compiling-FreeType).
+
 The barcode images generated by bwip-js are essentially identical to using BWIPP with 
 [Ghostscript](http://www.ghostscript.com/).  The most significant
-difference is the use of the OCR-A and OCR-B fonts as the defaults in bwip-js.
+difference is the use of the OCR-A and OCR-B fonts.
 Barcodes and the OCR fonts are like
 chocolate and hazelnut; they were meant to go together.  Unfortunately, most
 PostScript environments do not provide the OCR fonts and must fallback to Courier,
@@ -178,11 +210,17 @@ includetext guardwhitespace textfont=Inconsolata isbntextfont=Inconsolata isbnte
 
 ## Installation
 
-You can download the latest package at:
+You can download the latest npm module using:
 
-https://github.com/metafloor/bwip-js/releases/latest
+```
+npm install bwip-js
+```
 
-Unzip the download package.  bwip-js will be unpacked into the following directory structure:
+Or the latest code from github:
+
+	https://github.com/metafloor/bwip-js
+
+The software is organized in the following directory structure:
 
 	bwip-js/
 		bwip.js			# Main bwip-js code.
@@ -191,11 +229,17 @@ Unzip the download package.  bwip-js will be unpacked into the following directo
 		freetype.js.mem	# Demand loaded memory image
 		node-bwipjs		# Node.js module
 		node-zlibPNG	# Node.js module that implements a PNG encoder
+		package.json	# Node.js/npm configuration
 		bwipp/			# The cross-compiled BWIPP encoders and renderers
 		lib/			# Utilities required by the demo
 
 
 ## Usage
+
+> **Version 0.8 was an API-breaking release.**  If you have implemented code based on 
+> previous versions, you must update your code in three areas.  This 
+> [wiki page](https://github.com/metafloor/bwip-js/wiki/v0.8-API-Changes) describes
+> the changes.
 
 > **Using the demo with a file:// URL is no longer supported.**
 >
@@ -208,12 +252,9 @@ Unzip the download package.  bwip-js will be unpacked into the following directo
 > under the server's root document directory and modify the server's configuration
 > files, if necessary.  Then navigate your browser to the `bwip-js/demo.html` file.
 
-bwip-js was designed to run in both client-side and server-side JavaScript environments.  For server-side environments that do not provide a graphics API, there are freely available pure-JavaScript implementations of image file formats like PNG and BMP.  A quick search of the web turns up several possibilities that can be adapted for server-side usage. 
-
-The file `demo.html` provides a detailed example of how to use bwip-js in the browser.
-The file `server.js` shows how to use it as a node.js module.
-
-If you would like to implement your own interface to bwip-js, see [Integrating bwip.js Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code).
+If you would like to implement your own interface to bwip-js, see [Integrating bwip.js Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code).  I would also recommend looking at the `node-bwipjs` module to see how it
+was done for Node.js.  Getting the FreeType module to cooperate with the
+BWIPP cross-compiled code was not straightforward.
 
 ## Supported Barcode Types
 
@@ -223,12 +264,9 @@ If you would like to implement your own interface to bwip-js, see [Integrating b
 ## Emulator Notes
 
 bwip-js does not provide a general purpose PostScript emulation layer. The emulation
-supports only the PostScript operators used by BWIPP. The emulation is implemented
-as a cross-compiler that converts all non-graphics code to equivalent JavaScript,
-and converts all graphics operations to calls into a platform-neutral graphics
-context. It is up to the host environment to implement the bitmap interface that
-is exposed by the graphics context. An example implementation is provided in the
-demo. 
+supports only the PostScript operators used by BWIPP and is implemented
+as a cross-compiler that converts the non-graphics code to equivalent JavaScript,
+and the graphics operations to calls into a simple bitmap interface.
 
 The emulation uses, as much as possible, native JavaScript data types:
  * Boolean values true and false
