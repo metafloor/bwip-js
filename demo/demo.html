@@ -123,6 +123,16 @@ $(document).ready(function() {
 
 		fontSelected(file.nativeFile);		// Native browser File object
 	});
+
+	// Allow Enter to render
+	$('#params').keypress(function(ev) {
+		if (ev.which == 13) {
+			render();
+			ev.stopPropagation();
+			ev.preventDefault();
+			return false;
+		}
+	});
 });
 
 function render() {
@@ -213,7 +223,9 @@ function render() {
 }
 function saveCanvas(type, ext) {
 	var canvas = document.getElementById('canvas');
-	canvas.toBlob(function (blob) { saveAs(blob, saveCanvas.basename + ext); }, type, 1);
+	canvas.toBlob(function (blob) {
+					  saveAs(blob, saveCanvas.basename + ext);
+				  }, type, 1);
 }
 </script>
 </head><body>
