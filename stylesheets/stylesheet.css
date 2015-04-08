@@ -48,6 +48,13 @@ table {
 Theme Styles
 *******************************************************************************/
 
+img[alt="bwip-js"] {	/*MRW*/
+	float:	left;
+	margin-bottom:	16px;
+	margin-right:	12px;
+	box-shadow:		none;
+}
+
 body {
   box-sizing: border-box;
   color:#373737;
@@ -201,7 +208,8 @@ blockquote {
 
 
 ul, ol, dl {
-  margin-bottom: 15px
+  margin-bottom: 15px;
+  clear:	left;	/*MRW*/
 }
 
 ul {
