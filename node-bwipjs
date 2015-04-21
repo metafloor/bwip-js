@@ -48,6 +48,9 @@ function load(path) {
 module.exports = function(req, res) {
 	var args = url.parse(req.url, true).query;
 
+	// Fix the monochrome non sequitur
+	args.monochrome = args.monochrome === '';
+
 	module.exports.toBuffer(args, function(err, png) {
 		if (err) {
 			res.writeHead(400, { 'Content-Type':'text/plain' });
@@ -82,8 +85,11 @@ module.exports.toBuffer = function(args, callback) {
 	// Set the defaults
 	var scale	= args.scale || 2;
 	var scaleX	= +args.scaleX || scale;
-	var scaleY	= +args.scaleY || scale;
+	var scaleY	= +args.scaleY || scaleX;
 	var rot		= args.rotate || 'N';
+	var mono	= args.monochrome || false;
+
+	// The required parameters
 	var bcid	= args.bcid;
 	var text	= args.text;
 
@@ -101,6 +107,7 @@ module.exports.toBuffer = function(args, callback) {
 	delete args.rotate;
 	delete args.text;
 	delete args.bcid;
+	delete args.monochrome;
 
 	// Initialize a barcode writer object
 	var bw = new sandbox.BWIPJS;
@@ -109,7 +116,7 @@ module.exports.toBuffer = function(args, callback) {
 	var opts = {};
 	for (id in args) {
 		// options that do not take a value e.g. parsefnc
-		if (!args[id])
+		if (args[id] === '' || args[id] === undefined)
 			opts[id] = bw.value(true);
 		else
 			opts[id] = bw.value(args[id]);
@@ -122,6 +129,9 @@ module.exports.toBuffer = function(args, callback) {
 	// We use mm rather than inches for height
 	if (opts.height)
 		opts.height = opts.height / 25.4 || 0.5;
+	
+	// Enable/disable monochrome font rendering
+	sandbox.BWIPJS.ft_monochrome(mono ? 1 : 0);
 
 	// Render the bar code
 	bw.bitmap(new Bitmap);

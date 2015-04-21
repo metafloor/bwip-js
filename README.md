@@ -12,7 +12,7 @@ the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 0.11.0
+* Current bwip-js version is 0.12.0
 * Current BWIPP version is 2015-03-24
 * Node.js compatibility >= v0.10
 * npm dependencies: none
@@ -113,6 +113,7 @@ bwipjs.loadFont('Inconsolata', 108,
 bwipjs.toBuffer({
 		bcid:			'code128',		// Barcode type
 		text:			'0123456789',	// Text to encode
+		scale:			3,				// 3x scaling factor
 		height:			10,				// Bar height, in millimeters
 		includetext:	true,			// Show human-readable text
 		textxalign:		'center',		// Always good to set this
@@ -131,11 +132,26 @@ bwipjs.toBuffer({
 	});
 ```
 
-Only the first two options `bcid` and `text` are required.
+Only the first two options `bcid` and `text` are required.  The other bwip-js
+specific options are:
+
+- `scaleX` : The x-axis scaling factor.  Must be an integer > 0.  Default is 2.
+- `scaleY` : The y-axis scaling factor.  Must be an integer > 0.  Default is `scaleX`.
+- `scale` : Sets both the x-axis and y-axis scaling factors.  Must be an integer > 0.
+
+- `rotate` : Allows rotating the image to one of the four orthogonal orientations.  A string value.  Must be one of:
+
+    * `"N"` : Normal (not rotated).  The default.
+    * `"R"` : Clockwise (right) 90 degree rotation.
+    * `"L"` : Counter-clockwise (left) 90 degree rotation.
+    * `"I"` : Inverted 180 degree rotation.
+
+- `monochrome` : Sets the human-readable text to render in monochrome.  Boolean `true` or `false`.  Default is `false` which renders 256-level gray-scale anti-aliased text.
 
 You will need to consult the
 [BWIPP documentation](https://github.com/bwipp/postscriptbarcode/wiki)
 to determine what options are available for each barcode type.
+
 
 ## Features
 
