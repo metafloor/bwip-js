@@ -40,7 +40,7 @@ the end of this document.</p>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Status</h2>
 
 <ul>
-<li>Current bwip-js version is 0.11.0</li>
+<li>Current bwip-js version is 0.12.0</li>
 <li>Current BWIPP version is 2015-03-24</li>
 <li>Node.js compatibility &gt;= v0.10</li>
 <li>npm dependencies: none</li>
@@ -145,6 +145,7 @@ bwipjs.loadFont(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span
 bwipjs.toBuffer({
         bcid<span class="pl-k">:</span>           <span class="pl-s"><span class="pl-pds">'</span>code128<span class="pl-pds">'</span></span>,      <span class="pl-c">// Barcode type</span>
         text<span class="pl-k">:</span>           <span class="pl-s"><span class="pl-pds">'</span>0123456789<span class="pl-pds">'</span></span>,   <span class="pl-c">// Text to encode</span>
+        scale<span class="pl-k">:</span>          <span class="pl-c1">3</span>,              <span class="pl-c">// 3x scaling factor</span>
         height<span class="pl-k">:</span>         <span class="pl-c1">10</span>,             <span class="pl-c">// Bar height, in millimeters</span>
         includetext<span class="pl-k">:</span>    <span class="pl-c1">true</span>,           <span class="pl-c">// Show human-readable text</span>
         textxalign<span class="pl-k">:</span>     <span class="pl-s"><span class="pl-pds">'</span>center<span class="pl-pds">'</span></span>,       <span class="pl-c">// Always good to set this</span>
@@ -162,7 +163,31 @@ bwipjs.toBuffer({
         }
     });</pre></div>
 
-<p>Only the first two options <code>bcid</code> and <code>text</code> are required.</p>
+<p>Only the first two options <code>bcid</code> and <code>text</code> are required.  The other bwip-js
+specific options are:</p>
+
+<ul>
+<li>
+<code>scaleX</code> : The x-axis scaling factor.  Must be an integer &gt; 0.  Default is 2.</li>
+<li>
+<code>scaleY</code> : The y-axis scaling factor.  Must be an integer &gt; 0.  Default is <code>scaleX</code>.</li>
+<li><p><code>scale</code> : Sets both the x-axis and y-axis scaling factors.  Must be an integer &gt; 0.</p></li>
+<li>
+<p><code>rotate</code> : Allows rotating the image to one of the four orthogonal orientations.  A string value.  Must be one of:</p>
+
+<ul>
+<li>
+<code>"N"</code> : Normal (not rotated).  The default.</li>
+<li>
+<code>"R"</code> : Clockwise (right) 90 degree rotation.</li>
+<li>
+<code>"L"</code> : Counter-clockwise (left) 90 degree rotation.</li>
+<li>
+<code>"I"</code> : Inverted 180 degree rotation.</li>
+</ul>
+</li>
+<li><p><code>monochrome</code> : Sets the human-readable text to render in monochrome.  Boolean <code>true</code> or <code>false</code>.  Default is <code>false</code> which renders 256-level gray-scale anti-aliased text.</p></li>
+</ul>
 
 <p>You will need to consult the
 <a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP documentation</a>
