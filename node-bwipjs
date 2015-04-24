@@ -48,8 +48,11 @@ function load(path) {
 module.exports = function(req, res) {
 	var args = url.parse(req.url, true).query;
 
-	// Fix the monochrome non sequitur
-	args.monochrome = args.monochrome === '';
+	// Convert boolean empty parameters to true
+	for (var id in args) {
+		if (args[id] === '')
+			args[id] = true;
+	}
 
 	module.exports.toBuffer(args, function(err, png) {
 		if (err) {
@@ -115,19 +118,16 @@ module.exports.toBuffer = function(args, callback) {
 	// Set the options
 	var opts = {};
 	for (id in args) {
-		// options that do not take a value e.g. parsefnc
-		if (args[id] === '' || args[id] === undefined)
-			opts[id] = bw.value(true);
-		else
-			opts[id] = bw.value(args[id]);
+		opts[id] = bw.value(args[id]);
 	}
 
 	// Fix a disconnect in the BWIPP rendering logic
 	if (opts.alttext)
 		opts.includetext = bw.value(true);
 
-	// We use mm rather than inches for height
-	if (opts.height)
+	// We use mm rather than inches for height - except pharmacode2 height
+	// is explicitly in mm
+	if (opts.height && bcid != 'pharmacode2')
 		opts.height = opts.height / 25.4 || 0.5;
 	
 	// Enable/disable monochrome font rendering

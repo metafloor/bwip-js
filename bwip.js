@@ -201,7 +201,7 @@ BWIPJS.psstring = function(v) {
 		this.value  = [];
 		this.length = v.length;
 		this.offset = 0;
-		for (var i = 0; i < v.length; i++)
+		for (var i = 0; i < v.length; i++) 
 			this.value[i] = v.charCodeAt(i);
 	}
 	else { // v is a psstring
@@ -340,12 +340,24 @@ BWIPJS.prototype.print = function(s) {
 BWIPJS.prototype.value = function(v) {
 	if (v === true || v === false || v === null)
 		return v;
+	if (v === undefined)
+		throw new Error('undefined not a valid PostScript value');
 
 	var t = typeof(v);
-	if (t == 'number')
+	if (t == 'number') {
+		if (!isFinite(v))
+			throw new Error(v + ': not a valid PostScript value');
 		return v;
-	if (t == 'string')
-		return BWIPJS.psstring(v);
+	}
+	if (t == 'string') {
+		// Ensure the string is 8-bit clean
+		for (var i = 0; i < v.length && v.charCodeAt(i) < 256; i++)
+			;
+		if (i == v.length)
+			return BWIPJS.psstring(v);
+		// Convert to utf-8
+		return BWIPJS.psstring(unescape(encodeURIComponent(v)));
+	}
 	if (v instanceof Array)
 		return BWIPJS.psarray(v);
 	return v;	// s.b. a dictionary object
