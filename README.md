@@ -12,9 +12,9 @@ the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 0.12.1 (24-April-2015)
+* Current bwip-js version is 0.12.2 (27-April-2015)
 * Current BWIPP version is 2015-03-24
-* Node.js compatibility >= v0.10
+* Node.js compatibility >= v0.10 (reported to work with v0.8 but not tested).
 * npm dependencies: none
 
 ## Links
@@ -36,7 +36,7 @@ and allows using your own fonts.  All fonts are stored locally on your computer;
 the generator is 100% client-side JavaScript.
 
 The demo is tested on the latest versions of Firefox and Chrome, along with IE10.
-IE11+ should work, and so should the latest versions of Opera and Safari,
+IE11 should work, and so should the latest versions of Opera and Safari,
 but they are untested.
 
 ## Online Barcode API
