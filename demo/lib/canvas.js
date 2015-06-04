@@ -5,14 +5,23 @@
 // See the COPYRIGHT file in the bwip.js root directory
 // for the extended copyright notice.
 
-// Dynamically load the script.  Each script has a built-in callback into the
-// BWIPJS object.
+// Dynamically load the encoders.
 BWIPJS.load = function(path) {
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
-	script.src = path;
+	script.src = BWIPJS.load.root + path;
 	document.head.appendChild(script);
 };
+
+// Determine where this script is located on the server and
+// make the encoder loading relative to it.
+(function() {
+	var scripts = document.getElementsByTagName("script");
+	// http://host:port/foo/bar/lib/canvas.js
+	// We want root to be everything but lib/canvas.js
+    BWIPJS.load.root = scripts[scripts.length-1].src.replace(/lib.canvas.js$/,'');
+})();
+
 
 BWIPJS.print = function(s) {
 	var div = document.getElementById('output');
@@ -21,7 +30,8 @@ BWIPJS.print = function(s) {
 };
 
 // Encapsulate the bitmap interface
-function Bitmap() {
+// bgcolor is optional, defaults to #fff.
+function Bitmap(bgcolor) {
 	var clr  = [0, 0, 0];
 	var pts  = [];
 	var minx = 0;	// min-x
@@ -45,7 +55,7 @@ function Bitmap() {
 	}
 
 	this.show = function(cvsid, rot) {
-		var cvs = document.getElementById(cvsid);
+		var cvs = cvsid instanceof window.HTMLCanvasElement ? cvsid : document.getElementById(cvsid);
 		if (pts.length == 0) {
 			cvs.width  = 32;
 			cvs.height = 32;
@@ -66,7 +76,7 @@ function Bitmap() {
 		cvs.height = h;
 
 		var ctx = cvs.getContext('2d');
-		ctx.fillStyle = '#fff';
+		ctx.fillStyle = bgcolor || '#fff';
 		ctx.fillRect(0, 0, cvs.width, cvs.height);
 		ctx.fillStyle = '#000';
 
