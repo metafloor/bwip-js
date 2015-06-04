@@ -178,7 +178,14 @@ function render() {
 	// This hooks directly into the FreeType library.
 	BWIPJS.ft_monochrome(document.getElementById('fontAnti').checked ? 0 : 1);
 
-	bw.bitmap(new Bitmap);
+	// Feature or bug, BWIPP does not extend the background color into the
+	// human readable text.  Fix that in the bitmap interface.
+	if (opts.backgroundcolor) {
+		bw.bitmap(new Bitmap('#' + opts.backgroundcolor));
+		delete opts.backgroundcolor;
+	} else {
+		bw.bitmap(new Bitmap);
+	}
 	
 	var scaleX = +document.getElementById('scaleX').value || 2;
 	var scaleY = +document.getElementById('scaleY').value || 2;

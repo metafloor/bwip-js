@@ -49,37 +49,75 @@ var crcCalc = [];
 
 
 
-module.exports = function (width, height) {
+// bgcolor is optional.
+module.exports = function (width, height, bgcolor) {
 	width	= width | 0;
 	height	= height | 0;
 
 	var TEXT   		= "Software\0bwip-js.metafloor.com";
-	var _pixels  	= [];
-	var _palette 	= { 0:0 };
-	var _ncolors	= 1;		
+	var _pixels  	= [];		// Cannot use Uint32Array - need undefined elts
+	var _palette 	= { 0:0 };	// Index-0 is always the background color
+	var _ncolors	= 1;		// The background color
 	var _cmap		= [];		// Only if ncolors <= 256
 	var _trans		= false;	// Has transparency?
 	var _gray		= false;	// Has only grays?
 	var _nset		= 0;		// Number of set pixels
 
+	// Background color does not support alpha-channel
+	if (bgcolor !== undefined) {
+		bgcolor	 = (0xff000000|bgcolor) >>> 0;
+		_gray	 = ((bgcolor >>> 16) & 0xff) == (bgcolor & 0xff) &&
+				   ((bgcolor >>> 8) & 0xff) == (bgcolor & 0xff);
+		_nset	 = width * height;
+
+		_palette = {};
+		_palette[bgcolor] = 0;
+		for (var i = 0; i < _nset; i++)
+			_pixels[i] = bgcolor;
+	}
+
 	// Set a pixel to the given RGB color
 	this.setRGB = function(x, y, c) {
-		this.set(x, y, (255<<24)|c);
+		this.set(x, y, (0xff000000|c) >>> 0);
 	}
 	// Set a pixel to the given ARGB color
-	this.set = function(x, y, c) {
-		if (_pixels[y * width + x] == undefined)
+	this.set = function(x, y, clr) {
+		var cur = _pixels[y * width + x];
+		if (cur === undefined) {
 			_nset++;
+		} else {
+			// alpha-blend with the existing color
+			var cura = (cur >>> 24) / 255;
+			var curr = (cur >>> 16) & 0xff;
+			var curg = (cur >>>  8) & 0xff;
+			var curb = cur & 0xff;
+			var clra = (clr >>> 24) / 255;
+			var clrr = (clr >>> 16) & 0xff;
+			var clrg = (clr >>>  8) & 0xff;
+			var clrb = clr & 0xff;
+
+			var newa = clra + cura * (1 - clra);	// new alpha 0.0 - 1.0
+			if (!newa) {
+				clr = 0;	// fully transparent
+			} else {
+				var newr = ((clrr * clra + curr * cura * (1 - clra)) / newa)|0;
+				var newg = ((clrg * clra + curg * cura * (1 - clra)) / newa)|0;
+				var newb = ((clrb * clra + curb * cura * (1 - clra)) / newa)|0;
+				clr = ((((newa * 255)|0)<<24) | (newr<<16) | (newg<<8) | newb) >>> 0;
+			}
+		}
+
 		_gray = _gray && 
-			((c >> 16) & 0xff) == (c & 0xff) && ((c >> 8) & 0xff) == (c & 0xff);
-		_trans = _trans || (c >>> 24) < 255;
+			((clr >>> 16) & 0xff) == (clr & 0xff) && 
+			((clr >>> 8) & 0xff) == (clr & 0xff);
+		_trans = _trans || (clr >>> 24) < 255;
 
 		// If we exceed 256 unique colors, we automatically switch to 32-bit
 		// PNG (TrueColor with alpha)
-		if (_ncolors <= 256 && _palette[c] === undefined)
-			_palette[c] = _ncolors++;
+		if (_ncolors <= 256 && _palette[clr] === undefined)
+			_palette[clr] = _ncolors++;
 
-		_pixels[y * width + x] = c;
+		_pixels[y * width + x] = clr;
 	}
 	this.get = function(x, y) {
 		return _pixels[y * width + x] || 0;

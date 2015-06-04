@@ -133,8 +133,15 @@ module.exports.toBuffer = function(args, callback) {
 	// Enable/disable monochrome font rendering
 	sandbox.BWIPJS.ft_monochrome(mono ? 1 : 0);
 
-	// Render the bar code
-	bw.bitmap(new Bitmap);
+	// Feature or bug, BWIPP does not extend the background color into the
+	// human readable text.  Fix that in the bitmap interface.
+	if (opts.backgroundcolor) {
+		bw.bitmap(new Bitmap(parseInt(''+opts.backgroundcolor, 16)));
+		delete opts.backgroundcolor;
+	} else {
+		bw.bitmap(new Bitmap);
+	}
+
 	bw.scale(scaleX, scaleY);
 	bw.push(text);
 	bw.push(opts);
@@ -175,7 +182,10 @@ module.exports.unloadFont = function(fontname) {
 //		this.color(r, g, b)		## The color to use for subsequent set()'s.
 //		this.set(x, y, a)		## Sets the pixel at (x,y) using the current
 //								## color with alpha-a.
-function Bitmap() {
+//
+// bgcolor is optional.  If specified, if must be an integer or string RGB value.
+//						 Alpha channel is not supported.
+function Bitmap(bgcolor) {
 	var _clrr = 0;					// current red
 	var _clrg = 0;					// current green
 	var _clrb = 0;					// current blue
@@ -184,6 +194,11 @@ function Bitmap() {
 	var _miny = Infinity;
 	var _maxx = 0;
 	var _maxy = 0;
+
+	if (typeof bgcolor === 'string')
+		bgcolor = (0xff000000 | parseInt(bgcolor, 16)) >>> 0;
+	else if (bgcolor !== undefined)
+		bgcolor = (0xff000000 | bgcolor) >>> 0;
 
 	this.color = function(r,g,b) {
 		_clrr = r;
@@ -204,6 +219,8 @@ function Bitmap() {
 		var xy	= x + ',' + y;
 		var cx	= _pixs[xy];
 		var r, g, b;
+		if (cx === undefined)
+			cx = bgcolor;
 		if (cx === undefined) {
 			r = _clrr;
 			g = _clrg;
@@ -228,7 +245,7 @@ function Bitmap() {
 			}
 		}
 
-		_pixs[xy] = (a << 24) | (r << 16) | (g << 8) | b;
+		_pixs[xy] = ((a << 24) | (r << 16) | (g << 8) | b) >>> 0;
 	}
 
 	// `rot` is the desired image rotation
@@ -243,7 +260,7 @@ function Bitmap() {
 			var h = _maxy-_miny+1;
 		}
 
-		var png = new zlibPNG(w, h);
+		var png = new zlibPNG(w, h, bgcolor);
 		for (var xy in _pixs) {
 			var pts = xy.split(',');
 			var x	= +pts[0] - _minx;
