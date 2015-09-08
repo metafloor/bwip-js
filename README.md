@@ -12,8 +12,8 @@ the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 0.13.0 (04-June-2015)
-* Current BWIPP version is 2015-03-24
+* Current bwip-js version is 0.14.0 (07-Sep-2015)
+* Current BWIPP version is 2015-08-10
 * Node.js compatibility >= v0.10 (reported to work with v0.8 but not tested).
 * npm dependencies: none
 
@@ -307,10 +307,10 @@ The software is organized in the following directory structure:
 > image and using XHR (when running in a browser) to demand load it.  Because of
 > this, you can no longer reliably use the demo via the `file://` scheme in a
 > browser's URL bar.  Firefox supports XHR with `file://`, Chrome and IE do not.
->
-> To run the demo from your HTTP server, you should install the bwip-js directory
-> under the server's root document directory and modify the server's configuration
-> files, if necessary.  Then navigate your browser to the `bwip-js/demo.html` file.
+
+To run the demo from your HTTP server, you should install the bwip-js directory
+under the server's root document directory and modify the server's configuration
+files, if necessary.  Then navigate your browser to the `bwip-js/demo.html` file.
 
 If you would like to implement your own interface to bwip-js, see [Integrating bwip.js Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code).  I would also recommend looking at the `node-bwipjs` module to see how it
 was done for Node.js.  Getting the FreeType module to cooperate with the
