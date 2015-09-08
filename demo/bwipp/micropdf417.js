@@ -1,7 +1,7 @@
 // file: bwipp/micropdf417.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-03-24
+// Barcode Writer in Pure PostScript - Version 2015-08-10
 //
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2014 Terry Burton
@@ -103,6 +103,29 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f6(){
+		var t=this.dstk.get("version");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=BWIPJS.psstring("x");
+		var h=this.stk[this.ptr-2];
+		var t=h.indexOf(this.stk[this.ptr-1]);
+		if (t==-1) {
+			this.stk[this.ptr-1]=false;
+		} else {
+			this.stk[this.ptr-2]=h.subset(t+this.stk[this.ptr-1].length);
+			this.stk[this.ptr-1]=h.subset(t,this.stk[this.ptr-1].length);
+			this.stk[this.ptr++]=h.subset(0,t);
+			this.stk[this.ptr++]=true;
+		}
+		this.ptr--;
+		this.stk[this.ptr++]="columns";
+		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		this.ptr--;
+		this.stk[this.ptr++]="rows";
+		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	}
+	function $f7(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -148,7 +171,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
-	function $f7(){
+	function $f8(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("msg");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -175,7 +198,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
-	function $f8(){
+	function $f9(){
 		this.stk[this.ptr++]=BWIPJS.psstring("^");
 		var h=this.stk[this.ptr-2];
 		var t=h.indexOf(this.stk[this.ptr-1]);
@@ -187,17 +210,17 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr++]=h.subset(0,t);
 			this.stk[this.ptr++]=true;
 		}
-		this.stk[this.ptr++]=$f6;
 		this.stk[this.ptr++]=$f7;
-		var t8=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f8;
 		var t9=this.stk[--this.ptr];
+		var t10=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t9.call(this)==-1) return -1;
+			if (t10.call(this)==-1) return -1;
 		} else {
-			if (t8.call(this)==-1) return -1;
+			if (t9.call(this)==-1) return -1;
 		}
 	}
-	function $f9(){
+	function $f10(){
 		this.stk[this.ptr++]="msg";
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -210,26 +233,26 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=$f8;
-		var t10=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f9;
+		var t11=this.stk[--this.ptr];
 		while (true) {
-			if (t10.call(this)==-1) break;
+			if (t11.call(this)==-1) break;
 		}
 	}
-	function $f10(){
+	function $f11(){
 		this.stk[this.ptr++]="encoding";
 		this.stk[this.ptr++]=BWIPJS.psstring("raw");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f11(){
+	function $f12(){
 		this.stk[this.ptr++]="encoding";
 		this.stk[this.ptr++]=BWIPJS.psstring("cca");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f12(){
+	function $f13(){
 		return -1;
 	}
-	function $f13(){
+	function $f14(){
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barcode");
@@ -240,10 +263,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f12;
-		var t14=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f13;
+		var t15=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t14.call(this)==-1) return -1;
+			if (t15.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="cw";
 		var t=this.dstk.get("barcode");
@@ -279,7 +302,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f14(){
+	function $f15(){
 		this.stk[this.ptr++]="datcws";
 		var t=this.dstk.get("barcode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -293,10 +316,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]="j";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]=$f13;
-		var t15=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f14;
+		var t16=this.stk[--this.ptr];
 		while (true) {
-			if (t15.call(this)==-1) break;
+			if (t16.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="datcws";
 		var t=this.dstk.get("datcws");
@@ -307,20 +330,12 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f15(){
-	}
 	function $f16(){
+	}
+	function $f17(){
 		this.stk[this.ptr++]="encoding";
 		this.stk[this.ptr++]=BWIPJS.psstring("ccb");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	}
-	function $f17(){
-		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		this.stk[this.ptr++]=900;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr++]=900;
-		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 	}
 	function $f18(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
@@ -331,6 +346,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 	}
 	function $f19(){
+		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
+		this.stk[this.ptr++]=900;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr++]=900;
+		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
+	}
+	function $f20(){
 		this.stk[this.ptr++]="k";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -373,11 +396,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=3;
-		this.stk[this.ptr++]=$f17;
-		var t23=this.stk[--this.ptr];
-		var t21=this.stk[--this.ptr];
-		for (var t22=0; t22<t21; t22++) {
-			if (t23.call(this)==-1) break;
+		this.stk[this.ptr++]=$f18;
+		var t24=this.stk[--this.ptr];
+		var t22=this.stk[--this.ptr];
+		for (var t23=0; t23<t22; t23++) {
+			if (t24.call(this)==-1) break;
 		}
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -426,11 +449,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=3;
-		this.stk[this.ptr++]=$f18;
-		var t26=this.stk[--this.ptr];
-		var t24=this.stk[--this.ptr];
-		for (var t25=0; t25<t24; t25++) {
-			if (t26.call(this)==-1) break;
+		this.stk[this.ptr++]=$f19;
+		var t27=this.stk[--this.ptr];
+		var t25=this.stk[--this.ptr];
+		for (var t26=0; t26<t25; t26++) {
+			if (t27.call(this)==-1) break;
 		}
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -655,7 +678,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f20(){
+	function $f21(){
 		var t=this.dstk.get("out");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("out");
@@ -688,7 +711,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
-	function $f21(){
+	function $f22(){
 		this.stk[this.ptr++]="in";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -720,14 +743,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f19;
-		var t31=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f20;
+		var t32=this.stk[--this.ptr];
+		var t30=this.stk[--this.ptr];
 		var t29=this.stk[--this.ptr];
 		var t28=this.stk[--this.ptr];
-		var t27=this.stk[--this.ptr];
-		for (var t30=t27; t28<0 ? t30>=t29 : t30<=t29; t30+=t28) {
-			this.stk[this.ptr++]=t30;
-			if (t31.call(this)==-1) break;
+		for (var t31=t28; t29<0 ? t31>=t30 : t31<=t30; t31+=t29) {
+			this.stk[this.ptr++]=t31;
+			if (t32.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="rem";
 		var t=this.dstk.get("inlen");
@@ -742,21 +765,21 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f20;
-		var t32=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f21;
+		var t33=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t32.call(this)==-1) return -1;
+			if (t33.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("out");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f22(){
+	function $f23(){
 		this.stk[this.ptr++]=924;
 	}
-	function $f23(){
+	function $f24(){
 		this.stk[this.ptr++]=901;
 	}
-	function $f24(){
+	function $f25(){
 		this.stk[this.ptr++]="datcws";
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=920;
@@ -774,7 +797,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f25(){
+	function $f26(){
 		this.stk[this.ptr++]="datcws";
 		var t=this.dstk.get("barlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -803,14 +826,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f22;
 		this.stk[this.ptr++]=$f23;
-		var t33=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f24;
 		var t34=this.stk[--this.ptr];
+		var t35=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t34.call(this)==-1) return -1;
+			if (t35.call(this)==-1) return -1;
 		} else {
-			if (t33.call(this)==-1) return -1;
+			if (t34.call(this)==-1) return -1;
 		}
 		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
@@ -831,20 +854,20 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f24;
-		var t35=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f25;
+		var t36=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t35.call(this)==-1) return -1;
+			if (t36.call(this)==-1) return -1;
 		}
 	}
-	function $f26(){
+	function $f27(){
 		this.stk[this.ptr++]=0;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 	}
-	function $f27(){
+	function $f28(){
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -863,10 +886,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f26;
-		var t37=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f27;
+		var t38=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t37.call(this)==-1) return -1;
+			if (t38.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("charvals");
@@ -893,7 +916,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f28(){
+	function $f29(){
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -910,18 +933,15 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=3;
-		this.stk[this.ptr++]=$f27;
-		var t42=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f28;
+		var t43=this.stk[--this.ptr];
+		var t41=this.stk[--this.ptr];
 		var t40=this.stk[--this.ptr];
 		var t39=this.stk[--this.ptr];
-		var t38=this.stk[--this.ptr];
-		for (var t41=t38; t39<0 ? t41>=t40 : t41<=t40; t41+=t39) {
-			this.stk[this.ptr++]=t41;
-			if (t42.call(this)==-1) break;
+		for (var t42=t39; t40<0 ? t42>=t41 : t42<=t41; t42+=t40) {
+			this.stk[this.ptr++]=t42;
+			if (t43.call(this)==-1) break;
 		}
-	}
-	function $f29(){
-		this.stk[this.ptr++]=0;
 	}
 	function $f30(){
 		this.stk[this.ptr++]=0;
@@ -930,33 +950,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f32(){
-		var t=this.dstk.get("numdigits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("numdigits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
-		this.ptr-=3;
+		this.stk[this.ptr++]=0;
 	}
 	function $f33(){
-		var t=this.dstk.get("numtext");
+		var t=this.dstk.get("numdigits");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("numtext");
+		var t=this.dstk.get("numdigits");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -974,6 +975,28 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.ptr-=3;
 	}
 	function $f34(){
+		var t=this.dstk.get("numtext");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("numtext");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
+		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		this.ptr-=3;
+	}
+	function $f35(){
 		var t=this.dstk.get("numbytes");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
@@ -995,7 +1018,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f35(){
+	function $f36(){
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1016,10 +1039,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f32;
-		var t57=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f33;
+		var t58=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t57.call(this)==-1) return -1;
+			if (t58.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("alltext");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1045,10 +1068,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f33;
-		var t58=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f34;
+		var t59=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t58.call(this)==-1) return -1;
+			if (t59.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("numtext");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1073,16 +1096,16 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f34;
-		var t59=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f35;
+		var t60=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t59.call(this)==-1) return -1;
+			if (t60.call(this)==-1) return -1;
 		}
 	}
-	function $f36(){
+	function $f37(){
 		return -1;
 	}
-	function $f37(){
+	function $f38(){
 		this.stk[this.ptr++]="seq";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("seq");
@@ -1139,11 +1162,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f38(){
+	function $f39(){
 		var t=this.dstk.get("tl");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f39(){
+	function $f40(){
 		this.stk[this.ptr++]="seq";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("seq");
@@ -1161,10 +1184,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f38;
-		var t66=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f39;
+		var t67=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t66.call(this)==-1) return -1;
+			if (t67.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barcode");
@@ -1211,7 +1234,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f40(){
+	function $f41(){
 		this.stk[this.ptr++]="seq";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("seq");
@@ -1257,15 +1280,15 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f41(){
+	function $f42(){
 		var t=this.dstk.get("bl");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f42(){
+	function $f43(){
 		var t=this.dstk.get("bl6");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f43(){
+	function $f44(){
 		this.stk[this.ptr++]="seq";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("seq");
@@ -1284,14 +1307,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f41;
 		this.stk[this.ptr++]=$f42;
-		var t67=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f43;
 		var t68=this.stk[--this.ptr];
+		var t69=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t68.call(this)==-1) return -1;
+			if (t69.call(this)==-1) return -1;
 		} else {
-			if (t67.call(this)==-1) return -1;
+			if (t68.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barcode");
@@ -1338,7 +1361,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f44(){
+	function $f45(){
 		this.stk[this.ptr++]="b";
 		var t=this.dstk.get("numbytes");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1367,17 +1390,17 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f40;
-		this.stk[this.ptr++]=$f43;
-		var t69=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f41;
+		this.stk[this.ptr++]=$f44;
 		var t70=this.stk[--this.ptr];
+		var t71=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t70.call(this)==-1) return -1;
+			if (t71.call(this)==-1) return -1;
 		} else {
-			if (t69.call(this)==-1) return -1;
+			if (t70.call(this)==-1) return -1;
 		}
 	}
-	function $f45(){
+	function $f46(){
 		this.stk[this.ptr++]="t";
 		var t=this.dstk.get("numtext");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1392,17 +1415,17 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f39;
-		this.stk[this.ptr++]=$f44;
-		var t71=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f40;
+		this.stk[this.ptr++]=$f45;
 		var t72=this.stk[--this.ptr];
+		var t73=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t72.call(this)==-1) return -1;
+			if (t73.call(this)==-1) return -1;
 		} else {
-			if (t71.call(this)==-1) return -1;
+			if (t72.call(this)==-1) return -1;
 		}
 	}
-	function $f46(){
+	function $f47(){
 		var t=this.dstk.get("p");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
@@ -1411,10 +1434,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f36;
-		var t65=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f37;
+		var t66=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t65.call(this)==-1) return -1;
+			if (t66.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="n";
 		var t=this.dstk.get("numdigits");
@@ -1430,17 +1453,17 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=13;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f37;
-		this.stk[this.ptr++]=$f45;
-		var t73=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f38;
+		this.stk[this.ptr++]=$f46;
 		var t74=this.stk[--this.ptr];
+		var t75=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t74.call(this)==-1) return -1;
+			if (t75.call(this)==-1) return -1;
 		} else {
-			if (t73.call(this)==-1) return -1;
+			if (t74.call(this)==-1) return -1;
 		}
 	}
-	function $f47(){
+	function $f48(){
 		var t=this.dstk.get("charvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("A");
@@ -1455,7 +1478,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 	}
-	function $f48(){
+	function $f49(){
 		var t=this.dstk.get("charvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("L");
@@ -1470,7 +1493,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 	}
-	function $f49(){
+	function $f50(){
 		var t=this.dstk.get("charvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("M");
@@ -1485,7 +1508,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 	}
-	function $f50(){
+	function $f51(){
 		var t=this.dstk.get("charvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("P");
@@ -1500,7 +1523,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 	}
-	function $f51(){
+	function $f52(){
 		var t=this.dstk.get("text");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -1518,7 +1541,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f52(){
+	function $f53(){
 		var t=this.dstk.get("curlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("y");
@@ -1579,7 +1602,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f53(){
+	function $f54(){
 		this.stk[this.ptr++]="y";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1619,13 +1642,13 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f52;
-		var t76=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f53;
+		var t77=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t76.call(this)==-1) return -1;
+			if (t77.call(this)==-1) return -1;
 		}
 	}
-	function $f54(){
+	function $f55(){
 		this.stk[this.ptr++]="x";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1643,24 +1666,24 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=$f53;
+		this.stk[this.ptr++]=$f54;
+		var t80=this.stk[--this.ptr];
 		var t79=this.stk[--this.ptr];
-		var t78=this.stk[--this.ptr];
-		for (t77 in t78) {
-			if (t78 instanceof BWIPJS.psstring || t78 instanceof BWIPJS.psarray) {
-				if (t77.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t78.get(t77);
+		for (t78 in t79) {
+			if (t79 instanceof BWIPJS.psstring || t79 instanceof BWIPJS.psarray) {
+				if (t78.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t79.get(t78);
 			} else {
-				this.stk[this.ptr++]=t77;
-				this.stk[this.ptr++]=t78[t77];
+				this.stk[this.ptr++]=t78;
+				this.stk[this.ptr++]=t79[t78];
 			}
-			if (t79.call(this)==-1) break;
+			if (t80.call(this)==-1) break;
 		}
 	}
-	function $f55(){
+	function $f56(){
 		return -1;
 	}
-	function $f56(){
+	function $f57(){
 		this.stk[this.ptr++]="imp";
 		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1678,33 +1701,33 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=$f54;
+		this.stk[this.ptr++]=$f55;
+		var t83=this.stk[--this.ptr];
 		var t82=this.stk[--this.ptr];
-		var t81=this.stk[--this.ptr];
-		for (t80 in t81) {
-			if (t81 instanceof BWIPJS.psstring || t81 instanceof BWIPJS.psarray) {
-				if (t80.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t81.get(t80);
+		for (t81 in t82) {
+			if (t82 instanceof BWIPJS.psstring || t82 instanceof BWIPJS.psarray) {
+				if (t81.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t82.get(t81);
 			} else {
-				this.stk[this.ptr++]=t80;
-				this.stk[this.ptr++]=t81[t80];
+				this.stk[this.ptr++]=t81;
+				this.stk[this.ptr++]=t82[t81];
 			}
-			if (t82.call(this)==-1) break;
+			if (t83.call(this)==-1) break;
 		}
 		var t=this.dstk.get("imp");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
-		this.stk[this.ptr++]=$f55;
-		var t83=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f56;
+		var t84=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t83.call(this)==-1) return -1;
+			if (t84.call(this)==-1) return -1;
 		}
 	}
-	function $f57(){
+	function $f58(){
 		return -1;
 	}
-	function $f58(){
+	function $f59(){
 		var t=this.dstk.get("nxtlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("x");
@@ -1745,15 +1768,15 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f59(){
+	function $f60(){
 		var t=this.dstk.get("as");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f60(){
+	function $f61(){
 		var t=this.dstk.get("ps");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f61(){
+	function $f62(){
 		var t=this.dstk.get("nxtlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("y");
@@ -1790,14 +1813,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f59;
 		this.stk[this.ptr++]=$f60;
-		var t87=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f61;
 		var t88=this.stk[--this.ptr];
+		var t89=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t88.call(this)==-1) return -1;
+			if (t89.call(this)==-1) return -1;
 		} else {
-			if (t87.call(this)==-1) return -1;
+			if (t88.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("char");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1811,7 +1834,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f62(){
+	function $f63(){
 		this.stk[this.ptr++]="cost";
 		var t=this.dstk.get("curlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1850,13 +1873,13 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f61;
-		var t89=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f62;
+		var t90=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t89.call(this)==-1) return -1;
+			if (t90.call(this)==-1) return -1;
 		}
 	}
-	function $f63(){
+	function $f64(){
 		this.stk[this.ptr++]="y";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1868,13 +1891,13 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f62;
-		var t90=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f63;
+		var t91=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t90.call(this)==-1) return -1;
+			if (t91.call(this)==-1) return -1;
 		}
 	}
-	function $f64(){
+	function $f65(){
 		var t=this.dstk.get("charvals");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("x");
@@ -1888,10 +1911,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
-		this.stk[this.ptr++]=$f57;
-		var t85=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f58;
+		var t86=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t85.call(this)==-1) return -1;
+			if (t86.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="cost";
 		var t=this.dstk.get("curlen");
@@ -1916,10 +1939,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f58;
-		var t86=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f59;
+		var t87=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t86.call(this)==-1) return -1;
+			if (t87.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("A");
@@ -1935,39 +1958,39 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=$f63;
+		this.stk[this.ptr++]=$f64;
+		var t94=this.stk[--this.ptr];
 		var t93=this.stk[--this.ptr];
-		var t92=this.stk[--this.ptr];
-		for (t91 in t92) {
-			if (t92 instanceof BWIPJS.psstring || t92 instanceof BWIPJS.psarray) {
-				if (t91.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t92.get(t91);
+		for (t92 in t93) {
+			if (t93 instanceof BWIPJS.psstring || t93 instanceof BWIPJS.psarray) {
+				if (t92.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t93.get(t92);
 			} else {
-				this.stk[this.ptr++]=t91;
-				this.stk[this.ptr++]=t92[t91];
+				this.stk[this.ptr++]=t92;
+				this.stk[this.ptr++]=t93[t92];
 			}
-			if (t93.call(this)==-1) break;
+			if (t94.call(this)==-1) break;
 		}
 		return -1;
 	}
-	function $f65(){
+	function $f66(){
 		this.stk[this.ptr++]="x";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]=$f64;
-		var t94=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f65;
+		var t95=this.stk[--this.ptr];
 		while (true) {
-			if (t94.call(this)==-1) break;
+			if (t95.call(this)==-1) break;
 		}
 	}
-	function $f66(){
+	function $f67(){
 		this.stk[this.ptr++]="char";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]=$f56;
-		var t84=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f57;
+		var t85=this.stk[--this.ptr];
 		while (true) {
-			if (t84.call(this)==-1) break;
+			if (t85.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="nxtlen";
 		this.stk[this.ptr++]=Infinity;
@@ -2003,18 +2026,18 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=$f65;
+		this.stk[this.ptr++]=$f66;
+		var t98=this.stk[--this.ptr];
 		var t97=this.stk[--this.ptr];
-		var t96=this.stk[--this.ptr];
-		for (t95 in t96) {
-			if (t96 instanceof BWIPJS.psstring || t96 instanceof BWIPJS.psarray) {
-				if (t95.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t96.get(t95);
+		for (t96 in t97) {
+			if (t97 instanceof BWIPJS.psstring || t97 instanceof BWIPJS.psarray) {
+				if (t96.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t97.get(t96);
 			} else {
-				this.stk[this.ptr++]=t95;
-				this.stk[this.ptr++]=t96[t95];
+				this.stk[this.ptr++]=t96;
+				this.stk[this.ptr++]=t97[t96];
 			}
-			if (t97.call(this)==-1) break;
+			if (t98.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="curlen";
 		var t=this.dstk.get("nxtlen");
@@ -2025,7 +2048,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f67(){
+	function $f68(){
 		this.stk[this.ptr++]="minseq";
 		var t=this.dstk.get("curlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2047,7 +2070,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f68(){
+	function $f69(){
 		this.stk[this.ptr++]="k";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -2062,24 +2085,24 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t=this.dstk.get("minseq");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f67;
-		var t101=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f68;
+		var t102=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t101.call(this)==-1) return -1;
+			if (t102.call(this)==-1) return -1;
 		}
 	}
-	function $f69(){
+	function $f70(){
 		return -1;
 	}
-	function $f70(){
+	function $f71(){
 		var t=this.dstk.get("enca");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f71(){
+	function $f72(){
 		var t=this.dstk.get("encp");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f72(){
+	function $f73(){
 		var t=this.dstk.get("txtseq");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("k");
@@ -2096,14 +2119,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f70;
 		this.stk[this.ptr++]=$f71;
-		var t106=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f72;
 		var t107=this.stk[--this.ptr];
+		var t108=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t107.call(this)==-1) return -1;
+			if (t108.call(this)==-1) return -1;
 		} else {
-			if (t106.call(this)==-1) return -1;
+			if (t107.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("addtotext");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2114,31 +2137,31 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f73(){
+	function $f74(){
 		this.stk[this.ptr++]="submode";
 		var t=this.dstk.get("A");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f74(){
+	function $f75(){
 		this.stk[this.ptr++]="submode";
 		var t=this.dstk.get("L");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f75(){
+	function $f76(){
 		this.stk[this.ptr++]="submode";
 		var t=this.dstk.get("M");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f76(){
+	function $f77(){
 		this.stk[this.ptr++]="submode";
 		var t=this.dstk.get("P");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f77(){
+	function $f78(){
 		var t=this.dstk.get("k");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("txtseq");
@@ -2146,10 +2169,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f69;
-		var t105=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f70;
+		var t106=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t105.call(this)==-1) return -1;
+			if (t106.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="char";
 		var t=this.dstk.get("txtseq");
@@ -2202,19 +2225,6 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]||this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f72;
-		var t108=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t108.call(this)==-1) return -1;
-		}
-		var t=this.dstk.get("char");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("al");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
 		this.stk[this.ptr++]=$f73;
 		var t109=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -2222,7 +2232,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		}
 		var t=this.dstk.get("char");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("ll");
+		var t=this.dstk.get("al");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -2235,7 +2245,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		}
 		var t=this.dstk.get("char");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("ml");
+		var t=this.dstk.get("ll");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -2248,7 +2258,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		}
 		var t=this.dstk.get("char");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("pl");
+		var t=this.dstk.get("ml");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
@@ -2259,8 +2269,21 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (this.stk[--this.ptr]) {
 			if (t112.call(this)==-1) return -1;
 		}
+		var t=this.dstk.get("char");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("pl");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
+		this.ptr--;
+		this.stk[this.ptr++]=$f77;
+		var t113=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t113.call(this)==-1) return -1;
+		}
 	}
-	function $f78(){
+	function $f79(){
 		this.stk[this.ptr++]="pad";
 		var t=this.dstk.get("al");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2272,7 +2295,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f79(){
+	function $f80(){
 		this.stk[this.ptr++]="pad";
 		var t=this.dstk.get("ps");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2290,7 +2313,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f80(){
+	function $f81(){
 		var t=this.dstk.get("submode");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("P");
@@ -2299,14 +2322,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f78;
 		this.stk[this.ptr++]=$f79;
-		var t114=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f80;
 		var t115=this.stk[--this.ptr];
+		var t116=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t115.call(this)==-1) return -1;
+			if (t116.call(this)==-1) return -1;
 		} else {
-			if (t114.call(this)==-1) return -1;
+			if (t115.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="text";
 		this.stk[this.ptr++]=Infinity;
@@ -2326,7 +2349,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f81(){
+	function $f82(){
 		this.stk[this.ptr++]="k";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -2364,7 +2387,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f82(){
+	function $f83(){
 		this.stk[this.ptr++]="in";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -2407,18 +2430,18 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		var t=this.dstk.get("in");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=$f66;
+		this.stk[this.ptr++]=$f67;
+		var t101=this.stk[--this.ptr];
 		var t100=this.stk[--this.ptr];
-		var t99=this.stk[--this.ptr];
-		for (t98 in t99) {
-			if (t99 instanceof BWIPJS.psstring || t99 instanceof BWIPJS.psarray) {
-				if (t98.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t99.get(t98);
+		for (t99 in t100) {
+			if (t100 instanceof BWIPJS.psstring || t100 instanceof BWIPJS.psarray) {
+				if (t99.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t100.get(t99);
 			} else {
-				this.stk[this.ptr++]=t98;
-				this.stk[this.ptr++]=t99[t98];
+				this.stk[this.ptr++]=t99;
+				this.stk[this.ptr++]=t100[t99];
 			}
-			if (t100.call(this)==-1) break;
+			if (t101.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="minseq";
 		var t=this.dstk.get("e");
@@ -2438,18 +2461,18 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=$f68;
+		this.stk[this.ptr++]=$f69;
+		var t105=this.stk[--this.ptr];
 		var t104=this.stk[--this.ptr];
-		var t103=this.stk[--this.ptr];
-		for (t102 in t103) {
-			if (t103 instanceof BWIPJS.psstring || t103 instanceof BWIPJS.psarray) {
-				if (t102.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t103.get(t102);
+		for (t103 in t104) {
+			if (t104 instanceof BWIPJS.psstring || t104 instanceof BWIPJS.psarray) {
+				if (t103.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t104.get(t103);
 			} else {
-				this.stk[this.ptr++]=t102;
-				this.stk[this.ptr++]=t103[t102];
+				this.stk[this.ptr++]=t103;
+				this.stk[this.ptr++]=t104[t103];
 			}
-			if (t104.call(this)==-1) break;
+			if (t105.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="text";
 		var t=this.dstk.get("minseq");
@@ -2462,10 +2485,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]="l";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]=$f77;
-		var t113=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f78;
+		var t114=this.stk[--this.ptr];
 		while (true) {
-			if (t113.call(this)==-1) break;
+			if (t114.call(this)==-1) break;
 		}
 		var t=this.dstk.get("text");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2478,10 +2501,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f80;
-		var t116=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f81;
+		var t117=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t116.call(this)==-1) return -1;
+			if (t117.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="out";
 		var t=this.dstk.get("text");
@@ -2500,30 +2523,30 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f81;
-		var t121=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f82;
+		var t122=this.stk[--this.ptr];
+		var t120=this.stk[--this.ptr];
 		var t119=this.stk[--this.ptr];
 		var t118=this.stk[--this.ptr];
-		var t117=this.stk[--this.ptr];
-		for (var t120=t117; t118<0 ? t120>=t119 : t120<=t119; t120+=t118) {
-			this.stk[this.ptr++]=t120;
-			if (t121.call(this)==-1) break;
+		for (var t121=t118; t119<0 ? t121>=t120 : t121<=t120; t121+=t119) {
+			this.stk[this.ptr++]=t121;
+			if (t122.call(this)==-1) break;
 		}
 		var t=this.dstk.get("out");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f83(){
+	function $f84(){
 		this.ptr--;
 		this.stk[this.ptr++]=44;
 	}
-	function $f84(){
+	function $f85(){
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f85(){
+	function $f86(){
 		return -1;
 	}
-	function $f86(){
+	function $f87(){
 		this.stk[this.ptr++]="gmul";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("gmul");
@@ -2541,7 +2564,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f87(){
+	function $f88(){
 		var t=this.dstk.get("gmul");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -2551,13 +2574,13 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f86;
-		var t127=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f87;
+		var t128=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t127.call(this)==-1) return -1;
+			if (t128.call(this)==-1) return -1;
 		}
 	}
-	function $f88(){
+	function $f89(){
 		this.stk[this.ptr++]="gmul";
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("gmul");
@@ -2579,7 +2602,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f89(){
+	function $f90(){
 		var t=this.dstk.get("gmod");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
@@ -2589,10 +2612,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f85;
-		var t126=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f86;
+		var t127=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t126.call(this)==-1) return -1;
+			if (t127.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="val";
 		var t=this.dstk.get("val");
@@ -2625,14 +2648,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t=this.dstk.get("dv");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f87;
 		this.stk[this.ptr++]=$f88;
-		var t128=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f89;
 		var t129=this.stk[--this.ptr];
+		var t130=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t129.call(this)==-1) return -1;
+			if (t130.call(this)==-1) return -1;
 		} else {
-			if (t128.call(this)==-1) return -1;
+			if (t129.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="val";
 		var t=this.dstk.get("val");
@@ -2642,10 +2665,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f90(){
+	function $f91(){
 		return -1;
 	}
-	function $f91(){
+	function $f92(){
 		this.stk[this.ptr++]="dv";
 		this.stk[this.ptr++]=900;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -2655,10 +2678,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]="val";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]=$f89;
-		var t130=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f90;
+		var t131=this.stk[--this.ptr];
 		while (true) {
-			if (t130.call(this)==-1) break;
+			if (t131.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="dv";
 		var t=this.dstk.get("val");
@@ -2694,13 +2717,13 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f90;
-		var t131=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f91;
+		var t132=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t131.call(this)==-1) return -1;
+			if (t132.call(this)==-1) return -1;
 		}
 	}
-	function $f92(){
+	function $f93(){
 		this.stk[this.ptr++]="k";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -2721,24 +2744,24 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=44;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f83;
-		var t122=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f84;
+		var t123=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t122.call(this)==-1) return -1;
+			if (t123.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
-		this.stk[this.ptr++]=$f84;
+		this.stk[this.ptr++]=$f85;
+		var t126=this.stk[--this.ptr];
 		var t125=this.stk[--this.ptr];
-		var t124=this.stk[--this.ptr];
-		for (t123 in t124) {
-			if (t124 instanceof BWIPJS.psstring || t124 instanceof BWIPJS.psarray) {
-				if (t123.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t124.get(t123);
+		for (t124 in t125) {
+			if (t125 instanceof BWIPJS.psstring || t125 instanceof BWIPJS.psarray) {
+				if (t124.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t125.get(t124);
 			} else {
-				this.stk[this.ptr++]=t123;
-				this.stk[this.ptr++]=t124[t123];
+				this.stk[this.ptr++]=t124;
+				this.stk[this.ptr++]=t125[t124];
 			}
-			if (t125.call(this)==-1) break;
+			if (t126.call(this)==-1) break;
 		}
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -2749,10 +2772,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]="cwn";
 		this.stk[this.ptr++]=BWIPJS.psarray([]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]=$f91;
-		var t132=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f92;
+		var t133=this.stk[--this.ptr];
 		while (true) {
-			if (t132.call(this)==-1) break;
+			if (t133.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="out";
 		this.stk[this.ptr++]=Infinity;
@@ -2777,7 +2800,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f93(){
+	function $f94(){
 		this.stk[this.ptr++]="in";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -2792,19 +2815,19 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f92;
-		var t137=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f93;
+		var t138=this.stk[--this.ptr];
+		var t136=this.stk[--this.ptr];
 		var t135=this.stk[--this.ptr];
 		var t134=this.stk[--this.ptr];
-		var t133=this.stk[--this.ptr];
-		for (var t136=t133; t134<0 ? t136>=t135 : t136<=t135; t136+=t134) {
-			this.stk[this.ptr++]=t136;
-			if (t137.call(this)==-1) break;
+		for (var t137=t134; t135<0 ? t137>=t136 : t137<=t136; t137+=t135) {
+			this.stk[this.ptr++]=t137;
+			if (t138.call(this)==-1) break;
 		}
 		var t=this.dstk.get("out");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f94(){
+	function $f95(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("datcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2827,10 +2850,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f95(){
+	function $f96(){
 		return -1;
 	}
-	function $f96(){
+	function $f97(){
 		var t=this.dstk.get("chars");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("encfuncs");
@@ -2848,7 +2871,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f97(){
+	function $f98(){
 		this.stk[this.ptr++]="state";
 		var t=this.dstk.get("T");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2858,19 +2881,19 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f98(){
+	function $f99(){
 		this.stk[this.ptr++]="state";
 		var t=this.dstk.get("N");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f99(){
+	function $f100(){
 		this.stk[this.ptr++]="state";
 		var t=this.dstk.get("B");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f100(){
+	function $f101(){
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2890,7 +2913,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t=this.dstk.get("addtocws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	}
-	function $f101(){
+	function $f102(){
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("latchcws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2915,10 +2938,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f97;
-		var t139=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f98;
+		var t140=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t139.call(this)==-1) return -1;
+			if (t140.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("chars");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2928,10 +2951,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f98;
-		var t140=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f99;
+		var t141=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t140.call(this)==-1) return -1;
+			if (t141.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("chars");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2952,10 +2975,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]||this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f99;
-		var t141=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f100;
+		var t142=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t141.call(this)==-1) return -1;
+			if (t142.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("chars");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -2965,13 +2988,13 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f100;
-		var t142=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f101;
+		var t143=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t142.call(this)==-1) return -1;
+			if (t143.call(this)==-1) return -1;
 		}
 	}
-	function $f102(){
+	function $f103(){
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("seq");
@@ -2979,10 +3002,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f95;
-		var t138=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f96;
+		var t139=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t138.call(this)==-1) return -1;
+			if (t139.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="chars";
 		var t=this.dstk.get("seq");
@@ -3002,14 +3025,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f96;
-		this.stk[this.ptr++]=$f101;
-		var t143=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f97;
+		this.stk[this.ptr++]=$f102;
 		var t144=this.stk[--this.ptr];
+		var t145=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t144.call(this)==-1) return -1;
+			if (t145.call(this)==-1) return -1;
 		} else {
-			if (t143.call(this)==-1) return -1;
+			if (t144.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
@@ -3018,7 +3041,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f103(){
+	function $f104(){
 		this.stk[this.ptr++]="T";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3186,14 +3209,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f28;
-		var t47=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f29;
+		var t48=this.stk[--this.ptr];
+		var t46=this.stk[--this.ptr];
 		var t45=this.stk[--this.ptr];
 		var t44=this.stk[--this.ptr];
-		var t43=this.stk[--this.ptr];
-		for (var t46=t43; t44<0 ? t46>=t45 : t46<=t45; t46+=t44) {
-			this.stk[this.ptr++]=t46;
-			if (t47.call(this)==-1) break;
+		for (var t47=t44; t45<0 ? t47>=t46 : t47<=t46; t47+=t45) {
+			this.stk[this.ptr++]=t47;
+			if (t48.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="e";
 		this.stk[this.ptr++]=10000;
@@ -3416,11 +3439,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=$f29;
-		var t50=this.stk[--this.ptr];
-		var t48=this.stk[--this.ptr];
-		for (var t49=0; t49<t48; t49++) {
-			if (t50.call(this)==-1) break;
+		this.stk[this.ptr++]=$f30;
+		var t51=this.stk[--this.ptr];
+		var t49=this.stk[--this.ptr];
+		for (var t50=0; t50<t49; t50++) {
+			if (t51.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=0;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -3433,11 +3456,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=$f30;
-		var t53=this.stk[--this.ptr];
-		var t51=this.stk[--this.ptr];
-		for (var t52=0; t52<t51; t52++) {
-			if (t53.call(this)==-1) break;
+		this.stk[this.ptr++]=$f31;
+		var t54=this.stk[--this.ptr];
+		var t52=this.stk[--this.ptr];
+		for (var t53=0; t53<t52; t53++) {
+			if (t54.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=0;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -3450,11 +3473,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=Infinity;
 		var t=this.dstk.get("barlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=$f31;
-		var t56=this.stk[--this.ptr];
-		var t54=this.stk[--this.ptr];
-		for (var t55=0; t55<t54; t55++) {
-			if (t56.call(this)==-1) break;
+		this.stk[this.ptr++]=$f32;
+		var t57=this.stk[--this.ptr];
+		var t55=this.stk[--this.ptr];
+		for (var t56=0; t56<t55; t56++) {
+			if (t57.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=0;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -3469,14 +3492,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=0;
-		this.stk[this.ptr++]=$f35;
-		var t64=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f36;
+		var t65=this.stk[--this.ptr];
+		var t63=this.stk[--this.ptr];
 		var t62=this.stk[--this.ptr];
 		var t61=this.stk[--this.ptr];
-		var t60=this.stk[--this.ptr];
-		for (var t63=t60; t61<0 ? t63>=t62 : t63<=t62; t63+=t61) {
-			this.stk[this.ptr++]=t63;
-			if (t64.call(this)==-1) break;
+		for (var t64=t61; t62<0 ? t64>=t63 : t64<=t63; t64+=t62) {
+			this.stk[this.ptr++]=t64;
+			if (t65.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="numdigits";
 		var t=this.dstk.get("numdigits");
@@ -3515,10 +3538,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]="p";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]=$f46;
-		var t75=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f47;
+		var t76=this.stk[--this.ptr];
 		while (true) {
-			if (t75.call(this)==-1) break;
+			if (t76.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="latchcws";
 		this.stk[this.ptr++]=Infinity;
@@ -3547,16 +3570,16 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="enca";
-		this.stk[this.ptr++]=$f47;
-		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="encl";
 		this.stk[this.ptr++]=$f48;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="encm";
+		this.stk[this.ptr++]="encl";
 		this.stk[this.ptr++]=$f49;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]="encp";
+		this.stk[this.ptr++]="encm";
 		this.stk[this.ptr++]=$f50;
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		this.stk[this.ptr++]="encp";
+		this.stk[this.ptr++]=$f51;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="textencfuncs";
 		this.stk[this.ptr++]=Infinity;
@@ -3571,13 +3594,13 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="addtotext";
-		this.stk[this.ptr++]=$f51;
+		this.stk[this.ptr++]=$f52;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="enct";
-		this.stk[this.ptr++]=$f82;
+		this.stk[this.ptr++]=$f83;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="encn";
-		this.stk[this.ptr++]=$f93;
+		this.stk[this.ptr++]=$f94;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="encfuncs";
 		this.stk[this.ptr++]=Infinity;
@@ -3591,7 +3614,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="addtocws";
-		this.stk[this.ptr++]=$f94;
+		this.stk[this.ptr++]=$f95;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="state";
 		var t=this.dstk.get("T");
@@ -3612,10 +3635,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]="j";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.stk[this.ptr++]=$f102;
-		var t145=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f103;
+		var t146=this.stk[--this.ptr];
 		while (true) {
-			if (t145.call(this)==-1) break;
+			if (t146.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="datcws";
 		var t=this.dstk.get("datcws");
@@ -3626,15 +3649,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f104(){
+	function $f105(){
 		this.stk[this.ptr++]="metrics";
 		var t=this.dstk.get("ccametrics");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	}
-	function $f105(){
-		this.stk[this.ptr++]="okay";
-		this.stk[this.ptr++]=false;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f106(){
@@ -3648,9 +3666,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f108(){
-		return -1;
+		this.stk[this.ptr++]="okay";
+		this.stk[this.ptr++]=false;
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f109(){
+		return -1;
+	}
+	function $f110(){
 		this.stk[this.ptr++]="m";
 		var t=this.dstk.get("metrics");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3735,10 +3758,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		var t=this.dstk.get("ncws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f105;
-		var t148=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f106;
+		var t149=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t148.call(this)==-1) return -1;
+			if (t149.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("urows");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3758,10 +3781,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f106;
-		var t149=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f107;
+		var t150=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t149.call(this)==-1) return -1;
+			if (t150.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("ucols");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3781,17 +3804,17 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f107;
-		var t150=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t150.call(this)==-1) return -1;
-		}
-		var t=this.dstk.get("okay");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f108;
 		var t151=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t151.call(this)==-1) return -1;
+		}
+		var t=this.dstk.get("okay");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=$f109;
+		var t152=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t152.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="i";
 		var t=this.dstk.get("i");
@@ -3800,20 +3823,20 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f110(){
+	function $f111(){
 		this.stk[this.ptr++]=900;
 	}
-	function $f111(){
+	function $f112(){
 		this.stk[this.ptr++]=0;
 	}
-	function $f112(){
+	function $f113(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=929;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f113(){
+	function $f114(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("rsalog");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -3837,7 +3860,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f114(){
+	function $f115(){
 		var t=this.dstk.get("rslog");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -3864,12 +3887,12 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
 		this.ptr--;
 	}
-	function $f115(){
+	function $f116(){
 		this.ptr--;
 		this.ptr--;
 		this.stk[this.ptr++]=0;
 	}
-	function $f116(){
+	function $f117(){
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -3897,20 +3920,20 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f114;
 		this.stk[this.ptr++]=$f115;
-		var t167=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f116;
 		var t168=this.stk[--this.ptr];
+		var t169=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t168.call(this)==-1) return -1;
+			if (t169.call(this)==-1) return -1;
 		} else {
-			if (t167.call(this)==-1) return -1;
+			if (t168.call(this)==-1) return -1;
 		}
 	}
-	function $f117(){
+	function $f118(){
 		this.stk[this.ptr++]=0;
 	}
-	function $f118(){
+	function $f119(){
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3954,7 +3977,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f119(){
+	function $f120(){
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3982,14 +4005,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=1;
-		this.stk[this.ptr++]=$f118;
-		var t176=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f119;
+		var t177=this.stk[--this.ptr];
+		var t175=this.stk[--this.ptr];
 		var t174=this.stk[--this.ptr];
 		var t173=this.stk[--this.ptr];
-		var t172=this.stk[--this.ptr];
-		for (var t175=t172; t173<0 ? t175>=t174 : t175<=t174; t175+=t173) {
-			this.stk[this.ptr++]=t175;
-			if (t176.call(this)==-1) break;
+		for (var t176=t173; t174<0 ? t176>=t175 : t176<=t175; t176+=t174) {
+			this.stk[this.ptr++]=t176;
+			if (t177.call(this)==-1) break;
 		}
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4016,7 +4039,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f120(){
+	function $f121(){
 		var t=this.dstk.get("coeffs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -4045,7 +4068,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f121(){
+	function $f122(){
 		this.stk[this.ptr++]="j";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4097,7 +4120,7 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f122(){
+	function $f123(){
 		this.stk[this.ptr++]="t";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		var t=this.dstk.get("cws");
@@ -4125,17 +4148,17 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f121;
-		var t191=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f122;
+		var t192=this.stk[--this.ptr];
+		var t190=this.stk[--this.ptr];
 		var t189=this.stk[--this.ptr];
 		var t188=this.stk[--this.ptr];
-		var t187=this.stk[--this.ptr];
-		for (var t190=t187; t188<0 ? t190>=t189 : t190<=t189; t190+=t188) {
-			this.stk[this.ptr++]=t190;
-			if (t191.call(this)==-1) break;
+		for (var t191=t188; t189<0 ? t191>=t190 : t191<=t190; t191+=t189) {
+			this.stk[this.ptr++]=t191;
+			if (t192.call(this)==-1) break;
 		}
 	}
-	function $f123(){
+	function $f124(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4162,14 +4185,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
 		this.ptr-=3;
 	}
-	function $f124(){
+	function $f125(){
 		this.stk[this.ptr++]=0;
 	}
-	function $f125(){
+	function $f126(){
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f126(){
+	function $f127(){
 		var t=this.dstk.get("clusters");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -4187,11 +4210,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=17;
-		this.stk[this.ptr++]=$f124;
-		var t204=this.stk[--this.ptr];
-		var t202=this.stk[--this.ptr];
-		for (var t203=0; t203<t202; t203++) {
-			if (t204.call(this)==-1) break;
+		this.stk[this.ptr++]=$f125;
+		var t205=this.stk[--this.ptr];
+		var t203=this.stk[--this.ptr];
+		for (var t204=0; t204<t203; t204++) {
+			if (t205.call(this)==-1) break;
 		}
 		var t=this.dstk.get("v");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4202,18 +4225,18 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-1].assign(0,t);
 		this.stk[this.ptr-3]=this.stk[this.ptr-1].subset(0,t.length);
 		this.ptr-=2;
-		this.stk[this.ptr++]=$f125;
+		this.stk[this.ptr++]=$f126;
+		var t208=this.stk[--this.ptr];
 		var t207=this.stk[--this.ptr];
-		var t206=this.stk[--this.ptr];
-		for (t205 in t206) {
-			if (t206 instanceof BWIPJS.psstring || t206 instanceof BWIPJS.psarray) {
-				if (t205.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t206.get(t205);
+		for (t206 in t207) {
+			if (t207 instanceof BWIPJS.psstring || t207 instanceof BWIPJS.psarray) {
+				if (t206.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t207.get(t206);
 			} else {
-				this.stk[this.ptr++]=t205;
-				this.stk[this.ptr++]=t206[t205];
+				this.stk[this.ptr++]=t206;
+				this.stk[this.ptr++]=t207[t206];
 			}
-			if (t207.call(this)==-1) break;
+			if (t208.call(this)==-1) break;
 		}
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -4228,14 +4251,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=17;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
-	function $f127(){
+	function $f128(){
 		this.stk[this.ptr++]=0;
 	}
-	function $f128(){
+	function $f129(){
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f129(){
+	function $f130(){
 		var t=this.dstk.get("raps");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -4253,11 +4276,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=10;
-		this.stk[this.ptr++]=$f127;
-		var t210=this.stk[--this.ptr];
-		var t208=this.stk[--this.ptr];
-		for (var t209=0; t209<t208; t209++) {
-			if (t210.call(this)==-1) break;
+		this.stk[this.ptr++]=$f128;
+		var t211=this.stk[--this.ptr];
+		var t209=this.stk[--this.ptr];
+		for (var t210=0; t210<t209; t210++) {
+			if (t211.call(this)==-1) break;
 		}
 		var t=this.dstk.get("v");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4268,18 +4291,18 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-1].assign(0,t);
 		this.stk[this.ptr-3]=this.stk[this.ptr-1].subset(0,t.length);
 		this.ptr-=2;
-		this.stk[this.ptr++]=$f128;
+		this.stk[this.ptr++]=$f129;
+		var t214=this.stk[--this.ptr];
 		var t213=this.stk[--this.ptr];
-		var t212=this.stk[--this.ptr];
-		for (t211 in t212) {
-			if (t212 instanceof BWIPJS.psstring || t212 instanceof BWIPJS.psarray) {
-				if (t211.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t212.get(t211);
+		for (t212 in t213) {
+			if (t213 instanceof BWIPJS.psstring || t213 instanceof BWIPJS.psarray) {
+				if (t212.charCodeAt(0) > 57) continue;
+				this.stk[this.ptr++]=t213.get(t212);
 			} else {
-				this.stk[this.ptr++]=t211;
-				this.stk[this.ptr++]=t212[t211];
+				this.stk[this.ptr++]=t212;
+				this.stk[this.ptr++]=t213[t212];
 			}
-			if (t213.call(this)==-1) break;
+			if (t214.call(this)==-1) break;
 		}
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		if (i < 0) throw "array: underflow";
@@ -4294,63 +4317,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
-	function $f130(){
+	function $f131(){
 		this.stk[this.ptr++]="rwid";
 		this.stk[this.ptr++]=72;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	}
-	function $f131(){
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("rapl");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=52;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("raptobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		var t=this.dstk.get("clst");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("cwtobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("rapr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=52;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("raptobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
 	}
 	function $f132(){
 		var t=this.dstk.get("i");
@@ -4374,29 +4344,6 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		var t=this.dstk.get("clst");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("cwtobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
@@ -4446,16 +4393,92 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
+		var t=this.dstk.get("cws");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.ptr--;
+		var t=this.dstk.get("clst");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("cwtobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+		var t=this.dstk.get("cws");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.ptr--;
+		var t=this.dstk.get("clst");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("cwtobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("rapr");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=52;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=0;
+		var t=this.dstk.get("raptobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
 	}
 	function $f134(){
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("rapl");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=52;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=0;
+		var t=this.dstk.get("raptobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+	}
+	function $f135(){
 		var t=this.dstk.get("cca");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
 		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
-		this.stk[this.ptr++]=$f133;
-		var t217=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f134;
+		var t218=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t217.call(this)==-1) return -1;
+			if (t218.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("cws");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4521,141 +4544,6 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		var t=this.dstk.get("clst");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("cwtobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("rapr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=52;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("raptobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-	}
-	function $f135(){
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("rapl");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=52;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("raptobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=4;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		var t=this.dstk.get("clst");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("cwtobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=4;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		var t=this.dstk.get("clst");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("cwtobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("rapc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=52;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("raptobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=4;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		var t=this.dstk.get("clst");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("cwtobits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
-		this.ptr += t.length;
-		this.stk[this.ptr-1]=t;
-		this.ptr--;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=4;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
@@ -4689,6 +4577,141 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.ptr--;
 	}
 	function $f136(){
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("rapl");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=52;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=0;
+		var t=this.dstk.get("raptobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+		var t=this.dstk.get("cws");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=4;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.ptr--;
+		var t=this.dstk.get("clst");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("cwtobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+		var t=this.dstk.get("cws");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=4;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.ptr--;
+		var t=this.dstk.get("clst");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("cwtobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("rapc");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=52;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		var t=this.dstk.get("raptobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+		var t=this.dstk.get("cws");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=4;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.ptr--;
+		var t=this.dstk.get("clst");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("cwtobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+		var t=this.dstk.get("cws");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr++]=4;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=3;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.ptr--;
+		var t=this.dstk.get("clst");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("cwtobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("rapr");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=52;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=0;
+		var t=this.dstk.get("raptobits");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.stk[this.ptr-1];
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		this.ptr += t.length;
+		this.stk[this.ptr-1]=t;
+		this.ptr--;
+	}
+	function $f137(){
 		this.stk[this.ptr++]="i";
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4718,10 +4741,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f131;
-		var t215=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f132;
+		var t216=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t215.call(this)==-1) return -1;
+			if (t216.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("c");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4730,10 +4753,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f132;
-		var t216=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f133;
+		var t217=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t216.call(this)==-1) return -1;
+			if (t217.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("c");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4742,10 +4765,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f134;
-		var t218=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f135;
+		var t219=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t218.call(this)==-1) return -1;
+			if (t219.call(this)==-1) return -1;
 		}
 		var t=this.dstk.get("c");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4754,10 +4777,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 		this.ptr--;
-		this.stk[this.ptr++]=$f135;
-		var t219=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f136;
+		var t220=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t219.call(this)==-1) return -1;
+			if (t220.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]=1;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -4778,6 +4801,9 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
+	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	this.stk[this.ptr++]="version";
+	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="columns";
 	this.stk[this.ptr++]=0;
@@ -4831,6 +4857,18 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		}
 		if (t7.call(this)==-1) break;
 	}
+	var t=this.dstk.get("version");
+	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.stk[this.ptr++]=BWIPJS.psstring("unset");
+	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
+		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
+	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
+	this.ptr--;
+	this.stk[this.ptr++]=$f6;
+	var t8=this.stk[--this.ptr];
+	if (this.stk[--this.ptr]) {
+		if (t8.call(this)==-1) return -1;
+	}
 	this.stk[this.ptr++]="columns";
 	var t=this.dstk.get("columns");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4848,24 +4886,24 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	var t=this.dstk.get("parse");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]=$f9;
-	var t11=this.stk[--this.ptr];
-	if (this.stk[--this.ptr]) {
-		if (t11.call(this)==-1) return -1;
-	}
-	var t=this.dstk.get("raw");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f10;
 	var t12=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t12.call(this)==-1) return -1;
 	}
-	var t=this.dstk.get("cca");
+	var t=this.dstk.get("raw");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f11;
 	var t13=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t13.call(this)==-1) return -1;
+	}
+	var t=this.dstk.get("cca");
+	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.stk[this.ptr++]=$f12;
+	var t14=this.stk[--this.ptr];
+	if (this.stk[--this.ptr]) {
+		if (t14.call(this)==-1) return -1;
 	}
 	var t=this.dstk.get("encoding");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4884,27 +4922,27 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]||this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 	this.ptr--;
-	this.stk[this.ptr++]=$f14;
-	var t16=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f15;
+	var t17=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t16.call(this)==-1) return -1;
+		if (t17.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="barcode";
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]=$f15;
+	this.stk[this.ptr++]=$f16;
+	var t20=this.stk[--this.ptr];
 	var t19=this.stk[--this.ptr];
-	var t18=this.stk[--this.ptr];
-	for (t17 in t18) {
-		if (t18 instanceof BWIPJS.psstring || t18 instanceof BWIPJS.psarray) {
-			if (t17.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t18.get(t17);
+	for (t18 in t19) {
+		if (t19 instanceof BWIPJS.psstring || t19 instanceof BWIPJS.psarray) {
+			if (t18.charCodeAt(0) > 57) continue;
+			this.stk[this.ptr++]=t19.get(t18);
 		} else {
-			this.stk[this.ptr++]=t17;
-			this.stk[this.ptr++]=t18[t17];
+			this.stk[this.ptr++]=t18;
+			this.stk[this.ptr++]=t19[t18];
 		}
-		if (t19.call(this)==-1) break;
+		if (t20.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
@@ -4920,13 +4958,13 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	var t=this.dstk.get("ccb");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]=$f16;
-	var t20=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f17;
+	var t21=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t20.call(this)==-1) return -1;
+		if (t21.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="encb";
-	this.stk[this.ptr++]=$f21;
+	this.stk[this.ptr++]=$f22;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	var t=this.dstk.get("encoding");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4945,10 +4983,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]||this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
 	this.ptr--;
-	this.stk[this.ptr++]=$f25;
-	var t36=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f26;
+	var t37=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t36.call(this)==-1) return -1;
+		if (t37.call(this)==-1) return -1;
 	}
 	var t=this.dstk.get("encoding");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -4957,10 +4995,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
 	this.ptr--;
-	this.stk[this.ptr++]=$f103;
-	var t146=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f104;
+	var t147=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t146.call(this)==-1) return -1;
+		if (t147.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="metrics";
 	this.stk[this.ptr++]=Infinity;
@@ -5031,10 +5069,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	var t=this.dstk.get("cca");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]=$f104;
-	var t147=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f105;
+	var t148=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t147.call(this)==-1) return -1;
+		if (t148.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="urows";
 	var t=this.dstk.get("rows");
@@ -5047,10 +5085,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.stk[this.ptr++]="i";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]=$f109;
-	var t152=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f110;
+	var t153=this.stk[--this.ptr];
 	while (true) {
-		if (t152.call(this)==-1) break;
+		if (t153.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="m";
 	var t=this.dstk.get("datcws");
@@ -5094,11 +5132,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	var t=this.dstk.get("m");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f110;
-	var t155=this.stk[--this.ptr];
-	var t153=this.stk[--this.ptr];
-	for (var t154=0; t154<t153; t154++) {
-		if (t155.call(this)==-1) break;
+	this.stk[this.ptr++]=$f111;
+	var t156=this.stk[--this.ptr];
+	var t154=this.stk[--this.ptr];
+	for (var t155=0; t155<t154; t155++) {
+		if (t156.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
@@ -5113,11 +5151,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.stk[this.ptr++]=Infinity;
 	var t=this.dstk.get("k");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]=$f111;
-	var t158=this.stk[--this.ptr];
-	var t156=this.stk[--this.ptr];
-	for (var t157=0; t157<t156; t157++) {
-		if (t158.call(this)==-1) break;
+	this.stk[this.ptr++]=$f112;
+	var t159=this.stk[--this.ptr];
+	var t157=this.stk[--this.ptr];
+	for (var t158=0; t158<t157; t158++) {
+		if (t159.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]=0;
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -5130,11 +5168,11 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=928;
-	this.stk[this.ptr++]=$f112;
-	var t161=this.stk[--this.ptr];
-	var t159=this.stk[--this.ptr];
-	for (var t160=0; t160<t159; t160++) {
-		if (t161.call(this)==-1) break;
+	this.stk[this.ptr++]=$f113;
+	var t162=this.stk[--this.ptr];
+	var t160=this.stk[--this.ptr];
+	for (var t161=0; t161<t160; t161++) {
+		if (t162.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
@@ -5149,28 +5187,28 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=928;
-	this.stk[this.ptr++]=$f113;
-	var t166=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f114;
+	var t167=this.stk[--this.ptr];
+	var t165=this.stk[--this.ptr];
 	var t164=this.stk[--this.ptr];
 	var t163=this.stk[--this.ptr];
-	var t162=this.stk[--this.ptr];
-	for (var t165=t162; t163<0 ? t165>=t164 : t165<=t164; t165+=t163) {
-		this.stk[this.ptr++]=t165;
-		if (t166.call(this)==-1) break;
+	for (var t166=t163; t164<0 ? t166>=t165 : t166<=t165; t166+=t164) {
+		this.stk[this.ptr++]=t166;
+		if (t167.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="rsprod";
-	this.stk[this.ptr++]=$f116;
+	this.stk[this.ptr++]=$f117;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="coeffs";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("k");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]=$f117;
-	var t171=this.stk[--this.ptr];
-	var t169=this.stk[--this.ptr];
-	for (var t170=0; t170<t169; t170++) {
-		if (t171.call(this)==-1) break;
+	this.stk[this.ptr++]=$f118;
+	var t172=this.stk[--this.ptr];
+	var t170=this.stk[--this.ptr];
+	for (var t171=0; t171<t170; t171++) {
+		if (t172.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	if (i < 0) throw "array: underflow";
@@ -5182,14 +5220,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.stk[this.ptr++]=1;
 	var t=this.dstk.get("k");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	this.stk[this.ptr++]=$f119;
-	var t181=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f120;
+	var t182=this.stk[--this.ptr];
+	var t180=this.stk[--this.ptr];
 	var t179=this.stk[--this.ptr];
 	var t178=this.stk[--this.ptr];
-	var t177=this.stk[--this.ptr];
-	for (var t180=t177; t178<0 ? t180>=t179 : t180<=t179; t180+=t178) {
-		this.stk[this.ptr++]=t180;
-		if (t181.call(this)==-1) break;
+	for (var t181=t178; t179<0 ? t181>=t180 : t181<=t180; t181+=t179) {
+		this.stk[this.ptr++]=t181;
+		if (t182.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="coeffs";
 	var t=this.dstk.get("coeffs");
@@ -5211,14 +5249,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=-2;
 	this.stk[this.ptr++]=0;
-	this.stk[this.ptr++]=$f120;
-	var t186=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f121;
+	var t187=this.stk[--this.ptr];
+	var t185=this.stk[--this.ptr];
 	var t184=this.stk[--this.ptr];
 	var t183=this.stk[--this.ptr];
-	var t182=this.stk[--this.ptr];
-	for (var t185=t182; t183<0 ? t185>=t184 : t185<=t184; t185+=t183) {
-		this.stk[this.ptr++]=t185;
-		if (t186.call(this)==-1) break;
+	for (var t186=t183; t184<0 ? t186>=t185 : t186<=t185; t186+=t184) {
+		this.stk[this.ptr++]=t186;
+		if (t187.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
@@ -5226,14 +5264,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f122;
-	var t196=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f123;
+	var t197=this.stk[--this.ptr];
+	var t195=this.stk[--this.ptr];
 	var t194=this.stk[--this.ptr];
 	var t193=this.stk[--this.ptr];
-	var t192=this.stk[--this.ptr];
-	for (var t195=t192; t193<0 ? t195>=t194 : t195<=t194; t195+=t193) {
-		this.stk[this.ptr++]=t195;
-		if (t196.call(this)==-1) break;
+	for (var t196=t193; t194<0 ? t196>=t195 : t196<=t195; t196+=t194) {
+		this.stk[this.ptr++]=t196;
+		if (t197.call(this)==-1) break;
 	}
 	var t=this.dstk.get("n");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -5243,14 +5281,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	var t=this.dstk.get("k");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f123;
-	var t201=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f124;
+	var t202=this.stk[--this.ptr];
+	var t200=this.stk[--this.ptr];
 	var t199=this.stk[--this.ptr];
 	var t198=this.stk[--this.ptr];
-	var t197=this.stk[--this.ptr];
-	for (var t200=t197; t198<0 ? t200>=t199 : t200<=t199; t200+=t198) {
-		this.stk[this.ptr++]=t200;
-		if (t201.call(this)==-1) break;
+	for (var t201=t198; t199<0 ? t201>=t200 : t201<=t200; t201+=t199) {
+		this.stk[this.ptr++]=t201;
+		if (t202.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="cws";
 	var t=this.dstk.get("cws");
@@ -5286,10 +5324,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="cwtobits";
-	this.stk[this.ptr++]=$f126;
+	this.stk[this.ptr++]=$f127;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="raptobits";
-	this.stk[this.ptr++]=$f129;
+	this.stk[this.ptr++]=$f130;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="rwid";
 	this.stk[this.ptr++]=BWIPJS.psarray([38,55,82,99]);
@@ -5314,10 +5352,10 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 	else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 	this.ptr--;
-	this.stk[this.ptr++]=$f130;
-	var t214=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f131;
+	var t215=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t214.call(this)==-1) return -1;
+		if (t215.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="pixs";
 	var t=this.dstk.get("rwid");
@@ -5333,14 +5371,14 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f136;
-	var t224=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f137;
+	var t225=this.stk[--this.ptr];
+	var t223=this.stk[--this.ptr];
 	var t222=this.stk[--this.ptr];
 	var t221=this.stk[--this.ptr];
-	var t220=this.stk[--this.ptr];
-	for (var t223=t220; t221<0 ? t223>=t222 : t223<=t222; t223+=t221) {
-		this.stk[this.ptr++]=t223;
-		if (t224.call(this)==-1) break;
+	for (var t224=t221; t222<0 ? t224>=t223 : t224<=t223; t224+=t222) {
+		this.stk[this.ptr++]=t224;
+		if (t225.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]="ren";
@@ -5385,9 +5423,9 @@ BWIPJS.bwipp["micropdf417"]=function() {
 	else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
 	var t=this.dstk.get("renmatrix");
 	this.stk[this.ptr++]=t;
-	var t225=this.stk[--this.ptr];
+	var t226=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t225.call(this)==-1) return -1;
+		if (t226.call(this)==-1) return -1;
 	}
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;

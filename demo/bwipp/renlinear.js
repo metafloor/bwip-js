@@ -1,7 +1,7 @@
 // file: bwipp/renlinear.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-03-24
+// Barcode Writer in Pure PostScript - Version 2015-08-10
 //
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2014 Terry Burton
@@ -125,6 +125,15 @@ BWIPJS.bwipp["renlinear"]=function() {
 		this.ptr-=3;
 	}
 	function $f5(){
+		var t=this.dstk.get("sbs");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t=this.dstk.get("i");
+		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
+		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.ptr--;
+		this.print(BWIPJS.pstostring(this.stk[--this.ptr]));
 		this.stk[this.ptr++]="d";
 		var t=this.dstk.get("sbs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -1183,7 +1192,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="inkspread";
-	this.stk[this.ptr++]=0.15;
+	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="width";
 	this.stk[this.ptr++]=0;

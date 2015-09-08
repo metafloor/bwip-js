@@ -608,7 +608,7 @@ BWIPJS.prototype.gsave = function() {
 	BWIPJS.logapi('gsave', arguments);
 	// clone all g_ properties
 	var ctx = {};
-	for (id in this)
+	for (var id in this)
 		if (id.indexOf('g_') == 0)
 			ctx[id] = this.gclone(this[id]);
 
@@ -619,7 +619,7 @@ BWIPJS.prototype.grestore = function() {
 	if (!this.gstk.length)
 		throw new Error('grestore: stack underflow');
 	var ctx = this.gstk.pop();
-	for (id in ctx)
+	for (var id in ctx)
 		this[id] = ctx[id];
 
 	// color is part of the bitmap interface and must be restored separately
@@ -812,6 +812,8 @@ BWIPJS.prototype.gclone = function(o) {
 // it better connects one line with the next.
 BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 	BWIPJS.logapi('drawline', arguments);
+	console.log('x1,y1,x2,y2=' + x1 + ',' + y1 + ',' + x2 + ',' + y2);
+	console.log('optmz,penx,peny=' + optmz + ',' + penx + ',' + peny);
 	if (optmz && (x1 == x2 || y1 == y2)) {
 		var lx = Math.round(penx);
 		var ly = Math.round(peny);
@@ -822,16 +824,16 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 		// Horizontal or vertical line?
 		if (x1 == x2) {
 			// Vertical line
-			x1 = Math.round(x1 - lx/2);
-			x2 = Math.round(x2 + lx/2);
-			y1 = Math.round(y1 - (merge ? ly/2 : 0));
-			y2 = Math.round(y2 + (merge ? ly/2 : 0));
+			x1 = Math.floor(x1 - lx/2);
+			x2 = Math.floor(x2 + lx/2);
+			y1 = Math.floor(y1 - (merge ? ly/2 : 0));
+			y2 = Math.floor(y2 + (merge ? ly/2 : 0));
 		} else {
 			// Horizontal line
-			y1 = Math.round(y1 - ly/2);
-			y2 = Math.round(y2 + ly/2);
-			x1 = Math.round(x1 - (merge ? lx/2 : 0));
-			x2 = Math.round(x2 + (merge ? lx/2 : 0));
+			y1 = Math.floor(y1 - ly/2);
+			y2 = Math.floor(y2 + ly/2);
+			x1 = Math.floor(x1 - (merge ? lx/2 : 0));
+			x2 = Math.floor(x2 + (merge ? lx/2 : 0));
 		}
 		for (var y = y1; y < y2; y++)
 			for (var x = x1; x < x2; x++)
