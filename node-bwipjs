@@ -117,7 +117,7 @@ module.exports.toBuffer = function(args, callback) {
 
 	// Set the options
 	var opts = {};
-	for (id in args) {
+	for (var id in args) {
 		opts[id] = bw.value(args[id]);
 	}
 
