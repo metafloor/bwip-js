@@ -5,6 +5,10 @@
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 
+var CONFIG = {
+	verbose: false
+};
+
 // The one and only global - our class constructor
 var BWIPJS = function() {
 	
@@ -39,7 +43,7 @@ var BWIPJS = function() {
 		// errorname is the name of the function
 		// Don't use an Error object - keeps the message cleaner
 		throw '[' + $error.errorname.toString() + ']\r\n\r\n' +
-			  $error.errorinfo.toString();
+				$error.errorinfo.toString();
 	}
 
 }
@@ -105,7 +109,9 @@ BWIPJS.logapi = function(fn, args) {
 		s += (i ? ', ' : '') + JSON.stringify(args[i]);
 	}
 	s += ')';
-	console.log(s);
+	if(CONFIG.verbose){
+		console.log(s);
+	}
 };
 //BWIPJS.load  = function(s) {};	// force a run-time error	
 
@@ -333,7 +339,9 @@ BWIPJS.prototype.bitmap = function(bmap) {
 }
 // operators print, =, and == are all tied to this
 BWIPJS.prototype.print = function(s) {
-	console.log(''+s);
+	if(CONFIG.verbose){
+		console.log(''+s);
+	}
 };
 
 // Converts a javascript value into a postscript value
@@ -812,8 +820,10 @@ BWIPJS.prototype.gclone = function(o) {
 // it better connects one line with the next.
 BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 	BWIPJS.logapi('drawline', arguments);
-	console.log('x1,y1,x2,y2=' + x1 + ',' + y1 + ',' + x2 + ',' + y2);
-	console.log('optmz,penx,peny=' + optmz + ',' + penx + ',' + peny);
+	if(CONFIG.verbose){
+		console.log('x1,y1,x2,y2=' + x1 + ',' + y1 + ',' + x2 + ',' + y2);
+		console.log('optmz,penx,peny=' + optmz + ',' + penx + ',' + peny);
+	}
 	if (optmz && (x1 == x2 || y1 == y2)) {
 		var lx = Math.round(penx);
 		var ly = Math.round(peny);
