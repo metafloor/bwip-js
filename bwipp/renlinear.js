@@ -125,15 +125,6 @@ BWIPJS.bwipp["renlinear"]=function() {
 		this.ptr-=3;
 	}
 	function $f5(){
-		var t=this.dstk.get("sbs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		this.print(BWIPJS.pstostring(this.stk[--this.ptr]));
 		this.stk[this.ptr++]="d";
 		var t=this.dstk.get("sbs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;

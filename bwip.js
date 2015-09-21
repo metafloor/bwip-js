@@ -578,7 +578,6 @@ BWIPJS.prototype.charpath = function(str, b) {
 	this.rlineto(0, sw.a);
 	this.rlineto(sw.w, 0);
 	this.rlineto(0, -sw.h);
-	BWIPJS.debug('charpath(' + sw.a + ',' + sw.h + ')');
 }
 BWIPJS.prototype.pathbbox = function() {
 	BWIPJS.logapi('pathbbox', arguments);
@@ -601,7 +600,6 @@ BWIPJS.prototype.pathbbox = function() {
 				lly:(lly-this.g_tdy)/this.g_tsy,
 				urx:(urx-this.g_tdx)/this.g_tsx,
 				ury:(ury-this.g_tdy)/this.g_tsy };
-	BWIPJS.debug('pathbox'  + JSON.stringify(rv));
 	return rv;
 }
 BWIPJS.prototype.gsave = function() {
@@ -791,8 +789,8 @@ BWIPJS.prototype.gclone = function(o) {
 
 	if (o instanceof Object) {
 		var t = {};
-		for (i in o)
-			t[i] = this.gclone(o[i]);
+		for (var id in o)
+			t[id] = this.gclone(o[id]);
 		return t;
 	}
 	return o;
@@ -812,8 +810,6 @@ BWIPJS.prototype.gclone = function(o) {
 // it better connects one line with the next.
 BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 	BWIPJS.logapi('drawline', arguments);
-	console.log('x1,y1,x2,y2=' + x1 + ',' + y1 + ',' + x2 + ',' + y2);
-	console.log('optmz,penx,peny=' + optmz + ',' + penx + ',' + peny);
 	if (optmz && (x1 == x2 || y1 == y2)) {
 		var lx = Math.round(penx);
 		var ly = Math.round(peny);
