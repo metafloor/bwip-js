@@ -40,7 +40,7 @@ the end of this document.</p>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Status</h2>
 
 <ul>
-<li>Current bwip-js version is 0.14.0 (07-Sep-2015)</li>
+<li>Current bwip-js version is 0.14.1 (21-Sep-2015)</li>
 <li>Current BWIPP version is 2015-08-10</li>
 <li>Node.js compatibility &gt;= v0.10 (reported to work with v0.8 but not tested).</li>
 <li>npm dependencies: none</li>
@@ -96,7 +96,7 @@ See the
 
 <p>The following is a minimal example of how to use the request handler:</p>
 
-<div class="highlight highlight-javascript"><pre><span class="pl-c">// Simple HTTP server that renders bar code images using bwip-js.</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Simple HTTP server that renders bar code images using bwip-js.</span>
 <span class="pl-k">var</span> http   <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>);
 <span class="pl-k">var</span> bwipjs <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>bwip-js<span class="pl-pds">'</span></span>);
 
@@ -135,7 +135,7 @@ path as needed to implement the desired HTTP request routing.</p>
 
 <p>You can also use bwip-js to generate PNG images directly.</p>
 
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> bwipjs <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>bwip-js<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> bwipjs <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>bwip-js<span class="pl-pds">'</span></span>);
 
 <span class="pl-c">// Optionally load some custom fonts.  Maximum 8.</span>
 <span class="pl-c">// OpenType and TrueType are supported.</span>
