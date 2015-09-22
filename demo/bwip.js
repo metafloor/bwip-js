@@ -18,6 +18,8 @@ var BWIPJS = function() {
 
 	// dict-stack lookup
 	this.dstk.get = function(id) {
+		if (typeof id == 'number')
+			id = '\uffff' + id;
 		for (var i = this.length-1; i >= 0; i--) {
 			if (this[i][id] !== undefined) {
 				return this[i][id];
@@ -86,6 +88,24 @@ BWIPJS.decrefs = function(module) {
 	}
 }
 
+BWIPJS.get = function(obj, id) {
+	if (obj instanceof BWIPJS.psarray || obj instanceof BWIPJS.psstring)
+		return obj.value[obj.offset+parseFloat(id)];
+	if (typeof id === 'number')
+		return obj['\uffff' + id];
+	// Explicit toString() to convert psstrings
+	return obj[id.toString()];
+}
+BWIPJS.set = function(obj, id, val) {
+	if (obj instanceof BWIPJS.psarray || obj instanceof BWIPJS.psstring)
+		obj.value[obj.offset+parseFloat(id)] = val;
+	else if (typeof id === 'number')
+		obj['\uffff' + id] = val;
+	else
+		// Explicit toString() to convert psstrings
+		obj[id.toString()] = val;
+}
+
 // FreeType interface
 BWIPJS.ft_monochrome = Module.cwrap("monochrome", 'number', ['number']);
 BWIPJS.ft_lookup = Module.cwrap("find_font", 'number', ['string']);
@@ -108,7 +128,6 @@ BWIPJS.logapi = function(fn, args) {
 	console.log(s);
 };
 //BWIPJS.load  = function(s) {};	// force a run-time error	
-
 
 BWIPJS.psarray = function(v) {
 	if (!(this instanceof BWIPJS.psarray))
@@ -229,7 +248,6 @@ BWIPJS.psstring.prototype.valueOf = function() {
 		s += String.fromCharCode(this.value[i]);
 	return s;
 }
-
 BWIPJS.psstring.prototype.get = function(n) {
 	return this.value[this.offset+parseFloat(n)];
 }
@@ -312,8 +330,12 @@ BWIPJS.pstostring = function(v) {
 	}
 	if (typeof(v) == 'object') {
 		var s = '';
-		for (var i in v)
-			s += ' /' + i + ' ' + BWIPJS.pstostring(v[i]);
+		for (var i in v) {
+			if (i.charCodeAt(0) == 0xffff)
+				s += ' ' + i.substr(1) + ' ' + BWIPJS.pstostring(v[i]);
+			else
+				s += ' (' + i + ') ' + BWIPJS.pstostring(v[i]);
+		}
 		return '<<' + s + ' >>';
 	}
 	// Watch for the usual floating-point nonsense
@@ -578,7 +600,6 @@ BWIPJS.prototype.charpath = function(str, b) {
 	this.rlineto(0, sw.a);
 	this.rlineto(sw.w, 0);
 	this.rlineto(0, -sw.h);
-	BWIPJS.debug('charpath(' + sw.a + ',' + sw.h + ')');
 }
 BWIPJS.prototype.pathbbox = function() {
 	BWIPJS.logapi('pathbbox', arguments);
@@ -601,7 +622,6 @@ BWIPJS.prototype.pathbbox = function() {
 				lly:(lly-this.g_tdy)/this.g_tsy,
 				urx:(urx-this.g_tdx)/this.g_tsx,
 				ury:(ury-this.g_tdy)/this.g_tsy };
-	BWIPJS.debug('pathbox'  + JSON.stringify(rv));
 	return rv;
 }
 BWIPJS.prototype.gsave = function() {
@@ -791,8 +811,8 @@ BWIPJS.prototype.gclone = function(o) {
 
 	if (o instanceof Object) {
 		var t = {};
-		for (i in o)
-			t[i] = this.gclone(o[i]);
+		for (var id in o)
+			t[id] = this.gclone(o[id]);
 		return t;
 	}
 	return o;
@@ -812,8 +832,6 @@ BWIPJS.prototype.gclone = function(o) {
 // it better connects one line with the next.
 BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 	BWIPJS.logapi('drawline', arguments);
-	console.log('x1,y1,x2,y2=' + x1 + ',' + y1 + ',' + x2 + ',' + y2);
-	console.log('optmz,penx,peny=' + optmz + ',' + penx + ',' + peny);
 	if (optmz && (x1 == x2 || y1 == y2)) {
 		var lx = Math.round(penx);
 		var ly = Math.round(peny);

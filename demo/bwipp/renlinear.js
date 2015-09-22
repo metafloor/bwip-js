@@ -36,9 +36,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=72;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -59,9 +57,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=72;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -93,9 +89,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 		var t=this.dstk.get("h");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -119,29 +113,16 @@ BWIPJS.bwipp["renlinear"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.stk[this.ptr++]=-1;
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f5(){
-		var t=this.dstk.get("sbs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
-		this.ptr--;
-		this.print(BWIPJS.pstostring(this.stk[--this.ptr]));
 		this.stk[this.ptr++]="d";
 		var t=this.dstk.get("sbs");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		var t=this.dstk.get("barratio");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -156,9 +137,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=0;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -181,9 +160,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		var t=this.dstk.get("spaceratio");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -265,16 +242,19 @@ BWIPJS.bwipp["renlinear"]=function() {
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.stk[this.ptr++]=$f9;
-		var t19=this.stk[--this.ptr];
+		var t19=this.stk[--this.ptr];//forall
 		var t18=this.stk[--this.ptr];
-		for (t17 in t18) {
+		for (var t17 in t18) {
 			if (t18 instanceof BWIPJS.psstring || t18 instanceof BWIPJS.psarray) {
 				if (t17.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t18.get(t17);
 			} else {
-				this.stk[this.ptr++]=t17;
-				this.stk[this.ptr++]=t18[t17];
+				if (t17.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t17.substr(1);
+				} else {
+					this.stk[this.ptr++]=t17;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t18,t17);
 			if (t19.call(this)==-1) break;
 		}
 		this.setrgb(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -308,16 +288,19 @@ BWIPJS.bwipp["renlinear"]=function() {
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.stk[this.ptr++]=$f11;
-		var t23=this.stk[--this.ptr];
+		var t23=this.stk[--this.ptr];//forall
 		var t22=this.stk[--this.ptr];
-		for (t21 in t22) {
+		for (var t21 in t22) {
 			if (t22 instanceof BWIPJS.psstring || t22 instanceof BWIPJS.psarray) {
 				if (t21.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t22.get(t21);
 			} else {
-				this.stk[this.ptr++]=t21;
-				this.stk[this.ptr++]=t22[t21];
+				if (t21.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t21.substr(1);
+				} else {
+					this.stk[this.ptr++]=t21;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t22,t21);
 			if (t23.call(this)==-1) break;
 		}
 		this.setcmyk(this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -399,7 +382,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 	}
 	function $f18(){
 		var t=this.stk[this.ptr-1];
-		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=t.get(i);
+		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
@@ -473,16 +456,19 @@ BWIPJS.bwipp["renlinear"]=function() {
 	}
 	function $f25(){
 		this.stk[this.ptr++]=$f22;
-		var t37=this.stk[--this.ptr];
+		var t37=this.stk[--this.ptr];//forall
 		var t36=this.stk[--this.ptr];
-		for (t35 in t36) {
+		for (var t35 in t36) {
 			if (t36 instanceof BWIPJS.psstring || t36 instanceof BWIPJS.psarray) {
 				if (t35.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t36.get(t35);
 			} else {
-				this.stk[this.ptr++]=t35;
-				this.stk[this.ptr++]=t36[t35];
+				if (t35.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t35.substr(1);
+				} else {
+					this.stk[this.ptr++]=t35;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t36,t35);
 			if (t37.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=2;
@@ -537,16 +523,19 @@ BWIPJS.bwipp["renlinear"]=function() {
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f25;
-		var t42=this.stk[--this.ptr];
+		var t42=this.stk[--this.ptr];//forall
 		var t41=this.stk[--this.ptr];
-		for (t40 in t41) {
+		for (var t40 in t41) {
 			if (t41 instanceof BWIPJS.psstring || t41 instanceof BWIPJS.psarray) {
 				if (t40.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t41.get(t40);
 			} else {
-				this.stk[this.ptr++]=t40;
-				this.stk[this.ptr++]=t41[t40];
+				if (t40.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t40.substr(1);
+				} else {
+					this.stk[this.ptr++]=t40;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t41,t40);
 			if (t42.call(this)==-1) break;
 		}
 	}
@@ -554,21 +543,22 @@ BWIPJS.bwipp["renlinear"]=function() {
 	}
 	function $f28(){
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=$f27;
-		var t45=this.stk[--this.ptr];
+		var t45=this.stk[--this.ptr];//forall
 		var t44=this.stk[--this.ptr];
-		for (t43 in t44) {
+		for (var t43 in t44) {
 			if (t44 instanceof BWIPJS.psstring || t44 instanceof BWIPJS.psarray) {
 				if (t43.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t44.get(t43);
 			} else {
-				this.stk[this.ptr++]=t43;
-				this.stk[this.ptr++]=t44[t43];
+				if (t43.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t43.substr(1);
+				} else {
+					this.stk[this.ptr++]=t43;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t44,t43);
 			if (t45.call(this)==-1) break;
 		}
 	}
@@ -577,9 +567,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		var t=this.dstk.get("tstr");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
@@ -590,9 +578,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		if (b < 0) var t=this.stk.splice(this.ptr-a, -b);
 		else var t=this.stk.splice(this.ptr-a, a-b);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f30(){
@@ -601,16 +587,19 @@ BWIPJS.bwipp["renlinear"]=function() {
 		var t=this.dstk.get("txt");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		this.stk[this.ptr++]=$f28;
-		var t48=this.stk[--this.ptr];
+		var t48=this.stk[--this.ptr];//forall
 		var t47=this.stk[--this.ptr];
-		for (t46 in t47) {
+		for (var t46 in t47) {
 			if (t47 instanceof BWIPJS.psstring || t47 instanceof BWIPJS.psarray) {
 				if (t46.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t47.get(t46);
 			} else {
-				this.stk[this.ptr++]=t46;
-				this.stk[this.ptr++]=t47[t46];
+				if (t46.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t46.substr(1);
+				} else {
+					this.stk[this.ptr++]=t46;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t47,t46);
 			if (t48.call(this)==-1) break;
 		}
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -656,9 +645,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 	function $f33(){
 		this.stk[this.ptr++]=this.currentfont();
 		this.stk[this.ptr++]="PaintType";
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=2;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
@@ -672,9 +659,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 	function $f35(){
 		this.stk[this.ptr++]=this.currentfont();
 		this.stk[this.ptr++]="StrokeWidth";
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
@@ -682,9 +667,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=this.currentfont();
 		this.stk[this.ptr++]="FontMatrix";
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		var m=(BWIPJS.pstype(this.stk[this.ptr-1])=="arraytype"?this.stk[--this.ptr]:null);
 		var dx=this.stk[this.ptr-2]; var dy=this.stk[this.ptr-1];
@@ -725,7 +708,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		this.grestore();
 		this.stk[this.ptr++]=this.currentfont();
 		this.stk[this.ptr++]="PaintType";
-		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
 		this.stk[this.ptr++]=$f33;
 		this.stk[this.ptr++]=$f34;
 		var t56=this.stk[--this.ptr];
@@ -737,7 +720,7 @@ BWIPJS.bwipp["renlinear"]=function() {
 		}
 		this.stk[this.ptr++]=this.currentfont();
 		this.stk[this.ptr++]="StrokeWidth";
-		this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1]]!==undefined; this.ptr--;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
 		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
 		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
 		this.ptr--;
@@ -1245,31 +1228,37 @@ BWIPJS.bwipp["renlinear"]=function() {
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f0;
-	var t2=this.stk[--this.ptr];
+	var t2=this.stk[--this.ptr];//forall
 	var t1=this.stk[--this.ptr];
-	for (t0 in t1) {
+	for (var t0 in t1) {
 		if (t1 instanceof BWIPJS.psstring || t1 instanceof BWIPJS.psarray) {
 			if (t0.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t1.get(t0);
 		} else {
-			this.stk[this.ptr++]=t0;
-			this.stk[this.ptr++]=t1[t0];
+			if (t0.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t0.substr(1);
+			} else {
+				this.stk[this.ptr++]=t0;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t1,t0);
 		if (t2.call(this)==-1) break;
 	}
 	var t=this.dstk.get("opt");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f1;
-	var t5=this.stk[--this.ptr];
+	var t5=this.stk[--this.ptr];//forall
 	var t4=this.stk[--this.ptr];
-	for (t3 in t4) {
+	for (var t3 in t4) {
 		if (t4 instanceof BWIPJS.psstring || t4 instanceof BWIPJS.psarray) {
 			if (t3.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t4.get(t3);
 		} else {
-			this.stk[this.ptr++]=t3;
-			this.stk[this.ptr++]=t4[t3];
+			if (t3.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t3.substr(1);
+			} else {
+				this.stk[this.ptr++]=t3;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t4,t3);
 		if (t5.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="barcolor";
@@ -1553,16 +1542,19 @@ BWIPJS.bwipp["renlinear"]=function() {
 	var t=this.dstk.get("bars");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f20;
-	var t33=this.stk[--this.ptr];
+	var t33=this.stk[--this.ptr];//forall
 	var t32=this.stk[--this.ptr];
-	for (t31 in t32) {
+	for (var t31 in t32) {
 		if (t32 instanceof BWIPJS.psstring || t32 instanceof BWIPJS.psarray) {
 			if (t31.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t32.get(t31);
 		} else {
-			this.stk[this.ptr++]=t31;
-			this.stk[this.ptr++]=t32[t31];
+			if (t31.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t31.substr(1);
+			} else {
+				this.stk[this.ptr++]=t31;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t32,t31);
 		if (t33.call(this)==-1) break;
 	}
 	this.grestore();

@@ -186,9 +186,7 @@ BWIPJS.bwipp["flattermarken"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("indx");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		var t=this.dstk.get("sbs");
@@ -226,9 +224,7 @@ BWIPJS.bwipp["flattermarken"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f11(){
@@ -272,16 +268,19 @@ BWIPJS.bwipp["flattermarken"]=function() {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f1;
-	var t3=this.stk[--this.ptr];
+	var t3=this.stk[--this.ptr];//forall
 	var t2=this.stk[--this.ptr];
-	for (t1 in t2) {
+	for (var t1 in t2) {
 		if (t2 instanceof BWIPJS.psstring || t2 instanceof BWIPJS.psarray) {
 			if (t1.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t2.get(t1);
 		} else {
-			this.stk[this.ptr++]=t1;
-			this.stk[this.ptr++]=t2[t1];
+			if (t1.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t1.substr(1);
+			} else {
+				this.stk[this.ptr++]=t1;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t2,t1);
 		if (t3.call(this)==-1) break;
 	}
 	var t=this.dstk.get("options");
@@ -300,16 +299,19 @@ BWIPJS.bwipp["flattermarken"]=function() {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f7;
-	var t11=this.stk[--this.ptr];
+	var t11=this.stk[--this.ptr];//forall
 	var t10=this.stk[--this.ptr];
-	for (t9 in t10) {
+	for (var t9 in t10) {
 		if (t10 instanceof BWIPJS.psstring || t10 instanceof BWIPJS.psarray) {
 			if (t9.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t10.get(t9);
 		} else {
-			this.stk[this.ptr++]=t9;
-			this.stk[this.ptr++]=t10[t9];
+			if (t9.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t9.substr(1);
+			} else {
+				this.stk[this.ptr++]=t9;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t10,t9);
 		if (t11.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="textfont";
@@ -334,16 +336,19 @@ BWIPJS.bwipp["flattermarken"]=function() {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f9;
-	var t15=this.stk[--this.ptr];
+	var t15=this.stk[--this.ptr];//forall
 	var t14=this.stk[--this.ptr];
-	for (t13 in t14) {
+	for (var t13 in t14) {
 		if (t14 instanceof BWIPJS.psstring || t14 instanceof BWIPJS.psarray) {
 			if (t13.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t14.get(t13);
 		} else {
-			this.stk[this.ptr++]=t13;
-			this.stk[this.ptr++]=t14[t13];
+			if (t13.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t13.substr(1);
+			} else {
+				this.stk[this.ptr++]=t13;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t14,t13);
 		if (t15.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="encs";
@@ -394,16 +399,19 @@ BWIPJS.bwipp["flattermarken"]=function() {
 	var t=this.dstk.get("sbs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f11;
-	var t23=this.stk[--this.ptr];
+	var t23=this.stk[--this.ptr];//forall
 	var t22=this.stk[--this.ptr];
-	for (t21 in t22) {
+	for (var t21 in t22) {
 		if (t22 instanceof BWIPJS.psstring || t22 instanceof BWIPJS.psarray) {
 			if (t21.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t22.get(t21);
 		} else {
-			this.stk[this.ptr++]=t21;
-			this.stk[this.ptr++]=t22[t21];
+			if (t21.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t21.substr(1);
+			} else {
+				this.stk[this.ptr++]=t21;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t22,t21);
 		if (t23.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
@@ -462,7 +470,7 @@ BWIPJS.bwipp["flattermarken"]=function() {
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
-		t[this.stk[i-1]]=this.stk[i];
+		BWIPJS.set(t,this.stk[i-1],this.stk[i]);
 	}
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
