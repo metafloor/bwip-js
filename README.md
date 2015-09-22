@@ -12,9 +12,9 @@ the end of this document.
 
 ## Note to DataMatrix Bar Code Users
 
-If you are using bwip-js version 14.0.0 or 14.0.1, please upgrade immediately.
+If you are using bwip-js version 0.14.0 or 0.14.1, please upgrade immediately.
 There was a PostScript emulation bug that was exercised by new code added to
-BWIPP version 2015-08-10.  bwip-js version 14.0.2 fixes the issue.
+BWIPP version 2015-08-10.  bwip-js version 0.14.2 fixes the issue.
 
 ## Status 
 
