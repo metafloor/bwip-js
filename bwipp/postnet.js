@@ -149,9 +149,7 @@ BWIPJS.bwipp["postnet"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
@@ -171,17 +169,13 @@ BWIPJS.bwipp["postnet"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("barlen");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		var t=this.dstk.get("barchars");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("checksum");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
 			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
@@ -221,9 +215,7 @@ BWIPJS.bwipp["postnet"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f14(){
@@ -246,9 +238,7 @@ BWIPJS.bwipp["postnet"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f15(){
@@ -262,15 +252,11 @@ BWIPJS.bwipp["postnet"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="heights";
@@ -338,9 +324,7 @@ BWIPJS.bwipp["postnet"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f16(){
@@ -363,9 +347,7 @@ BWIPJS.bwipp["postnet"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f17(){
@@ -399,9 +381,7 @@ BWIPJS.bwipp["postnet"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f18(){
@@ -432,9 +412,7 @@ BWIPJS.bwipp["postnet"]=function() {
 		var t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f19(){
@@ -457,9 +435,7 @@ BWIPJS.bwipp["postnet"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f20(){
@@ -523,16 +499,19 @@ BWIPJS.bwipp["postnet"]=function() {
 	var t=this.dstk.get("options");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f5;
-	var t7=this.stk[--this.ptr];
+	var t7=this.stk[--this.ptr];//forall
 	var t6=this.stk[--this.ptr];
-	for (t5 in t6) {
+	for (var t5 in t6) {
 		if (t6 instanceof BWIPJS.psstring || t6 instanceof BWIPJS.psarray) {
 			if (t5.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t6.get(t5);
 		} else {
-			this.stk[this.ptr++]=t5;
-			this.stk[this.ptr++]=t6[t5];
+			if (t5.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t5.substr(1);
+			} else {
+				this.stk[this.ptr++]=t5;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t6,t5);
 		if (t7.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="textfont";
@@ -602,16 +581,19 @@ BWIPJS.bwipp["postnet"]=function() {
 	var t=this.dstk.get("barcode");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f9;
-	var t13=this.stk[--this.ptr];
+	var t13=this.stk[--this.ptr];//forall
 	var t12=this.stk[--this.ptr];
-	for (t11 in t12) {
+	for (var t11 in t12) {
 		if (t12 instanceof BWIPJS.psstring || t12 instanceof BWIPJS.psarray) {
 			if (t11.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t12.get(t11);
 		} else {
-			this.stk[this.ptr++]=t11;
-			this.stk[this.ptr++]=t12[t11];
+			if (t11.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t11.substr(1);
+			} else {
+				this.stk[this.ptr++]=t11;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t12,t11);
 		if (t13.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="barchars";
@@ -675,9 +657,7 @@ BWIPJS.bwipp["postnet"]=function() {
 	var t=this.dstk.get("encs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=10;
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+	this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="heights";
@@ -730,9 +710,7 @@ BWIPJS.bwipp["postnet"]=function() {
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	var t=this.dstk.get("checksum");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+	this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="heights";
@@ -785,9 +763,7 @@ BWIPJS.bwipp["postnet"]=function() {
 	var t=this.dstk.get("encs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=11;
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+	this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="heights";
@@ -882,7 +858,7 @@ BWIPJS.bwipp["postnet"]=function() {
 	var t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
 		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
-		t[this.stk[i-1]]=this.stk[i];
+		BWIPJS.set(t,this.stk[i-1],this.stk[i]);
 	}
 	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;

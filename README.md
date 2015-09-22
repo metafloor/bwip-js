@@ -10,9 +10,15 @@ All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be found at
 the end of this document.
 
+## Note to DataMatrix Bar Code Users
+
+If you are using bwip-js version 14.0.0 or 14.0.1, please upgrade immediately.
+There was a PostScript emulation bug that was exercised by new code added to
+BWIPP version 2015-08-10.  bwip-js version 14.0.2 fixes the issue.
+
 ## Status 
 
-* Current bwip-js version is 0.14.1 (21-Sep-2015)
+* Current bwip-js version is 0.14.2 (22-Sep-2015)
 * Current BWIPP version is 2015-08-10
 * Node.js compatibility >= v0.10 (reported to work with v0.8 but not tested).
 * npm dependencies: none
@@ -319,26 +325,4 @@ BWIPP cross-compiled code was not straightforward.
 ## Supported Barcode Types
 
 &#x2022; AusPost 4 State Customer Code &#x2022; Aztec Code &#x2022; Aztec Runes &#x2022; BC412 &#x2022; Channel Code &#x2022; Codabar &#x2022; Codablock F &#x2022; Code 11 &#x2022; Code 128 &#x2022; Code 16K &#x2022; Code 25 &#x2022; Code 39 &#x2022; Code 39 Extended &#x2022; Code 49 &#x2022; Code 93 &#x2022; Code 93 Extended &#x2022; Code One &#x2022; Compact Aztec Code &#x2022; Compact PDF417 &#x2022; COOP 2 of 5 &#x2022; Custom 1D symbology &#x2022; Custom 4 state symbology &#x2022; Data Matrix &#x2022; Datalogic 2 of 5 &#x2022; Deutsche Post Identcode &#x2022; Deutsche Post Leitcode &#x2022; EAN-13 &#x2022; EAN-13 Composite &#x2022; EAN-2 (2 digit addon) &#x2022; EAN-5 (5 digit addon) &#x2022; EAN-8 &#x2022; EAN-8 Composite &#x2022; Flattermarken &#x2022; GS1 Composite 2D Component &#x2022; GS1 Data Matrix &#x2022; GS1 DataBar Expanded &#x2022; GS1 DataBar Expanded Composite &#x2022; GS1 DataBar Expanded Stacked &#x2022; GS1 DataBar Expanded Stacked Composite &#x2022; GS1 DataBar Limited &#x2022; GS1 DataBar Limited Composite &#x2022; GS1 DataBar Omnidirectional &#x2022; GS1 DataBar Omnidirectional Composite &#x2022; GS1 DataBar Stacked &#x2022; GS1 DataBar Stacked Composite &#x2022; GS1 DataBar Stacked Omnidirectional &#x2022; GS1 DataBar Stacked Omnidirectional Composite &#x2022; GS1 DataBar Truncated &#x2022; GS1 DataBar Truncated Composite &#x2022; GS1 QR Code &#x2022; GS1-128 &#x2022; GS1-128 Composite &#x2022; GS1-14 &#x2022; HIBC Codablock F &#x2022; HIBC Code 128 &#x2022; HIBC Code 39 &#x2022; HIBC Data Matrix &#x2022; HIBC MicroPDF417 &#x2022; HIBC PDF417 &#x2022; HIBC QR Code &#x2022; IATA 2 of 5 &#x2022; Industrial 2 of 5 &#x2022; Interleaved 2 of 5 (ITF) &#x2022; ISBN &#x2022; ISMN &#x2022; ISSN &#x2022; Italian Pharmacode &#x2022; ITF-14 &#x2022; Japan Post 4 State Customer Code &#x2022; Matrix 2 of 5 &#x2022; MaxiCode &#x2022; Micro QR Code &#x2022; MicroPDF417 &#x2022; Miscellaneous symbols &#x2022; MSI Modified Plessey &#x2022; PDF417 &#x2022; Pharmaceutical Binary Code &#x2022; Pharmazentralnummer (PZN) &#x2022; Plessey UK &#x2022; PosiCode &#x2022; QR Code &#x2022; Royal Dutch TPG Post KIX &#x2022; Royal Mail 4 State Customer Code &#x2022; SSCC-18 &#x2022; Telepen &#x2022; Telepen Numeric &#x2022; Two-track Pharmacode &#x2022; UPC-A &#x2022; UPC-A Composite &#x2022; UPC-E &#x2022; UPC-E Composite &#x2022; USPS Intelligent Mail &#x2022; USPS PLANET &#x2022; USPS POSTNET &#x2022;
-
-
-## Emulator Notes
-
-bwip-js does not provide a general purpose PostScript emulation layer. The emulation
-supports only the PostScript operators used by BWIPP and is implemented
-as a cross-compiler that converts the non-graphics code to equivalent JavaScript,
-and the graphics operations to calls into a simple bitmap interface.
-
-The emulation uses, as much as possible, native JavaScript data types:
- * Boolean values true and false
- * Null value
- * Numeric values (integer and float)
- * Objects (PostScript dictionary object)
- * Function objects
-
-You will note that two of the more common JavaScript data types, strings and arrays,
-are not on the list.  PostScript implements live-view semantics with strings and
-arrays, similar to JavaScript's Typed Arrays and Views.  For that matter, PostScript
-strings can be implemented using Uint8Arrays but PostScript arrays have no similar
-JavaScript equivalent.  We must wait for ECMAScript6's computed property name getters
-and setters to land in the primary browsers before arrays can be handled cleanly.
 

@@ -47,16 +47,19 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.stk[this.ptr++]=$f2;
-		var t8=this.stk[--this.ptr];
+		var t8=this.stk[--this.ptr];//forall
 		var t7=this.stk[--this.ptr];
-		for (t6 in t7) {
+		for (var t6 in t7) {
 			if (t7 instanceof BWIPJS.psstring || t7 instanceof BWIPJS.psarray) {
 				if (t6.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t7.get(t6);
 			} else {
-				this.stk[this.ptr++]=t6;
-				this.stk[this.ptr++]=t7[t6];
+				if (t6.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t6.substr(1);
+				} else {
+					this.stk[this.ptr++]=t6;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t7,t6);
 			if (t8.call(this)==-1) break;
 		}
 		this.setrgb(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -90,16 +93,19 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.stk[this.ptr++]=$f4;
-		var t12=this.stk[--this.ptr];
+		var t12=this.stk[--this.ptr];//forall
 		var t11=this.stk[--this.ptr];
-		for (t10 in t11) {
+		for (var t10 in t11) {
 			if (t11 instanceof BWIPJS.psstring || t11 instanceof BWIPJS.psarray) {
 				if (t10.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t11.get(t10);
 			} else {
-				this.stk[this.ptr++]=t10;
-				this.stk[this.ptr++]=t11[t10];
+				if (t10.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t10.substr(1);
+				} else {
+					this.stk[this.ptr++]=t10;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t11,t10);
 			if (t12.call(this)==-1) break;
 		}
 		this.setcmyk(this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -246,31 +252,37 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f0;
-	var t2=this.stk[--this.ptr];
+	var t2=this.stk[--this.ptr];//forall
 	var t1=this.stk[--this.ptr];
-	for (t0 in t1) {
+	for (var t0 in t1) {
 		if (t1 instanceof BWIPJS.psstring || t1 instanceof BWIPJS.psarray) {
 			if (t0.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t1.get(t0);
 		} else {
-			this.stk[this.ptr++]=t0;
-			this.stk[this.ptr++]=t1[t0];
+			if (t0.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t0.substr(1);
+			} else {
+				this.stk[this.ptr++]=t0;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t1,t0);
 		if (t2.call(this)==-1) break;
 	}
 	var t=this.dstk.get("opt");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f1;
-	var t5=this.stk[--this.ptr];
+	var t5=this.stk[--this.ptr];//forall
 	var t4=this.stk[--this.ptr];
-	for (t3 in t4) {
+	for (var t3 in t4) {
 		if (t4 instanceof BWIPJS.psstring || t4 instanceof BWIPJS.psarray) {
 			if (t3.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t4.get(t3);
 		} else {
-			this.stk[this.ptr++]=t3;
-			this.stk[this.ptr++]=t4[t3];
+			if (t3.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t3.substr(1);
+			} else {
+				this.stk[this.ptr++]=t3;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t4,t3);
 		if (t5.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="barcolor";
@@ -343,16 +355,19 @@ BWIPJS.bwipp["renmaximatrix"]=function() {
 	var t=this.dstk.get("pixs");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f11;
-	var t20=this.stk[--this.ptr];
+	var t20=this.stk[--this.ptr];//forall
 	var t19=this.stk[--this.ptr];
-	for (t18 in t19) {
+	for (var t18 in t19) {
 		if (t19 instanceof BWIPJS.psstring || t19 instanceof BWIPJS.psarray) {
 			if (t18.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t19.get(t18);
 		} else {
-			this.stk[this.ptr++]=t18;
-			this.stk[this.ptr++]=t19[t18];
+			if (t18.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t18.substr(1);
+			} else {
+				this.stk[this.ptr++]=t18;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t19,t18);
 		if (t20.call(this)==-1) break;
 	}
 	this.fill();

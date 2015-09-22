@@ -65,9 +65,7 @@ BWIPJS.bwipp["renmatrix"]=function() {
 			this.stk[this.ptr-2]=dst;
 			this.ptr--;
 		}
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=7;
@@ -82,15 +80,11 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 		var t=this.dstk.get("i");
 		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring || this.stk[this.ptr-2] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].get(this.stk[this.ptr-1]);
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2][this.stk[this.ptr-1].toString()];
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		if (this.stk[this.ptr-3] instanceof BWIPJS.psstring || this.stk[this.ptr-3] instanceof BWIPJS.psarray)
-			this.stk[this.ptr-3].set(this.stk[this.ptr-2], this.stk[this.ptr-1]);
-		else this.stk[this.ptr-3][this.stk[this.ptr-2].toString()]=this.stk[this.ptr-1];
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f5(){
@@ -121,16 +115,19 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.stk[this.ptr++]=$f5;
-		var t21=this.stk[--this.ptr];
+		var t21=this.stk[--this.ptr];//forall
 		var t20=this.stk[--this.ptr];
-		for (t19 in t20) {
+		for (var t19 in t20) {
 			if (t20 instanceof BWIPJS.psstring || t20 instanceof BWIPJS.psarray) {
 				if (t19.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t20.get(t19);
 			} else {
-				this.stk[this.ptr++]=t19;
-				this.stk[this.ptr++]=t20[t19];
+				if (t19.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t19.substr(1);
+				} else {
+					this.stk[this.ptr++]=t19;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t20,t19);
 			if (t21.call(this)==-1) break;
 		}
 		this.setrgb(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -164,16 +161,19 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		var t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.stk[this.ptr++]=$f7;
-		var t25=this.stk[--this.ptr];
+		var t25=this.stk[--this.ptr];//forall
 		var t24=this.stk[--this.ptr];
-		for (t23 in t24) {
+		for (var t23 in t24) {
 			if (t24 instanceof BWIPJS.psstring || t24 instanceof BWIPJS.psarray) {
 				if (t23.charCodeAt(0) > 57) continue;
-				this.stk[this.ptr++]=t24.get(t23);
 			} else {
-				this.stk[this.ptr++]=t23;
-				this.stk[this.ptr++]=t24[t23];
+				if (t23.charCodeAt(0) == 0xffff) {
+					this.stk[this.ptr++]=+t23.substr(1);
+				} else {
+					this.stk[this.ptr++]=t23;
+				}
 			}
+			this.stk[this.ptr++]=BWIPJS.get(t24,t23);
 			if (t25.call(this)==-1) break;
 		}
 		this.setcmyk(this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -252,31 +252,37 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	var t=this.dstk.get("args");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f0;
-	var t2=this.stk[--this.ptr];
+	var t2=this.stk[--this.ptr];//forall
 	var t1=this.stk[--this.ptr];
-	for (t0 in t1) {
+	for (var t0 in t1) {
 		if (t1 instanceof BWIPJS.psstring || t1 instanceof BWIPJS.psarray) {
 			if (t0.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t1.get(t0);
 		} else {
-			this.stk[this.ptr++]=t0;
-			this.stk[this.ptr++]=t1[t0];
+			if (t0.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t0.substr(1);
+			} else {
+				this.stk[this.ptr++]=t0;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t1,t0);
 		if (t2.call(this)==-1) break;
 	}
 	var t=this.dstk.get("opt");
 	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
 	this.stk[this.ptr++]=$f1;
-	var t5=this.stk[--this.ptr];
+	var t5=this.stk[--this.ptr];//forall
 	var t4=this.stk[--this.ptr];
-	for (t3 in t4) {
+	for (var t3 in t4) {
 		if (t4 instanceof BWIPJS.psstring || t4 instanceof BWIPJS.psarray) {
 			if (t3.charCodeAt(0) > 57) continue;
-			this.stk[this.ptr++]=t4.get(t3);
 		} else {
-			this.stk[this.ptr++]=t3;
-			this.stk[this.ptr++]=t4[t3];
+			if (t3.charCodeAt(0) == 0xffff) {
+				this.stk[this.ptr++]=+t3.substr(1);
+			} else {
+				this.stk[this.ptr++]=t3;
+			}
 		}
+		this.stk[this.ptr++]=BWIPJS.get(t4,t3);
 		if (t5.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="width";

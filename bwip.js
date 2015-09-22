@@ -18,6 +18,8 @@ var BWIPJS = function() {
 
 	// dict-stack lookup
 	this.dstk.get = function(id) {
+		if (typeof id == 'number')
+			id = '\uffff' + id;
 		for (var i = this.length-1; i >= 0; i--) {
 			if (this[i][id] !== undefined) {
 				return this[i][id];
@@ -86,6 +88,24 @@ BWIPJS.decrefs = function(module) {
 	}
 }
 
+BWIPJS.get = function(obj, id) {
+	if (obj instanceof BWIPJS.psarray || obj instanceof BWIPJS.psstring)
+		return obj.value[obj.offset+parseFloat(id)];
+	if (typeof id === 'number')
+		return obj['\uffff' + id];
+	// Explicit toString() to convert psstrings
+	return obj[id.toString()];
+}
+BWIPJS.set = function(obj, id, val) {
+	if (obj instanceof BWIPJS.psarray || obj instanceof BWIPJS.psstring)
+		obj.value[obj.offset+parseFloat(id)] = val;
+	else if (typeof id === 'number')
+		obj['\uffff' + id] = val;
+	else
+		// Explicit toString() to convert psstrings
+		obj[id.toString()] = val;
+}
+
 // FreeType interface
 BWIPJS.ft_monochrome = Module.cwrap("monochrome", 'number', ['number']);
 BWIPJS.ft_lookup = Module.cwrap("find_font", 'number', ['string']);
@@ -108,7 +128,6 @@ BWIPJS.logapi = function(fn, args) {
 	console.log(s);
 };
 //BWIPJS.load  = function(s) {};	// force a run-time error	
-
 
 BWIPJS.psarray = function(v) {
 	if (!(this instanceof BWIPJS.psarray))
@@ -229,7 +248,6 @@ BWIPJS.psstring.prototype.valueOf = function() {
 		s += String.fromCharCode(this.value[i]);
 	return s;
 }
-
 BWIPJS.psstring.prototype.get = function(n) {
 	return this.value[this.offset+parseFloat(n)];
 }
@@ -312,8 +330,12 @@ BWIPJS.pstostring = function(v) {
 	}
 	if (typeof(v) == 'object') {
 		var s = '';
-		for (var i in v)
-			s += ' /' + i + ' ' + BWIPJS.pstostring(v[i]);
+		for (var i in v) {
+			if (i.charCodeAt(0) == 0xffff)
+				s += ' ' + i.substr(1) + ' ' + BWIPJS.pstostring(v[i]);
+			else
+				s += ' (' + i + ') ' + BWIPJS.pstostring(v[i]);
+		}
 		return '<<' + s + ' >>';
 	}
 	// Watch for the usual floating-point nonsense
