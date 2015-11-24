@@ -37,18 +37,11 @@ ones) are available.  An exhaustive list of supported barcode types can be found
 the end of this document.</p>
 
 <h2>
-<a id="user-content-note-to-datamatrix-bar-code-users" class="anchor" href="#note-to-datamatrix-bar-code-users" aria-hidden="true"><span class="octicon octicon-link"></span></a>Note to DataMatrix Bar Code Users</h2>
-
-<p>If you are using bwip-js version 0.14.0 or 0.14.1, please upgrade immediately.
-There was a PostScript emulation bug that was exercised by new code added to
-BWIPP version 2015-08-10.  bwip-js version 0.14.2 fixes the issue.</p>
-
-<h2>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Status</h2>
 
 <ul>
-<li>Current bwip-js version is 0.14.2 (22-Sep-2015)</li>
-<li>Current BWIPP version is 2015-08-10</li>
+<li>Current bwip-js version is 0.15.0 (24-Nov-2015)</li>
+<li>Current BWIPP version is 2015-11-24</li>
 <li>Node.js compatibility &gt;= v0.10 (reported to work with v0.8 but not tested).</li>
 <li>npm dependencies: none</li>
 </ul>
@@ -113,20 +106,20 @@ See the
 <span class="pl-c">// To unload a font (and free up space for another):</span>
 <span class="pl-c">//  bwipjs.unloadFont(fontname)</span>
 <span class="pl-c">//</span>
-bwipjs.loadFont(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span class="pl-pds">'</span></span>, <span class="pl-c1">108</span>,
-            <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>).readFileSync(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata.otf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>binary<span class="pl-pds">'</span></span>));
+<span class="pl-smi">bwipjs</span>.<span class="pl-en">loadFont</span>(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span class="pl-pds">'</span></span>, <span class="pl-c1">108</span>,
+            <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>).<span class="pl-en">readFileSync</span>(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata.otf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>binary<span class="pl-pds">'</span></span>));
 
-http.createServer(<span class="pl-k">function</span>(<span class="pl-smi">req</span>, <span class="pl-smi">res</span>) {
+<span class="pl-smi">http</span>.<span class="pl-en">createServer</span>(<span class="pl-k">function</span>(<span class="pl-smi">req</span>, <span class="pl-smi">res</span>) {
     <span class="pl-c">// If the url does not begin /?bcid= then 404.  Otherwise, we end up</span>
     <span class="pl-c">// returning 400 on requests like favicon.ico.</span>
-    <span class="pl-k">if</span> (req.url.<span class="pl-c1">indexOf</span>(<span class="pl-s"><span class="pl-pds">'</span>/?bcid=<span class="pl-pds">'</span></span>) <span class="pl-k">!=</span> <span class="pl-c1">0</span>) {
-        res.writeHead(<span class="pl-c1">404</span>, { <span class="pl-s"><span class="pl-pds">'</span>Content-Type<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>text/plain<span class="pl-pds">'</span></span> });
-        res.end(<span class="pl-s"><span class="pl-pds">'</span>BWIP-JS: Unknown request format.<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>utf8<span class="pl-pds">'</span></span>);
+    <span class="pl-k">if</span> (<span class="pl-smi">req</span>.<span class="pl-smi">url</span>.<span class="pl-c1">indexOf</span>(<span class="pl-s"><span class="pl-pds">'</span>/?bcid=<span class="pl-pds">'</span></span>) <span class="pl-k">!=</span> <span class="pl-c1">0</span>) {
+        <span class="pl-smi">res</span>.<span class="pl-en">writeHead</span>(<span class="pl-c1">404</span>, { <span class="pl-s"><span class="pl-pds">'</span>Content-Type<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>text/plain<span class="pl-pds">'</span></span> });
+        <span class="pl-smi">res</span>.<span class="pl-en">end</span>(<span class="pl-s"><span class="pl-pds">'</span>BWIP-JS: Unknown request format.<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>utf8<span class="pl-pds">'</span></span>);
     } <span class="pl-k">else</span> {
-        bwipjs(req, res);
+        <span class="pl-en">bwipjs</span>(req, res);
     }
 
-}).listen(<span class="pl-c1">3030</span>);</pre></div>
+}).<span class="pl-en">listen</span>(<span class="pl-c1">3030</span>);</pre></div>
 
 <p>If you run the above code on your local machine, you can test with the following URL:</p>
 
@@ -146,10 +139,10 @@ path as needed to implement the desired HTTP request routing.</p>
 
 <span class="pl-c">// Optionally load some custom fonts.  Maximum 8.</span>
 <span class="pl-c">// OpenType and TrueType are supported.</span>
-bwipjs.loadFont(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span class="pl-pds">'</span></span>, <span class="pl-c1">108</span>,
-            <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>).readFileSync(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata.otf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>binary<span class="pl-pds">'</span></span>));
+<span class="pl-smi">bwipjs</span>.<span class="pl-en">loadFont</span>(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span class="pl-pds">'</span></span>, <span class="pl-c1">108</span>,
+            <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>).<span class="pl-en">readFileSync</span>(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata.otf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>binary<span class="pl-pds">'</span></span>));
 
-bwipjs.toBuffer({
+<span class="pl-smi">bwipjs</span>.<span class="pl-en">toBuffer</span>({
         bcid<span class="pl-k">:</span>           <span class="pl-s"><span class="pl-pds">'</span>code128<span class="pl-pds">'</span></span>,      <span class="pl-c">// Barcode type</span>
         text<span class="pl-k">:</span>           <span class="pl-s"><span class="pl-pds">'</span>0123456789<span class="pl-pds">'</span></span>,   <span class="pl-c">// Text to encode</span>
         scale<span class="pl-k">:</span>          <span class="pl-c1">3</span>,              <span class="pl-c">// 3x scaling factor</span>
