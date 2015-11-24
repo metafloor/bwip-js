@@ -12,7 +12,7 @@ the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 0.15.0 (24-Nov-2015)
+* Current bwip-js version is 0.15.1 (24-Nov-2015)
 * Current BWIPP version is 2015-11-24
 * Node.js compatibility >= v0.10 (reported to work with v0.8 but not tested).
 * npm dependencies: none
