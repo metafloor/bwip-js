@@ -3031,23 +3031,51 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.ptr-=3;
 	}
 	function $f185(){
+		this.xget("cws");
+		this.xget("cws");
+		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		if (typeof(this.stk[this.ptr-1])=="number") {
+			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
+		} else if (this.stk[this.ptr-1] instanceof BWIPJS.psstring||this.stk[this.ptr-1] instanceof BWIPJS.psarray) {
+			this.stk[this.ptr-1].assign(0,this.stk[this.ptr-2]);
+			this.stk[this.ptr-2]=this.stk[this.ptr-1].subset(0,this.stk[this.ptr-2].length);
+			this.ptr--;
+		} else {
+			var src=this.stk[this.ptr-2]; var dst=this.stk[this.ptr-1];
+			for (var i in src) dst[i]=src[i];
+			this.stk[this.ptr-2]=dst;
+			this.ptr--;
+		}
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.stk[this.ptr++]=4;
+		if (this.stk[this.ptr-1]<0) this.stk[this.ptr-2]>>>=-this.stk[this.ptr-1];
+		else this.stk[this.ptr-2]<<=this.stk[this.ptr-1];
+		this.ptr--;
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr-=3;
+	}
+	function $f186(){
 		this.stk[this.ptr++]=285;
 		this.xor();
 	}
-	function $f186(){
+	function $f187(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=256;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f185;
-		var t263=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f186;
+		var t264=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t263.call(this)==-1) return -1;
+			if (t264.call(this)==-1) return -1;
 		}
 	}
-	function $f187(){
+	function $f188(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.xget("rsalog");
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -3057,15 +3085,15 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("rslog");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=1;
+		var t269=this.stk[--this.ptr];
 		var t268=this.stk[--this.ptr];
-		var t267=this.stk[--this.ptr];
-		if (t268 < 0) t=this.stk.splice(this.ptr-t267, -t268);
-		else t=this.stk.splice(this.ptr-t267, t267-t268);
+		if (t269 < 0) t=this.stk.splice(this.ptr-t268, -t269);
+		else t=this.stk.splice(this.ptr-t268, t268-t269);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f188(){
+	function $f189(){
 		this.xget("rslog");
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -3083,12 +3111,12 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 	}
-	function $f189(){
+	function $f190(){
 		this.ptr--;
 		this.ptr--;
 		this.stk[this.ptr++]=0;
 	}
-	function $f190(){
+	function $f191(){
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -3108,20 +3136,20 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=0;
 		this.ne();
 		this.and();
-		this.stk[this.ptr++]=$f188;
 		this.stk[this.ptr++]=$f189;
-		var t274=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f190;
 		var t275=this.stk[--this.ptr];
+		var t276=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t275.call(this)==-1) return -1;
+			if (t276.call(this)==-1) return -1;
 		} else {
-			if (t274.call(this)==-1) return -1;
+			if (t275.call(this)==-1) return -1;
 		}
 	}
-	function $f191(){
+	function $f192(){
 		this.stk[this.ptr++]=0;
 	}
-	function $f192(){
+	function $f193(){
 		this.stk[this.ptr++]="j";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3146,7 +3174,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f193(){
+	function $f194(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3163,14 +3191,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("i");
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=1;
-		this.stk[this.ptr++]=$f192;
-		var t283=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f193;
+		var t284=this.stk[--this.ptr];
+		var t282=this.stk[--this.ptr];
 		var t281=this.stk[--this.ptr];
 		var t280=this.stk[--this.ptr];
-		var t279=this.stk[--this.ptr];
-		for (var t282=t279; t280<0 ? t282>=t281 : t282<=t281; t282+=t280) {
-			this.stk[this.ptr++]=t282;
-			if (t283.call(this)==-1) break;
+		for (var t283=t280; t281<0 ? t283>=t282 : t283<=t282; t283+=t281) {
+			this.stk[this.ptr++]=t283;
+			if (t284.call(this)==-1) break;
 		}
 		this.xget("coeffs");
 		this.stk[this.ptr++]=0;
@@ -3186,12 +3214,12 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f194(){
-	}
 	function $f195(){
-		this.stk[this.ptr++]=0;
 	}
 	function $f196(){
+		this.stk[this.ptr++]=0;
+	}
+	function $f197(){
 		this.stk[this.ptr++]="j";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3223,7 +3251,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f197(){
+	function $f198(){
 		this.stk[this.ptr++]="m";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3238,17 +3266,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("ecpb");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f196;
-		var t297=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f197;
+		var t298=this.stk[--this.ptr];
+		var t296=this.stk[--this.ptr];
 		var t295=this.stk[--this.ptr];
 		var t294=this.stk[--this.ptr];
-		var t293=this.stk[--this.ptr];
-		for (var t296=t293; t294<0 ? t296>=t295 : t296<=t295; t296+=t294) {
-			this.stk[this.ptr++]=t296;
-			if (t297.call(this)==-1) break;
+		for (var t297=t294; t295<0 ? t297>=t296 : t297<=t296; t297+=t295) {
+			this.stk[this.ptr++]=t297;
+			if (t298.call(this)==-1) break;
 		}
 	}
-	function $f198(){
+	function $f199(){
 		this.stk[this.ptr++]="rscws";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3259,15 +3287,15 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]="rscws";
 		this.stk[this.ptr++]=Infinity;
 		this.xget("rscws");
-		this.stk[this.ptr++]=$f194;
-		var t289=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t289);
-		this.xget("ecpb");
 		this.stk[this.ptr++]=$f195;
-		var t292=this.stk[--this.ptr];
 		var t290=this.stk[--this.ptr];
-		for (var t291=0; t291<t290; t291++) {
-			if (t292.call(this)==-1) break;
+		this.forall(this.stk[--this.ptr],t290);
+		this.xget("ecpb");
+		this.stk[this.ptr++]=$f196;
+		var t293=this.stk[--this.ptr];
+		var t291=this.stk[--this.ptr];
+		for (var t292=0; t292<t291; t292++) {
+			if (t293.call(this)==-1) break;
 		}
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 		t = this.stk.splice(i+1, this.ptr-1-i);
@@ -3279,76 +3307,38 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("rsnd");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f197;
-		var t302=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f198;
+		var t303=this.stk[--this.ptr];
+		var t301=this.stk[--this.ptr];
 		var t300=this.stk[--this.ptr];
 		var t299=this.stk[--this.ptr];
-		var t298=this.stk[--this.ptr];
-		for (var t301=t298; t299<0 ? t301>=t300 : t301<=t300; t301+=t299) {
-			this.stk[this.ptr++]=t301;
-			if (t302.call(this)==-1) break;
+		for (var t302=t299; t300<0 ? t302>=t301 : t302<=t301; t302+=t300) {
+			this.stk[this.ptr++]=t302;
+			if (t303.call(this)==-1) break;
 		}
 		this.xget("rscws");
 		this.xget("rsnd");
 		this.xget("ecpb");
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
-	function $f199(){
-		this.stk[this.ptr++]="i";
-		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		this.xget("dcwsb");
-		this.xget("i");
-		this.xget("cws");
-		this.xget("i");
-		this.xget("dcpb");
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.xget("dcpb");
-		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
-		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr-=3;
-		this.xget("ecwsb");
-		this.xget("i");
-		this.xget("dcwsb");
-		this.xget("i");
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr--;
-		this.xget("rscodes");
-		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr-=3;
-	}
 	function $f200(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.xget("dcwsb");
-		this.xget("ecb1");
 		this.xget("i");
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.xget("cws");
-		this.xget("ecb1");
-		this.xget("dcpb");
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.xget("i");
 		this.xget("dcpb");
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.xget("dcpb");
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 		this.xget("ecwsb");
-		this.xget("ecb1");
 		this.xget("i");
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.xget("dcwsb");
-		this.xget("ecb1");
 		this.xget("i");
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.xget("rscodes");
@@ -3356,6 +3346,44 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.ptr-=3;
 	}
 	function $f201(){
+		this.stk[this.ptr++]="i";
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+		this.xget("dcwsb");
+		this.xget("ecb1");
+		this.xget("i");
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.xget("cws");
+		this.xget("ecb1");
+		this.xget("dcpb");
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.xget("i");
+		this.xget("dcpb");
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.xget("dcpb");
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr-=3;
+		this.xget("ecwsb");
+		this.xget("ecb1");
+		this.xget("i");
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.xget("dcwsb");
+		this.xget("ecb1");
+		this.xget("i");
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.xget("rscodes");
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr-=3;
+	}
+	function $f202(){
 		this.xget("cws");
 		this.xget("cw");
 		this.xget("dcwsb");
@@ -3373,7 +3401,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f202(){
+	function $f203(){
 		this.stk[this.ptr++]="j";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3384,13 +3412,13 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.ptr--;
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f201;
-		var t313=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f202;
+		var t314=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t313.call(this)==-1) return -1;
+			if (t314.call(this)==-1) return -1;
 		}
 	}
-	function $f203(){
+	function $f204(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3401,17 +3429,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f202;
-		var t318=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f203;
+		var t319=this.stk[--this.ptr];
+		var t317=this.stk[--this.ptr];
 		var t316=this.stk[--this.ptr];
 		var t315=this.stk[--this.ptr];
-		var t314=this.stk[--this.ptr];
-		for (var t317=t314; t315<0 ? t317>=t316 : t317<=t316; t317+=t315) {
-			this.stk[this.ptr++]=t317;
-			if (t318.call(this)==-1) break;
+		for (var t318=t315; t316<0 ? t318>=t317 : t318<=t317; t318+=t316) {
+			this.stk[this.ptr++]=t318;
+			if (t319.call(this)==-1) break;
 		}
 	}
-	function $f204(){
+	function $f205(){
 		this.stk[this.ptr++]="j";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3432,7 +3460,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f205(){
+	function $f206(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3443,17 +3471,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f204;
-		var t328=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f205;
+		var t329=this.stk[--this.ptr];
+		var t327=this.stk[--this.ptr];
 		var t326=this.stk[--this.ptr];
 		var t325=this.stk[--this.ptr];
-		var t324=this.stk[--this.ptr];
-		for (var t327=t324; t325<0 ? t327>=t326 : t327<=t326; t327+=t325) {
-			this.stk[this.ptr++]=t327;
-			if (t328.call(this)==-1) break;
+		for (var t328=t325; t326<0 ? t328>=t327 : t328<=t327; t328+=t326) {
+			this.stk[this.ptr++]=t328;
+			if (t329.call(this)==-1) break;
 		}
 	}
-	function $f206(){
+	function $f207(){
 		this.stk[this.ptr++]="pad";
 		this.xget("cws");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
@@ -3477,7 +3505,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("pad");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f207(){
+	function $f208(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3517,7 +3545,32 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f208(){
+	function $f209(){
+		this.xget("cws");
+		this.xget("dcws");
+		this.stk[this.ptr++]=1;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		if (typeof(this.stk[this.ptr-1])=="number") {
+			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
+		} else if (this.stk[this.ptr-1] instanceof BWIPJS.psstring||this.stk[this.ptr-1] instanceof BWIPJS.psarray) {
+			this.stk[this.ptr-1].assign(0,this.stk[this.ptr-2]);
+			this.stk[this.ptr-2]=this.stk[this.ptr-1].subset(0,this.stk[this.ptr-2].length);
+			this.ptr--;
+		} else {
+			var src=this.stk[this.ptr-2]; var dst=this.stk[this.ptr-1];
+			for (var i in src) dst[i]=src[i];
+			this.stk[this.ptr-2]=dst;
+			this.ptr--;
+		}
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.stk[this.ptr++]=-4;
+		if (this.stk[this.ptr-1]<0) this.stk[this.ptr-2]>>>=-this.stk[this.ptr-1];
+		else this.stk[this.ptr-2]<<=this.stk[this.ptr-1];
+		this.ptr--;
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr-=3;
 		this.xget("dcws");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
@@ -3525,14 +3578,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("ncws");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f207;
-		var t339=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f208;
+		var t340=this.stk[--this.ptr];
+		var t338=this.stk[--this.ptr];
 		var t337=this.stk[--this.ptr];
 		var t336=this.stk[--this.ptr];
-		var t335=this.stk[--this.ptr];
-		for (var t338=t335; t336<0 ? t338>=t337 : t338<=t337; t338+=t336) {
-			this.stk[this.ptr++]=t338;
-			if (t339.call(this)==-1) break;
+		for (var t339=t336; t337<0 ? t339>=t338 : t339<=t338; t339+=t337) {
+			this.stk[this.ptr++]=t339;
+			if (t340.call(this)==-1) break;
 		}
 		this.xget("cws");
 		this.xget("ncws");
@@ -3553,15 +3606,15 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f209(){
+	function $f210(){
 		this.stk[this.ptr++]=-1;
 	}
-	function $f210(){
+	function $f211(){
 		this.xget("size");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f211(){
+	function $f212(){
 		this.xget("pixs");
 		this.xget("size");
 		this.xget("x");
@@ -3585,7 +3638,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f212(){
+	function $f213(){
 		this.stk[this.ptr++]="x";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3608,13 +3661,13 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("format");
 		this.stk[this.ptr++]=BWIPJS.psstring("full");
 		this.eq();
-		this.stk[this.ptr++]=$f211;
-		var t344=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f212;
+		var t345=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t344.call(this)==-1) return -1;
+			if (t345.call(this)==-1) return -1;
 		}
 	}
-	function $f213(){
+	function $f214(){
 		this.stk[this.ptr++]="y";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3627,17 +3680,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f212;
-		var t349=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f213;
+		var t350=this.stk[--this.ptr];
+		var t348=this.stk[--this.ptr];
 		var t347=this.stk[--this.ptr];
 		var t346=this.stk[--this.ptr];
-		var t345=this.stk[--this.ptr];
-		for (var t348=t345; t346<0 ? t348>=t347 : t348<=t347; t348+=t346) {
-			this.stk[this.ptr++]=t348;
-			if (t349.call(this)==-1) break;
+		for (var t349=t346; t347<0 ? t349>=t348 : t349<=t348; t349+=t347) {
+			this.stk[this.ptr++]=t349;
+			if (t350.call(this)==-1) break;
 		}
 	}
-	function $f214(){
+	function $f215(){
 		this.stk[this.ptr++]="pa";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3659,24 +3712,24 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f215(){
+	function $f216(){
 		this.stk[this.ptr++]="pb";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=4;
-		this.stk[this.ptr++]=$f214;
-		var t359=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f215;
+		var t360=this.stk[--this.ptr];
+		var t358=this.stk[--this.ptr];
 		var t357=this.stk[--this.ptr];
 		var t356=this.stk[--this.ptr];
-		var t355=this.stk[--this.ptr];
-		for (var t358=t355; t356<0 ? t358>=t357 : t358<=t357; t358+=t356) {
-			this.stk[this.ptr++]=t358;
-			if (t359.call(this)==-1) break;
+		for (var t359=t356; t357<0 ? t359>=t358 : t359<=t358; t359+=t357) {
+			this.stk[this.ptr++]=t359;
+			if (t360.call(this)==-1) break;
 		}
 	}
-	function $f216(){
+	function $f217(){
 		this.stk[this.ptr++]="py";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3686,17 +3739,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=4;
-		this.stk[this.ptr++]=$f215;
-		var t364=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f216;
+		var t365=this.stk[--this.ptr];
+		var t363=this.stk[--this.ptr];
 		var t362=this.stk[--this.ptr];
 		var t361=this.stk[--this.ptr];
-		var t360=this.stk[--this.ptr];
-		for (var t363=t360; t361<0 ? t363>=t362 : t363<=t362; t363+=t361) {
-			this.stk[this.ptr++]=t363;
-			if (t364.call(this)==-1) break;
+		for (var t364=t361; t362<0 ? t364>=t363 : t364<=t363; t364+=t362) {
+			this.stk[this.ptr++]=t364;
+			if (t365.call(this)==-1) break;
 		}
 	}
-	function $f217(){
+	function $f218(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3707,7 +3760,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("i");
 		this.xget("putalgnpat");
 	}
-	function $f218(){
+	function $f219(){
 		this.stk[this.ptr++]="y";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3715,7 +3768,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("y");
 		this.xget("putalgnpat");
 	}
-	function $f219(){
+	function $f220(){
 		this.stk[this.ptr++]="x";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3728,17 +3781,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("size");
 		this.stk[this.ptr++]=9;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f218;
-		var t374=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f219;
+		var t375=this.stk[--this.ptr];
+		var t373=this.stk[--this.ptr];
 		var t372=this.stk[--this.ptr];
 		var t371=this.stk[--this.ptr];
-		var t370=this.stk[--this.ptr];
-		for (var t373=t370; t371<0 ? t373>=t372 : t373<=t372; t373+=t371) {
-			this.stk[this.ptr++]=t373;
-			if (t374.call(this)==-1) break;
+		for (var t374=t371; t372<0 ? t374>=t373 : t374<=t373; t374+=t372) {
+			this.stk[this.ptr++]=t374;
+			if (t375.call(this)==-1) break;
 		}
 	}
-	function $f220(){
+	function $f221(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3765,23 +3818,23 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f221(){
+	function $f222(){
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr++]=1;
 		this.xget("size");
 		this.stk[this.ptr++]=9;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f220;
-		var t384=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f221;
+		var t385=this.stk[--this.ptr];
+		var t383=this.stk[--this.ptr];
 		var t382=this.stk[--this.ptr];
 		var t381=this.stk[--this.ptr];
-		var t380=this.stk[--this.ptr];
-		for (var t383=t380; t381<0 ? t383>=t382 : t383<=t382; t383+=t381) {
-			this.stk[this.ptr++]=t383;
-			if (t384.call(this)==-1) break;
+		for (var t384=t381; t382<0 ? t384>=t383 : t384<=t383; t384+=t382) {
+			this.stk[this.ptr++]=t384;
+			if (t385.call(this)==-1) break;
 		}
 	}
-	function $f222(){
+	function $f223(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3808,23 +3861,23 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f223(){
+	function $f224(){
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr++]=1;
 		this.xget("size");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f222;
-		var t389=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f223;
+		var t390=this.stk[--this.ptr];
+		var t388=this.stk[--this.ptr];
 		var t387=this.stk[--this.ptr];
 		var t386=this.stk[--this.ptr];
-		var t385=this.stk[--this.ptr];
-		for (var t388=t385; t386<0 ? t388>=t387 : t388<=t387; t388+=t386) {
-			this.stk[this.ptr++]=t388;
-			if (t389.call(this)==-1) break;
+		for (var t389=t386; t387<0 ? t389>=t388 : t389<=t388; t389+=t387) {
+			this.stk[this.ptr++]=t389;
+			if (t390.call(this)==-1) break;
 		}
 	}
-	function $f224(){
+	function $f225(){
 		this.stk[this.ptr++]="formatmap";
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=Infinity;
@@ -4058,7 +4111,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f225(){
+	function $f226(){
 		this.stk[this.ptr++]="formatmap";
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=Infinity;
@@ -4157,471 +4210,471 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f226(){
-	}
 	function $f227(){
-		this.stk[this.ptr++]=$f226;
-		var t394=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t394);
-		this.xget("qmv");
-		this.xget("pixs");
-		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr++]=0;
-		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr-=3;
 	}
 	function $f228(){
 		this.stk[this.ptr++]=$f227;
 		var t395=this.stk[--this.ptr];
 		this.forall(this.stk[--this.ptr],t395);
-	}
-	function $f229(){
-		this.stk[this.ptr++]="versionmap";
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=5;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=5;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=5;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=5;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=5;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=5;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=4;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=4;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=4;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=4;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=4;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=4;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=3;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=3;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=3;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=3;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=3;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=3;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=2;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=2;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=2;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=1;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=1;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=1;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=0;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=0;
-		this.xget("size");
-		this.stk[this.ptr++]=9;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=0;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=0;
-		this.xget("size");
-		this.stk[this.ptr++]=10;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=Infinity;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=0;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.stk[this.ptr++]=Infinity;
-		this.stk[this.ptr++]=0;
-		this.xget("size");
-		this.stk[this.ptr++]=11;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		t = this.stk.splice(i+1, this.ptr-1-i);
-		this.ptr = i;
-		this.stk[this.ptr++]=BWIPJS.psarray(t);
-		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	}
-	function $f230(){
-		this.stk[this.ptr++]="versionmap";
-		this.stk[this.ptr++]=BWIPJS.psarray([]);
-		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	}
-	function $f231(){
-	}
-	function $f232(){
-		this.stk[this.ptr++]=$f231;
-		var t399=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t399);
 		this.xget("qmv");
 		this.xget("pixs");
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=0;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
+	}
+	function $f229(){
+		this.stk[this.ptr++]=$f228;
+		var t396=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t396);
+	}
+	function $f230(){
+		this.stk[this.ptr++]="versionmap";
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=5;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=5;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=5;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=5;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=5;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=5;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=4;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=4;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=4;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=4;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=4;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=4;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=3;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=3;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=3;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=3;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=3;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=3;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=2;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=2;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=2;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=1;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=1;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=1;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=0;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=0;
+		this.xget("size");
+		this.stk[this.ptr++]=9;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=0;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=0;
+		this.xget("size");
+		this.stk[this.ptr++]=10;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=Infinity;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=0;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.stk[this.ptr++]=Infinity;
+		this.stk[this.ptr++]=0;
+		this.xget("size");
+		this.stk[this.ptr++]=11;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
+		t = this.stk.splice(i+1, this.ptr-1-i);
+		this.ptr = i;
+		this.stk[this.ptr++]=BWIPJS.psarray(t);
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	}
+	function $f231(){
+		this.stk[this.ptr++]="versionmap";
+		this.stk[this.ptr++]=BWIPJS.psarray([]);
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	}
+	function $f232(){
 	}
 	function $f233(){
 		this.stk[this.ptr++]=$f232;
 		var t400=this.stk[--this.ptr];
 		this.forall(this.stk[--this.ptr],t400);
+		this.xget("qmv");
+		this.xget("pixs");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr++]=0;
+		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr-=3;
 	}
 	function $f234(){
+		this.stk[this.ptr++]=$f233;
+		var t401=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t401);
+	}
+	function $f235(){
 		this.xget("pixs");
 		this.stk[this.ptr++]=8;
 		this.xget("size");
@@ -4632,46 +4685,36 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f235(){
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-	}
 	function $f236(){
-		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.ptr--;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f237(){
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.ptr--;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+	}
+	function $f238(){
 		this.ptr--;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f238(){
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=3;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-	}
 	function $f239(){
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
-		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr++]=3;
-		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
+		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f240(){
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=3;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f241(){
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -4682,62 +4725,8 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f242(){
-		this.stk[this.ptr++]=2;
-		if (typeof(this.stk[this.ptr-1])=="number") {
-			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
-		} else if (this.stk[this.ptr-1] instanceof BWIPJS.psstring||this.stk[this.ptr-1] instanceof BWIPJS.psarray) {
-			this.stk[this.ptr-1].assign(0,this.stk[this.ptr-2]);
-			this.stk[this.ptr-2]=this.stk[this.ptr-1].subset(0,this.stk[this.ptr-2].length);
-			this.ptr--;
-		} else {
-			var src=this.stk[this.ptr-2]; var dst=this.stk[this.ptr-1];
-			for (var i in src) dst[i]=src[i];
-			this.stk[this.ptr-2]=dst;
-			this.ptr--;
-		}
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=3;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=3;
-		this.stk[this.ptr++]=1;
-		var t404=this.stk[--this.ptr];
-		var t403=this.stk[--this.ptr];
-		if (t404 < 0) t=this.stk.splice(this.ptr-t403, -t404);
-		else t=this.stk.splice(this.ptr-t403, t403-t404);
-		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-	}
-	function $f243(){
-		this.stk[this.ptr++]="maskfuncs";
-		this.stk[this.ptr++]=BWIPJS.psarray([$f235,$f236,$f237,$f238,$f239,$f240,$f241,$f242]);
-		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	}
-	function $f244(){
-		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.ptr--;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-	}
-	function $f245(){
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
-		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr++]=3;
-		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-	}
-	function $f246(){
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
@@ -4749,7 +4738,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f247(){
+	function $f243(){
 		this.stk[this.ptr++]=2;
 		if (typeof(this.stk[this.ptr-1])=="number") {
 			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
@@ -4768,10 +4757,10 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=1;
-		var t406=this.stk[--this.ptr];
 		var t405=this.stk[--this.ptr];
-		if (t406 < 0) t=this.stk.splice(this.ptr-t405, -t406);
-		else t=this.stk.splice(this.ptr-t405, t405-t406);
+		var t404=this.stk[--this.ptr];
+		if (t405 < 0) t=this.stk.splice(this.ptr-t404, -t405);
+		else t=this.stk.splice(this.ptr-t404, t404-t405);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=2;
@@ -4780,12 +4769,76 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f248(){
+	function $f244(){
 		this.stk[this.ptr++]="maskfuncs";
-		this.stk[this.ptr++]=BWIPJS.psarray([$f244,$f245,$f246,$f247]);
+		this.stk[this.ptr++]=BWIPJS.psarray([$f236,$f237,$f238,$f239,$f240,$f241,$f242,$f243]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
+	function $f245(){
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.ptr--;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+	}
+	function $f246(){
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr++]=3;
+		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+	}
+	function $f247(){
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr++]=3;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+	}
+	function $f248(){
+		this.stk[this.ptr++]=2;
+		if (typeof(this.stk[this.ptr-1])=="number") {
+			for (var n=this.stk[--this.ptr],t=this.ptr+n; this.ptr<t; this.ptr++) this.stk[this.ptr]=this.stk[this.ptr-n];
+		} else if (this.stk[this.ptr-1] instanceof BWIPJS.psstring||this.stk[this.ptr-1] instanceof BWIPJS.psarray) {
+			this.stk[this.ptr-1].assign(0,this.stk[this.ptr-2]);
+			this.stk[this.ptr-2]=this.stk[this.ptr-1].subset(0,this.stk[this.ptr-2].length);
+			this.ptr--;
+		} else {
+			var src=this.stk[this.ptr-2]; var dst=this.stk[this.ptr-1];
+			for (var i in src) dst[i]=src[i];
+			this.stk[this.ptr-2]=dst;
+			this.ptr--;
+		}
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=3;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=3;
+		this.stk[this.ptr++]=1;
+		var t407=this.stk[--this.ptr];
+		var t406=this.stk[--this.ptr];
+		if (t407 < 0) t=this.stk.splice(this.ptr-t406, -t407);
+		else t=this.stk.splice(this.ptr-t406, t406-t407);
+		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+	}
 	function $f249(){
+		this.stk[this.ptr++]="maskfuncs";
+		this.stk[this.ptr++]=BWIPJS.psarray([$f245,$f246,$f247,$f248]);
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	}
+	function $f250(){
 		this.stk[this.ptr++]="maskfuncs";
 		this.stk[this.ptr++]=Infinity;
 		this.xget("maskfuncs");
@@ -4805,13 +4858,13 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f250(){
+	function $f251(){
 		this.stk[this.ptr++]=1;
 	}
-	function $f251(){
+	function $f252(){
 		this.stk[this.ptr++]=0;
 	}
-	function $f252(){
+	function $f253(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4834,14 +4887,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=-1;
 		this.eq();
 		this.and();
-		this.stk[this.ptr++]=$f250;
 		this.stk[this.ptr++]=$f251;
-		var t410=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f252;
 		var t411=this.stk[--this.ptr];
+		var t412=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t411.call(this)==-1) return -1;
+			if (t412.call(this)==-1) return -1;
 		} else {
-			if (t410.call(this)==-1) return -1;
+			if (t411.call(this)==-1) return -1;
 		}
 		this.xget("mask");
 		this.xget("i");
@@ -4849,15 +4902,15 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("qmv");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=-1;
+		var t414=this.stk[--this.ptr];
 		var t413=this.stk[--this.ptr];
-		var t412=this.stk[--this.ptr];
-		if (t413 < 0) t=this.stk.splice(this.ptr-t412, -t413);
-		else t=this.stk.splice(this.ptr-t412, t412-t413);
+		if (t414 < 0) t=this.stk.splice(this.ptr-t413, -t414);
+		else t=this.stk.splice(this.ptr-t413, t413-t414);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f253(){
+	function $f254(){
 		this.stk[this.ptr++]="j";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4866,17 +4919,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("size");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f252;
-		var t418=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f253;
+		var t419=this.stk[--this.ptr];
+		var t417=this.stk[--this.ptr];
 		var t416=this.stk[--this.ptr];
 		var t415=this.stk[--this.ptr];
-		var t414=this.stk[--this.ptr];
-		for (var t417=t414; t415<0 ? t417>=t416 : t417<=t416; t417+=t415) {
-			this.stk[this.ptr++]=t417;
-			if (t418.call(this)==-1) break;
+		for (var t418=t415; t416<0 ? t418>=t417 : t418<=t417; t418+=t416) {
+			this.stk[this.ptr++]=t418;
+			if (t419.call(this)==-1) break;
 		}
 	}
-	function $f254(){
+	function $f255(){
 		this.stk[this.ptr++]="m";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4891,14 +4944,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("size");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f253;
-		var t423=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f254;
+		var t424=this.stk[--this.ptr];
+		var t422=this.stk[--this.ptr];
 		var t421=this.stk[--this.ptr];
 		var t420=this.stk[--this.ptr];
-		var t419=this.stk[--this.ptr];
-		for (var t422=t419; t420<0 ? t422>=t421 : t422<=t421; t422+=t420) {
-			this.stk[this.ptr++]=t422;
-			if (t423.call(this)==-1) break;
+		for (var t423=t420; t421<0 ? t423>=t422 : t423<=t422; t423+=t421) {
+			this.stk[this.ptr++]=t423;
+			if (t424.call(this)==-1) break;
 		}
 		this.xget("masks");
 		this.xget("m");
@@ -4906,10 +4959,10 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f255(){
+	function $f256(){
 		return -1;
 	}
-	function $f256(){
+	function $f257(){
 		this.xget("cws");
 		this.xget("num");
 		this.stk[this.ptr++]=8;
@@ -4933,10 +4986,10 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("qmv");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=-1;
+		var t432=this.stk[--this.ptr];
 		var t431=this.stk[--this.ptr];
-		var t430=this.stk[--this.ptr];
-		if (t431 < 0) t=this.stk.splice(this.ptr-t430, -t431);
-		else t=this.stk.splice(this.ptr-t430, t430-t431);
+		if (t432 < 0) t=this.stk.splice(this.ptr-t431, -t432);
+		else t=this.stk.splice(this.ptr-t431, t431-t432);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
@@ -4946,7 +4999,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f257(){
+	function $f258(){
 		this.stk[this.ptr++]="col";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4956,14 +5009,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f258(){
+	function $f259(){
 		this.stk[this.ptr++]="posx";
 		this.xget("posx");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f259(){
+	function $f260(){
 		this.stk[this.ptr++]="dir";
 		this.xget("dir");
 		this.stk[this.ptr++]=-1;
@@ -4986,13 +5039,13 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=6;
 		this.eq();
 		this.and();
-		this.stk[this.ptr++]=$f258;
-		var t433=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f259;
+		var t434=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t433.call(this)==-1) return -1;
+			if (t434.call(this)==-1) return -1;
 		}
 	}
-	function $f260(){
+	function $f261(){
 		this.stk[this.ptr++]="col";
 		this.stk[this.ptr++]=1;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5013,20 +5066,20 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("size");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.or();
-		this.stk[this.ptr++]=$f259;
-		var t434=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f260;
+		var t435=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t434.call(this)==-1) return -1;
+			if (t435.call(this)==-1) return -1;
 		}
 	}
-	function $f261(){
+	function $f262(){
 		this.xget("posx");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f255;
-		var t429=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f256;
+		var t430=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t429.call(this)==-1) return -1;
+			if (t430.call(this)==-1) return -1;
 		}
 		this.xget("pixs");
 		this.xget("posx");
@@ -5036,51 +5089,44 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.ptr--;
 		this.stk[this.ptr++]=-1;
 		this.eq();
-		this.stk[this.ptr++]=$f256;
-		var t432=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f257;
+		var t433=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t432.call(this)==-1) return -1;
+			if (t433.call(this)==-1) return -1;
 		}
 		this.xget("col");
 		this.stk[this.ptr++]=1;
 		this.eq();
-		this.stk[this.ptr++]=$f257;
-		this.stk[this.ptr++]=$f260;
-		var t435=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f258;
+		this.stk[this.ptr++]=$f261;
 		var t436=this.stk[--this.ptr];
+		var t437=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t436.call(this)==-1) return -1;
+			if (t437.call(this)==-1) return -1;
 		} else {
-			if (t435.call(this)==-1) return -1;
+			if (t436.call(this)==-1) return -1;
 		}
 	}
-	function $f262(){
+	function $f263(){
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 	}
-	function $f263(){
+	function $f264(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f262;
-		var t438=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f263;
+		var t439=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t438.call(this)==-1) return -1;
+			if (t439.call(this)==-1) return -1;
 		}
 		this.ptr--;
 	}
-	function $f264(){
+	function $f265(){
 		this.xget("fact");
 		this.eq();
-	}
-	function $f265(){
-		this.stk[this.ptr++]="scr3";
-		this.xget("scr3");
-		this.stk[this.ptr++]=40;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f266(){
 		this.stk[this.ptr++]="scr3";
@@ -5090,6 +5136,13 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f267(){
+		this.stk[this.ptr++]="scr3";
+		this.xget("scr3");
+		this.stk[this.ptr++]=40;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
+	}
+	function $f268(){
 		this.xget("scrle");
 		this.xget("j");
 		this.stk[this.ptr++]=3;
@@ -5107,13 +5160,13 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.or();
-		this.stk[this.ptr++]=$f266;
-		var t441=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f267;
+		var t442=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t441.call(this)==-1) return -1;
+			if (t442.call(this)==-1) return -1;
 		}
 	}
-	function $f268(){
+	function $f269(){
 		this.xget("j");
 		this.stk[this.ptr++]=3;
 		this.eq();
@@ -5124,17 +5177,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.or();
-		this.stk[this.ptr++]=$f265;
-		this.stk[this.ptr++]=$f267;
-		var t442=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f266;
+		this.stk[this.ptr++]=$f268;
 		var t443=this.stk[--this.ptr];
+		var t444=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t443.call(this)==-1) return -1;
+			if (t444.call(this)==-1) return -1;
 		} else {
-			if (t442.call(this)==-1) return -1;
+			if (t443.call(this)==-1) return -1;
 		}
 	}
-	function $f269(){
+	function $f270(){
 		this.stk[this.ptr++]="fact";
 		this.xget("scrle");
 		this.xget("j");
@@ -5149,21 +5202,21 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
-		this.stk[this.ptr++]=$f264;
-		var t440=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t440);
+		this.stk[this.ptr++]=$f265;
+		var t441=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t441);
 		this.and();
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.and();
 		this.and();
-		this.stk[this.ptr++]=$f268;
-		var t444=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f269;
+		var t445=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t444.call(this)==-1) return -1;
+			if (t445.call(this)==-1) return -1;
 		}
 	}
-	function $f270(){
+	function $f271(){
 		this.stk[this.ptr++]="j";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5175,22 +5228,22 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
 		this.eq();
-		this.stk[this.ptr++]=$f269;
-		var t445=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f270;
+		var t446=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t445.call(this)==-1) return -1;
+			if (t446.call(this)==-1) return -1;
 		}
 	}
-	function $f271(){
+	function $f272(){
 		this.stk[this.ptr++]="scrle";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="scr1";
 		this.stk[this.ptr++]=0;
 		this.xget("scrle");
-		this.stk[this.ptr++]=$f263;
-		var t439=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t439);
+		this.stk[this.ptr++]=$f264;
+		var t440=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t440);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="scr3";
 		this.stk[this.ptr++]=0;
@@ -5201,29 +5254,29 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f270;
-		var t450=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f271;
+		var t451=this.stk[--this.ptr];
+		var t449=this.stk[--this.ptr];
 		var t448=this.stk[--this.ptr];
 		var t447=this.stk[--this.ptr];
-		var t446=this.stk[--this.ptr];
-		for (var t449=t446; t447<0 ? t449>=t448 : t449<=t448; t449+=t447) {
-			this.stk[this.ptr++]=t449;
-			if (t450.call(this)==-1) break;
+		for (var t450=t447; t448<0 ? t450>=t449 : t450<=t449; t450+=t448) {
+			this.stk[this.ptr++]=t450;
+			if (t451.call(this)==-1) break;
 		}
 		this.xget("scr1");
 		this.xget("scr3");
 	}
-	function $f272(){
+	function $f273(){
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
-	function $f273(){
+	function $f274(){
 		this.stk[this.ptr++]=1;
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
-	function $f274(){
+	function $f275(){
 		this.xget("sym");
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -5232,59 +5285,59 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 		this.eq();
-		this.stk[this.ptr++]=$f272;
 		this.stk[this.ptr++]=$f273;
-		var t451=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f274;
 		var t452=this.stk[--this.ptr];
+		var t453=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t452.call(this)==-1) return -1;
+			if (t453.call(this)==-1) return -1;
 		} else {
-			if (t451.call(this)==-1) return -1;
+			if (t452.call(this)==-1) return -1;
 		}
 	}
-	function $f275(){
+	function $f276(){
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
-	function $f276(){
+	function $f277(){
 		this.stk[this.ptr++]=1;
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
-	function $f277(){
+	function $f278(){
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 		this.eq();
-		this.stk[this.ptr++]=$f275;
 		this.stk[this.ptr++]=$f276;
-		var t458=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f277;
 		var t459=this.stk[--this.ptr];
+		var t460=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t459.call(this)==-1) return -1;
+			if (t460.call(this)==-1) return -1;
 		} else {
-			if (t458.call(this)==-1) return -1;
+			if (t459.call(this)==-1) return -1;
 		}
 	}
-	function $f278(){
+	function $f279(){
 		this.stk[this.ptr++]=0;
 	}
-	function $f279(){
+	function $f280(){
 		this.stk[this.ptr++]=1;
 	}
-	function $f280(){
+	function $f281(){
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	}
-	function $f281(){
+	function $f282(){
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f282(){
+	function $f283(){
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.xget("sizeadd1");
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
@@ -5293,13 +5346,13 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.and();
 		this.stk[this.ptr++]=0;
 		this.eq();
-		this.stk[this.ptr++]=$f281;
-		var t464=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f282;
+		var t465=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t464.call(this)==-1) return -1;
+			if (t465.call(this)==-1) return -1;
 		}
 	}
-	function $f283(){
+	function $f284(){
 		this.stk[this.ptr++]=Infinity;
 		this.xget("lastpairs");
 		t=this.stk[this.ptr-1];
@@ -5315,11 +5368,11 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.ptr--;
 		this.xget("n2");
 		this.xget("size");
-		this.stk[this.ptr++]=$f282;
-		var t467=this.stk[--this.ptr];
-		var t465=this.stk[--this.ptr];
-		for (var t466=0; t466<t465; t466++) {
-			if (t467.call(this)==-1) break;
+		this.stk[this.ptr++]=$f283;
+		var t468=this.stk[--this.ptr];
+		var t466=this.stk[--this.ptr];
+		for (var t467=0; t467<t466; t467++) {
+			if (t468.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="n2";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
@@ -5327,7 +5380,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		for (var i=this.ptr-1; i>=0 && this.stk[i]!==Infinity; i--);
 		this.ptr=i;
 	}
-	function $f284(){
+	function $f285(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5341,14 +5394,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f274;
-		var t457=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f275;
+		var t458=this.stk[--this.ptr];
+		var t456=this.stk[--this.ptr];
 		var t455=this.stk[--this.ptr];
 		var t454=this.stk[--this.ptr];
-		var t453=this.stk[--this.ptr];
-		for (var t456=t453; t454<0 ? t456>=t455 : t456<=t455; t456+=t454) {
-			this.stk[this.ptr++]=t456;
-			if (t457.call(this)==-1) break;
+		for (var t457=t454; t455<0 ? t457>=t456 : t457<=t456; t457+=t455) {
+			this.stk[this.ptr++]=t457;
+			if (t458.call(this)==-1) break;
 		}
 		this.ptr--;
 		this.xget("rle");
@@ -5387,9 +5440,9 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=0;
 		this.xget("symrow");
-		this.stk[this.ptr++]=$f277;
-		var t460=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t460);
+		this.stk[this.ptr++]=$f278;
+		var t461=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t461);
 		this.ptr--;
 		this.xget("rle");
 		this.stk[this.ptr++]=0;
@@ -5427,19 +5480,19 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.eq();
-		this.stk[this.ptr++]=$f278;
 		this.stk[this.ptr++]=$f279;
-		var t461=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f280;
 		var t462=this.stk[--this.ptr];
+		var t463=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t462.call(this)==-1) return -1;
+			if (t463.call(this)==-1) return -1;
 		} else {
-			if (t461.call(this)==-1) return -1;
+			if (t462.call(this)==-1) return -1;
 		}
 		this.xget("symrow");
-		this.stk[this.ptr++]=$f280;
-		var t463=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t463);
+		this.stk[this.ptr++]=$f281;
+		var t464=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t464);
 		this.ptr--;
 		this.xget("thispairs");
 		t=this.stk[this.ptr-1];
@@ -5450,16 +5503,16 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("i");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f283;
-		var t468=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f284;
+		var t469=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t468.call(this)==-1) return -1;
+			if (t469.call(this)==-1) return -1;
 		}
 	}
-	function $f285(){
+	function $f286(){
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f286(){
+	function $f287(){
 		this.stk[this.ptr++]="sym";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5496,21 +5549,21 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("size");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f284;
-		var t473=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f285;
+		var t474=this.stk[--this.ptr];
+		var t472=this.stk[--this.ptr];
 		var t471=this.stk[--this.ptr];
 		var t470=this.stk[--this.ptr];
-		var t469=this.stk[--this.ptr];
-		for (var t472=t469; t470<0 ? t472>=t471 : t472<=t471; t472+=t470) {
-			this.stk[this.ptr++]=t472;
-			if (t473.call(this)==-1) break;
+		for (var t473=t470; t471<0 ? t473>=t472 : t473<=t472; t473+=t471) {
+			this.stk[this.ptr++]=t473;
+			if (t474.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="dark";
 		this.stk[this.ptr++]=0;
 		this.xget("sym");
-		this.stk[this.ptr++]=$f285;
-		var t474=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t474);
+		this.stk[this.ptr++]=$f286;
+		var t475=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t475);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="n4";
 		this.xget("dark");
@@ -5537,7 +5590,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("n4");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	}
-	function $f287(){
+	function $f288(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5566,23 +5619,23 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f288(){
-		this.xget("dkrhs");
-		this.stk[this.ptr++]=16;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.xget("dkbot");
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr-1]=-this.stk[this.ptr-1];
-	}
 	function $f289(){
-		this.xget("dkbot");
+		this.xget("dkrhs");
 		this.stk[this.ptr++]=16;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		this.xget("dkrhs");
+		this.xget("dkbot");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-1]=-this.stk[this.ptr-1];
 	}
 	function $f290(){
+		this.xget("dkbot");
+		this.stk[this.ptr++]=16;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
+		this.xget("dkrhs");
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr-1]=-this.stk[this.ptr-1];
+	}
+	function $f291(){
 		this.stk[this.ptr++]="sym";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5597,29 +5650,29 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("size");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f287;
-		var t479=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f288;
+		var t480=this.stk[--this.ptr];
+		var t478=this.stk[--this.ptr];
 		var t477=this.stk[--this.ptr];
 		var t476=this.stk[--this.ptr];
-		var t475=this.stk[--this.ptr];
-		for (var t478=t475; t476<0 ? t478>=t477 : t478<=t477; t478+=t476) {
-			this.stk[this.ptr++]=t478;
-			if (t479.call(this)==-1) break;
+		for (var t479=t476; t477<0 ? t479>=t478 : t479<=t478; t479+=t477) {
+			this.stk[this.ptr++]=t479;
+			if (t480.call(this)==-1) break;
 		}
 		this.xget("dkrhs");
 		this.xget("dkbot");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f288;
 		this.stk[this.ptr++]=$f289;
-		var t480=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f290;
 		var t481=this.stk[--this.ptr];
+		var t482=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t481.call(this)==-1) return -1;
+			if (t482.call(this)==-1) return -1;
 		} else {
-			if (t480.call(this)==-1) return -1;
+			if (t481.call(this)==-1) return -1;
 		}
 	}
-	function $f291(){
+	function $f292(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5640,21 +5693,21 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f292(){
+	function $f293(){
 		this.xget("masksym");
 		this.xget("evalfull");
 		this.stk[this.ptr++]="score";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f293(){
+	function $f294(){
 		this.xget("masksym");
 		this.xget("evalmicro");
 		this.stk[this.ptr++]="score";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f294(){
+	function $f295(){
 		this.stk[this.ptr++]="bestsym";
 		this.xget("masksym");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5665,34 +5718,34 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("score");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f295(){
+	function $f296(){
 		this.xget("format");
 		this.stk[this.ptr++]=BWIPJS.psstring("full");
 		this.eq();
-		this.stk[this.ptr++]=$f292;
 		this.stk[this.ptr++]=$f293;
-		var t487=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f294;
 		var t488=this.stk[--this.ptr];
+		var t489=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t488.call(this)==-1) return -1;
+			if (t489.call(this)==-1) return -1;
 		} else {
-			if (t487.call(this)==-1) return -1;
+			if (t488.call(this)==-1) return -1;
 		}
 		this.xget("score");
 		this.xget("bestscore");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f294;
-		var t489=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f295;
+		var t490=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t489.call(this)==-1) return -1;
+			if (t490.call(this)==-1) return -1;
 		}
 	}
-	function $f296(){
+	function $f297(){
 		this.stk[this.ptr++]="bestsym";
 		this.xget("masksym");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f297(){
+	function $f298(){
 		this.stk[this.ptr++]="m";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5709,30 +5762,30 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f291;
-		var t486=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f292;
+		var t487=this.stk[--this.ptr];
+		var t485=this.stk[--this.ptr];
 		var t484=this.stk[--this.ptr];
 		var t483=this.stk[--this.ptr];
-		var t482=this.stk[--this.ptr];
-		for (var t485=t482; t483<0 ? t485>=t484 : t485<=t484; t485+=t483) {
-			this.stk[this.ptr++]=t485;
-			if (t486.call(this)==-1) break;
+		for (var t486=t483; t484<0 ? t486>=t485 : t486<=t485; t486+=t484) {
+			this.stk[this.ptr++]=t486;
+			if (t487.call(this)==-1) break;
 		}
 		this.xget("masks");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=1;
 		this.ne();
-		this.stk[this.ptr++]=$f295;
 		this.stk[this.ptr++]=$f296;
-		var t490=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f297;
 		var t491=this.stk[--this.ptr];
+		var t492=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t491.call(this)==-1) return -1;
+			if (t492.call(this)==-1) return -1;
 		} else {
-			if (t490.call(this)==-1) return -1;
+			if (t491.call(this)==-1) return -1;
 		}
 	}
-	function $f298(){
+	function $f299(){
 		this.stk[this.ptr++]="fmtvals";
 		this.stk[this.ptr++]=BWIPJS.psarray([21522,20773,24188,23371,17913,16590,20375,19104,30660,29427,32170,30877,26159,25368,27713,26998,5769,5054,7399,6608,1890,597,3340,2107,13663,12392,16177,14854,9396,8579,11994,11245]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5769,7 +5822,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f299(){
+	function $f300(){
 		this.stk[this.ptr++]="fmtvals";
 		this.stk[this.ptr++]=BWIPJS.psarray([17477,16754,20011,19228,21934,20633,24512,23287,26515,25252,28157,26826,30328,29519,31766,31009,1758,1001,3248,2439,5941,4610,7515,6252,9480,8255,12134,10833,13539,12756,16013,15290]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5807,14 +5860,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
-	function $f300(){
-	}
 	function $f301(){
+	}
+	function $f302(){
 		this.xget("pixs");
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr++]=$f300;
-		var t499=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t499);
+		this.stk[this.ptr++]=$f301;
+		var t500=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t500);
 		this.xget("qmv");
 		this.xget("fmtval");
 		this.stk[this.ptr++]=14;
@@ -5829,7 +5882,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f302(){
+	function $f303(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5837,18 +5890,18 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		this.stk[this.ptr++]=$f301;
-		var t500=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t500);
-	}
-	function $f303(){
+		this.stk[this.ptr++]=$f302;
+		var t501=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t501);
 	}
 	function $f304(){
+	}
+	function $f305(){
 		this.xget("pixs");
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr++]=$f303;
-		var t506=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t506);
+		this.stk[this.ptr++]=$f304;
+		var t507=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t507);
 		this.xget("qmv");
 		this.xget("verval");
 		this.stk[this.ptr++]=17;
@@ -5863,7 +5916,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
-	function $f305(){
+	function $f306(){
 		this.stk[this.ptr++]="i";
 		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5871,11 +5924,11 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		this.stk[this.ptr++]=$f304;
-		var t507=this.stk[--this.ptr];
-		this.forall(this.stk[--this.ptr],t507);
+		this.stk[this.ptr++]=$f305;
+		var t508=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t508);
 	}
-	function $f306(){
+	function $f307(){
 		this.stk[this.ptr++]="vervals";
 		this.stk[this.ptr++]=BWIPJS.psarray([31892,34236,39577,42195,48118,51042,55367,58893,63784,68472,70749,76311,79154,84390,87683,92361,96236,102084,102881,110507,110734,117786,119615,126325,127568,133589,136957,141498,145311,150283,152622,158308,161089,167017]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -5897,14 +5950,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f305;
-		var t512=this.stk[--this.ptr];
+		this.stk[this.ptr++]=$f306;
+		var t513=this.stk[--this.ptr];
+		var t511=this.stk[--this.ptr];
 		var t510=this.stk[--this.ptr];
 		var t509=this.stk[--this.ptr];
-		var t508=this.stk[--this.ptr];
-		for (var t511=t508; t509<0 ? t511>=t510 : t511<=t510; t511+=t509) {
-			this.stk[this.ptr++]=t511;
-			if (t512.call(this)==-1) break;
+		for (var t512=t509; t510<0 ? t512>=t511 : t512<=t511; t512+=t510) {
+			this.stk[this.ptr++]=t512;
+			if (t513.call(this)==-1) break;
 		}
 	}
 	this.stk[this.ptr++]=20;
@@ -7329,15 +7382,21 @@ BWIPJS.bwipp["qrcode"]=function() {
 		this.stk[this.ptr++]=t261;
 		if (t262.call(this)==-1) break;
 	}
+	this.xget("lc4b");
+	this.stk[this.ptr++]=$f185;
+	var t263=this.stk[--this.ptr];
+	if (this.stk[--this.ptr]) {
+		if (t263.call(this)==-1) return -1;
+	}
 	this.stk[this.ptr++]="rsalog";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=255;
-	this.stk[this.ptr++]=$f186;
-	var t266=this.stk[--this.ptr];
-	var t264=this.stk[--this.ptr];
-	for (var t265=0; t265<t264; t265++) {
-		if (t266.call(this)==-1) break;
+	this.stk[this.ptr++]=$f187;
+	var t267=this.stk[--this.ptr];
+	var t265=this.stk[--this.ptr];
+	for (var t266=0; t266<t265; t266++) {
+		if (t267.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	t = this.stk.splice(i+1, this.ptr-1-i);
@@ -7351,27 +7410,27 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr++]=255;
-	this.stk[this.ptr++]=$f187;
-	var t273=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f188;
+	var t274=this.stk[--this.ptr];
+	var t272=this.stk[--this.ptr];
 	var t271=this.stk[--this.ptr];
 	var t270=this.stk[--this.ptr];
-	var t269=this.stk[--this.ptr];
-	for (var t272=t269; t270<0 ? t272>=t271 : t272<=t271; t272+=t270) {
-		this.stk[this.ptr++]=t272;
-		if (t273.call(this)==-1) break;
+	for (var t273=t270; t271<0 ? t273>=t272 : t273<=t272; t273+=t271) {
+		this.stk[this.ptr++]=t273;
+		if (t274.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="rsprod";
-	this.stk[this.ptr++]=$f190;
+	this.stk[this.ptr++]=$f191;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="coeffs";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=1;
 	this.xget("ecpb");
-	this.stk[this.ptr++]=$f191;
-	var t278=this.stk[--this.ptr];
-	var t276=this.stk[--this.ptr];
-	for (var t277=0; t277<t276; t277++) {
-		if (t278.call(this)==-1) break;
+	this.stk[this.ptr++]=$f192;
+	var t279=this.stk[--this.ptr];
+	var t277=this.stk[--this.ptr];
+	for (var t278=0; t278<t277; t278++) {
+		if (t279.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	t = this.stk.splice(i+1, this.ptr-1-i);
@@ -7383,14 +7442,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.xget("ecpb");
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f193;
-	var t288=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f194;
+	var t289=this.stk[--this.ptr];
+	var t287=this.stk[--this.ptr];
 	var t286=this.stk[--this.ptr];
 	var t285=this.stk[--this.ptr];
-	var t284=this.stk[--this.ptr];
-	for (var t287=t284; t285<0 ? t287>=t286 : t287<=t286; t287+=t285) {
-		this.stk[this.ptr++]=t287;
-		if (t288.call(this)==-1) break;
+	for (var t288=t285; t286<0 ? t288>=t287 : t288<=t287; t288+=t286) {
+		this.stk[this.ptr++]=t288;
+		if (t289.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="coeffs";
 	this.xget("coeffs");
@@ -7402,7 +7461,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="rscodes";
-	this.stk[this.ptr++]=$f198;
+	this.stk[this.ptr++]=$f199;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="dcwsb";
 	this.xget("ecb1");
@@ -7421,28 +7480,28 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.xget("ecb1");
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f199;
-	var t307=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f200;
+	var t308=this.stk[--this.ptr];
+	var t306=this.stk[--this.ptr];
 	var t305=this.stk[--this.ptr];
 	var t304=this.stk[--this.ptr];
-	var t303=this.stk[--this.ptr];
-	for (var t306=t303; t304<0 ? t306>=t305 : t306<=t305; t306+=t304) {
-		this.stk[this.ptr++]=t306;
-		if (t307.call(this)==-1) break;
+	for (var t307=t304; t305<0 ? t307>=t306 : t307<=t306; t307+=t305) {
+		this.stk[this.ptr++]=t307;
+		if (t308.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.xget("ecb2");
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f200;
-	var t312=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f201;
+	var t313=this.stk[--this.ptr];
+	var t311=this.stk[--this.ptr];
 	var t310=this.stk[--this.ptr];
 	var t309=this.stk[--this.ptr];
-	var t308=this.stk[--this.ptr];
-	for (var t311=t308; t309<0 ? t311>=t310 : t311<=t310; t311+=t309) {
-		this.stk[this.ptr++]=t311;
-		if (t312.call(this)==-1) break;
+	for (var t312=t309; t310<0 ? t312>=t311 : t312<=t311; t312+=t310) {
+		this.stk[this.ptr++]=t312;
+		if (t313.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="cws";
 	this.xget("ncws");
@@ -7454,53 +7513,53 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.xget("dcpb");
-	this.stk[this.ptr++]=$f203;
-	var t323=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f204;
+	var t324=this.stk[--this.ptr];
+	var t322=this.stk[--this.ptr];
 	var t321=this.stk[--this.ptr];
 	var t320=this.stk[--this.ptr];
-	var t319=this.stk[--this.ptr];
-	for (var t322=t319; t320<0 ? t322>=t321 : t322<=t321; t322+=t320) {
-		this.stk[this.ptr++]=t322;
-		if (t323.call(this)==-1) break;
+	for (var t323=t320; t321<0 ? t323>=t322 : t323<=t322; t323+=t321) {
+		this.stk[this.ptr++]=t323;
+		if (t324.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
 	this.xget("ecpb");
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f205;
-	var t333=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f206;
+	var t334=this.stk[--this.ptr];
+	var t332=this.stk[--this.ptr];
 	var t331=this.stk[--this.ptr];
 	var t330=this.stk[--this.ptr];
-	var t329=this.stk[--this.ptr];
-	for (var t332=t329; t330<0 ? t332>=t331 : t332<=t331; t332+=t330) {
-		this.stk[this.ptr++]=t332;
-		if (t333.call(this)==-1) break;
+	for (var t333=t330; t331<0 ? t333>=t332 : t333<=t332; t333+=t331) {
+		this.stk[this.ptr++]=t333;
+		if (t334.call(this)==-1) break;
 	}
 	this.xget("rbit");
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f206;
-	var t334=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f207;
+	var t335=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t334.call(this)==-1) return -1;
+		if (t335.call(this)==-1) return -1;
 	}
 	this.xget("lc4b");
-	this.stk[this.ptr++]=$f208;
-	var t340=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f209;
+	var t341=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t340.call(this)==-1) return -1;
+		if (t341.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="pixs";
 	this.stk[this.ptr++]=Infinity;
 	this.xget("size");
 	this.xget("size");
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f209;
-	var t343=this.stk[--this.ptr];
-	var t341=this.stk[--this.ptr];
-	for (var t342=0; t342<t341; t342++) {
-		if (t343.call(this)==-1) break;
+	this.stk[this.ptr++]=$f210;
+	var t344=this.stk[--this.ptr];
+	var t342=this.stk[--this.ptr];
+	for (var t343=0; t343<t342; t343++) {
+		if (t344.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
 	t = this.stk.splice(i+1, this.ptr-1-i);
@@ -7508,7 +7567,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="qmv";
-	this.stk[this.ptr++]=$f210;
+	this.stk[this.ptr++]=$f211;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="fpat";
 	this.stk[this.ptr++]=Infinity;
@@ -7531,14 +7590,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f213;
-	var t354=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f214;
+	var t355=this.stk[--this.ptr];
+	var t353=this.stk[--this.ptr];
 	var t352=this.stk[--this.ptr];
 	var t351=this.stk[--this.ptr];
-	var t350=this.stk[--this.ptr];
-	for (var t353=t350; t351<0 ? t353>=t352 : t353<=t352; t353+=t351) {
-		this.stk[this.ptr++]=t353;
-		if (t354.call(this)==-1) break;
+	for (var t354=t351; t352<0 ? t354>=t353 : t354<=t353; t354+=t352) {
+		this.stk[this.ptr++]=t354;
+		if (t355.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="algnpat";
 	this.stk[this.ptr++]=Infinity;
@@ -7553,7 +7612,7 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="putalgnpat";
-	this.stk[this.ptr++]=$f216;
+	this.stk[this.ptr++]=$f217;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.xget("asp2");
 	this.stk[this.ptr++]=2;
@@ -7564,14 +7623,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.xget("size");
 	this.stk[this.ptr++]=13;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f217;
-	var t369=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f218;
+	var t370=this.stk[--this.ptr];
+	var t368=this.stk[--this.ptr];
 	var t367=this.stk[--this.ptr];
 	var t366=this.stk[--this.ptr];
-	var t365=this.stk[--this.ptr];
-	for (var t368=t365; t366<0 ? t368>=t367 : t368<=t367; t368+=t366) {
-		this.stk[this.ptr++]=t368;
-		if (t369.call(this)==-1) break;
+	for (var t369=t366; t367<0 ? t369>=t368 : t369<=t368; t369+=t367) {
+		this.stk[this.ptr++]=t369;
+		if (t370.call(this)==-1) break;
 	}
 	this.xget("asp2");
 	this.stk[this.ptr++]=2;
@@ -7582,86 +7641,86 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.xget("size");
 	this.stk[this.ptr++]=9;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f219;
-	var t379=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f220;
+	var t380=this.stk[--this.ptr];
+	var t378=this.stk[--this.ptr];
 	var t377=this.stk[--this.ptr];
 	var t376=this.stk[--this.ptr];
-	var t375=this.stk[--this.ptr];
-	for (var t378=t375; t376<0 ? t378>=t377 : t378<=t377; t378+=t376) {
-		this.stk[this.ptr++]=t378;
-		if (t379.call(this)==-1) break;
+	for (var t379=t376; t377<0 ? t379>=t378 : t379<=t378; t379+=t377) {
+		this.stk[this.ptr++]=t379;
+		if (t380.call(this)==-1) break;
 	}
 	this.xget("format");
 	this.stk[this.ptr++]=BWIPJS.psstring("full");
 	this.eq();
-	this.stk[this.ptr++]=$f221;
-	this.stk[this.ptr++]=$f223;
-	var t390=this.stk[--this.ptr];
-	var t391=this.stk[--this.ptr];
-	if (this.stk[--this.ptr]) {
-		if (t391.call(this)==-1) return -1;
-	} else {
-		if (t390.call(this)==-1) return -1;
-	}
-	this.xget("format");
-	this.stk[this.ptr++]=BWIPJS.psstring("full");
-	this.eq();
+	this.stk[this.ptr++]=$f222;
 	this.stk[this.ptr++]=$f224;
-	this.stk[this.ptr++]=$f225;
+	var t391=this.stk[--this.ptr];
 	var t392=this.stk[--this.ptr];
-	var t393=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t393.call(this)==-1) return -1;
-	} else {
 		if (t392.call(this)==-1) return -1;
+	} else {
+		if (t391.call(this)==-1) return -1;
+	}
+	this.xget("format");
+	this.stk[this.ptr++]=BWIPJS.psstring("full");
+	this.eq();
+	this.stk[this.ptr++]=$f225;
+	this.stk[this.ptr++]=$f226;
+	var t393=this.stk[--this.ptr];
+	var t394=this.stk[--this.ptr];
+	if (this.stk[--this.ptr]) {
+		if (t394.call(this)==-1) return -1;
+	} else {
+		if (t393.call(this)==-1) return -1;
 	}
 	this.xget("formatmap");
-	this.stk[this.ptr++]=$f228;
-	var t396=this.stk[--this.ptr];
-	this.forall(this.stk[--this.ptr],t396);
+	this.stk[this.ptr++]=$f229;
+	var t397=this.stk[--this.ptr];
+	this.forall(this.stk[--this.ptr],t397);
 	this.xget("size");
 	this.stk[this.ptr++]=45;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f229;
 	this.stk[this.ptr++]=$f230;
-	var t397=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f231;
 	var t398=this.stk[--this.ptr];
+	var t399=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t398.call(this)==-1) return -1;
+		if (t399.call(this)==-1) return -1;
 	} else {
-		if (t397.call(this)==-1) return -1;
+		if (t398.call(this)==-1) return -1;
 	}
 	this.xget("versionmap");
-	this.stk[this.ptr++]=$f233;
-	var t401=this.stk[--this.ptr];
-	this.forall(this.stk[--this.ptr],t401);
+	this.stk[this.ptr++]=$f234;
+	var t402=this.stk[--this.ptr];
+	this.forall(this.stk[--this.ptr],t402);
 	this.xget("format");
 	this.stk[this.ptr++]=BWIPJS.psstring("full");
 	this.eq();
-	this.stk[this.ptr++]=$f234;
-	var t402=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f235;
+	var t403=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t402.call(this)==-1) return -1;
+		if (t403.call(this)==-1) return -1;
 	}
 	this.xget("format");
 	this.stk[this.ptr++]=BWIPJS.psstring("full");
 	this.eq();
-	this.stk[this.ptr++]=$f243;
-	this.stk[this.ptr++]=$f248;
-	var t407=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f244;
+	this.stk[this.ptr++]=$f249;
 	var t408=this.stk[--this.ptr];
+	var t409=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t408.call(this)==-1) return -1;
+		if (t409.call(this)==-1) return -1;
 	} else {
-		if (t407.call(this)==-1) return -1;
+		if (t408.call(this)==-1) return -1;
 	}
 	this.xget("mask");
 	this.stk[this.ptr++]=-1;
 	this.ne();
-	this.stk[this.ptr++]=$f249;
-	var t409=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f250;
+	var t410=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t409.call(this)==-1) return -1;
+		if (t410.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="masks";
 	this.xget("maskfuncs");
@@ -7674,14 +7733,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f254;
-	var t428=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f255;
+	var t429=this.stk[--this.ptr];
+	var t427=this.stk[--this.ptr];
 	var t426=this.stk[--this.ptr];
 	var t425=this.stk[--this.ptr];
-	var t424=this.stk[--this.ptr];
-	for (var t427=t424; t425<0 ? t427>=t426 : t427<=t426; t427+=t425) {
-		this.stk[this.ptr++]=t427;
-		if (t428.call(this)==-1) break;
+	for (var t428=t425; t426<0 ? t428>=t427 : t428<=t427; t428+=t426) {
+		this.stk[this.ptr++]=t428;
+		if (t429.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="posx";
 	this.xget("size");
@@ -7702,17 +7761,17 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr++]="num";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	this.stk[this.ptr++]=$f261;
-	var t437=this.stk[--this.ptr];
-	while (t437.call(this)!=-1);
+	this.stk[this.ptr++]=$f262;
+	var t438=this.stk[--this.ptr];
+	while (t438.call(this)!=-1);
 	this.stk[this.ptr++]="evalfulln1n3";
-	this.stk[this.ptr++]=$f271;
+	this.stk[this.ptr++]=$f272;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="evalfull";
-	this.stk[this.ptr++]=$f286;
+	this.stk[this.ptr++]=$f287;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="evalmicro";
-	this.stk[this.ptr++]=$f290;
+	this.stk[this.ptr++]=$f291;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="bestscore";
 	this.stk[this.ptr++]=999999999;
@@ -7723,14 +7782,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f297;
-	var t496=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f298;
+	var t497=this.stk[--this.ptr];
+	var t495=this.stk[--this.ptr];
 	var t494=this.stk[--this.ptr];
 	var t493=this.stk[--this.ptr];
-	var t492=this.stk[--this.ptr];
-	for (var t495=t492; t493<0 ? t495>=t494 : t495<=t494; t495+=t493) {
-		this.stk[this.ptr++]=t495;
-		if (t496.call(this)==-1) break;
+	for (var t496=t493; t494<0 ? t496>=t495 : t496<=t495; t496+=t494) {
+		this.stk[this.ptr++]=t496;
+		if (t497.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="pixs";
 	this.xget("bestsym");
@@ -7738,14 +7797,14 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.xget("format");
 	this.stk[this.ptr++]=BWIPJS.psstring("full");
 	this.eq();
-	this.stk[this.ptr++]=$f298;
 	this.stk[this.ptr++]=$f299;
-	var t497=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f300;
 	var t498=this.stk[--this.ptr];
+	var t499=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t498.call(this)==-1) return -1;
+		if (t499.call(this)==-1) return -1;
 	} else {
-		if (t497.call(this)==-1) return -1;
+		if (t498.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
@@ -7753,22 +7812,22 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f302;
-	var t505=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f303;
+	var t506=this.stk[--this.ptr];
+	var t504=this.stk[--this.ptr];
 	var t503=this.stk[--this.ptr];
 	var t502=this.stk[--this.ptr];
-	var t501=this.stk[--this.ptr];
-	for (var t504=t501; t502<0 ? t504>=t503 : t504<=t503; t504+=t502) {
-		this.stk[this.ptr++]=t504;
-		if (t505.call(this)==-1) break;
+	for (var t505=t502; t503<0 ? t505>=t504 : t505<=t504; t505+=t503) {
+		this.stk[this.ptr++]=t505;
+		if (t506.call(this)==-1) break;
 	}
 	this.xget("size");
 	this.stk[this.ptr++]=45;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-	this.stk[this.ptr++]=$f306;
-	var t513=this.stk[--this.ptr];
+	this.stk[this.ptr++]=$f307;
+	var t514=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t513.call(this)==-1) return -1;
+		if (t514.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]="ren";
@@ -7802,9 +7861,9 @@ BWIPJS.bwipp["qrcode"]=function() {
 	this.xget("dontdraw");
 	this.not();
 	this.stk[this.ptr++]=this.get("renmatrix");
-	var t514=this.stk[--this.ptr];
+	var t515=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t514.call(this)==-1) return -1;
+		if (t515.call(this)==-1) return -1;
 	}
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;
