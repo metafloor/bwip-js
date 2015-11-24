@@ -7,7 +7,6 @@
 
 // The one and only global - our class constructor
 var BWIPJS = function() {
-	
 	// PostScript state
 	this.ptr	= 0;				// operand stack pointer
 	this.stk	= [];				// operand stack
@@ -17,17 +16,27 @@ var BWIPJS = function() {
 	this.bmap	= null;				// host bitmap instance
 
 	// dict-stack lookup
-	this.dstk.get = function(id) {
+	this.get = function(id) {
 		if (typeof id == 'number')
 			id = '\uffff' + id;
-		for (var i = this.length-1; i >= 0; i--) {
-			if (this[i][id] !== undefined) {
-				return this[i][id];
+		for (var i = this.dstk.length-1; i >= 0; i--) {
+			if (this.dstk[i][id] !== undefined) {
+				return this.dstk[i][id];
 			}
 		}
 		if (BWIPJS.bwipp[id])
 			return BWIPJS.bwipp[id];
 		throw new Error('dict: ' + id + ': --undefined--');
+	}
+ 
+	// This code used to be in the default branch of the code generator, which
+	// resulted in a lot of extra code.  Now consolidated.
+	this.xget = function(id) {
+		var t = this.get(id);
+		if (t instanceof Function)
+			t.call(this);
+		else
+			this.stk[this.ptr++] = t;
 	}
 
 	// Initialize the graphics 
@@ -44,6 +53,76 @@ var BWIPJS = function() {
 			  $error.errorinfo.toString();
 	}
 
+	this.forall = function(o,f) {
+		if (o instanceof BWIPJS.psstring || o instanceof BWIPJS.psarray) {
+			for (var it in o) {
+                if (it.charCodeAt(0) > 57) {
+					 continue;
+				}
+				this.stk[this.ptr++] = BWIPJS.get(o,it);
+				if (f.call(this) == -1) {
+					 return;
+				}
+			}
+		} else {
+			for (var it in o) {
+                if (it.charCodeAt(0) == 0xffff) { // numeric key 
+                    this.stk[this.ptr++]=+it.substr(1);
+                } else {
+                    this.stk[this.ptr++]=it;
+                }
+				this.stk[this.ptr++] = BWIPJS.get(o,it);
+				if (f.call(this) == -1) {
+					 return;
+				}
+            }
+		}
+	}
+	this.eq = function() {
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString() == 
+									this.stk[this.ptr-1];
+		else
+			this.stk[this.ptr-2]=this.stk[this.ptr-2] == this.stk[this.ptr-1];
+		this.ptr--;
+	}
+	this.ne = function() {
+		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
+			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString() !=
+									this.stk[this.ptr-1];
+		else
+			this.stk[this.ptr-2]=this.stk[this.ptr-2] != this.stk[this.ptr-1];
+		this.ptr--;
+	}
+	this.and = function() {
+		if (typeof(this.stk[this.ptr-1])=="boolean")
+			this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
+		else
+			this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
+		this.ptr--;
+	}
+	this.or = function() {
+		if (typeof(this.stk[this.ptr-1])=="boolean")
+			this.stk[this.ptr-2]=this.stk[this.ptr-2]||this.stk[this.ptr-1];
+		else
+			this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
+		this.ptr--;
+	}
+	this.xor = function() {
+		if (typeof(this.stk[this.ptr-1])=="boolean")
+		   this.stk[this.ptr-2] =
+		   				!this.stk[this.ptr-2] && this.stk[this.ptr-1] ||
+						this.stk[this.ptr-2] && !this.stk[this.ptr-1];
+		else
+			this.stk[this.ptr-2]=this.stk[this.ptr-2]^this.stk[this.ptr-1];
+		this.ptr--;
+	}
+	this.not = function() {
+		if (typeof(this.stk[this.ptr-1])=="boolean")
+			this.stk[this.ptr-1] = !this.stk[this.ptr-1];
+		else
+			this.stk[this.ptr-1] = ~this.stk[this.ptr-1];
+	}
 }
 
 BWIPJS.bwipp = {};		// BWIPP encoders and renderers

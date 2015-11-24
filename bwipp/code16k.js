@@ -1,7 +1,7 @@
 // file: bwipp/code16k.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-08-10
+// Barcode Writer in Pure PostScript - Version 2015-11-24
 //
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2014 Terry Burton
@@ -16,13 +16,14 @@ if (!BWIPJS.bwipp["renmatrix"] && BWIPJS.increfs("code16k", "renmatrix")) {
 	BWIPJS.load("bwipp/renmatrix.js");
 }
 BWIPJS.bwipp["code16k"]=function() {
+	var t,x,y;
 	function $f0(){
 		return -1;
 	}
 	function $f1(){
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f2(){
@@ -39,26 +40,22 @@ BWIPJS.bwipp["code16k"]=function() {
 			this.stk[this.ptr-1]=false;
 		}
 		this.stk[this.ptr++]=false;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f0;
 		var t0=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t0.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
-		var t=this.stk[this.ptr-2].toString();
+		t=this.stk[this.ptr-2].toString();
 		this.stk[this.ptr-1].assign(0,t);
 		this.stk[this.ptr-2]=this.stk[this.ptr-1].subset(0,t.length);
 		this.ptr--;
 		this.stk[this.ptr++]=BWIPJS.psstring("=");
 		var h=this.stk[this.ptr-2];
-		var t=h.indexOf(this.stk[this.ptr-1]);
+		t=h.indexOf(this.stk[this.ptr-1]);
 		if (t==-1) {
 			this.stk[this.ptr-1]=false;
 		} else {
@@ -68,10 +65,7 @@ BWIPJS.bwipp["code16k"]=function() {
 			this.stk[this.ptr++]=true;
 		}
 		this.stk[this.ptr++]=true;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f1;
 		this.stk[this.ptr++]=$f2;
 		var t1=this.stk[--this.ptr];
@@ -86,17 +80,14 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-1]={};
 		this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
-		var t=this.dstk.get("options");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("options");
 		this.stk[this.ptr++]=$f3;
 		var t3=this.stk[--this.ptr];
-		while (true) {
-			if (t3.call(this)==-1) break;
-		}
+		while (t3.call(this)!=-1);
 		this.stk[this.ptr++]=this.dict;
 		this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 		this.stk[this.ptr++]="options";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f5(){
@@ -109,22 +100,18 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f7(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("msg");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("j");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]="j";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
@@ -132,48 +119,39 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("j");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=3;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 	}
 	function $f8(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("msg");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("j");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]="j";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="barcode";
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
@@ -181,7 +159,7 @@ BWIPJS.bwipp["code16k"]=function() {
 	function $f9(){
 		this.stk[this.ptr++]=BWIPJS.psstring("^");
 		var h=this.stk[this.ptr-2];
-		var t=h.indexOf(this.stk[this.ptr-1]);
+		t=h.indexOf(this.stk[this.ptr-1]);
 		if (t==-1) {
 			this.stk[this.ptr-1]=false;
 		} else {
@@ -192,32 +170,27 @@ BWIPJS.bwipp["code16k"]=function() {
 		}
 		this.stk[this.ptr++]=$f7;
 		this.stk[this.ptr++]=$f8;
-		var t9=this.stk[--this.ptr];
-		var t10=this.stk[--this.ptr];
+		var t7=this.stk[--this.ptr];
+		var t8=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t10.call(this)==-1) return -1;
+			if (t8.call(this)==-1) return -1;
 		} else {
-			if (t9.call(this)==-1) return -1;
+			if (t7.call(this)==-1) return -1;
 		}
 	}
 	function $f10(){
 		this.stk[this.ptr++]="msg";
-		var t=this.dstk.get("barcode");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("barcode");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr-1]=BWIPJS.psstring(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="j";
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("barcode");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("barcode");
 		this.stk[this.ptr++]=$f9;
-		var t11=this.stk[--this.ptr];
-		while (true) {
-			if (t11.call(this)==-1) break;
-		}
+		var t9=this.stk[--this.ptr];
+		while (t9.call(this)!=-1);
 	}
 	function $f11(){
 		this.stk[this.ptr++]=0;
@@ -226,47 +199,37 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f12(){
 		this.stk[this.ptr++]="j";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("encs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encs");
+		this.xget("j");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr++]="stringtype";
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f11;
-		var t13=this.stk[--this.ptr];
+		var t11=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t13.call(this)==-1) return -1;
+			if (t11.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("charvals");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("charvals");
+		this.xget("j");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("i");
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f13(){
 		this.stk[this.ptr++]="i";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="encs";
-		var t=this.dstk.get("charmaps");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("charmaps");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -274,13 +237,13 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=$f12;
-		var t18=this.stk[--this.ptr];
 		var t16=this.stk[--this.ptr];
-		var t15=this.stk[--this.ptr];
 		var t14=this.stk[--this.ptr];
-		for (var t17=t14; t15<0 ? t17>=t16 : t17<=t16; t17+=t15) {
-			this.stk[this.ptr++]=t17;
-			if (t18.call(this)==-1) break;
+		var t13=this.stk[--this.ptr];
+		var t12=this.stk[--this.ptr];
+		for (var t15=t12; t13<0 ? t15>=t14 : t15<=t14; t15+=t13) {
+			this.stk[this.ptr++]=t15;
+			if (t16.call(this)==-1) break;
 		}
 	}
 	function $f14(){
@@ -292,55 +255,42 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f16(){
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("barlen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("i");
+		this.xget("barlen");
+		this.eq();
 		this.stk[this.ptr++]=$f15;
-		var t25=this.stk[--this.ptr];
+		var t23=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t25.call(this)==-1) return -1;
+			if (t23.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="cw";
-		var t=this.dstk.get("barcode");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("barcode");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("cw");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cws");
+		this.xget("j");
+		this.xget("cw");
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="j";
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f17(){
 		this.stk[this.ptr++]="cws";
-		var t=this.dstk.get("barlen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("barlen");
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="i";
@@ -350,16 +300,12 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=$f16;
-		var t26=this.stk[--this.ptr];
-		while (true) {
-			if (t26.call(this)==-1) break;
-		}
+		var t24=this.stk[--this.ptr];
+		while (t24.call(this)!=-1);
 		this.stk[this.ptr++]="cws";
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cws");
 		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="text";
@@ -371,12 +317,9 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f19(){
 		this.stk[this.ptr++]="char";
-		var t=this.dstk.get("fncvals");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("barcode");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fncvals");
+		this.xget("barcode");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=4;
@@ -385,110 +328,80 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f20(){
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f21(){
-		var t=this.dstk.get("barcode");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("barcode");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=94;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
-		this.ptr--;
+		this.ne();
 		this.stk[this.ptr++]=$f19;
 		this.stk[this.ptr++]=$f20;
-		var t29=this.stk[--this.ptr];
-		var t30=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t30.call(this)==-1) return -1;
-		} else {
-			if (t29.call(this)==-1) return -1;
-		}
-	}
-	function $f22(){
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("barlen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		this.stk[this.ptr++]=$f18;
+		var t27=this.stk[--this.ptr];
 		var t28=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t28.call(this)==-1) return -1;
+		} else {
+			if (t27.call(this)==-1) return -1;
+		}
+	}
+	function $f22(){
+		this.xget("i");
+		this.xget("barlen");
+		this.eq();
+		this.stk[this.ptr++]=$f18;
+		var t26=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t26.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="char";
-		var t=this.dstk.get("barcode");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("barcode");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("parsefnc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("char");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("parsefnc");
+		this.xget("char");
 		this.stk[this.ptr++]=94;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("barlen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.eq();
+		this.and();
+		this.xget("i");
+		this.xget("barlen");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.and();
 		this.stk[this.ptr++]=$f21;
-		var t31=this.stk[--this.ptr];
+		var t29=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t31.call(this)==-1) return -1;
+			if (t29.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("char");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("j");
+		this.xget("char");
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="j";
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -500,14 +413,10 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f25(){
-		var t=this.dstk.get("numEA");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("numEA");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("numEA");
+		this.xget("i");
+		this.xget("numEA");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -518,14 +427,10 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.ptr-=3;
 	}
 	function $f26(){
-		var t=this.dstk.get("numSA");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("numSA");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("numSA");
+		this.xget("i");
+		this.xget("numSA");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -536,49 +441,43 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.ptr-=3;
 	}
 	function $f27(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=128;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f25;
 		this.stk[this.ptr++]=$f26;
-		var t39=this.stk[--this.ptr];
-		var t40=this.stk[--this.ptr];
+		var t37=this.stk[--this.ptr];
+		var t38=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t40.call(this)==-1) return -1;
+			if (t38.call(this)==-1) return -1;
 		} else {
-			if (t39.call(this)==-1) return -1;
+			if (t37.call(this)==-1) return -1;
 		}
 	}
 	function $f28(){
 		this.stk[this.ptr++]="i";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f27;
-		var t41=this.stk[--this.ptr];
+		var t39=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t41.call(this)==-1) return -1;
+			if (t39.call(this)==-1) return -1;
 		}
 	}
 	function $f29(){
-		var t=this.dstk.get("numSA");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("numSA");
 	}
 	function $f30(){
-		var t=this.dstk.get("numEA");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("numEA");
 	}
 	function $f31(){
 		this.stk[this.ptr++]=3;
@@ -589,18 +488,15 @@ BWIPJS.bwipp["code16k"]=function() {
 	function $f33(){
 		this.stk[this.ptr++]="msgtmp";
 		this.stk[this.ptr++]=Infinity;
-		var t=this.dstk.get("msgtmp");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
+		this.xget("msgtmp");
+		t=this.stk[this.ptr-1];
 		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		var t=this.dstk.get("fn4");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn4");
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		if (i < 0) throw "array: underflow";
-		var t = this.stk.splice(i+1, this.ptr-1-i);
+		t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -608,35 +504,45 @@ BWIPJS.bwipp["code16k"]=function() {
 	function $f34(){
 		this.stk[this.ptr++]="msgtmp";
 		this.stk[this.ptr++]=Infinity;
-		var t=this.dstk.get("msgtmp");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
+		this.xget("msgtmp");
+		t=this.stk[this.ptr-1];
 		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		var t=this.dstk.get("fn4");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("fn4");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn4");
+		this.xget("fn4");
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		if (i < 0) throw "array: underflow";
-		var t = this.stk.splice(i+1, this.ptr-1-i);
+		t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="ea";
-		var t=this.dstk.get("ea");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
-		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
+		this.xget("ea");
+		this.not();
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f35(){
-		var t=this.dstk.get("ea");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("ea");
 		this.stk[this.ptr++]=$f29;
 		this.stk[this.ptr++]=$f30;
+		var t45=this.stk[--this.ptr];
+		var t46=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t46.call(this)==-1) return -1;
+		} else {
+			if (t45.call(this)==-1) return -1;
+		}
+		this.xget("i");
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
+		this.xget("i");
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
+		this.xget("msglen");
+		this.eq();
+		this.stk[this.ptr++]=$f31;
+		this.stk[this.ptr++]=$f32;
 		var t47=this.stk[--this.ptr];
 		var t48=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -644,22 +550,9 @@ BWIPJS.bwipp["code16k"]=function() {
 		} else {
 			if (t47.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr--;
-		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		this.stk[this.ptr++]=$f31;
-		this.stk[this.ptr++]=$f32;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=$f33;
+		this.stk[this.ptr++]=$f34;
 		var t49=this.stk[--this.ptr];
 		var t50=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -667,90 +560,62 @@ BWIPJS.bwipp["code16k"]=function() {
 		} else {
 			if (t49.call(this)==-1) return -1;
 		}
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f33;
-		this.stk[this.ptr++]=$f34;
-		var t51=this.stk[--this.ptr];
-		var t52=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t52.call(this)==-1) return -1;
-		} else {
-			if (t51.call(this)==-1) return -1;
-		}
 	}
 	function $f36(){
-		var t=this.dstk.get("c");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("c");
 		this.stk[this.ptr++]=127;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.and();
 	}
 	function $f37(){
-		var t=this.dstk.get("c");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("c");
 	}
 	function $f38(){
 		this.stk[this.ptr++]="i";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="c";
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("ea");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("c");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("ea");
+		this.xget("c");
 		this.stk[this.ptr++]=128;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean")
-			this.stk[this.ptr-2]=!this.stk[this.ptr-2]&&this.stk[this.ptr-1] || this.stk[this.ptr-2]&&!this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]^this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
-		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
-		var t=this.dstk.get("c");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xor();
+		this.not();
+		this.xget("c");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.and();
 		this.stk[this.ptr++]=$f35;
-		var t53=this.stk[--this.ptr];
+		var t51=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t53.call(this)==-1) return -1;
+			if (t51.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="msgtmp";
 		this.stk[this.ptr++]=Infinity;
-		var t=this.dstk.get("msgtmp");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-1];
+		this.xget("msgtmp");
+		t=this.stk[this.ptr-1];
 		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
-		var t=this.dstk.get("c");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("c");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f36;
 		this.stk[this.ptr++]=$f37;
-		var t54=this.stk[--this.ptr];
-		var t55=this.stk[--this.ptr];
+		var t52=this.stk[--this.ptr];
+		var t53=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t55.call(this)==-1) return -1;
+			if (t53.call(this)==-1) return -1;
 		} else {
-			if (t54.call(this)==-1) return -1;
+			if (t52.call(this)==-1) return -1;
 		}
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		if (i < 0) throw "array: underflow";
-		var t = this.stk.splice(i+1, this.ptr-1-i);
+		t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -764,8 +629,7 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f41(){
 		this.stk[this.ptr++]="s";
-		var t=this.dstk.get("s");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("s");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -774,80 +638,63 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f43(){
-		var t=this.dstk.get("s");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("s");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f41;
 		this.stk[this.ptr++]=$f42;
-		var t63=this.stk[--this.ptr];
-		var t64=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t64.call(this)==-1) return -1;
-		} else {
-			if (t63.call(this)==-1) return -1;
-		}
-	}
-	function $f44(){
-		var t=this.dstk.get("p");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f39;
 		var t61=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t61.call(this)==-1) return -1;
-		}
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("p");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr--;
-		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		var t=this.dstk.get("setc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
-		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
-		this.stk[this.ptr++]=$f40;
 		var t62=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t62.call(this)==-1) return -1;
+		} else {
+			if (t61.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		this.stk[this.ptr++]=$f43;
-		var t65=this.stk[--this.ptr];
+	}
+	function $f44(){
+		this.xget("p");
+		this.xget("msglen");
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=$f39;
+		var t59=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t65.call(this)==-1) return -1;
+			if (t59.call(this)==-1) return -1;
+		}
+		this.xget("msg");
+		this.xget("p");
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
+		this.xget("setc");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
+		this.not();
+		this.stk[this.ptr++]=$f40;
+		var t60=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t60.call(this)==-1) return -1;
+		}
+		this.xget("fn1");
+		this.eq();
+		this.stk[this.ptr++]=$f43;
+		var t63=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t63.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="n";
-		var t=this.dstk.get("n");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("n");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="s";
-		var t=this.dstk.get("s");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("s");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="p";
-		var t=this.dstk.get("p");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("p");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -860,76 +707,63 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="p";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=$f44;
-		var t66=this.stk[--this.ptr];
-		while (true) {
-			if (t66.call(this)==-1) break;
-		}
-		var t=this.dstk.get("n");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("s");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t64=this.stk[--this.ptr];
+		while (t64.call(this)!=-1);
+		this.xget("n");
+		this.xget("s");
 	}
 	function $f46(){
-		var t=this.dstk.get("seta");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("seta");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("cws");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("j");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 		this.stk[this.ptr++]="j";
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f47(){
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("setb");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("cws");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("j");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 		this.stk[this.ptr++]="j";
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f48(){
-		var t=this.dstk.get("setc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("setc");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 	}
 	function $f49(){
-		var t=this.stk[this.ptr-1];
+		t=this.stk[this.ptr-1];
 		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=48;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=10;
@@ -940,67 +774,51 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
 		this.stk[this.ptr++]="arraytype";
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
-		this.ptr--;
+		this.ne();
 		this.stk[this.ptr++]=$f48;
 		this.stk[this.ptr++]=$f49;
-		var t67=this.stk[--this.ptr];
-		var t68=this.stk[--this.ptr];
+		var t65=this.stk[--this.ptr];
+		var t66=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t68.call(this)==-1) return -1;
+			if (t66.call(this)==-1) return -1;
 		} else {
-			if (t67.call(this)==-1) return -1;
+			if (t65.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("cws");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("j");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 		this.stk[this.ptr++]="j";
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f51(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		var t=this.dstk.get("seta");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("seta");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("setb");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
-		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.not();
+		this.and();
 	}
 	function $f52(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("setb");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("seta");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("seta");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
-		else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.not();
+		this.and();
 	}
 	function $f53(){
 		this.stk[this.ptr++]=0;
@@ -1009,23 +827,17 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=0;
 	}
 	function $f55(){
-		var t=this.dstk.get("nextanotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nextanotb");
+		this.xget("i");
 		this.stk[this.ptr++]=0;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f56(){
-		var t=this.dstk.get("nextanotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("nextanotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nextanotb");
+		this.xget("i");
+		this.xget("nextanotb");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -1036,23 +848,17 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.ptr-=3;
 	}
 	function $f57(){
-		var t=this.dstk.get("nextbnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nextbnota");
+		this.xget("i");
 		this.stk[this.ptr++]=0;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
 	function $f58(){
-		var t=this.dstk.get("nextbnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("nextbnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nextbnota");
+		this.xget("i");
+		this.xget("nextbnota");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
@@ -1064,18 +870,29 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f59(){
 		this.stk[this.ptr++]="i";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("anotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("anotb");
 		this.stk[this.ptr++]=$f55;
 		this.stk[this.ptr++]=$f56;
+		var t73=this.stk[--this.ptr];
+		var t74=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t74.call(this)==-1) return -1;
+		} else {
+			if (t73.call(this)==-1) return -1;
+		}
+		this.xget("msg");
+		this.xget("i");
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.xget("bnota");
+		this.stk[this.ptr++]=$f57;
+		this.stk[this.ptr++]=$f58;
 		var t75=this.stk[--this.ptr];
 		var t76=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
@@ -1083,71 +900,46 @@ BWIPJS.bwipp["code16k"]=function() {
 		} else {
 			if (t75.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr--;
-		var t=this.dstk.get("bnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=$f57;
-		this.stk[this.ptr++]=$f58;
-		var t77=this.stk[--this.ptr];
-		var t78=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t78.call(this)==-1) return -1;
-		} else {
-			if (t77.call(this)==-1) return -1;
-		}
 	}
 	function $f60(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		var t=this.dstk.get("nextanotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("nextanotb");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("nextbnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("nextbnota");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f61(){
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		var t=this.dstk.get("nextbnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("nextbnota");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("nextanotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("nextanotb");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f62(){
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cws");
 		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("pos");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("pos");
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cws");
 		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("pos");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("pos");
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
@@ -1187,31 +979,23 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f65(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("fn1");
+		this.eq();
 		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.and();
 		this.stk[this.ptr++]=$f64;
-		var t86=this.stk[--this.ptr];
+		var t84=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t86.call(this)==-1) return -1;
+			if (t84.call(this)==-1) return -1;
 		}
 	}
 	function $f66(){
@@ -1236,13 +1020,11 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f68(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setc");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1255,13 +1037,11 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f69(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setc");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1274,20 +1054,16 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f70(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setc");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1300,20 +1076,16 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f71(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setc");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -1327,168 +1099,122 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f72(){
 		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
+		this.and();
 		this.stk[this.ptr++]=$f67;
+		var t87=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t87.call(this)==-1) return -1;
+		}
+		this.stk[this.ptr++]=0;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.ptr--;
+		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
+		this.stk[this.ptr++]=3;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.eq();
+		this.and();
+		this.stk[this.ptr++]=$f68;
+		var t88=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t88.call(this)==-1) return -1;
+		}
+		this.xget("setb");
+		this.xget("msg");
+		this.stk[this.ptr++]=0;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.ptr--;
+		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=0;
+		this.eq();
+		this.and();
+		this.and();
+		this.stk[this.ptr++]=$f69;
 		var t89=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t89.call(this)==-1) return -1;
 		}
+		this.xget("setb");
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
+		this.stk[this.ptr++]=1;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		this.stk[this.ptr++]=$f68;
+		this.eq();
+		this.and();
+		this.and();
+		this.stk[this.ptr++]=$f70;
 		var t90=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t90.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
+		this.xget("setb");
+		this.xget("msg");
 		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
+		this.ptr--;
+		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
+		this.and();
+		this.stk[this.ptr++]=2;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		this.stk[this.ptr++]=$f69;
+		this.eq();
+		this.and();
+		this.and();
+		this.stk[this.ptr++]=$f71;
 		var t91=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t91.call(this)==-1) return -1;
-		}
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=0;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr--;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.ptr--;
-		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		this.stk[this.ptr++]=3;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=1;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		this.stk[this.ptr++]=$f70;
-		var t92=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t92.call(this)==-1) return -1;
-		}
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=0;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr--;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=1;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
-		this.ptr--;
-		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		this.stk[this.ptr++]=2;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.ptr--;
-		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		this.stk[this.ptr++]=$f71;
-		var t93=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t93.call(this)==-1) return -1;
 		}
 	}
 	function $f73(){
@@ -1501,71 +1227,55 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f74(){
-		var t=this.dstk.get("pos");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("pos");
 		this.stk[this.ptr++]=-1;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
-		this.ptr--;
+		this.ne();
 		this.stk[this.ptr++]=$f62;
-		var t84=this.stk[--this.ptr];
+		var t82=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t84.call(this)==-1) return -1;
+			if (t82.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msglen");
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f63;
+		var t83=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t83.call(this)==-1) return -1;
+		}
+		this.xget("msglen");
+		this.stk[this.ptr++]=2;
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=$f65;
 		var t85=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t85.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=2;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f65;
-		var t87=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t87.call(this)==-1) return -1;
-		}
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("fn1");
+		this.eq();
 		this.stk[this.ptr++]=$f66;
-		var t88=this.stk[--this.ptr];
+		var t86=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t88.call(this)==-1) return -1;
+			if (t86.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msglen");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f72;
-		var t94=this.stk[--this.ptr];
+		var t92=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t94.call(this)==-1) return -1;
+			if (t92.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("abeforeb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("abeforeb");
 		this.stk[this.ptr++]=$f73;
-		var t95=this.stk[--this.ptr];
+		var t93=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t95.call(this)==-1) return -1;
+			if (t93.call(this)==-1) return -1;
 		}
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setb");
@@ -1579,1510 +1289,1109 @@ BWIPJS.bwipp["code16k"]=function() {
 		return -1;
 	}
 	function $f76(){
-		var t=this.dstk.get("sb1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sb1");
+		this.xget("enca");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f77(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("bnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("bnota");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("abeforeb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("abeforeb");
+		this.and();
 		this.stk[this.ptr++]=$f76;
-		var t98=this.stk[--this.ptr];
+		var t96=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t98.call(this)==-1) return -1;
+			if (t96.call(this)==-1) return -1;
 		}
 	}
 	function $f78(){
-		var t=this.dstk.get("sb2");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sb2");
+		this.xget("enca");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f79(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("bnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("bnota");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("bnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("bnota");
+		this.and();
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("abeforeb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("abeforeb");
+		this.and();
 		this.stk[this.ptr++]=$f78;
-		var t100=this.stk[--this.ptr];
+		var t98=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t100.call(this)==-1) return -1;
+			if (t98.call(this)==-1) return -1;
 		}
 	}
 	function $f80(){
-		var t=this.dstk.get("swb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("swb");
+		this.xget("enca");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setb");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f81(){
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn1");
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f82(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f83(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("fn1");
+		this.eq();
 		this.stk[this.ptr++]=$f81;
 		this.stk[this.ptr++]=$f82;
-		var t103=this.stk[--this.ptr];
-		var t104=this.stk[--this.ptr];
+		var t101=this.stk[--this.ptr];
+		var t102=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t104.call(this)==-1) return -1;
+			if (t102.call(this)==-1) return -1;
 		} else {
-			if (t103.call(this)==-1) return -1;
+			if (t101.call(this)==-1) return -1;
 		}
 	}
 	function $f84(){
-		var t=this.dstk.get("sc2");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sc2");
+		this.xget("enca");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=$f83;
-		var t107=this.stk[--this.ptr];
 		var t105=this.stk[--this.ptr];
-		for (var t106=0; t106<t105; t106++) {
-			if (t107.call(this)==-1) break;
+		var t103=this.stk[--this.ptr];
+		for (var t104=0; t104<t103; t104++) {
+			if (t105.call(this)==-1) break;
 		}
 		return -1;
 	}
 	function $f85(){
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=4;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("seta");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.eq();
+		this.xget("seta");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.and();
 		this.stk[this.ptr++]=$f84;
-		var t108=this.stk[--this.ptr];
+		var t106=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t108.call(this)==-1) return -1;
+			if (t106.call(this)==-1) return -1;
 		}
 	}
 	function $f86(){
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn1");
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f87(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f88(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("fn1");
+		this.eq();
 		this.stk[this.ptr++]=$f86;
 		this.stk[this.ptr++]=$f87;
-		var t110=this.stk[--this.ptr];
-		var t111=this.stk[--this.ptr];
+		var t108=this.stk[--this.ptr];
+		var t109=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t111.call(this)==-1) return -1;
+			if (t109.call(this)==-1) return -1;
 		} else {
-			if (t110.call(this)==-1) return -1;
+			if (t108.call(this)==-1) return -1;
 		}
 	}
 	function $f89(){
-		var t=this.dstk.get("sc3");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sc3");
+		this.xget("enca");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=$f88;
-		var t114=this.stk[--this.ptr];
 		var t112=this.stk[--this.ptr];
-		for (var t113=0; t113<t112; t113++) {
-			if (t114.call(this)==-1) break;
+		var t110=this.stk[--this.ptr];
+		for (var t111=0; t111<t110; t111++) {
+			if (t112.call(this)==-1) break;
 		}
 		return -1;
 	}
 	function $f90(){
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=6;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("seta");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.eq();
+		this.xget("seta");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.and();
 		this.stk[this.ptr++]=$f89;
-		var t115=this.stk[--this.ptr];
+		var t113=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t115.call(this)==-1) return -1;
+			if (t113.call(this)==-1) return -1;
 		}
 	}
 	function $f91(){
-		var t=this.dstk.get("swc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("swc");
+		this.xget("enca");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setc");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f92(){
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f77;
-		var t99=this.stk[--this.ptr];
+		var t97=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t99.call(this)==-1) return -1;
+			if (t97.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f79;
-		var t101=this.stk[--this.ptr];
+		var t99=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t101.call(this)==-1) return -1;
+			if (t99.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("bnota");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("bnota");
 		this.stk[this.ptr++]=$f80;
-		var t102=this.stk[--this.ptr];
+		var t100=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t102.call(this)==-1) return -1;
+			if (t100.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f85;
-		var t109=this.stk[--this.ptr];
+		var t107=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t109.call(this)==-1) return -1;
+			if (t107.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f90;
-		var t116=this.stk[--this.ptr];
+		var t114=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t116.call(this)==-1) return -1;
+			if (t114.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
+		this.and();
 		this.stk[this.ptr++]=$f91;
-		var t117=this.stk[--this.ptr];
+		var t115=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t117.call(this)==-1) return -1;
+			if (t115.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("enca");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f93(){
-		var t=this.dstk.get("sa1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sa1");
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("enca");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f94(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("anotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("anotb");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("bbeforea");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("bbeforea");
+		this.and();
 		this.stk[this.ptr++]=$f93;
-		var t119=this.stk[--this.ptr];
+		var t117=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t119.call(this)==-1) return -1;
+			if (t117.call(this)==-1) return -1;
 		}
 	}
 	function $f95(){
-		var t=this.dstk.get("sa2");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sa2");
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("enca");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("enca");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("enca");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f96(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("anotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("anotb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("anotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("anotb");
+		this.and();
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("bbeforea");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("bbeforea");
+		this.and();
 		this.stk[this.ptr++]=$f95;
-		var t121=this.stk[--this.ptr];
+		var t119=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t121.call(this)==-1) return -1;
+			if (t119.call(this)==-1) return -1;
 		}
 	}
 	function $f97(){
-		var t=this.dstk.get("swa");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("swa");
+		this.xget("encb");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("seta");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f98(){
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn1");
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f99(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f100(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("fn1");
+		this.eq();
 		this.stk[this.ptr++]=$f98;
 		this.stk[this.ptr++]=$f99;
-		var t124=this.stk[--this.ptr];
-		var t125=this.stk[--this.ptr];
+		var t122=this.stk[--this.ptr];
+		var t123=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t125.call(this)==-1) return -1;
+			if (t123.call(this)==-1) return -1;
 		} else {
-			if (t124.call(this)==-1) return -1;
+			if (t122.call(this)==-1) return -1;
 		}
 	}
 	function $f101(){
-		var t=this.dstk.get("sc2");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sc2");
+		this.xget("encb");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=$f100;
-		var t128=this.stk[--this.ptr];
 		var t126=this.stk[--this.ptr];
-		for (var t127=0; t127<t126; t127++) {
-			if (t128.call(this)==-1) break;
+		var t124=this.stk[--this.ptr];
+		for (var t125=0; t125<t124; t125++) {
+			if (t126.call(this)==-1) break;
 		}
 		return -1;
 	}
 	function $f102(){
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=4;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.eq();
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.and();
 		this.stk[this.ptr++]=$f101;
-		var t129=this.stk[--this.ptr];
+		var t127=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t129.call(this)==-1) return -1;
+			if (t127.call(this)==-1) return -1;
 		}
 	}
 	function $f103(){
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn1");
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f104(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f105(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("fn1");
+		this.eq();
 		this.stk[this.ptr++]=$f103;
 		this.stk[this.ptr++]=$f104;
-		var t131=this.stk[--this.ptr];
-		var t132=this.stk[--this.ptr];
+		var t129=this.stk[--this.ptr];
+		var t130=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t132.call(this)==-1) return -1;
+			if (t130.call(this)==-1) return -1;
 		} else {
-			if (t131.call(this)==-1) return -1;
+			if (t129.call(this)==-1) return -1;
 		}
 	}
 	function $f106(){
-		var t=this.dstk.get("sc3");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sc3");
+		this.xget("encb");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=$f105;
-		var t135=this.stk[--this.ptr];
 		var t133=this.stk[--this.ptr];
-		for (var t134=0; t134<t133; t134++) {
-			if (t135.call(this)==-1) break;
+		var t131=this.stk[--this.ptr];
+		for (var t132=0; t132<t131; t132++) {
+			if (t133.call(this)==-1) break;
 		}
 		return -1;
 	}
 	function $f107(){
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=6;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.eq();
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.and();
 		this.stk[this.ptr++]=$f106;
-		var t136=this.stk[--this.ptr];
+		var t134=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t136.call(this)==-1) return -1;
+			if (t134.call(this)==-1) return -1;
 		}
 	}
 	function $f108(){
-		var t=this.dstk.get("swc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("swc");
+		this.xget("encb");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setc");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f109(){
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f94;
-		var t120=this.stk[--this.ptr];
+		var t118=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t120.call(this)==-1) return -1;
+			if (t118.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f96;
-		var t122=this.stk[--this.ptr];
+		var t120=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t122.call(this)==-1) return -1;
+			if (t120.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("anotb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("anotb");
 		this.stk[this.ptr++]=$f97;
-		var t123=this.stk[--this.ptr];
+		var t121=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t123.call(this)==-1) return -1;
+			if (t121.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f102;
-		var t130=this.stk[--this.ptr];
+		var t128=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t130.call(this)==-1) return -1;
+			if (t128.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=6;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f107;
-		var t137=this.stk[--this.ptr];
+		var t135=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t137.call(this)==-1) return -1;
+			if (t135.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=4;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
+		this.and();
 		this.stk[this.ptr++]=$f108;
-		var t138=this.stk[--this.ptr];
+		var t136=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t138.call(this)==-1) return -1;
+			if (t136.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f110(){
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn1");
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f111(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encc");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f112(){
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("fn1");
+		this.eq();
 		this.stk[this.ptr++]=$f110;
 		this.stk[this.ptr++]=$f111;
-		var t140=this.stk[--this.ptr];
-		var t141=this.stk[--this.ptr];
+		var t138=this.stk[--this.ptr];
+		var t139=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t141.call(this)==-1) return -1;
+			if (t139.call(this)==-1) return -1;
 		} else {
-			if (t140.call(this)==-1) return -1;
+			if (t138.call(this)==-1) return -1;
 		}
 		return -1;
 	}
 	function $f113(){
-		var t=this.dstk.get("sb1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sb1");
+		this.xget("encc");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f114(){
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
+		this.and();
+		this.and();
 		this.stk[this.ptr++]=$f113;
-		var t143=this.stk[--this.ptr];
+		var t141=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t143.call(this)==-1) return -1;
+			if (t141.call(this)==-1) return -1;
 		}
 	}
 	function $f115(){
-		var t=this.dstk.get("sb2");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sb2");
+		this.xget("encc");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f116(){
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
+		this.and();
+		this.and();
 		this.stk[this.ptr++]=$f115;
-		var t145=this.stk[--this.ptr];
+		var t143=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t145.call(this)==-1) return -1;
+			if (t143.call(this)==-1) return -1;
 		}
 	}
 	function $f117(){
-		var t=this.dstk.get("sb2");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sb2");
+		this.xget("encc");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f118(){
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.and();
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
+		this.and();
+		this.and();
 		this.stk[this.ptr++]=$f117;
-		var t147=this.stk[--this.ptr];
+		var t145=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t147.call(this)==-1) return -1;
+			if (t145.call(this)==-1) return -1;
 		}
 	}
 	function $f119(){
-		var t=this.dstk.get("sb3");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sb3");
+		this.xget("encc");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f120(){
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.and();
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=1;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
+		this.and();
+		this.and();
 		this.stk[this.ptr++]=$f119;
-		var t149=this.stk[--this.ptr];
+		var t147=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t149.call(this)==-1) return -1;
+			if (t147.call(this)==-1) return -1;
 		}
 	}
 	function $f121(){
-		var t=this.dstk.get("sb3");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sb3");
+		this.xget("encc");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.dstk.get("encb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("encb");
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f122(){
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("setb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.and();
+		this.xget("setb");
+		this.xget("msg");
+		this.xget("i");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1])!==undefined; this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.and();
+		this.xget("i");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("numsscr");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
+		this.and();
+		this.and();
 		this.stk[this.ptr++]=$f121;
-		var t151=this.stk[--this.ptr];
+		var t149=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t151.call(this)==-1) return -1;
+			if (t149.call(this)==-1) return -1;
 		}
 	}
 	function $f123(){
-		var t=this.dstk.get("swa");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("swa");
+		this.xget("encc");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("seta");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f124(){
-		var t=this.dstk.get("nums");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("nums");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]>=this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f112;
-		var t142=this.stk[--this.ptr];
+		var t140=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t142.call(this)==-1) return -1;
+			if (t140.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f114;
-		var t144=this.stk[--this.ptr];
+		var t142=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t144.call(this)==-1) return -1;
+			if (t142.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f116;
-		var t146=this.stk[--this.ptr];
+		var t144=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t146.call(this)==-1) return -1;
+			if (t144.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f118;
-		var t148=this.stk[--this.ptr];
+		var t146=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t148.call(this)==-1) return -1;
+			if (t146.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f120;
-		var t150=this.stk[--this.ptr];
+		var t148=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t150.call(this)==-1) return -1;
+			if (t148.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("msglen");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]<this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f122;
-		var t152=this.stk[--this.ptr];
+		var t150=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t152.call(this)==-1) return -1;
+			if (t150.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("abeforeb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("abeforeb");
 		this.stk[this.ptr++]=$f123;
-		var t153=this.stk[--this.ptr];
+		var t151=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t153.call(this)==-1) return -1;
+			if (t151.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("swb");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("encc");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("swb");
+		this.xget("encc");
 		this.stk[this.ptr++]="cset";
 		this.stk[this.ptr++]=BWIPJS.psstring("setb");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		return -1;
 	}
 	function $f125(){
-		var t=this.dstk.get("cset");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cset");
 		this.stk[this.ptr++]=BWIPJS.psstring("seta");
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f92;
-		var t118=this.stk[--this.ptr];
+		var t116=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t118.call(this)==-1) return -1;
+			if (t116.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("cset");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cset");
 		this.stk[this.ptr++]=BWIPJS.psstring("setb");
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f109;
-		var t139=this.stk[--this.ptr];
+		var t137=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t139.call(this)==-1) return -1;
+			if (t137.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("cset");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cset");
 		this.stk[this.ptr++]=BWIPJS.psstring("setc");
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f124;
-		var t154=this.stk[--this.ptr];
+		var t152=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t154.call(this)==-1) return -1;
+			if (t152.call(this)==-1) return -1;
 		}
 		return -1;
 	}
 	function $f126(){
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.xget("i");
+		this.xget("msglen");
+		this.eq();
 		this.stk[this.ptr++]=$f75;
-		var t97=this.stk[--this.ptr];
+		var t95=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t97.call(this)==-1) return -1;
+			if (t95.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("numsscr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
+		this.xget("numsscr");
 		this.stk[this.ptr++]="nums";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="nchars";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=$f125;
-		var t155=this.stk[--this.ptr];
-		while (true) {
-			if (t155.call(this)==-1) break;
-		}
+		var t153=this.stk[--this.ptr];
+		while (t153.call(this)!=-1);
 	}
 	function $f127(){
 		this.stk[this.ptr++]="fncvals";
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=BWIPJS.psstring("FNC1");
-		var t=this.dstk.get("fn1");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn1");
 		this.stk[this.ptr++]=BWIPJS.psstring("FNC2");
-		var t=this.dstk.get("fn2");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("fn2");
 		this.stk[this.ptr++]=BWIPJS.psstring("FNC3");
-		var t=this.dstk.get("fn3");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t = {};
+		this.xget("fn3");
+		t = {};
 		for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
-			if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
 			BWIPJS.set(t,this.stk[i-1],this.stk[i]);
 		}
-		if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 		this.ptr = i;
 		this.stk[this.ptr++]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="msg";
-		var t=this.dstk.get("barlen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("barlen");
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="i";
@@ -3092,72 +2401,61 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=$f22;
-		var t32=this.stk[--this.ptr];
-		while (true) {
-			if (t32.call(this)==-1) break;
-		}
+		var t30=this.stk[--this.ptr];
+		while (t30.call(this)!=-1);
 		this.stk[this.ptr++]="msg";
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msg");
 		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="msglen";
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("msg");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="numSA";
 		this.stk[this.ptr++]=Infinity;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msglen");
 		this.stk[this.ptr++]=$f23;
-		var t35=this.stk[--this.ptr];
 		var t33=this.stk[--this.ptr];
-		for (var t34=0; t34<t33; t34++) {
-			if (t35.call(this)==-1) break;
+		var t31=this.stk[--this.ptr];
+		for (var t32=0; t32<t31; t32++) {
+			if (t33.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=0;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		if (i < 0) throw "array: underflow";
-		var t = this.stk.splice(i+1, this.ptr-1-i);
+		t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="numEA";
 		this.stk[this.ptr++]=Infinity;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msglen");
 		this.stk[this.ptr++]=$f24;
-		var t38=this.stk[--this.ptr];
 		var t36=this.stk[--this.ptr];
-		for (var t37=0; t37<t36; t37++) {
-			if (t38.call(this)==-1) break;
+		var t34=this.stk[--this.ptr];
+		for (var t35=0; t35<t34; t35++) {
+			if (t36.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=0;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		if (i < 0) throw "array: underflow";
-		var t = this.stk.splice(i+1, this.ptr-1-i);
+		t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msglen");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=$f28;
-		var t46=this.stk[--this.ptr];
 		var t44=this.stk[--this.ptr];
-		var t43=this.stk[--this.ptr];
 		var t42=this.stk[--this.ptr];
-		for (var t45=t42; t43<0 ? t45>=t44 : t45<=t44; t45+=t43) {
-			this.stk[this.ptr++]=t45;
-			if (t46.call(this)==-1) break;
+		var t41=this.stk[--this.ptr];
+		var t40=this.stk[--this.ptr];
+		for (var t43=t40; t41<0 ? t43>=t42 : t43<=t42; t43+=t41) {
+			this.stk[this.ptr++]=t43;
+			if (t44.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="ea";
 		this.stk[this.ptr++]=false;
@@ -3167,27 +2465,23 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("msglen");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msglen");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=$f38;
-		var t60=this.stk[--this.ptr];
 		var t58=this.stk[--this.ptr];
-		var t57=this.stk[--this.ptr];
 		var t56=this.stk[--this.ptr];
-		for (var t59=t56; t57<0 ? t59>=t58 : t59<=t58; t59+=t57) {
-			this.stk[this.ptr++]=t59;
-			if (t60.call(this)==-1) break;
+		var t55=this.stk[--this.ptr];
+		var t54=this.stk[--this.ptr];
+		for (var t57=t54; t55<0 ? t57>=t56 : t57<=t56; t57+=t55) {
+			this.stk[this.ptr++]=t57;
+			if (t58.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="msg";
-		var t=this.dstk.get("msgtmp");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("msgtmp");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="msglen";
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("msg");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="numsscr";
@@ -3210,58 +2504,50 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="nextanotb";
 		this.stk[this.ptr++]=Infinity;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("msg");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=$f53;
-		var t71=this.stk[--this.ptr];
 		var t69=this.stk[--this.ptr];
-		for (var t70=0; t70<t69; t70++) {
-			if (t71.call(this)==-1) break;
+		var t67=this.stk[--this.ptr];
+		for (var t68=0; t68<t67; t68++) {
+			if (t69.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=9999;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		if (i < 0) throw "array: underflow";
-		var t = this.stk.splice(i+1, this.ptr-1-i);
+		t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="nextbnota";
 		this.stk[this.ptr++]=Infinity;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("msg");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=$f54;
-		var t74=this.stk[--this.ptr];
 		var t72=this.stk[--this.ptr];
-		for (var t73=0; t73<t72; t73++) {
-			if (t74.call(this)==-1) break;
+		var t70=this.stk[--this.ptr];
+		for (var t71=0; t71<t70; t71++) {
+			if (t72.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=9999;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		if (i < 0) throw "array: underflow";
-		var t = this.stk.splice(i+1, this.ptr-1-i);
+		t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("msg");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("msg");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=-1;
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr++]=$f59;
-		var t83=this.stk[--this.ptr];
 		var t81=this.stk[--this.ptr];
-		var t80=this.stk[--this.ptr];
 		var t79=this.stk[--this.ptr];
-		for (var t82=t79; t80<0 ? t82>=t81 : t82<=t81; t82+=t80) {
-			this.stk[this.ptr++]=t82;
-			if (t83.call(this)==-1) break;
+		var t78=this.stk[--this.ptr];
+		var t77=this.stk[--this.ptr];
+		for (var t80=t77; t78<0 ? t80>=t79 : t80<=t79; t80+=t78) {
+			this.stk[this.ptr++]=t80;
+			if (t81.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]="abeforeb";
 		this.stk[this.ptr++]=$f60;
@@ -3270,9 +2556,7 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=$f61;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="cws";
-		var t=this.dstk.get("barcode");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("barcode");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -3287,21 +2571,15 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=0;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=$f74;
-		var t96=this.stk[--this.ptr];
-		while (true) {
-			if (t96.call(this)==-1) break;
-		}
+		var t94=this.stk[--this.ptr];
+		while (t94.call(this)!=-1);
 		this.stk[this.ptr++]=$f126;
-		var t156=this.stk[--this.ptr];
-		while (true) {
-			if (t156.call(this)==-1) break;
-		}
+		var t154=this.stk[--this.ptr];
+		while (t154.call(this)!=-1);
 		this.stk[this.ptr++]="cws";
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cws");
 		this.stk[this.ptr++]=0;
-		var t=this.dstk.get("j");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("j");
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
@@ -3320,23 +2598,19 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f131(){
 		this.stk[this.ptr++]="m";
-		var t=this.dstk.get("metrics");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("metrics");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="r";
-		var t=this.dstk.get("m");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("m");
 		this.stk[this.ptr++]=0;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="dcws";
-		var t=this.dstk.get("m");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("m");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
@@ -3344,51 +2618,35 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]="okay";
 		this.stk[this.ptr++]=true;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("urows");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("urows");
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
-		this.ptr--;
-		var t=this.dstk.get("urows");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("r");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
-		this.ptr--;
-		if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]&&this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]&this.stk[this.ptr-1];
-		this.ptr--;
+		this.ne();
+		this.xget("urows");
+		this.xget("r");
+		this.ne();
+		this.and();
 		this.stk[this.ptr++]=$f128;
+		var t156=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t156.call(this)==-1) return -1;
+		}
+		this.xget("cws");
+		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
+		this.xget("dcws");
+		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
+		this.stk[this.ptr++]=$f129;
+		var t157=this.stk[--this.ptr];
+		if (this.stk[--this.ptr]) {
+			if (t157.call(this)==-1) return -1;
+		}
+		this.xget("okay");
+		this.stk[this.ptr++]=$f130;
 		var t158=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
 			if (t158.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
-		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
-		var t=this.dstk.get("dcws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr-2]=this.stk[this.ptr-2]>this.stk[this.ptr-1]; this.ptr--;
-		this.stk[this.ptr++]=$f129;
-		var t159=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t159.call(this)==-1) return -1;
-		}
-		var t=this.dstk.get("okay");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		this.stk[this.ptr++]=$f130;
-		var t160=this.stk[--this.ptr];
-		if (this.stk[--this.ptr]) {
-			if (t160.call(this)==-1) return -1;
-		}
 		this.stk[this.ptr++]="i";
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -3400,10 +2658,9 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("cws");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -3413,10 +2670,9 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("cws");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -3424,14 +2680,12 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f135(){
 		this.stk[this.ptr++]="stopencs";
-		var t=this.dstk.get("stopencsodd");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("stopencsodd");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f136(){
 		this.stk[this.ptr++]="stopencs";
-		var t=this.dstk.get("stopencseven");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("stopencseven");
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
 	function $f137(){
@@ -3443,27 +2697,13 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	}
 	function $f139(){
-		var t=this.dstk.get("encs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		this.xget("encs");
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=$f138;
-		var t182=this.stk[--this.ptr];//forall
-		var t181=this.stk[--this.ptr];
-		for (var t180 in t181) {
-			if (t181 instanceof BWIPJS.psstring || t181 instanceof BWIPJS.psarray) {
-				if (t180.charCodeAt(0) > 57) continue;
-			} else {
-				if (t180.charCodeAt(0) == 0xffff) {
-					this.stk[this.ptr++]=+t180.substr(1);
-				} else {
-					this.stk[this.ptr++]=t180;
-				}
-			}
-			this.stk[this.ptr++]=BWIPJS.get(t181,t180);
-			if (t182.call(this)==-1) break;
-		}
+		var t176=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t176);
 	}
 	function $f140(){
 		this.stk[this.ptr++]=48;
@@ -3483,157 +2723,89 @@ BWIPJS.bwipp["code16k"]=function() {
 	}
 	function $f145(){
 		this.stk[this.ptr++]=1;
-		if (this.stk[this.ptr-1] >= this.ptr) throw "index: underflow";
 		this.stk[this.ptr-1]=this.stk[this.ptr-2-this.stk[this.ptr-1]];
 		this.stk[this.ptr++]=0;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f142;
 		this.stk[this.ptr++]=$f144;
-		var t189=this.stk[--this.ptr];
-		var t190=this.stk[--this.ptr];
+		var t179=this.stk[--this.ptr];
+		var t180=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t190.call(this)==-1) return -1;
+			if (t180.call(this)==-1) return -1;
 		} else {
-			if (t189.call(this)==-1) return -1;
+			if (t179.call(this)==-1) return -1;
 		}
-		var t193=this.stk[--this.ptr];
-		var t191=this.stk[--this.ptr];
-		for (var t192=0; t192<t191; t192++) {
-			if (t193.call(this)==-1) break;
+		var t183=this.stk[--this.ptr];
+		var t181=this.stk[--this.ptr];
+		for (var t182=0; t182<t181; t182++) {
+			if (t183.call(this)==-1) break;
 		}
 	}
 	function $f146(){
 		this.stk[this.ptr++]="i";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]="sbs";
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=10;
-		var t=this.dstk.get("startencs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("startencs");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=$f137;
-		var t179=this.stk[--this.ptr];//forall
-		var t178=this.stk[--this.ptr];
-		for (var t177 in t178) {
-			if (t178 instanceof BWIPJS.psstring || t178 instanceof BWIPJS.psarray) {
-				if (t177.charCodeAt(0) > 57) continue;
-			} else {
-				if (t177.charCodeAt(0) == 0xffff) {
-					this.stk[this.ptr++]=+t177.substr(1);
-				} else {
-					this.stk[this.ptr++]=t177;
-				}
-			}
-			this.stk[this.ptr++]=BWIPJS.get(t178,t177);
-			if (t179.call(this)==-1) break;
-		}
+		var t175=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t175);
 		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("cws");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("cws");
+		this.xget("i");
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr++]=5;
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr++]=$f139;
-		var t185=this.stk[--this.ptr];//forall
-		var t184=this.stk[--this.ptr];
-		for (var t183 in t184) {
-			if (t184 instanceof BWIPJS.psstring || t184 instanceof BWIPJS.psarray) {
-				if (t183.charCodeAt(0) > 57) continue;
-			} else {
-				if (t183.charCodeAt(0) == 0xffff) {
-					this.stk[this.ptr++]=+t183.substr(1);
-				} else {
-					this.stk[this.ptr++]=t183;
-				}
-			}
-			this.stk[this.ptr++]=BWIPJS.get(t184,t183);
-			if (t185.call(this)==-1) break;
-		}
-		var t=this.dstk.get("stopencs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		var t177=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t177);
+		this.xget("stopencs");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr++]=$f140;
-		var t188=this.stk[--this.ptr];//forall
-		var t187=this.stk[--this.ptr];
-		for (var t186 in t187) {
-			if (t187 instanceof BWIPJS.psstring || t187 instanceof BWIPJS.psarray) {
-				if (t186.charCodeAt(0) > 57) continue;
-			} else {
-				if (t186.charCodeAt(0) == 0xffff) {
-					this.stk[this.ptr++]=+t186.substr(1);
-				} else {
-					this.stk[this.ptr++]=t186;
-				}
-			}
-			this.stk[this.ptr++]=BWIPJS.get(t187,t186);
-			if (t188.call(this)==-1) break;
-		}
+		var t178=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t178);
 		this.stk[this.ptr++]=1;
 		for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-		if (i < 0) throw "array: underflow";
-		var t = this.stk.splice(i+1, this.ptr-1-i);
+		t = this.stk.splice(i+1, this.ptr-1-i);
 		this.ptr = i;
 		this.stk[this.ptr++]=BWIPJS.psarray(t);
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 		this.stk[this.ptr++]=Infinity;
 		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("sbs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sbs");
 		this.stk[this.ptr++]=$f145;
-		var t196=this.stk[--this.ptr];//forall
-		var t195=this.stk[--this.ptr];
-		for (var t194 in t195) {
-			if (t195 instanceof BWIPJS.psstring || t195 instanceof BWIPJS.psarray) {
-				if (t194.charCodeAt(0) > 57) continue;
-			} else {
-				if (t194.charCodeAt(0) == 0xffff) {
-					this.stk[this.ptr++]=+t194.substr(1);
-				} else {
-					this.stk[this.ptr++]=t194;
-				}
-			}
-			this.stk[this.ptr++]=BWIPJS.get(t195,t194);
-			if (t196.call(this)==-1) break;
-		}
+		var t184=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t184);
 		for (var i=this.ptr-1; i>=0 && this.stk[i]!==Infinity; i--);
-		if (i==-1) throw "counttomark: underflow";
 		this.stk[this.ptr]=this.ptr-i-1;
 		this.ptr++;
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
-		var t=this.stk[this.ptr-1];
-		if (t.length >= this.ptr) throw "astore: underflow";
+		t=this.stk[this.ptr-1];
 		var a=this.stk.splice(this.ptr-1-t.length,t.length);
 		t.assign(0,a);
 		this.ptr-=t.length;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.ptr--;
-		var t=this.dstk.get("rowbits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("rowbits");
+		this.xget("i");
 		this.stk[this.ptr++]=3;
 		this.stk[this.ptr++]=-1;
-		var b=this.stk[--this.ptr]; var a=this.stk[--this.ptr];
-		if (a > this.ptr) throw "roll: underflow: this.ptr="+this.ptr+",offset="+a;
-		if (b < 0) var t=this.stk.splice(this.ptr-a, -b);
-		else var t=this.stk.splice(this.ptr-a, a-b);
+		var t186=this.stk[--this.ptr];
+		var t185=this.stk[--this.ptr];
+		if (t186 < 0) t=this.stk.splice(this.ptr-t185, -t186);
+		else t=this.stk.splice(this.ptr-t185, t185-t186);
 		this.stk.splice.apply(this.stk, [this.ptr-t.length, 0].concat(t));
 		BWIPJS.set(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
@@ -3642,13 +2814,11 @@ BWIPJS.bwipp["code16k"]=function() {
 		this.stk[this.ptr++]=1;
 	}
 	function $f148(){
-		var t=this.dstk.get("rowbits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("rowbits");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.stk[this.ptr-1];
+		t=this.stk[this.ptr-1];
 		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
@@ -3663,51 +2833,47 @@ BWIPJS.bwipp["code16k"]=function() {
 	function $f151(){
 		this.stk[this.ptr++]=10;
 		this.stk[this.ptr++]=$f149;
-		var t210=this.stk[--this.ptr];
-		var t208=this.stk[--this.ptr];
-		for (var t209=0; t209<t208; t209++) {
-			if (t210.call(this)==-1) break;
+		var t200=this.stk[--this.ptr];
+		var t198=this.stk[--this.ptr];
+		for (var t199=0; t199<t198; t199++) {
+			if (t200.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=70;
 		this.stk[this.ptr++]=$f150;
-		var t213=this.stk[--this.ptr];
-		var t211=this.stk[--this.ptr];
-		for (var t212=0; t212<t211; t212++) {
-			if (t213.call(this)==-1) break;
+		var t203=this.stk[--this.ptr];
+		var t201=this.stk[--this.ptr];
+		for (var t202=0; t202<t201; t202++) {
+			if (t203.call(this)==-1) break;
 		}
 		this.stk[this.ptr++]=0;
 	}
 	function $f152(){
 		this.stk[this.ptr++]="i";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("rowheight");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("rowheight");
 		this.stk[this.ptr++]=$f148;
-		var t207=this.stk[--this.ptr];
-		var t205=this.stk[--this.ptr];
-		for (var t206=0; t206<t205; t206++) {
-			if (t207.call(this)==-1) break;
+		var t197=this.stk[--this.ptr];
+		var t195=this.stk[--this.ptr];
+		for (var t196=0; t196<t195; t196++) {
+			if (t197.call(this)==-1) break;
 		}
-		var t=this.dstk.get("sepheight");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("sepheight");
 		this.stk[this.ptr++]=$f151;
-		var t216=this.stk[--this.ptr];
-		var t214=this.stk[--this.ptr];
-		for (var t215=0; t215<t214; t215++) {
-			if (t216.call(this)==-1) break;
+		var t206=this.stk[--this.ptr];
+		var t204=this.stk[--this.ptr];
+		for (var t205=0; t205<t204; t205++) {
+			if (t206.call(this)==-1) break;
 		}
 	}
 	function $f153(){
-		var t=this.dstk.get("rowbits");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("r");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("rowbits");
+		this.xget("r");
 		this.stk[this.ptr++]=1;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
-		var t=this.stk[this.ptr-1];
+		t=this.stk[this.ptr-1];
 		for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 		this.ptr += t.length;
 		this.stk[this.ptr-1]=t;
@@ -3720,10 +2886,10 @@ BWIPJS.bwipp["code16k"]=function() {
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
 	this.stk[this.ptr++]="options";
-	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+	t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="barcode";
-	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+	t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="dontdraw";
 	this.stk[this.ptr++]=false;
@@ -3755,85 +2921,55 @@ BWIPJS.bwipp["code16k"]=function() {
 	this.stk[this.ptr++]="parsefnc";
 	this.stk[this.ptr++]=false;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	var t=this.dstk.get("options");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("options");
 	this.stk[this.ptr-1]=BWIPJS.pstype(this.stk[this.ptr-1]);
 	this.stk[this.ptr++]="stringtype";
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-	this.ptr--;
+	this.eq();
 	this.stk[this.ptr++]=$f4;
 	var t4=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
 		if (t4.call(this)==-1) return -1;
 	}
-	var t=this.dstk.get("options");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("options");
 	this.stk[this.ptr++]=$f5;
-	var t7=this.stk[--this.ptr];//forall
-	var t6=this.stk[--this.ptr];
-	for (var t5 in t6) {
-		if (t6 instanceof BWIPJS.psstring || t6 instanceof BWIPJS.psarray) {
-			if (t5.charCodeAt(0) > 57) continue;
-		} else {
-			if (t5.charCodeAt(0) == 0xffff) {
-				this.stk[this.ptr++]=+t5.substr(1);
-			} else {
-				this.stk[this.ptr++]=t5;
-			}
-		}
-		this.stk[this.ptr++]=BWIPJS.get(t6,t5);
-		if (t7.call(this)==-1) break;
-	}
+	var t5=this.stk[--this.ptr];
+	this.forall(this.stk[--this.ptr],t5);
 	this.stk[this.ptr++]="mode";
-	var t=this.dstk.get("mode");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("mode");
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="pos";
-	var t=this.dstk.get("pos");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pos");
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="rows";
-	var t=this.dstk.get("rows");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("rows");
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="rowheight";
-	var t=this.dstk.get("rowheight");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("rowheight");
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="sepheight";
-	var t=this.dstk.get("sepheight");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("sepheight");
 	this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	var t=this.dstk.get("pos");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pos");
 	this.stk[this.ptr++]=-1;
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
-	this.ptr--;
+	this.ne();
 	this.stk[this.ptr++]=$f6;
-	var t8=this.stk[--this.ptr];
+	var t6=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t8.call(this)==-1) return -1;
+		if (t6.call(this)==-1) return -1;
 	}
-	var t=this.dstk.get("parse");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("parse");
 	this.stk[this.ptr++]=$f10;
-	var t12=this.stk[--this.ptr];
+	var t10=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t12.call(this)==-1) return -1;
+		if (t10.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="barlen";
-	var t=this.dstk.get("barcode");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+	this.xget("barcode");
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="swa";
@@ -3983,136 +3119,95 @@ BWIPJS.bwipp["code16k"]=function() {
 	this.stk[this.ptr++]=BWIPJS.psarray([30,BWIPJS.psstring("~"),BWIPJS.psstring("94")]);
 	this.stk[this.ptr++]=BWIPJS.psarray([31,127,BWIPJS.psstring("95")]);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("fn3");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("fn3");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("fn3");
+	this.xget("fn3");
 	this.stk[this.ptr++]=BWIPJS.psstring("96");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("fn2");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("fn2");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("fn2");
+	this.xget("fn2");
 	this.stk[this.ptr++]=BWIPJS.psstring("97");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("sb1");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("sa1");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("sb1");
+	this.xget("sa1");
 	this.stk[this.ptr++]=BWIPJS.psstring("98");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("swc");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("swc");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("swc");
+	this.xget("swc");
 	this.stk[this.ptr++]=BWIPJS.psstring("99");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("swb");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("fn4");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("swb");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("swb");
+	this.xget("fn4");
+	this.xget("swb");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("fn4");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("swa");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("swa");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("fn4");
+	this.xget("swa");
+	this.xget("swa");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("fn1");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("fn1");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("fn1");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("fn1");
+	this.xget("fn1");
+	this.xget("fn1");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("pad");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("pad");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("pad");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pad");
+	this.xget("pad");
+	this.xget("pad");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("sb2");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("sa2");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("sb1");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("sb2");
+	this.xget("sa2");
+	this.xget("sb1");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("sc2");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("sc2");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("sb2");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("sc2");
+	this.xget("sc2");
+	this.xget("sb2");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("sc3");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("sc3");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("sb3");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("sc3");
+	this.xget("sc3");
+	this.xget("sb3");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4125,79 +3220,64 @@ BWIPJS.bwipp["code16k"]=function() {
 	this.stk[this.ptr++]=109;
 	this.stk[this.ptr-1]={};
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
-	var t=this.dstk.get("charmaps");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+	this.xget("charmaps");
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f13;
-	var t23=this.stk[--this.ptr];
 	var t21=this.stk[--this.ptr];
-	var t20=this.stk[--this.ptr];
 	var t19=this.stk[--this.ptr];
-	for (var t22=t19; t20<0 ? t22>=t21 : t22<=t21; t22+=t20) {
-		this.stk[this.ptr++]=t22;
-		if (t23.call(this)==-1) break;
+	var t18=this.stk[--this.ptr];
+	var t17=this.stk[--this.ptr];
+	for (var t20=t17; t18<0 ? t20>=t19 : t20<=t19; t20+=t18) {
+		this.stk[this.ptr++]=t20;
+		if (t21.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="seta";
-	var t=this.dstk.get("charvals");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("charvals");
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="setb";
-	var t=this.dstk.get("charvals");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("charvals");
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="setc";
-	var t=this.dstk.get("charvals");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("charvals");
 	this.stk[this.ptr++]=2;
 	this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 	this.ptr--;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	var t=this.dstk.get("raw");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("raw");
 	this.stk[this.ptr++]=$f14;
-	var t24=this.stk[--this.ptr];
+	var t22=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t24.call(this)==-1) return -1;
+		if (t22.call(this)==-1) return -1;
 	}
-	var t=this.dstk.get("encoding");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("encoding");
 	this.stk[this.ptr++]=BWIPJS.psstring("raw");
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-	this.ptr--;
+	this.eq();
 	this.stk[this.ptr++]=$f17;
-	var t27=this.stk[--this.ptr];
+	var t25=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t27.call(this)==-1) return -1;
+		if (t25.call(this)==-1) return -1;
 	}
-	var t=this.dstk.get("encoding");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("encoding");
 	this.stk[this.ptr++]=BWIPJS.psstring("auto");
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-	this.ptr--;
+	this.eq();
 	this.stk[this.ptr++]=$f127;
-	var t157=this.stk[--this.ptr];
+	var t155=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t157.call(this)==-1) return -1;
+		if (t155.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="metrics";
 	this.stk[this.ptr++]=Infinity;
@@ -4217,112 +3297,95 @@ BWIPJS.bwipp["code16k"]=function() {
 	this.stk[this.ptr++]=BWIPJS.psarray([15,72]);
 	this.stk[this.ptr++]=BWIPJS.psarray([16,77]);
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="urows";
-	var t=this.dstk.get("rows");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("rows");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="i";
 	this.stk[this.ptr++]=0;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=$f131;
-	var t161=this.stk[--this.ptr];
-	while (true) {
-		if (t161.call(this)==-1) break;
-	}
+	var t159=this.stk[--this.ptr];
+	while (t159.call(this)!=-1);
 	this.stk[this.ptr++]="cws";
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("cws");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.stk[this.ptr-1];
+	this.xget("cws");
+	t=this.stk[this.ptr-1];
 	for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	var t=this.dstk.get("dcws");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("cws");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+	this.xget("dcws");
+	this.xget("cws");
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f132;
-	var t164=this.stk[--this.ptr];
 	var t162=this.stk[--this.ptr];
-	for (var t163=0; t163<t162; t163++) {
-		if (t164.call(this)==-1) break;
+	var t160=this.stk[--this.ptr];
+	for (var t161=0; t161<t160; t161++) {
+		if (t162.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="cws";
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("r");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("r");
 	this.stk[this.ptr++]=2;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=7;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-	var t=this.dstk.get("mode");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("mode");
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
-	var t=this.dstk.get("cws");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.stk[this.ptr-1];
+	this.xget("cws");
+	t=this.stk[this.ptr-1];
 	for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
-	var t=this.dstk.get("dcws");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("dcws");
 	this.stk[this.ptr++]=$f133;
-	var t169=this.stk[--this.ptr];
 	var t167=this.stk[--this.ptr];
-	var t166=this.stk[--this.ptr];
 	var t165=this.stk[--this.ptr];
-	for (var t168=t165; t166<0 ? t168>=t167 : t168<=t167; t168+=t166) {
-		this.stk[this.ptr++]=t168;
-		if (t169.call(this)==-1) break;
+	var t164=this.stk[--this.ptr];
+	var t163=this.stk[--this.ptr];
+	for (var t166=t163; t164<0 ? t166>=t165 : t166<=t165; t166+=t164) {
+		this.stk[this.ptr++]=t166;
+		if (t167.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]=107;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]="c1";
-	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+	t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
-	var t=this.dstk.get("dcws");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("dcws");
 	this.stk[this.ptr++]=$f134;
-	var t174=this.stk[--this.ptr];
 	var t172=this.stk[--this.ptr];
-	var t171=this.stk[--this.ptr];
 	var t170=this.stk[--this.ptr];
-	for (var t173=t170; t171<0 ? t173>=t172 : t173<=t172; t173+=t171) {
-		this.stk[this.ptr++]=t173;
-		if (t174.call(this)==-1) break;
+	var t169=this.stk[--this.ptr];
+	var t168=this.stk[--this.ptr];
+	for (var t171=t168; t169<0 ? t171>=t170 : t171<=t170; t171+=t169) {
+		this.stk[this.ptr++]=t171;
+		if (t172.call(this)==-1) break;
 	}
-	var t=this.dstk.get("c1");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("dcws");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("c1");
+	this.xget("dcws");
 	this.stk[this.ptr++]=2;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]+this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -4330,24 +3393,20 @@ BWIPJS.bwipp["code16k"]=function() {
 	this.stk[this.ptr++]=107;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]="c2";
-	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+	t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="cws";
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("cws");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.stk[this.ptr-1];
+	this.xget("cws");
+	t=this.stk[this.ptr-1];
 	for (var i = 0; i < t.length; i++) this.stk[this.ptr-1+i]=BWIPJS.get(t,i);
 	this.ptr += t.length;
 	this.stk[this.ptr-1]=t;
 	this.ptr--;
-	var t=this.dstk.get("c1");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("c2");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("c1");
+	this.xget("c2");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
@@ -4363,127 +3422,104 @@ BWIPJS.bwipp["code16k"]=function() {
 	this.stk[this.ptr++]="stopencseven";
 	this.stk[this.ptr++]=BWIPJS.psarray([BWIPJS.psstring("2122"),BWIPJS.psstring("1411"),BWIPJS.psstring("1132"),BWIPJS.psstring("1231"),BWIPJS.psstring("1114"),BWIPJS.psstring("3112"),BWIPJS.psstring("1132"),BWIPJS.psstring("1231"),BWIPJS.psstring("1114"),BWIPJS.psstring("3112"),BWIPJS.psstring("3211"),BWIPJS.psstring("2221"),BWIPJS.psstring("2122"),BWIPJS.psstring("1411"),BWIPJS.psstring("3211"),BWIPJS.psstring("2221")]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	var t=this.dstk.get("pos");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pos");
 	this.stk[this.ptr++]=-1;
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-	this.ptr--;
-	var t=this.dstk.get("pos");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.eq();
+	this.xget("pos");
 	this.stk[this.ptr++]=10;
 	this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 	this.stk[this.ptr++]=2;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=1;
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-	this.ptr--;
-	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-2]=this.stk[this.ptr-2]||this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]|this.stk[this.ptr-1];
-	this.ptr--;
+	this.eq();
+	this.or();
 	this.stk[this.ptr++]=$f135;
 	this.stk[this.ptr++]=$f136;
-	var t175=this.stk[--this.ptr];
-	var t176=this.stk[--this.ptr];
+	var t173=this.stk[--this.ptr];
+	var t174=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t176.call(this)==-1) return -1;
+		if (t174.call(this)==-1) return -1;
 	} else {
-		if (t175.call(this)==-1) return -1;
+		if (t173.call(this)==-1) return -1;
 	}
 	this.stk[this.ptr++]="rowbits";
-	var t=this.dstk.get("r");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("r");
 	this.stk[this.ptr-1]=BWIPJS.psarray(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
-	var t=this.dstk.get("r");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("r");
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f146;
-	var t201=this.stk[--this.ptr];
-	var t199=this.stk[--this.ptr];
-	var t198=this.stk[--this.ptr];
-	var t197=this.stk[--this.ptr];
-	for (var t200=t197; t198<0 ? t200>=t199 : t200<=t199; t200+=t198) {
-		this.stk[this.ptr++]=t200;
-		if (t201.call(this)==-1) break;
+	var t191=this.stk[--this.ptr];
+	var t189=this.stk[--this.ptr];
+	var t188=this.stk[--this.ptr];
+	var t187=this.stk[--this.ptr];
+	for (var t190=t187; t188<0 ? t190>=t189 : t190<=t189; t190+=t188) {
+		this.stk[this.ptr++]=t190;
+		if (t191.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="pixs";
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]=81;
-	var t=this.dstk.get("sepheight");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("sepheight");
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f147;
-	var t204=this.stk[--this.ptr];
-	var t202=this.stk[--this.ptr];
-	for (var t203=0; t203<t202; t203++) {
-		if (t204.call(this)==-1) break;
+	var t194=this.stk[--this.ptr];
+	var t192=this.stk[--this.ptr];
+	for (var t193=0; t193<t192; t193++) {
+		if (t194.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
-	var t=this.dstk.get("r");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("r");
 	this.stk[this.ptr++]=2;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f152;
-	var t221=this.stk[--this.ptr];
-	var t219=this.stk[--this.ptr];
-	var t218=this.stk[--this.ptr];
-	var t217=this.stk[--this.ptr];
-	for (var t220=t217; t218<0 ? t220>=t219 : t220<=t219; t220+=t218) {
-		this.stk[this.ptr++]=t220;
-		if (t221.call(this)==-1) break;
+	var t211=this.stk[--this.ptr];
+	var t209=this.stk[--this.ptr];
+	var t208=this.stk[--this.ptr];
+	var t207=this.stk[--this.ptr];
+	for (var t210=t207; t208<0 ? t210>=t209 : t210<=t209; t210+=t208) {
+		this.stk[this.ptr++]=t210;
+		if (t211.call(this)==-1) break;
 	}
-	var t=this.dstk.get("rowheight");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("rowheight");
 	this.stk[this.ptr++]=$f153;
-	var t224=this.stk[--this.ptr];
-	var t222=this.stk[--this.ptr];
-	for (var t223=0; t223<t222; t223++) {
-		if (t224.call(this)==-1) break;
+	var t214=this.stk[--this.ptr];
+	var t212=this.stk[--this.ptr];
+	for (var t213=0; t213<t212; t213++) {
+		if (t214.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]=81;
-	var t=this.dstk.get("sepheight");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("sepheight");
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f154;
-	var t227=this.stk[--this.ptr];
-	var t225=this.stk[--this.ptr];
-	for (var t226=0; t226<t225; t226++) {
-		if (t227.call(this)==-1) break;
+	var t217=this.stk[--this.ptr];
+	var t215=this.stk[--this.ptr];
+	for (var t216=0; t216<t215; t216++) {
+		if (t217.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=Infinity;
 	this.stk[this.ptr++]="ren";
-	var t=this.dstk.get("renmatrix");
-	this.stk[this.ptr++]=t;
+	this.stk[this.ptr++]=this.get("renmatrix");
 	this.stk[this.ptr++]="pixs";
-	var t=this.dstk.get("pixs");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixs");
 	this.stk[this.ptr++]="pixx";
 	this.stk[this.ptr++]=81;
 	this.stk[this.ptr++]="pixy";
-	var t=this.dstk.get("pixs");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+	this.xget("pixs");
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=81;
 	this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 	this.stk[this.ptr++]="height";
-	var t=this.dstk.get("pixs");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+	this.xget("pixs");
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=81;
 	this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
@@ -4494,25 +3530,19 @@ BWIPJS.bwipp["code16k"]=function() {
 	this.stk[this.ptr++]=72;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]="opt";
-	var t=this.dstk.get("options");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t = {};
+	this.xget("options");
+	t = {};
 	for (var i = this.ptr-1; i >= 1 && this.stk[i] !== Infinity; i-=2) {
-		if (this.stk[i-1] === Infinity) throw "dict: malformed stack";
 		BWIPJS.set(t,this.stk[i-1],this.stk[i]);
 	}
-	if (i < 0 || this.stk[i]!==Infinity) throw "dict: underflow";
 	this.ptr = i;
 	this.stk[this.ptr++]=t;
-	var t=this.dstk.get("dontdraw");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1])=="boolean") this.stk[this.ptr-1]=!this.stk[this.ptr-1];
-	else this.stk[this.ptr-1]=~this.stk[this.ptr-1];
-	var t=this.dstk.get("renmatrix");
-	this.stk[this.ptr++]=t;
-	var t228=this.stk[--this.ptr];
+	this.xget("dontdraw");
+	this.not();
+	this.stk[this.ptr++]=this.get("renmatrix");
+	var t218=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t228.call(this)==-1) return -1;
+		if (t218.call(this)==-1) return -1;
 	}
 	this.dstk.pop(); this.dict=this.dstk[this.dstk.length-1];
 	psstptr = this.ptr;

@@ -1,7 +1,7 @@
 // file: bwipp/renmatrix.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-08-10
+// Barcode Writer in Pure PostScript - Version 2015-11-24
 //
 // Copyright (c) 2011-2015 Mark Warren
 // Copyright (c) 2004-2014 Terry Burton
@@ -10,6 +10,7 @@
 // for the extended copyright notice.
 // BEGIN renmatrix
 BWIPJS.bwipp["renmatrix"]=function() {
+	var t,x,y;
 	function $f0(){
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	}
@@ -21,35 +22,26 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	}
 	function $f3(){
 		this.stk[this.ptr++]="i";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("pixs8");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("pixx8");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("pixs8");
+		this.xget("pixx8");
+		this.xget("i");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("pixs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("pixx");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("pixs");
+		this.xget("pixx");
+		this.xget("i");
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-		var t=this.dstk.get("pixx");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("pixx");
 		this.stk[this.ptr-3]=this.stk[this.ptr-3].subset(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=2;
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
 	}
 	function $f4(){
 		this.stk[this.ptr++]="i";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("imgstr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("imgstr");
+		this.xget("i");
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
 		this.stk[this.ptr++]=2;
@@ -69,17 +61,14 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		this.ptr--;
 		this.stk[this.ptr++]=2;
 		this.stk[this.ptr++]=7;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("i");
 		this.stk[this.ptr++]=8;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]%this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 		this.stk[this.ptr-2]=Math.pow(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr--;
 		this.stk[this.ptr-1]=parseInt(this.stk[this.ptr-1],10);
-		var t=this.dstk.get("pixs");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("i");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("pixs");
+		this.xget("i");
 		this.stk[this.ptr-2]=BWIPJS.get(this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr--;
 		this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
@@ -109,27 +98,13 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		}
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("anycolor");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("anycolor");
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		var t=this.stk[--this.ptr];
+		t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.stk[this.ptr++]=$f5;
-		var t21=this.stk[--this.ptr];//forall
-		var t20=this.stk[--this.ptr];
-		for (var t19 in t20) {
-			if (t20 instanceof BWIPJS.psstring || t20 instanceof BWIPJS.psarray) {
-				if (t19.charCodeAt(0) > 57) continue;
-			} else {
-				if (t19.charCodeAt(0) == 0xffff) {
-					this.stk[this.ptr++]=+t19.substr(1);
-				} else {
-					this.stk[this.ptr++]=t19;
-				}
-			}
-			this.stk[this.ptr++]=BWIPJS.get(t20,t19);
-			if (t21.call(this)==-1) break;
-		}
+		var t15=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t15);
 		this.setrgb(this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=3;
 	}
@@ -155,87 +130,58 @@ BWIPJS.bwipp["renmatrix"]=function() {
 		}
 		this.stk[this.ptr]=this.stk[this.ptr-1]; this.ptr++;
 		this.stk[this.ptr++]=1;
-		var t=this.dstk.get("anycolor");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("anycolor");
 		this.stk[this.ptr-3].assign(this.stk[this.ptr-2],this.stk[this.ptr-1]); this.ptr-=3;
-		var t=this.stk[--this.ptr];
+		t=this.stk[--this.ptr];
 		if (t instanceof Function) t.call(this); else this.eval(t);
 		this.stk[this.ptr++]=$f7;
-		var t25=this.stk[--this.ptr];//forall
-		var t24=this.stk[--this.ptr];
-		for (var t23 in t24) {
-			if (t24 instanceof BWIPJS.psstring || t24 instanceof BWIPJS.psarray) {
-				if (t23.charCodeAt(0) > 57) continue;
-			} else {
-				if (t23.charCodeAt(0) == 0xffff) {
-					this.stk[this.ptr++]=+t23.substr(1);
-				} else {
-					this.stk[this.ptr++]=t23;
-				}
-			}
-			this.stk[this.ptr++]=BWIPJS.get(t24,t23);
-			if (t25.call(this)==-1) break;
-		}
+		var t17=this.stk[--this.ptr];
+		this.forall(this.stk[--this.ptr],t17);
 		this.setcmyk(this.stk[this.ptr-4],this.stk[this.ptr-3],this.stk[this.ptr-2],this.stk[this.ptr-1]);
 		this.ptr-=4;
 	}
 	function $f9(){
 		this.stk[this.ptr++]="anycolor";
-		var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+		t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 		this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-		var t=this.dstk.get("anycolor");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("anycolor");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=6;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f6;
-		var t22=this.stk[--this.ptr];
+		var t16=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t22.call(this)==-1) return -1;
+			if (t16.call(this)==-1) return -1;
 		}
-		var t=this.dstk.get("anycolor");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+		this.xget("anycolor");
 		this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 		this.stk[this.ptr++]=8;
-		if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-			this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()==this.stk[this.ptr-1];
-		else this.stk[this.ptr-2]=this.stk[this.ptr-2]==this.stk[this.ptr-1];
-		this.ptr--;
+		this.eq();
 		this.stk[this.ptr++]=$f8;
-		var t26=this.stk[--this.ptr];
+		var t18=this.stk[--this.ptr];
 		if (this.stk[--this.ptr]) {
-			if (t26.call(this)==-1) return -1;
+			if (t18.call(this)==-1) return -1;
 		}
 	}
 	function $f10(){
 		this.gsave();
-		var t=this.dstk.get("backgroundcolor");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("setanycolor");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("backgroundcolor");
+		this.xget("setanycolor");
 		this.fill();
 		this.grestore();
 	}
 	function $f11(){
-		var t=this.dstk.get("barcolor");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-		var t=this.dstk.get("setanycolor");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("barcolor");
+		this.xget("setanycolor");
 	}
 	function $f12(){
-		var t=this.dstk.get("imgstr");
-		if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+		this.xget("imgstr");
 	}
 	this.stk[this.ptr++]=20;
 	this.stk[this.ptr-1]={};
 	this.dict=this.stk[--this.ptr]; this.dstk.push(this.dict);
 	this.stk[this.ptr++]="args";
-	var t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
+	t=this.stk[this.ptr-2]; this.stk[this.ptr-2]=this.stk[this.ptr-1]; this.stk[this.ptr-1]=t;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="width";
 	this.stk[this.ptr++]=1;
@@ -249,63 +195,30 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.stk[this.ptr++]="backgroundcolor";
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
-	var t=this.dstk.get("args");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("args");
 	this.stk[this.ptr++]=$f0;
-	var t2=this.stk[--this.ptr];//forall
-	var t1=this.stk[--this.ptr];
-	for (var t0 in t1) {
-		if (t1 instanceof BWIPJS.psstring || t1 instanceof BWIPJS.psarray) {
-			if (t0.charCodeAt(0) > 57) continue;
-		} else {
-			if (t0.charCodeAt(0) == 0xffff) {
-				this.stk[this.ptr++]=+t0.substr(1);
-			} else {
-				this.stk[this.ptr++]=t0;
-			}
-		}
-		this.stk[this.ptr++]=BWIPJS.get(t1,t0);
-		if (t2.call(this)==-1) break;
-	}
-	var t=this.dstk.get("opt");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	var t0=this.stk[--this.ptr];
+	this.forall(this.stk[--this.ptr],t0);
+	this.xget("opt");
 	this.stk[this.ptr++]=$f1;
-	var t5=this.stk[--this.ptr];//forall
-	var t4=this.stk[--this.ptr];
-	for (var t3 in t4) {
-		if (t4 instanceof BWIPJS.psstring || t4 instanceof BWIPJS.psarray) {
-			if (t3.charCodeAt(0) > 57) continue;
-		} else {
-			if (t3.charCodeAt(0) == 0xffff) {
-				this.stk[this.ptr++]=+t3.substr(1);
-			} else {
-				this.stk[this.ptr++]=t3;
-			}
-		}
-		this.stk[this.ptr++]=BWIPJS.get(t4,t3);
-		if (t5.call(this)==-1) break;
-	}
+	var t1=this.stk[--this.ptr];
+	this.forall(this.stk[--this.ptr],t1);
 	this.stk[this.ptr++]="width";
-	var t=this.dstk.get("width");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("width");
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="height";
-	var t=this.dstk.get("height");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("height");
 	this.stk[this.ptr-1]=parseFloat(this.stk[this.ptr-1]);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="barcolor";
-	var t=this.dstk.get("barcolor");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("barcolor");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="backgroundcolor";
-	var t=this.dstk.get("backgroundcolor");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("backgroundcolor");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="pixx8";
-	var t=this.dstk.get("pixx");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixx");
 	this.stk[this.ptr++]=8;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]/this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr-1]=Math.ceil(this.stk[this.ptr-1]);
@@ -315,46 +228,39 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="pixs8";
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("pixx8");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("pixy");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixx8");
+	this.xget("pixy");
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f2;
-	var t8=this.stk[--this.ptr];
-	var t6=this.stk[--this.ptr];
-	for (var t7=0; t7<t6; t7++) {
-		if (t8.call(this)==-1) break;
+	var t4=this.stk[--this.ptr];
+	var t2=this.stk[--this.ptr];
+	for (var t3=0; t3<t2; t3++) {
+		if (t4.call(this)==-1) break;
 	}
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
-	var t=this.dstk.get("pixy");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixy");
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f3;
-	var t13=this.stk[--this.ptr];
-	var t11=this.stk[--this.ptr];
-	var t10=this.stk[--this.ptr];
 	var t9=this.stk[--this.ptr];
-	for (var t12=t9; t10<0 ? t12>=t11 : t12<=t11; t12+=t10) {
-		this.stk[this.ptr++]=t12;
-		if (t13.call(this)==-1) break;
+	var t7=this.stk[--this.ptr];
+	var t6=this.stk[--this.ptr];
+	var t5=this.stk[--this.ptr];
+	for (var t8=t5; t6<0 ? t8>=t7 : t8<=t7; t8+=t6) {
+		this.stk[this.ptr++]=t8;
+		if (t9.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="pixs";
-	var t=this.dstk.get("pixs8");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixs8");
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]="imgstr";
-	var t=this.dstk.get("pixs");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+	this.xget("pixs");
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=8;
 	this.stk[this.ptr-2]=Math.floor(this.stk[this.ptr-2]/this.stk[this.ptr-1]); this.ptr--;
@@ -362,100 +268,82 @@ BWIPJS.bwipp["renmatrix"]=function() {
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=1;
-	var t=this.dstk.get("pixs");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	if (typeof(this.stk[this.ptr-1].length)!=="number") throw "length: invalid: " + BWIPJS.pstype(this.stk[this.ptr-1]);
+	this.xget("pixs");
 	this.stk[this.ptr-1]=this.stk[this.ptr-1].length;
 	this.stk[this.ptr++]=1;
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]-this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=$f4;
-	var t18=this.stk[--this.ptr];
-	var t16=this.stk[--this.ptr];
-	var t15=this.stk[--this.ptr];
 	var t14=this.stk[--this.ptr];
-	for (var t17=t14; t15<0 ? t17>=t16 : t17<=t16; t17+=t15) {
-		this.stk[this.ptr++]=t17;
-		if (t18.call(this)==-1) break;
+	var t12=this.stk[--this.ptr];
+	var t11=this.stk[--this.ptr];
+	var t10=this.stk[--this.ptr];
+	for (var t13=t10; t11<0 ? t13>=t12 : t13<=t12; t13+=t11) {
+		this.stk[this.ptr++]=t13;
+		if (t14.call(this)==-1) break;
 	}
 	this.stk[this.ptr++]="setanycolor";
 	this.stk[this.ptr++]=$f9;
 	this.dict[this.stk[this.ptr-2]]=this.stk[this.ptr-1]; this.ptr-=2;
 	this.gsave();
-	var t=this.currentpoint();
+	t=this.currentpoint();
 	this.stk[this.ptr++]=t.x;
 	this.stk[this.ptr++]=t.y;
-	var y=this.stk[--this.ptr];
+	y=this.stk[--this.ptr];
 	this.translate(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=72;
-	var t=this.dstk.get("width");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("width");
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
 	this.stk[this.ptr++]=72;
-	var t=this.dstk.get("height");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("height");
 	this.stk[this.ptr-2]=this.stk[this.ptr-2]*this.stk[this.ptr-1]; this.ptr--;
-	var y=this.stk[--this.ptr];
+	y=this.stk[--this.ptr];
 	this.scale(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=0.0001;
 	this.stk[this.ptr++]=0.0001;
-	var y=this.stk[--this.ptr];
+	y=this.stk[--this.ptr];
 	this.moveto(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=0.9999;
 	this.stk[this.ptr++]=0.0001;
-	var y=this.stk[--this.ptr];
+	y=this.stk[--this.ptr];
 	this.lineto(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=0.9999;
 	this.stk[this.ptr++]=0.9999;
-	var y=this.stk[--this.ptr];
+	y=this.stk[--this.ptr];
 	this.lineto(this.stk[--this.ptr],y);
 	this.stk[this.ptr++]=0.0001;
 	this.stk[this.ptr++]=0.9999;
-	var y=this.stk[--this.ptr];
+	y=this.stk[--this.ptr];
 	this.lineto(this.stk[--this.ptr],y);
 	this.closepath();
-	var t=this.dstk.get("backgroundcolor");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("backgroundcolor");
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
-	this.ptr--;
+	this.ne();
 	this.stk[this.ptr++]=$f10;
-	var t27=this.stk[--this.ptr];
+	var t19=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t27.call(this)==-1) return -1;
+		if (t19.call(this)==-1) return -1;
 	}
-	var t=this.dstk.get("barcolor");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("barcolor");
 	this.stk[this.ptr++]=BWIPJS.psstring("unset");
-	if (this.stk[this.ptr-2] instanceof BWIPJS.psstring)
-		this.stk[this.ptr-2]=this.stk[this.ptr-2].toString()!=this.stk[this.ptr-1];
-	else this.stk[this.ptr-2]=this.stk[this.ptr-2]!=this.stk[this.ptr-1];
-	this.ptr--;
+	this.ne();
 	this.stk[this.ptr++]=$f11;
-	var t28=this.stk[--this.ptr];
+	var t20=this.stk[--this.ptr];
 	if (this.stk[--this.ptr]) {
-		if (t28.call(this)==-1) return -1;
+		if (t20.call(this)==-1) return -1;
 	}
-	var t=this.dstk.get("pixx");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
-	var t=this.dstk.get("pixy");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixx");
+	this.xget("pixy");
 	this.stk[this.ptr++]=true;
 	this.stk[this.ptr++]=Infinity;
-	var t=this.dstk.get("pixx");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixx");
 	this.stk[this.ptr++]=0;
 	this.stk[this.ptr++]=0;
-	var t=this.dstk.get("pixy");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixy");
 	this.stk[this.ptr-1]=-this.stk[this.ptr-1];
 	this.stk[this.ptr++]=0;
-	var t=this.dstk.get("pixy");
-	if (t instanceof Function) t.call(this); else this.stk[this.ptr++]=t;
+	this.xget("pixy");
 	for (var i = this.ptr-1; i >= 0 && this.stk[i] !== Infinity; i--) ;
-	if (i < 0) throw "array: underflow";
-	var t = this.stk.splice(i+1, this.ptr-1-i);
+	t = this.stk.splice(i+1, this.ptr-1-i);
 	this.ptr = i;
 	this.stk[this.ptr++]=BWIPJS.psarray(t);
 	this.stk[this.ptr++]=$f12;

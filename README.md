@@ -10,16 +10,10 @@ All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be found at
 the end of this document.
 
-## Note to DataMatrix Bar Code Users
-
-If you are using bwip-js version 0.14.0 or 0.14.1, please upgrade immediately.
-There was a PostScript emulation bug that was exercised by new code added to
-BWIPP version 2015-08-10.  bwip-js version 0.14.2 fixes the issue.
-
 ## Status 
 
-* Current bwip-js version is 0.14.2 (22-Sep-2015)
-* Current BWIPP version is 2015-08-10
+* Current bwip-js version is 0.15.0 (24-Nov-2015)
+* Current BWIPP version is 2015-11-24
 * Node.js compatibility >= v0.10 (reported to work with v0.8 but not tested).
 * npm dependencies: none
 
