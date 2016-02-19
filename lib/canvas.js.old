@@ -16,62 +16,10 @@ BWIPJS.load = function(path) {
 // Determine where this script is located on the server and
 // make the encoder loading relative to it.
 (function() {
-	//var scripts = document.getElementsByTagName("script");
+	var scripts = document.getElementsByTagName("script");
 	// http://host:port/foo/bar/lib/canvas.js
 	// We want root to be everything but lib/canvas.js
-    //BWIPJS.load.root = scripts[scripts.length-1].src.replace(/lib.canvas.js$/,'');
-	
-	//the pattern we will use to detect our current script 
-	var scriptMatchPattern = /(lib.canvas\.js)$/;
-	
-	//the old method of detecting root url was not working for scripts loaded with async , defer or loaded 
-	//dynamically with js 
-	
-	//set script src var
-	var scriptSrc;
-	
-	//test document.currentScript first 
-	if (document.currentScript){
-	
-	//get only the src ur;
-	scriptSrc = document.currentScript.src;
-	
-	}else if(document.querySelector){
-	
-	//test second src 
-	scriptSrc = document.querySelector('script[src$="lib/canvas.js"]').src;
-	}else{
-		//our last attempt will be to loop through all the tags 
-		var scripts = document.getElementsByTagName("script");
-		
-		//loop 
-		for(i=0; i<= scripts.length;i++){
-           
-		   script = scripts[i];
-		   
-		   //leave non external urls out 
-		   if(!script.src){
-			   continue;
-		   }//end if 
-			   
-			 //set source 
-		   var currentScriptSrc = script.src;
-		   
-			//if pattern matches, then horrayy , we have found the script 
-			if(scriptMatchPattern.test(currentScriptSrc)){
-				//assign current script Obj
-				scriptSrc = currentScriptSrc;
-				//break loop 
-				break;
-			}//end sript src detect 
-		}//end loop 
-	
-	}//end test feature support 
-	
-
-	//now set the root of the script 
-	BWIPJS.load.root = scriptSrc.replace(scriptMatchPattern,'');
-
+    BWIPJS.load.root = scripts[scripts.length-1].src.replace(/lib.canvas.js$/,'');
 })();
 
 
