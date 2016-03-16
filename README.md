@@ -147,6 +147,8 @@ specific options are:
     * `"I"` : Inverted 180 degree rotation.
 
 - `monochrome` : Sets the human-readable text to render in monochrome.  Boolean `true` or `false`.  Default is `false` which renders 256-level gray-scale anti-aliased text.
+- `paddingwidth` :  Sets the horizontal padding (in pixels) around the rendered barcode.
+- `paddingheight` : Sets the vertical padding (in pixels) around the rendered barcode.
 
 You will need to consult the
 [BWIPP documentation](https://github.com/bwipp/postscriptbarcode/wiki)

@@ -186,6 +186,7 @@ function render() {
 	} else {
 		bw.bitmap(new Bitmap);
 	}
+	bw.bitmap().pad(+opts.paddingwidth || 0, +opts.paddingheight || 0);
 	
 	var scaleX = +document.getElementById('scaleX').value || 2;
 	var scaleY = +document.getElementById('scaleY').value || 2;
