@@ -1,4 +1,4 @@
-// file: node-zlibPNG
+// file: node-zlibPNG.js
 //
 // Implements a PNG encoder using only the built-in zlib module.
 // No other dependencies.

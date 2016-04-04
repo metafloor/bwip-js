@@ -249,7 +249,7 @@ bwip-js.
 ![bwip-js ISBN](http://metafloor.github.io/bwip-js/images/bwip-js-isbn-bg.png?raw=true)
 
 If you want to use BWIPP's original background color handling, look for the
-following lines in `node-bwipjs` (or `lib/canvas.js` if using the browser code):
+following lines in `node-bwip.js` (or `lib/canvas.js` if using the browser code):
 
 ```
 // Feature or bug, BWIPP does not extend the background color into
@@ -287,8 +287,8 @@ The software is organized in the following directory structure:
 		demo.html		# The bwip-js demo
 		freetype.js		# The Emscripten-compiled FreeType library
 		freetype.js.mem	# Demand loaded memory image
-		node-bwipjs		# Node.js module
-		node-zlibPNG	# Node.js module that implements a PNG encoder
+		node-bwip.js	# Node.js module
+		node-zlibPNG.js	# Node.js module that implements a PNG encoder
 		package.json	# Node.js/npm configuration
 		bwipp/			# The cross-compiled BWIPP encoders and renderers
 		lib/			# Utilities required by the demo
@@ -312,7 +312,7 @@ To run the demo from your HTTP server, you should install the bwip-js directory
 under the server's root document directory and modify the server's configuration
 files, if necessary.  Then navigate your browser to the `bwip-js/demo.html` file.
 
-If you would like to implement your own interface to bwip-js, see [Integrating bwip.js Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code).  I would also recommend looking at the `node-bwipjs` module to see how it
+If you would like to implement your own interface to bwip-js, see [Integrating bwip.js Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code).  I would also recommend looking at the `node-bwip.js` module to see how it
 was done for Node.js.  Getting the FreeType module to cooperate with the
 BWIPP cross-compiled code was not straightforward.
 
