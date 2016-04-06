@@ -2,7 +2,7 @@
   "name": "bwip-js",
   "version": "0.15.1",
   "description": "Barcode generator supporting over 90 types and standards.",
-  "main": "node-bwipjs",
+  "main": "node-bwip.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

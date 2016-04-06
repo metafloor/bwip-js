@@ -1,15 +1,14 @@
-// file: node-bwipjs
+// file: node-bwip.js
 //
 // Copyright (c) 2011-2015 Mark Warren
 //
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 //
-var url	= require('url'),
-	fs	= require('fs'),
-	vm	= require('vm'),
-	zlibPNG	= require(__dirname + '/node-zlibPNG')
-	;
+var url = require('url');
+var fs = require('fs');
+var vm = require('vm');
+var zlibPNG = require('./node-zlibPNG');
 
 // The global inside a sandboxed context is virtually useless.  None of
 // the goodies available in a primary context.
