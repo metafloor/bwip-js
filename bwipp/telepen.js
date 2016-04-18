@@ -1,9 +1,9 @@
 // file: bwipp/telepen.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2015-11-24
+// Barcode Writer in Pure PostScript - Version 2016-03-28
 //
-// Copyright (c) 2011-2015 Mark Warren
+// Copyright (c) 2011-2016 Mark Warren
 // Copyright (c) 2004-2014 Terry Burton
 //
 // See the LICENSE file in the bwip-js root directory

@@ -1,6 +1,6 @@
 // file: bwip.js)
 //
-// Copyright (c) 2011-2015 Mark Warren
+// Copyright (c) 2011-2016 Mark Warren
 //
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.

@@ -12,8 +12,8 @@ the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 0.15.1 (24-Nov-2015)
-* Current BWIPP version is 2015-11-24
+* Current bwip-js version is 0.16.0 (18-Apr-2016)
+* Current BWIPP version is 2016-03-28
 * Node.js compatibility >= v0.10 (reported to work with v0.8 but not tested).
 * npm dependencies: none
 
@@ -35,8 +35,8 @@ It showcases the new font rendering provided by the FreeType library,
 and allows using your own fonts.  All fonts are stored locally on your computer;
 the generator is 100% client-side JavaScript.
 
-The demo is tested on the latest versions of Firefox and Chrome, along with IE10.
-IE11 should work, and so should the latest versions of Opera and Safari,
+The demo is tested on the latest versions of Firefox and Chrome, along with IE10 and IE11.
+Microsoft Edge should work, and so should the latest versions of Opera and Safari,
 but they are untested.
 
 ## Online Barcode API
@@ -146,6 +146,8 @@ specific options are:
     * `"L"` : Counter-clockwise (left) 90 degree rotation.
     * `"I"` : Inverted 180 degree rotation.
 
+- `paddingwidth` : Sets the left and right padding (in points/pixels) around the rendered barcode.  Rotates and scales with the image.
+- `paddingheight` : Sets the top and bottom padding (in points/pixels) around the rendered barcode.  Rotates and scales with the image.
 - `monochrome` : Sets the human-readable text to render in monochrome.  Boolean `true` or `false`.  Default is `false` which renders 256-level gray-scale anti-aliased text.
 
 You will need to consult the
