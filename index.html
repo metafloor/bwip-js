@@ -37,17 +37,17 @@ ones) are available.  An exhaustive list of supported barcode types can be found
 the end of this document.</p>
 
 <h2>
-<a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Status</h2>
+<a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 
 <ul>
-<li>Current bwip-js version is 0.15.1 (24-Nov-2015)</li>
-<li>Current BWIPP version is 2015-11-24</li>
+<li>Current bwip-js version is 0.16.0 (18-Apr-2016)</li>
+<li>Current BWIPP version is 2016-03-28</li>
 <li>Node.js compatibility &gt;= v0.10 (reported to work with v0.8 but not tested).</li>
 <li>npm dependencies: none</li>
 </ul>
 
 <h2>
-<a id="user-content-links" class="anchor" href="#links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Links</h2>
+<a id="user-content-links" class="anchor" href="#links" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Links</h2>
 
 <ul>
 <li><a href="http://metafloor.github.io/bwip-js/">Home Page</a></li>
@@ -60,7 +60,7 @@ the end of this document.</p>
 </ul>
 
 <h2>
-<a id="user-content-online-barcode-generator" class="anchor" href="#online-barcode-generator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Online Barcode Generator</h2>
+<a id="user-content-online-barcode-generator" class="anchor" href="#online-barcode-generator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Online Barcode Generator</h2>
 
 <p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online barcode generator</a>
 demonstrates all of the features of bwip-js.
@@ -68,12 +68,12 @@ It showcases the new font rendering provided by the FreeType library,
 and allows using your own fonts.  All fonts are stored locally on your computer;
 the generator is 100% client-side JavaScript.</p>
 
-<p>The demo is tested on the latest versions of Firefox and Chrome, along with IE10.
-IE11 should work, and so should the latest versions of Opera and Safari,
+<p>The demo is tested on the latest versions of Firefox and Chrome, along with IE10 and IE11.
+Microsoft Edge should work, and so should the latest versions of Opera and Safari,
 but they are untested.</p>
 
 <h2>
-<a id="user-content-online-barcode-api" class="anchor" href="#online-barcode-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Online Barcode API</h2>
+<a id="user-content-online-barcode-api" class="anchor" href="#online-barcode-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Online Barcode API</h2>
 
 <p>A bwip-js barcode service is available online, ready to serve up barcode images
 on demand.</p>
@@ -87,7 +87,7 @@ be a lot more performant.)</p>
 <a href="https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API">Online Barcode Generator API</a>.</p>
 
 <h2>
-<a id="user-content-nodejs-request-handler" class="anchor" href="#nodejs-request-handler" aria-hidden="true"><span class="octicon octicon-link"></span></a>Node.js Request Handler</h2>
+<a id="user-content-nodejs-request-handler" class="anchor" href="#nodejs-request-handler" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Node.js Request Handler</h2>
 
 <p>The online barcode service is implemented as a Node.js application.  The code used
 for the service is available as part of the bwip-js source code.
@@ -131,7 +131,7 @@ ignores all path information.  Your application is free to structure the URL
 path as needed to implement the desired HTTP request routing.</p>
 
 <h2>
-<a id="user-content-nodejs-image-generator" class="anchor" href="#nodejs-image-generator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Node.js Image Generator</h2>
+<a id="user-content-nodejs-image-generator" class="anchor" href="#nodejs-image-generator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Node.js Image Generator</h2>
 
 <p>You can also use bwip-js to generate PNG images directly.</p>
 
@@ -186,7 +186,11 @@ specific options are:</p>
 <code>"I"</code> : Inverted 180 degree rotation.</li>
 </ul>
 </li>
-<li><p><code>monochrome</code> : Sets the human-readable text to render in monochrome.  Boolean <code>true</code> or <code>false</code>.  Default is <code>false</code> which renders 256-level gray-scale anti-aliased text.</p></li>
+<li><p><code>paddingwidth</code> : Sets the left and right padding (in points/pixels) around the rendered barcode.  Rotates and scales with the image.</p></li>
+<li>
+<code>paddingheight</code> : Sets the top and bottom padding (in points/pixels) around the rendered barcode.  Rotates and scales with the image.</li>
+<li>
+<code>monochrome</code> : Sets the human-readable text to render in monochrome.  Boolean <code>true</code> or <code>false</code>.  Default is <code>false</code> which renders 256-level gray-scale anti-aliased text.</li>
 </ul>
 
 <p>You will need to consult the
@@ -194,7 +198,7 @@ specific options are:</p>
 to determine what options are available for each barcode type.</p>
 
 <h2>
-<a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+<a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
 
 <p>An
 <a href="http://kripken.github.io/emscripten-site/index.html">Emscripten compiled</a>
@@ -209,7 +213,7 @@ project.</p>
 <a href="https://github.com/metafloor/bwip-js/wiki/Compiling-FreeType">Compiling FreeType with Emscripten</a>.</p>
 
 <h3>
-<a id="user-content-ocr-fonts" class="anchor" href="#ocr-fonts" aria-hidden="true"><span class="octicon octicon-link"></span></a>OCR Fonts</h3>
+<a id="user-content-ocr-fonts" class="anchor" href="#ocr-fonts" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OCR Fonts</h3>
 
 <p>The barcode images generated by bwip-js are essentially identical to using BWIPP with 
 <a href="http://www.ghostscript.com/">Ghostscript</a>.  The most significant
@@ -267,7 +271,7 @@ with the Inconsolata font using the BWIPP options:</p>
 <p><a href="https://camo.githubusercontent.com/adda62aa0732b8b613d4ffef6559d64dd6c2803b/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f6973626e2d696e636f6e736f6c6174612e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/adda62aa0732b8b613d4ffef6559d64dd6c2803b/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f6973626e2d696e636f6e736f6c6174612e706e673f7261773d74727565" alt="ISBN Using Inconsolata" data-canonical-src="http://metafloor.github.io/bwip-js/images/isbn-inconsolata.png?raw=true" style="max-width:100%;"></a></p>
 
 <h3>
-<a id="user-content-background-color" class="anchor" href="#background-color" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background Color</h3>
+<a id="user-content-background-color" class="anchor" href="#background-color" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Background Color</h3>
 
 <p>A second difference between BWIPP and bwip-js rendering occurs with the
 <code>backgroundcolor</code> option.  The BWIPP implementation of background color is a bit
@@ -308,7 +312,7 @@ if (opts.backgroundcolor) {
 image with a transparent background.</p>
 
 <h2>
-<a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+<a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>You can download the latest npm module using:</p>
 
@@ -335,7 +339,7 @@ image with a transparent background.</p>
 </code></pre>
 
 <h2>
-<a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+<a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
 
 <blockquote>
 <p><strong>Version 0.8 was an API-breaking release.</strong>  If you have implemented code based on 
@@ -360,7 +364,7 @@ was done for Node.js.  Getting the FreeType module to cooperate with the
 BWIPP cross-compiled code was not straightforward.</p>
 
 <h2>
-<a id="user-content-supported-barcode-types" class="anchor" href="#supported-barcode-types" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Barcode Types</h2>
+<a id="user-content-supported-barcode-types" class="anchor" href="#supported-barcode-types" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Supported Barcode Types</h2>
 
 <p>• AusPost 4 State Customer Code • Aztec Code • Aztec Runes • BC412 • Channel Code • Codabar • Codablock F • Code 11 • Code 128 • Code 16K • Code 25 • Code 39 • Code 39 Extended • Code 49 • Code 93 • Code 93 Extended • Code One • Compact Aztec Code • Compact PDF417 • COOP 2 of 5 • Custom 1D symbology • Custom 4 state symbology • Data Matrix • Datalogic 2 of 5 • Deutsche Post Identcode • Deutsche Post Leitcode • EAN-13 • EAN-13 Composite • EAN-2 (2 digit addon) • EAN-5 (5 digit addon) • EAN-8 • EAN-8 Composite • Flattermarken • GS1 Composite 2D Component • GS1 Data Matrix • GS1 DataBar Expanded • GS1 DataBar Expanded Composite • GS1 DataBar Expanded Stacked • GS1 DataBar Expanded Stacked Composite • GS1 DataBar Limited • GS1 DataBar Limited Composite • GS1 DataBar Omnidirectional • GS1 DataBar Omnidirectional Composite • GS1 DataBar Stacked • GS1 DataBar Stacked Composite • GS1 DataBar Stacked Omnidirectional • GS1 DataBar Stacked Omnidirectional Composite • GS1 DataBar Truncated • GS1 DataBar Truncated Composite • GS1 QR Code • GS1-128 • GS1-128 Composite • GS1-14 • HIBC Codablock F • HIBC Code 128 • HIBC Code 39 • HIBC Data Matrix • HIBC MicroPDF417 • HIBC PDF417 • HIBC QR Code • IATA 2 of 5 • Industrial 2 of 5 • Interleaved 2 of 5 (ITF) • ISBN • ISMN • ISSN • Italian Pharmacode • ITF-14 • Japan Post 4 State Customer Code • Matrix 2 of 5 • MaxiCode • Micro QR Code • MicroPDF417 • Miscellaneous symbols • MSI Modified Plessey • PDF417 • Pharmaceutical Binary Code • Pharmazentralnummer (PZN) • Plessey UK • PosiCode • QR Code • Royal Dutch TPG Post KIX • Royal Mail 4 State Customer Code • SSCC-18 • Telepen • Telepen Numeric • Two-track Pharmacode • UPC-A • UPC-A Composite • UPC-E • UPC-E Composite • USPS Intelligent Mail • USPS PLANET • USPS POSTNET •</p>
 

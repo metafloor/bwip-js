@@ -1,12 +1,22 @@
 // file: lib/canvas.js
 //
-// Copyright (c) 2011-2015 Mark Warren
+// Copyright (c) 2011-2016 Mark Warren
 //
 // See the COPYRIGHT file in the bwip.js root directory
 // for the extended copyright notice.
 
 // Dynamically load the encoders.
 BWIPJS.load = function(path) {
+	var script;
+	var src = BWIPJS.load.root + path;
+	var scriptInjected = Array.prototype.filter.call(document.scripts,
+				function (script) {
+			        return script.getAttribute('src') === src;
+				})[0];
+	if (scriptInjected) {
+		// Script has already been added, we are waiting for it to load.
+		return false;
+	}
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
 	script.src = BWIPJS.load.root + path;
@@ -38,6 +48,13 @@ function Bitmap(bgcolor) {
 	var miny = 0;	// min-y
 	var maxx = 0;	// max-x
 	var maxy = 0;	// max-y
+	var padx = 0;	// optional left/right padding
+	var pady = 0;	// optional top/bottom padding
+
+	this.pad = function(width, height) {
+		padx = width;
+		pady = height;
+	}
 
 	this.color = function(r, g, b) {
 		clr = [r, g, b];
@@ -67,13 +84,17 @@ function Bitmap(bgcolor) {
 		if (rot == 'R' || rot == 'L') {
 			var h = maxx-minx+1;
 			var w = maxy-miny+1;
+			// Swap the padding values.
+			var t = pady;
+			pady = padx;
+			padx = t;
 		} else {
 			var w = maxx-minx+1;
 			var h = maxy-miny+1;
 		}
 
-		cvs.width  = w;
-		cvs.height = h;
+		cvs.width  = w + 2*padx;
+		cvs.height = h + 2*pady;
 
 		var ctx = cvs.getContext('2d');
 		ctx.fillStyle = bgcolor || '#fff';
@@ -113,7 +134,7 @@ function Bitmap(bgcolor) {
 			dat[idx+2] = (dat[idx+2] * (1 - a) + c[2] * a)|0;
 			dat[idx+3] = 255;
 		}
-		ctx.putImageData(id, 0, 0);
+		ctx.putImageData(id, padx, pady);
 		cvs.style.visibility = 'visible';
 	}
 }
