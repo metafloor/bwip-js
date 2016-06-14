@@ -7,141 +7,196 @@ html, body {
 	overflow:	hidden;
 }
 div {
-	box-sizing:	border-box;
-	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
+	box-sizing:		border-box;
+	font-family: 	"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
 }
 #header {
-	background-color:	#040404;
-	color:				#fff;
-	font-weight:		bold;
-	font-size:			125%;
-	padding:			10px;
-	text-align:			center;
+	background-color:#040404;
+	color:			#fff;
+	font-weight:	bold;
+	font-size:		125%;
+	padding:		10px;
+	text-align:		center;
 }
 #links {
-	overflow:			visible;
-	padding:			10px;
-	padding-right:		24px;
+	overflow:		visible;
+	padding:		10px;
+	padding-right:	24px;
 }
-a, a:visited, a:active {
-	color:			#6492ed;
+.codeblock {
+	display:		none;
 }
-b {
+.codeblock.show {
+	display:		block;
+	min-width:		100vw;	/* hack */
+	white-space:	pre;
+	font-family:	monospace;
+}
+.codeblock b {
 	font-size:		115%;
 	font-weight:	bold;
 	color:			#6492ed;
 }
+a, a:visited, a:active {
+	color:			#6492ed;
+}
+a.show {
+	font-weight:	bold;
+	color:			black;
+	text-decoration:none;
+}
 .taken { color: #000; }
 .missed { color: red; }
 </style>
+<script type="text/javascript">
+function showcode(ev, ident) {
+	// Undo the active codeblock and link
+	var a = document.querySelectorAll('a.codelink.show');
+	if (a && a.length) {
+		for (var i = 0; i < a.length; i++) {
+			a[i].className = 'codelink';
+		}
+	}
+	var a = document.querySelectorAll('div.codeblock.show');
+	if (a && a.length) {
+		for (var i = 0; i < a.length; i++) {
+			a[i].className = 'codeblock';
+		}
+	}
+	// Activate the selected 
+	ident = ident || ev.target.href.replace(/^.*#/, '');
+	console.log(ev.target);
+	document.querySelectorAll('div.codeblock.' + ident)[0].className += ' show';
+	document.querySelectorAll('a.codelink.' + ident)[0].className += ' show'; 
+
+	if (history.replaceState) {
+		history.replaceState(null, null, '#' + ident);
+	} else {
+		location.hash = '#' + ident;
+	}
+
+	ev.stopPropagation();
+	ev.preventDefault();
+}
+window.addEventListener('load', function(ev) {
+		var a = document.querySelectorAll('a.codelink');
+		for (var i = 0; i < a.length; i++) {
+			a[i].addEventListener('click', showcode, false);
+		}
+		if (window.location.hash) {
+			showcode(ev, window.location.hash.substr(1));
+		}
+	}, false);
+</script>
 </head><body>
 <div style="display:flex;flex-direction:row;height:100vh;width:100vw">
 <div style="position:relative;flex-shrink:0;height:100vh;padding:0px;overflow-y:auto;overflow-x:hidden">
 <div id="header">bwipjs // Bar Code Writer in Pure JavaScript<br>Code Coverage</div>
 <div id="links">
-<a href="#auspost">auspost&nbsp;(33/33&nbsp;-&nbsp;100%)</a><br>
-<a href="#azteccode">azteccode&nbsp;(112/136&nbsp;-&nbsp;82.4%)</a><br>
-<a href="#azteccodecompact">azteccodecompact&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#aztecrune">aztecrune&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#bc412">bc412&nbsp;(17/24&nbsp;-&nbsp;70.8%)</a><br>
-<a href="#channelcode">channelcode&nbsp;(20/26&nbsp;-&nbsp;76.9%)</a><br>
-<a href="#codablockf">codablockf&nbsp;(82/118&nbsp;-&nbsp;69.5%)</a><br>
-<a href="#code11">code11&nbsp;(17/31&nbsp;-&nbsp;54.8%)</a><br>
-<a href="#code128">code128&nbsp;(72/90&nbsp;-&nbsp;80%)</a><br>
-<a href="#code16k">code16k&nbsp;(73/143&nbsp;-&nbsp;51%)</a><br>
-<a href="#code2of5">code2of5&nbsp;(23/24&nbsp;-&nbsp;95.8%)</a><br>
-<a href="#code32">code32&nbsp;(11/15&nbsp;-&nbsp;73.3%)</a><br>
-<a href="#code39">code39&nbsp;(25/25&nbsp;-&nbsp;100%)</a><br>
-<a href="#code39ext">code39ext&nbsp;(8/9&nbsp;-&nbsp;88.9%)</a><br>
-<a href="#code49">code49&nbsp;(49/77&nbsp;-&nbsp;63.6%)</a><br>
-<a href="#code93">code93&nbsp;(16/19&nbsp;-&nbsp;84.2%)</a><br>
-<a href="#code93ext">code93ext&nbsp;(7/7&nbsp;-&nbsp;100%)</a><br>
-<a href="#codeone">codeone&nbsp;(136/261&nbsp;-&nbsp;52.1%)</a><br>
-<a href="#coop2of5">coop2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#daft">daft&nbsp;(9/11&nbsp;-&nbsp;81.8%)</a><br>
-<a href="#databarexpanded">databarexpanded&nbsp;(147/210&nbsp;-&nbsp;70%)</a><br>
-<a href="#databarexpandedcomposite">databarexpandedcomposite&nbsp;(14/16&nbsp;-&nbsp;87.5%)</a><br>
-<a href="#databarexpandedstacked">databarexpandedstacked&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#databarexpandedstackedcomposite">databarexpandedstackedcomposite&nbsp;(13/14&nbsp;-&nbsp;92.9%)</a><br>
-<a href="#databarlimited">databarlimited&nbsp;(50/57&nbsp;-&nbsp;87.7%)</a><br>
-<a href="#databarlimitedcomposite">databarlimitedcomposite&nbsp;(4/6&nbsp;-&nbsp;66.7%)</a><br>
-<a href="#databaromni">databaromni&nbsp;(91/99&nbsp;-&nbsp;91.9%)</a><br>
-<a href="#databaromnicomposite">databaromnicomposite&nbsp;(12/15&nbsp;-&nbsp;80%)</a><br>
-<a href="#databarstacked">databarstacked&nbsp;(7/11&nbsp;-&nbsp;63.6%)</a><br>
-<a href="#databarstackedcomposite">databarstackedcomposite&nbsp;(10/13&nbsp;-&nbsp;76.9%)</a><br>
-<a href="#databarstackedomni">databarstackedomni&nbsp;(7/11&nbsp;-&nbsp;63.6%)</a><br>
-<a href="#databarstackedomnicomposite">databarstackedomnicomposite&nbsp;(10/13&nbsp;-&nbsp;76.9%)</a><br>
-<a href="#databartruncated">databartruncated&nbsp;(7/11&nbsp;-&nbsp;63.6%)</a><br>
-<a href="#databartruncatedcomposite">databartruncatedcomposite&nbsp;(12/15&nbsp;-&nbsp;80%)</a><br>
-<a href="#datalogic2of5">datalogic2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#datamatrix">datamatrix&nbsp;(228/316&nbsp;-&nbsp;72.2%)</a><br>
-<a href="#datamatrixrectangular">datamatrixrectangular&nbsp;(2/3&nbsp;-&nbsp;66.7%)</a><br>
-<a href="#ean13">ean13&nbsp;(43/43&nbsp;-&nbsp;100%)</a><br>
-<a href="#ean13composite">ean13composite&nbsp;(6/7&nbsp;-&nbsp;85.7%)</a><br>
-<a href="#ean14">ean14&nbsp;(10/15&nbsp;-&nbsp;66.7%)</a><br>
-<a href="#ean2">ean2&nbsp;(17/17&nbsp;-&nbsp;100%)</a><br>
-<a href="#ean5">ean5&nbsp;(20/20&nbsp;-&nbsp;100%)</a><br>
-<a href="#ean8">ean8&nbsp;(41/41&nbsp;-&nbsp;100%)</a><br>
-<a href="#ean8composite">ean8composite&nbsp;(6/7&nbsp;-&nbsp;85.7%)</a><br>
-<a href="#flattermarken">flattermarken&nbsp;(9/11&nbsp;-&nbsp;81.8%)</a><br>
-<a href="#gs1-128">gs1-128&nbsp;(24/25&nbsp;-&nbsp;96%)</a><br>
-<a href="#gs1-128composite">gs1-128composite&nbsp;(9/14&nbsp;-&nbsp;64.3%)</a><br>
-<a href="#gs1-cc">gs1-cc&nbsp;(103/182&nbsp;-&nbsp;56.6%)</a><br>
-<a href="#gs1datamatrix">gs1datamatrix&nbsp;(20/22&nbsp;-&nbsp;90.9%)</a><br>
-<a href="#gs1datamatrixrectangular">gs1datamatrixrectangular&nbsp;(20/22&nbsp;-&nbsp;90.9%)</a><br>
-<a href="#gs1qrcode">gs1qrcode&nbsp;(20/22&nbsp;-&nbsp;90.9%)</a><br>
-<a href="#hanxin">hanxin&nbsp;(83/110&nbsp;-&nbsp;75.5%)</a><br>
-<a href="#hibcazteccode">hibcazteccode&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
-<a href="#hibccodablockf">hibccodablockf&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
-<a href="#hibccode128">hibccode128&nbsp;(6/11&nbsp;-&nbsp;54.5%)</a><br>
-<a href="#hibccode39">hibccode39&nbsp;(6/11&nbsp;-&nbsp;54.5%)</a><br>
-<a href="#hibcdatamatrix">hibcdatamatrix&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
-<a href="#hibcdatamatrixrectangular">hibcdatamatrixrectangular&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
-<a href="#hibcmicropdf417">hibcmicropdf417&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
-<a href="#hibcpdf417">hibcpdf417&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
-<a href="#hibcqrcode">hibcqrcode&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
-<a href="#iata2of5">iata2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#identcode">identcode&nbsp;(8/11&nbsp;-&nbsp;72.7%)</a><br>
-<a href="#industrial2of5">industrial2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#interleaved2of5">interleaved2of5&nbsp;(16/18&nbsp;-&nbsp;88.9%)</a><br>
-<a href="#isbn">isbn&nbsp;(54/58&nbsp;-&nbsp;93.1%)</a><br>
-<a href="#ismn">ismn&nbsp;(30/51&nbsp;-&nbsp;58.8%)</a><br>
-<a href="#issn">issn&nbsp;(20/34&nbsp;-&nbsp;58.8%)</a><br>
-<a href="#itf14">itf14&nbsp;(10/14&nbsp;-&nbsp;71.4%)</a><br>
-<a href="#japanpost">japanpost&nbsp;(16/19&nbsp;-&nbsp;84.2%)</a><br>
-<a href="#kix">kix&nbsp;(13/14&nbsp;-&nbsp;92.9%)</a><br>
-<a href="#leitcode">leitcode&nbsp;(8/11&nbsp;-&nbsp;72.7%)</a><br>
-<a href="#matrix2of5">matrix2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#maxicode">maxicode&nbsp;(59/86&nbsp;-&nbsp;68.6%)</a><br>
-<a href="#micropdf417">micropdf417&nbsp;(97/128&nbsp;-&nbsp;75.8%)</a><br>
-<a href="#microqrcode">microqrcode&nbsp;(2/3&nbsp;-&nbsp;66.7%)</a><br>
-<a href="#msi">msi&nbsp;(29/31&nbsp;-&nbsp;93.5%)</a><br>
-<a href="#onecode">onecode&nbsp;(43/48&nbsp;-&nbsp;89.6%)</a><br>
-<a href="#pdf417">pdf417&nbsp;(86/131&nbsp;-&nbsp;65.6%)</a><br>
-<a href="#pdf417compact">pdf417compact&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#pharmacode">pharmacode&nbsp;(10/13&nbsp;-&nbsp;76.9%)</a><br>
-<a href="#pharmacode2">pharmacode2&nbsp;(9/12&nbsp;-&nbsp;75%)</a><br>
-<a href="#planet">planet&nbsp;(14/20&nbsp;-&nbsp;70%)</a><br>
-<a href="#plessey">plessey&nbsp;(16/21&nbsp;-&nbsp;76.2%)</a><br>
-<a href="#posicode">posicode&nbsp;(41/65&nbsp;-&nbsp;63.1%)</a><br>
-<a href="#postnet">postnet&nbsp;(14/20&nbsp;-&nbsp;70%)</a><br>
-<a href="#pzn">pzn&nbsp;(6/13&nbsp;-&nbsp;46.2%)</a><br>
-<a href="#qrcode">qrcode&nbsp;(233/286&nbsp;-&nbsp;81.5%)</a><br>
-<a href="#rationalizedCodabar">rationalizedCodabar&nbsp;(20/30&nbsp;-&nbsp;66.7%)</a><br>
-<a href="#raw">raw&nbsp;(7/8&nbsp;-&nbsp;87.5%)</a><br>
-<a href="#royalmail">royalmail&nbsp;(19/20&nbsp;-&nbsp;95%)</a><br>
-<a href="#sscc18">sscc18&nbsp;(11/15&nbsp;-&nbsp;73.3%)</a><br>
-<a href="#symbol">symbol&nbsp;(8/8&nbsp;-&nbsp;100%)</a><br>
-<a href="#telepen">telepen&nbsp;(14/17&nbsp;-&nbsp;82.4%)</a><br>
-<a href="#telepennumeric">telepennumeric&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
-<a href="#upca">upca&nbsp;(57/57&nbsp;-&nbsp;100%)</a><br>
-<a href="#upcacomposite">upcacomposite&nbsp;(6/7&nbsp;-&nbsp;85.7%)</a><br>
-<a href="#upce">upce&nbsp;(59/59&nbsp;-&nbsp;100%)</a><br>
-<a href="#upcecomposite">upcecomposite&nbsp;(9/10&nbsp;-&nbsp;90%)</a><br>
+<a class="codelink auspost" href="#auspost">auspost&nbsp;(33/33&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink azteccode" href="#azteccode">azteccode&nbsp;(129/136&nbsp;-&nbsp;94.9%)</a><br>
+<a class="codelink azteccodecompact" href="#azteccodecompact">azteccodecompact&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink aztecrune" href="#aztecrune">aztecrune&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink bc412" href="#bc412">bc412&nbsp;(17/24&nbsp;-&nbsp;70.8%)</a><br>
+<a class="codelink channelcode" href="#channelcode">channelcode&nbsp;(20/26&nbsp;-&nbsp;76.9%)</a><br>
+<a class="codelink codablockf" href="#codablockf">codablockf&nbsp;(82/118&nbsp;-&nbsp;69.5%)</a><br>
+<a class="codelink code11" href="#code11">code11&nbsp;(17/31&nbsp;-&nbsp;54.8%)</a><br>
+<a class="codelink code128" href="#code128">code128&nbsp;(73/90&nbsp;-&nbsp;81.1%)</a><br>
+<a class="codelink code16k" href="#code16k">code16k&nbsp;(73/143&nbsp;-&nbsp;51%)</a><br>
+<a class="codelink code2of5" href="#code2of5">code2of5&nbsp;(23/24&nbsp;-&nbsp;95.8%)</a><br>
+<a class="codelink code32" href="#code32">code32&nbsp;(11/15&nbsp;-&nbsp;73.3%)</a><br>
+<a class="codelink code39" href="#code39">code39&nbsp;(25/25&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink code39ext" href="#code39ext">code39ext&nbsp;(8/9&nbsp;-&nbsp;88.9%)</a><br>
+<a class="codelink code49" href="#code49">code49&nbsp;(49/77&nbsp;-&nbsp;63.6%)</a><br>
+<a class="codelink code93" href="#code93">code93&nbsp;(18/19&nbsp;-&nbsp;94.7%)</a><br>
+<a class="codelink code93ext" href="#code93ext">code93ext&nbsp;(7/7&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink codeone" href="#codeone">codeone&nbsp;(136/261&nbsp;-&nbsp;52.1%)</a><br>
+<a class="codelink coop2of5" href="#coop2of5">coop2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink daft" href="#daft">daft&nbsp;(9/11&nbsp;-&nbsp;81.8%)</a><br>
+<a class="codelink databarexpanded" href="#databarexpanded">databarexpanded&nbsp;(150/210&nbsp;-&nbsp;71.4%)</a><br>
+<a class="codelink databarexpandedcomposite" href="#databarexpandedcomposite">databarexpandedcomposite&nbsp;(14/16&nbsp;-&nbsp;87.5%)</a><br>
+<a class="codelink databarexpandedstacked" href="#databarexpandedstacked">databarexpandedstacked&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink databarexpandedstackedcomposite" href="#databarexpandedstackedcomposite">databarexpandedstackedcomposite&nbsp;(13/14&nbsp;-&nbsp;92.9%)</a><br>
+<a class="codelink databarlimited" href="#databarlimited">databarlimited&nbsp;(52/57&nbsp;-&nbsp;91.2%)</a><br>
+<a class="codelink databarlimitedcomposite" href="#databarlimitedcomposite">databarlimitedcomposite&nbsp;(4/6&nbsp;-&nbsp;66.7%)</a><br>
+<a class="codelink databaromni" href="#databaromni">databaromni&nbsp;(94/99&nbsp;-&nbsp;94.9%)</a><br>
+<a class="codelink databaromnicomposite" href="#databaromnicomposite">databaromnicomposite&nbsp;(13/15&nbsp;-&nbsp;86.7%)</a><br>
+<a class="codelink databarstacked" href="#databarstacked">databarstacked&nbsp;(7/11&nbsp;-&nbsp;63.6%)</a><br>
+<a class="codelink databarstackedcomposite" href="#databarstackedcomposite">databarstackedcomposite&nbsp;(10/13&nbsp;-&nbsp;76.9%)</a><br>
+<a class="codelink databarstackedomni" href="#databarstackedomni">databarstackedomni&nbsp;(7/11&nbsp;-&nbsp;63.6%)</a><br>
+<a class="codelink databarstackedomnicomposite" href="#databarstackedomnicomposite">databarstackedomnicomposite&nbsp;(10/13&nbsp;-&nbsp;76.9%)</a><br>
+<a class="codelink databartruncated" href="#databartruncated">databartruncated&nbsp;(7/11&nbsp;-&nbsp;63.6%)</a><br>
+<a class="codelink databartruncatedcomposite" href="#databartruncatedcomposite">databartruncatedcomposite&nbsp;(13/15&nbsp;-&nbsp;86.7%)</a><br>
+<a class="codelink datalogic2of5" href="#datalogic2of5">datalogic2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink datamatrix" href="#datamatrix">datamatrix&nbsp;(266/316&nbsp;-&nbsp;84.2%)</a><br>
+<a class="codelink datamatrixrectangular" href="#datamatrixrectangular">datamatrixrectangular&nbsp;(2/3&nbsp;-&nbsp;66.7%)</a><br>
+<a class="codelink ean13" href="#ean13">ean13&nbsp;(43/43&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink ean13composite" href="#ean13composite">ean13composite&nbsp;(6/7&nbsp;-&nbsp;85.7%)</a><br>
+<a class="codelink ean14" href="#ean14">ean14&nbsp;(10/15&nbsp;-&nbsp;66.7%)</a><br>
+<a class="codelink ean2" href="#ean2">ean2&nbsp;(17/17&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink ean5" href="#ean5">ean5&nbsp;(20/20&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink ean8" href="#ean8">ean8&nbsp;(41/41&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink ean8composite" href="#ean8composite">ean8composite&nbsp;(6/7&nbsp;-&nbsp;85.7%)</a><br>
+<a class="codelink flattermarken" href="#flattermarken">flattermarken&nbsp;(9/11&nbsp;-&nbsp;81.8%)</a><br>
+<a class="codelink gs1-128" href="#gs1-128">gs1-128&nbsp;(24/25&nbsp;-&nbsp;96%)</a><br>
+<a class="codelink gs1-128composite" href="#gs1-128composite">gs1-128composite&nbsp;(12/14&nbsp;-&nbsp;85.7%)</a><br>
+<a class="codelink gs1-cc" href="#gs1-cc">gs1-cc&nbsp;(104/182&nbsp;-&nbsp;57.1%)</a><br>
+<a class="codelink gs1datamatrix" href="#gs1datamatrix">gs1datamatrix&nbsp;(20/22&nbsp;-&nbsp;90.9%)</a><br>
+<a class="codelink gs1datamatrixrectangular" href="#gs1datamatrixrectangular">gs1datamatrixrectangular&nbsp;(20/22&nbsp;-&nbsp;90.9%)</a><br>
+<a class="codelink gs1qrcode" href="#gs1qrcode">gs1qrcode&nbsp;(20/22&nbsp;-&nbsp;90.9%)</a><br>
+<a class="codelink hanxin" href="#hanxin">hanxin&nbsp;(99/110&nbsp;-&nbsp;90%)</a><br>
+<a class="codelink hibcazteccode" href="#hibcazteccode">hibcazteccode&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
+<a class="codelink hibccodablockf" href="#hibccodablockf">hibccodablockf&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
+<a class="codelink hibccode128" href="#hibccode128">hibccode128&nbsp;(6/11&nbsp;-&nbsp;54.5%)</a><br>
+<a class="codelink hibccode39" href="#hibccode39">hibccode39&nbsp;(6/11&nbsp;-&nbsp;54.5%)</a><br>
+<a class="codelink hibcdatamatrix" href="#hibcdatamatrix">hibcdatamatrix&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
+<a class="codelink hibcdatamatrixrectangular" href="#hibcdatamatrixrectangular">hibcdatamatrixrectangular&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
+<a class="codelink hibcmicropdf417" href="#hibcmicropdf417">hibcmicropdf417&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
+<a class="codelink hibcpdf417" href="#hibcpdf417">hibcpdf417&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
+<a class="codelink hibcqrcode" href="#hibcqrcode">hibcqrcode&nbsp;(5/10&nbsp;-&nbsp;50%)</a><br>
+<a class="codelink iata2of5" href="#iata2of5">iata2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink identcode" href="#identcode">identcode&nbsp;(8/11&nbsp;-&nbsp;72.7%)</a><br>
+<a class="codelink industrial2of5" href="#industrial2of5">industrial2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink interleaved2of5" href="#interleaved2of5">interleaved2of5&nbsp;(16/18&nbsp;-&nbsp;88.9%)</a><br>
+<a class="codelink isbn" href="#isbn">isbn&nbsp;(54/58&nbsp;-&nbsp;93.1%)</a><br>
+<a class="codelink ismn" href="#ismn">ismn&nbsp;(30/51&nbsp;-&nbsp;58.8%)</a><br>
+<a class="codelink issn" href="#issn">issn&nbsp;(20/34&nbsp;-&nbsp;58.8%)</a><br>
+<a class="codelink itf14" href="#itf14">itf14&nbsp;(11/14&nbsp;-&nbsp;78.6%)</a><br>
+<a class="codelink japanpost" href="#japanpost">japanpost&nbsp;(18/19&nbsp;-&nbsp;94.7%)</a><br>
+<a class="codelink kix" href="#kix">kix&nbsp;(13/14&nbsp;-&nbsp;92.9%)</a><br>
+<a class="codelink leitcode" href="#leitcode">leitcode&nbsp;(8/11&nbsp;-&nbsp;72.7%)</a><br>
+<a class="codelink matrix2of5" href="#matrix2of5">matrix2of5&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink maxicode" href="#maxicode">maxicode&nbsp;(59/86&nbsp;-&nbsp;68.6%)</a><br>
+<a class="codelink micropdf417" href="#micropdf417">micropdf417&nbsp;(97/128&nbsp;-&nbsp;75.8%)</a><br>
+<a class="codelink microqrcode" href="#microqrcode">microqrcode&nbsp;(2/3&nbsp;-&nbsp;66.7%)</a><br>
+<a class="codelink msi" href="#msi">msi&nbsp;(29/31&nbsp;-&nbsp;93.5%)</a><br>
+<a class="codelink onecode" href="#onecode">onecode&nbsp;(44/48&nbsp;-&nbsp;91.7%)</a><br>
+<a class="codelink pdf417" href="#pdf417">pdf417&nbsp;(119/131&nbsp;-&nbsp;90.8%)</a><br>
+<a class="codelink pdf417compact" href="#pdf417compact">pdf417compact&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink pharmacode" href="#pharmacode">pharmacode&nbsp;(10/13&nbsp;-&nbsp;76.9%)</a><br>
+<a class="codelink pharmacode2" href="#pharmacode2">pharmacode2&nbsp;(9/12&nbsp;-&nbsp;75%)</a><br>
+<a class="codelink planet" href="#planet">planet&nbsp;(15/20&nbsp;-&nbsp;75%)</a><br>
+<a class="codelink plessey" href="#plessey">plessey&nbsp;(16/21&nbsp;-&nbsp;76.2%)</a><br>
+<a class="codelink posicode" href="#posicode">posicode&nbsp;(41/65&nbsp;-&nbsp;63.1%)</a><br>
+<a class="codelink postnet" href="#postnet">postnet&nbsp;(15/20&nbsp;-&nbsp;75%)</a><br>
+<a class="codelink pzn" href="#pzn">pzn&nbsp;(6/13&nbsp;-&nbsp;46.2%)</a><br>
+<a class="codelink qrcode" href="#qrcode">qrcode&nbsp;(257/286&nbsp;-&nbsp;89.9%)</a><br>
+<a class="codelink rationalizedCodabar" href="#rationalizedCodabar">rationalizedCodabar&nbsp;(20/30&nbsp;-&nbsp;66.7%)</a><br>
+<a class="codelink raw" href="#raw">raw&nbsp;(7/8&nbsp;-&nbsp;87.5%)</a><br>
+<a class="codelink royalmail" href="#royalmail">royalmail&nbsp;(19/20&nbsp;-&nbsp;95%)</a><br>
+<a class="codelink sscc18" href="#sscc18">sscc18&nbsp;(11/15&nbsp;-&nbsp;73.3%)</a><br>
+<a class="codelink symbol" href="#symbol">symbol&nbsp;(8/8&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink telepen" href="#telepen">telepen&nbsp;(14/17&nbsp;-&nbsp;82.4%)</a><br>
+<a class="codelink telepennumeric" href="#telepennumeric">telepennumeric&nbsp;(3/3&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink upca" href="#upca">upca&nbsp;(57/57&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink upcacomposite" href="#upcacomposite">upcacomposite&nbsp;(6/7&nbsp;-&nbsp;85.7%)</a><br>
+<a class="codelink upce" href="#upce">upce&nbsp;(59/59&nbsp;-&nbsp;100%)</a><br>
+<a class="codelink upcecomposite" href="#upcecomposite">upcecomposite&nbsp;(9/10&nbsp;-&nbsp;90%)</a><br>
 
 </div>
 </div>
-<div style="flex-shrink:1;height:100vh;overflow:auto;white-space:pre;font-family:monospace">
+<div style="flex-shrink:1;height:100vh;overflow:auto">
+<div class="codeblock ean5">
     $0.<b id="ean5">ean5</b> = function() {
       var $1 = {}; /*489*/
       $1.options = $k[--$j]; /*491*/
@@ -264,6 +319,7 @@ b {
 <span class="taken">         $0.renlinear(); /*609*/
 </span>      } /*609*/
    } // end ean5
+</div><div class="codeblock ean2">
     $0.<b id="ean2">ean2</b> = function() {
       var $1 = {}; /*636*/
       $1.options = $k[--$j]; /*638*/
@@ -375,6 +431,7 @@ b {
 <span class="taken">         $0.renlinear(); /*741*/
 </span>      } /*741*/
    } // end ean2
+</div><div class="codeblock ean13">
     $0.<b id="ean13">ean13</b> = function() {
       var $1 = {}; /*770*/
       $1.options = $k[--$j]; /*772*/
@@ -654,6 +711,7 @@ b {
 <span class="taken">         $0.renlinear(); /*968*/
 </span>      } /*968*/
    } // end ean13
+</div><div class="codeblock ean8">
     $0.<b id="ean8">ean8</b> = function() {
       var $1 = {}; /*997*/
       $1.options = $k[--$j]; /*999*/
@@ -921,6 +979,7 @@ b {
 <span class="taken">         $0.renlinear(); /*1176*/
 </span>      } /*1176*/
    } // end ean8
+</div><div class="codeblock upca">
     $0.<b id="upca">upca</b> = function() {
       var $1 = {}; /*1205*/
       $1.options = $k[--$j]; /*1207*/
@@ -1251,6 +1310,7 @@ b {
 <span class="taken">         $0.renlinear(); /*1436*/
 </span>      } /*1436*/
    } // end upca
+</div><div class="codeblock upce">
     $0.<b id="upce">upce</b> = function() {
       var $1 = {}; /*1465*/
       $1.options = $k[--$j]; /*1467*/
@@ -1603,6 +1663,7 @@ b {
 <span class="taken">         $0.renlinear(); /*1735*/
 </span>      } /*1735*/
    } // end upce
+</div><div class="codeblock isbn">
     $0.<b id="isbn">isbn</b> = function() {
       var $1 = {}; /*1763*/
       $1.options = $k[--$j]; /*1765*/
@@ -1895,6 +1956,7 @@ b {
 <span class="taken">         $0.renlinear(); /*1999*/
 </span>      } /*1999*/
    } // end isbn
+</div><div class="codeblock ismn">
     $0.<b id="ismn">ismn</b> = function() {
       var $1 = {}; /*2027*/
       $1.options = $k[--$j]; /*2029*/
@@ -2149,6 +2211,7 @@ b {
 <span class="taken">         $0.renlinear(); /*2242*/
 </span>      } /*2242*/
    } // end ismn
+</div><div class="codeblock issn">
     $0.<b id="issn">issn</b> = function() {
       var $1 = {}; /*2270*/
       $1.options = $k[--$j]; /*2272*/
@@ -2331,6 +2394,7 @@ b {
 <span class="taken">         $0.renlinear(); /*2431*/
 </span>      } /*2431*/
    } // end issn
+</div><div class="codeblock code128">
     $0.<b id="code128">code128</b> = function() {
       var $1 = {}; /*2458*/
       $1.options = $k[--$j]; /*2460*/
@@ -2497,7 +2561,7 @@ b {
                   var _56 = $a(); /*2657*/
                   $1[$k[--$j]] = _56; /*2657*/
 </span>               } else { /*2660*/
-<span class="missed">                  $k[$j++] = "msgtmp"; /*2659*/
+<span class="taken">                  $k[$j++] = "msgtmp"; /*2659*/
                   $k[$j++] = Infinity; /*2659*/
                   $aload($1.msgtmp); /*2659*/
                   $k[$j++] = $1.fn4; /*2659*/
@@ -2847,6 +2911,7 @@ b {
 <span class="taken">         $0.renlinear(); /*2898*/
 </span>      } /*2898*/
    } // end code128
+</div><div class="codeblock gs1-128">
     $0["<b id="gs1-128">gs1-128</b>"] = function() {
       var $1 = {}; /*2926*/
       $1.options = $k[--$j]; /*2928*/
@@ -3059,6 +3124,7 @@ b {
 <span class="taken">         $0.renlinear(); /*3067*/
 </span>      } /*3067*/
    } // end gs1-128
+</div><div class="codeblock ean14">
     $0.<b id="ean14">ean14</b> = function() {
       var $1 = {}; /*3095*/
       $1.options = $k[--$j]; /*3097*/
@@ -3171,6 +3237,7 @@ b {
 <span class="taken">         $0.renlinear(); /*3184*/
 </span>      } /*3184*/
    } // end ean14
+</div><div class="codeblock sscc18">
     $0.<b id="sscc18">sscc18</b> = function() {
       var $1 = {}; /*3212*/
       $1.options = $k[--$j]; /*3214*/
@@ -3283,6 +3350,7 @@ b {
 <span class="taken">         $0.renlinear(); /*3301*/
 </span>      } /*3301*/
    } // end sscc18
+</div><div class="codeblock code39">
     $0.<b id="code39">code39</b> = function() {
       var $1 = {}; /*3328*/
       $1.options = $k[--$j]; /*3330*/
@@ -3416,6 +3484,7 @@ b {
 <span class="taken">         $0.renlinear(); /*3454*/
 </span>      } /*3454*/
    } // end code39
+</div><div class="codeblock code39ext">
     $0.<b id="code39ext">code39ext</b> = function() {
       var $1 = {}; /*3482*/
       $1.options = $k[--$j]; /*3484*/
@@ -3475,6 +3544,7 @@ b {
 <span class="taken">         $0.renlinear(); /*3576*/
 </span>      } /*3576*/
    } // end code39ext
+</div><div class="codeblock code32">
     $0.<b id="code32">code32</b> = function() {
       var $1 = {}; /*3604*/
       $1.options = $k[--$j]; /*3606*/
@@ -3577,6 +3647,7 @@ b {
 <span class="taken">         $0.renlinear(); /*3687*/
 </span>      } /*3687*/
    } // end code32
+</div><div class="codeblock pzn">
     $0.<b id="pzn">pzn</b> = function() {
       var $1 = {}; /*3715*/
       $1.options = $k[--$j]; /*3717*/
@@ -3663,6 +3734,7 @@ b {
 <span class="taken">         $0.renlinear(); /*3799*/
 </span>      } /*3799*/
    } // end pzn
+</div><div class="codeblock code93">
     $0.<b id="code93">code93</b> = function() {
       var $1 = {}; /*3826*/
       $1.options = $k[--$j]; /*3828*/
@@ -3722,7 +3794,7 @@ b {
       if ($1.includecheck) { /*3906*/
 <span class="taken">         $1.sbs = $s(($1.msglen * 6) + 25); /*3904*/
 </span>      } else { /*3906*/
-<span class="missed">         $1.sbs = $s(($1.msglen * 6) + 13); /*3906*/
+<span class="taken">         $1.sbs = $s(($1.msglen * 6) + 13); /*3906*/
 </span>      } /*3906*/
       $1.txt = $a($1.msglen); /*3908*/
       $puti($1.sbs, 0, $get($1.encs, 47)); /*3911*/
@@ -3757,7 +3829,7 @@ b {
          $puti($1.sbs, ($1.msglen * 6) + 12, $get($1.encs, $1.checksum2)); /*3939*/
          $puti($1.sbs, ($1.msglen * 6) + 18, $get($1.encs, 48)); /*3941*/
 </span>      } else { /*3944*/
-<span class="missed">         $puti($1.sbs, ($1.msglen * 6) + 6, $get($1.encs, 48)); /*3944*/
+<span class="taken">         $puti($1.sbs, ($1.msglen * 6) + 6, $get($1.encs, 48)); /*3944*/
 </span>      } /*3944*/
       $k[$j++] = Infinity; /*3956*/
       $k[$j++] = "ren"; /*3950*/
@@ -3796,6 +3868,7 @@ b {
 <span class="taken">         $0.renlinear(); /*3959*/
 </span>      } /*3959*/
    } // end code93
+</div><div class="codeblock code93ext">
     $0.<b id="code93ext">code93ext</b> = function() {
       var $1 = {}; /*3987*/
       $1.options = $k[--$j]; /*3989*/
@@ -3853,6 +3926,7 @@ b {
 <span class="taken">         $0.renlinear(); /*4085*/
 </span>      } /*4085*/
    } // end code93ext
+</div><div class="codeblock interleaved2of5">
     $0.<b id="interleaved2of5">interleaved2of5</b> = function() {
       var $1 = {}; /*4112*/
       $1.options = $k[--$j]; /*4114*/
@@ -3981,6 +4055,7 @@ b {
 <span class="taken">         $0.renlinear(); /*4247*/
 </span>      } /*4247*/
    } // end interleaved2of5
+</div><div class="codeblock itf14">
     $0.<b id="itf14">itf14</b> = function() {
       var $1 = {}; /*4275*/
       $1.options = $k[--$j]; /*4277*/
@@ -4065,7 +4140,7 @@ b {
             $0.raiseerror(); /*4339*/
 </span>         } /*4339*/
 </span>      } else { /*4350*/
-<span class="missed">         var _i = $s(14); /*4342*/
+<span class="taken">         var _i = $s(14); /*4342*/
          $puti(_i, 0, $1.barcode); /*4343*/
          $put(_i, 13, $1.checksum + 48); /*4344*/
          $1.barcode = _i; /*4345*/
@@ -4097,6 +4172,7 @@ b {
 <span class="taken">         $0.renlinear(); /*4368*/
 </span>      } /*4368*/
    } // end itf14
+</div><div class="codeblock identcode">
     $0.<b id="identcode">identcode</b> = function() {
       var $1 = {}; /*4396*/
       $1.options = $k[--$j]; /*4398*/
@@ -4182,6 +4258,7 @@ b {
 <span class="taken">         $0.renlinear(); /*4471*/
 </span>      } /*4471*/
    } // end identcode
+</div><div class="codeblock leitcode">
     $0.<b id="leitcode">leitcode</b> = function() {
       var $1 = {}; /*4499*/
       $1.options = $k[--$j]; /*4501*/
@@ -4267,6 +4344,7 @@ b {
 <span class="taken">         $0.renlinear(); /*4574*/
 </span>      } /*4574*/
    } // end leitcode
+</div><div class="codeblock databaromni">
     $0.<b id="databaromni">databaromni</b> = function() {
       var $1 = {}; /*4602*/
       $1.options = $k[--$j]; /*4604*/
@@ -4425,7 +4503,7 @@ b {
                   $1.sval = $1.sval - ($1.lval * (($1.el - $1.bar) - 1)); /*4701*/
 </span>               } else { /*4703*/
 <span class="taken">                  if (($1.nm - $1.ew) > $1.mw) { /*4703*/
-<span class="missed">                     $1.sval = $1.sval - 1; /*4703*/
+<span class="taken">                     $1.sval = $1.sval - 1; /*4703*/
 </span>                  } /*4703*/
 </span>               } /*4703*/
                $1.val = $1.val - $1.sval; /*4705*/
@@ -4670,7 +4748,7 @@ b {
 <span class="taken">         $1.checksum = $1.checksum + 1; /*4875*/
 </span>      } /*4875*/
       if ($1.checksum >= 72) { /*4876*/
-<span class="missed">         $1.checksum = $1.checksum + 1; /*4876*/
+<span class="taken">         $1.checksum = $1.checksum + 1; /*4876*/
 </span>      } /*4876*/
       $1.checklt = $geti($1.checkwidths, (~~($1.checksum / 9)) * 5, 5); /*4877*/
       $1.checkrtrev = $geti($1.checkwidths, ($1.checksum % 9) * 5, 5); /*4878*/
@@ -4901,7 +4979,7 @@ b {
                $k[$j++] = _96 &amp;&amp; $eq($get($1.bot, _91 + 19), $get($1.f3, _91)); /*4977*/
 </span>            } /*4977*/
             if ($k[--$j]) { /*4980*/
-<span class="missed">               $puti($1.sep3, 19, $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])); /*4979*/
+<span class="taken">               $puti($1.sep3, 19, $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])); /*4979*/
 </span>            } /*4979*/
             $k[$j++] = "pixs"; /*4986*/
             $k[$j++] = Infinity; /*4986*/
@@ -4933,6 +5011,7 @@ b {
 </span>         } /*5002*/
 </span>      } /*5002*/
    } // end databaromni
+</div><div class="codeblock databarstacked">
     $0.<b id="databarstacked">databarstacked</b> = function() {
       var $1 = {}; /*5032*/
       $1.options = $k[--$j]; /*5034*/
@@ -5001,6 +5080,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*5089*/
 </span>      } /*5089*/
    } // end databarstacked
+</div><div class="codeblock databarstackedomni">
     $0.<b id="databarstackedomni">databarstackedomni</b> = function() {
       var $1 = {}; /*5117*/
       $1.options = $k[--$j]; /*5119*/
@@ -5069,6 +5149,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*5174*/
 </span>      } /*5174*/
    } // end databarstackedomni
+</div><div class="codeblock databartruncated">
     $0.<b id="databartruncated">databartruncated</b> = function() {
       var $1 = {}; /*5202*/
       $1.options = $k[--$j]; /*5204*/
@@ -5137,6 +5218,7 @@ b {
 <span class="taken">         $0.renlinear(); /*5259*/
 </span>      } /*5259*/
    } // end databartruncated
+</div><div class="codeblock databarlimited">
     $0.<b id="databarlimited">databarlimited</b> = function() {
       var $1 = {}; /*5286*/
       $1.options = $k[--$j]; /*5288*/
@@ -5293,7 +5375,7 @@ b {
                var _1d = $k[--$j]; /*5388*/
                $1[$k[--$j]] = _1d; /*5388*/
                if (($1.oe &amp;&amp; ($1.mask == 0)) &amp;&amp; (((($1.nm - $1.ew) - ($1.el * 2)) + ($1.bar * 2)) >= -2)) { /*5391*/
-<span class="missed">                  $k[$j++] = "sval"; /*5390*/
+<span class="taken">                  $k[$j++] = "sval"; /*5390*/
                   $k[$j++] = $1.sval; /*5390*/
                   $k[$j++] = (($1.nm - $1.ew) - $1.el) + $1.bar; /*5390*/
                   $k[$j++] = ($1.el - $1.bar) - 2; /*5390*/
@@ -5313,7 +5395,7 @@ b {
                   $1.sval = $1.sval - ($1.lval * (($1.el - $1.bar) - 1)); /*5398*/
 </span>               } else { /*5400*/
 <span class="taken">                  if (($1.nm - $1.ew) > $1.mw) { /*5400*/
-<span class="missed">                     $1.sval = $1.sval - 1; /*5400*/
+<span class="taken">                     $1.sval = $1.sval - 1; /*5400*/
 </span>                  } /*5400*/
 </span>               } /*5400*/
                $1.val = $1.val - $1.sval; /*5402*/
@@ -5562,6 +5644,7 @@ b {
 <span class="taken">         $0.renlinear(); /*5547*/
 </span>      } /*5547*/
    } // end databarlimited
+</div><div class="codeblock databarexpanded">
     $0.<b id="databarexpanded">databarexpanded</b> = function() {
       var $1 = {}; /*5575*/
       $1.options = $k[--$j]; /*5577*/
@@ -5713,7 +5796,7 @@ b {
 <span class="taken">               $1.aibad = false; /*5680*/
 </span>            } /*5680*/
             if (($eq($get($1.ais, 0), "01") &amp;&amp; ($1.ai310x || $1.ai320x)) &amp;&amp; (!$1.aibad)) { /*5703*/
-<span class="missed">               if ($1.ais.length == 3) { /*5700*/
+<span class="taken">               if ($1.ais.length == 3) { /*5700*/
 <span class="missed">                  if (($eq($geti($1.aival["01"], 0, 1), "9") &amp;&amp; ((~~$z($get($1.aival, $get($1.ais, 1)))) &lt= 99999)) &amp;&amp; ((~~$z($get($1.aival, $get($1.ais, 2)))) &lt= 999999)) { /*5695*/
 <span class="missed">                     if ($1.ai310x &amp;&amp; $eq($get($1.ais, 2), "11")) { /*5687*/
 <span class="missed">                        $k[$j++] = "0111000"; /*5687*/
@@ -5757,7 +5840,7 @@ b {
 </span>                     } /*5694*/
 </span>                  } /*5694*/
 </span>               } else { /*5700*/
-<span class="missed">                  if ($eq($geti($1.aival["01"], 0, 1), "9") &amp;&amp; ((~~$z($get($1.aival, $get($1.ais, 1)))) &lt= 99999)) { /*5701*/
+<span class="taken">                  if ($eq($geti($1.aival["01"], 0, 1), "9") &amp;&amp; ((~~$z($get($1.aival, $get($1.ais, 1)))) &lt= 99999)) { /*5701*/
 <span class="missed">                     if ($1.ai310x) { /*5699*/
 <span class="missed">                        $k[$j++] = "0111000"; /*5699*/
                         $k[$j++] = false; /*5699*/
@@ -6554,7 +6637,7 @@ b {
             $puti($k[--$j], _CE, _CD); /*6065*/
 </span>         } /*6065*/
          if ($eq($1.mode, "numeric")) { /*6069*/
-<span class="missed">            $k[$j++] = "pad"; /*6068*/
+<span class="taken">            $k[$j++] = "pad"; /*6068*/
             $k[$j++] = Infinity; /*6068*/
             $k[$j++] = 0; /*6068*/
             $k[$j++] = 0; /*6068*/
@@ -7041,6 +7124,7 @@ b {
 </span>         } /*6428*/
 </span>      } /*6428*/
    } // end databarexpanded
+</div><div class="codeblock databarexpandedstacked">
     $0.<b id="databarexpandedstacked">databarexpandedstacked</b> = function() {
       var $1 = {}; /*6458*/
       $1.options = $k[--$j]; /*6460*/
@@ -7064,6 +7148,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*6485*/
 </span>      } /*6485*/
    } // end databarexpandedstacked
+</div><div class="codeblock pharmacode">
     $0.<b id="pharmacode">pharmacode</b> = function() {
       var $1 = {}; /*6512*/
       $1.options = $k[--$j]; /*6514*/
@@ -7151,6 +7236,7 @@ b {
 <span class="taken">         $0.renlinear(); /*6588*/
 </span>      } /*6588*/
    } // end pharmacode
+</div><div class="codeblock pharmacode2">
     $0.<b id="pharmacode2">pharmacode2</b> = function() {
       var $1 = {}; /*6615*/
       $1.options = $k[--$j]; /*6617*/
@@ -7239,6 +7325,7 @@ b {
 <span class="taken">         $0.renlinear(); /*6696*/
 </span>      } /*6696*/
    } // end pharmacode2
+</div><div class="codeblock code2of5">
     $0.<b id="code2of5">code2of5</b> = function() {
       var $1 = {}; /*6723*/
       $1.options = $k[--$j]; /*6725*/
@@ -7415,6 +7502,7 @@ b {
 <span class="taken">         $0.renlinear(); /*6858*/
 </span>      } /*6858*/
    } // end code2of5
+</div><div class="codeblock industrial2of5">
     $0.<b id="industrial2of5">industrial2of5</b> = function() {
       var $1 = {}; /*6886*/
       $1.options = $k[--$j]; /*6888*/
@@ -7449,6 +7537,7 @@ b {
 <span class="taken">         $0.renlinear(); /*6925*/
 </span>      } /*6925*/
    } // end industrial2of5
+</div><div class="codeblock iata2of5">
     $0.<b id="iata2of5">iata2of5</b> = function() {
       var $1 = {}; /*6953*/
       $1.options = $k[--$j]; /*6955*/
@@ -7483,6 +7572,7 @@ b {
 <span class="taken">         $0.renlinear(); /*6992*/
 </span>      } /*6992*/
    } // end iata2of5
+</div><div class="codeblock matrix2of5">
     $0.<b id="matrix2of5">matrix2of5</b> = function() {
       var $1 = {}; /*7020*/
       $1.options = $k[--$j]; /*7022*/
@@ -7517,6 +7607,7 @@ b {
 <span class="taken">         $0.renlinear(); /*7059*/
 </span>      } /*7059*/
    } // end matrix2of5
+</div><div class="codeblock coop2of5">
     $0.<b id="coop2of5">coop2of5</b> = function() {
       var $1 = {}; /*7087*/
       $1.options = $k[--$j]; /*7089*/
@@ -7551,6 +7642,7 @@ b {
 <span class="taken">         $0.renlinear(); /*7126*/
 </span>      } /*7126*/
    } // end coop2of5
+</div><div class="codeblock datalogic2of5">
     $0.<b id="datalogic2of5">datalogic2of5</b> = function() {
       var $1 = {}; /*7154*/
       $1.options = $k[--$j]; /*7156*/
@@ -7585,6 +7677,7 @@ b {
 <span class="taken">         $0.renlinear(); /*7193*/
 </span>      } /*7193*/
    } // end datalogic2of5
+</div><div class="codeblock code11">
     $0.<b id="code11">code11</b> = function() {
       var $1 = {}; /*7220*/
       $1.options = $k[--$j]; /*7222*/
@@ -7745,6 +7838,7 @@ b {
 <span class="taken">         $0.renlinear(); /*7363*/
 </span>      } /*7363*/
    } // end code11
+</div><div class="codeblock bc412">
     $0.<b id="bc412">bc412</b> = function() {
       var $1 = {}; /*7390*/
       $1.options = $k[--$j]; /*7392*/
@@ -7881,6 +7975,7 @@ b {
 <span class="taken">         $0.renlinear(); /*7523*/
 </span>      } /*7523*/
    } // end bc412
+</div><div class="codeblock rationalizedCodabar">
     $0.<b id="rationalizedCodabar">rationalizedCodabar</b> = function() {
       var $1 = {}; /*7550*/
       $1.options = $k[--$j]; /*7552*/
@@ -8053,6 +8148,7 @@ b {
 <span class="taken">         $0.renlinear(); /*7691*/
 </span>      } /*7691*/
    } // end rationalizedCodabar
+</div><div class="codeblock onecode">
     $0.<b id="onecode">onecode</b> = function() {
       var $1 = {}; /*7718*/
       $1.options = $k[--$j]; /*7720*/
@@ -8125,7 +8221,7 @@ b {
 <span class="taken">            var _18 = $k[--$j]; /*7777*/
             $k[$j++] = _18; /*7777*/
             if ((_18 == 0) &amp;&amp; $1.i) { /*7777*/
-<span class="missed">               $j--; /*7777*/
+<span class="taken">               $j--; /*7777*/
 </span>            } else { /*7777*/
 <span class="taken">               $1.i = false; /*7777*/
 </span>            } /*7777*/
@@ -8359,6 +8455,7 @@ b {
 <span class="taken">         $0.renlinear(); /*8038*/
 </span>      } /*8038*/
    } // end onecode
+</div><div class="codeblock postnet">
     $0.<b id="postnet">postnet</b> = function() {
       var $1 = {}; /*8065*/
       $1.options = $k[--$j]; /*8067*/
@@ -8447,7 +8544,7 @@ b {
       if ($1.includecheckintext) { /*8166*/
 <span class="taken">         $put($1.txt, $1.barlen, $a([$geti($1.barchars, $1.checksum, 1), (($1.barlen * 5) + 1) * 3.312, $1.textyoffset, $1.textfont, $1.textsize])); /*8164*/
 </span>      } else { /*8166*/
-<span class="missed">         $put($1.txt, $1.barlen, $a([" ", ((($1.barlen * 5) + 1) * 72) / 25, $1.textyoffset, $1.textfont, $1.textsize])); /*8166*/
+<span class="taken">         $put($1.txt, $1.barlen, $a([" ", ((($1.barlen * 5) + 1) * 72) / 25, $1.textyoffset, $1.textfont, $1.textsize])); /*8166*/
 </span>      } /*8166*/
       $1.enc = $get($1.encs, 11); /*8170*/
       $1.heights = $a($1.enc.length); /*8171*/
@@ -8489,6 +8586,7 @@ b {
 <span class="taken">         $0.renlinear(); /*8190*/
 </span>      } /*8190*/
    } // end postnet
+</div><div class="codeblock planet">
     $0.<b id="planet">planet</b> = function() {
       var $1 = {}; /*8217*/
       $1.options = $k[--$j]; /*8219*/
@@ -8577,7 +8675,7 @@ b {
       if ($1.includecheckintext) { /*8319*/
 <span class="taken">         $put($1.txt, $1.barlen, $a([$geti($1.barchars, $1.checksum, 1), (($1.barlen * 5) + 1) * 3.312, $1.textyoffset, $1.textfont, $1.textsize])); /*8317*/
 </span>      } else { /*8319*/
-<span class="missed">         $put($1.txt, $1.barlen, $a([" ", ((($1.barlen * 5) + 1) * 72) / 25, $1.textyoffset, $1.textfont, $1.textsize])); /*8319*/
+<span class="taken">         $put($1.txt, $1.barlen, $a([" ", ((($1.barlen * 5) + 1) * 72) / 25, $1.textyoffset, $1.textfont, $1.textsize])); /*8319*/
 </span>      } /*8319*/
       $1.enc = $get($1.encs, 11); /*8323*/
       $1.heights = $a($1.enc.length); /*8324*/
@@ -8619,6 +8717,7 @@ b {
 <span class="taken">         $0.renlinear(); /*8343*/
 </span>      } /*8343*/
    } // end planet
+</div><div class="codeblock royalmail">
     $0.<b id="royalmail">royalmail</b> = function() {
       var $1 = {}; /*8370*/
       $1.options = $k[--$j]; /*8372*/
@@ -8745,6 +8844,7 @@ b {
 <span class="taken">         $0.renlinear(); /*8500*/
 </span>      } /*8500*/
    } // end royalmail
+</div><div class="codeblock auspost">
     $0.<b id="auspost">auspost</b> = function() {
       var $1 = {}; /*8527*/
       $1.options = $k[--$j]; /*8529*/
@@ -8940,6 +9040,7 @@ b {
 <span class="taken">         $0.renlinear(); /*8714*/
 </span>      } /*8714*/
    } // end auspost
+</div><div class="codeblock kix">
     $0.<b id="kix">kix</b> = function() {
       var $1 = {}; /*8741*/
       $1.options = $k[--$j]; /*8743*/
@@ -9031,6 +9132,7 @@ b {
 <span class="taken">         $0.renlinear(); /*8837*/
 </span>      } /*8837*/
    } // end kix
+</div><div class="codeblock japanpost">
     $0.<b id="japanpost">japanpost</b> = function() {
       var $1 = {}; /*8864*/
       $1.options = $k[--$j]; /*8866*/
@@ -9068,7 +9170,7 @@ b {
          $j -= 2; /*8919*/
          if (($1.indx >= 11) &amp;&amp; ($1.indx &lt 37)) { /*8930*/
 <span class="taken">            if ($1.j > 18) { /*8921*/
-<span class="missed">               break; /*8921*/
+<span class="taken">               break; /*8921*/
 </span>            } /*8921*/
             $1.digit = (~~(($1.indx - 1) / 10)) + 10; /*8925*/
             $puti($1.encstr, ($1.j * 3) + 2, $get($1.encs, $1.digit)); /*8926*/
@@ -9077,7 +9179,7 @@ b {
             $1.j = $1.j + 1; /*8929*/
 </span>         } /*8929*/
          if ($1.j > 19) { /*8931*/
-<span class="missed">            break; /*8931*/
+<span class="taken">            break; /*8931*/
 </span>         } /*8931*/
          $1.digit = 0; /*8932*/
          if ($1.indx == 37) { /*8935*/
@@ -9164,6 +9266,7 @@ b {
 <span class="taken">         $0.renlinear(); /*9011*/
 </span>      } /*9011*/
    } // end japanpost
+</div><div class="codeblock msi">
     $0.<b id="msi">msi</b> = function() {
       var $1 = {}; /*9038*/
       $1.options = $k[--$j]; /*9040*/
@@ -9387,6 +9490,7 @@ b {
 <span class="taken">         $0.renlinear(); /*9162*/
 </span>      } /*9162*/
    } // end msi
+</div><div class="codeblock plessey">
     $0.<b id="plessey">plessey</b> = function() {
       var $1 = {}; /*9189*/
       $1.options = $k[--$j]; /*9191*/
@@ -9520,6 +9624,7 @@ b {
 <span class="taken">         $0.renlinear(); /*9320*/
 </span>      } /*9320*/
    } // end plessey
+</div><div class="codeblock telepen">
     $0.<b id="telepen">telepen</b> = function() {
       var $1 = {}; /*9347*/
       $1.options = $k[--$j]; /*9349*/
@@ -9630,6 +9735,7 @@ b {
 <span class="taken">         $0.renlinear(); /*9505*/
 </span>      } /*9505*/
    } // end telepen
+</div><div class="codeblock telepennumeric">
     $0.<b id="telepennumeric">telepennumeric</b> = function() {
       var $1 = {}; /*9533*/
       $1.options = $k[--$j]; /*9535*/
@@ -9664,6 +9770,7 @@ b {
 <span class="taken">         $0.renlinear(); /*9572*/
 </span>      } /*9572*/
    } // end telepennumeric
+</div><div class="codeblock posicode">
     $0.<b id="posicode">posicode</b> = function() {
       var $1 = {}; /*9599*/
       $1.options = $k[--$j]; /*9601*/
@@ -10067,6 +10174,7 @@ b {
 <span class="taken">         $0.renlinear(); /*10007*/
 </span>      } /*10007*/
    } // end posicode
+</div><div class="codeblock codablockf">
     $0.<b id="codablockf">codablockf</b> = function() {
       var $1 = {}; /*10034*/
       $1.options = $k[--$j]; /*10036*/
@@ -10724,6 +10832,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*10540*/
 </span>      } /*10540*/
    } // end codablockf
+</div><div class="codeblock code16k">
     $0.<b id="code16k">code16k</b> = function() {
       var $1 = {}; /*10567*/
       $1.options = $k[--$j]; /*10569*/
@@ -11597,6 +11706,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*11296*/
 </span>      } /*11296*/
    } // end code16k
+</div><div class="codeblock code49">
     $0.<b id="code49">code49</b> = function() {
       var $1 = {}; /*11323*/
       $1.options = $k[--$j]; /*11325*/
@@ -12120,6 +12230,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*12384*/
 </span>      } /*12384*/
    } // end code49
+</div><div class="codeblock channelcode">
     $0.<b id="channelcode">channelcode</b> = function() {
       var $1 = {}; /*12411*/
       $1.options = $k[--$j]; /*12413*/
@@ -12328,6 +12439,7 @@ b {
 <span class="taken">         $0.renlinear(); /*12545*/
 </span>      } /*12545*/
    } // end channelcode
+</div><div class="codeblock flattermarken">
     $0.<b id="flattermarken">flattermarken</b> = function() {
       var $1 = {}; /*12572*/
       $1.options = $k[--$j]; /*12574*/
@@ -12412,6 +12524,7 @@ b {
 <span class="taken">         $0.renlinear(); /*12650*/
 </span>      } /*12650*/
    } // end flattermarken
+</div><div class="codeblock raw">
     $0.<b id="raw">raw</b> = function() {
       var $1 = {}; /*12677*/
       $1.options = $k[--$j]; /*12679*/
@@ -12464,6 +12577,7 @@ b {
 <span class="taken">         $0.renlinear(); /*12714*/
 </span>      } /*12714*/
    } // end raw
+</div><div class="codeblock daft">
     $0.<b id="daft">daft</b> = function() {
       var $1 = {}; /*12741*/
       $1.options = $k[--$j]; /*12743*/
@@ -12530,6 +12644,7 @@ b {
 <span class="taken">         $0.renlinear(); /*12802*/
 </span>      } /*12802*/
    } // end daft
+</div><div class="codeblock symbol">
     $0.<b id="symbol">symbol</b> = function() {
       var $1 = {}; /*12829*/
       $1.options = $k[--$j]; /*12831*/
@@ -12581,6 +12696,7 @@ b {
 <span class="taken">         $0.renlinear(); /*12886*/
 </span>      } /*12886*/
    } // end symbol
+</div><div class="codeblock pdf417">
     $0.<b id="pdf417">pdf417</b> = function() {
       var $1 = {}; /*12913*/
       $1.options = $k[--$j]; /*12915*/
@@ -12817,7 +12933,7 @@ b {
 </span>            } /*13138*/
             $1.n = $get($1.numdigits, $1.p); /*13139*/
             if ($1.n >= 13) { /*13178*/
-<span class="missed">               $k[$j++] = "seq"; /*13144*/
+<span class="taken">               $k[$j++] = "seq"; /*13144*/
                $k[$j++] = Infinity; /*13144*/
                $aload($1.seq); /*13142*/
                $k[$j++] = $1.nl; /*13144*/
@@ -12837,7 +12953,7 @@ b {
                   $k[$j++] = Infinity; /*13155*/
                   $aload($1.seq); /*13153*/
                   if ($1.state != $1.T) { /*13154*/
-<span class="missed">                     $k[$j++] = $1.tl; /*13154*/
+<span class="taken">                     $k[$j++] = $1.tl; /*13154*/
 </span>                  } /*13154*/
                   $k[$j++] = Infinity; /*13155*/
                   $aload($geti($1.barcode, $1.p, $1.t)); /*13155*/
@@ -12849,9 +12965,9 @@ b {
                   $1.p = $1.p + $1.t; /*13158*/
                   $1.seqlen = ($1.seqlen + 1) + $1.t; /*13159*/
 </span>               } else { /*13178*/
-<span class="missed">                  $1.b = $get($1.numbytes, $1.p); /*13161*/
+<span class="taken">                  $1.b = $get($1.numbytes, $1.p); /*13161*/
                   if (($1.b == 1) &amp;&amp; ($1.state == $1.T)) { /*13178*/
-<span class="missed">                     $k[$j++] = "seq"; /*13166*/
+<span class="taken">                     $k[$j++] = "seq"; /*13166*/
                      $k[$j++] = Infinity; /*13166*/
                      $aload($1.seq); /*13164*/
                      $k[$j++] = $1.bs; /*13166*/
@@ -12861,13 +12977,13 @@ b {
                      $1.p = $1.p + $1.b; /*13168*/
                      $1.seqlen = $1.seqlen + 2; /*13169*/
 </span>                  } else { /*13178*/
-<span class="missed">                     $k[$j++] = "seq"; /*13174*/
+<span class="taken">                     $k[$j++] = "seq"; /*13174*/
                      $k[$j++] = Infinity; /*13174*/
                      $aload($1.seq); /*13172*/
                      if (($1.b % 6) != 0) { /*13173*/
-<span class="missed">                        $k[$j++] = $1.bl; /*13173*/
+<span class="taken">                        $k[$j++] = $1.bl; /*13173*/
 </span>                     } else { /*13173*/
-<span class="missed">                        $k[$j++] = $1.bl6; /*13173*/
+<span class="taken">                        $k[$j++] = $1.bl6; /*13173*/
 </span>                     } /*13173*/
                      $k[$j++] = Infinity; /*13174*/
                      $aload($geti($1.barcode, $1.p, $1.b)); /*13174*/
@@ -12909,7 +13025,7 @@ b {
             $k[$j++] = _6d; /*13189*/
 </span>         }; /*13189*/
          $1.encp = function() {
-<span class="missed">            var _6i = $get($get($1.charvals, $1.P), $k[--$j]); /*13190*/
+<span class="taken">            var _6i = $get($get($1.charvals, $1.P), $k[--$j]); /*13190*/
             $k[$j++] = _6i; /*13190*/
 </span>         }; /*13190*/
          $1.textencfuncs = $a(["enca", "encl", "encm", "encp"]); /*13191*/
@@ -12987,7 +13103,7 @@ b {
                               if ($1.x == $1.A) { /*13259*/
 <span class="taken">                                 $k[$j++] = $1.as; /*13259*/
 </span>                              } else { /*13259*/
-<span class="missed">                                 $k[$j++] = $1.ps; /*13259*/
+<span class="taken">                                 $k[$j++] = $1.ps; /*13259*/
 </span>                              } /*13259*/
                               $k[$j++] = $1.char; /*13260*/
                               var _8x = $a(); /*13260*/
@@ -13024,11 +13140,11 @@ b {
                $1.addtotext(); /*13294*/
                $1.k = $1.k + 1; /*13295*/
                if (($1.char == $1.as) || ($1.char == $1.ps)) { /*13301*/
-<span class="missed">                  $k[$j++] = $get($1.txtseq, $1.k); /*13299*/
+<span class="taken">                  $k[$j++] = $get($1.txtseq, $1.k); /*13299*/
                   if ($1.char == $1.as) { /*13299*/
-<span class="missed">                     $1.enca(); /*13299*/
+<span class="taken">                     $1.enca(); /*13299*/
 </span>                  } else { /*13299*/
-<span class="missed">                     $1.encp(); /*13299*/
+<span class="taken">                     $1.encp(); /*13299*/
 </span>                  } /*13299*/
                   $1.addtotext(); /*13299*/
                   $1.k = $1.k + 1; /*13300*/
@@ -13043,12 +13159,12 @@ b {
 <span class="taken">                  $1.submode = $1.M; /*13306*/
 </span>               } /*13306*/
                if ($1.char == $1.pl) { /*13307*/
-<span class="missed">                  $1.submode = $1.P; /*13307*/
+<span class="taken">                  $1.submode = $1.P; /*13307*/
 </span>               } /*13307*/
 </span>            } /*13307*/
             if (($1.text.length % 2) == 1) { /*13318*/
 <span class="taken">               if ($1.submode == $1.P) { /*13315*/
-<span class="missed">                  $k[$j++] = "pad"; /*13312*/
+<span class="taken">                  $k[$j++] = "pad"; /*13312*/
                   $k[$j++] = $1.al; /*13312*/
                   $1.encp(); /*13312*/
                   var _9y = $k[--$j]; /*13312*/
@@ -13076,10 +13192,10 @@ b {
             $k[$j++] = $1.out; /*13326*/
 </span>         }; /*13328*/
          $1.encn = function() {
-<span class="missed">            $1.in = $k[--$j]; /*13331*/
+<span class="taken">            $1.in = $k[--$j]; /*13331*/
             $1.out = $a([]); /*13332*/
             for (var _AU = 0, _AT = $1.in.length - 1; _AU &lt= _AT; _AU += 44) { /*13360*/
-<span class="missed">               $1.k = _AU; /*13334*/
+<span class="taken">               $1.k = _AU; /*13334*/
                $k[$j++] = "gmod"; /*13337*/
                $k[$j++] = Infinity; /*13337*/
                var _AZ = $1.in.length - $1.k; /*13336*/
@@ -13088,31 +13204,31 @@ b {
                $k[$j++] = $1.k; /*13336*/
                $k[$j++] = _AZ; /*13336*/
                if (_AZ > 44) { /*13336*/
-<span class="missed">                  $j--; /*13336*/
+<span class="taken">                  $j--; /*13336*/
                   $k[$j++] = 44; /*13336*/
 </span>               } /*13336*/
                var _Aa = $k[--$j]; /*13336*/
                var _Ab = $k[--$j]; /*13336*/
                $forall($geti($k[--$j], _Ab, _Aa), function() { /*13337*/
-<span class="missed">                  var _Ae = $k[--$j]; /*13337*/
+<span class="taken">                  var _Ae = $k[--$j]; /*13337*/
                   $k[$j++] = _Ae - 48; /*13337*/
 </span>               }) /*13337*/
                var _Af = $a(); /*13337*/
                $1[$k[--$j]] = _Af; /*13338*/
                $1.cwn = $a([]); /*13339*/
                for (;;) { /*13358*/
-<span class="missed">                  $1.dv = 900; /*13340*/
+<span class="taken">                  $1.dv = 900; /*13340*/
                   $1.gmul = $a([]); /*13341*/
                   $1.val = 0; /*13341*/
                   for (;;) { /*13353*/
-<span class="missed">                     if ($1.gmod.length == 0) { /*13342*/
-<span class="missed">                        break; /*13342*/
+<span class="taken">                     if ($1.gmod.length == 0) { /*13342*/
+<span class="taken">                        break; /*13342*/
 </span>                     } /*13342*/
                      $1.val = ($1.val * 10) + $get($1.gmod, 0); /*13343*/
                      $1.gmod = $geti($1.gmod, 1, $1.gmod.length - 1); /*13344*/
                      if ($1.val &lt $1.dv) { /*13350*/
-<span class="missed">                        if ($1.gmul.length != 0) { /*13348*/
-<span class="missed">                           $k[$j++] = "gmul"; /*13347*/
+<span class="taken">                        if ($1.gmul.length != 0) { /*13348*/
+<span class="taken">                           $k[$j++] = "gmul"; /*13347*/
                            $k[$j++] = Infinity; /*13347*/
                            $aload($1.gmul); /*13347*/
                            $k[$j++] = 0; /*13347*/
@@ -13120,7 +13236,7 @@ b {
                            $1[$k[--$j]] = _Au; /*13347*/
 </span>                        } /*13347*/
 </span>                     } else { /*13350*/
-<span class="missed">                        $k[$j++] = "gmul"; /*13350*/
+<span class="taken">                        $k[$j++] = "gmul"; /*13350*/
                         $k[$j++] = Infinity; /*13350*/
                         $aload($1.gmul); /*13350*/
                         $k[$j++] = ~~($1.val / $1.dv); /*13350*/
@@ -13138,7 +13254,7 @@ b {
                   $1[$k[--$j]] = _B6; /*13355*/
                   $1.gmod = $1.gmul; /*13356*/
                   if ($1.gmul.length == 0) { /*13357*/
-<span class="missed">                     break; /*13357*/
+<span class="taken">                     break; /*13357*/
 </span>                  } /*13357*/
 </span>               } /*13357*/
                $k[$j++] = "out"; /*13359*/
@@ -13171,20 +13287,20 @@ b {
                $1[$get($1.encfuncs, $1.state)](); /*13378*/
                $1.addtocws(); /*13378*/
 </span>            } else { /*13386*/
-<span class="missed">               $k[$j++] = $a([$get($1.latchcws, $1.chars)]); /*13380*/
+<span class="taken">               $k[$j++] = $a([$get($1.latchcws, $1.chars)]); /*13380*/
                $1.addtocws(); /*13380*/
                if ($1.chars == $1.tl) { /*13381*/
-<span class="missed">                  $1.state = $1.T; /*13381*/
+<span class="taken">                  $1.state = $1.T; /*13381*/
                   $1.submode = $1.A; /*13381*/
 </span>               } /*13381*/
                if ($1.chars == $1.nl) { /*13382*/
-<span class="missed">                  $1.state = $1.N; /*13382*/
+<span class="taken">                  $1.state = $1.N; /*13382*/
 </span>               } /*13382*/
                if (($1.chars == $1.bl) || ($1.chars == $1.bl6)) { /*13383*/
-<span class="missed">                  $1.state = $1.B; /*13383*/
+<span class="taken">                  $1.state = $1.B; /*13383*/
 </span>               } /*13383*/
                if ($1.chars == $1.bs) { /*13387*/
-<span class="missed">                  $1.i = $1.i + 1; /*13385*/
+<span class="taken">                  $1.i = $1.i + 1; /*13385*/
                   $k[$j++] = $get($1.seq, $1.i); /*13386*/
                   $1.encb(); /*13386*/
                   $1.addtocws(); /*13386*/
@@ -13200,7 +13316,7 @@ b {
 <span class="taken">            $1.eclevel = 2; /*13397*/
 </span>         } /*13397*/
          if (($1.m >= 41) &amp;&amp; ($1.m &lt= 160)) { /*13398*/
-<span class="missed">            $1.eclevel = 3; /*13398*/
+<span class="taken">            $1.eclevel = 3; /*13398*/
 </span>         } /*13398*/
          if (($1.m >= 161) &amp;&amp; ($1.m &lt= 320)) { /*13399*/
 <span class="missed">            $1.eclevel = 4; /*13399*/
@@ -13215,7 +13331,7 @@ b {
 </span>      } /*13405*/
       $1.k = ~~Math.pow(2, $1.eclevel + 1); /*13406*/
       if ($1.columns == 0) { /*13409*/
-<span class="missed">         $1.columns = ~~(Math.round(Math.sqrt(($1.m + $1.k) / 3))); /*13409*/
+<span class="taken">         $1.columns = ~~(Math.round(Math.sqrt(($1.m + $1.k) / 3))); /*13409*/
 </span>      } /*13409*/
       if (($1.columns >= 1) &amp;&amp; ($1.columns &lt= 30)) { /*13410*/
 <span class="taken">         $1.c = $1.columns; /*13410*/
@@ -13254,7 +13370,7 @@ b {
       $k[$j++] = $1.m + 1; /*13429*/
       $k[$j++] = Infinity; /*13429*/
       for (var _Cq = 0, _Cr = ($1.n - $1.m) - 1; _Cq &lt _Cr; _Cq++) { /*13429*/
-<span class="missed">         $k[$j++] = 900; /*13429*/
+<span class="taken">         $k[$j++] = 900; /*13429*/
 </span>      } /*13429*/
       var _Cs = $a(); /*13429*/
       var _Ct = $k[--$j]; /*13429*/
@@ -13454,6 +13570,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*13771*/
 </span>      } /*13771*/
    } // end pdf417
+</div><div class="codeblock pdf417compact">
     $0.<b id="pdf417compact">pdf417compact</b> = function() {
       var $1 = {}; /*13799*/
       $1.options = $k[--$j]; /*13801*/
@@ -13477,6 +13594,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*13826*/
 </span>      } /*13826*/
    } // end pdf417compact
+</div><div class="codeblock micropdf417">
     $0.<b id="micropdf417">micropdf417</b> = function() {
       var $1 = {}; /*13853*/
       $1.options = $k[--$j]; /*13855*/
@@ -14382,6 +14500,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*14797*/
 </span>      } /*14797*/
    } // end micropdf417
+</div><div class="codeblock datamatrix">
     $0.<b id="datamatrix">datamatrix</b> = function() {
       var $1 = {}; /*14824*/
       $1.options = $k[--$j]; /*14826*/
@@ -14961,7 +15080,7 @@ b {
 <span class="taken">            $put($1.numD, $1.i, $get($1.numD, $1.i + 1) + 1); /*15103*/
 </span>         } /*15103*/
          if ((($1.barchar == 13) || ($1.barchar == 42)) || ($1.barchar == 62)) { /*15108*/
-<span class="missed">            $put($1.nextXterm, $1.i, 0); /*15106*/
+<span class="taken">            $put($1.nextXterm, $1.i, 0); /*15106*/
 </span>         } else { /*15108*/
 <span class="taken">            $put($1.nextXterm, $1.i, $get($1.nextXterm, $1.i + 1) + 1); /*15108*/
 </span>         } /*15108*/
@@ -15056,10 +15175,10 @@ b {
 <span class="missed">            $1.xc = 0; /*15135*/
 </span>         } /*15135*/
          if ($1.mode == $1.E) { /*15136*/
-<span class="missed">            $1.ec = 0; /*15136*/
+<span class="taken">            $1.ec = 0; /*15136*/
 </span>         } /*15136*/
          if ($1.mode == $1.B) { /*15137*/
-<span class="missed">            $1.bc = 0; /*15137*/
+<span class="taken">            $1.bc = 0; /*15137*/
 </span>         } /*15137*/
          for (var _7F = 0, _7G = 1; _7F &lt _7G; _7F++) { /*15170*/
 <span class="taken">            $1.k = 0; /*15139*/
@@ -15087,7 +15206,7 @@ b {
                      $k[$j++] = _7m &amp;&amp; ($1.bc &lt $get(_7h, _7i)); /*15143*/
 </span>                  } /*15143*/
                   if ($k[--$j]) { /*15143*/
-<span class="missed">                     $k[$j++] = $1.B; /*15143*/
+<span class="taken">                     $k[$j++] = $1.B; /*15143*/
                      break; /*15143*/
 </span>                  } /*15143*/
                   var _7u = $a([$1.ac, $1.cc, $1.tc, $1.xc, $1.bc]); /*15144*/
@@ -15097,7 +15216,7 @@ b {
                      $k[$j++] = _7z &amp;&amp; ($1.ec &lt $get(_7u, _7v)); /*15144*/
 </span>                  } /*15144*/
                   if ($k[--$j]) { /*15144*/
-<span class="missed">                     $k[$j++] = $1.E; /*15144*/
+<span class="taken">                     $k[$j++] = $1.E; /*15144*/
                      break; /*15144*/
 </span>                  } /*15144*/
                   var _87 = $a([$1.ac, $1.cc, $1.xc, $1.ec, $1.bc]); /*15145*/
@@ -15133,7 +15252,7 @@ b {
 </span>               } else { /*15150*/
 <span class="taken">                  $1.isEA(); /*15150*/
                   if ($k[--$j]) { /*15150*/
-<span class="missed">                     var _8b = $k[--$j]; /*15150*/
+<span class="taken">                     var _8b = $k[--$j]; /*15150*/
                      $k[$j++] = Math.ceil(_8b) + 2; /*15150*/
 </span>                  } else { /*15150*/
 <span class="taken">                     var _8c = $k[--$j]; /*15150*/
@@ -15151,7 +15270,7 @@ b {
 </span>               } else { /*15151*/
 <span class="taken">                  $1.isEA(); /*15151*/
                   if ($k[--$j]) { /*15151*/
-<span class="missed">                     var _8j = $k[--$j]; /*15151*/
+<span class="taken">                     var _8j = $k[--$j]; /*15151*/
                      $k[$j++] = _8j + (8 / 3); /*15151*/
 </span>                  } else { /*15151*/
 <span class="taken">                     var _8k = $k[--$j]; /*15151*/
@@ -15169,7 +15288,7 @@ b {
 </span>               } else { /*15152*/
 <span class="taken">                  $1.isEA(); /*15152*/
                   if ($k[--$j]) { /*15152*/
-<span class="missed">                     var _8r = $k[--$j]; /*15152*/
+<span class="taken">                     var _8r = $k[--$j]; /*15152*/
                      $k[$j++] = _8r + (8 / 3); /*15152*/
 </span>                  } else { /*15152*/
 <span class="taken">                     var _8s = $k[--$j]; /*15152*/
@@ -15187,7 +15306,7 @@ b {
 </span>               } else { /*15153*/
 <span class="taken">                  $1.isEA(); /*15153*/
                   if ($k[--$j]) { /*15153*/
-<span class="missed">                     var _8z = $k[--$j]; /*15153*/
+<span class="taken">                     var _8z = $k[--$j]; /*15153*/
                      $k[$j++] = _8z + (13 / 3); /*15153*/
 </span>                  } else { /*15153*/
 <span class="taken">                     var _90 = $k[--$j]; /*15153*/
@@ -15205,7 +15324,7 @@ b {
 </span>               } else { /*15154*/
 <span class="taken">                  $1.isEA(); /*15154*/
                   if ($k[--$j]) { /*15154*/
-<span class="missed">                     var _97 = $k[--$j]; /*15154*/
+<span class="taken">                     var _97 = $k[--$j]; /*15154*/
                      $k[$j++] = _97 + (17 / 4); /*15154*/
 </span>                  } else { /*15154*/
 <span class="taken">                     var _98 = $k[--$j]; /*15154*/
@@ -15238,7 +15357,7 @@ b {
                      break; /*15157*/
 </span>                  } /*15157*/
                   if (($1.bc + 1) &lt= $1.ac) { /*15158*/
-<span class="missed">                     $k[$j++] = $1.B; /*15158*/
+<span class="taken">                     $k[$j++] = $1.B; /*15158*/
                      break; /*15158*/
 </span>                  } /*15158*/
                   var _9c = $a([$1.cc, $1.tc, $1.xc, $1.ec]); /*15159*/
@@ -15248,7 +15367,7 @@ b {
                      $k[$j++] = _9h &amp;&amp; (($1.bc + 1) &lt $get(_9c, _9d)); /*15159*/
 </span>                  } /*15159*/
                   if ($k[--$j]) { /*15159*/
-<span class="missed">                     $k[$j++] = $1.B; /*15159*/
+<span class="taken">                     $k[$j++] = $1.B; /*15159*/
                      break; /*15159*/
 </span>                  } /*15159*/
                   var _9p = $a([$1.ac, $1.cc, $1.tc, $1.xc, $1.bc]); /*15160*/
@@ -15258,7 +15377,7 @@ b {
                      $k[$j++] = _9u &amp;&amp; (($1.ec + 1) &lt $get(_9p, _9q)); /*15160*/
 </span>                  } /*15160*/
                   if ($k[--$j]) { /*15160*/
-<span class="missed">                     $k[$j++] = $1.E; /*15160*/
+<span class="taken">                     $k[$j++] = $1.E; /*15160*/
                      break; /*15160*/
 </span>                  } /*15160*/
                   var _A2 = $a([$1.ac, $1.cc, $1.xc, $1.ec, $1.bc]); /*15161*/
@@ -15374,7 +15493,7 @@ b {
             if (($1.p % 3) == 0) { /*15272*/
 <span class="taken">               $1.lookup(); /*15216*/
                if ($ne($k[--$j], $1.mode)) { /*15221*/
-<span class="missed">                  $k[$j++] = $geti($1.ctxvals, 0, $1.p); /*15217*/
+<span class="taken">                  $k[$j++] = $geti($1.ctxvals, 0, $1.p); /*15217*/
                   $1.CTXvalstocws(); /*15217*/
                   $1.addtocws(); /*15217*/
                   $k[$j++] = $a([$1.unlcw]); /*15218*/
@@ -15403,7 +15522,7 @@ b {
                   var _CF = $a(); /*15229*/
                   $1[$k[--$j]] = _CF; /*15232*/
                   if (($1.remcws == 2) &amp;&amp; ($1.remvals.length == 3)) { /*15242*/
-<span class="missed">                     $k[$j++] = Infinity; /*15237*/
+<span class="taken">                     $k[$j++] = Infinity; /*15237*/
                      $aload($geti($1.ctxvals, 0, $1.p)); /*15236*/
                      $aload($1.remvals); /*15237*/
                      var _CN = $a(); /*15237*/
@@ -15440,7 +15559,7 @@ b {
                      break; /*15261*/
 </span>                  } /*15261*/
                   if (($1.remcws == 1) &amp;&amp; ($1.remvals.length == 1)) { /*15270*/
-<span class="missed">                     $k[$j++] = $geti($1.ctxvals, 0, $1.p); /*15265*/
+<span class="taken">                     $k[$j++] = $geti($1.ctxvals, 0, $1.p); /*15265*/
                      $1.CTXvalstocws(); /*15265*/
                      $1.addtocws(); /*15265*/
                      $k[$j++] = $get($1.Avals, $get($1.msg, $1.i)); /*15266*/
@@ -15490,7 +15609,7 @@ b {
 </span>         } /*15298*/
 </span>      }; /*15303*/
       $1.Evalstocws = function() {
-<span class="missed">         $1.in = $k[--$j]; /*15306*/
+<span class="taken">         $1.in = $k[--$j]; /*15306*/
          $1.inlen = $1.in.length; /*15307*/
          $1.outlen = ~~(Math.ceil(($1.in.length / 4) * 3)); /*15308*/
          $k[$j++] = "in"; /*15309*/
@@ -15503,9 +15622,9 @@ b {
          $1[$k[--$j]] = _Dz; /*15309*/
          $k[$j++] = Infinity; /*15310*/
          for (var _E3 = 0, _E2 = $1.inlen - 1; _E3 &lt= _E2; _E3 += 4) { /*15316*/
-<span class="missed">            $k[$j++] = 0; /*15312*/
+<span class="taken">            $k[$j++] = 0; /*15312*/
             $forall($geti($1.in, _E3, 4), function() { /*15312*/
-<span class="missed">               var _E6 = $k[--$j]; /*15312*/
+<span class="taken">               var _E6 = $k[--$j]; /*15312*/
                var _E7 = $k[--$j]; /*15312*/
                $k[$j++] = $or(_E7, _E6) &lt&lt 6; /*15312*/
 </span>            }) /*15312*/
@@ -15520,20 +15639,20 @@ b {
          $k[$j++] = $geti(_EC, 0, $1.outlen); /*15318*/
 </span>      }; /*15319*/
       $1.encE = function() {
-<span class="missed">         $1.p = 0; /*15322*/
+<span class="taken">         $1.p = 0; /*15322*/
          $1.edifactvals = $a(2100); /*15323*/
          for (;;) { /*15365*/
-<span class="missed">            if ($1.i == $1.msglen) { /*15327*/
-<span class="missed">               break; /*15327*/
+<span class="taken">            if ($1.i == $1.msglen) { /*15327*/
+<span class="taken">               break; /*15327*/
 </span>            } /*15327*/
             var _EN = $get($1.Evals, $get($1.msg, $1.i)) !== undefined; /*15328*/
             if (!_EN) { /*15328*/
-<span class="missed">               break; /*15328*/
+<span class="taken">               break; /*15328*/
 </span>            } /*15328*/
             if (($1.p % 4) == 0) { /*15360*/
-<span class="missed">               $1.lookup(); /*15330*/
+<span class="taken">               $1.lookup(); /*15330*/
                if ($k[--$j] != $1.mode) { /*15330*/
-<span class="missed">                  break; /*15330*/
+<span class="taken">                  break; /*15330*/
 </span>               } /*15330*/
                if (($1.msglen - $1.i) &lt= 2) { /*15359*/
 <span class="missed">                  $1.remcws = $get($1.numremcws, $1.j + ((~~($1.p / 4)) * 3)); /*15332*/
@@ -15586,9 +15705,9 @@ b {
             $1.i = $1.i + 1; /*15364*/
 </span>         } /*15364*/
          if ($1.mode != $1.A) { /*15387*/
-<span class="missed">            $1.remcws = $get($1.numremcws, ($1.j + ((~~($1.p / 4)) * 3)) - 1) - 1; /*15369*/
+<span class="taken">            $1.remcws = $get($1.numremcws, ($1.j + ((~~($1.p / 4)) * 3)) - 1) - 1; /*15369*/
             if ($1.remcws != 0) { /*15374*/
-<span class="missed">               var _FW = $get($1.Evals, $1.unl); /*15371*/
+<span class="taken">               var _FW = $get($1.Evals, $1.unl); /*15371*/
                $puti($1.edifactvals, $1.p, _FW); /*15372*/
                $1.p = _FW.length + $1.p; /*15373*/
 </span>            } /*15373*/
@@ -15597,7 +15716,7 @@ b {
             $1.addtocws(); /*15375*/
             $1.mode = $1.A; /*15376*/
             if ($1.i != $1.msglen) { /*15386*/
-<span class="missed">               if ($get($1.numD, $1.i) >= 2) { /*15384*/
+<span class="taken">               if ($get($1.numD, $1.i) >= 2) { /*15384*/
 <span class="missed">                  var _Fj = $s(2); /*15380*/
                   $put(_Fj, 0, $get($1.msg, $1.i)); /*15380*/
                   $put(_Fj, 1, $get($1.msg, $1.i + 1)); /*15380*/
@@ -15605,7 +15724,7 @@ b {
                   $1.addtocws(); /*15380*/
                   $1.i = $1.i + 2; /*15381*/
 </span>               } else { /*15384*/
-<span class="missed">                  $k[$j++] = $get($1.Avals, $get($1.msg, $1.i)); /*15383*/
+<span class="taken">                  $k[$j++] = $get($1.Avals, $get($1.msg, $1.i)); /*15383*/
                   $1.addtocws(); /*15383*/
                   $1.i = $1.i + 1; /*15384*/
 </span>               } /*15384*/
@@ -15613,15 +15732,15 @@ b {
 </span>         } /*15384*/
 </span>      }; /*15389*/
       $1.encB = function() {
-<span class="missed">         $1.p = 0; /*15392*/
+<span class="taken">         $1.p = 0; /*15392*/
          $1.bvals = $a(1558); /*15392*/
          for (;;) { /*15398*/
-<span class="missed">            if ($1.i == $1.msglen) { /*15393*/
-<span class="missed">               break; /*15393*/
+<span class="taken">            if ($1.i == $1.msglen) { /*15393*/
+<span class="taken">               break; /*15393*/
 </span>            } /*15393*/
             $1.lookup(); /*15394*/
             if ($k[--$j] != $1.mode) { /*15394*/
-<span class="missed">               break; /*15394*/
+<span class="taken">               break; /*15394*/
 </span>            } /*15394*/
             $put($1.bvals, $1.p, $get($1.msg, $1.i)); /*15395*/
             $1.p = $1.p + 1; /*15396*/
@@ -15633,8 +15752,8 @@ b {
          if (($1.remcws == 0) &amp;&amp; ($1.i == $1.msglen)) { /*15404*/
 <span class="missed">            $k[$j++] = 0; /*15402*/
 </span>         } else { /*15404*/
-<span class="missed">            if ($1.p &lt 250) { /*15404*/
-<span class="missed">               $k[$j++] = $1.p; /*15404*/
+<span class="taken">            if ($1.p &lt 250) { /*15404*/
+<span class="taken">               $k[$j++] = $1.p; /*15404*/
 </span>            } else { /*15404*/
 <span class="missed">               $k[$j++] = (~~($1.p / 250)) + 249; /*15404*/
                $k[$j++] = $1.p % 250; /*15404*/
@@ -15644,11 +15763,11 @@ b {
          var _GP = $a(); /*15406*/
          $1[$k[--$j]] = _GP; /*15407*/
          for (var _GT = 0, _GS = $1.bvals.length - 1; _GT &lt= _GS; _GT += 1) { /*15413*/
-<span class="missed">            $1.p = _GT; /*15409*/
+<span class="taken">            $1.p = _GT; /*15409*/
             var _GZ = ((((($1.j + $1.p) + 1) * 149) % 255) + 1) + $get($1.bvals, $1.p); /*15411*/
             $k[$j++] = _GZ; /*15411*/
             if (_GZ >= 256) { /*15411*/
-<span class="missed">               var _Ga = $k[--$j]; /*15411*/
+<span class="taken">               var _Ga = $k[--$j]; /*15411*/
                $k[$j++] = _Ga - 256; /*15411*/
 </span>            } /*15411*/
             $put($1.bvals, $1.p, $k[--$j]); /*15412*/
@@ -15783,7 +15902,7 @@ b {
             var _In = $get($1.rsalog, (_Ii + $get($1.rslog, $k[--$j])) % 255); /*15490*/
             $k[$j++] = _In; /*15490*/
 </span>         } else { /*15492*/
-<span class="missed">            $j -= 2; /*15492*/
+<span class="taken">            $j -= 2; /*15492*/
             $k[$j++] = 0; /*15492*/
 </span>         } /*15492*/
 </span>      }; /*15494*/
@@ -16268,6 +16387,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*15680*/
 </span>      } /*15680*/
    } // end datamatrix
+</div><div class="codeblock datamatrixrectangular">
     $0.<b id="datamatrixrectangular">datamatrixrectangular</b> = function() {
       var $1 = {}; /*15708*/
       $1.options = $k[--$j]; /*15710*/
@@ -16291,6 +16411,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*15735*/
 </span>      } /*15735*/
    } // end datamatrixrectangular
+</div><div class="codeblock qrcode">
     $0.<b id="qrcode">qrcode</b> = function() {
       var $1 = {}; /*15762*/
       $1.options = $k[--$j]; /*15764*/
@@ -16501,7 +16622,7 @@ b {
                $1.tobin(); /*15923*/
                $1.k = $1.k + 2; /*15924*/
 </span>            } else { /*15927*/
-<span class="missed">               $k[$j++] = $get($1.charvals, $get($1.in, $1.k)); /*15926*/
+<span class="taken">               $k[$j++] = $get($1.charvals, $get($1.in, $1.k)); /*15926*/
                $k[$j++] = 6; /*15926*/
                $1.tobin(); /*15926*/
                $1.k = $1.k + 1; /*15927*/
@@ -16587,20 +16708,20 @@ b {
          $k[$j++] = $1.out; /*15969*/
 </span>      }; /*15970*/
       $1.encK = function() {
-<span class="missed">         $1.in = $k[--$j]; /*15973*/
+<span class="taken">         $1.in = $k[--$j]; /*15973*/
          $1.out = $s((~~($1.in.length / 2)) * 13); /*15974*/
          $1.k = 0; /*15975*/
          $1.m = 0; /*15975*/
          for (;;) { /*15983*/
-<span class="missed">            if ($1.k == $1.in.length) { /*15976*/
-<span class="missed">               break; /*15976*/
+<span class="taken">            if ($1.k == $1.in.length) { /*15976*/
+<span class="taken">               break; /*15976*/
 </span>            } /*15976*/
             var _3U = ($get($1.in, $1.k) * 256) + $get($1.in, $1.k + 1); /*15978*/
             $k[$j++] = _3U; /*15978*/
             if (_3U &lt 57408) { /*15978*/
 <span class="missed">               $k[$j++] = 33088; /*15978*/
 </span>            } else { /*15978*/
-<span class="missed">               $k[$j++] = 49472; /*15978*/
+<span class="taken">               $k[$j++] = 49472; /*15978*/
 </span>            } /*15978*/
             var _3V = $k[--$j]; /*15978*/
             var _3X = $k[--$j] - _3V; /*15979*/
@@ -16689,7 +16810,7 @@ b {
          $1.barchar = $get($1.msg, $1.i); /*16004*/
          var _4U = $get($1.Kexcl, $1.barchar) !== undefined; /*16005*/
          if (_4U) { /*16009*/
-<span class="missed">            $put($1.nextKs, $1.i, 0); /*16006*/
+<span class="taken">            $put($1.nextKs, $1.i, 0); /*16006*/
             $put($1.numKs, $1.i, $get($1.numKs, $1.i + 1) + 1); /*16007*/
 </span>         } else { /*16009*/
 <span class="taken">            $put($1.nextKs, $1.i, $get($1.nextKs, $1.i + 1) + 1); /*16009*/
@@ -16804,7 +16925,7 @@ b {
                break; /*16060*/
 </span>            } /*16060*/
             if (($1.ver == $1.vM1) &amp;&amp; ($1.numK >= 1)) { /*16061*/
-<span class="missed">               $1.seq = -1; /*16061*/
+<span class="taken">               $1.seq = -1; /*16061*/
                break; /*16061*/
 </span>            } /*16061*/
             if (($1.ver == $1.vM2) &amp;&amp; ($1.numB >= 1)) { /*16062*/
@@ -16812,7 +16933,7 @@ b {
                break; /*16062*/
 </span>            } /*16062*/
             if (($1.ver == $1.vM2) &amp;&amp; ($1.numK >= 1)) { /*16063*/
-<span class="missed">               $1.seq = -1; /*16063*/
+<span class="taken">               $1.seq = -1; /*16063*/
                break; /*16063*/
 </span>            } /*16063*/
             for (;;) { /*16118*/
@@ -16820,7 +16941,7 @@ b {
 <span class="taken">                  $k[$j++] = $a([1, 1, 1, $1.e, $1.e, 1, 1]); /*16066*/
                   $1.KbeforeA(); /*16066*/
                   if ($k[--$j]) { /*16066*/
-<span class="missed">                     $k[$j++] = $1.K; /*16066*/
+<span class="taken">                     $k[$j++] = $1.K; /*16066*/
                      break; /*16066*/
 </span>                  } /*16066*/
                   $k[$j++] = $a([1, 1, 1, $1.e, $1.e, 1, 1]); /*16067*/
@@ -16842,7 +16963,7 @@ b {
                      break; /*16069*/
 </span>                  } /*16069*/
                   if ($1.numK >= 1) { /*16070*/
-<span class="missed">                     $k[$j++] = $1.B; /*16070*/
+<span class="taken">                     $k[$j++] = $1.B; /*16070*/
                      break; /*16070*/
 </span>                  } /*16070*/
                   $k[$j++] = $a([6, 7, 8, $1.e, $1.e, 3, 4]); /*16071*/
@@ -16874,19 +16995,19 @@ b {
                   $k[$j++] = $a([1, 1, 1, $1.e, $1.e, 1, 1]); /*16077*/
                   $1.NbeforeB(); /*16077*/
                   if ($k[--$j]) { /*16077*/
-<span class="missed">                     $k[$j++] = $1.B; /*16077*/
+<span class="taken">                     $k[$j++] = $1.B; /*16077*/
                      break; /*16077*/
 </span>                  } /*16077*/
                   $k[$j++] = $a([7, 8, 9, $1.e, 3, 4, 5]); /*16078*/
                   $1.NbeforeA(); /*16078*/
                   if ($k[--$j]) { /*16078*/
-<span class="missed">                     $k[$j++] = $1.N; /*16078*/
+<span class="taken">                     $k[$j++] = $1.N; /*16078*/
                      break; /*16078*/
 </span>                  } /*16078*/
                   $k[$j++] = $a([1, 1, 1, $1.e, 1, 1, 1]); /*16079*/
                   $1.NbeforeA(); /*16079*/
                   if ($k[--$j]) { /*16079*/
-<span class="missed">                     $k[$j++] = $1.A; /*16079*/
+<span class="taken">                     $k[$j++] = $1.A; /*16079*/
                      break; /*16079*/
 </span>                  } /*16079*/
                   if ($1.numN >= 1) { /*16080*/
@@ -16930,7 +17051,7 @@ b {
                   $k[$j++] = $a([11, 15, 16, $1.e, $1.e, 6, 7]); /*16089*/
                   $1.AbeforeB(); /*16089*/
                   if ($k[--$j]) { /*16089*/
-<span class="missed">                     $k[$j++] = $1.A; /*16089*/
+<span class="taken">                     $k[$j++] = $1.A; /*16089*/
                      break; /*16089*/
 </span>                  } /*16089*/
                   $k[$j++] = $a([12, 13, 15, $1.e, $1.e, 6, 8]); /*16090*/
@@ -16942,7 +17063,7 @@ b {
                   $k[$j++] = $a([6, 7, 8, $1.e, $1.e, 3, 4]); /*16091*/
                   $1.AbeforeE(); /*16091*/
                   if ($k[--$j]) { /*16091*/
-<span class="missed">                     $k[$j++] = $1.A; /*16091*/
+<span class="taken">                     $k[$j++] = $1.A; /*16091*/
                      break; /*16091*/
 </span>                  } /*16091*/
                   $k[$j++] = $a([6, 7, 8, $1.e, $1.e, 3, 4]); /*16092*/
@@ -16954,7 +17075,7 @@ b {
                   $k[$j++] = $a([6, 8, 9, $1.e, $1.e, 3, 4]); /*16093*/
                   $1.NbeforeB(); /*16093*/
                   if ($k[--$j]) { /*16093*/
-<span class="missed">                     $k[$j++] = $1.N; /*16093*/
+<span class="taken">                     $k[$j++] = $1.N; /*16093*/
                      break; /*16093*/
 </span>                  } /*16093*/
                   $k[$j++] = $a([6, 7, 8, $1.e, $1.e, 3, 4]); /*16094*/
@@ -16974,7 +17095,7 @@ b {
 </span>               } /*16096*/
                if ($1.mode == $1.A) { /*16105*/
 <span class="taken">                  if ($1.numK >= 1) { /*16099*/
-<span class="missed">                     $k[$j++] = $1.K; /*16099*/
+<span class="taken">                     $k[$j++] = $1.K; /*16099*/
                      break; /*16099*/
 </span>                  } /*16099*/
                   if ($1.numB >= 1) { /*16100*/
@@ -16984,7 +17105,7 @@ b {
                   $k[$j++] = $a([13, 15, 17, $1.e, 5, 7, 9]); /*16101*/
                   $1.NbeforeA(); /*16101*/
                   if ($k[--$j]) { /*16101*/
-<span class="missed">                     $k[$j++] = $1.N; /*16101*/
+<span class="taken">                     $k[$j++] = $1.N; /*16101*/
                      break; /*16101*/
 </span>                  } /*16101*/
                   $k[$j++] = $a([13, 17, 18, $1.e, $1.e, 7, 9]); /*16102*/
@@ -17004,7 +17125,7 @@ b {
 </span>               } /*16104*/
                if ($1.mode == $1.N) { /*16111*/
 <span class="taken">                  if ($1.numK >= 1) { /*16107*/
-<span class="missed">                     $k[$j++] = $1.K; /*16107*/
+<span class="taken">                     $k[$j++] = $1.K; /*16107*/
                      break; /*16107*/
 </span>                  } /*16107*/
                   if ($1.numB >= 1) { /*16108*/
@@ -17019,12 +17140,12 @@ b {
                   break; /*16110*/
 </span>               } /*16110*/
                if ($1.mode == $1.K) { /*16117*/
-<span class="missed">                  if ($1.numB >= 1) { /*16113*/
-<span class="missed">                     $k[$j++] = $1.B; /*16113*/
+<span class="taken">                  if ($1.numB >= 1) { /*16113*/
+<span class="taken">                     $k[$j++] = $1.B; /*16113*/
                      break; /*16113*/
 </span>                  } /*16113*/
                   if ($1.numA >= 1) { /*16114*/
-<span class="missed">                     $k[$j++] = $1.A; /*16114*/
+<span class="taken">                     $k[$j++] = $1.A; /*16114*/
                      break; /*16114*/
 </span>                  } /*16114*/
                   if ($1.numN >= 1) { /*16115*/
@@ -17063,7 +17184,7 @@ b {
 </span>            } else { /*16134*/
 <span class="taken">               $1.mode = $k[--$j]; /*16128*/
                if ($1.mode == $1.K) { /*16129*/
-<span class="missed">                  $k[$j++] = $1.K; /*16129*/
+<span class="taken">                  $k[$j++] = $1.K; /*16129*/
                   $k[$j++] = $geti($1.msg, $1.i, $1.numK * 2); /*16129*/
 </span>               } /*16129*/
                if ($1.mode == $1.B) { /*16130*/
@@ -17114,7 +17235,7 @@ b {
 </span>               } /*16153*/
                $k[$j++] = $1.chars.length; /*16155*/
                if ($1.mode == $1.K) { /*16155*/
-<span class="missed">                  var _Bc = $k[--$j]; /*16155*/
+<span class="taken">                  var _Bc = $k[--$j]; /*16155*/
                   $k[$j++] = ~~(_Bc / 2); /*16155*/
 </span>               } /*16155*/
                $k[$j++] = $1.cclen; /*16155*/
@@ -17962,6 +18083,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*16766*/
 </span>      } /*16766*/
    } // end qrcode
+</div><div class="codeblock microqrcode">
     $0.<b id="microqrcode">microqrcode</b> = function() {
       var $1 = {}; /*16794*/
       $1.options = $k[--$j]; /*16796*/
@@ -17985,6 +18107,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*16821*/
 </span>      } /*16821*/
    } // end microqrcode
+</div><div class="codeblock maxicode">
     $0.<b id="maxicode">maxicode</b> = function() {
       var $1 = {}; /*16848*/
       $1.options = $k[--$j]; /*16850*/
@@ -18701,6 +18824,7 @@ b {
 <span class="taken">         $0.renmaximatrix(); /*17397*/
 </span>      } /*17397*/
    } // end maxicode
+</div><div class="codeblock azteccode">
     $0.<b id="azteccode">azteccode</b> = function() {
       var $1 = {}; /*17424*/
       $1.options = $k[--$j]; /*17426*/
@@ -18902,7 +19026,7 @@ b {
                $1.numbytes = $k[--$j]; /*17672*/
 </span>            }) /*17672*/
             if ($1.numbytes == 32) { /*17674*/
-<span class="missed">               $put($1.nxtlen, $1.B, $get($1.nxtlen, $1.B) + 11); /*17674*/
+<span class="taken">               $put($1.nxtlen, $1.B, $get($1.nxtlen, $1.B) + 11); /*17674*/
 </span>            } /*17674*/
             $1.curlen = $1.nxtlen; /*17676*/
             $1.curseq = $1.nxtseq; /*17677*/
@@ -18943,7 +19067,7 @@ b {
             $1.tobin(); /*17698*/
 </span>         }; /*17698*/
          $1.encm = function() {
-<span class="missed">            var _7a = $get($get($1.charvals, $1.M), $k[--$j]); /*17699*/
+<span class="taken">            var _7a = $get($get($1.charvals, $1.M), $k[--$j]); /*17699*/
             $k[$j++] = _7a; /*17699*/
             $k[$j++] = 5; /*17699*/
             $1.tobin(); /*17699*/
@@ -18997,35 +19121,35 @@ b {
 <span class="taken">                  $1.state = $1.L; /*17731*/
 </span>               } /*17731*/
                if ($1.char == $1.lm) { /*17732*/
-<span class="missed">                  $1.state = $1.M; /*17732*/
+<span class="taken">                  $1.state = $1.M; /*17732*/
 </span>               } /*17732*/
                if ($1.char == $1.lp) { /*17733*/
-<span class="missed">                  $1.state = $1.P; /*17733*/
+<span class="taken">                  $1.state = $1.P; /*17733*/
 </span>               } /*17733*/
                if ($1.char == $1.ld) { /*17734*/
 <span class="taken">                  $1.state = $1.D; /*17734*/
 </span>               } /*17734*/
                if ($1.char == $1.sb) { /*17735*/
-<span class="missed">                  $1.state = $1.B; /*17735*/
+<span class="taken">                  $1.state = $1.B; /*17735*/
 </span>               } /*17735*/
 </span>            } else { /*17766*/
-<span class="missed">               $1.numbytes = 0; /*17740*/
+<span class="taken">               $1.numbytes = 0; /*17740*/
                for (;;) { /*17744*/
-<span class="missed">                  if (($1.i + $1.numbytes) >= $1.seq.length) { /*17741*/
-<span class="missed">                     break; /*17741*/
+<span class="taken">                  if (($1.i + $1.numbytes) >= $1.seq.length) { /*17741*/
+<span class="taken">                     break; /*17741*/
 </span>                  } /*17741*/
                   if ($get($1.seq, $1.i + $1.numbytes) &lt 0) { /*17742*/
-<span class="missed">                     break; /*17742*/
+<span class="taken">                     break; /*17742*/
 </span>                  } /*17742*/
                   $1.numbytes = $1.numbytes + 1; /*17743*/
 </span>               } /*17743*/
                if ($1.numbytes &lt= 31) { /*17751*/
-<span class="missed">                  $k[$j++] = $1.numbytes; /*17748*/
+<span class="taken">                  $k[$j++] = $1.numbytes; /*17748*/
                   $k[$j++] = 5; /*17748*/
                   $1.tobin(); /*17748*/
                   $1.addtomsgbits(); /*17748*/
 </span>               } else { /*17751*/
-<span class="missed">                  $k[$j++] = 0; /*17750*/
+<span class="taken">                  $k[$j++] = 0; /*17750*/
                   $k[$j++] = 5; /*17750*/
                   $1.tobin(); /*17750*/
                   $1.addtomsgbits(); /*17750*/
@@ -19035,23 +19159,23 @@ b {
                   $1.addtomsgbits(); /*17751*/
 </span>               } /*17751*/
                for (var _8m = 0, _8n = $1.numbytes; _8m &lt _8n; _8m++) { /*17758*/
-<span class="missed">                  $k[$j++] = $get($1.seq, $1.i); /*17756*/
+<span class="taken">                  $k[$j++] = $get($1.seq, $1.i); /*17756*/
                   $k[$j++] = 8; /*17756*/
                   $1.tobin(); /*17756*/
                   $1.addtomsgbits(); /*17756*/
                   $1.i = $1.i + 1; /*17757*/
 </span>               } /*17757*/
                if ($1.i &lt $1.seq.length) { /*17767*/
-<span class="missed">                  $1.char = $get($1.seq, $1.i); /*17762*/
+<span class="taken">                  $1.char = $get($1.seq, $1.i); /*17762*/
                   $1.i = $1.i + 1; /*17763*/
                   if ($1.char == $1.lu) { /*17764*/
-<span class="missed">                     $1.state = $1.U; /*17764*/
+<span class="taken">                     $1.state = $1.U; /*17764*/
 </span>                  } /*17764*/
                   if ($1.char == $1.ll) { /*17765*/
-<span class="missed">                     $1.state = $1.L; /*17765*/
+<span class="taken">                     $1.state = $1.L; /*17765*/
 </span>                  } /*17765*/
                   if ($1.char == $1.lm) { /*17766*/
-<span class="missed">                     $1.state = $1.M; /*17766*/
+<span class="taken">                     $1.state = $1.M; /*17766*/
 </span>                  } /*17766*/
 </span>               } /*17766*/
 </span>            } /*17766*/
@@ -19133,7 +19257,7 @@ b {
             $k[$j++] = $1.cwb; /*17834*/
             $1.allones(); /*17834*/
             if ($k[--$j]) { /*17834*/
-<span class="missed">               $puti($1.cwb, $1.cwb.length - 1, "0"); /*17834*/
+<span class="taken">               $puti($1.cwb, $1.cwb.length - 1, "0"); /*17834*/
 </span>            } /*17834*/
 </span>         } /*17834*/
          $1.cw = 0; /*17837*/
@@ -19496,6 +19620,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*18088*/
 </span>      } /*18088*/
    } // end azteccode
+</div><div class="codeblock azteccodecompact">
     $0.<b id="azteccodecompact">azteccodecompact</b> = function() {
       var $1 = {}; /*18116*/
       $1.options = $k[--$j]; /*18118*/
@@ -19519,6 +19644,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*18143*/
 </span>      } /*18143*/
    } // end azteccodecompact
+</div><div class="codeblock aztecrune">
     $0.<b id="aztecrune">aztecrune</b> = function() {
       var $1 = {}; /*18171*/
       $1.options = $k[--$j]; /*18173*/
@@ -19542,6 +19668,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*18198*/
 </span>      } /*18198*/
    } // end aztecrune
+</div><div class="codeblock codeone">
     $0.<b id="codeone">codeone</b> = function() {
       var $1 = {}; /*18225*/
       $1.options = $k[--$j]; /*18227*/
@@ -21209,6 +21336,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*19061*/
 </span>      } /*19061*/
    } // end codeone
+</div><div class="codeblock hanxin">
     $0.<b id="hanxin">hanxin</b> = function() {
       var $1 = {}; /*19088*/
       $1.options = $k[--$j]; /*19090*/
@@ -21391,7 +21519,7 @@ b {
                var _Kl = $get($1.rsalog, (_Kf + $get($1.rslog, $k[--$j])) % ($1.rsgf - 1)); /*19583*/
                $k[$j++] = _Kl; /*19583*/
 </span>            } else { /*19585*/
-<span class="missed">               $j -= 2; /*19585*/
+<span class="taken">               $j -= 2; /*19585*/
                $k[$j++] = 0; /*19585*/
 </span>            } /*19585*/
 </span>         }; /*19587*/
@@ -21539,13 +21667,13 @@ b {
          $k[$j++] = _Nq + (_Np * $1.size); /*19666*/
 </span>      }; /*19666*/
       if ($1.alnn != 0) { /*19725*/
-<span class="missed">         $1.trmv = function() {
-<span class="missed">            var _Nt = $k[--$j]; /*19670*/
+<span class="taken">         $1.trmv = function() {
+<span class="taken">            var _Nt = $k[--$j]; /*19670*/
             var _Nv = $k[--$j]; /*19670*/
             $k[$j++] = (((_Nt * $1.size) + $1.size) - 1) - _Nv; /*19670*/
 </span>         }; /*19670*/
          $1.aplot = function() {
-<span class="missed">            var _Nw = $k[--$j]; /*19672*/
+<span class="taken">            var _Nw = $k[--$j]; /*19672*/
             var _Nx = $k[--$j]; /*19672*/
             var _Ny = $k[--$j]; /*19672*/
             $k[$j++] = _Nw; /*19672*/
@@ -21564,18 +21692,18 @@ b {
          $1.i = 0; /*19675*/
          $1.stag = 0; /*19675*/
          for (;;) { /*19697*/
-<span class="missed">            if ($1.i >= $1.size) { /*19676*/
-<span class="missed">               break; /*19676*/
+<span class="taken">            if ($1.i >= $1.size) { /*19676*/
+<span class="taken">               break; /*19676*/
 </span>            } /*19676*/
             for (var _O9 = 0, _O8 = $1.size - 1; _O9 &lt= _O8; _O9 += 1) { /*19690*/
-<span class="missed">               $1.j = _O9; /*19678*/
+<span class="taken">               $1.j = _O9; /*19678*/
                if (($1.j + $1.alnr) &lt $1.size) { /*19684*/
-<span class="missed">                  $k[$j++] = (((((~~($1.j / $1.alnk)) + $1.stag) % 2) == 0) &amp;&amp; (!(($1.i == 0) &amp;&amp; ($1.j &lt $1.alnk)))) || (($1.j % $1.alnk) == 0); /*19682*/
+<span class="taken">                  $k[$j++] = (((((~~($1.j / $1.alnk)) + $1.stag) % 2) == 0) &amp;&amp; (!(($1.i == 0) &amp;&amp; ($1.j &lt $1.alnk)))) || (($1.j % $1.alnk) == 0); /*19682*/
 </span>               } else { /*19684*/
-<span class="missed">                  $k[$j++] = (($1.alnn + $1.stag) % 2) == 0; /*19684*/
+<span class="taken">                  $k[$j++] = (($1.alnn + $1.stag) % 2) == 0; /*19684*/
 </span>               } /*19684*/
                if ($k[--$j]) { /*19689*/
-<span class="missed">                  $k[$j++] = $1.j; /*19687*/
+<span class="taken">                  $k[$j++] = $1.j; /*19687*/
                   $k[$j++] = $1.i; /*19687*/
                   $k[$j++] = 1; /*19687*/
                   $1.aplot(); /*19687*/
@@ -21584,24 +21712,24 @@ b {
                   $k[$j++] = _OQ + 1; /*19688*/
                   $k[$j++] = _OR + 1; /*19688*/
                   if (((_OR + 1) &lt $1.size) &amp;&amp; ((_OQ + 1) &lt $1.size)) { /*19688*/
-<span class="missed">                     $k[$j++] = 0; /*19688*/
+<span class="taken">                     $k[$j++] = 0; /*19688*/
                      $1.aplot(); /*19688*/
 </span>                  } else { /*19688*/
-<span class="missed">                     $j -= 2; /*19688*/
+<span class="taken">                     $j -= 2; /*19688*/
 </span>                  } /*19688*/
 </span>               } /*19688*/
 </span>            } /*19688*/
             if (($1.i + $1.alnr) == $1.size) { /*19694*/
-<span class="missed">               $1.i = ($1.i + $1.alnr) - 1; /*19692*/
+<span class="taken">               $1.i = ($1.i + $1.alnr) - 1; /*19692*/
 </span>            } else { /*19694*/
-<span class="missed">               $1.i = $1.i + $1.alnk; /*19694*/
+<span class="taken">               $1.i = $1.i + $1.alnk; /*19694*/
 </span>            } /*19694*/
             $1.stag = 1 - $1.stag; /*19696*/
 </span>         } /*19696*/
          for (var _Og = $1.alnk, _Oh = $1.alnk, _Of = $1.size - 2; _Oh &lt 0 ? _Og >= _Of : _Og &lt= _Of; _Og += _Oh) { /*19724*/
-<span class="missed">            $1.i = _Og; /*19699*/
+<span class="taken">            $1.i = _Og; /*19699*/
             if (((~~($1.i / $1.alnk)) % 2) != 0) { /*19711*/
-<span class="missed">               $k[$j++] = $1.pixs; /*19701*/
+<span class="taken">               $k[$j++] = $1.pixs; /*19701*/
                $k[$j++] = 0; /*19701*/
                $k[$j++] = $1.i - 1; /*19701*/
                $1.trmv(); /*19701*/
@@ -22060,6 +22188,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*19959*/
 </span>      } /*19959*/
    } // end hanxin
+</div><div class="codeblock gs1-cc">
     $0["<b id="gs1-cc">gs1-cc</b>"] = function() {
       var $1 = {}; /*19988*/
       $1.options = $k[--$j]; /*19990*/
@@ -23122,7 +23251,7 @@ b {
                   break; /*20501*/
 </span>               } /*20501*/
                if (($get($1.alphanumericruns, $1.i) >= 5) &amp;&amp; ($get($1.nextiso646only, $1.i) >= 10)) { /*20507*/
-<span class="missed">                  $k[$j++] = $1.lalphanumeric; /*20504*/
+<span class="taken">                  $k[$j++] = $1.lalphanumeric; /*20504*/
                   $k[$j++] = $1.iso646; /*20504*/
                   $1.encode(); /*20504*/
                   $1.mode = "alphanumeric"; /*20505*/
@@ -23339,6 +23468,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*20621*/
 </span>      } /*20621*/
    } // end gs1-cc
+</div><div class="codeblock ean13composite">
     $0.<b id="ean13composite">ean13composite</b> = function() {
       var $1 = {}; /*20651*/
       $1.options = $k[--$j]; /*20653*/
@@ -23413,6 +23543,7 @@ b {
       $0.renmatrix(); /*20703*/
       $$.restore(); /*20705*/
    } // end ean13composite
+</div><div class="codeblock ean8composite">
     $0.<b id="ean8composite">ean8composite</b> = function() {
       var $1 = {}; /*20735*/
       $1.options = $k[--$j]; /*20737*/
@@ -23489,6 +23620,7 @@ b {
       $0.renmatrix(); /*20790*/
       $$.restore(); /*20792*/
    } // end ean8composite
+</div><div class="codeblock upcacomposite">
     $0.<b id="upcacomposite">upcacomposite</b> = function() {
       var $1 = {}; /*20822*/
       $1.options = $k[--$j]; /*20824*/
@@ -23563,6 +23695,7 @@ b {
       $0.renmatrix(); /*20874*/
       $$.restore(); /*20876*/
    } // end upcacomposite
+</div><div class="codeblock upcecomposite">
     $0.<b id="upcecomposite">upcecomposite</b> = function() {
       var $1 = {}; /*20906*/
       $1.options = $k[--$j]; /*20908*/
@@ -23678,6 +23811,7 @@ b {
       $0.renmatrix(); /*20973*/
       $$.restore(); /*20975*/
    } // end upcecomposite
+</div><div class="codeblock databaromnicomposite">
     $0.<b id="databaromnicomposite">databaromnicomposite</b> = function() {
       var $1 = {}; /*21005*/
       $1.options = $k[--$j]; /*21007*/
@@ -23731,7 +23865,7 @@ b {
             $k[$j++] = _i &amp;&amp; $eq($get($1.bot, _c + $1.fp), $get($1.f3, _c)); /*21062*/
 </span>         } /*21062*/
          if ($k[--$j]) { /*21065*/
-<span class="missed">            $puti($1.sep, $1.fp, $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])); /*21064*/
+<span class="taken">            $puti($1.sep, $1.fp, $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])); /*21064*/
 </span>         } /*21064*/
 </span>      }; /*21066*/
       $k[$j++] = Infinity; /*21067*/
@@ -23781,6 +23915,7 @@ b {
       $0.renmatrix(); /*21085*/
       $$.restore(); /*21087*/
    } // end databaromnicomposite
+</div><div class="codeblock databarstackedcomposite">
     $0.<b id="databarstackedcomposite">databarstackedcomposite</b> = function() {
       var $1 = {}; /*21116*/
       $1.options = $k[--$j]; /*21118*/
@@ -23869,6 +24004,7 @@ b {
       $0.renmatrix(); /*21193*/
       $$.restore(); /*21195*/
    } // end databarstackedcomposite
+</div><div class="codeblock databarstackedomnicomposite">
     $0.<b id="databarstackedomnicomposite">databarstackedomnicomposite</b> = function() {
       var $1 = {}; /*21224*/
       $1.options = $k[--$j]; /*21226*/
@@ -23957,6 +24093,7 @@ b {
       $0.renmatrix(); /*21301*/
       $$.restore(); /*21303*/
    } // end databarstackedomnicomposite
+</div><div class="codeblock databartruncatedcomposite">
     $0.<b id="databartruncatedcomposite">databartruncatedcomposite</b> = function() {
       var $1 = {}; /*21333*/
       $1.options = $k[--$j]; /*21335*/
@@ -24010,7 +24147,7 @@ b {
             $k[$j++] = _i &amp;&amp; $eq($get($1.bot, _c + $1.fp), $get($1.f3, _c)); /*21390*/
 </span>         } /*21390*/
          if ($k[--$j]) { /*21393*/
-<span class="missed">            $puti($1.sep, $1.fp, $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])); /*21392*/
+<span class="taken">            $puti($1.sep, $1.fp, $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])); /*21392*/
 </span>         } /*21392*/
 </span>      }; /*21394*/
       $k[$j++] = Infinity; /*21395*/
@@ -24060,6 +24197,7 @@ b {
       $0.renmatrix(); /*21413*/
       $$.restore(); /*21415*/
    } // end databartruncatedcomposite
+</div><div class="codeblock databarlimitedcomposite">
     $0.<b id="databarlimitedcomposite">databarlimitedcomposite</b> = function() {
       var $1 = {}; /*21445*/
       $1.options = $k[--$j]; /*21447*/
@@ -24127,6 +24265,7 @@ b {
       $0.renmatrix(); /*21504*/
       $$.restore(); /*21506*/
    } // end databarlimitedcomposite
+</div><div class="codeblock databarexpandedcomposite">
     $0.<b id="databarexpandedcomposite">databarexpandedcomposite</b> = function() {
       var $1 = {}; /*21536*/
       $1.options = $k[--$j]; /*21538*/
@@ -24229,6 +24368,7 @@ b {
       $0.renmatrix(); /*21614*/
       $$.restore(); /*21616*/
    } // end databarexpandedcomposite
+</div><div class="codeblock databarexpandedstackedcomposite">
     $0.<b id="databarexpandedstackedcomposite">databarexpandedstackedcomposite</b> = function() {
       var $1 = {}; /*21645*/
       $1.options = $k[--$j]; /*21647*/
@@ -24319,6 +24459,7 @@ b {
       $0.renmatrix(); /*21721*/
       $$.restore(); /*21723*/
    } // end databarexpandedstackedcomposite
+</div><div class="codeblock gs1-128composite">
     $0["<b id="gs1-128composite">gs1-128composite</b>"] = function() {
       var $1 = {}; /*21753*/
       $1.options = $k[--$j]; /*21755*/
@@ -24361,13 +24502,13 @@ b {
       $0["gs1-cc"](); /*21793*/
       $1.compsym = $k[--$j]; /*21793*/
       if ($1.compsym.pixx == 99) { /*21794*/
-<span class="missed">         $k[$j++] = "a"; /*21794*/
+<span class="taken">         $k[$j++] = "a"; /*21794*/
 </span>      } else { /*21794*/
 <span class="taken">         $k[$j++] = "c"; /*21794*/
 </span>      } /*21794*/
       $1.linktype = $k[--$j]; /*21794*/
       if ($eq($1.linktype, "a")) { /*21802*/
-<span class="missed">         $1.options.linkagea = true; /*21798*/
+<span class="taken">         $1.options.linkagea = true; /*21798*/
          $1.options.linkagec = false; /*21799*/
 </span>      } else { /*21802*/
 <span class="taken">         $1.options.linkagea = false; /*21801*/
@@ -24412,7 +24553,7 @@ b {
       $k[$j++] = _t; /*21821*/
       $0.renmatrix(); /*21821*/
       if ($eq($1.linktype, "a")) { /*21830*/
-<span class="missed">         $1.s = ~~(($1.linwidth - 2) / 11); /*21825*/
+<span class="taken">         $1.s = ~~(($1.linwidth - 2) / 11); /*21825*/
          $1.p = ~~(($1.s - 9) / 2); /*21826*/
          $k[$j++] = "x"; /*21827*/
          $k[$j++] = ((($1.s - $1.p) - 1) * 11) + 10; /*21827*/
@@ -24430,6 +24571,7 @@ b {
       $0.renmatrix(); /*21833*/
       $$.restore(); /*21835*/
    } // end gs1-128composite
+</div><div class="codeblock gs1datamatrix">
     $0.<b id="gs1datamatrix">gs1datamatrix</b> = function() {
       var $1 = {}; /*21863*/
       $1.options = $k[--$j]; /*21865*/
@@ -24612,6 +24754,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*21981*/
 </span>      } /*21981*/
    } // end gs1datamatrix
+</div><div class="codeblock gs1datamatrixrectangular">
     $0.<b id="gs1datamatrixrectangular">gs1datamatrixrectangular</b> = function() {
       var $1 = {}; /*22009*/
       $1.options = $k[--$j]; /*22011*/
@@ -24795,6 +24938,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*22128*/
 </span>      } /*22128*/
    } // end gs1datamatrixrectangular
+</div><div class="codeblock gs1qrcode">
     $0.<b id="gs1qrcode">gs1qrcode</b> = function() {
       var $1 = {}; /*22155*/
       $1.options = $k[--$j]; /*22157*/
@@ -24977,6 +25121,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*22273*/
 </span>      } /*22273*/
    } // end gs1qrcode
+</div><div class="codeblock hibccode39">
     $0.<b id="hibccode39">hibccode39</b> = function() {
       var $1 = {}; /*22301*/
       $1.options = $k[--$j]; /*22303*/
@@ -25067,6 +25212,7 @@ b {
 <span class="taken">         $0.renlinear(); /*22377*/
 </span>      } /*22377*/
    } // end hibccode39
+</div><div class="codeblock hibccode128">
     $0.<b id="hibccode128">hibccode128</b> = function() {
       var $1 = {}; /*22405*/
       $1.options = $k[--$j]; /*22407*/
@@ -25156,6 +25302,7 @@ b {
 <span class="taken">         $0.renlinear(); /*22480*/
 </span>      } /*22480*/
    } // end hibccode128
+</div><div class="codeblock hibcdatamatrix">
     $0.<b id="hibcdatamatrix">hibcdatamatrix</b> = function() {
       var $1 = {}; /*22508*/
       $1.options = $k[--$j]; /*22510*/
@@ -25219,6 +25366,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*22566*/
 </span>      } /*22566*/
    } // end hibcdatamatrix
+</div><div class="codeblock hibcdatamatrixrectangular">
     $0.<b id="hibcdatamatrixrectangular">hibcdatamatrixrectangular</b> = function() {
       var $1 = {}; /*22594*/
       $1.options = $k[--$j]; /*22596*/
@@ -25283,6 +25431,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*22653*/
 </span>      } /*22653*/
    } // end hibcdatamatrixrectangular
+</div><div class="codeblock hibcpdf417">
     $0.<b id="hibcpdf417">hibcpdf417</b> = function() {
       var $1 = {}; /*22681*/
       $1.options = $k[--$j]; /*22683*/
@@ -25349,6 +25498,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*22743*/
 </span>      } /*22743*/
    } // end hibcpdf417
+</div><div class="codeblock hibcmicropdf417">
     $0.<b id="hibcmicropdf417">hibcmicropdf417</b> = function() {
       var $1 = {}; /*22771*/
       $1.options = $k[--$j]; /*22773*/
@@ -25415,6 +25565,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*22833*/
 </span>      } /*22833*/
    } // end hibcmicropdf417
+</div><div class="codeblock hibcqrcode">
     $0.<b id="hibcqrcode">hibcqrcode</b> = function() {
       var $1 = {}; /*22861*/
       $1.options = $k[--$j]; /*22863*/
@@ -25478,6 +25629,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*22919*/
 </span>      } /*22919*/
    } // end hibcqrcode
+</div><div class="codeblock hibccodablockf">
     $0.<b id="hibccodablockf">hibccodablockf</b> = function() {
       var $1 = {}; /*22947*/
       $1.options = $k[--$j]; /*22949*/
@@ -25541,6 +25693,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*23005*/
 </span>      } /*23005*/
    } // end hibccodablockf
+</div><div class="codeblock hibcazteccode">
     $0.<b id="hibcazteccode">hibcazteccode</b> = function() {
       var $1 = {}; /*23033*/
       $1.options = $k[--$j]; /*23035*/
@@ -25604,7 +25757,7 @@ b {
 <span class="taken">         $0.renmatrix(); /*23091*/
 </span>      } /*23091*/
    } // end hibcazteccode
-
+</div>
 </div>
 </div>
 </body>
