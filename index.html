@@ -28,21 +28,40 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 
-<p><a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="https://camo.githubusercontent.com/bf801c201bf177a65a4b14922c0ec9d61f2bee06/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732e706e67" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js.png" style="max-width:100%;"></a>
+<p><a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="https://camo2.githubusercontent.com/bf801c201bf177a65a4b14922c0ec9d61f2bee06/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732e706e67" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js.png" style="max-width:100%;"></a>
 bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any modern browser or JavaScript-based server framework.</p>
 
 <p>The software has encoding modules for over 90 different barcode types and standards.
 All linear and two-dimensional barcodes in common use (and many uncommon
-ones) are available.  An exhaustive list of supported barcode types can be found at
-the end of this document.</p>
+ones) are available.  An exhaustive list of supported barcode types can be
+found at the end of this document.</p>
+
+<p>bwip-js has finally hit the 1.0 release.  This release uses a newly developed
+optimizing PostScript to JavaScript cross-compiler that reduces code size and
+improves performance, in some cases an order-of-magnitude decrease in run time.
+See the <a href="https://github.com/metafloor/bwip-js/wiki/Version-1.0-Release-Announcement">Version 1.0 Release Announcement</a> for more details.</p>
+
+<blockquote>
+<p>Version 1.0 is an API breaking release.  If you are using the demo or
+the Node.js module without modification, there is no change.  If you have
+customized the node module or integrated bwip-js into your code directly,
+you will need to make some adjustments.</p>
+
+<p>The new JavaScript API is significantly simplified.  Asynchronous module
+loading has been eliminated.  You simply load or <code>require()</code> three modules
+(FreeType, BWIPP, and bwip-js) rather than having to create separate
+execution contexts and asynchronously load into them.</p>
+
+<p>See <a href="https://github.com/metafloor/bwip-js/wiki/Integrating-With-Your-Code">Integrating With Your Code</a> for more details.</p>
+</blockquote>
 
 <h2>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 
 <ul>
-<li>Current bwip-js version is 0.16.0 (18-Apr-2016)</li>
-<li>Current BWIPP version is 2016-03-28</li>
-<li>Node.js compatibility &gt;= v0.10 (reported to work with v0.8 but not tested).</li>
+<li>Current bwip-js version is 1.0.0 (2016-06-16)</li>
+<li>Current BWIPP version is 2016-06-03</li>
+<li>Node.js compatibility &gt;= v0.10</li>
 <li>npm dependencies: none</li>
 </ul>
 
@@ -53,10 +72,11 @@ the end of this document.</p>
 <li><a href="http://metafloor.github.io/bwip-js/">Home Page</a></li>
 <li><a href="https://github.com/metafloor/bwip-js">Repository</a></li>
 <li><a href="http://metafloor.github.io/bwip-js/demo/demo.html">Online Barcode Generator</a></li>
-<li><a href="https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API">Online Barcode API</a></li>
+<li><a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">Online Barcode API</a></li>
 <li><a href="https://www.npmjs.com/package/bwip-js">Node.js npm Page</a></li>
 <li><a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP Documentation</a></li>
-<li><a href="https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies">Symbologies Supported by BWIPP/bwip-js</a></li>
+<li><a href="https://github.com/metafloor/bwip-js/wiki/Differences-between-BWIPP-and-bwipjs">Differences between BWIPP and bwipjs</a></li>
+<li><a href="https://github.com/metafloor/bwip-js/wiki/BWIPP-Barcode-Types">Supported Barcode Types</a></li>
 </ul>
 
 <h2>
@@ -64,9 +84,9 @@ the end of this document.</p>
 
 <p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online barcode generator</a>
 demonstrates all of the features of bwip-js.
-It showcases the new font rendering provided by the FreeType library,
+It showcases the font rendering provided by the FreeType library,
 and allows using your own fonts.  All fonts are stored locally on your computer;
-the generator is 100% client-side JavaScript.</p>
+the demo is 100% client-side JavaScript.</p>
 
 <p>The demo is tested on the latest versions of Firefox and Chrome, along with IE10 and IE11.
 Microsoft Edge should work, and so should the latest versions of Opera and Safari,
@@ -83,38 +103,37 @@ HTML documents or retrieve the barcode images directly from your non-JavaScript
 server.  (JavaScript-based servers should use the bwip-js code directly - it will
 be a lot more performant.)</p>
 
-<p>For details on how to use this service, see 
-<a href="https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API">Online Barcode Generator API</a>.</p>
+<p>For details on how to use this service, see <a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">Online Barcode API</a>.</p>
 
 <h2>
 <a id="user-content-nodejs-request-handler" class="anchor" href="#nodejs-request-handler" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Node.js Request Handler</h2>
 
-<p>The online barcode service is implemented as a Node.js application.  The code used
-for the service is available as part of the bwip-js source code.
-See the
-<a href="https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API">Barcode API</a> for details on how the URL query parameters must be structured.</p>
+<p>The online barcode API is implemented as a Node.js application.  The code
+used for the service is available as part of the bwip-js source code.
+See the <a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">Online Barcode API</a> for details on how the URL query parameters must be structured.</p>
 
-<p>The following is a minimal example of how to use the request handler:</p>
+<p>A working, minimal example of how to use the request handler can be found in
+<code>server.js</code>:</p>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-c">// Simple HTTP server that renders bar code images using bwip-js.</span>
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// Simple HTTP server that renders barcode images using bwip-js.</span>
 <span class="pl-k">var</span> http   <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>);
 <span class="pl-k">var</span> bwipjs <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>bwip-js<span class="pl-pds">'</span></span>);
 
 <span class="pl-c">// Example of how to load a font into bwipjs. </span>
-<span class="pl-c">//  bwipjs.loadFont(fontname, sizemult, fontdata)</span>
+<span class="pl-c">//    bwipjs.loadFont(fontname, sizemult, fontdata)</span>
 <span class="pl-c">//</span>
 <span class="pl-c">// To unload a font (and free up space for another):</span>
-<span class="pl-c">//  bwipjs.unloadFont(fontname)</span>
+<span class="pl-c">//    bwipjs.unloadFont(fontname)</span>
 <span class="pl-c">//</span>
 <span class="pl-smi">bwipjs</span>.<span class="pl-en">loadFont</span>(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span class="pl-pds">'</span></span>, <span class="pl-c1">108</span>,
-            <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>).<span class="pl-en">readFileSync</span>(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata.otf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>binary<span class="pl-pds">'</span></span>));
+            <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>).<span class="pl-en">readFileSync</span>(<span class="pl-s"><span class="pl-pds">'</span>fonts/Inconsolata.otf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>binary<span class="pl-pds">'</span></span>));
 
 <span class="pl-smi">http</span>.<span class="pl-en">createServer</span>(<span class="pl-k">function</span>(<span class="pl-smi">req</span>, <span class="pl-smi">res</span>) {
     <span class="pl-c">// If the url does not begin /?bcid= then 404.  Otherwise, we end up</span>
     <span class="pl-c">// returning 400 on requests like favicon.ico.</span>
     <span class="pl-k">if</span> (<span class="pl-smi">req</span>.<span class="pl-smi">url</span>.<span class="pl-c1">indexOf</span>(<span class="pl-s"><span class="pl-pds">'</span>/?bcid=<span class="pl-pds">'</span></span>) <span class="pl-k">!=</span> <span class="pl-c1">0</span>) {
         <span class="pl-smi">res</span>.<span class="pl-en">writeHead</span>(<span class="pl-c1">404</span>, { <span class="pl-s"><span class="pl-pds">'</span>Content-Type<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>text/plain<span class="pl-pds">'</span></span> });
-        <span class="pl-smi">res</span>.<span class="pl-en">end</span>(<span class="pl-s"><span class="pl-pds">'</span>BWIP-JS: Unknown request format.<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>utf8<span class="pl-pds">'</span></span>);
+        <span class="pl-smi">res</span>.<span class="pl-en">end</span>(<span class="pl-s"><span class="pl-pds">'</span>BWIPJS: Unknown request format.<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>utf8<span class="pl-pds">'</span></span>);
     } <span class="pl-k">else</span> {
         <span class="pl-en">bwipjs</span>(req, res);
     }
@@ -140,17 +159,17 @@ path as needed to implement the desired HTTP request routing.</p>
 <span class="pl-c">// Optionally load some custom fonts.  Maximum 8.</span>
 <span class="pl-c">// OpenType and TrueType are supported.</span>
 <span class="pl-smi">bwipjs</span>.<span class="pl-en">loadFont</span>(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span class="pl-pds">'</span></span>, <span class="pl-c1">108</span>,
-            <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>).<span class="pl-en">readFileSync</span>(<span class="pl-s"><span class="pl-pds">'</span>Inconsolata.otf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>binary<span class="pl-pds">'</span></span>));
+            <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>).<span class="pl-en">readFileSync</span>(<span class="pl-s"><span class="pl-pds">'</span>fonts/Inconsolata.otf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>binary<span class="pl-pds">'</span></span>));
 
 <span class="pl-smi">bwipjs</span>.<span class="pl-en">toBuffer</span>({
-        bcid<span class="pl-k">:</span>           <span class="pl-s"><span class="pl-pds">'</span>code128<span class="pl-pds">'</span></span>,      <span class="pl-c">// Barcode type</span>
-        text<span class="pl-k">:</span>           <span class="pl-s"><span class="pl-pds">'</span>0123456789<span class="pl-pds">'</span></span>,   <span class="pl-c">// Text to encode</span>
-        scale<span class="pl-k">:</span>          <span class="pl-c1">3</span>,              <span class="pl-c">// 3x scaling factor</span>
-        height<span class="pl-k">:</span>         <span class="pl-c1">10</span>,             <span class="pl-c">// Bar height, in millimeters</span>
-        includetext<span class="pl-k">:</span>    <span class="pl-c1">true</span>,           <span class="pl-c">// Show human-readable text</span>
-        textxalign<span class="pl-k">:</span>     <span class="pl-s"><span class="pl-pds">'</span>center<span class="pl-pds">'</span></span>,       <span class="pl-c">// Always good to set this</span>
-        textfont<span class="pl-k">:</span>       <span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span class="pl-pds">'</span></span>,  <span class="pl-c">// Use your custom font</span>
-        textsize<span class="pl-k">:</span>       <span class="pl-c1">13</span>              <span class="pl-c">// Font size, in points</span>
+        bcid<span class="pl-k">:</span>        <span class="pl-s"><span class="pl-pds">'</span>code128<span class="pl-pds">'</span></span>,       <span class="pl-c">// Barcode type</span>
+        text<span class="pl-k">:</span>        <span class="pl-s"><span class="pl-pds">'</span>0123456789<span class="pl-pds">'</span></span>,    <span class="pl-c">// Text to encode</span>
+        scale<span class="pl-k">:</span>       <span class="pl-c1">3</span>,               <span class="pl-c">// 3x scaling factor</span>
+        height<span class="pl-k">:</span>      <span class="pl-c1">10</span>,              <span class="pl-c">// Bar height, in millimeters</span>
+        includetext<span class="pl-k">:</span> <span class="pl-c1">true</span>,            <span class="pl-c">// Show human-readable text</span>
+        textxalign<span class="pl-k">:</span>  <span class="pl-s"><span class="pl-pds">'</span>center<span class="pl-pds">'</span></span>,        <span class="pl-c">// Always good to set this</span>
+        textfont<span class="pl-k">:</span>    <span class="pl-s"><span class="pl-pds">'</span>Inconsolata<span class="pl-pds">'</span></span>,   <span class="pl-c">// Use your custom font</span>
+        textsize<span class="pl-k">:</span>    <span class="pl-c1">13</span>               <span class="pl-c">// Font size, in points</span>
     }, <span class="pl-k">function</span> (<span class="pl-smi">err</span>, <span class="pl-smi">png</span>) {
         <span class="pl-k">if</span> (err) {
             <span class="pl-c">// Decide how to handle the error</span>
@@ -198,120 +217,6 @@ specific options are:</p>
 to determine what options are available for each barcode type.</p>
 
 <h2>
-<a id="user-content-features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
-
-<p>An
-<a href="http://kripken.github.io/emscripten-site/index.html">Emscripten compiled</a>
-version of the <a href="http://freetype.org/">FreeType library</a> is integrated into bwip-js.</p>
-
-<p>Embedded in the FreeType library are open-source versions of the OCR-A and OCR-B
-fonts provided by the
-<a href="http://en.sourceforge.jp/projects/tsukurimashou/releases/">Tsukurimashou Font Family</a>
-project.</p>
-
-<p>A description of how FreeType was compiled for use with bwip-js can be found at:
-<a href="https://github.com/metafloor/bwip-js/wiki/Compiling-FreeType">Compiling FreeType with Emscripten</a>.</p>
-
-<h3>
-<a id="user-content-ocr-fonts" class="anchor" href="#ocr-fonts" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OCR Fonts</h3>
-
-<p>The barcode images generated by bwip-js are essentially identical to using BWIPP with 
-<a href="http://www.ghostscript.com/">Ghostscript</a>.  The most significant
-difference is the use of the OCR-A and OCR-B fonts.
-Barcodes and the OCR fonts are like
-chocolate and hazelnut; they were meant to go together.  Unfortunately, most
-PostScript environments do not provide the OCR fonts and must fallback to Courier,
-Helvetica, and other less-than-ideal typefaces.</p>
-
-<p>The following two images show the differences in typeface.
-The image below was rendered by bwip-js:</p>
-
-<p><a href="https://camo.githubusercontent.com/5f77ec2eafe4a28980d74744ede6ac0c058b3884/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732d6973626e2e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/5f77ec2eafe4a28980d74744ede6ac0c058b3884/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732d6973626e2e706e673f7261773d74727565" alt="bwip-js ISBN" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js-isbn.png?raw=true" style="max-width:100%;"></a></p>
-
-<p>And the next image was rendered using BWIPP with Ghostscript:</p>
-
-<p><a href="https://camo.githubusercontent.com/68f4bd92fed69504f756fd86fd99bf7609a42c51/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f62776970702d6973626e2e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/68f4bd92fed69504f756fd86fd99bf7609a42c51/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f62776970702d6973626e2e706e673f7261773d74727565" alt="BWIPP/Ghostscript ISBN" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwipp-isbn.png?raw=true" style="max-width:100%;"></a></p>
-
-<p>The new font functionality is implemented with the following logic:</p>
-
-<ul>
-<li>OCR-B is used as the default font for all barcodes.</li>
-<li>OCR-A is used for the extra text on the ISBN, ISMN and ISSN symbols.</li>
-</ul>
-
-<p>These defaults can be overridden using BWIPP options.
-The fonts are known to the PostScript emulation as <code>OCR-A</code> and <code>OCR-B</code>.
-For example, to switch the font to OCR-A, you would specify the option:</p>
-
-<pre><code>textfont=OCR-A
-</code></pre>
-
-<p>For the text above the barcode on the ISBN, ISMN, and ISSN symbols, the font
-can be changed using <code>isbntextfont</code>, <code>ismntextfont</code>, and <code>issntextfont</code>,
-respectively.</p>
-
-<p>The code in <code>demo.html</code> shows how to load your own fonts into bwip-js.  See 
-<a href="https://github.com/metafloor/bwip-js/wiki/Preloading-Fonts-Into-FreeType">Preloading Fonts Into FreeType</a>
-and <a href="https://github.com/metafloor/bwip-js/wiki/Loading-Fonts-During-Runtime">Loading Fonts During Runtime</a>
-for descriptions of the two techniques.</p>
-
-<p>The online barcode generator pre-loads the
-<a href="http://www.levien.com/type/myfonts/inconsolata.html">Inconsolata font</a>,
-which can be seen using the option:</p>
-
-<pre><code>textfont=Inconsolata
-</code></pre>
-
-<p>For example, we can render an alternate version of the ISBN barcodes shown above
-with the Inconsolata font using the BWIPP options:</p>
-
-<pre><code>includetext guardwhitespace textfont=Inconsolata isbntextfont=Inconsolata isbntextsize=11
-</code></pre>
-
-<p><a href="https://camo.githubusercontent.com/adda62aa0732b8b613d4ffef6559d64dd6c2803b/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f6973626e2d696e636f6e736f6c6174612e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/adda62aa0732b8b613d4ffef6559d64dd6c2803b/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f6973626e2d696e636f6e736f6c6174612e706e673f7261773d74727565" alt="ISBN Using Inconsolata" data-canonical-src="http://metafloor.github.io/bwip-js/images/isbn-inconsolata.png?raw=true" style="max-width:100%;"></a></p>
-
-<h3>
-<a id="user-content-background-color" class="anchor" href="#background-color" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Background Color</h3>
-
-<p>A second difference between BWIPP and bwip-js rendering occurs with the
-<code>backgroundcolor</code> option.  The BWIPP implementation of background color is a bit
-inconsistent.  For some bar code types, the background color extends into the
-human readable text, and for others, it does not.  The bwip-js PostScript emulation
-implements BWIPP's background color handling but the front-end interfaces
-in the demo and in the node module explicitly override the option.  They extend
-the background color to cover the entire image, including all human readable text.</p>
-
-<p>The first/left image in each pair is from BWIPP using ghostscript, the second from
-bwip-js.</p>
-
-<p><a href="https://camo.githubusercontent.com/fb6fd3fcdd0287c101308162ab79977b57ddb09b/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f62776970702d65616e31332d62672e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/fb6fd3fcdd0287c101308162ab79977b57ddb09b/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f62776970702d65616e31332d62672e706e673f7261773d74727565" alt="BWIPP EAN-13" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwipp-ean13-bg.png?raw=true" style="max-width:100%;"></a>
-<a href="https://camo.githubusercontent.com/66fa3e8add52e8f9af2c06f1a7dc61b70a1ad117/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732d65616e31332d62672e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/66fa3e8add52e8f9af2c06f1a7dc61b70a1ad117/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732d65616e31332d62672e706e673f7261773d74727565" alt="bwip-js EAN-13" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js-ean13-bg.png?raw=true" style="max-width:100%;"></a></p>
-
-<p><a href="https://camo.githubusercontent.com/c2afac73b6ea9688442c47e9b083ae7bc7bdb4c2/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f62776970702d636f64653132382d62672e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/c2afac73b6ea9688442c47e9b083ae7bc7bdb4c2/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f62776970702d636f64653132382d62672e706e673f7261773d74727565" alt="BWIPP Code128" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwipp-code128-bg.png?raw=true" style="max-width:100%;"></a>
-<a href="https://camo.githubusercontent.com/44dfd13f2ff224ffa0c3c095bbb33d1b32d9e9d9/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732d636f64653132382d62672e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/44dfd13f2ff224ffa0c3c095bbb33d1b32d9e9d9/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732d636f64653132382d62672e706e673f7261773d74727565" alt="bwip-js Code128" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js-code128-bg.png?raw=true" style="max-width:100%;"></a></p>
-
-<p><a href="https://camo.githubusercontent.com/e9b7c48ca3161c46400c61df2848ec00d2a4f2eb/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f62776970702d6973626e2d62672e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/e9b7c48ca3161c46400c61df2848ec00d2a4f2eb/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f62776970702d6973626e2d62672e706e673f7261773d74727565" alt="BWIPP ISBN" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwipp-isbn-bg.png?raw=true" style="max-width:100%;"></a>
-<a href="https://camo.githubusercontent.com/bfa155a2d72b0524b352d9f6dc8a43a70df1caf6/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732d6973626e2d62672e706e673f7261773d74727565" target="_blank"><img src="https://camo.githubusercontent.com/bfa155a2d72b0524b352d9f6dc8a43a70df1caf6/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732d6973626e2d62672e706e673f7261773d74727565" alt="bwip-js ISBN" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js-isbn-bg.png?raw=true" style="max-width:100%;"></a></p>
-
-<p>If you want to use BWIPP's original background color handling, look for the
-following lines in <code>node-bwipjs</code> (or <code>lib/canvas.js</code> if using the browser code):</p>
-
-<pre><code>// Feature or bug, BWIPP does not extend the background color into
-// the human readable text.  Fix that in the bitmap interface.
-if (opts.backgroundcolor) {
-    bw.bitmap(new Bitmap(parseInt(''+opts.backgroundcolor, 16)));
-    delete opts.backgroundcolor;
-} else {
-    bw.bitmap(new Bitmap);
-}
-</code></pre>
-
-<p>Comment out or remove the <code>if</code> part of the logic, leaving only <code>bw.bitmap(new Bitmap);</code>.</p>
-
-<p>By default, if the <code>backgroundcolor</code> option is not specified, bwip-js renders the
-image with a transparent background.</p>
-
-<h2>
 <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>You can download the latest npm module using:</p>
@@ -324,49 +229,48 @@ image with a transparent background.</p>
 <pre><code>https://github.com/metafloor/bwip-js
 </code></pre>
 
-<p>The software is organized in the following directory structure:</p>
+<p>(The bwip-js master branch and the npm version are kept sync'd.)</p>
+
+<p>The software is organized as follows:</p>
 
 <pre><code>bwip-js/
-    bwip.js         # Main bwip-js code.
-    demo.html       # The bwip-js demo
-    freetype.js     # The Emscripten-compiled FreeType library
-    freetype.js.mem # Demand loaded memory image
-    node-bwipjs     # Node.js module
-    node-zlibPNG    # Node.js module that implements a PNG encoder
-    package.json    # Node.js/npm configuration
-    bwipp/          # The cross-compiled BWIPP encoders and renderers
-    lib/            # Utilities required by the demo
+    barcode.ps       # The BWIPP PostScript barcode library
+    bwipjs.js        # Main bwipjs code
+    bwipp.js         # The cross-compiled BWIPP code
+    demo.html        # The bwipjs demo
+    freetype.js      # The Emscripten-compiled FreeType library
+    freetype.js.mem  # Demand loaded memory image
+    node-bwipjs.js   # Node.js module
+    node-zlibPNG.js  # Node.js module that implements a PNG encoder
+    package.json     # Node.js/npm configuration
+    server.js        # Node.js example server
+    fonts/           # OCR and Inconsolata font files
+    lib/             # Utilities required by the demo
 </code></pre>
 
+<p>The above files are part of the <code>master</code> branch.  If you wish to 
+compile bwip-js on your own, you will need to download the <code>develop</code> branch, 
+which contains the cross-compiler, test framework, code-coverage files,
+benchmark framework, image proofs, etc.  Everything used to create and
+validate bwip-js.</p>
+
+<p>For details on how to compile and test bwip-js, see <a href="https://github.com/metafloor/bwip-js/wiki/Compiling-bwipjs">Compiling bwipjs</a>.</p>
+
 <h2>
-<a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+<a id="user-content-demo-usage" class="anchor" href="#demo-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo Usage</h2>
+
+<p>To run the demo from your HTTP server, you should install the <code>bwip-js</code>
+directory
+under the server's root document directory and modify the server's configuration
+files, if necessary.  Then navigate your browser to <code>bwip-js/demo.html</code>.</p>
 
 <blockquote>
-<p><strong>Version 0.8 was an API-breaking release.</strong>  If you have implemented code based on 
-previous versions, you must update your code in three areas.  This 
-<a href="https://github.com/metafloor/bwip-js/wiki/v0.8-API-Changes">wiki page</a> describes
-the changes.</p>
-
-<p><strong>Using the demo with a file:// URL is no longer supported.</strong></p>
-
-<p>Emscripten optimizes the FreeType library by separating the memory intialization
-image and using XHR (when running in a browser) to demand load it.  Because of
-this, you can no longer reliably use the demo via the <code>file://</code> scheme in a
-browser's URL bar.  Firefox supports XHR with <code>file://</code>, Chrome and IE do not.</p>
+<p>You cannot run the demo using a <code>file://</code> URL.  The freetype library demand
+loads files using XHR, which must run over HTTP.</p>
 </blockquote>
 
-<p>To run the demo from your HTTP server, you should install the bwip-js directory
-under the server's root document directory and modify the server's configuration
-files, if necessary.  Then navigate your browser to the <code>bwip-js/demo.html</code> file.</p>
-
-<p>If you would like to implement your own interface to bwip-js, see <a href="https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code">Integrating bwip.js Into Your Code</a>.  I would also recommend looking at the <code>node-bwipjs</code> module to see how it
-was done for Node.js.  Getting the FreeType module to cooperate with the
-BWIPP cross-compiled code was not straightforward.</p>
-
-<h2>
-<a id="user-content-supported-barcode-types" class="anchor" href="#supported-barcode-types" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Supported Barcode Types</h2>
-
-<p>• AusPost 4 State Customer Code • Aztec Code • Aztec Runes • BC412 • Channel Code • Codabar • Codablock F • Code 11 • Code 128 • Code 16K • Code 25 • Code 39 • Code 39 Extended • Code 49 • Code 93 • Code 93 Extended • Code One • Compact Aztec Code • Compact PDF417 • COOP 2 of 5 • Custom 1D symbology • Custom 4 state symbology • Data Matrix • Datalogic 2 of 5 • Deutsche Post Identcode • Deutsche Post Leitcode • EAN-13 • EAN-13 Composite • EAN-2 (2 digit addon) • EAN-5 (5 digit addon) • EAN-8 • EAN-8 Composite • Flattermarken • GS1 Composite 2D Component • GS1 Data Matrix • GS1 DataBar Expanded • GS1 DataBar Expanded Composite • GS1 DataBar Expanded Stacked • GS1 DataBar Expanded Stacked Composite • GS1 DataBar Limited • GS1 DataBar Limited Composite • GS1 DataBar Omnidirectional • GS1 DataBar Omnidirectional Composite • GS1 DataBar Stacked • GS1 DataBar Stacked Composite • GS1 DataBar Stacked Omnidirectional • GS1 DataBar Stacked Omnidirectional Composite • GS1 DataBar Truncated • GS1 DataBar Truncated Composite • GS1 QR Code • GS1-128 • GS1-128 Composite • GS1-14 • HIBC Codablock F • HIBC Code 128 • HIBC Code 39 • HIBC Data Matrix • HIBC MicroPDF417 • HIBC PDF417 • HIBC QR Code • IATA 2 of 5 • Industrial 2 of 5 • Interleaved 2 of 5 (ITF) • ISBN • ISMN • ISSN • Italian Pharmacode • ITF-14 • Japan Post 4 State Customer Code • Matrix 2 of 5 • MaxiCode • Micro QR Code • MicroPDF417 • Miscellaneous symbols • MSI Modified Plessey • PDF417 • Pharmaceutical Binary Code • Pharmazentralnummer (PZN) • Plessey UK • PosiCode • QR Code • Royal Dutch TPG Post KIX • Royal Mail 4 State Customer Code • SSCC-18 • Telepen • Telepen Numeric • Two-track Pharmacode • UPC-A • UPC-A Composite • UPC-E • UPC-E Composite • USPS Intelligent Mail • USPS PLANET • USPS POSTNET •</p>
+<p>If you would like to implement your own interface to bwip-js, see <a href="https://github.com/metafloor/bwip-js/wiki/Integrating-With-Your-Code">Integrating With Your Code</a>.  You should also look at the <code>node-bwipjs.js</code> module to see
+how it was done for Node.js.</p>
 
 	</div>
     <!-- FOOTER  -->
