@@ -12,7 +12,7 @@ found at the end of this document.
 bwipjs has finally hit the 1.0 release.  This release uses a newly developed
 optimizing PostScript to JavaScript cross-compiler that reduces code size and
 improves performance, in some cases an order-of-magnitude decrease in run time.
-See the [[Version 1.0 Release Announcement]] for more details.
+See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/wiki/Version-1.0-Release-Announcement) for more details.
 
 > Version 1.0 is an API breaking release.  If you are using the demo or
 > the Node.js module without modification, there is no change.  If you have
@@ -24,7 +24,7 @@ See the [[Version 1.0 Release Announcement]] for more details.
 > (FreeType, BWIPP, and bwipjs) rather than having to create separate
 > execution contexts and asynchronously load into them.
 > 
-> See [[Integrating Into Your Code]] for more details.
+> See [Integrating Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-Your-Code) for more details.
 
 ## Status 
 
@@ -38,11 +38,11 @@ See the [[Version 1.0 Release Announcement]] for more details.
 * [Home Page](http://metafloor.github.io/bwip-js/)
 * [Repository](https://github.com/metafloor/bwip-js)
 * [Online Barcode Generator](http://metafloor.github.io/bwip-js/demo/demo.html)
-* [[Online Barcode API]]
+* [Online Barcode API](https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API)
 * [Node.js npm Page](https://www.npmjs.com/package/bwip-js)
 * [BWIPP Documentation](https://github.com/bwipp/postscriptbarcode/wiki)
-* [[Differences between BWIPP and bwipjs]]
-* [[Supported Barcode Types]]
+* [Differences between BWIPP and bwipjs](https://github.com/metafloor/bwip-js/wiki/Differences-between-BWIPP-and-bwipjs)
+* [Supported Barcode Types](https://github.com/metafloor/bwip-js/wiki/BWIPP-Barcode-Types)
 
 ## Online Barcode Generator
 
@@ -66,13 +66,13 @@ HTML documents or retrieve the barcode images directly from your non-JavaScript
 server.  (JavaScript-based servers should use the bwipjs code directly - it will
 be a lot more performant.)
 
-For details on how to use this service, see [[Online Barcode API]].
+For details on how to use this service, see [Online Barcode API](https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API).
 
 ## Node.js Request Handler
 
 The online barcode API is implemented as a Node.js application.  The code
 used for the service is available as part of the bwipjs source code.
-See the [[Online Barcode API]] for details on how the URL query parameters must be structured.
+See the [Online Barcode API](https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API) for details on how the URL query parameters must be structured.
 
 A working, minimal example of how to use the request handler can be found in
 `server.js`:
@@ -206,7 +206,7 @@ which contains the cross-compiler, test framework, code-coverage files,
 benchmark framework, image proofs, etc.  Everything used to create and
 validate bwipjs.
 
-For details on how to compile and test bwipjs, see [[Compiling bwipjs]].
+For details on how to compile and test bwipjs, see [Compiling bwipjs](https://github.com/metafloor/bwip-js/wiki/Compiling-bwipjs).
 
 
 ## Demo Usage
@@ -219,7 +219,7 @@ files, if necessary.  Then navigate your browser to `bwip-js/demo.html`.
 > You cannot run the demo using a `file://` URL.  The freetype library demand
 > loads files using XHR, which must run over HTTP.
 
-If you would like to implement your own interface to bwipjs, see [[Integrating With Your Code]].  You should also look at the `node-bwipjs.js` module to see
+If you would like to implement your own interface to bwipjs, see [Integrating With Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-With-Your-Code).  You should also look at the `node-bwipjs.js` module to see
 how it was done for Node.js.
 
 ## Supported Barcode Types
