@@ -1,45 +1,12 @@
-// file: lib/canvas.js
+// file : bwip-js/lib/canvas.js
+// 
+// bwip-js bitmap interface for an HTML canvas.
 //
 // Copyright (c) 2011-2016 Mark Warren
 //
-// See the COPYRIGHT file in the bwip.js root directory
+// Licensed MIT.  See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 
-// Dynamically load the encoders.
-BWIPJS.load = function(path) {
-	var script;
-	var src = BWIPJS.load.root + path;
-	var scriptInjected = Array.prototype.filter.call(document.scripts,
-				function (script) {
-			        return script.getAttribute('src') === src;
-				})[0];
-	if (scriptInjected) {
-		// Script has already been added, we are waiting for it to load.
-		return false;
-	}
-	var script = document.createElement('script');
-	script.type = 'text/javascript';
-	script.src = BWIPJS.load.root + path;
-	document.head.appendChild(script);
-};
-
-// Determine where this script is located on the server and
-// make the encoder loading relative to it.
-(function() {
-	var scripts = document.getElementsByTagName("script");
-	// http://host:port/foo/bar/lib/canvas.js
-	// We want root to be everything but lib/canvas.js
-    BWIPJS.load.root = scripts[scripts.length-1].src.replace(/lib.canvas.js$/,'');
-})();
-
-
-BWIPJS.print = function(s) {
-	var div = document.getElementById('output');
-	if (div)
-		div.innerHTML += s.replace(/&/g,'&amp;').replace(/</g,'&lt;') + '<br>';
-};
-
-// Encapsulate the bitmap interface
 // bgcolor is optional, defaults to #fff.
 function Bitmap(bgcolor) {
 	var clr  = [0, 0, 0];
@@ -48,16 +15,30 @@ function Bitmap(bgcolor) {
 	var miny = 0;	// min-y
 	var maxx = 0;	// max-x
 	var maxy = 0;	// max-y
-	var padx = 0;	// optional left/right padding
-	var pady = 0;	// optional top/bottom padding
+	var padx = 0;	// padding-x
+	var pady = 0;	// padding-y
 
-	this.pad = function(width, height) {
-		padx = width;
-		pady = height;
+	this.pad = function(x, y) {
+		padx = x;
+		pady = y;
 	}
 
 	this.color = function(r, g, b) {
 		clr = [r, g, b];
+	}
+
+	// Sets the minimim size for the drawing surface (can grow larger).
+	// BWIPP has logic for borders (padding) that without this custom call
+	// gets lost.  See custom/ren*.ps.
+	this.extent = function(llx, lly, urx, ury) {
+		llx = Math.floor(llx);
+		lly = Math.floor(lly);
+		urx = Math.floor(urx);
+		ury = Math.floor(ury);
+		if (minx > llx) minx = llx;
+		if (miny > lly) miny = lly;
+		if (maxx < urx) maxx = urx;
+		if (maxy < ury) maxy = ury;
 	}
 
 	// a is the alpha-level of the pixel [0 .. 255]
@@ -72,7 +53,8 @@ function Bitmap(bgcolor) {
 	}
 
 	this.show = function(cvsid, rot) {
-		var cvs = cvsid instanceof window.HTMLCanvasElement ? cvsid : document.getElementById(cvsid);
+		var cvs = cvsid instanceof window.HTMLCanvasElement
+					? cvsid : document.getElementById(cvsid);
 		if (pts.length == 0) {
 			cvs.width  = 32;
 			cvs.height = 32;
@@ -84,10 +66,6 @@ function Bitmap(bgcolor) {
 		if (rot == 'R' || rot == 'L') {
 			var h = maxx-minx+1;
 			var w = maxy-miny+1;
-			// Swap the padding values.
-			var t = pady;
-			pady = padx;
-			padx = t;
 		} else {
 			var w = maxx-minx+1;
 			var h = maxy-miny+1;
@@ -95,6 +73,20 @@ function Bitmap(bgcolor) {
 
 		cvs.width  = w + 2*padx;
 		cvs.height = h + 2*pady;
+
+		// Convert from cmyk?
+		if (bgcolor && bgcolor.length == 8) {
+			var c = parseInt(bgcolor.substr(0,2), 16) / 255;
+			var m = parseInt(bgcolor.substr(2,2), 16) / 255;
+			var y = parseInt(bgcolor.substr(4,2), 16) / 255;
+			var k = parseInt(bgcolor.substr(6,2), 16) / 255;
+			var r = Math.floor((1-c) * (1-k) * 255);
+			var g = Math.floor((1-m) * (1-k) * 255);
+			var b = Math.floor((1-y) * (1-k) * 255);
+			bgcolor = 'rgb(' + r + ',' + g + ',' + b + ')';
+		} else if (bgcolor) {
+			bgcolor = '#' + bgcolor;
+		}
 
 		var ctx = cvs.getContext('2d');
 		ctx.fillStyle = bgcolor || '#fff';
