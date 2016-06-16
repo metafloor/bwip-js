@@ -14,7 +14,7 @@ var bwipjs = require('./node-bwipjs');	// ./ required for local use
 //  bwipjs.unloadFont(fontname)
 //
 bwipjs.loadFont('Inconsolata', 108,
-			require('fs').readFileSync('Inconsolata.otf', 'binary'));
+			require('fs').readFileSync('fonts/Inconsolata.otf', 'binary'));
 
 http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
