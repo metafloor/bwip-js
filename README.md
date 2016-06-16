@@ -25,7 +25,7 @@ the end of this document.
 * [Online Barcode API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API)
 * [Node.js npm Page](https://www.npmjs.com/package/bwip-js)
 * [BWIPP Documentation](https://github.com/bwipp/postscriptbarcode/wiki)
-* [Symbologies Supported by BWIPP/bwip-js](https://github.com/metafloor/bwip-js/wiki/Supported-Barcode-Symbologies)
+* [Barcode Types Supported by BWIPP/bwip-js](https://github.com/metafloor/bwip-js/wiki/BWIPP-Barcode-Types)
 
 ## Online Barcode Generator
 
@@ -50,14 +50,14 @@ server.  (JavaScript-based servers should use the bwip-js code directly - it wil
 be a lot more performant.)
 
 For details on how to use this service, see 
-[Online Barcode Generator API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API).
+[Online Barcode API](https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API).
 
 ## Node.js Request Handler
 
 The online barcode service is implemented as a Node.js application.  The code used
 for the service is available as part of the bwip-js source code.
 See the
-[Barcode API](https://github.com/metafloor/bwip-js/wiki/bwip-js-Online-Barcode-Generator-API) for details on how the URL query parameters must be structured.
+[Barcode API](https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API) for details on how the URL query parameters must be structured.
 
 The following is a minimal example of how to use the request handler:
 
@@ -314,7 +314,7 @@ To run the demo from your HTTP server, you should install the bwip-js directory
 under the server's root document directory and modify the server's configuration
 files, if necessary.  Then navigate your browser to the `bwip-js/demo.html` file.
 
-If you would like to implement your own interface to bwip-js, see [Integrating bwip.js Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-bwip.js-Into-Your-Code).  I would also recommend looking at the `node-bwipjs` module to see how it
+If you would like to implement your own interface to bwip-js, see [Integrating bwip.js Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-bwipjs-(version-0.16-or-earlier)-Into-Your-Code).  I would also recommend looking at the `node-bwipjs` module to see how it
 was done for Node.js.  Getting the FreeType module to cooperate with the
 BWIPP cross-compiled code was not straightforward.
 
