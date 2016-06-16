@@ -1,4 +1,4 @@
-// file: node-bwipjs
+// file: node-bwipjs.js
 //
 // Copyright (c) 2011-2016 Mark Warren
 //
@@ -6,43 +6,11 @@
 // for the extended copyright notice.
 //
 var url	= require('url'),
-	fs	= require('fs'),
-	vm	= require('vm'),
-	zlibPNG	= require(__dirname + '/node-zlibPNG')
+	bwipp = require(__dirname + '/bwipp'),
+	bwipjs = require(__dirname + '/bwipjs'),
+	zlibPNG	= require(__dirname + '/node-zlibPNG'),
+	freetype = require(__dirname + '/freetype')
 	;
-
-// The global inside a sandboxed context is virtually useless.  None of
-// the goodies available in a primary context.
-// Emscripten uses the existence of require() and process to decide whether it is
-// running in node.  And console is really nice to have.  
-// And it cannot run without all of the TypedArray constructors.
-var sandbox = vm.createContext({
-		require:require,
-		process:process,
-		console:console,
-		ArrayBuffer:ArrayBuffer, DataView:DataView,
-		Int8Array:Int8Array, Uint8Array:Uint8Array,
-		Uint8ClampedArray:Uint8ClampedArray,
-		Int16Array:Int16Array, Uint16Array:Uint16Array,
-		Int32Array:Int32Array, Uint32Array:Uint32Array,
-		Float32Array:Float32Array, Float64Array:Float64Array,
-
-		// The .mem image makes it really hard to use as a library module
-		Module:{ memoryInitializerPrefixURL : __dirname + '/' }
-	});
-
-load('freetype.js');
-
-// We will use a synchronous demand-loader as each module's load-cost is
-// a one-time hit and it prevents any potential race conditions.
-function load(path) {
-	var text = fs.readFileSync(__dirname + '/' + path);
-	if (!text)
-		throw new Error(path + ": could not read file");
-
-	vm.runInContext(text, sandbox, { filename:path });
-}
-
 
 // This module's primary export is the bwip-js HTTP request handler
 module.exports = function(req, res) {
@@ -53,7 +21,6 @@ module.exports = function(req, res) {
 		if (args[id] === '')
 			args[id] = true;
 	}
-
 	module.exports.toBuffer(args, function(err, png) {
 		if (err) {
 			res.writeHead(400, { 'Content-Type':'text/plain' });
@@ -79,12 +46,6 @@ module.exports = function(req, res) {
 // 		`png` is a node Buffer containing the PNG image.
 //
 module.exports.toBuffer = function(args, callback) {
-	// Finish loading bwip-js?
-	if (typeof sandbox.BWIPJS === 'undefined') {
-		load('bwip.js');
-		sandbox.BWIPJS.load = load;
-	}
-
 	// Set the defaults
 	var scale	= args.scale || 2;
 	var scaleX	= +args.scaleX || scale;
@@ -96,13 +57,12 @@ module.exports.toBuffer = function(args, callback) {
 	var bcid	= args.bcid;
 	var text	= args.text;
 
-	if (!text)
+	if (!text) {
 		return callback('Bar code text not specified.');
-	if (!bcid)
+	}
+	if (!bcid) {
 		return callback('Bar code type not specified.');
-	if (!fs.existsSync(__dirname + '/bwipp/' + bcid + '.js'))
-		return callback('Bar code type "' + bcid + '" unknown.');
-
+	}
 	// Remove the non-BWIPP options
 	delete args.scale;
 	delete args.scaleX;
@@ -112,83 +72,78 @@ module.exports.toBuffer = function(args, callback) {
 	delete args.bcid;
 	delete args.monochrome;
 
-	// Initialize a barcode writer object
-	var bw = new sandbox.BWIPJS;
+	// Initialize a barcode writer object.  This is the interface between
+	// the low-level BWIPP code, freetype, and the Bitmap object.
+	var bw = new bwipjs(freetype, mono);
 
 	// Set the options
 	var opts = {};
 	for (var id in args) {
-		opts[id] = bw.value(args[id]);
+		opts[id] = args[id];
 	}
-
 	// Fix a disconnect in the BWIPP rendering logic
-	if (opts.alttext)
-		opts.includetext = bw.value(true);
-
+	if (opts.alttext) {
+		opts.includetext = true;
+	}
 	// We use mm rather than inches for height - except pharmacode2 height
 	// is explicitly in mm
-	if (opts.height && bcid != 'pharmacode2')
+	if (opts.height && bcid != 'pharmacode2') {
 		opts.height = opts.height / 25.4 || 0.5;
-	
-	// Enable/disable monochrome font rendering
-	sandbox.BWIPJS.ft_monochrome(mono ? 1 : 0);
+	}
 
-	// Feature or bug, BWIPP does not extend the background color into the
-	// human readable text.  Fix that in the bitmap interface.
+	// Override the `backgroundcolor` option.
 	if (opts.backgroundcolor) {
 		bw.bitmap(new Bitmap(parseInt(''+opts.backgroundcolor, 16)));
 		delete opts.backgroundcolor;
 	} else {
 		bw.bitmap(new Bitmap);
 	}
-
-	// Add optional padding around the image.
+	// Add optional padding and scale the image.
 	bw.bitmap().pad(+opts.paddingwidth*scaleX || 0,
 					+opts.paddingheight*scaleY || 0);
-
 	bw.scale(scaleX, scaleY);
-	bw.push(text);
-	bw.push(opts);
 
-	bw.call(bcid, function(e) {
-		if (e) {
-			callback('BWIP-JS ERROR: ' + e);
-		} else {
-			bw.bitmap().getPNG(rot, callback);
-		}
-	});
+	// Call into the BWIPP cross-compiled code
+	try {
+		bwipp()(bw, bcid, text, args);
+		bw.bitmap().getPNG(rot, callback);
+	} catch (e) {
+		// Invoking this callback is synchronous.
+		callback('' + e);
+	}
 }
 
 module.exports.loadFont = function(fontname, sizemult, fontfile) {
-	sandbox.Module.FS_createDataFile('/', fontname, fontfile, true, false);
+	freetype.FS_createDataFile('/', fontname, fontfile, true, false);
 
-	var load_font = sandbox.Module.cwrap("load_font", 'number',
+	var load_font = freetype.cwrap("load_font", 'number',
 										['string','string','number']);
 	var rv = load_font('/' + fontname, fontname, sizemult);
 	if (rv != 0) {
-		sandbox.FS.unlink('/' + fontname);
+		freetype.unlink('/' + fontname);
 		throw 'Error: font load failed [' + rv + ']';
 	}
 }
 
 module.exports.unloadFont = function(fontname) {
 	// Unload from freetype
-	var close_font = sandbox.Module.cwrap("close_font", 'number', ['string']);
+	var close_font = freetype.cwrap("close_font", 'number', ['string']);
 	close_font(fontname);
 
 	// Delete from emscripten
-	sandbox.FS.unlink('/' + fontname);
+	freetype.unlink('/' + fontname);
 }
 
 
-// bwip-js bitmap interface
+// bwipjs Bitmap interface
 // Must export to the PostScript emulation:
+//      this.extent(llx, lly, urx, ury) {   ## See comments below.
 //		this.color(r, g, b)		## The color to use for subsequent set()'s.
 //		this.set(x, y, a)		## Sets the pixel at (x,y) using the current
 //								## color with alpha-a.
 //
-// bgcolor is optional.  If specified, if must be an integer or string RGB value.
-//						 Alpha channel is not supported.
+// bgcolor is optional.  If specified, if must be an integer or string RGB
+//						 value. Alpha channel is not supported.
 function Bitmap(bgcolor) {
 	var _clrr = 0;					// current red
 	var _clrg = 0;					// current green
@@ -201,15 +156,30 @@ function Bitmap(bgcolor) {
 	var _padx = 0;					// optional left/right padding
 	var _pady = 0;					// optional top/bottom padding
 
-	if (typeof bgcolor === 'string')
+	if (typeof bgcolor === 'string') {
 		bgcolor = (0xff000000 | parseInt(bgcolor, 16)) >>> 0;
-	else if (bgcolor !== undefined)
+	} else if (bgcolor !== undefined) {
 		bgcolor = (0xff000000 | bgcolor) >>> 0;
+	}
 
 	// Optional padding.  Rotates with the image.
 	this.pad = function(width, height) {
 		_padx = width;
 		_pady = height;
+	}
+
+	// Sets the minimim size for the drawing surface (can grow larger).
+	// BWIPP has logic for borders (padding) that without this custom call
+	// gets lost.  See custom/renlinear.ps.
+	this.extent = function(llx, lly, urx, ury) {
+		llx = Math.floor(llx);
+		lly = Math.floor(lly);
+		urx = Math.floor(urx);
+		ury = Math.floor(ury);
+		if (_minx > llx) _minx = llx;
+		if (_miny > lly) _miny = lly;
+		if (_maxx < urx) _maxx = urx;
+		if (_maxy < ury) _maxy = ury;
 	}
 
 	this.color = function(r,g,b) {

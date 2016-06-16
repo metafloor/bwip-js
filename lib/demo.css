@@ -1,6 +1,7 @@
 /* bwip-js : lib/demo.css */
 body {
 	font-size:			11pt;
+	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
 	margin:				0px;
 }
 #header {
@@ -15,7 +16,7 @@ body {
 }
 #header #bwipjs {
 	font-size:			25px;
-	font-family: 		"Lucida Grande","Calibri",Helvetica,Arial,sans-serif;
+	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
 	font-weight:		bold;
 	position:			absolute;
 	bottom:				21px;
