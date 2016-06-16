@@ -24,7 +24,7 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
 > (FreeType, BWIPP, and bwipjs) rather than having to create separate
 > execution contexts and asynchronously load into them.
 > 
-> See [Integrating Into Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-Your-Code) for more details.
+> See [Integrating With Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-With-Your-Code) for more details.
 
 ## Status 
 
