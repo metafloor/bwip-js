@@ -28,7 +28,9 @@ function $a(a) {
 		$j=i;
 	} else if (!(a instanceof Array)) {
 		a=new Array(+arguments[0]);
-		a.fill(null);
+		for (var i = 0, l = a.length; i < l; i++) {
+			a[i] = null;
+		}
 	} 
 	a.b = a;	// base array
 	a.o = 0;	// offset into base
@@ -51,7 +53,7 @@ function $d() {
 			d['\uffff' + k]=$k[i];
 		} else if (t === 'string') {
 			d[k]=$k[i];
-		} else if (ArrayBuffer.isView(k)) {
+		} else if (k instanceof Uint8Array) {
 			d[$z(k)] = $k[i];
 		} else {
 			throw 'dict-not-a-valid-key(' + k + ')';
@@ -88,7 +90,7 @@ function $s(v) {
 // Primarily designed to convert uint8-string to string, but will call the
 // the toString() method on any value.
 function $z(s) {
-	if (ArrayBuffer.isView(s)) {
+	if (s instanceof Uint8Array) {
 		// Postscript treats nul-char as end of string, even if string is
 		// longer.
 		for (var i = 0, l = s.length; i < l && s[i]; i++);
@@ -105,7 +107,7 @@ function $strcpy(dst, src) {
 	if (typeof dst === 'string') {
 		dst = $s(dst);
 	}
-	if (ArrayBuffer.isView(src)) {
+	if (src instanceof Uint8Array) {
 		for (var i = 0, l = src.length; i < l; i++) {
 			dst[i] = src[i];
 		}
@@ -144,13 +146,13 @@ function $cvrs(s,n,r) {
 //	s : source
 //	k : key
 function $get(s,k) {
-	if (ArrayBuffer.isView(s)) {
+	if (s instanceof Uint8Array) {
 		return s[k];
 	}
 	if (typeof s === 'string') {
 		return s.charCodeAt(k);
 	}
-	if (Array.isArray(s)) {
+	if (s instanceof Array) {
 		return s.b[s.o+k];
 	}
 	// Must be a dict object : with postscript dict objects, a number key
@@ -159,7 +161,7 @@ function $get(s,k) {
 	if (typeof k === 'number') {
 		return s['\uffff'+k];
 	}
-	if (ArrayBuffer.isView(k)) {
+	if (k instanceof Uint8Array) {
 		return s[$z(k)];
 	}
 	return s[k];
@@ -170,12 +172,12 @@ function $get(s,k) {
 //	k : key
 //	v : value
 function $put(d,k,v) {
-	if (ArrayBuffer.isView(d)) {
+	if (d instanceof Uint8Array) {
 		d[k] = v;
-	} else if (Array.isArray(d)) {
+	} else if (d instanceof Array) {
 		d.b[d.o+k] = v;
 	} else if (typeof d == 'object') {
-		if (ArrayBuffer.isView(k)) {
+		if (k instanceof Uint8Array) {
 			d[$z(k)] = v;
 		} else {
 			d[typeof k == 'number' ? '\uffff'+k : k] = v;
@@ -190,10 +192,10 @@ function $put(d,k,v) {
 //	o : offset
 //	l : length
 function $geti(s,o,l) {
-	if (ArrayBuffer.isView(s)) {
+	if (s instanceof Uint8Array) {
 		return s.subarray(o,o+l);
 	}
-	if (Array.isArray(s)) {
+	if (s instanceof Array) {
 		var a = new Array(l);
 		a.b = s.b;		// base array
 		a.o = s.o + o;	// offset into base
@@ -208,7 +210,7 @@ function $geti(s,o,l) {
 //	o : offset
 //	s : src
 function $puti(d,o,s) {
-	if (ArrayBuffer.isView(d)) {
+	if (d instanceof Uint8Array) {
 		if (typeof s == 'string') {
 			for (var i = 0, l = s.length; i < l; i++) {
 				d[o+i] = s.charCodeAt(i);
@@ -220,7 +222,7 @@ function $puti(d,o,s) {
 				d[o+i] = s[i];
 			}
 		}
-	} else if (Array.isArray(d)) {
+	} else if (d instanceof Array) {
 		// Operate on the base arrays
 		var darr = d.b;
 		var doff = o + d.o;
@@ -248,13 +250,13 @@ function $type(v) {
 	if (t == 'boolean') {
 		return 'booleantype';
 	}
-	if (t == 'string' || ArrayBuffer.isView(v)) {
+	if (t == 'string' || v instanceof Uint8Array) {
 		return 'stringtype';
 	}
 	if (t == 'function') {
 		return 'operatortype';
 	}
-	if (Array.isArray(v)) {
+	if (v instanceof Array) {
 		return 'arraytype';
 	}
 	return 'dicttype';
@@ -270,16 +272,18 @@ function $type(v) {
 //		string seek search suffix match prefix true %if-found
 //						   string false				%if-not-found
 function $search(str, seek) {
-	if (!ArrayBuffer.isView(str)) {
+	if (!(str instanceof Uint8Array)) {
 		str = $s(str);
 	}
+	var ls = str.length;
+
 	// Virtually all uses of search in BWIPP are for single-characters.
 	// Optimize for that case.
 	if (seek.length == 1) {
-		var cd = ArrayBuffer.isView(seek) ? seek[0] : seek.charCodeAt(0);
-		var i = str.indexOf(cd);
-		if (i >= 0) {
-			$k[$j++] = str.subarray(i+1, l);
+		var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
+		for (var i = 0; i < ls && str[i] != cd; i++) ;
+		if (i < ls) {
+			$k[$j++] = str.subarray(i+1);
 			$k[$j++] = str.subarray(i, i+1);
 			$k[$j++] = str.subarray(0, i);
 			$k[$j++] = true;
@@ -291,21 +295,22 @@ function $search(str, seek) {
 	}
 
 	// Slow path, 
-	if (!ArrayBuffer.isView(seek)) {
+	if (!(seek instanceof Uint8Array)) {
 		seek = $(seek);
 	}
-	var i = str.indexOf(seek[0]);
-	var l = seek.length;
-	while (i >= 0) {
-		for (var j = 1; j < l && str[i+j] === seek[j]; j++);
-		if (j === l) {
-			$k[$j++] = str.subarray(i+l);
-			$k[$j++] = str.subarray(i, i+l);
+	var lk = seek.length;
+	var cd = seek[0];
+	for (var i = 0; i < ls && str[i] != cd; i++) ;
+	while (i < ls) {
+		for (var j = 1; j < lk && str[i+j] === seek[j]; j++);
+		if (j === lk) {
+			$k[$j++] = str.subarray(i+lk);
+			$k[$j++] = str.subarray(i, i+lk);
 			$k[$j++] = str.subarray(0, i);
 			$k[$j++] = true;
 			return;
 		}
-		i = str.indexOf(seek[0], i+1);
+		for (i++; i < ls && str[i] != cd; i++) ;
 	}
 	$k[$j++] = str;
 	$k[$j++] = false;
@@ -314,12 +319,12 @@ function $search(str, seek) {
 // The callback is omitted when forall is being used just to push onto the
 // stack.
 function $forall(o, cb) {
-	if (ArrayBuffer.isView(o)) {
+	if (o instanceof Uint8Array) {
 		for (var i = 0, l = o.length; i < l; i++) {
 			$k[$j++] = o[i];
 			cb && cb();
 		}
-	} else if (Array.isArray(o)) {
+	} else if (o instanceof Array) {
 		// The array may be a view.
 		for (var a = o.b, i = o.o, l = o.o + o.length; i < l; i++) {
 			$k[$j++] = a[i];
@@ -366,7 +371,7 @@ function $eq(a,b) {
 	if (typeof a === 'string' && typeof b === 'string') {
 		return a == b;
 	}
-	if (ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+	if (a instanceof Uint8Array && b instanceof Uint8Array) {
 		if (a.length != b.length) {
 			return false;
 		}
@@ -377,9 +382,9 @@ function $eq(a,b) {
 		}
 		return true;
 	}
-	if (ArrayBuffer.isView(a) && typeof b === 'string' ||
-		ArrayBuffer.isView(b) && typeof a === 'string') {
-		if (ArrayBuffer.isView(a)) {
+	if (a instanceof Uint8Array && typeof b === 'string' ||
+		b instanceof Uint8Array && typeof a === 'string') {
+		if (a instanceof Uint8Array) {
 			a = $z(a);
 		} else {
 			b = $z(b);
@@ -392,37 +397,37 @@ function $ne(a,b) {
 	return !$eq(a,b);
 }
 function $lt(a, b) {
-	if (ArrayBuffer.isView(a)) {
+	if (a instanceof Uint8Array) {
 		a = $z(a);
 	}
-	if (ArrayBuffer.isView(b)) {
+	if (b instanceof Uint8Array) {
 		b = $z(b);
 	}
 	return a < b;
 }
 function $le(a, b) {
-	if (ArrayBuffer.isView(a)) {
+	if (a instanceof Uint8Array) {
 		a = $z(a);
 	}
-	if (ArrayBuffer.isView(b)) {
+	if (b instanceof Uint8Array) {
 		b = $z(b);
 	}
 	return a <= b;
 }
 function $gt(a, b) {
-	if (ArrayBuffer.isView(a)) {
+	if (a instanceof Uint8Array) {
 		a = $z(a);
 	}
-	if (ArrayBuffer.isView(b)) {
+	if (b instanceof Uint8Array) {
 		b = $z(b);
 	}
 	return a > b;
 }
 function $ge(a, b) {
-	if (ArrayBuffer.isView(a)) {
+	if (a instanceof Uint8Array) {
 		a = $z(a);
 	}
-	if (ArrayBuffer.isView(b)) {
+	if (b instanceof Uint8Array) {
 		b = $z(b);
 	}
 	return a >= b;
@@ -451,13 +456,13 @@ function $stack() {
 			return 'null';
 		} else if (v === undefined) {
 			return '<undefined>';
-		} else if (Array.isArray(v)) {
+		} else if (v instanceof Array) {
 			var s = '<array,' + v.o + ',' + v.length + '>[';
 			for (var j = v.o, a = v.b, l = v.length + v.o; j < l; j++) {
 				s += (j == v.o ? '' : ',') + tostring(a[j]);
 			}
 			return s + ']';
-		} else if (ArrayBuffer.isView(v)) {
+		} else if (v instanceof Uint8Array) {
 			return '(' + $z[v] + ')';
 		} else if (typeof v === 'object') {
 			var s = '<<';
