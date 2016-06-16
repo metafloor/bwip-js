@@ -1,0 +1,68 @@
+% --BEGIN RENDERER renmaximatrix--
+% --REQUIRES preamble raiseerror--
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2016032800 55426 55272
+%%BeginData:         79 ASCII Lines
+%% /setpacking where {pop currentpacking true setpacking} if
+%% 1 dict
+%% dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%% begin
+/renmaximatrix {
+	% true when running the test framework
+	bwipjs_dontdraw { return } if
+
+    20 dict begin
+
+    /args exch def   % We are given some arguments
+
+    % Default options
+    /barcolor (unset) def
+    /backgroundcolor (unset) def
+
+    % Apply the renderer options and the user options
+    args {def} forall
+    opt {def} forall
+
+    /barcolor barcolor cvlit def
+    /backgroundcolor backgroundcolor cvlit def
+
+    gsave
+
+    currentpoint translate
+
+    2.4945 dup scale  % from 1pt to 1.88mm
+
+    0 0 moveto 30 0 lineto 30 29 lineto 0 29 lineto closepath
+	setextent
+    %backgroundcolor (unset) ne { gsave backgroundcolor setcolor fill grestore } if 
+    barcolor (unset) ne { barcolor setcolor } if
+
+    0.5 0.5774 translate
+
+	(OCRB) findfont 2.8 scalefont setfont
+
+    newpath
+    pixs {
+        dup 
+        /x exch 30 mod def 
+        /y exch 30 idiv def
+        y 2 mod 0 eq {x} {x 0.5 add} ifelse
+        32 y sub 0.8661 mul
+        moveto
+		<ae> show
+    } forall
+
+    % Plot the locator symbol
+	(OCRB) findfont 2.85 scalefont setfont
+    14 13.8576 moveto <a9> show
+
+    grestore
+    end
+
+} bind def
+%% /renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%% end
+%% /setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RENDERER renmaximatrix--
+

@@ -74,6 +74,9 @@ function showcode(ev, ident) {
 	} else {
 		location.hash = '#' + ident;
 	}
+	var panel = document.getElementById('codepanel');
+	panel.scrollTop = 0;
+	panel.scrollLeft = 0;
 
 	ev.stopPropagation();
 	ev.preventDefault();
@@ -195,7 +198,7 @@ window.addEventListener('load', function(ev) {
 
 </div>
 </div>
-<div style="flex-shrink:1;height:100vh;overflow:auto">
+<div id="codepanel" style="flex-shrink:1;height:100vh;overflow:auto">
 <div class="codeblock ean5">
     $0.<b id="ean5">ean5</b> = function() {
       var $1 = {}; /*489*/
