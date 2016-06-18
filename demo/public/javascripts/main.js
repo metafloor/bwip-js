@@ -47,6 +47,8 @@
   \*****************/
 /***/ function(module, exports) {
 
+	'use strict';
+	
 	$(document).ready(function () {
 	    var lastSymbol = localStorage.getItem('bwipjsLastSymbol');
 	    var lastBarText = localStorage.getItem('bwipjsLastBarText');
