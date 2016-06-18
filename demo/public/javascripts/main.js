@@ -49,87 +49,28 @@
 
 	'use strict';
 	
-	$(document).ready(function () {
-	    var lastSymbol = localStorage.getItem('bwipjsLastSymbol');
-	    var lastBarText = localStorage.getItem('bwipjsLastBarText');
-	    var lastAltText = localStorage.getItem('bwipjsLastAltText');
-	    var lastOptions = localStorage.getItem('bwipjsLastOptions');
-	    var lastRotate = localStorage.getItem('bwipjsLastRotation');
-	    var lastScaleX = +localStorage.getItem('bwipjsLastScaleX');
-	    var lastScaleY = +localStorage.getItem('bwipjsLastScaleY');
-	    var lastFntMono = +localStorage.getItem('bwipjsLastFontMono');
+	/* global $, Bitmap, BWIPJS, BWIPP, FileDrop, fontClick, fontRead, fontSelected, Module, saveAs,
+	symdesc */
 	
-	    var $sel = $('#symbol').change(function (ev) {
-	        var desc = symdesc[$(this).val()];
-	        if (desc) {
-	            $('#symtext').val(desc.text);
-	            $('#symopts').val(desc.opts);
-	        } else {
-	            $('#symtext').val('');
-	            $('#symopts').val('');
-	        }
-	        $('#symaltx').val('');
-	        $('.saveas').css('visibility', 'hidden');
-	        $('#proof-img').css('visibility', 'hidden');
-	        $('#stats').text('');
-	        var canvas = document.getElementById('canvas');
-	        canvas.width = canvas.width;
-	    });
+	function saveCanvas(type, ext) {
+	    var canvas = document.getElementById('canvas');
+	    canvas.toBlob(function (blob) {
+	        saveAs(blob, saveCanvas.basename + ext);
+	    }, type, 1);
+	}
 	
-	    if (lastSymbol) {
-	        $sel.val(lastSymbol);
-	    } else {
-	        $sel.prop('selectedIndex', 0);
-	    }
-	    $sel.trigger('change');
+	function setURL() {
+	    var elt = symdesc[$('#symbol').val()];
+	    var text = $('#symtext').val().replace(/^\s+/, '').replace(/\s+$/, '');
+	    var altx = $('#symaltx').val().replace(/^\s+/, '').replace(/\s+$/, '');
+	    var opts = $('#symopts').val().replace(/^\s+/, '').replace(/\s+$/, '');
 	
-	    if (lastSymbol) {
-	        $('#symtext').val(lastBarText);
-	        $('#symaltx').val(lastAltText);
-	        $('#symopts').val(lastOptions);
-	    }
-	    if (lastScaleX && lastScaleY) {
-	        $('#scaleX').val(lastScaleX);
-	        $('#scaleY').val(lastScaleY);
-	    }
-	    if (lastRotate) {
-	        document.getElementById('rot' + lastRotate).selected = true;
-	    }
-	    if (lastFntMono) {
-	        document.getElementById('fontMono').checked = true;
-	    }
+	    /* eslint-disable prefer-template */
+	    var url = 'http://api-bwipjs.rhcloud.com/?bcid=' + elt.sym + '&text=' + encodeURIComponent(text) + (altx ? '&alttext=' + encodeURIComponent(altx) : '') + (opts ? '&' + opts.replace(/ /g, '&') : '');
+	    /* eslint-enable */
 	
-	    $('#fonthdr').click(fontClick);
-	    $('#addfont').button().click(fontRead);
-	    $('.saveas').css('visibility', 'hidden');
-	
-	    if (location.search.indexOf('proofs=1') != -1) {
-	        // Show the images from BWIPP with Ghostscript
-	        var img = document.createElement('img');
-	        img.id = 'proof-img';
-	        img.style.left = '0';
-	        img.style.position = 'absolute';
-	        img.style.top = '0';
-	        img.style.visibility = 'hidden';
-	        $('#proof').append(img);
-	    }
-	
-	    // File picker
-	    var zone = new FileDrop('dropzone');
-	    zone.event('send', function (files) {
-	        var file = files.first();
-	        $('#dropzone div.droptext').css('display', 'none');
-	        $('#dropzone div.dropfile').css('display', 'block').text(file.name);
-	        $('#dropzone input.fd-file')[0].title = file.name;
-	
-	        fontSelected(file.nativeFile); // Native browser File object
-	    });
-	
-	    $('form').submit(function (e) {
-	        e.preventDefault();
-	        render();
-	    });
-	});
+	    document.getElementById('apiurl').href = url;
+	}
 	
 	function render() {
 	    var elt = symdesc[$('#symbol').val()];
@@ -172,7 +113,7 @@
 	            continue;
 	        }
 	        var eq = tmp[i].indexOf('=');
-	        if (eq == -1) {
+	        if (eq === -1) {
 	            opts[tmp[i]] = true;
 	        } else {
 	            opts[tmp[i].substr(0, eq)] = tmp[i].substr(eq + 1);
@@ -186,9 +127,9 @@
 	
 	    var rot = 'N';
 	    var rots = ['rotL', 'rotR', 'rotI'];
-	    for (var i = 0; i < rots.length; i++) {
-	        if (document.getElementById(rots[i]).selected) {
-	            rot = rots[i].charAt(3);
+	    for (var _i = 0; _i < rots.length; _i++) {
+	        if (document.getElementById(rots[_i]).selected) {
+	            rot = rots[_i].charAt(3);
 	            break;
 	        }
 	    }
@@ -214,7 +155,7 @@
 	    // Render the bar code
 	    try {
 	        // Create a new BWIPP instance for each
-	        BWIPP()(bw, elt.sym, text, opts);
+	        BWIPP()(bw, elt.sym, text, opts); // eslint-disable-line new-cap
 	    } catch (e) {
 	        // Watch for BWIPP generated raiseerror's.
 	        var msg = '' + e;
@@ -228,8 +169,6 @@
 	        return;
 	    }
 	
-	    var ts1 = Date.now();
-	
 	    bw.bitmap().show(canvas, rot);
 	
 	    var ts2 = Date.now();
@@ -237,10 +176,10 @@
 	    setURL();
 	    $('#stats').text('Rendered in ' + (ts2 - ts0) + ' msecs');
 	    $('.saveas').css('visibility', 'visible');
-	    saveCanvas.basename = elt.sym + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-');
+	    saveCanvas.basename = elt.sym + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-'); // eslint-disable-line max-len, prefer-template
 	
 	    // Show proofs?
-	    if (location.search.indexOf('proofs=1') != -1) {
+	    if (location.search.indexOf('proofs=1') !== -1) {
 	        var img = document.getElementById('proof-img');
 	        if (img) {
 	            img.src = 'proofs/' + elt.sym + '.png';
@@ -249,23 +188,87 @@
 	    }
 	}
 	
-	function saveCanvas(type, ext) {
-	    var canvas = document.getElementById('canvas');
-	    canvas.toBlob(function (blob) {
-	        saveAs(blob, saveCanvas.basename + ext);
-	    }, type, 1);
-	}
+	$(document).ready(function () {
+	    var lastSymbol = localStorage.getItem('bwipjsLastSymbol');
+	    var lastBarText = localStorage.getItem('bwipjsLastBarText');
+	    var lastAltText = localStorage.getItem('bwipjsLastAltText');
+	    var lastOptions = localStorage.getItem('bwipjsLastOptions');
+	    var lastRotate = localStorage.getItem('bwipjsLastRotation');
+	    var lastScaleX = +localStorage.getItem('bwipjsLastScaleX');
+	    var lastScaleY = +localStorage.getItem('bwipjsLastScaleY');
+	    var lastFntMono = +localStorage.getItem('bwipjsLastFontMono');
 	
-	function setURL() {
-	    var elt = symdesc[$('#symbol').val()];
-	    var text = $('#symtext').val().replace(/^\s+/, '').replace(/\s+$/, '');
-	    var altx = $('#symaltx').val().replace(/^\s+/, '').replace(/\s+$/, '');
-	    var opts = $('#symopts').val().replace(/^\s+/, '').replace(/\s+$/, '');
+	    var $sel = $('#symbol').change(function () {
+	        var desc = symdesc[$(undefined).val()];
+	        if (desc) {
+	            $('#symtext').val(desc.text);
+	            $('#symopts').val(desc.opts);
+	        } else {
+	            $('#symtext').val('');
+	            $('#symopts').val('');
+	        }
+	        $('#symaltx').val('');
+	        $('.saveas').css('visibility', 'hidden');
+	        $('#proof-img').css('visibility', 'hidden');
+	        $('#stats').text('');
+	        var canvas = document.getElementById('canvas');
+	        canvas.width = canvas.width;
+	    });
 	
-	    var url = 'http://api-bwipjs.rhcloud.com/?bcid=' + elt.sym + '&text=' + encodeURIComponent(text) + (altx ? '&alttext=' + encodeURIComponent(altx) : '') + (opts ? '&' + opts.replace(/ /g, '&') : '');
+	    if (lastSymbol) {
+	        $sel.val(lastSymbol);
+	    } else {
+	        $sel.prop('selectedIndex', 0);
+	    }
+	    $sel.trigger('change');
 	
-	    document.getElementById('apiurl').href = url;
-	}
+	    if (lastSymbol) {
+	        $('#symtext').val(lastBarText);
+	        $('#symaltx').val(lastAltText);
+	        $('#symopts').val(lastOptions);
+	    }
+	    if (lastScaleX && lastScaleY) {
+	        $('#scaleX').val(lastScaleX);
+	        $('#scaleY').val(lastScaleY);
+	    }
+	    if (lastRotate) {
+	        document.getElementById('rot' + lastRotate).selected = true;
+	    }
+	    if (lastFntMono) {
+	        document.getElementById('fontMono').checked = true;
+	    }
+	
+	    $('#fonthdr').click(fontClick);
+	    $('#addfont').button().click(fontRead);
+	    $('.saveas').css('visibility', 'hidden');
+	
+	    if (location.search.indexOf('proofs=1') !== -1) {
+	        // Show the images from BWIPP with Ghostscript
+	        var img = document.createElement('img');
+	        img.id = 'proof-img';
+	        img.style.left = '0';
+	        img.style.position = 'absolute';
+	        img.style.top = '0';
+	        img.style.visibility = 'hidden';
+	        $('#proof').append(img);
+	    }
+	
+	    // File picker
+	    var zone = new FileDrop('dropzone');
+	    zone.event('send', function (files) {
+	        var file = files.first();
+	        $('#dropzone div.droptext').css('display', 'none');
+	        $('#dropzone div.dropfile').css('display', 'block').text(file.name);
+	        $('#dropzone input.fd-file')[0].title = file.name;
+	
+	        fontSelected(file.nativeFile); // Native browser File object
+	    });
+	
+	    $('form').submit(function (event) {
+	        event.preventDefault();
+	        render();
+	    });
+	});
 
 /***/ }
 /******/ ]);
