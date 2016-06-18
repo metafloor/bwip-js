@@ -1,5 +1,6 @@
-/* global $, Bitmap, BWIPJS, BWIPP, FileDrop, fontClick, fontRead, fontSelected, Module, saveAs,
-symdesc */
+/* global $, Bitmap, BWIPJS, BWIPP, FileDrop, fontClick, fontRead, fontSelected, Module, saveAs */
+
+import symdesc from './symdesc';
 
 function saveCanvas(type, ext) {
     const canvas = document.getElementById('canvas');
