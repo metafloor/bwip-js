@@ -49,18 +49,24 @@
 
 	'use strict';
 	
-	var _symdesc = __webpack_require__(/*! ./symdesc */ 1);
+	var _Bitmap = __webpack_require__(/*! ./Bitmap */ 1);
+	
+	var _Bitmap2 = _interopRequireDefault(_Bitmap);
+	
+	var _symdesc = __webpack_require__(/*! ./symdesc */ 2);
 	
 	var _symdesc2 = _interopRequireDefault(_symdesc);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/* global $, BWIPJS, BWIPP, FileDrop, fontClick, fontRead, fontSelected, Module, saveAs */
 	
 	function saveCanvas(type, ext) {
 	    var canvas = document.getElementById('canvas');
 	    canvas.toBlob(function (blob) {
 	        saveAs(blob, saveCanvas.basename + ext);
 	    }, type, 1);
-	} /* global $, Bitmap, BWIPJS, BWIPP, FileDrop, fontClick, fontRead, fontSelected, Module, saveAs */
+	}
 	
 	function setURL() {
 	    var elt = _symdesc2.default[$('#symbol').val()];
@@ -141,10 +147,10 @@
 	    // Feature or bug, BWIPP does not extend the background color into the
 	    // human readable text.  Fix that in the bitmap interface.
 	    if (opts.backgroundcolor) {
-	        bw.bitmap(new Bitmap(opts.backgroundcolor));
+	        bw.bitmap(new _Bitmap2.default(opts.backgroundcolor));
 	        delete opts.backgroundcolor;
 	    } else {
-	        bw.bitmap(new Bitmap());
+	        bw.bitmap(new _Bitmap2.default());
 	    }
 	
 	    // Set the scaling factors
@@ -201,8 +207,8 @@
 	    var lastScaleY = +localStorage.getItem('bwipjsLastScaleY');
 	    var lastFntMono = +localStorage.getItem('bwipjsLastFontMono');
 	
-	    var $sel = $('#symbol').change(function () {
-	        var desc = _symdesc2.default[$(undefined).val()];
+	    var $sel = $('#symbol').change(function change() {
+	        var desc = _symdesc2.default[$(this).val()];
 	        if (desc) {
 	            $('#symtext').val(desc.text);
 	            $('#symopts').val(desc.opts);
@@ -275,6 +281,149 @@
 
 /***/ },
 /* 1 */
+/*!*******************!*\
+  !*** ./Bitmap.js ***!
+  \*******************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = Bitmap;
+	function Bitmap() {
+	    var bgcolor = arguments.length <= 0 || arguments[0] === undefined ? 'fff' : arguments[0];
+	
+	    var clr = [0, 0, 0];
+	    var pts = [];
+	    var minx = 0; // min-x
+	    var miny = 0; // min-y
+	    var maxx = 0; // max-x
+	    var maxy = 0; // max-y
+	    var padx = 0; // padding-x
+	    var pady = 0; // padding-y
+	
+	    this.pad = function pad(x, y) {
+	        padx = x;
+	        pady = y;
+	    };
+	
+	    this.color = function color(r, g, b) {
+	        clr = [r, g, b];
+	    };
+	
+	    // Sets the minimim size for the drawing surface (can grow larger).
+	    // BWIPP has logic for borders (padding) that without this custom call
+	    // gets lost. See custom/ren*.ps.
+	    this.extent = function extent(llx, lly, urx, ury) {
+	        /* eslint-disable no-param-reassign */
+	        llx = Math.floor(llx);
+	        lly = Math.floor(lly);
+	        urx = Math.floor(urx);
+	        ury = Math.floor(ury);
+	        /* eslint-enable */
+	        if (minx > llx) minx = llx;
+	        if (miny > lly) miny = lly;
+	        if (maxx < urx) maxx = urx;
+	        if (maxy < ury) maxy = ury;
+	    };
+	
+	    // a is the alpha-level of the pixel [0 .. 255]
+	    this.set = function set(x, y, a) {
+	        /* eslint-disable no-param-reassign */
+	        x = Math.floor(x);
+	        y = Math.floor(y);
+	        /* eslint-enable */
+	        pts.push([x, y, clr, a]);
+	        if (minx > x) minx = x;
+	        if (miny > y) miny = y;
+	        if (maxx < x) maxx = x;
+	        if (maxy < y) maxy = y;
+	    };
+	
+	    this.show = function show(cvsid, rot) {
+	        var cvs = cvsid instanceof window.HTMLCanvasElement ? cvsid : document.getElementById(cvsid); // eslint-disable-line max-len
+	        if (pts.length === 0) {
+	            cvs.width = 32;
+	            cvs.height = 32;
+	            cvs.getContext('2d').clearRect(0, 0, cvs.width, cvs.height);
+	            cvs.style.visibility = 'visible';
+	            return;
+	        }
+	
+	        var h = void 0;
+	        var w = void 0;
+	        if (rot === 'R' || rot === 'L') {
+	            h = maxx - minx + 1;
+	            w = maxy - miny + 1;
+	        } else {
+	            w = maxx - minx + 1;
+	            h = maxy - miny + 1;
+	        }
+	
+	        cvs.width = w + 2 * padx;
+	        cvs.height = h + 2 * pady;
+	
+	        // Convert from cmyk?
+	        if (bgcolor && bgcolor.length === 8) {
+	            var c = parseInt(bgcolor.substr(0, 2), 16) / 255;
+	            var m = parseInt(bgcolor.substr(2, 2), 16) / 255;
+	            var y = parseInt(bgcolor.substr(4, 2), 16) / 255;
+	            var k = parseInt(bgcolor.substr(6, 2), 16) / 255;
+	            var r = Math.floor((1 - c) * (1 - k) * 255);
+	            var g = Math.floor((1 - m) * (1 - k) * 255);
+	            var b = Math.floor((1 - y) * (1 - k) * 255);
+	            bgcolor = 'rgb(' + r + ',' + g + ',' + b + ')'; // eslint-disable-line no-param-reassign
+	        } else if (bgcolor) {
+	                bgcolor = '#' + bgcolor; // eslint-disable-line no-param-reassign
+	            }
+	
+	        var ctx = cvs.getContext('2d');
+	        ctx.fillStyle = bgcolor;
+	        ctx.fillRect(0, 0, cvs.width, cvs.height);
+	        ctx.fillStyle = '#000';
+	
+	        var id = ctx.getImageData(0, 0, cvs.width, cvs.height);
+	        var dat = id.data;
+	
+	        for (var i = 0; i < pts.length; i++) {
+	            // PostScript builds bottom-up, we build top-down.
+	            var x = pts[i][0] - minx;
+	            var _y = pts[i][1] - miny;
+	            var _c = pts[i][2];
+	            var a = pts[i][3] / 255;
+	
+	            if (rot === 'N') {
+	                _y = h - _y - 1; // Invert y
+	            } else if (rot === 'I') {
+	                    x = w - x - 1; // Invert x
+	                } else {
+	                        _y = w - _y; // Invert y
+	                        if (rot === 'L') {
+	                            var t = _y;
+	                            _y = h - x - 1;
+	                            x = t - 1;
+	                        } else {
+	                            var _t = x;
+	                            x = w - _y;
+	                            _y = _t;
+	                        }
+	                    }
+	
+	            var idx = (_y * id.width + x) * 4;
+	            dat[idx + 0] = dat[idx + 0] * (1 - a) + _c[0] * a | 0;
+	            dat[idx + 1] = dat[idx + 1] * (1 - a) + _c[1] * a | 0;
+	            dat[idx + 2] = dat[idx + 2] * (1 - a) + _c[2] * a | 0;
+	            dat[idx + 3] = 255;
+	        }
+	        ctx.putImageData(id, padx, pady);
+	        cvs.style.visibility = 'visible';
+	    };
+	}
+
+/***/ },
+/* 2 */
 /*!********************!*\
   !*** ./symdesc.js ***!
   \********************/

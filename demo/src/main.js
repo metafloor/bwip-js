@@ -1,5 +1,6 @@
-/* global $, Bitmap, BWIPJS, BWIPP, FileDrop, fontClick, fontRead, fontSelected, Module, saveAs */
+/* global $, BWIPJS, BWIPP, FileDrop, fontClick, fontRead, fontSelected, Module, saveAs */
 
+import Bitmap from './Bitmap';
 import symdesc from './symdesc';
 
 function saveCanvas(type, ext) {
@@ -168,7 +169,7 @@ $(document).ready(() => {
     const lastScaleY = +localStorage.getItem('bwipjsLastScaleY');
     const lastFntMono = +localStorage.getItem('bwipjsLastFontMono');
 
-    const $sel = $('#symbol').change(() => {
+    const $sel = $('#symbol').change(function change() {
         const desc = symdesc[$(this).val()];
         if (desc) {
             $('#symtext').val(desc.text);
