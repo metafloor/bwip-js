@@ -664,14 +664,36 @@ function PSC(str, flags) {
 					emit('var ' + tid + '=$a([' + code + ']);');
 					st[sp++] = { type:TYPE_ARRAY, expr:tid, seq:++seq };
 				} else {
+					// Does the top of the stack contain an ident?  And is the
+					// next token a def?
+					// If so, we can inline the array creation with the dict
+					// assignment.
+					var defsym = '';
+					if (sp && st[sp-1].type == TYPE_IDENT &&
+							lex.peek() == 'def') {
+						defsym = st[--sp].expr;
+					}
+
 					// Build the array at runtime
 					ctxflush();
 					emit('$k[$j++]=Infinity;');
 					for (var i = 0; i < lines.length; i++) {
 						emit(lines[i]);
 					}
-					emit('var ' + tid + '=$a();');
-					st[sp++] = { type:TYPE_ARRAY, expr:tid, seq:++seq };
+
+					if (defsym) {
+						if (/^"\w+"$/.test(defsym)) {
+							emit('$' + dlvl + '.' +
+								defsym.substr(1, defsym.length-2) + '=$a();');
+						} else {
+							emit('$' + dlvl + '[' + defsym + ']=$a();');
+						}
+						lex.next();	// consume the def
+						dict[defsym.substr(1,defsym.length-2)] = TYPE_ARRAY;
+					} else {
+						emit('var ' + tid + '=$a();');
+						st[sp++] = { type:TYPE_ARRAY, expr:tid, seq:++seq };
+					}
 				}
 			}
 			else if (tkn == '<<') {
@@ -798,9 +820,12 @@ function PSC(str, flags) {
 					dict[tkn.substr(2)] = TYPE_IENAME;
 				} else {
 					var id = tkn.substr(1);
-					var ty = dict[id] || TYPE_IDENT;
-					st[sp++] = { type:ty, expr:'"' + id + '"', seq:++seq };
-					dict[id] = ty;
+					//var ty = dict[id] || TYPE_IDENT;
+					st[sp++] = { type:TYPE_IDENT, expr:'"' + id + '"',
+								 seq:++seq };
+					if (!dict[id]) {
+						dict[id] = TYPE_IDENT;
+					}
 				}
 			} else if ($[tkn]) {
 				//dump(tkn);
@@ -1610,7 +1635,7 @@ function PSC(str, flags) {
 				emit('$forall(' + o.expr + ',function()' + LC);
 				newbranch();
 				append(ctxexec(exec));
-				emit(RC + ')');
+				emit(RC + ');');
 			}
 		}
 	}

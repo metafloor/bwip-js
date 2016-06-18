@@ -22,7 +22,7 @@ function $a(a) {
 	if (!arguments.length) {
 		for (var i=$j-1;i>=0&&$k[i]!==Infinity;i--);
 		if (i < 0) {
-			throw 'array-marker-not-found';
+			throw new Error('array-marker-not-found');
 		}
 		a=$k.splice(i+1,$j-1-i);
 		$j=i;
@@ -43,7 +43,7 @@ function $d() {
 	var d = {};
 	for (var i=$j-1;i>=0&&$k[i]!==Infinity;i-=2) {
 		if ($k[i-1]===Infinity) {
-			throw 'dict-malformed-stack';
+			throw new Error('dict-malformed-stack');
 		}
 		// Unlike javascript, postscript dict keys differentiate between
 		// numbers and the string representation of a number.
@@ -280,40 +280,34 @@ function $search(str, seek) {
 	// Virtually all uses of search in BWIPP are for single-characters.
 	// Optimize for that case.
 	if (seek.length == 1) {
+		var lk = 1;
 		var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
 		for (var i = 0; i < ls && str[i] != cd; i++) ;
-		if (i < ls) {
-			$k[$j++] = str.subarray(i+1);
-			$k[$j++] = str.subarray(i, i+1);
-			$k[$j++] = str.subarray(0, i);
-			$k[$j++] = true;
-		} else {
-			$k[$j++] = str;
-			$k[$j++] = false;
+	} else {
+		// Slow path, 
+		if (!(seek instanceof Uint8Array)) {
+			seek = $(seek);
 		}
-		return;
-	}
-
-	// Slow path, 
-	if (!(seek instanceof Uint8Array)) {
-		seek = $(seek);
-	}
-	var lk = seek.length;
-	var cd = seek[0];
-	for (var i = 0; i < ls && str[i] != cd; i++) ;
-	while (i < ls) {
-		for (var j = 1; j < lk && str[i+j] === seek[j]; j++);
-		if (j === lk) {
-			$k[$j++] = str.subarray(i+lk);
-			$k[$j++] = str.subarray(i, i+lk);
-			$k[$j++] = str.subarray(0, i);
-			$k[$j++] = true;
-			return;
+		var lk = seek.length;
+		var cd = seek[0];
+		for (var i = 0; i < ls && str[i] != cd; i++) ;
+		while (i < ls) {
+			for (var j = 1; j < lk && str[i+j] === seek[j]; j++) ;
+			if (j === lk) {
+				break;
+			}
+			for (i++; i < ls && str[i] != cd; i++) ;
 		}
-		for (i++; i < ls && str[i] != cd; i++) ;
 	}
-	$k[$j++] = str;
-	$k[$j++] = false;
+	if (i < ls) {
+		$k[$j++] = str.subarray(i+lk);
+		$k[$j++] = str.subarray(i, i+lk);
+		$k[$j++] = str.subarray(0, i);
+		$k[$j++] = true;
+	} else {
+		$k[$j++] = str;
+		$k[$j++] = false;
+	}
 }
 
 // The callback is omitted when forall is being used just to push onto the

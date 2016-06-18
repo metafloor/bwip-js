@@ -92,8 +92,8 @@ function onload() {
 		document.getElementById('pstext').value = pstext;
 		numbers('ps');
 	}
-	if (+state.psypos) {
-		document.getElementById('pstext').scrollTop = +state.psypos;
+	if (+state.pspos) {
+		document.getElementById('pstext').scrollTop = +state.pspos;
 	}
 	if (state.flags) {
 		document.getElementById('flags').value = state.flags;
@@ -122,22 +122,46 @@ function resize() {
 }
 
 function compile() {
-	var str = document.getElementById('pstext').value;
-	var psy = document.getElementById('pstext').scrollTop;
-	var jsy = document.getElementById('jstext').scrollTop;
+	var pselt = document.getElementById('pstext');
+	var jselt = document.getElementById('jstext');
+	var pstxt = pselt.value;
+	var pspos = pselt.scrollTop;
 	var flags = document.getElementById('flags').value
 									.replace(/(^\s+)|(\s+$)/, '')
 									.replace(/\s\s+/g, ' ');
 
 	localStorage.setItem('pscstate',
-					JSON.stringify({ pstext:str, flags:flags,
-									 psypos:psy, jsypos:jsy }))
-	document.getElementById('jstext').value = PSC(str, flags.split(' '));
+				JSON.stringify({ pstext:pstxt, flags:flags, pspos:pspos  }))
+	var jstxt = jselt.value = PSC(pstxt, flags.split(' '));
 	numbers('js');
 	indent('js');
+	sync();
+}
+function sync() {
+	var pselt = document.getElementById('pstext');
+	var jselt = document.getElementById('jstext');
+	var pstxt = pselt.value;
+	var jstxt = jselt.value;
 
-	if (jsy) {
-		document.getElementById('jstext').scrollTop = +jsy;
+	// Get the top visible line number of the ps text.  Add X to display the 
+	// JS code more in the middle of the listing.
+	var nlines = pstxt.replace(/[^\n]+/g, '').length+1;
+	var lnbr = Math.ceil(nlines * pselt.scrollTop / pselt.scrollHeight) + 12;
+
+	// Find the first occurrence of that line number in the javascript.
+	// One issue is that not every PS line number appears in the JS.  
+	// Therefore, keep looking.
+	while (lnbr < nlines) {
+		// Line numbers are wrapped in /*###*/ comments
+		var a = (new RegExp("/\\*" + lnbr + "\\*/")).exec(jstxt);
+		if (a) {
+			console.log(lnbr, a);
+			jselt.scrollTop = jselt.scrollHeight *
+					  (jstxt.substr(0,a.index).replace(/[^\n]+/g,'').length+1) /
+					  (jstxt.replace(/[^\n]+/g,'').length+1)
+			break;
+		}
+		lnbr++;
 	}
 }
 function linkta(id) {
@@ -192,6 +216,7 @@ function indent(id) {
 	&nbsp;<button onclick="compile()">Compile</button>&nbsp;
 	<b>Flags:&nbsp;</b><input type="text" size=50 id="flags">
 	<td>&nbsp;<b>JavaScript</b>
+	&nbsp;<button onclick="sync()">Goto</button>&nbsp;
 <tr><td id="lefttd"><textarea id="psnbrs" spellcheck="false"></textarea>
 					<textarea id="pstext" spellcheck="false"></textarea>
 	<td id="righttd"><textarea id="jsnbrs" spellcheck="false"></textarea>
