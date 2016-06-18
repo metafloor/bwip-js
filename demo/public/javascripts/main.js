@@ -242,7 +242,7 @@
 	    }
 	
 	    $('#fonthdr').click(fontClick);
-	    $('#addfont').button().click(fontRead);
+	    $('#addfont').click(fontRead);
 	    $('.saveas').css('visibility', 'hidden');
 	
 	    if (location.search.indexOf('proofs=1') !== -1) {
