@@ -1,469 +1,306 @@
 <!doctype html>
-<html><head><title>bwip-js - JavaScript Barcode Generator</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta charset="utf-8" />
-<meta name="keywords" content="bar code, barcode generator, online barcode generator, free barcode generator, javascript, javascript library, nodejs, QR Code, EAN, EAN 13, Code 128, UPC, ISBN, ITF 14, Code 39, GS1, GS1 128, PDF417, HIBC, DataMatrix, Data Matrix, DataBar, OCR, OCR B, OCR font, Aztec Code, PostNet, USPS, Pharmacode" />
-<meta name="description" content="JavaScript barcode generator and library.  Create any barcode in your browser." />
-<!--
-	Copyright (c) 2011-2016 Mark Warren.
+<html>
+<head>
+    <title>bwip-js - JavaScript Barcode Generator</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <meta name="keywords" content="bar code, barcode generator, online barcode generator, free barcode generator, javascript, javascript library, nodejs, QR Code, EAN, EAN 13, Code 128, UPC, ISBN, ITF 14, Code 39, GS1, GS1 128, PDF417, HIBC, DataMatrix, Data Matrix, DataBar, OCR, OCR B, OCR font, Aztec Code, PostNet, USPS, Pharmacode" />
+    <meta name="description" content="JavaScript barcode generator and library. Create any barcode in your browser." />
+    <!--
+        Copyright (c) 2011-2016 Mark Warren.
 
-	See the LICENSE file in the bwip-js root directory
-	for the extended copyright notice.
--->
-<link rel="stylesheet" type="text/css" href="lib/demo.css">
-<link rel="stylesheet" type="text/css" href="lib/jquery-ui.min.css">
-<script type="text/javascript" src="lib/jquery.js"></script>
-<script type="text/javascript" src="lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="lib/fonts.js"></script>
-<script type="text/javascript" src="lib/filedrop-min.js"></script>
-<script type="text/javascript">
+        See the LICENSE file in the bwip-js root directory
+        for the extended copyright notice.
+    -->
+    <link rel="stylesheet" type="text/css" href="lib/demo.css" />
+    <link rel="stylesheet" href="https://npmcdn.com/bootstrap@4.0.0-alpha.2/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-full bg-inverse m-b-2">
+        <div class="container">
+            <span class="navbar-brand">
+                bwip-js // Barcode Writer in Pure JavaScript
+            </span>
+            <div class="pull-xs-right">
+                <div id="fonthdr">▼ Fonts</div>
+                <div id="fontdiv" style="visibility:hidden">
+                    <div class="inner">
+                        PostScript Name of Font:<br />
+                        <input type="text" id="fontname" style="width:32ex"><br />
+                        <br />
+                        Font Size Multiplier (100 = 100%):<br />
+                        <input type="text" id="fontmult" style="width:6ex" value="100"><br />
+                        <br />
+                        <div id="dropzone">
+                            <div class="content">
+                                <div class="droptext">Drop file here or click to select.</div>
+                                <div class="dropfile" style="display:none"></div>
+                            </div>
+                        </div>
+                        <br />
+                        <button id="addfont">
+                            Add Font
+                        </button><br />
+                        <div id="fontlist" class="empty"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <form>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group row">
+                        <label for="symbol" class="col-sm-4 form-control-label">
+                            Barcode Type
+                        </label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="symbol">
+                                <option value="auspost">AusPost 4 State Customer Code</option>
+                                <option value="azteccode">Aztec Code</option>
+                                <option value="aztecrune">Aztec Runes</option>
+                                <option value="bc412">BC412</option>
+                                <option value="channelcode">Channel Code</option>
+                                <option value="rationalizedCodabar">Codabar</option>
+                                <option value="codablockf">Codablock F</option>
+                                <option value="code11">Code 11</option>
+                                <option value="code128">Code 128</option>
+                                <option value="code16k">Code 16K</option>
+                                <option value="code2of5">Code 25</option>
+                                <option value="code39">Code 39</option>
+                                <option value="code39ext">Code 39 Extended</option>
+                                <option value="code49">Code 49</option>
+                                <option value="code93">Code 93</option>
+                                <option value="code93ext">Code 93 Extended</option>
+                                <option value="codeone">Code One</option>
+                                <option value="azteccodecompact">Compact Aztec Code</option>
+                                <option value="pdf417compact">Compact PDF417</option>
+                                <option value="coop2of5">COOP 2 of 5</option>
+                                <option value="raw">Custom 1D symbology</option>
+                                <option value="daft">Custom 4 state symbology</option>
+                                <option value="datamatrix">Data Matrix</option>
+                                <option value="datamatrixrectangular">Data Matrix Rectangular</option>
+                                <option value="datalogic2of5">Datalogic 2 of 5</option>
+                                <option value="identcode">Deutsche Post Identcode</option>
+                                <option value="leitcode">Deutsche Post Leitcode</option>
+                                <option value="ean13">EAN-13</option>
+                                <option value="ean13composite">EAN-13 Composite</option>
+                                <option value="ean2">EAN-2 (2 digit addon)</option>
+                                <option value="ean5">EAN-5 (5 digit addon)</option>
+                                <option value="ean8">EAN-8</option>
+                                <option value="ean8composite">EAN-8 Composite</option>
+                                <option value="flattermarken">Flattermarken</option>
+                                <option value="gs1-cc">GS1 Composite 2D Component</option>
+                                <option value="gs1datamatrix">GS1 Data Matrix</option>
+                                <option value="gs1datamatrixrectangular">GS1 Data Matrix Rectangular</option>
+                                <option value="databarexpanded">GS1 DataBar Expanded</option>
+                                <option value="databarexpandedcomposite">GS1 DataBar Expanded Composite</option>
+                                <option value="databarexpandedstacked">GS1 DataBar Expanded Stacked</option>
+                                <option value="databarexpandedstackedcomposite">GS1 DataBar Expanded Stacked Composite</option>
+                                <option value="databarlimited">GS1 DataBar Limited</option>
+                                <option value="databarlimitedcomposite">GS1 DataBar Limited Composite</option>
+                                <option value="databaromni">GS1 DataBar Omnidirectional</option>
+                                <option value="databaromnicomposite">GS1 DataBar Omnidirectional Composite</option>
+                                <option value="databarstacked">GS1 DataBar Stacked</option>
+                                <option value="databarstackedcomposite">GS1 DataBar Stacked Composite</option>
+                                <option value="databarstackedomni">GS1 DataBar Stacked Omnidirectional</option>
+                                <option value="databarstackedomnicomposite">GS1 DataBar Stacked Omnidirectional Composite</option>
+                                <option value="databartruncated">GS1 DataBar Truncated</option>
+                                <option value="databartruncatedcomposite">GS1 DataBar Truncated Composite</option>
+                                <option value="gs1qrcode">GS1 QR Code</option>
+                                <option value="gs1-128">GS1-128</option>
+                                <option value="gs1-128composite">GS1-128 Composite</option>
+                                <option value="ean14">GS1-14</option>
+                                <option value="hanxin">Han Xin Code</option>
+                                <option value="hibcazteccode">HIBC Aztec Code</option>
+                                <option value="hibccodablockf">HIBC Codablock F</option>
+                                <option value="hibccode128">HIBC Code 128</option>
+                                <option value="hibccode39">HIBC Code 39</option>
+                                <option value="hibcdatamatrix">HIBC Data Matrix</option>
+                                <option value="hibcdatamatrixrectangular">HIBC Data Matrix Rectangular</option>
+                                <option value="hibcmicropdf417">HIBC MicroPDF417</option>
+                                <option value="hibcpdf417">HIBC PDF417</option>
+                                <option value="hibcqrcode">HIBC QR Code</option>
+                                <option value="iata2of5">IATA 2 of 5</option>
+                                <option value="industrial2of5">Industrial 2 of 5</option>
+                                <option value="interleaved2of5">Interleaved 2 of 5 (ITF)</option>
+                                <option value="isbn">ISBN</option>
+                                <option value="ismn">ISMN</option>
+                                <option value="issn">ISSN</option>
+                                <option value="code32">Italian Pharmacode</option>
+                                <option value="itf14">ITF-14</option>
+                                <option value="japanpost">Japan Post 4 State Customer Code</option>
+                                <option value="matrix2of5">Matrix 2 of 5</option>
+                                <option value="maxicode">MaxiCode</option>
+                                <option value="microqrcode">Micro QR Code</option>
+                                <option value="micropdf417">MicroPDF417</option>
+                                <option value="symbol">Miscellaneous symbols</option>
+                                <option value="msi">MSI Modified Plessey</option>
+                                <option value="pdf417">PDF417</option>
+                                <option value="pharmacode">Pharmaceutical Binary Code</option>
+                                <option value="pzn">Pharmazentralnummer (PZN)</option>
+                                <option value="plessey">Plessey UK</option>
+                                <option value="posicode">PosiCode</option>
+                                <option value="qrcode">QR Code</option>
+                                <option value="kix">Royal Dutch TPG Post KIX</option>
+                                <option value="royalmail">Royal Mail 4 State Customer Code</option>
+                                <option value="sscc18">SSCC-18</option>
+                                <option value="telepen">Telepen</option>
+                                <option value="telepennumeric">Telepen Numeric</option>
+                                <option value="pharmacode2">Two-track Pharmacode</option>
+                                <option value="upca">UPC-A</option>
+                                <option value="upcacomposite">UPC-A Composite</option>
+                                <option value="upce">UPC-E</option>
+                                <option value="upcecomposite">UPC-E Composite</option>
+                                <option value="onecode">USPS Intelligent Mail</option>
+                                <option value="planet">USPS PLANET</option>
+                                <option value="postnet">USPS POSTNET</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="symtext" class="col-sm-4 form-control-label">
+                            Bar Text
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="symtext">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="symaltx" class="col-sm-4 form-control-label">
+                            Alt Text
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="symaltx">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="symopts" class="col-sm-4 form-control-label">
+                            Options
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="symopts">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group row">
+                        <label for="scaleX" class="col-sm-4 form-control-label">
+                            Scale X
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="scaleX" value="2" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="scaleY" class="col-sm-4 form-control-label">
+                            Scale Y
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="scaleY" value="2" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label">
+                            Image Rotation
+                        </label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="foo">
+                                <option id="rotN" value="N" selected>Normal</option>
+                                <option id="rotR" value="R">90 CW</option>
+                                <option id="rotL" value="L">90 CCW</option>
+                                <option id="rotI" value="I">180</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 form-control-label">
+                            Font Rendering
+                        </label>
+                        <div class="col-sm-8">
+                            <label class="c-input c-radio">
+                                <input type="radio" name="font" value="A" id="fontAnti" checked="">
+                                <span class="c-indicator"></span>
+                                Anti-Aliased
+                            </label>
+                            <label class="c-input c-radio">
+                                <input type="radio" name="font" value="M" id="fontMono">
+                                <span class="c-indicator"></span>
+                                Monochrome
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button id="render" type="submit" class="btn btn-primary">
+                                Show Barcode
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div id="content">
+            <canvas id="canvas" width="1" height="1" style="border: 1px solid #fff; visibility: hidden;"></canvas>
+            <div id="proof" style="position: relative; border: 1px solid #fff;"></div>
+            <div id="output" style="white-space: pre;"></div>
+        </div>
+        <p class="text-muted" id="stats"></p>
+        <button type="button" class="saveas btn btn-success-outline" onclick="saveCanvas('image/png', '.png')">
+            Save As PNG
+        </button>
+        <button type="button" class="saveas btn btn-success-outline" onclick="saveCanvas('image/jpeg', '.jpg')">
+            Save As JPEG
+        </button>
+        <a class="saveas btn btn-link" id="apiurl" href="">Goto URL</a>
+    </div>
+    <script type="text/javascript" src="lib/jquery.js"></script>
+    <script type="text/javascript" src="lib/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="lib/fonts.js"></script>
+    <script type="text/javascript" src="lib/filedrop-min.js"></script>
+    <script type="text/javascript">
 var Module = {
-	// memoryInitializerPrefixURL:'your-path-here/',
-	preRun:[ function() {
-			Module.FS_createPreloadedFile("/", "Inconsolata.otf",
-										 "fonts/Inconsolata.otf", true, false);
-	} ],
-	postRun:[ function() {
-			var load_font = Module.cwrap("load_font", 'number',
-										['string','string','number']);
-			load_font("Inconsolata.otf", "INCONSOLATA", 108);
+    // memoryInitializerPrefixURL:'your-path-here/',
+    preRun:[function() {
+        Module.FS_createPreloadedFile('/', 'Inconsolata.otf', 'fonts/Inconsolata.otf', true, false);
+    }],
+    postRun:[function() {
+        var load_font = Module.cwrap('load_font', 'number', ['string', 'string', 'number']);
+        load_font('Inconsolata.otf', 'INCONSOLATA', 108);
 
-			// Load any previously saved fonts
-			for (var i = 0; i < 8; i++) {
-				if (!localStorage.getItem('bwipjsFontName' + i))
-					continue;
+        // Load any previously saved fonts
+        for (var i = 0; i < 8; i++) {
+            if (!localStorage.getItem('bwipjsFontName' + i)) {
+                continue;
+            }
 
-				var fontname = localStorage.getItem('bwipjsFontName' + i);
-				var filename = localStorage.getItem('bwipjsFileName' + i);
-				var sizemult = localStorage.getItem('bwipjsSizeMult' + i);
-				var fontfile = atob(localStorage.getItem('bwipjsFontFile' + i));
-				try {
-					fontLoad(fontname, filename, sizemult, fontfile);
-					fontShow(fontname, filename, sizemult);
-				} catch (e) {
-					alert('Error: ' + fontname + ': ' + filename + ': ' + e);
+            var fontname = localStorage.getItem('bwipjsFontName' + i);
+            var filename = localStorage.getItem('bwipjsFileName' + i);
+            var sizemult = localStorage.getItem('bwipjsSizeMult' + i);
+            var fontfile = atob(localStorage.getItem('bwipjsFontFile' + i));
+            try {
+                fontLoad(fontname, filename, sizemult, fontfile);
+                fontShow(fontname, filename, sizemult);
+            } catch (e) {
+                alert('Error: ' + fontname + ': ' + filename + ': ' + e);
 
-					localStorage.removeItem('bwipjsFontName' + i);
-					localStorage.removeItem('bwipjsFileName' + i);
-					localStorage.removeItem('bwipjsSizeMult' + i);
-					localStorage.removeItem('bwipjsFontFile' + i);
-				}
-			}
-	} ]
+                localStorage.removeItem('bwipjsFontName' + i);
+                localStorage.removeItem('bwipjsFileName' + i);
+                localStorage.removeItem('bwipjsSizeMult' + i);
+                localStorage.removeItem('bwipjsFontFile' + i);
+            }
+        }
+    }],
 };
-</script>
-<script type="text/javascript" src="freetype.js"></script>
-<script type="text/javascript" src="bwipp.js"></script>
-<script type="text/javascript" src="bwipjs.js"></script>
-<script type="text/javascript" src="lib/bitmap.js"></script>
-<script type="text/javascript" src="lib/symdesc.js"></script>
-<script type="text/javascript" src="lib/canvas-toblob.js"></script>
-<script type="text/javascript" src="lib/filesaver.js"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-	var lastSymbol	= localStorage.getItem('bwipjsLastSymbol');
-	var lastBarText	= localStorage.getItem('bwipjsLastBarText');
-	var lastAltText	= localStorage.getItem('bwipjsLastAltText');
-	var lastOptions = localStorage.getItem('bwipjsLastOptions');
-	var lastRotate	= localStorage.getItem('bwipjsLastRotation');
-	var lastScaleX  = +localStorage.getItem('bwipjsLastScaleX');
-	var lastScaleY  = +localStorage.getItem('bwipjsLastScaleY');
-	var lastFntMono	= +localStorage.getItem('bwipjsLastFontMono');
-
-	var $sel = $('#symbol')
-		.change(function(ev) {
-			var desc = symdesc[$(this).val()];
-			if (desc) {
-				$('#symtext').val(desc.text);
-				$('#symopts').val(desc.opts);
-			} else {
-				$('#symtext').val('');
-				$('#symopts').val('');
-			}
-			$('#symaltx').val('');
-			$('.saveas').css('visibility', 'hidden');
-			$('#proof-img').css('visibility', 'hidden');
-			$('#stats').text('');
-			var canvas = document.getElementById('canvas');
-			canvas.width = canvas.width;
-		});
-
-	if (lastSymbol) {
-		$sel.val(lastSymbol);
-	} else {
-		$sel.prop('selectedIndex', 0);
-	}
-	$sel.trigger('change');
-
-	if (lastSymbol) {
-		$('#symtext').val(lastBarText);
-		$('#symaltx').val(lastAltText);
-		$('#symopts').val(lastOptions);
-	}
-	if (lastScaleX && lastScaleY) {
-		$('#scaleX').val(lastScaleX);
-		$('#scaleY').val(lastScaleY);
-	}
-	if (lastRotate) {
-		document.getElementById('rot' + lastRotate).checked = true;
-	}
-	if (lastFntMono) {
-		document.getElementById('fontMono').checked = true;
-	}
-
-	$('#scaleX').spinner({ min:1 })
-		.on("spinstop", function(ev) {
-			$('#scaleY').val(this.value);
-		});
-	$('#scaleY').spinner({ min:1 });
-	$('#render').button().click(render);
-	$('#fonthdr').click(fontClick);
-	$('#addfont').button().click(fontRead);
-	$('.saveas').css('visibility', 'hidden');
-
-	if (location.search.indexOf('proofs=1') != -1) { 
-		// Show the images from BWIPP with Ghostscript
-		var img = document.createElement('img');
-		img.id					= 'proof-img';
-		img.style.visibility 	= 'hidden';
-		img.style.position		= 'absolute';
-		img.style.top			= '0px';
-		img.style.left			= '0px';
-		$('#proof').append(img);
-	}
-
-	// File picker
-	var zone = new FileDrop('dropzone');
-	zone.event('send', function (files) {
-		var file = files.first();
-		$('#dropzone div.droptext').css('display', 'none');
-		$('#dropzone div.dropfile').css('display', 'block').text(file.name);
-		$('#dropzone input.fd-file')[0].title = file.name;
-
-		fontSelected(file.nativeFile);		// Native browser File object
-	});
-
-	// Allow Enter to render
-	$('#params').keypress(function(ev) {
-		if (ev.which == 13) {
-			render();
-			ev.stopPropagation();
-			ev.preventDefault();
-			return false;
-		}
-	});
-});
-
-function render() {
-	var elt  = symdesc[$('#symbol').val()];
-	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
-
-	// Anti-aliased or monochrome fonts and scaling factors.
-	var monochrome = document.getElementById('fontMono').checked;
-	var scaleX = +document.getElementById('scaleX').value || 2;
-	var scaleY = +document.getElementById('scaleY').value || 2;
-
-	localStorage.setItem('bwipjsLastSymbol',  elt.sym);
-	localStorage.setItem('bwipjsLastBarText', text);
-	localStorage.setItem('bwipjsLastAltText', altx);
-	localStorage.setItem('bwipjsLastOptions', opts);
-	localStorage.setItem('bwipjsLastScaleX', scaleX);
-	localStorage.setItem('bwipjsLastScaleY', scaleY);
-	localStorage.setItem('bwipjsLastFontMono', monochrome ? 1 : 0);
-
-	// Link in the freetype module and how to render fonts.
-	var bw = new BWIPJS(Module, monochrome);
-
-	// Clear the page
-	$('#output').text('');
-	$('#stats').text('');
-	$('#proof-img').css('visibility', 'hidden');
-	$('.saveas').css('visibility', 'hidden');
-
-	var canvas = document.getElementById('canvas');
-	canvas.height = 1;
-	canvas.width  = 1;
-
-	// Convert the options to a dictionary object, so we can pass alttext with
-	// spaces.
-	var tmp = opts.split(' '); 
-	opts = {};
-	for (var i = 0; i < tmp.length; i++) {
-		if (!tmp[i])
-			continue;
-		var eq = tmp[i].indexOf('=');
-		if (eq == -1)
-			opts[tmp[i]] = true;
-		else
-			opts[tmp[i].substr(0, eq)] = tmp[i].substr(eq+1);
-	}
-
-	// Add the alternate text
-	if (altx)
-		opts.alttext = altx;
-
-	var rot  = 'N';
-	var rots = [ 'rotL', 'rotR', 'rotI' ];
-	for (var i = 0; i < rots.length; i++) {
-		if (document.getElementById(rots[i]).checked) {
-			rot = rots[i].charAt(3);
-			break;
-		}
-	}
-	localStorage.setItem('bwipjsLastRotation', rot);
-
-	// Feature or bug, BWIPP does not extend the background color into the
-	// human readable text.  Fix that in the bitmap interface.
-	if (opts.backgroundcolor) {
-		bw.bitmap(new Bitmap(opts.backgroundcolor));
-		delete opts.backgroundcolor;
-	} else {
-		bw.bitmap(new Bitmap);
-	}
-	
-	// Set the scaling factors
-	bw.scale(scaleX, scaleY);
-
-	// Add optional padding to the image
-	bw.bitmap().pad(+opts.paddingwidth*scaleX || 0,
-					+opts.paddingheight*scaleY || 0);
-
-
-	var ts0 = Date.now();
-
-	// Render the bar code
-	try {
-		// Create a new BWIPP instance for each
-		BWIPP()(bw, elt.sym, text, opts);
-	} catch (e) {
-		// Watch for BWIPP generated raiseerror's.
-		var msg = ''+e;
-		if (msg.indexOf("bwipp.") >= 0) {
-			$('#output').text(msg);
-		} else if (e.stack) {
-			$('#output').text(e.stack);
-		} else {
-			$('#output').text(e);
-		}
-		return;
-	}
-
-	var ts1 = Date.now();
-
-	bw.bitmap().show(canvas, rot);
-
-	var ts2 = Date.now();
-
-	setURL();
-	$('#stats').text('Rendered in ' + (ts2-ts0) + ' msecs');
-	$('.saveas').css('visibility', 'visible');
-	saveCanvas.basename = elt.sym + '-' +
-			text.replace(/[^a-zA-Z0-9._]+/g, '-');
-
-	// Show proofs?
-	if (location.search.indexOf('proofs=1') != -1) { 
-		var img = document.getElementById('proof-img');
-		if (img) {
-			img.src = 'proofs/' + elt.sym + '.png';
-			img.style.visibility = 'visible';
-		}
-	}
-}
-function saveCanvas(type, ext) {
-	var canvas = document.getElementById('canvas');
-	canvas.toBlob(function (blob) {
-					  saveAs(blob, saveCanvas.basename + ext);
-				  }, type, 1);
-}
-function setURL() {
-	var elt  = symdesc[$('#symbol').val()];
-	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
-
-	var url = 'http://api-bwipjs.rhcloud.com/?bcid=' + elt.sym + 
-					'&text=' + encodeURIComponent(text) +
-					(altx ? '&alttext=' + encodeURIComponent(altx) : '') +
-					(opts ? '&' + opts.replace(/ /g, '&') : '');
-
-	document.getElementById('apiurl').href = url;
-}
-</script>
-</head><body>
-<div id="header">
-	<div id="bwipjs">bwip-js // Barcode Writer in Pure JavaScript</div>
-	<div id="fonthdr">&#x25bc; Fonts</div>
-	<div id="fontdiv" style="visibility:hidden">
-		<div class="inner">
-			PostScript Name of Font:<br>
-			<input type="text" id="fontname" style="width:32ex"><br>
-			<br>
-			Font Size Multiplier (100 = 100%):<br>
-			<input type="text" id="fontmult" style="width:6ex" value="100"><br>
-			<br>
-			<div id="dropzone">
-				<div class="content">
-					<div class="droptext">Drop file here or click to select.</div>
-					<div class="dropfile" style="display:none"></div>
-				</div>
-			</div>
-			<br>
-			<button id="addfont">Add Font</button><br>
-			<div id="fontlist" class="empty"></div>
-		</div>
-	</div>
-</div>
-<div id="params">
-<table border=0 cellpading=0 cellspacing=0><tr>
-<td style="vertical-align:top">
-	<table border=0 cellpading=0 cellspacing=0>
-	<tr><th>Barcode Type:
-		<!-- Do not change the `select id="symbol"` - see develop/mkdesc -->
-		<td><select id="symbol" style="width:63.5ex">
-			<!-- Barcode Writer in Pure PostScript - Version 2016-06-03 -->
-			<option value="auspost">AusPost 4 State Customer Code</option>
-			<option value="azteccode">Aztec Code</option>
-			<option value="aztecrune">Aztec Runes</option>
-			<option value="bc412">BC412</option>
-			<option value="channelcode">Channel Code</option>
-			<option value="rationalizedCodabar">Codabar</option>
-			<option value="codablockf">Codablock F</option>
-			<option value="code11">Code 11</option>
-			<option value="code128">Code 128</option>
-			<option value="code16k">Code 16K</option>
-			<option value="code2of5">Code 25</option>
-			<option value="code39">Code 39</option>
-			<option value="code39ext">Code 39 Extended</option>
-			<option value="code49">Code 49</option>
-			<option value="code93">Code 93</option>
-			<option value="code93ext">Code 93 Extended</option>
-			<option value="codeone">Code One</option>
-			<option value="azteccodecompact">Compact Aztec Code</option>
-			<option value="pdf417compact">Compact PDF417</option>
-			<option value="coop2of5">COOP 2 of 5</option>
-			<option value="raw">Custom 1D symbology</option>
-			<option value="daft">Custom 4 state symbology</option>
-			<option value="datamatrix">Data Matrix</option>
-			<option value="datamatrixrectangular">Data Matrix Rectangular</option>
-			<option value="datalogic2of5">Datalogic 2 of 5</option>
-			<option value="identcode">Deutsche Post Identcode</option>
-			<option value="leitcode">Deutsche Post Leitcode</option>
-			<option value="ean13">EAN-13</option>
-			<option value="ean13composite">EAN-13 Composite</option>
-			<option value="ean2">EAN-2 (2 digit addon)</option>
-			<option value="ean5">EAN-5 (5 digit addon)</option>
-			<option value="ean8">EAN-8</option>
-			<option value="ean8composite">EAN-8 Composite</option>
-			<option value="flattermarken">Flattermarken</option>
-			<option value="gs1-cc">GS1 Composite 2D Component</option>
-			<option value="gs1datamatrix">GS1 Data Matrix</option>
-			<option value="gs1datamatrixrectangular">GS1 Data Matrix Rectangular</option>
-			<option value="databarexpanded">GS1 DataBar Expanded</option>
-			<option value="databarexpandedcomposite">GS1 DataBar Expanded Composite</option>
-			<option value="databarexpandedstacked">GS1 DataBar Expanded Stacked</option>
-			<option value="databarexpandedstackedcomposite">GS1 DataBar Expanded Stacked Composite</option>
-			<option value="databarlimited">GS1 DataBar Limited</option>
-			<option value="databarlimitedcomposite">GS1 DataBar Limited Composite</option>
-			<option value="databaromni">GS1 DataBar Omnidirectional</option>
-			<option value="databaromnicomposite">GS1 DataBar Omnidirectional Composite</option>
-			<option value="databarstacked">GS1 DataBar Stacked</option>
-			<option value="databarstackedcomposite">GS1 DataBar Stacked Composite</option>
-			<option value="databarstackedomni">GS1 DataBar Stacked Omnidirectional</option>
-			<option value="databarstackedomnicomposite">GS1 DataBar Stacked Omnidirectional Composite</option>
-			<option value="databartruncated">GS1 DataBar Truncated</option>
-			<option value="databartruncatedcomposite">GS1 DataBar Truncated Composite</option>
-			<option value="gs1qrcode">GS1 QR Code</option>
-			<option value="gs1-128">GS1-128</option>
-			<option value="gs1-128composite">GS1-128 Composite</option>
-			<option value="ean14">GS1-14</option>
-			<option value="hanxin">Han Xin Code</option>
-			<option value="hibcazteccode">HIBC Aztec Code</option>
-			<option value="hibccodablockf">HIBC Codablock F</option>
-			<option value="hibccode128">HIBC Code 128</option>
-			<option value="hibccode39">HIBC Code 39</option>
-			<option value="hibcdatamatrix">HIBC Data Matrix</option>
-			<option value="hibcdatamatrixrectangular">HIBC Data Matrix Rectangular</option>
-			<option value="hibcmicropdf417">HIBC MicroPDF417</option>
-			<option value="hibcpdf417">HIBC PDF417</option>
-			<option value="hibcqrcode">HIBC QR Code</option>
-			<option value="iata2of5">IATA 2 of 5</option>
-			<option value="industrial2of5">Industrial 2 of 5</option>
-			<option value="interleaved2of5">Interleaved 2 of 5 (ITF)</option>
-			<option value="isbn">ISBN</option>
-			<option value="ismn">ISMN</option>
-			<option value="issn">ISSN</option>
-			<option value="code32">Italian Pharmacode</option>
-			<option value="itf14">ITF-14</option>
-			<option value="japanpost">Japan Post 4 State Customer Code</option>
-			<option value="matrix2of5">Matrix 2 of 5</option>
-			<option value="maxicode">MaxiCode</option>
-			<option value="microqrcode">Micro QR Code</option>
-			<option value="micropdf417">MicroPDF417</option>
-			<option value="symbol">Miscellaneous symbols</option>
-			<option value="msi">MSI Modified Plessey</option>
-			<option value="pdf417">PDF417</option>
-			<option value="pharmacode">Pharmaceutical Binary Code</option>
-			<option value="pzn">Pharmazentralnummer (PZN)</option>
-			<option value="plessey">Plessey UK</option>
-			<option value="posicode">PosiCode</option>
-			<option value="qrcode">QR Code</option>
-			<option value="kix">Royal Dutch TPG Post KIX</option>
-			<option value="royalmail">Royal Mail 4 State Customer Code</option>
-			<option value="sscc18">SSCC-18</option>
-			<option value="telepen">Telepen</option>
-			<option value="telepennumeric">Telepen Numeric</option>
-			<option value="pharmacode2">Two-track Pharmacode</option>
-			<option value="upca">UPC-A</option>
-			<option value="upcacomposite">UPC-A Composite</option>
-			<option value="upce">UPC-E</option>
-			<option value="upcecomposite">UPC-E Composite</option>
-			<option value="onecode">USPS Intelligent Mail</option>
-			<option value="planet">USPS PLANET</option>
-			<option value="postnet">USPS POSTNET</option>
-			</select>
-	<tr><th>Bar Text:<td><input id="symtext" type="text" style="width:63ex">
-	<tr><th>Alt Text:<td><input id="symaltx" type="text" style="width:63ex">
-	<tr><th>Options:<td><input id="symopts" type="text" style="width:63ex">
-	<tr><td><td>
-		<a class="saveas" href="javascript:saveCanvas('image/png','.png')">Save As PNG</a>
-		&nbsp;&nbsp;
-		<a class="saveas" href="javascript:saveCanvas('image/jpeg','.jpg')">Save As JPEG</a>
-		&nbsp;&nbsp;
-		<a class="saveas" id="apiurl" href="">Goto URL</a>
-		&nbsp;&nbsp;
-		<br>
-		<div id="stats"></div>
-	</table>
-<td style="padding-left:10mm;vertical-align:top">
-	<table border=0 cellpading=0 cellspacing=5>
-	<tr><th>Scale X,Y:<td>
-		<input type="text" id="scaleX" value=2>
-		<input type="text" id="scaleY" value=2>
-	<tr><th>Image Rotation:<td>
-		<label for="rotN"><input type="radio" name="rot" value="N"
-			id="rotN" checked>Normal</label>
-		<label for="rotR"><input type="radio" name="rot" value="R"
-			id="rotR">90 CW</label>
-		<label for="rotL"><input type="radio" name="rot" value="L"
-			id="rotL">90 CCW</label>
-		<label for="rotI"><input type="radio" name="rot" value="I"
-			id="rotI">180</label>
-	<tr><th>Font Rendering:<td>
-		<label for="fontAnti"><input type="radio" name="font" value="A"
-			id="fontAnti" checked>Anti-Aliased</label>
-		<label for="fontMono"><input type="radio" name="font" value="M"
-			id="fontMono">Monochrome</label>
-	<tr><td><td><button id="render">Show Barcode</button>
-	</table>
-<tr><td><br>
-</table>
-</div>
-<div id="content">
-<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
-<div id="proof" style="position:relative;border:1px solid #fff"></div>
-<div id="output" style="white-space:pre"></div>
-</div>
+    </script>
+    <script type="text/javascript" src="freetype.js"></script>
+    <script type="text/javascript" src="bwipp.js"></script>
+    <script type="text/javascript" src="bwipjs.js"></script>
+    <script type="text/javascript" src="lib/bitmap.js"></script>
+    <script type="text/javascript" src="lib/symdesc.js"></script>
+    <script type="text/javascript" src="lib/canvas-toblob.js"></script>
+    <script type="text/javascript" src="lib/filesaver.js"></script>
+    <script type="text/javascript" src="lib/demo.js"></script>
 </body>
 </html>
