@@ -25,20 +25,22 @@
 //		$0["<ident>"] = function() {
 //
 // Likewise, each branch looks like:
+//		<loop-or-if-or-else> {
 //			bwipjs_coverage[X] = 1;
 //			<blah>
-//		} <optional else>
+//		}
 //
-var fs = require('fs');
-var data = eval('('+fs.readFileSync(process.argv[2], 'binary')+')');
+var fs	  = require('fs');
+var data  = eval('('+fs.readFileSync(process.argv[2], 'binary')+')');
 var lines = fs.readFileSync('bwipp.js', 'binary').split(/\r\n|[\r\n]/);
 var stats = [];			// encoder stats
-var html = '';
-var tabs = [];
+var html  = '';
+var tabs  = [];
 var taken = null;		// branches taken in the current func
 
 // Make the line html-safe (this is only for function-body code that is
-// indented an extra level due to the try-catch block
+// indented an extra level due to the try-catch block emitted as part of
+// the code coverage boilerplate.
 function emit(s) {
 	return s.replace(/^\t/, '').replace(/\t/g, '   ')
 			.replace(/&/g, '&amp;').replace(/</g, '&lt') + '\n';
@@ -113,7 +115,7 @@ for (var i = 0; i < lines.length; i++) {
 }
 // If seen is zero, there was no coverage instrumentation in the code.
 if (!seen) {
-	console.error(process.argv[1] + ': No coverage stats.  Did you build --with-coverage?');
+	console.error('uncover.js: No coverage stats. Did you build --with-coverage?');
 	process.exit(1);
 }
 // Build the left panel html

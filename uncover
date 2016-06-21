@@ -28,6 +28,8 @@ sort coverage/functions | while read FUNCTION ; do
 	## always be wrong.
 	##
 	if [ $FUNCTION = raiseerror -o ${FUNCTION:0:3} = ren ] ; then
+		## Keep the files svelte
+		rm -f coverage/$FUNCTION 2>/dev/null
 		continue;
 	fi
 
@@ -44,8 +46,10 @@ sort coverage/functions | while read FUNCTION ; do
 
 	## jsonify the data
 	echo "\"$FUNCTION\":[$(xargs < $TMPFILE | sed -e 's/ /,/g')]," >> $JSONFILE
+
+	## Keep the smaller post-processed file
+	mv -f $TMPFILE coverage/$FUNCTION
 done
-rm -f $TMPFILE 2>/dev/null
 
 echo '}' >> $JSONFILE
 
