@@ -13,7 +13,7 @@ var url	= require('url'),
 	;
 
 // This module's primary export is the bwip-js HTTP request handler
-module.exports = function(req, res) {
+module.exports = function(req, res, opts) {
 	var args = url.parse(req.url, true).query;
 
 	// Convert boolean empty parameters to true
@@ -21,6 +21,12 @@ module.exports = function(req, res) {
 		if (args[id] === '')
 			args[id] = true;
 	}
+	// Add in server options/overrides
+	opts = opts || {};
+	for (var id in opts) {
+		args[id] = opts[id];
+	}
+
 	module.exports.toBuffer(args, function(err, png) {
 		if (err) {
 			res.writeHead(400, { 'Content-Type':'text/plain' });
@@ -53,6 +59,11 @@ module.exports.toBuffer = function(args, callback) {
 	var rot		= args.rotate || 'N';
 	var mono	= args.monochrome || false;
 
+	// To protect the server from memory exhaustion, you can optionally limit
+	// the size of the image.  Value is in pixels.
+	// For example sizelimit=1024*1024 will limit images to under (roughly) 1MiB.
+	var sizelimit = +args.sizelimit || 0;
+
 	// The required parameters
 	var bcid	= args.bcid;
 	var text	= args.text;
@@ -71,6 +82,7 @@ module.exports.toBuffer = function(args, callback) {
 	delete args.text;
 	delete args.bcid;
 	delete args.monochrome;
+	delete args.sizelimit;
 
 	// Initialize a barcode writer object.  This is the interface between
 	// the low-level BWIPP code, freetype, and the Bitmap object.
@@ -98,6 +110,10 @@ module.exports.toBuffer = function(args, callback) {
 	} else {
 		bw.bitmap(new Bitmap);
 	}
+
+	// Constrain resulting image size
+	bw.bitmap().limit(sizelimit);
+
 	// Add optional padding and scale the image.
 	bw.bitmap().pad(+opts.paddingwidth*scaleX || 0,
 					+opts.paddingheight*scaleY || 0);
@@ -155,6 +171,7 @@ function Bitmap(bgcolor) {
 	var _maxy = 0;
 	var _padx = 0;					// optional left/right padding
 	var _pady = 0;					// optional top/bottom padding
+	var _sizelim = 0;				// optional size limit
 
 	if (typeof bgcolor === 'string') {
 		bgcolor = (0xff000000 | parseInt(bgcolor, 16)) >>> 0;
@@ -166,6 +183,10 @@ function Bitmap(bgcolor) {
 	this.pad = function(width, height) {
 		_padx = width;
 		_pady = height;
+	}
+
+	this.limit = function(size) {
+		_sizelim = size;
 	}
 
 	// Sets the minimim size for the drawing surface (can grow larger).
@@ -180,6 +201,11 @@ function Bitmap(bgcolor) {
 		if (_miny > lly) _miny = lly;
 		if (_maxx < urx) _maxx = urx;
 		if (_maxy < ury) _maxy = ury;
+
+		// This is the only place where size limit is enforced.
+		if (_sizelim && _maxx * _maxy > _sizelim) {
+			throw 'BWIPJS: image exceeded size limit';
+		}
 	}
 
 	this.color = function(r,g,b) {
