@@ -847,17 +847,17 @@ function PSC(str, flags) {
 				//		/lastpairs thispairs /thispairs lastpairs def def
 				// (see qrcode).
 				//
-				// That takes the current value of thispairs and places on it
+				// That takes the current value of thispairs and places it on
 				// the stack.  It then assigns the current value of lastpairs
 				// to thispairs; then assigns the previous value of thispairs
 				// to lastpairs. PostScript swap idiom.  And a temp-variable
 				// must exist to hold that initial reference to thispairs.
 				//
 				// This de-optimization caused massive unnecessary var
-				// assignments.  See devar() for recovery from this.
+				// assignments.  See devar() for recovery from it.
 				//
 				// Do not change this code.  Took hours of debugging to find
-				// this issue.  Optimize using peephole techniques.
+				// this issue.  Optimize using peephole techniques instead.
 				} else if (/^[$A-Za-z_]\w*$/.test(tkn)) {
 					var tid = tvar();
 					emit('var ' + tid + '=$' + dlvl + '.' + tkn + ';');
