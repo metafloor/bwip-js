@@ -105,7 +105,7 @@ module.exports.toBuffer = function(args, callback) {
 
 	// Call into the BWIPP cross-compiled code
 	try {
-		bwipp()(bw, bcid, text, args);
+		bwipp()(bw, bcid, text, opts);
 		bw.bitmap().getPNG(rot, callback);
 	} catch (e) {
 		// Invoking this callback is synchronous.
