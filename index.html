@@ -28,7 +28,7 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 
-<p><a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="https://camo2.githubusercontent.com/bf801c201bf177a65a4b14922c0ec9d61f2bee06/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732e706e67" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js.png" style="max-width:100%;"></a>
+<p><a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="https://camo.githubusercontent.com/bf801c201bf177a65a4b14922c0ec9d61f2bee06/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732e706e67" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js.png" style="max-width:100%;"></a>
 bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any modern browser or JavaScript-based server framework.</p>
 
 <p>The software has encoding modules for over 90 different barcode types and standards.
@@ -59,7 +59,7 @@ execution contexts and asynchronously load into them.</p>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 
 <ul>
-<li>Current bwip-js version is 1.0.4 (2016-06-16)</li>
+<li>Current bwip-js version is 1.0.5 (2016-06-28)</li>
 <li>Current BWIPP version is 2016-06-03</li>
 <li>Node.js compatibility &gt;= v0.10</li>
 <li>npm dependencies: none</li>
@@ -83,10 +83,9 @@ execution contexts and asynchronously load into them.</p>
 <a id="user-content-online-barcode-generator" class="anchor" href="#online-barcode-generator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Online Barcode Generator</h2>
 
 <p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online barcode generator</a>
-demonstrates all of the features of bwip-js.
-It showcases the font rendering provided by the FreeType library,
-and allows using your own fonts.  All fonts are stored locally on your computer;
-the demo is 100% client-side JavaScript.</p>
+demonstrates all of the features of bwip-js.  All features and options of BWIPP are available, along with the font rendering provided by the FreeType library.
+It also allows using your own fonts.  The fonts are stored locally on your
+computer; the demo is 100% client-side JavaScript.</p>
 
 <p>The demo is tested on the latest versions of Firefox and Chrome, along with IE10 and IE11.
 Microsoft Edge should work, and so should the latest versions of Opera and Safari,
@@ -239,7 +238,6 @@ to determine what options are available for each barcode type.</p>
     bwipp.js         # The cross-compiled BWIPP code
     demo.html        # The bwipjs demo
     freetype.js      # The Emscripten-compiled FreeType library
-    freetype.js.mem  # Demand loaded memory image
     node-bwipjs.js   # Node.js module
     node-zlibPNG.js  # Node.js module that implements a PNG encoder
     package.json     # Node.js/npm configuration
@@ -248,8 +246,8 @@ to determine what options are available for each barcode type.</p>
     lib/             # Utilities required by the demo
 </code></pre>
 
-<p>The above files are part of the <code>master</code> branch.  If you wish to 
-compile bwip-js on your own, you will need to download the <code>develop</code> branch, 
+<p>The above files are part of the <em>master</em> branch.  If you wish to 
+compile bwip-js on your own, you will need to clone the <em>develop</em> branch, 
 which contains the cross-compiler, test framework, code-coverage files,
 benchmark framework, image proofs, etc.  Everything used to create and
 validate bwip-js.</p>

@@ -21,6 +21,15 @@ body {
 	position:			absolute;
 	bottom:				21px;
 }
+#header #version {
+	font-size:			10px;
+	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
+	font-weight:		100;
+	color:				#a7a7a7;
+	position:			absolute;
+	bottom:				2px;
+	right:				12px;
+}
 input, select, label {
 	font-family:		Verdana, Arial, san-serif;
 	font-size:			10.5pt;

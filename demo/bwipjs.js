@@ -3,6 +3,9 @@
 // Graphics-context interface to the BWIPP cross-compiled code
 
 function BWIPJS(freetype, monochrome) {
+	if (this.constructor !== BWIPJS) {
+		return new BWIPJS(freetype, monochrome);
+	}
 	this.bmap = null;	// bitmap interface
 	this.gstk = [];		// graphics save/restore stack
 	this.reset();
