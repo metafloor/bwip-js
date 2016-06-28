@@ -121,7 +121,7 @@ module.exports.toBuffer = function(args, callback) {
 
 	// Call into the BWIPP cross-compiled code
 	try {
-		bwipp()(bw, bcid, text, args);
+		bwipp()(bw, bcid, text, opts);
 		bw.bitmap().getPNG(rot, callback);
 	} catch (e) {
 		// Invoking this callback is synchronous.
@@ -149,6 +149,9 @@ module.exports.unloadFont = function(fontname) {
 	// Delete from emscripten
 	freetype.unlink('/' + fontname);
 }
+
+module.exports.bwipjs_version = "__BWIPJS_VERS__";
+module.exports.bwipp_version = "__BWIPP_VERS__";
 
 
 // bwipjs Bitmap interface

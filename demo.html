@@ -159,6 +159,7 @@ function render() {
 	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
 	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
 	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var rot  = document.querySelector('input[name="rot"]:checked').value;
 
 	// Anti-aliased or monochrome fonts and scaling factors.
 	var monochrome = document.getElementById('fontMono').checked;
@@ -172,6 +173,7 @@ function render() {
 	localStorage.setItem('bwipjsLastScaleX', scaleX);
 	localStorage.setItem('bwipjsLastScaleY', scaleY);
 	localStorage.setItem('bwipjsLastFontMono', monochrome ? 1 : 0);
+	localStorage.setItem('bwipjsLastRotation', rot);
 
 	// Link in the freetype module and how to render fonts.
 	var bw = new BWIPJS(Module, monochrome);
@@ -191,30 +193,22 @@ function render() {
 	var tmp = opts.split(' '); 
 	opts = {};
 	for (var i = 0; i < tmp.length; i++) {
-		if (!tmp[i])
+		if (!tmp[i]) {
 			continue;
+		}
 		var eq = tmp[i].indexOf('=');
-		if (eq == -1)
+		if (eq == -1) {
 			opts[tmp[i]] = true;
-		else
+		} else {
 			opts[tmp[i].substr(0, eq)] = tmp[i].substr(eq+1);
+		}
 	}
 
 	// Add the alternate text
-	if (altx)
+	if (altx) {
 		opts.alttext = altx;
-
-	var rot  = 'N';
-	var rots = [ 'rotL', 'rotR', 'rotI' ];
-	for (var i = 0; i < rots.length; i++) {
-		if (document.getElementById(rots[i]).checked) {
-			rot = rots[i].charAt(3);
-			break;
-		}
 	}
-	localStorage.setItem('bwipjsLastRotation', rot);
-
-	// Feature or bug, BWIPP does not extend the background color into the
+	// BWIPP does not extend the background color into the
 	// human readable text.  Fix that in the bitmap interface.
 	if (opts.backgroundcolor) {
 		bw.bitmap(new Bitmap(opts.backgroundcolor));
@@ -229,7 +223,6 @@ function render() {
 	// Add optional padding to the image
 	bw.bitmap().pad(+opts.paddingwidth*scaleX || 0,
 					+opts.paddingheight*scaleY || 0);
-
 
 	var ts0 = Date.now();
 
@@ -294,6 +287,7 @@ function setURL() {
 </head><body>
 <div id="header">
 	<div id="bwipjs">bwip-js // Barcode Writer in Pure JavaScript</div>
+	<div id="version">bwip-js __BWIPJS_VERS__ / BWIPP __BWIPP_VERS__</div>
 	<div id="fonthdr">&#x25bc; Fonts</div>
 	<div id="fontdiv" style="visibility:hidden">
 		<div class="inner">
@@ -445,11 +439,11 @@ function setURL() {
 		<label for="rotN"><input type="radio" name="rot" value="N"
 			id="rotN" checked>Normal</label>
 		<label for="rotR"><input type="radio" name="rot" value="R"
-			id="rotR">90 CW</label>
+			id="rotR">Right</label>
 		<label for="rotL"><input type="radio" name="rot" value="L"
-			id="rotL">90 CCW</label>
+			id="rotL">Left</label>
 		<label for="rotI"><input type="radio" name="rot" value="I"
-			id="rotI">180</label>
+			id="rotI">Invert</label>
 	<tr><th>Font Rendering:<td>
 		<label for="fontAnti"><input type="radio" name="font" value="A"
 			id="fontAnti" checked>Anti-Aliased</label>

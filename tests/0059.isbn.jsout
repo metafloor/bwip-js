@@ -1,0 +1,3 @@
+Error: /bwipp.isbnBadLength in
+Additional information: (ISBN-13 must be 15 or 17 characters including dashes. ISBN-10 must be 11 or 13 characters including dashes)
+Current allocation mode is local
