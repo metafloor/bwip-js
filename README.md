@@ -28,7 +28,7 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
 
 ## Status 
 
-* Current bwip-js version is 1.0.4 (2016-06-16)
+* Current bwip-js version is 1.0.5 (2016-06-28)
 * Current BWIPP version is 2016-06-03
 * Node.js compatibility >= v0.10
 * npm dependencies: none
@@ -47,10 +47,9 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
 ## Online Barcode Generator
 
 An [online barcode generator](http://metafloor.github.io/bwip-js/demo/demo.html)
-demonstrates all of the features of bwip-js.
-It showcases the font rendering provided by the FreeType library,
-and allows using your own fonts.  All fonts are stored locally on your computer;
-the demo is 100% client-side JavaScript.
+demonstrates all of the features of bwip-js.  All features and options of BWIPP are available, along with the font rendering provided by the FreeType library.
+It also allows using your own fonts.  The fonts are stored locally on your
+computer; the demo is 100% client-side JavaScript.
 
 The demo is tested on the latest versions of Firefox and Chrome, along with IE10 and IE11.
 Microsoft Edge should work, and so should the latest versions of Opera and Safari,
@@ -192,7 +191,6 @@ The software is organized as follows:
         bwipp.js         # The cross-compiled BWIPP code
         demo.html        # The bwipjs demo
         freetype.js      # The Emscripten-compiled FreeType library
-        freetype.js.mem  # Demand loaded memory image
         node-bwipjs.js   # Node.js module
         node-zlibPNG.js  # Node.js module that implements a PNG encoder
         package.json     # Node.js/npm configuration
@@ -200,8 +198,8 @@ The software is organized as follows:
         fonts/           # OCR and Inconsolata font files
         lib/             # Utilities required by the demo
 
-The above files are part of the `master` branch.  If you wish to 
-compile bwip-js on your own, you will need to download the `develop` branch, 
+The above files are part of the *master* branch.  If you wish to 
+compile bwip-js on your own, you will need to clone the *develop* branch, 
 which contains the cross-compiler, test framework, code-coverage files,
 benchmark framework, image proofs, etc.  Everything used to create and
 validate bwip-js.

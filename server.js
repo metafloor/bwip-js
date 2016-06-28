@@ -23,7 +23,8 @@ http.createServer(function(req, res) {
 		res.writeHead(404, { 'Content-Type':'text/plain' });
 		res.end('BWIP-JS: Unknown request format.', 'utf8');
 	} else {
-		bwipjs(req, res);
+		// Do not allow images to grow too large (1 mega-pixel limit)
+		bwipjs(req, res, { sizelimit:1024*1024 });
 	}
 
 }).listen(3030);
