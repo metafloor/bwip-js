@@ -27,6 +27,25 @@ module.exports = function(req, res, opts) {
 		args[id] = opts[id];
 	}
 
+	function hexToRgb(hex) {
+	    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+	    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+	    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+	        return r + r + g + g + b + b;
+	    });
+
+	    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	    return result ? {
+	        r: parseInt(result[1], 16),
+	        g: parseInt(result[2], 16),
+	        b: parseInt(result[3], 16)
+	    } : null;
+	}
+
+	// inject color for barcode
+	var rgb = args.color ? hexToRgb(args.color) : hexToRgb('#000000');
+	args['color'] = rgb;
+
 	module.exports.toBuffer(args, function(err, png) {
 		if (err) {
 			res.writeHead(400, { 'Content-Type':'text/plain' });
@@ -109,6 +128,11 @@ module.exports.toBuffer = function(args, callback) {
 		delete opts.backgroundcolor;
 	} else {
 		bw.bitmap(new Bitmap);
+	}
+
+	// color for actual bitmap itself
+	if (opts.color && opts.color.r && opts.color.b && opts.color.g) {
+		bw.bitmap().color(opts.color.r, opts.color.b, opts.color.g);
 	}
 
 	// Constrain resulting image size
