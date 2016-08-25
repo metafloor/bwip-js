@@ -169,6 +169,22 @@ You will need to consult the
 [BWIPP documentation](https://github.com/bwipp/postscriptbarcode/wiki)
 to determine what options are available for each barcode type.
 
+## Command Line Interface
+
+bwip-js can be used as a command line tool.
+
+```
+npm install -g bwip-js
+bwip-js --help
+```
+
+Usage example:
+
+```
+bwip-js --bcid=qrcode --text=123456789 ~/qrcode.png
+```
+
+
 ## Installation
 
 You can download the latest npm module using:

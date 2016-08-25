@@ -3,6 +3,9 @@
   "version": "1.0.5",
   "description": "Barcode generator supporting over 90 types and standards.",
   "main": "node-bwipjs",
+  "bin": {
+    "bwip-js": "./bin/node-bwipjs.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,21 +15,21 @@
   },
   "keywords": [
     "qr",
-	"itf",
+    "itf",
     "gs1",
     "upc",
     "ean",
-	"pdf417",
-	"matrix",
-	"data",
-	"datamatrix",
-	"qrcode",
+    "pdf417",
+    "matrix",
+    "data",
+    "datamatrix",
+    "qrcode",
     "databar",
     "code128",
-	"code93",
+    "code93",
     "code39",
-	"code",
-	"bar",
+    "code",
+    "bar",
     "generator",
     "barcode"
   ],
@@ -35,5 +38,8 @@
   "bugs": {
     "url": "https://github.com/metafloor/bwip-js/issues"
   },
-  "homepage": "https://github.com/metafloor/bwip-js"
+  "homepage": "https://github.com/metafloor/bwip-js",
+  "dependencies": {
+    "argv": "0.0.2"
+  }
 }
