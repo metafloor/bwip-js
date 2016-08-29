@@ -31,9 +31,14 @@ return function(bwipjs, encoder, text, opts, dontdraw) {
 		throw new Error('bwipp.typeError: options not an object');
 	}
 
+	// Convert utf-16 to utf-8 but leave binary (8-bit) strings untouched.
+	if (/[\u0100-\uffff]/.test(text)) {
+		text = unescape(encodeURIComponent(text));
+	}
+		
 	// Handle the `parse` option here rather than in BWIPP - eliminates
-	// conflict the parsefnc option.  And allows removing the parsing
-	// code from // BWIPP.
+	// conflict with the parsefnc option and allows removing the parsing
+	// code from BWIPP.
 	if (opts.parse) {
 		text = text.replace(/\^(\d\d\d)/g, function ($0,$1) {
 				var v = +$1;
