@@ -59,10 +59,9 @@ execution contexts and asynchronously load into them.</p>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 
 <ul>
-<li>Current bwip-js version is 1.0.5 (2016-06-28)</li>
-<li>Current BWIPP version is 2016-06-03</li>
+<li>Current bwip-js version is 1.1.0 (2016-08-29)</li>
+<li>Current BWIPP version is 2016-08-29</li>
 <li>Node.js compatibility &gt;= v0.10</li>
-<li>npm dependencies: none</li>
 </ul>
 
 <h2>
@@ -214,6 +213,20 @@ specific options are:</p>
 <p>You will need to consult the
 <a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP documentation</a>
 to determine what options are available for each barcode type.</p>
+
+<h2>
+<a id="user-content-command-line-interface" class="anchor" href="#command-line-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command Line Interface</h2>
+
+<p>bwip-js can be used as a command line tool.</p>
+
+<pre><code>npm install -g bwip-js
+bwip-js --help
+</code></pre>
+
+<p>Usage example:</p>
+
+<pre><code>bwip-js --bcid=qrcode --text=123456789 ~/qrcode.png
+</code></pre>
 
 <h2>
 <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
