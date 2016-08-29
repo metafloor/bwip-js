@@ -150,8 +150,8 @@ module.exports.unloadFont = function(fontname) {
 	freetype.unlink('/' + fontname);
 }
 
-module.exports.bwipjs_version = "1.0.5 (2016-06-28)";
-module.exports.bwipp_version = "2016-06-03";
+module.exports.bwipjs_version = "1.1.0 (2016-08-29)";
+module.exports.bwipp_version = "2016-08-29";
 
 
 // bwipjs Bitmap interface

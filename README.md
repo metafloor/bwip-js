@@ -28,10 +28,9 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
 
 ## Status 
 
-* Current bwip-js version is 1.0.5 (2016-06-28)
-* Current BWIPP version is 2016-06-03
+* Current bwip-js version is 1.1.0 (2016-08-29)
+* Current BWIPP version is 2016-08-29
 * Node.js compatibility >= v0.10
-* npm dependencies: none
 
 ## Links
 
@@ -183,7 +182,6 @@ Usage example:
 ```
 bwip-js --bcid=qrcode --text=123456789 ~/qrcode.png
 ```
-
 
 ## Installation
 
