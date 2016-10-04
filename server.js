@@ -16,6 +16,11 @@ var bwipjs = require('./node-bwipjs');	// ./ required for local use
 bwipjs.loadFont('Inconsolata', 108,
 			require('fs').readFileSync('fonts/Inconsolata.otf', 'binary'));
 
+var port = (process.env.PORT || 3030)
+
+
+console.log('listening on ' + port);
+
 http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
 	// returning 400 on requests like favicon.ico.
@@ -27,6 +32,5 @@ http.createServer(function(req, res) {
 		bwipjs(req, res, { sizelimit:1024*1024 });
 	}
 
-}).listen(80);
+}).listen(port);
 
-console.log('listening on 80');
