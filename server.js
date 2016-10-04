@@ -27,6 +27,6 @@ http.createServer(function(req, res) {
 		bwipjs(req, res, { sizelimit:1024*1024 });
 	}
 
-}).listen(3030);
+}).listen(80);
 
-console.log('listening on 3030');
+console.log('listening on 80');
