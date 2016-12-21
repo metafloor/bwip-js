@@ -98,9 +98,13 @@ module.exports.toBuffer = function(args, callback) {
 		opts.includetext = true;
 	}
 	// We use mm rather than inches for height - except pharmacode2 height
-	// is explicitly in mm
-	if (opts.height && bcid != 'pharmacode2') {
+	// which is expected to be in mm
+	if (+opts.height && bcid != 'pharmacode2') {
 		opts.height = opts.height / 25.4 || 0.5;
+	}
+	// Likewise, width
+	if (+opts.width) {
+		opts.width = opts.width / 25.4 || 0;
 	}
 
 	// Override the `backgroundcolor` option.
@@ -184,8 +188,8 @@ function Bitmap(bgcolor) {
 
 	// Optional padding.  Rotates with the image.
 	this.pad = function(width, height) {
-		_padx = width;
-		_pady = height;
+		_padx = width|0;
+		_pady = height|0;
 	}
 
 	this.limit = function(size) {

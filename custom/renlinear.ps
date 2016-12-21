@@ -114,17 +114,23 @@
         width 72 mul x div 1 scale
     } if
 
-    % Display the border and background
-    newpath
-    borderleft neg borderbottom neg moveto
-    x borderleft add borderright add 0 rlineto
-    0 maxh borderbottom add bordertop add rlineto
-    x borderleft add borderright add neg 0 rlineto
-    0 maxh borderbottom add bordertop add neg rlineto    
-    closepath
+	% Custom interface to round down scale so bars are always the correct width.
+	floorscale
 
-	% Custom interface to tell the drawing surface minimum size
-	setextent
+    % Display the border
+	borderleft 0 gt borderright 0 gt bordertop 0 gt borderbottom gt or or or {
+		newpath
+		borderleft neg borderbottom neg moveto
+		x borderleft add borderright add 0 rlineto
+		0 maxh borderbottom add bordertop add rlineto
+		x borderleft add borderright add neg 0 rlineto
+		0 maxh borderbottom add bordertop add neg rlineto    
+		closepath
+
+		% Custom interface to tell the drawing surface minimum size
+		setextent
+	} if
+
     %backgroundcolor (unset) ne { gsave backgroundcolor setcolor fill grestore } if     
     showborder {
         gsave

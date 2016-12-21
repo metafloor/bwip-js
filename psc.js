@@ -1952,6 +1952,18 @@ function PSC(str, flags) {
 		emit('$$.setextent();');
 	}
 
+	// Custom interfaces to round scale up/down to integer values so we
+	// have no rounding error.
+	$.floorscale = function() {
+		emit('$$.floorscale();');
+	}
+	$.ceilscale = function() {
+		emit('$$.ceilscale();');
+	}
+	$.roundscale = function() {
+		emit('$$.roundscale();');
+	}
+
 	$.currentpoint = function() {
 		var tid = tvar();
 		emit('var ' + tid + '=$$.currpos();');			// CANVAS
