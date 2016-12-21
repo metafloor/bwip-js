@@ -207,6 +207,16 @@ function render() {
 	// Add the alternate text
 	if (altx) {
 		opts.alttext = altx;
+		opts.includetext = true;
+	}
+	// We use mm rather than inches for height - except pharmacode2 height
+	// which is expected to be in mm
+	if (+opts.height && elt.sym != 'pharmacode2') {
+		opts.height = opts.height / 25.4 || 0.5;
+	}
+	// Likewise, width.
+	if (+opts.width) {
+		opts.width = opts.width / 25.4 || 0;
 	}
 	// BWIPP does not extend the background color into the
 	// human readable text.  Fix that in the bitmap interface.
@@ -287,7 +297,7 @@ function setURL() {
 </head><body>
 <div id="header">
 	<div id="bwipjs">bwip-js // Barcode Writer in Pure JavaScript</div>
-	<div id="version">bwip-js 1.1.1 (2016-09-19) / BWIPP 2016-08-29</div>
+	<div id="version">bwip-js 1.2.0 (2016-12-20) / BWIPP 2016-12-16</div>
 	<div id="fonthdr">&#x25bc; Fonts</div>
 	<div id="fontdiv" style="visibility:hidden">
 		<div class="inner">
@@ -316,7 +326,7 @@ function setURL() {
 	<tr><th>Barcode Type:
 		<!-- Do not change the `select id="symbol"` - see develop/mkdesc -->
 		<td><select id="symbol" style="width:63.5ex">
-			<!-- Barcode Writer in Pure PostScript - Version 2016-06-03 -->
+			<!-- Barcode Writer in Pure PostScript - Version 2016-12-16 -->
 			<option value="auspost">AusPost 4 State Customer Code</option>
 			<option value="azteccode">Aztec Code</option>
 			<option value="aztecrune">Aztec Runes</option>
