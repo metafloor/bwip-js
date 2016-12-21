@@ -267,6 +267,22 @@ BWIPJS.prototype.stroke = function() {
 	}
 	this.g_path = [];
 }
+
+// Fix sources of rounding error by making the scale-factors integral.
+// Currently, only floor is being used.
+BWIPJS.prototype.floorscale = function() {
+	this.g_tsx = Math.floor(this.g_tsx) || 1;
+	this.g_tsy = Math.floor(this.g_tsy) || 1;
+}
+BWIPJS.prototype.ceilscale = function() {
+	this.g_tsx = Math.ceil(this.g_tsx) || 1;
+	this.g_tsy = Math.ceil(this.g_tsy) || 1;
+}
+BWIPJS.prototype.roundscale = function() {
+	this.g_tsx = Math.round(this.g_tsx) || 1;
+	this.g_tsy = Math.round(this.g_tsy) || 1;
+}
+
 BWIPJS.prototype.setextent = function() {
 	if (!this.g_path.length)						 // Nothing to do?
 		return;
