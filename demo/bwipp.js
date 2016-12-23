@@ -25506,7 +25506,7 @@ function BWIPP() {
 			$$.scale(($1.width * 72) / $1.x, 1); /*23413*/
 		} /*23413*/
 		$$.floorscale(); /*23417*/
-		if (($1.borderleft > 0) || (($1.borderright > 0) || (($1.bordertop > 0) > $1.borderbottom))) { /*23431*/
+		if (($1.borderleft > 0) || (($1.borderright > 0) || (($1.bordertop > 0) || ($1.borderbottom > 0)))) { /*23431*/
 			$$.newpath(); /*23421*/
 			$$.moveto(-$1.borderleft, -$1.borderbottom); /*23422*/
 			$$.rlineto(($1.x + $1.borderleft) + $1.borderright, 0); /*23423*/
