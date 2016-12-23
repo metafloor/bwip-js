@@ -154,7 +154,7 @@ module.exports.unloadFont = function(fontname) {
 	freetype.unlink('/' + fontname);
 }
 
-module.exports.bwipjs_version = "1.2.1 (2016-12-22)";
+module.exports.bwipjs_version = "1.2.2 (2016-12-22)";
 module.exports.bwipp_version = "2016-12-16";
 
 

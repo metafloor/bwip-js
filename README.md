@@ -28,7 +28,7 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
 
 ## Status 
 
-* Current bwip-js version is 1.2.1 (2016-12-22)
+* Current bwip-js version is 1.2.2 (2016-12-22)
 * Current BWIPP version is 2016-12-16
 * Node.js compatibility >= v0.10
 
