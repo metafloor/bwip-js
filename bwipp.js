@@ -25506,7 +25506,7 @@ function BWIPP() {
 			$$.scale(($1.width * 72) / $1.x, 1); /*23413*/
 		} /*23413*/
 		$$.floorscale(); /*23417*/
-		if ($k[--$j] || (($1.borderleft > 0) || (($1.borderright > 0) || (($1.bordertop > 0) > $1.borderbottom)))) { /*23431*/
+		if (($1.borderleft > 0) || (($1.borderright > 0) || (($1.bordertop > 0) > $1.borderbottom))) { /*23431*/
 			$$.newpath(); /*23421*/
 			$$.moveto(-$1.borderleft, -$1.borderbottom); /*23422*/
 			$$.rlineto(($1.x + $1.borderleft) + $1.borderright, 0); /*23423*/
@@ -25529,16 +25529,16 @@ function BWIPP() {
 		if ($ne($1.barcolor, "unset")) { /*23444*/
 			$$.setcolor($1.barcolor); /*23444*/
 		} /*23444*/
-		var _1p = $1.bars; /*23445*/
-		for (var _1q = 0, _1r = _1p.length; _1q < _1r; _1q++) { /*23451*/
-			var _1s = $get(_1p, _1q); /*23451*/
-			$k[$j++] = _1s; /*23450*/
-			if (_1s != -1) { /*23449*/
+		var _1o = $1.bars; /*23445*/
+		for (var _1p = 0, _1q = _1o.length; _1p < _1q; _1p++) { /*23451*/
+			var _1r = $get(_1o, _1p); /*23451*/
+			$k[$j++] = _1r; /*23450*/
+			if (_1r != -1) { /*23449*/
 				$aload($k[--$j]); /*23447*/
 				$$.newpath(); /*23447*/
 				$$.setlinewidth($k[--$j]); /*23447*/
-				var _1v = $k[--$j]; /*23447*/
-				$$.moveto($k[--$j], _1v); /*23447*/
+				var _1u = $k[--$j]; /*23447*/
+				$$.moveto($k[--$j], _1u); /*23447*/
 				$$.rlineto(0, $k[--$j]); /*23447*/
 				$$.stroke(); /*23447*/
 			} else { /*23449*/
@@ -25553,42 +25553,42 @@ function BWIPP() {
 			if (($eq($1.textxalign, "unset") && $eq($1.textyalign, "unset")) && $eq($1.alttext, "")) { /*23510*/
 				$1.s = 0; /*23458*/
 				$1.fn = ""; /*23458*/
-				var _24 = $1.txt; /*23459*/
-				for (var _25 = 0, _26 = _24.length; _25 < _26; _25++) { /*23468*/
-					$forall($get(_24, _25)); /*23460*/
+				var _23 = $1.txt; /*23459*/
+				for (var _24 = 0, _25 = _23.length; _24 < _25; _24++) { /*23468*/
+					$forall($get(_23, _24)); /*23460*/
+					var _27 = $k[--$j]; /*23461*/
 					var _28 = $k[--$j]; /*23461*/
-					var _29 = $k[--$j]; /*23461*/
-					$k[$j++] = _29; /*23466*/
 					$k[$j++] = _28; /*23466*/
-					if ((_28 != $1.s) || $ne(_29, $1.fn)) { /*23465*/
+					$k[$j++] = _27; /*23466*/
+					if ((_27 != $1.s) || $ne(_28, $1.fn)) { /*23465*/
+						var _2B = $k[--$j]; /*23462*/
 						var _2C = $k[--$j]; /*23462*/
-						var _2D = $k[--$j]; /*23462*/
-						$1.s = _2C; /*23462*/
-						$1.fn = _2D; /*23462*/
-						var _2E = $$.findfont(_2D); /*23463*/
-						_2E.FontSize = _2C; /*23463*/
-						$$.setfont(_2E); /*23463*/
+						$1.s = _2B; /*23462*/
+						$1.fn = _2C; /*23462*/
+						var _2D = $$.findfont(_2C); /*23463*/
+						_2D.FontSize = _2B; /*23463*/
+						$$.setfont(_2D); /*23463*/
 					} else { /*23465*/
 						$j -= 2; /*23465*/
 					} /*23465*/
-					var _2F = $k[--$j]; /*23467*/
-					$$.moveto($k[--$j], _2F); /*23467*/
+					var _2E = $k[--$j]; /*23467*/
+					$$.moveto($k[--$j], _2E); /*23467*/
 					$$.show($k[--$j], 0, 0); /*23467*/
 				} /*23467*/
 			} else { /*23510*/
-				var _2J = $$.findfont($1.textfont); /*23470*/
-				_2J.FontSize = $1.textsize; /*23470*/
-				$$.setfont(_2J); /*23470*/
+				var _2I = $$.findfont($1.textfont); /*23470*/
+				_2I.FontSize = $1.textsize; /*23470*/
+				$$.setfont(_2I); /*23470*/
 				if ($eq($1.alttext, "")) { /*23476*/
 					$k[$j++] = Infinity; /*23472*/
-					var _2M = $1.txt; /*23472*/
-					for (var _2N = 0, _2O = _2M.length; _2N < _2O; _2N++) { /*23472*/
-						$forall($get($get(_2M, _2N), 0)); /*23472*/
+					var _2L = $1.txt; /*23472*/
+					for (var _2M = 0, _2N = _2L.length; _2M < _2N; _2M++) { /*23472*/
+						$forall($get($get(_2L, _2M), 0)); /*23472*/
 					} /*23472*/
 					$1.txt = $a(); /*23472*/
 					$1.tstr = $s($1.txt.length); /*23473*/
-					for (var _2W = 0, _2V = $1.txt.length - 1; _2W <= _2V; _2W += 1) { /*23474*/
-						$put($1.tstr, _2W, $get($1.txt, _2W)); /*23474*/
+					for (var _2V = 0, _2U = $1.txt.length - 1; _2V <= _2U; _2V += 1) { /*23474*/
+						$put($1.tstr, _2V, $get($1.txt, _2V)); /*23474*/
 					} /*23474*/
 				} else { /*23476*/
 					$1.tstr = $1.alttext; /*23476*/
@@ -25600,31 +25600,31 @@ function BWIPP() {
 					$$.newpath(); /*23484*/
 					$$.moveto(0, 0); /*23484*/
 					$$.charpath("0", false); /*23484*/
-					var _2c = $$.pathbbox(); /*23484*/
+					var _2b = $$.pathbbox(); /*23484*/
 					$$.restore(); /*23486*/
-					var _2d = $$.currfont(); /*23487*/
-					var _2e = _2d.PaintType !== undefined; /*23487*/
-					$k[$j++] = _2c.ury; /*23487*/
-					if (_2e) { /*23487*/
-						var _2f = $$.currfont(); /*23487*/
-						$k[$j++] = _2f.PaintType == 2; /*23487*/
+					var _2c = $$.currfont(); /*23487*/
+					var _2d = _2c.PaintType !== undefined; /*23487*/
+					$k[$j++] = _2b.ury; /*23487*/
+					if (_2d) { /*23487*/
+						var _2e = $$.currfont(); /*23487*/
+						$k[$j++] = _2e.PaintType == 2; /*23487*/
 					} else { /*23487*/
 						$k[$j++] = false; /*23487*/
 					} /*23487*/
-					var _2h = $$.currfont(); /*23488*/
-					var _2i = _2h.StrokeWidth !== undefined; /*23488*/
-					if ($k[--$j] && _2i) { /*23493*/
-						var _2k = $$.currfont(); /*23489*/
-						var _2m = $$.currfont(); /*23490*/
-						var _2n = _2m.FontMatrix; /*23490*/
-						var _2o = _2k.StrokeWidth / 2; /*23491*/
-						var _2p = $k[--$j]; /*23492*/
-						$k[$j++] = _2p + (Math.sqrt((_2o * _2o) + (0 * 0))); /*23492*/
+					var _2g = $$.currfont(); /*23488*/
+					var _2h = _2g.StrokeWidth !== undefined; /*23488*/
+					if ($k[--$j] && _2h) { /*23493*/
+						var _2j = $$.currfont(); /*23489*/
+						var _2l = $$.currfont(); /*23490*/
+						var _2m = _2l.FontMatrix; /*23490*/
+						var _2n = _2j.StrokeWidth / 2; /*23491*/
+						var _2o = $k[--$j]; /*23492*/
+						$k[$j++] = _2o + (Math.sqrt((_2n * _2n) + (0 * 0))); /*23492*/
 					} /*23492*/
 				} /*23492*/
 				$1.textascent = $k[--$j]; /*23495*/
-				var _2s = $$.stringwidth($1.tstr); /*23496*/
-				$1.textwidth = _2s.w + (($1.tstr.length - 1) * $1.textgaps); /*23496*/
+				var _2r = $$.stringwidth($1.tstr); /*23496*/
+				$1.textwidth = _2r.w + (($1.tstr.length - 1) * $1.textgaps); /*23496*/
 				$1.textxpos = $1.textxoffset + (($1.x - $1.textwidth) / 2); /*23498*/
 				if ($eq($1.textxalign, "left")) { /*23499*/
 					$1.textxpos = $1.textxoffset; /*23499*/
@@ -25654,9 +25654,9 @@ function BWIPP() {
 			} /*23510*/
 		} /*23510*/
 		if ($1.guardwhitespace) { /*23525*/
-			var _3U = $$.findfont("OCR-B"); /*23516*/
-			_3U.FontSize = ($1.guardheight * 2) - 1; /*23516*/
-			$$.setfont(_3U); /*23516*/
+			var _3T = $$.findfont("OCR-B"); /*23516*/
+			_3T.FontSize = ($1.guardheight * 2) - 1; /*23516*/
+			$$.setfont(_3T); /*23516*/
 			if ($1.guardleftpos != 0) { /*23520*/
 				$$.moveto((-$1.guardleftpos) - 1.5, ($1.guardleftypos - ($1.guardheight / 2)) - 1); /*23518*/
 				$$.show("<", 0, 0); /*23519*/
