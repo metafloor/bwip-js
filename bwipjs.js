@@ -305,7 +305,7 @@ BWIPJS.prototype.setextent = function() {
 }
 // source is an 8-bit bitmask
 // This implementation is optimized for 2D bar codes.  That is, it does not
-// distort the image due to rounding errors.  Every pixel is sized
+// distort the image due to rounding errors.  Every pixel is scaled
 // identically, so the resulting image may be smaller by a few pixels than
 // the scaling factor would require.  And the transform matrix is not used.
 BWIPJS.prototype.imagemask = function(width, height, source) {
@@ -316,7 +316,10 @@ BWIPJS.prototype.imagemask = function(width, height, source) {
 	var rl = Math.ceil(width / 8); 	// row length (bytes per row)
 	var y0 = Math.floor(this.g_tdy) + height * dy;
 	var x0;
-	
+
+	if (!dx || !dy) {
+		throw new Error('Image scaled to zero size.');
+	}
 	for (var y = 0; y < height; y++) {
 		x0 = Math.floor(this.g_tdx);
 		y0 -= dy;
