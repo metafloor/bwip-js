@@ -132,7 +132,9 @@ bwipjs.toBuffer({
         includetext: true,            // Show human-readable text
         textxalign:  'center',        // Always good to set this
         textfont:    'Inconsolata',   // Use your custom font
-        textsize:    13               // Font size, in points
+        textsize:    13,              // Font size, in points
+        width:       50,              // Width (in millimeters)
+        height:      10,              // Height (in millimeters)
     }, function (err, png) {
         if (err) {
             // Decide how to handle the error
@@ -163,10 +165,16 @@ specific options are:
 - `paddingwidth` : Sets the left and right padding (in points/pixels) around the rendered barcode.  Rotates and scales with the image.
 - `paddingheight` : Sets the top and bottom padding (in points/pixels) around the rendered barcode.  Rotates and scales with the image.
 - `monochrome` : Sets the human-readable text to render in monochrome.  Boolean `true` or `false`.  Default is `false` which renders 256-level gray-scale anti-aliased text.
+- `width` : Sets the width [in millimeter](#width-and-height-conversion).
+- `height` : Sets the height [in millimeter](#width-and-height-conversion).
 
 You will need to consult the
 [BWIPP documentation](https://github.com/bwipp/postscriptbarcode/wiki)
 to determine what options are available for each barcode type.
+
+### Width and height conversion
+
+Width and height parameters are assumed in millimeters. The resulting PNG is rendered with 72 dpi. To convert to pixels, use factor 2.83 (72 dpi / 25.4 mm per in), so for example `width = 100 / 2.83 = 35.335689` will result in a 100px wide image.
 
 ## Command Line Interface
 
