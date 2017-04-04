@@ -59,8 +59,8 @@ execution contexts and asynchronously load into them.</p>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 
 <ul>
-<li>Current bwip-js version is 1.2.3 (2017-01-16)</li>
-<li>Current BWIPP version is 2016-12-16</li>
+<li>Current bwip-js version is 1.3.0 (2017-04-04)</li>
+<li>Current BWIPP version is 2017-04-04</li>
 <li>Node.js compatibility &gt;= v0.10</li>
 </ul>
 
@@ -210,9 +210,15 @@ specific options are:</p>
 <code>monochrome</code> : Sets the human-readable text to render in monochrome.  Boolean <code>true</code> or <code>false</code>.  Default is <code>false</code> which renders 256-level gray-scale anti-aliased text.</li>
 </ul>
 
-<p>You will need to consult the
+<p>All other options are BWIPP specific. You will need to consult the
 <a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP documentation</a>
 to determine what options are available for each barcode type.</p>
+
+<p>Note that bwip-js normalizes the BWIPP <code>width</code> and <code>height</code> options to always be in millimeters.
+The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm
+(72 dpi / 25.4 mm/in).  The bwip-js option <code>scale</code> multiplies both the <code>width</code> and <code>height</code>
+options.  Likewise, the discrete scaling factors <code>scaleX</code> and <code>scaleY</code> multiply the <code>width</code>
+and <code>height</code> options, respectively.</p>
 
 <h2>
 <a id="user-content-command-line-interface" class="anchor" href="#command-line-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command Line Interface</h2>
