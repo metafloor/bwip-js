@@ -951,6 +951,10 @@ function PSC(str, flags) {
 	$.quit = function() {
 		// no-op : handlerror throws
 	}
+	// Newest versions of barcode.ps are using stop rather than handleerror.
+	$.stop = function() {
+		emit('throw new Error($0.$error.errorname+": "+$0.$error.errorinfo);');
+	}
 
 	// OBSOLETE:  setanycolor in the renderers has been replaced by custom
 	//			  logic.  No eval of strings required now.

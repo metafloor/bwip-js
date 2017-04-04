@@ -1,9 +1,9 @@
 %!PS
 
-% Barcode Writer in Pure PostScript - Version 2016-12-16
+% Barcode Writer in Pure PostScript - Version 2017-04-04
 % http://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2016 Terry Burton
+% Copyright (c) 2004-2014 Terry Burton
 %
 % Permission is hereby granted, free of charge, to any
 % person obtaining a copy of this software and associated
@@ -32,7 +32,7 @@
 % --BEGIN TEMPLATE--
 
 % --BEGIN RESOURCE preamble--
-%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2016121600 31191 34576
+%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2017040400 31191 34576
 %%BeginData:          6 ASCII Lines
 currentglobal
 true setglobal
@@ -46,7 +46,7 @@ setglobal
 
 % --BEGIN RESOURCE raiseerror--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2016121600 44890 44440
+%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2017040400 44890 44440
 %%BeginData:         13 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -55,8 +55,8 @@ begin
   $error exch /errorinfo exch put
   $error exch /errorname exch put
   $error /command null put
-  $error /newerror true put 
-  handleerror quit
+  $error /newerror true put
+  stop
 } bind def
 /raiseerror dup load /uk.co.terryburton.bwipp defineresource pop
 end
@@ -67,7 +67,7 @@ end
 
 % --BEGIN RENDERER renlinear--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2016121600 76684 76278
+%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2017040400 76684 76278
 %%BeginData:        237 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -312,8 +312,8 @@ end
 
 % --BEGIN RENDERER renmatrix--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2016121600 80252 80028
-%%BeginData:        227 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2017040400 92981 92444
+%%BeginData:        309 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -332,6 +332,17 @@ begin
 %    /inkspread 0 def
 %    /inkspreadh 0 def
 %    /inkspreadv 0 def
+%    /includetext false def
+%    /txt [] def
+%    /textcolor (unset) def
+%    /textxalign (unset) def
+%    /textyalign (unset) def
+%    /textfont (Courier) def
+%    /textsize 10 def
+%    /textxoffset 0 def
+%    /textyoffset 0 def
+%    /textgaps 0 def
+%    /alttext () def
 
 %    % Apply the renderer options and the user options
 %    args {def} forall
@@ -344,6 +355,15 @@ begin
 %    /inkspread inkspread cvr def
 %    /inkspreadh inkspreadh cvr def
 %    /inkspreadv inkspreadv cvr def
+%    /textcolor textcolor cvlit def
+%    /textxalign textxalign cvlit def
+%    /textyalign textyalign cvlit def
+%    /textfont textfont cvlit def
+%    /textsize textsize cvr def
+%    /textxoffset textxoffset cvr def
+%    /textyoffset textyoffset cvr def
+%    /textgaps textgaps cvr def
+%    /alttext alttext cvlit def
 
 %    inkspread 0 ne {/inkspreadh inkspread def} if
 %    inkspread 0 ne {/inkspreadv inkspread def} if
@@ -503,10 +523,11 @@ begin
 %        } if
 %    } bind def
 
+%    gsave
+
 %    % Draw the image
 %    /inkspreadh inkspreadh 2 div def
 %    /inkspreadv inkspreadv 2 div def
-%    gsave
 %    currentpoint translate
 %    width pixx div 72 mul height pixy div 72 mul scale
 %    0 0 moveto pixx 0 lineto pixx pixy lineto 0 pixy lineto closepath
@@ -533,6 +554,67 @@ begin
 %        pop pop pop pop
 %    } forall
 %    fill
+
+%    % Display the text for elements in the text array
+%    textcolor (unset) ne { textcolor setanycolor } if
+%    includetext {
+%        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
+%            /s 0 def /fn () def
+%            txt {
+%                {} forall
+%                2 copy s ne exch fn ne or {
+%                    2 copy /s exch def /fn exch def
+%                    selectfont
+%                } {
+%                    pop pop
+%                } ifelse
+%                moveto show
+%            } forall
+%        } {
+%            textfont textsize selectfont
+%            alttext () eq {
+%                /txt [ txt { 0 get {} forall } forall ] def
+%                /tstr txt length string def
+%                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
+%            } {
+%                /tstr alttext def
+%            } ifelse
+
+%            % Find true ascent of font
+%            tstr length 0 eq {
+%                0
+%            } {
+%                gsave
+%                newpath 0 0 moveto (0) false charpath pathbbox
+%                4 1 roll pop pop pop
+%                grestore
+%                currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%                currentfont /StrokeWidth known and {
+%                    currentfont /StrokeWidth get 2 div 0 exch
+%                    currentfont /FontMatrix get dtransform
+%                    dup mul exch dup mul add sqrt
+%                    add
+%                } if
+%            } ifelse
+%            /textascent exch def
+%            /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
+
+%            /textxpos textxoffset x textwidth sub 2 div add def
+%            textxalign (left) eq { /textxpos textxoffset def } if
+%            textxalign (right) eq { /textxpos x textxoffset sub textwidth sub def } if
+%            textxalign (offleft) eq { /textxpos textwidth textxoffset add neg def } if
+%            textxalign (offright) eq { /textxpos x textxoffset add def } if
+%            textxalign (justify) eq textwidth x lt and {
+%                /textxpos 0 def
+%                /textgaps x textwidth sub tstr length 1 sub div def
+%            } if
+%            /textypos textyoffset textascent add 1 add neg def
+%            textyalign (above) eq { /textypos textyoffset pixy add 1 add def } if
+%            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
+%            textxpos textypos moveto textgaps 0 tstr ashow
+%        } ifelse
+%    } if
+
 %    grestore
 
 %    end
@@ -547,7 +629,7 @@ end
 
 % --BEGIN RENDERER renmaximatrix--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2016121600 55426 55272
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2017040400 55426 55272
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -638,7 +720,7 @@ end
 % --EXAM: 90200
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2016121600 62897 62576
+%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2017040400 62897 62576
 %%BeginData:        135 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -785,7 +867,7 @@ end
 % --EXAM: 05
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2016121600 61678 61382
+%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2017040400 61678 61382
 %%BeginData:        120 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -917,7 +999,7 @@ end
 % --EXAM: 2112345678900
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2016121600 84460 87603
+%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2017040400 84460 87603
 %%BeginData:        215 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -1144,7 +1226,7 @@ end
 % --EXAM: 02345673
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2016121600 81954 85278
+%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2017040400 81954 85278
 %%BeginData:        196 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -1352,7 +1434,7 @@ end
 % --EXAM: 416000336108
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2016121600 89013 91922
+%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2017040400 89013 91922
 %%BeginData:        248 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -1612,7 +1694,7 @@ end
 % --EXAM: 00123457
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2016121600 92938 99490
+%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2017040400 92938 99490
 %%BeginData:        287 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -1911,7 +1993,7 @@ end
 % --EXAM: 978-1-56581-231-4 52250
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2016121600 97266 100269
+%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2017040400 97266 100269
 %%BeginData:        252 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -2175,7 +2257,7 @@ end
 % --EXAM: 979-0-2605-3211-3
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2016121600 94118 93526
+%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2017040400 94118 93526
 %%BeginData:        231 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -2418,7 +2500,7 @@ end
 % --EXAM: 0311-175X 00 17
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2016121600 85063 81304
+%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2017040400 85398 81530
 %%BeginData:        176 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -2482,24 +2564,24 @@ begin
 
     % Validate the input
     issntxt length 8 ne issntxt length 9 ne and {
-        /bwipp.issnBadLength (ISSN must be 8 or 9 characters including dash) //raiseerror exec
+        /bwipp.issnBadLength (ISSN must be 8 or 9 characters including dash, in the format XXXX-XXXX) //raiseerror exec
     } if
     issntxt 0 4 getinterval {
         dup 48 lt exch 57 gt or {
-            /bwipp.issnBadFormat (ISSN must have the format XXXX-XXXX) //raiseerror exec
+            /bwipp.issnFirstThroughFourthNotNumeric (ISSN first four characters must be numeral characters) //raiseerror exec
         } if
     } forall
     issntxt 4 1 getinterval (-) ne {
-        /bwipp.issnBadFormat (ISSN must have the format XXXX-XXXX) //raiseerror exec
+        /bwipp.issnNeedsDash (ISSN fifth character must be a dash) //raiseerror exec
     } if
     issntxt 5 3 getinterval {
         dup 48 lt exch 57 gt or {
-            /bwipp.issnBadFormat (ISSN must have the format XXXX-XXXX) //raiseerror exec
+            /bwipp.issnSixthThroughEighthNotNumeric (ISSN sixth through eighth characters must be numerals) //raiseerror exec
         } if
     } forall
     issntxt length 9 eq {
         issntxt 8 get dup dup 48 lt exch 57 gt or exch 88 ne and {  % Digits or X
-            /bwipp.issnBadFormat (ISSN must have the format XXXX-XXXX) //raiseerror exec
+            /bwipp.issnNinthCharacterBadFormat (ISSN ninth character must be a number or the character X) //raiseerror exec
         } if
     } if
     seqvar length 2 ne {
@@ -2606,7 +2688,7 @@ end
 % --EXAM: Count01234567!
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2016121600 118230 128296
+%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2017040400 118230 128296
 %%BeginData:        455 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3073,8 +3155,8 @@ end
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2016121600 77699 77161
-%%BeginData:        157 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2017040400 78394 81185
+%%BeginData:        158 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -3116,7 +3198,7 @@ begin
     /height height cvr def 
    
     /text barcode def
- 
+
     % Expand ordinals of the form ^NNN to ASCII
     /expand {
         /in exch def
@@ -3134,25 +3216,26 @@ begin
                 dup out exch j exch putinterval
                 length j add /j exch def
                 out 0 j getinterval exit
-            } ifelse 
+            } ifelse
         } loop
     } bind def
-    
+
     % Parse out AIs
-    /ais [] def
-    /aival 2 dict def
+    /ais  [] def
+    /vals [] def
     barcode dup length 1 sub 1 exch getinterval
     {  % loop
         dup () eq {exit} if
         (\)) search pop
         exch pop
         exch (\() search {
-            exch pop exch 3 1 roll 
-        } { 
+            exch pop exch 3 1 roll
+        } {
             () 3 1 roll
         } ifelse
-        [ ais aload pop counttomark 2 add index ] /ais exch def
-        aival 3 1 roll expand put
+        [ ais  aload pop counttomark 2 add index ] /ais exch def
+        [ vals aload pop counttomark 1 add index expand ] /vals exch def
+        pop pop
     } loop
     pop
 
@@ -3180,7 +3263,7 @@ begin
     0 1 ais length 1 sub {
         /i exch def
         /ai ais i get def
-        /val aival ai get def
+        /val vals i get def
         c128 length ai length add val length add array
         dup 0 c128 putinterval
         dup c128 length ai [ exch {} forall ] putinterval
@@ -3242,7 +3325,7 @@ end
 % --EXAM: (01) 0 46 01234 56789 3
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2016121600 69977 69481
+%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2017040400 69977 69481
 %%BeginData:        105 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3359,7 +3442,7 @@ end
 % --EXAM: (00) 0 0614141 123456789 0
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2016121600 69989 69488
+%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2017040400 69989 69488
 %%BeginData:        105 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3476,7 +3559,7 @@ end
 % --EXAM: THIS IS CODE 39
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2016121600 67013 66837
+%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2017040400 67013 66837
 %%BeginData:        141 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3629,7 +3712,7 @@ end
 % --EXAM: Code39 Ext!
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2016121600 65588 65334
+%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2017040400 65588 65334
 %%BeginData:        110 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3751,7 +3834,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2016121600 63549 63380
+%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2017040400 63549 63380
 %%BeginData:         99 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3862,7 +3945,7 @@ end
 % --EXAM: 123456
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2016121600 63596 63384
+%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2017040400 63596 63384
 %%BeginData:        100 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -3974,7 +4057,7 @@ end
 % --EXAM: THIS IS CODE 93
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2016121600 65852 65716
+%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2017040400 65852 65716
 %%BeginData:        148 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4134,7 +4217,7 @@ end
 % --EXAM: Code93 Ext!
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2016121600 65941 65711
+%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2017040400 65941 65711
 %%BeginData:        114 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4260,7 +4343,7 @@ end
 % --EXAM: 2401234567
 % --EXOP: height=0.5 includecheck includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2016121600 65832 65492
+%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2017040400 65832 65492
 %%BeginData:        150 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4422,7 +4505,7 @@ end
 % --EXAM: 0 46 01234 56789 3
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2016121600 65819 65737
+%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2017040400 65819 65737
 %%BeginData:        109 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4543,7 +4626,7 @@ end
 % --EXAM: 563102430313
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2016121600 62754 62576
+%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2017040400 62754 62576
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4646,7 +4729,7 @@ end
 % --EXAM: 21348075016401
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2016121600 62746 62572
+%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2017040400 62746 62572
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -4749,7 +4832,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2016121600 127681 124817
+%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2017040400 131273 124729
 %%BeginData:        420 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5181,7 +5264,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2016121600 67872 74445
+%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2017040400 67784 70941
 %%BeginData:         73 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5266,7 +5349,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2016121600 67972 74525
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2017040400 67884 71109
 %%BeginData:         73 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5351,7 +5434,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2016121600 67898 74461
+%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2017040400 67810 70957
 %%BeginData:         73 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5436,7 +5519,7 @@ end
 % --EXAM: (01)15012345678907
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2016121600 83260 86093
+%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2017040400 83260 86093
 %%BeginData:        276 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -5724,8 +5807,8 @@ end
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2016121600 224448 218050
-%%BeginData:        873 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2017040400 225365 222120
+%%BeginData:        880 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -5782,36 +5865,37 @@ begin
                 dup out exch j exch putinterval
                 length j add /j exch def
                 out 0 j getinterval exit
-            } ifelse 
+            } ifelse
         } loop
     } bind def
-    
+
     % Parse out AIs
-    /ais [] def
-    /aival 2 dict def
+    /ais  [] def
+    /vals [] def
     barcode dup length 1 sub 1 exch getinterval
     {  % loop
         dup () eq {exit} if
         (\)) search pop
         exch pop
         exch (\() search {
-            exch pop exch 3 1 roll 
-        } { 
+            exch pop exch 3 1 roll
+        } {
             () 3 1 roll
-        }  ifelse
-        [ ais aload pop counttomark 2 add index ] /ais exch def
-        aival 3 1 roll expand put
+        } ifelse
+        [ ais  aload pop counttomark 2 add index ] /ais exch def
+        [ vals aload pop counttomark 1 add index expand ] /vals exch def
+        pop pop
     } loop
     pop
-    
+
     % Method selection
     {  % common exit
-    
+
         % (01)9...(3103)...
         ais length 2 eq {
-            ais 0 get (01) eq ais 1 get (3103) eq and { 
-                aival (01) get 0 1 getinterval (9) eq aival (3103) get cvi 32767 le and {
-                   (0100) false exit 
+            ais 0 get (01) eq ais 1 get (3103) eq and {
+                vals 0 get 0 1 getinterval (9) eq vals 1 get cvi 32767 le and {
+                   (0100) false exit
                 } if
             } if
         } if
@@ -5819,7 +5903,7 @@ begin
         % (01)9...(3202)...
         ais length 2 eq {
             ais 0 get (01) eq ais 1 get (3202) eq and {
-                aival (01) get 0 1 getinterval (9) eq aival (3202) get cvi 9999 le and {
+                vals 0 get 0 1 getinterval (9) eq vals 1 get cvi 9999 le and {
                     (0101) false exit
                 } if
             } if
@@ -5828,7 +5912,7 @@ begin
         % (01)9...(3203)...
         ais length 2 eq {
             ais 0 get (01) eq ais 1 get (3203) eq and {
-                aival (01) get 0 1 getinterval (9) eq aival (3203) get cvi 22767 le and {
+                vals 0 get 0 1 getinterval (9) eq vals 1 get cvi 22767 le and {
                     (0101) false exit
                 } if
             } if
@@ -5845,9 +5929,9 @@ begin
            } ifelse
            ais 0 get (01) eq ai310x ai320x or and aibad not and {
                ais length 3 eq {
-                   aival (01) get 0 1 getinterval (9) eq 
-                   aival ais 1 get get cvi 99999 le and 
-                   aival ais 2 get get cvi 999999 le and {
+                   vals 0 get 0 1 getinterval (9) eq
+                   vals 1 get cvi 99999 le and
+                   vals 2 cvi 999999 le and {
                        ai310x ais 2 get (11) eq and { (0111000) false exit } if
                        ai320x ais 2 get (11) eq and { (0111001) false exit } if
                        ai310x ais 2 get (13) eq and { (0111010) false exit } if
@@ -5858,8 +5942,8 @@ begin
                        ai320x ais 2 get (17) eq and { (0111111) false exit } if
                    } if
                } {
-                   aival (01) get 0 1 getinterval (9) eq 
-                   aival ais 1 get get cvi 99999 le and {
+                   vals 0 get 0 1 getinterval (9) eq
+                   vals 1 get cvi 99999 le and {
                        ai310x { (0111000) false exit } if
                        ai320x { (0111001) false exit } if
                    } if
@@ -5871,7 +5955,7 @@ begin
         ais length 2 ge {
             /ai392x false 3920 1 3923 {10 4 string cvrs ais 1 get eq or} for def
             ais 0 get (01) eq ai392x and {
-                aival (01) get 0 1 getinterval (9) eq { (01100) true exit } if
+                vals 0 get 0 1 getinterval (9) eq { (01100) true exit } if
             } if
         } if
     
@@ -5879,7 +5963,7 @@ begin
         ais length 2 ge {
             /ai393x false 3930 1 3933 {10 4 string cvrs ais 1 get eq or} for def
             ais 0 get (01) eq ai393x and {
-                aival (01) get 0 1 getinterval (9) eq { (01101) true exit } if
+                vals 0 get 0 1 getinterval (9) eq { (01101) true exit } if
             } if
         } if
     
@@ -5919,46 +6003,49 @@ begin
     } if
     
     method (1) eq {
-        /cdf aival (01) get 0 13 getinterval conv13to44 def
+        /cdf vals 0 get 0 13 getinterval conv13to44 def
         /cdf [ cdf {48 sub} forall ] def
         /gpf [] def
-        /ais ais 1 ais length 1 sub getinterval def
+        /ais  ais  1 ais  length 1 sub getinterval def
+        /vals vals 1 vals length 1 sub getinterval def
     } if
     
     method (0100) eq {
         /cdf 55 string def
-        cdf 0 aival (01) get 1 12 getinterval conv12to40 putinterval
-        cdf 40 aival (3103) get cvi 15 tobin putinterval
+        cdf  0 vals 0 get 1 12 getinterval conv12to40 putinterval
+        cdf 40 vals 1 get cvi 15 tobin putinterval
         /cdf [ cdf {48 sub} forall ] def
         /gpf [] def
         /ais [] def
+        /vals [] def
     } if
     
     method (0101) eq {
         /cdf 55 string def
-        cdf 0 aival (01) get 1 12 getinterval conv12to40 putinterval
+        cdf 0 vals 0 get 1 12 getinterval conv12to40 putinterval
         ais 1 get (3202) eq {
-            aival (3202) get cvi 15 tobin
+            vals 1 get cvi 15 tobin
         } {
-            aival (3203) get cvi 10000 add 15 tobin
+            vals 1 get cvi 10000 add 15 tobin
         } ifelse
         cdf exch 40 exch putinterval
         /cdf [ cdf {48 sub} forall ] def
         /gpf [] def
         /ais [] def
+        /vals [] def
     } if
     
     method length 7 eq {
         /cdf 76 string def
-        cdf 0 aival (01) get 1 12 getinterval conv12to40 putinterval
+        cdf 0 vals 0 get 1 12 getinterval conv12to40 putinterval
         6 string dup 0 ais 1 get 3 1 getinterval putinterval
-        dup aival ais 1 get get 1 5 getinterval 1 exch putinterval cvi 20 tobin
+        dup vals 1 get 1 5 getinterval 1 exch putinterval cvi 20 tobin
         cdf exch 40 exch putinterval
         ais length 3 eq {
-            aival ais 2 get get
+            vals 2 get
             dup 0 2 getinterval cvi 384 mul exch
             dup 2 2 getinterval cvi 1 sub 32 mul exch
-            4 2 getinterval cvi add add 
+            4 2 getinterval cvi add add
         } {
             38400
         } ifelse
@@ -5966,25 +6053,28 @@ begin
         /cdf [ cdf {48 sub} forall ] def
         /gpf [] def
         /ais [] def
+        /vals [] def
     } if
     
     method (01100) eq {
         /cdf 42 string def
-        cdf 0 aival (01) get 1 12 getinterval conv12to40 putinterval
-        cdf 40 ais 1 get 3 1 getinterval cvi 2 tobin putinterval
+        cdf  0 vals 0 get 1 12 getinterval conv12to40 putinterval
+        cdf 40 ais  1 get 3  1 getinterval cvi 2 tobin putinterval
         /cdf [ cdf {48 sub} forall ] def
-        /gpf [ aival ais 1 get get {} forall ] def
-        /ais ais 2 ais length 2 sub getinterval def
+        /gpf [ vals 1 get {} forall ] def
+        /ais  ais  2 ais  length 2 sub getinterval def
+        /vals vals 2 vals length 2 sub getinterval def
     } if
     
     method (01101) eq {
         /cdf 52 string def
-        cdf 0 aival (01) get 1 12 getinterval conv12to40 putinterval
-        cdf 40 ais 1 get 3 1 getinterval cvi 2 tobin putinterval
-        cdf 42 aival ais 1 get get 0 3 getinterval cvi 10 tobin putinterval
+        cdf  0 vals 0 get 1 12 getinterval conv12to40 putinterval
+        cdf 40 ais  1 get 3  1 getinterval cvi 2 tobin putinterval
+        cdf 42 vals 1 get 0  3 getinterval cvi 10 tobin putinterval
         /cdf [ cdf {48 sub} forall ] def
-        /gpf [ aival ais 1 get get dup length 3 sub 3 exch getinterval {} forall ] def
-        /ais ais 2 ais length 2 sub getinterval def
+        /gpf [ vals 1 get dup length 3 sub 3 exch getinterval {} forall ] def
+        /ais  ais  2 ais  length 2 sub getinterval def
+        /vals vals 2 vals length 2 sub getinterval def
     } if
     
     % Variable length symbol field
@@ -6056,7 +6146,7 @@ begin
     0 1 ais length 1 sub {
         /i exch def
         /ai ais i get def
-        /val aival ai get def
+        /val vals i get def
         gpf length ai length add val length add array
         dup 0 gpf putinterval
         dup gpf length ai [ exch {} forall ] putinterval
@@ -6609,7 +6699,7 @@ end
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: segments=4
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2016121600 63589 66857
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2017040400 63589 66857
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6658,13 +6748,158 @@ end
 %%EndResource
 % --END ENCODER databarexpandedstacked--
 
+% --BEGIN ENCODER gs1northamericancoupon--
+% --REQUIRES preamble raiseerror renlinear renmatrix databarexpanded databarexpandedstacked--
+% --DESC: GS1 North American Coupon
+% --EXAM: (8110)106141416543213500110000310123196000
+% --EXOP: includetext segments=8
+% --RNDR: renlinear renmatrix
+%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2017040400 86956 83179
+%%BeginData:        133 ASCII Lines
+/setpacking where {pop currentpacking true setpacking} if
+1 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+dup /databarexpandedstacked dup /uk.co.terryburton.bwipp findresource put
+begin
+/gs1northamericancoupon {
+
+    20 dict begin                 % Confine variables to local scope
+
+    /options exch def       % We are given an option string
+    /barcode exch def       % We are given a barcode string
+
+    /dontdraw false def
+
+    /includetext false def  % Enable/disable coupon text
+    /coupontextfont /Helvetica def
+    /coupontextsize 9 def
+    /coupontextxoffset (unset) def
+    /coupontextyoffset (unset) def
+
+    % Parse the input options
+    options type /stringtype eq {
+        1 dict begin
+        options {
+            token false eq {exit} if dup length string cvs (=) search
+            true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+        } loop
+        currentdict end /options exch def
+    } if
+    options {def} forall
+
+    /coupontextfont coupontextfont cvlit def
+    /coupontextsize coupontextsize cvr def
+    coupontextxoffset (unset) ne {/coupontextxoffset coupontextxoffset cvr def} if
+    coupontextyoffset (unset) ne {/coupontextyoffset coupontextyoffset cvr def} if
+
+    % Expand ordinals of the form ^NNN to ASCII
+    /expand {
+        /in exch def
+        /out in length string def
+        /j 0 def
+        in
+        { % loop
+            (^) search {
+                dup out exch j exch putinterval
+                length j add 1 add /j exch def
+                pop
+                dup 0 3 getinterval cvi out exch j 1 sub exch put
+                dup length 3 sub 3 exch getinterval
+            } {
+                dup out exch j exch putinterval
+                length j add /j exch def
+                out 0 j getinterval exit
+            } ifelse
+        } loop
+    } bind def
+
+    % Parse out AIs
+    /ais  [] def
+    /vals [] def
+    barcode dup length 1 sub 1 exch getinterval
+    {  % loop
+        dup () eq {exit} if
+        (\)) search pop
+        exch pop
+        exch (\() search {
+            exch pop exch 3 1 roll
+        } {
+            () 3 1 roll
+        } ifelse
+        [ ais  aload pop counttomark 2 add index ] /ais exch def
+        [ vals aload pop counttomark 1 add index expand ] /vals exch def
+        pop pop
+    } loop
+    pop
+
+    % Validate the AI structure
+    ais length 1 ne {
+      /bwipp.gs1northamericancouponBadAIStructure (A GS1 North American Coupon should consist of a single AI (8110)) //raiseerror exec
+    } if
+    ais 0 get (8110) ne {
+      /bwipp.gs1northamericancouponBadAIStructure (A GS1 North American Coupon should consist of a single AI (8110)) //raiseerror exec
+    } if
+
+    % Parse out the Company Prefix and Offer Code
+    /val vals 0 get def
+    /vli val 0 get 48 sub def
+    vli 0 lt vli 6 gt or {
+      /bwipp.gs1northamericancouponBadVLI (The AI (8110) data should start with a Company Prefix length indicator in the range 0 to 6) //raiseerror exec
+    } if
+    /gcp val 1 vli 6 add getinterval def
+    /cod val vli 7 add 6 getinterval def
+    /coupontext gcp length 7 add string def
+    coupontext 0 gcp putinterval
+    coupontext gcp length (-) putinterval
+    coupontext gcp length 1 add cod putinterval
+
+    % Get the result of encoding with databarexpandedstacked
+    options (dontdraw) true put
+
+    /args barcode options //databarexpandedstacked exec def
+
+    % Add the coupon text
+    includetext {
+        coupontextxoffset (unset) eq {
+            /coupontextxoffset 0 def
+        } if
+        coupontextyoffset (unset) eq {
+            /coupontextyoffset args (height) get 72 mul 3 add def
+        } if
+        args (txt) known {
+            /txt args (txt) get def
+            /newtxt txt length 1 add array def
+            newtxt 0 txt putinterval
+            newtxt newtxt length 1 sub [coupontext coupontextxoffset coupontextyoffset coupontextfont coupontextsize] put
+            args (txt) newtxt put
+        } {
+            args (txt) [ [coupontext coupontextxoffset coupontextyoffset coupontextfont coupontextsize] ] put
+        } ifelse
+    } if
+
+    args (opt) options put
+    args
+
+    dontdraw not //renmatrix if
+
+    end
+
+} bind def
+/gs1northamericancoupon dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END ENCODER gs1northamericancoupon--
+
 % --BEGIN ENCODER pharmacode--
 % --REQUIRES preamble raiseerror renlinear--
 % --DESC: Pharmaceutical Binary Code
 % --EXAM: 117480
 % --EXOP: showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2016121600 60269 60124
+%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2017040400 60269 60124
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6767,7 +7002,7 @@ end
 % --EXAM: 117480
 % --EXOP: includetext showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2016121600 60956 60646
+%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2017040400 60956 60646
 %%BeginData:         96 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -6875,7 +7110,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2016121600 67430 67109
+%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2017040400 67430 67109
 %%BeginData:        150 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7037,7 +7272,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2016121600 57882 57606
+%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2017040400 57882 57606
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7104,7 +7339,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2016121600 57852 57582
+%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2017040400 57852 57582
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7171,7 +7406,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2016121600 57862 57590
+%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2017040400 57862 57590
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7238,7 +7473,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2016121600 57852 57582
+%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2017040400 57852 57582
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7305,7 +7540,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2016121600 57877 57602
+%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2017040400 57877 57602
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7372,7 +7607,7 @@ end
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2016121600 69086 68582
+%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2017040400 69086 68582
 %%BeginData:        158 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7542,7 +7777,7 @@ end
 % --EXAM: BC412
 % --EXOP: semi includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2016121600 64995 64541
+%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2017040400 64995 64541
 %%BeginData:        148 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7702,7 +7937,7 @@ end
 % --EXAM: A0123456789B
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2016121600 69398 68906
+%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2017040400 69398 68906
 %%BeginData:        156 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -7870,7 +8105,7 @@ end
 % --EXAM: 0123456709498765432101234567891
 % --EXOP: barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2016121600 101896 104906
+%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2017040400 101896 104906
 %%BeginData:        335 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8217,7 +8452,7 @@ end
 % --EXAM: 01234
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2016121600 65689 65439
+%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2017040400 65689 65439
 %%BeginData:        140 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8369,7 +8604,7 @@ end
 % --EXAM: 01234567890
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2016121600 65565 65215
+%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2017040400 65565 65215
 %%BeginData:        141 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8522,7 +8757,7 @@ end
 % --EXAM: LE28HS9Z
 % --EXOP: includetext barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2016121600 66136 65853
+%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2017040400 66136 65853
 %%BeginData:        145 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8679,7 +8914,7 @@ end
 % --EXAM: 5956439111ABA 9
 % --EXOP: includetext custinfoenc=character
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2016121600 75628 75331
+%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2017040400 75628 75331
 %%BeginData:        202 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -8893,7 +9128,7 @@ end
 % --EXAM: 1231FZ13XHS
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2016121600 61942 61672
+%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2017040400 61942 61672
 %%BeginData:        111 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9016,7 +9251,7 @@ end
 % --EXAM: 6540123789-A-K-Z
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2016121600 66345 66129
+%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2017040400 66345 66129
 %%BeginData:        162 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9190,7 +9425,7 @@ end
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2016121600 71052 70834
+%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2017040400 71052 70834
 %%BeginData:        139 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9341,7 +9576,7 @@ end
 % --EXAM: 01234ABCD
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2016121600 67754 67457
+%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2017040400 67754 67457
 %%BeginData:        146 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9499,7 +9734,7 @@ end
 % --EXAM: ABCDEF
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2016121600 68624 68368
+%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2017040400 68624 68368
 %%BeginData:        173 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9684,7 +9919,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2016121600 57870 57594
+%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2017040400 57870 57594
 %%BeginData:         55 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -9751,7 +9986,7 @@ end
 % --EXAM: ABC123
 % --EXOP: version=b inkspread=-0.5 parsefnc includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2016121600 106927 109835
+%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2017040400 106927 109835
 %%BeginData:        423 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -10186,8 +10421,8 @@ end
 % --EXAM: CODABLOCK F 34567890123456789010040digit
 % --EXOP: columns=8
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2016121600 126826 140340
-%%BeginData:        521 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2017040400 132886 142728
+%%BeginData:        520 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -10205,7 +10440,6 @@ begin
     /columns 8 def
     /rowheight 10 def
     /sepheight 1 def
-    /encoding (auto) def
     /parse false def
     /parsefnc false def
 
@@ -10719,7 +10953,7 @@ end
 % --EXAM: Abcd-1234567890-wxyZ
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2016121600 152191 165496
+%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2017040400 160751 174144
 %%BeginData:        744 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -11475,7 +11709,7 @@ end
 % --EXAM: MULTIPLE ROWS IN CODE 49
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2016121600 221784 234784
+%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2017040400 223000 239680
 %%BeginData:       1076 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12563,7 +12797,7 @@ end
 % --EXAM: 3493
 % --EXOP: height=0.5 includetext 
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2016121600 68302 68105
+%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2017040400 68302 68105
 %%BeginData:        149 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12724,7 +12958,7 @@ end
 % --EXAM: 11099
 % --EXOP: inkspread=-0.25 showborder borderleft=0 borderright=0
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2016121600 59248 59148
+%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2017040400 59248 59148
 %%BeginData:         93 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12829,7 +13063,7 @@ end
 % --EXAM: 331132131313411122131311333213114131131221323
 % --EXOP: height=0.5
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2016121600 55514 55371
+%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2017040400 55514 55371
 %%BeginData:         52 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12893,7 +13127,7 @@ end
 % --EXAM: FATDAFTDAD
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2016121600 58288 58222
+%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2017040400 58288 58222
 %%BeginData:         76 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -12981,7 +13215,7 @@ end
 % --EXAM: fima
 % --EXOP: backgroundcolor=DD000011
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2016121600 58044 57965
+%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2017040400 58044 57965
 %%BeginData:         72 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -13065,7 +13299,7 @@ end
 % --EXAM: This is PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2016121600 194540 210906
+%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2017040400 200436 213562
 %%BeginData:        873 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -13950,7 +14184,7 @@ end
 % --EXAM: This is compact PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2016121600 60580 60355
+%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2017040400 60668 60355
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -14005,7 +14239,7 @@ end
 % --EXAM: MicroPDF417
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2016121600 210014 222834
+%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2017040400 224918 228970
 %%BeginData:        959 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -14976,7 +15210,7 @@ end
 % --EXAM: This is Data Matrix!
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2016121600 228426 232007
+%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2017040400 233658 233999
 %%BeginData:        889 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -15877,7 +16111,7 @@ end
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2016121600 60716 60395
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2017040400 60716 60395
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -15932,7 +16166,7 @@ end
 % --EXAM: http://goo.gl/0bis
 % --EXOP: eclevel=M
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2016121600 285540 292524
+%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2017040400 291532 295276
 %%BeginData:       1028 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -16972,7 +17206,7 @@ end
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2016121600 60576 60353
+%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2017040400 60576 60353
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -17027,7 +17261,7 @@ end
 % --EXAM: [)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004
 % --EXOP: mode=2 parse
 % --RNDR: renmaximatrix
-%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2016121600 116961 123452
+%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2017040400 116961 123452
 %%BeginData:        564 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -17603,7 +17837,7 @@ end
 % --EXAM: This is Aztec Code
 % --EXOP: format=full
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2016121600 176354 192866
+%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2017040400 194746 195394
 %%BeginData:        679 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -18294,7 +18528,7 @@ end
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2016121600 60692 60376
+%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2017040400 60692 60376
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -18349,7 +18583,7 @@ end
 % --EXAM: 1
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2016121600 60661 60352
+%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2017040400 60661 60352
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -18404,7 +18638,7 @@ end
 % --EXAM: Code One
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2016121600 217188 220978
+%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2017040400 219548 223338
 %%BeginData:        856 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -19272,7 +19506,7 @@ end
 % --EXAM: This is Han Xin
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2016121600 311932 328236
+%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2017040400 331268 331884
 %%BeginData:        886 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20170,8 +20404,8 @@ end
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: ccversion=b cccolumns=4
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2016121600 202437 192705
-%%BeginData:        650 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2017040400 192067 198371
+%%BeginData:        656 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -20245,25 +20479,26 @@ begin
             } ifelse 
         } loop
     } bind def
- 
+
     % Parse out AIs
-    /ais [] def
-    /aival 2 dict def
+    /ais  [] def
+    /vals [] def
     barcode dup length 1 sub 1 exch getinterval
     {  % loop
         dup () eq {exit} if
         (\)) search pop
         exch pop
         exch (\() search {
-            exch pop exch 3 1 roll 
-        } { 
+            exch pop exch 3 1 roll
+        } {
             () 3 1 roll
-        }  ifelse
-        [ ais aload pop counttomark 2 add index ] /ais exch def
-        aival 3 1 roll expand put
+        } ifelse
+        [ ais  aload pop counttomark 2 add index ] /ais exch def
+        [ vals aload pop counttomark 1 add index expand ] /vals exch def
+        pop pop
     } loop
     pop
-    
+
     % Method selection
     /isupper {dup 65 ge exch 90 le and} bind def  % A-Z
     /isnum0  {dup 48 ge exch 57 le and} bind def  % 0-9
@@ -20280,7 +20515,7 @@ begin
         % (90){0-3 digits not starting 0}{upper alpha}...
         ais length 1 ge {
             ais 0 get (90) eq {
-                /v aival (90) get def
+                /v vals 0 get def
                 v length 1 ge {
                    v 0 get isupper {
                        0 (11) exit
@@ -20370,25 +20605,27 @@ begin
 
     method (10) eq {  % TODO: fixme
         ais 0 get (11) eq ais 0 get (17) eq or {
-            aival ais 0 get get
+            vals 0 get
             dup 0 2 getinterval cvi 384 mul exch
             dup 2 2 getinterval cvi 1 sub 32 mul exch
-            4 2 getinterval cvi add add 
+            4 2 getinterval cvi add add
             (0000000000000000) 16 string copy dup 3 -1 roll 2 16 string cvrs
             dup length 16 exch sub exch putinterval
             [ 1 0
               4 -1 roll {48 sub} forall
               ais 0 get (11) eq {0} {1} ifelse
             ] /cdf exch def
-            /ais ais 1 ais length 1 sub getinterval def
+            /ais  ais  1 ais  length 1 sub getinterval def
+            /vals vals 1 vals length 1 sub getinterval def
         } {
             /cdf [ 1 0  1 1 ] def
         } ifelse
         ais length 0 ne {
             ais 0 get (10) eq {
-                /gpf [ aival (10) get {} forall ] def
+                /gpf [ vals 0 get {} forall ] def
                 ais length 1 gt {/gpf [ gpf aload pop fnc1 ] def} if  % TODO: check
-                /ais ais 1 ais length 1 sub getinterval def
+                /ais  ais  1 ais  length 1 sub getinterval def
+                /vals vals 1 vals length 1 sub getinterval def
             } {
                 /gpf [fnc1] def  % TODO: check
             } ifelse
@@ -20401,7 +20638,7 @@ begin
 
     method (11) eq {
         /cdf [ 1 1 ] def
-        /ai90 aival (90) get def
+        /ai90 vals 0 get def
         npre 1 add ai90 length ne {
             ai90 npre 1 add ai90 length npre sub 1 sub getinterval
         } {
@@ -20414,12 +20651,13 @@ begin
         nalpha nnums add ai90rem length ne {/mode (alphanumeric) def} if
         /cdf [
             cdf aload pop
-            mode (alphanumeric) eq {0} if   
-            mode (numeric) eq {1 0} if   
-            mode (alpha) eq {1 1} if   
+            mode (alphanumeric) eq {0} if
+            mode (numeric) eq {1 0} if
+            mode (alpha) eq {1 1} if
         ] def
-        /ais1 ais length 1 gt {ais 1 get} {-1} ifelse def
-        ais1 (21) eq ais1 (8004) eq or { 
+        /ais1  ais  length 1 gt {ais  1 get} {-1} ifelse def
+        /vals1 vals length 1 gt {vals 1 get} {-1} ifelse def
+        ais1 (21) eq ais1 (8004) eq or {
             /cdf [ cdf aload pop ais1 (21) eq {1 0} {1 1} ifelse ] def
         } {
             /cdf [ cdf aload pop 0 ] def
@@ -20430,7 +20668,7 @@ begin
             /aval exch def
         } {
             pop /aval -1 def
-        } ifelse 
+        } ifelse
         nval 31 lt aval -1 ne and {
             (00000) 5 string copy dup nval 2 5 string cvrs
             dup length 5 exch sub exch putinterval
@@ -20439,7 +20677,7 @@ begin
             dup length 4 exch sub exch putinterval
             [ exch {48 sub} forall ] /abits exch def
             /cdf [
-                cdf aload pop 
+                cdf aload pop
                 nbits aload pop
                 abits aload pop
             ] def
@@ -20465,25 +20703,27 @@ begin
             /out in length 6 mul array def
             /j 0 def
             0 1 in length 1 sub {
-                in exch get encs exch get 
+                in exch get encs exch get
                 dup [ exch {48 sub} forall ] out exch j exch putinterval
                 length j add /j exch def
             } for
             /cdf [
-                cdf aload pop 
+                cdf aload pop
                 out 0 j getinterval aload pop
             ] def
             /gpf [] def
             ais length 1 gt mode (alpha) ne or {/mode (numeric) def} if
         } ifelse
-        /ais ais 1 ais length 1 sub getinterval def
+        /ais  ais  1 ais  length 1 sub getinterval def
+        /vals vals 1 vals length 1 sub getinterval def
         ais length 0 ne {
             ais1 (21) eq ais1 (8004) eq or {
                 /gpf [
                     gpf aload pop
-                    aival ais1 get {} forall
+                    vals1 {} forall
                 ] def
-                /ais ais 1 ais length 1 sub getinterval def
+                /ais  ais  1 ais  length 1 sub getinterval def
+                /vals vals 1 vals length 1 sub getinterval def
                 ais length 0 ne {/gpf [gpf aload pop fnc1] def} if
             } if
         } if
@@ -20517,7 +20757,7 @@ begin
     0 1 ais length 1 sub {
         /i exch def
         /ai ais i get def
-        /val aival ai get def
+        /val vals i get def
         gpf length ai length add val length add array
         dup 0 gpf putinterval
         dup gpf length ai [ exch {} forall ] putinterval
@@ -20832,7 +21072,7 @@ end
 % --EXAM: 2112345678900|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2016121600 84127 84015
+%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2017040400 84039 84015
 %%BeginData:         72 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -20916,7 +21156,7 @@ end
 % --EXAM: 02345673|(21)A12345678
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2016121600 84340 84317
+%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2017040400 87844 84317
 %%BeginData:         75 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -21003,7 +21243,7 @@ end
 % --EXAM: 416000336108|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2016121600 84017 87498
+%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2017040400 84017 84082
 %%BeginData:         72 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21087,7 +21327,7 @@ end
 % --EXAM: 00123457|(15)021231
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2016121600 88387 84857
+%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2017040400 84883 88361
 %%BeginData:         87 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21186,7 +21426,7 @@ end
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2016121600 83884 87420
+%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2017040400 83884 87420
 %%BeginData:        100 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21298,7 +21538,7 @@ end
 % --EXAM: (01)03412345678900|(17)010200
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2016121600 89818 86093
+%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2017040400 86402 89597
 %%BeginData:         96 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21406,7 +21646,7 @@ end
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2016121600 89894 86165
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2017040400 86478 89669
 %%BeginData:         96 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21514,7 +21754,7 @@ end
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2016121600 90784 87051
+%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2017040400 87368 90467
 %%BeginData:        100 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21626,7 +21866,7 @@ end
 % --EXAM: (01)03512345678907|(21)abcdefghijklmnopqrstuv
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2016121600 80573 80522
+%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2017040400 84165 80610
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21717,7 +21957,7 @@ end
 % --EXAM: (01)93712345678904(3103)001234|(91)1A2B3C4D5E
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2016121600 83387 86828
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2017040400 83387 86828
 %%BeginData:         98 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21827,7 +22067,7 @@ end
 % --EXAM: (01)00012345678905(10)ABCDEF|(21)12345678
 % --EXOP: segments=4 
 % --RNDR: renmatrix renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2016121600 86229 89501
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2017040400 86229 89413
 %%BeginData:         95 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -21934,7 +22174,7 @@ end
 % --EXAM: (00)030123456789012340|(02)13012345678909(37)24(10)1234567ABCDEFG
 % --EXOP: ccversion=c
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2016121600 86884 90073
+%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2017040400 86884 89985
 %%BeginData:        100 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 2 dict
@@ -22046,8 +22286,8 @@ end
 % --EXAM: (01)03453120000011(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2016121600 78432 74670
-%%BeginData:        134 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2017040400 75535 78694
+%%BeginData:        135 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -22091,25 +22331,26 @@ begin
                 dup out exch j exch putinterval
                 length j add /j exch def
                 out 0 j getinterval exit
-            } ifelse 
+            } ifelse
         } loop
     } bind def
-    
+
     % Parse out AIs
-    /ais [] def
-    /aival 2 dict def
+    /ais  [] def
+    /vals [] def
     barcode dup length 1 sub 1 exch getinterval
     {  % loop
         dup () eq {exit} if
         (\)) search pop
         exch pop
         exch (\() search {
-            exch pop exch 3 1 roll 
-        } { 
+            exch pop exch 3 1 roll
+        } {
             () 3 1 roll
         } ifelse
-        [ ais aload pop counttomark 2 add index ] /ais exch def
-        aival 3 1 roll expand put
+        [ ais  aload pop counttomark 2 add index ] /ais exch def
+        [ vals aload pop counttomark 1 add index expand ] /vals exch def
+        pop pop
     } loop
     pop
 
@@ -22137,7 +22378,7 @@ begin
     0 1 ais length 1 sub {
         /i exch def
         /ai ais i get def
-        /val aival ai get def
+        /val vals i get def
         dmtx length ai length add val length add array
         dup 0 dmtx putinterval
         dup dmtx length ai [ exch {} forall ] putinterval
@@ -22192,8 +22433,8 @@ end
 % --EXAM: (01)03453120000011(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2016121600 78611 74838
-%%BeginData:        135 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2017040400 75714 78862
+%%BeginData:        136 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -22237,25 +22478,26 @@ begin
                 dup out exch j exch putinterval
                 length j add /j exch def
                 out 0 j getinterval exit
-            } ifelse 
+            } ifelse
         } loop
     } bind def
-    
+
     % Parse out AIs
-    /ais [] def
-    /aival 2 dict def
+    /ais  [] def
+    /vals [] def
     barcode dup length 1 sub 1 exch getinterval
     {  % loop
         dup () eq {exit} if
         (\)) search pop
         exch pop
         exch (\() search {
-            exch pop exch 3 1 roll 
-        } { 
+            exch pop exch 3 1 roll
+        } {
             () 3 1 roll
         } ifelse
-        [ ais aload pop counttomark 2 add index ] /ais exch def
-        aival 3 1 roll expand put
+        [ ais  aload pop counttomark 2 add index ] /ais exch def
+        [ vals aload pop counttomark 1 add index expand ] /vals exch def
+        pop pop
     } loop
     pop
 
@@ -22283,7 +22525,7 @@ begin
     0 1 ais length 1 sub {
         /i exch def
         /ai ais i get def
-        /val aival ai get def
+        /val vals i get def
         dmtx length ai length add val length add array
         dup 0 dmtx putinterval
         dup dmtx length ai [ exch {} forall ] putinterval
@@ -22339,8 +22581,8 @@ end
 % --EXAM: (01)03453120000011(8200)http://www.abc.net(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2016121600 78192 78026
-%%BeginData:        133 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2017040400 78887 78634
+%%BeginData:        134 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
 dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
@@ -22383,25 +22625,26 @@ begin
                 dup out exch j exch putinterval
                 length j add /j exch def
                 out 0 j getinterval exit
-            } ifelse 
+            } ifelse
         } loop
     } bind def
-    
+
     % Parse out AIs
-    /ais [] def
-    /aival 2 dict def
+    /ais  [] def
+    /vals [] def
     barcode dup length 1 sub 1 exch getinterval
     {  % loop
         dup () eq {exit} if
         (\)) search pop
         exch pop
         exch (\() search {
-            exch pop exch 3 1 roll 
-        } { 
+            exch pop exch 3 1 roll
+        } {
             () 3 1 roll
         } ifelse
-        [ ais aload pop counttomark 2 add index ] /ais exch def
-        aival 3 1 roll expand put
+        [ ais  aload pop counttomark 2 add index ] /ais exch def
+        [ vals aload pop counttomark 1 add index expand ] /vals exch def
+        pop pop
     } loop
     pop
 
@@ -22423,13 +22666,13 @@ begin
         10 2 string cvrs dup aifixed 3 1 roll put
     } forall
 
-    % Create the qrcode data 
+    % Create the qrcode data
     /fnc1 -1 def
     /qrc [ fnc1 ] def
     0 1 ais length 1 sub {
         /i exch def
         /ai ais i get def
-        /val aival ai get def
+        /val vals i get def
         qrc length ai length add val length add array
         dup 0 qrc putinterval
         dup qrc length ai [ exch {} forall ] putinterval
@@ -22484,7 +22727,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2016121600 63169 62924
+%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2017040400 63169 62924
 %%BeginData:         92 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -22588,7 +22831,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2016121600 67484 66909
+%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2017040400 67484 66909
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -22691,7 +22934,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2016121600 65295 64879
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2017040400 65207 64879
 %%BeginData:         74 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -22777,7 +23020,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2016121600 65520 65071
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2017040400 65520 65071
 %%BeginData:         75 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -22864,7 +23107,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2016121600 65292 64984
+%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2017040400 77916 64984
 %%BeginData:         78 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -22954,7 +23197,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2016121600 65518 65107
+%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2017040400 68846 65019
 %%BeginData:         78 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -23044,7 +23287,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2016121600 64983 68091
+%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2017040400 64983 68091
 %%BeginData:         74 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -23130,7 +23373,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2016121600 65019 64703
+%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2017040400 65107 64791
 %%BeginData:         74 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -23216,7 +23459,7 @@ end
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2016121600 65179 64944
+%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2017040400 65179 64856
 %%BeginData:         74 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
