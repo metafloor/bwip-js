@@ -17,8 +17,8 @@ var port     = 3030;
 // To unload a font (and free up space for another):
 //  bwipjs.unloadFont(fontname)
 //
-bwipjs.loadFont('Inconsolata', 108,
-			fs.readFileSync(path.resolve(__dirname, 'fonts/Inconsolata.otf'), 'binary'));
+//bwipjs.loadFont('Inconsolata', 108,
+//		fs.readFileSync(path.resolve(__dirname, 'fonts/Inconsolata.otf'), 'binary'));
 
 http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
