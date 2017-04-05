@@ -118,9 +118,13 @@ module.exports.toBuffer = function(args, callback) {
 		opts.includetext = true;
 	}
 	// We use mm rather than inches for height - except pharmacode2 height
-	// is explicitly in mm
-	if (opts.height && bcid != 'pharmacode2') {
+	// which is expected to be in mm
+	if (+opts.height && bcid != 'pharmacode2') {
 		opts.height = opts.height / 25.4 || 0.5;
+	}
+	// Likewise, width
+	if (+opts.width) {
+		opts.width = opts.width / 25.4 || 0;
 	}
 
 	// Override the `backgroundcolor` option.
@@ -175,8 +179,8 @@ module.exports.unloadFont = function(fontname) {
 	freetype.unlink('/' + fontname);
 }
 
-module.exports.bwipjs_version = "1.0.5 (2016-06-28)";
-module.exports.bwipp_version = "2016-06-03";
+module.exports.bwipjs_version = "1.3.0 (2017-04-04)";
+module.exports.bwipp_version = "2017-04-04";
 
 
 // bwipjs Bitmap interface
