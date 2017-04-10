@@ -134,9 +134,9 @@ module.exports.toBuffer = function(args, callback) {
 		callback('' + e);
 	}
 	var ts2 = Date.now();
-	console.log('Encoded in: ' + (ts1-ts0) + ' msecs');
-	console.log('Rendered in: ' + (ts2-ts1) + ' msecs');
-	console.log('Elapsed: ' + (ts2-ts0) + ' msecs');
+	//console.log('Encoded in: ' + (ts1-ts0) + ' msecs');
+	//console.log('Rendered in: ' + (ts2-ts1) + ' msecs');
+	//console.log('Elapsed: ' + (ts2-ts0) + ' msecs');
 }
 
 module.exports.loadFont = function(fontname, sizemult, fontfile) {
@@ -160,7 +160,7 @@ module.exports.unloadFont = function(fontname) {
 	freetype.unlink('/' + fontname);
 }
 
-module.exports.bwipjs_version = "1.3.0 (2017-04-04)";
+module.exports.bwipjs_version = "1.3.1 (2017-04-10)";
 module.exports.bwipp_version = "2017-04-04";
 
 
@@ -315,9 +315,9 @@ function Bitmap(bgcolor) {
 		var ts1 = Date.now();
 		return png.render(function(err,png) {
 				var ts2 = Date.now();
-				console.log('js rendering: ' + (ts1-ts0) + ' msecs');
-				console.log('zlib rendering: ' + (ts2-ts1) + ' msecs');
-				console.log('png rendering: ' + (ts2-ts0) + ' msecs');
+				//console.log('js rendering: ' + (ts1-ts0) + ' msecs');
+				//console.log('zlib rendering: ' + (ts2-ts1) + ' msecs');
+				//console.log('png rendering: ' + (ts2-ts0) + ' msecs');
 				callback(err, png);
 			});
 
