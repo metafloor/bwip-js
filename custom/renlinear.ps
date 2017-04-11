@@ -37,10 +37,10 @@
     /barratio 1 def
     /spaceratio 1 def
     /showborder false def
-    /borderleft 0 def			% MRW was 10
-    /borderright 0 def			% MRW was 10
-    /bordertop 0 def			% MRW was 1
-    /borderbottom 0 def			% MRW was 1
+    /borderleft 10 def			% MRW was 10
+    /borderright 10 def			% MRW was 10
+    /bordertop 1 def			% MRW was 1
+    /borderbottom 1 def			% MRW was 1
     /borderwidth 0.5 def
     /guardwhitespace false def
     /guardleftpos 0 def
@@ -118,21 +118,18 @@
 	floorscale
 
     % Display the border
-	borderleft 0 gt borderright 0 gt bordertop 0 gt borderbottom 0 gt or or or {
-		newpath
-		borderleft neg borderbottom neg moveto
-		x borderleft add borderright add 0 rlineto
-		0 maxh borderbottom add bordertop add rlineto
-		x borderleft add borderright add neg 0 rlineto
-		0 maxh borderbottom add bordertop add neg rlineto    
-		closepath
-
-		% Custom interface to tell the drawing surface minimum size
-		setextent
-	} if
+	newpath
+	borderleft neg borderbottom neg moveto
+	x borderleft add borderright add 0 rlineto
+	0 maxh borderbottom add bordertop add rlineto
+	x borderleft add borderright add neg 0 rlineto
+	0 maxh borderbottom add bordertop add neg rlineto    
+	closepath
 
     %backgroundcolor (unset) ne { gsave backgroundcolor setcolor fill grestore } if     
     showborder {
+		% Custom interface to tell the drawing surface minimum size
+		setextent
         gsave
         bordercolor (unset) ne { bordercolor setcolor } if
         borderwidth setlinewidth stroke
