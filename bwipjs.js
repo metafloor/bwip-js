@@ -2,6 +2,11 @@
 //
 // Graphics-context interface to the BWIPP cross-compiled code
 
+// Math.floor(), etc. are notoriously slow.  Caching seems to help.
+const floor = Math.floor;
+const round = Math.round;
+const ceil  = Math.ceil;
+
 function BWIPJS(freetype, monochrome) {
 	if (this.constructor !== BWIPJS) {
 		return new BWIPJS(freetype, monochrome);
@@ -142,9 +147,9 @@ BWIPJS.prototype.setcolor = function(s) {
 		var m = parseInt(s.substr(2,2), 16) / 255;
 		var y = parseInt(s.substr(4,2), 16) / 255;
 		var k = parseInt(s.substr(6,2), 16) / 255;
-		var r = Math.round((1-c) * (1-k) * 255);
-		var g = Math.round((1-m) * (1-k) * 255);
-		var b = Math.round((1-y) * (1-k) * 255);
+		var r = round((1-c) * (1-k) * 255);
+		var g = round((1-m) * (1-k) * 255);
+		var b = round((1-y) * (1-k) * 255);
 	} else {
 		throw 'bwipp.setcolor: invalid string length (' + s + ')' ;
 	}
@@ -271,57 +276,37 @@ BWIPJS.prototype.stroke = function() {
 // Fix sources of rounding error by making the scale-factors integral.
 // Currently, only floor is being used.
 BWIPJS.prototype.floorscale = function() {
-	this.g_tsx = Math.floor(this.g_tsx) || 1;
-	this.g_tsy = Math.floor(this.g_tsy) || 1;
+	this.g_tsx = floor(this.g_tsx) || 1;
+	this.g_tsy = floor(this.g_tsy) || 1;
 }
 BWIPJS.prototype.ceilscale = function() {
-	this.g_tsx = Math.ceil(this.g_tsx) || 1;
-	this.g_tsy = Math.ceil(this.g_tsy) || 1;
+	this.g_tsx = ceil(this.g_tsx) || 1;
+	this.g_tsy = ceil(this.g_tsy) || 1;
 }
 BWIPJS.prototype.roundscale = function() {
-	this.g_tsx = Math.round(this.g_tsx) || 1;
-	this.g_tsy = Math.round(this.g_tsy) || 1;
+	this.g_tsx = round(this.g_tsx) || 1;
+	this.g_tsy = round(this.g_tsy) || 1;
 }
 
-BWIPJS.prototype.setextent = function() {
-	if (!this.g_path.length)						 // Nothing to do?
-		return;
-
-	// pathbbox() without the user-space conversion
-	var pth = this.g_path;
-	var llx = pth[0][0];
-	var lly = pth[0][1];
-	var urx = 0;
-	var ury = 0;
-	for (var i = 2, inc = 2; i < pth.length; i += inc) {
-		if (llx > pth[i][0]) llx = pth[i][0];
-		if (urx < pth[i][0]) urx = pth[i][0];
-		if (lly > pth[i][1]) lly = pth[i][1];
-		if (ury < pth[i][1]) ury = pth[i][1];
-		inc = (inc == 2 ? 1 : 2);
-	}
-
-	this.bmap.extent(llx, lly, urx, ury);
-}
 // source is an 8-bit bitmask
 // This implementation is optimized for 2D bar codes.  That is, it does not
 // distort the image due to rounding errors.  Every pixel is scaled
 // identically, so the resulting image may be smaller by a few pixels than
 // the scaling factor would require.  And the transform matrix is not used.
 BWIPJS.prototype.imagemask = function(width, height, source) {
-	var sx = Math.round(this.g_tsx);
-	var sy = Math.round(this.g_tsy);
-	var dx = Math.floor(sx / width);		// pixel width
-	var dy = Math.floor(sy / height);		// pixel height
-	var rl = Math.ceil(width / 8); 	// row length (bytes per row)
-	var y0 = Math.floor(this.g_tdy) + height * dy;
+	var sx = round(this.g_tsx);
+	var sy = round(this.g_tsy);
+	var dx = floor(sx / width);		// pixel width
+	var dy = floor(sy / height);		// pixel height
+	var rl = ceil(width / 8); 	// row length (bytes per row)
+	var y0 = floor(this.g_tdy) + height * dy;
 	var x0;
 
 	if (!dx || !dy) {
 		throw new Error('Image scaled to zero size.');
 	}
 	for (var y = 0; y < height; y++) {
-		x0 = Math.floor(this.g_tdx);
+		x0 = floor(this.g_tdx);
 		y0 -= dy;
 		for (var x = 0; x < width; x++) {
 			var by = source[y*rl + (x>>>3)];
@@ -399,8 +384,8 @@ BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 // it better connects one line with the next.
 BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 	if (optmz && (x1 == x2 || y1 == y2)) {
-		var lx = Math.round(penx);
-		var ly = Math.round(peny);
+		var lx = round(penx);
+		var ly = round(peny);
 
 		if (y2 < y1) { var t = y1; y1 = y2; y2 = t; }
 		if (x2 < x1) { var t = x1; x1 = x2; x2 = t; }
@@ -408,16 +393,16 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 		// Horizontal or vertical line?
 		if (x1 == x2) {
 			// Vertical line
-			x1 = Math.floor(x1 - lx/2);
-			x2 = Math.floor(x2 + lx/2);
-			y1 = Math.floor(y1 - (merge ? ly/2 : 0));
-			y2 = Math.floor(y2 + (merge ? ly/2 : 0));
+			x1 = floor(x1 - lx/2);
+			x2 = floor(x2 + lx/2);
+			y1 = floor(y1 - (merge ? ly/2 : 0));
+			y2 = floor(y2 + (merge ? ly/2 : 0));
 		} else {
 			// Horizontal line
-			y1 = Math.floor(y1 - ly/2);
-			y2 = Math.floor(y2 + ly/2);
-			x1 = Math.floor(x1 - (merge ? lx/2 : 0));
-			x2 = Math.floor(x2 + (merge ? lx/2 : 0));
+			y1 = floor(y1 - ly/2);
+			y2 = floor(y2 + ly/2);
+			x1 = floor(x1 - (merge ? lx/2 : 0));
+			x2 = floor(x2 + (merge ? lx/2 : 0));
 		}
 		for (var y = y1; y < y2; y++)
 			for (var x = x1; x < x2; x++)
@@ -427,10 +412,10 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 	}
 
 	// Draw an arbitrary line
-	x1 = Math.floor(x1);
-	x2 = Math.floor(x2);
-	y1 = Math.floor(y1);
-	y2 = Math.floor(y2);
+	x1 = floor(x1);
+	x2 = floor(x2);
+	y1 = floor(y1);
+	y2 = floor(y2);
 
 	var du = Math.abs(x2-x1);
 	var dv = Math.abs(y2-y1);
@@ -441,9 +426,9 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 	var d  = 0;
 
 	// Calculate the effect of pen width
-	var penw = Math.floor(Math.sqrt(penx*penx + peny*peny));
-	var pixh = Math.round(Math.sqrt((penw*penw)/((dv*dv)/(du*du)+1))) || 1;
-	var pixw = Math.round(Math.sqrt(penw*penw-pixh*pixh)) || 1;
+	var penw = floor(Math.sqrt(penx*penx + peny*peny));
+	var pixh = round(Math.sqrt((penw*penw)/((dv*dv)/(du*du)+1))) || 1;
+	var pixw = round(Math.sqrt(penw*penw-pixh*pixh)) || 1;
 
 	if (du >= dv) {
 		// Increment on x

@@ -1950,12 +1950,6 @@ function PSC(str, flags) {
 		emit('$$.restore();');							// CANVAS
 	}
 
-	// Custom interface to indicate the minimum drawing surface based on
-	// the border path that BWIPP draws.
-	$.setextent = function() {
-		emit('$$.setextent();');
-	}
-
 	// Custom interfaces to round scale up/down to integer values so we
 	// have no rounding error.
 	$.floorscale = function() {

@@ -37,10 +37,10 @@
     /barratio 1 def
     /spaceratio 1 def
     /showborder false def
-    /borderleft 10 def			% MRW was 10
-    /borderright 10 def			% MRW was 10
-    /bordertop 1 def			% MRW was 1
-    /borderbottom 1 def			% MRW was 1
+    /borderleft 10 def
+    /borderright 10 def
+    /bordertop 1 def
+    /borderbottom 1 def
     /borderwidth 0.5 def
     /guardwhitespace false def
     /guardleftpos 0 def
@@ -114,7 +114,7 @@
         width 72 mul x div 1 scale
     } if
 
-	% Custom interface to round down scale so bars are always the correct width.
+	% Custom interface to round down scale so bars and spaces are uniform widths.
 	floorscale
 
     % Display the border
@@ -128,8 +128,6 @@
 
     %backgroundcolor (unset) ne { gsave backgroundcolor setcolor fill grestore } if     
     showborder {
-		% Custom interface to tell the drawing surface minimum size
-		setextent
         gsave
         bordercolor (unset) ne { bordercolor setcolor } if
         borderwidth setlinewidth stroke
