@@ -1,6 +1,6 @@
 {
   "name": "bwip-js",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Barcode generator supporting over 90 types and standards.",
   "main": "node-bwipjs",
   "bin": {

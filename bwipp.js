@@ -25665,400 +25665,399 @@ function BWIPP() {
 		$$.rlineto(-(($1.x + $1.borderleft) + $1.borderright), 0); /*23667*/
 		$$.rlineto(0, -(($1.maxh + $1.borderbottom) + $1.bordertop)); /*23668*/
 		$$.closepath(); /*23669*/
-		if ($1.showborder) { /*23679*/
-			$$.setextent(); /*23674*/
-			$$.save(); /*23675*/
-			if ($ne($1.bordercolor, "unset")) { /*23676*/
-				$$.setcolor($1.bordercolor); /*23676*/
-			} /*23676*/
-			$$.setlinewidth($1.borderwidth); /*23677*/
-			$$.stroke(); /*23677*/
-			$$.restore(); /*23678*/
-		} /*23678*/
-		$$.save(); /*23682*/
-		if ($ne($1.barcolor, "unset")) { /*23684*/
-			$$.setcolor($1.barcolor); /*23684*/
-		} /*23684*/
-		var _1k = $1.bars; /*23685*/
-		for (var _1l = 0, _1m = _1k.length; _1l < _1m; _1l++) { /*23691*/
-			var _1n = $get(_1k, _1l); /*23691*/
-			$k[$j++] = _1n; /*23690*/
-			if (_1n != -1) { /*23689*/
-				$aload($k[--$j]); /*23687*/
-				$$.newpath(); /*23687*/
-				$$.setlinewidth($k[--$j]); /*23687*/
-				var _1q = $k[--$j]; /*23687*/
-				$$.moveto($k[--$j], _1q); /*23687*/
-				$$.rlineto(0, $k[--$j]); /*23687*/
-				$$.stroke(); /*23687*/
-			} else { /*23689*/
-				$j--; /*23689*/
-			} /*23689*/
-		} /*23689*/
-		$$.restore(); /*23692*/
-		if ($ne($1.textcolor, "unset")) { /*23695*/
-			$$.setcolor($1.textcolor); /*23695*/
-		} /*23695*/
-		if ($1.includetext) { /*23752*/
-			if (($eq($1.textxalign, "unset") && $eq($1.textyalign, "unset")) && $eq($1.alttext, "")) { /*23750*/
-				$1.s = 0; /*23698*/
-				$1.fn = ""; /*23698*/
-				var _1z = $1.txt; /*23699*/
-				for (var _20 = 0, _21 = _1z.length; _20 < _21; _20++) { /*23708*/
-					$forall($get(_1z, _20)); /*23700*/
-					var _23 = $k[--$j]; /*23701*/
-					var _24 = $k[--$j]; /*23701*/
-					$k[$j++] = _24; /*23706*/
-					$k[$j++] = _23; /*23706*/
-					if ((_23 != $1.s) || $ne(_24, $1.fn)) { /*23705*/
-						var _27 = $k[--$j]; /*23702*/
-						var _28 = $k[--$j]; /*23702*/
-						$1.s = _27; /*23702*/
-						$1.fn = _28; /*23702*/
-						var _29 = $$.findfont(_28); /*23703*/
-						_29.FontSize = _27; /*23703*/
-						$$.setfont(_29); /*23703*/
-					} else { /*23705*/
-						$j -= 2; /*23705*/
-					} /*23705*/
-					var _2A = $k[--$j]; /*23707*/
-					$$.moveto($k[--$j], _2A); /*23707*/
-					$$.show($k[--$j], 0, 0); /*23707*/
-				} /*23707*/
-			} else { /*23750*/
-				var _2E = $$.findfont($1.textfont); /*23710*/
-				_2E.FontSize = $1.textsize; /*23710*/
-				$$.setfont(_2E); /*23710*/
-				if ($eq($1.alttext, "")) { /*23716*/
-					$k[$j++] = Infinity; /*23712*/
-					var _2H = $1.txt; /*23712*/
-					for (var _2I = 0, _2J = _2H.length; _2I < _2J; _2I++) { /*23712*/
-						$forall($get($get(_2H, _2I), 0)); /*23712*/
+		if ($1.showborder) { /*23677*/
+			$$.save(); /*23673*/
+			if ($ne($1.bordercolor, "unset")) { /*23674*/
+				$$.setcolor($1.bordercolor); /*23674*/
+			} /*23674*/
+			$$.setlinewidth($1.borderwidth); /*23675*/
+			$$.stroke(); /*23675*/
+			$$.restore(); /*23676*/
+		} /*23676*/
+		$$.save(); /*23680*/
+		if ($ne($1.barcolor, "unset")) { /*23682*/
+			$$.setcolor($1.barcolor); /*23682*/
+		} /*23682*/
+		var _1k = $1.bars; /*23683*/
+		for (var _1l = 0, _1m = _1k.length; _1l < _1m; _1l++) { /*23689*/
+			var _1n = $get(_1k, _1l); /*23689*/
+			$k[$j++] = _1n; /*23688*/
+			if (_1n != -1) { /*23687*/
+				$aload($k[--$j]); /*23685*/
+				$$.newpath(); /*23685*/
+				$$.setlinewidth($k[--$j]); /*23685*/
+				var _1q = $k[--$j]; /*23685*/
+				$$.moveto($k[--$j], _1q); /*23685*/
+				$$.rlineto(0, $k[--$j]); /*23685*/
+				$$.stroke(); /*23685*/
+			} else { /*23687*/
+				$j--; /*23687*/
+			} /*23687*/
+		} /*23687*/
+		$$.restore(); /*23690*/
+		if ($ne($1.textcolor, "unset")) { /*23693*/
+			$$.setcolor($1.textcolor); /*23693*/
+		} /*23693*/
+		if ($1.includetext) { /*23750*/
+			if (($eq($1.textxalign, "unset") && $eq($1.textyalign, "unset")) && $eq($1.alttext, "")) { /*23748*/
+				$1.s = 0; /*23696*/
+				$1.fn = ""; /*23696*/
+				var _1z = $1.txt; /*23697*/
+				for (var _20 = 0, _21 = _1z.length; _20 < _21; _20++) { /*23706*/
+					$forall($get(_1z, _20)); /*23698*/
+					var _23 = $k[--$j]; /*23699*/
+					var _24 = $k[--$j]; /*23699*/
+					$k[$j++] = _24; /*23704*/
+					$k[$j++] = _23; /*23704*/
+					if ((_23 != $1.s) || $ne(_24, $1.fn)) { /*23703*/
+						var _27 = $k[--$j]; /*23700*/
+						var _28 = $k[--$j]; /*23700*/
+						$1.s = _27; /*23700*/
+						$1.fn = _28; /*23700*/
+						var _29 = $$.findfont(_28); /*23701*/
+						_29.FontSize = _27; /*23701*/
+						$$.setfont(_29); /*23701*/
+					} else { /*23703*/
+						$j -= 2; /*23703*/
+					} /*23703*/
+					var _2A = $k[--$j]; /*23705*/
+					$$.moveto($k[--$j], _2A); /*23705*/
+					$$.show($k[--$j], 0, 0); /*23705*/
+				} /*23705*/
+			} else { /*23748*/
+				var _2E = $$.findfont($1.textfont); /*23708*/
+				_2E.FontSize = $1.textsize; /*23708*/
+				$$.setfont(_2E); /*23708*/
+				if ($eq($1.alttext, "")) { /*23714*/
+					$k[$j++] = Infinity; /*23710*/
+					var _2H = $1.txt; /*23710*/
+					for (var _2I = 0, _2J = _2H.length; _2I < _2J; _2I++) { /*23710*/
+						$forall($get($get(_2H, _2I), 0)); /*23710*/
+					} /*23710*/
+					$1.txt = $a(); /*23710*/
+					$1.tstr = $s($1.txt.length); /*23711*/
+					for (var _2R = 0, _2Q = $1.txt.length - 1; _2R <= _2Q; _2R += 1) { /*23712*/
+						$put($1.tstr, _2R, $get($1.txt, _2R)); /*23712*/
 					} /*23712*/
-					$1.txt = $a(); /*23712*/
-					$1.tstr = $s($1.txt.length); /*23713*/
-					for (var _2R = 0, _2Q = $1.txt.length - 1; _2R <= _2Q; _2R += 1) { /*23714*/
-						$put($1.tstr, _2R, $get($1.txt, _2R)); /*23714*/
-					} /*23714*/
-				} else { /*23716*/
-					$1.tstr = $1.alttext; /*23716*/
-				} /*23716*/
-				if ($1.tstr.length == 0) { /*23732*/
-					$k[$j++] = 0; /*23721*/
-				} else { /*23732*/
-					$$.save(); /*23723*/
-					$$.newpath(); /*23724*/
-					$$.moveto(0, 0); /*23724*/
-					$$.charpath("0", false); /*23724*/
-					var _2X = $$.pathbbox(); /*23724*/
-					$$.restore(); /*23726*/
-					var _2Y = $$.currfont(); /*23727*/
-					var _2Z = _2Y.PaintType !== undefined; /*23727*/
-					$k[$j++] = _2X.ury; /*23727*/
-					if (_2Z) { /*23727*/
-						var _2a = $$.currfont(); /*23727*/
-						$k[$j++] = _2a.PaintType == 2; /*23727*/
-					} else { /*23727*/
-						$k[$j++] = false; /*23727*/
-					} /*23727*/
-					var _2c = $$.currfont(); /*23728*/
-					var _2d = _2c.StrokeWidth !== undefined; /*23728*/
-					if ($k[--$j] && _2d) { /*23733*/
-						var _2f = $$.currfont(); /*23729*/
-						var _2h = $$.currfont(); /*23730*/
-						var _2i = _2h.FontMatrix; /*23730*/
-						var _2j = _2f.StrokeWidth / 2; /*23731*/
-						var _2k = $k[--$j]; /*23732*/
-						$k[$j++] = _2k + (Math.sqrt((_2j * _2j) + (0 * 0))); /*23732*/
-					} /*23732*/
-				} /*23732*/
-				$1.textascent = $k[--$j]; /*23735*/
-				var _2n = $$.stringwidth($1.tstr); /*23736*/
-				$1.textwidth = _2n.w + (($1.tstr.length - 1) * $1.textgaps); /*23736*/
-				$1.textxpos = $1.textxoffset + (($1.x - $1.textwidth) / 2); /*23738*/
-				if ($eq($1.textxalign, "left")) { /*23739*/
-					$1.textxpos = $1.textxoffset; /*23739*/
+				} else { /*23714*/
+					$1.tstr = $1.alttext; /*23714*/
+				} /*23714*/
+				if ($1.tstr.length == 0) { /*23730*/
+					$k[$j++] = 0; /*23719*/
+				} else { /*23730*/
+					$$.save(); /*23721*/
+					$$.newpath(); /*23722*/
+					$$.moveto(0, 0); /*23722*/
+					$$.charpath("0", false); /*23722*/
+					var _2X = $$.pathbbox(); /*23722*/
+					$$.restore(); /*23724*/
+					var _2Y = $$.currfont(); /*23725*/
+					var _2Z = _2Y.PaintType !== undefined; /*23725*/
+					$k[$j++] = _2X.ury; /*23725*/
+					if (_2Z) { /*23725*/
+						var _2a = $$.currfont(); /*23725*/
+						$k[$j++] = _2a.PaintType == 2; /*23725*/
+					} else { /*23725*/
+						$k[$j++] = false; /*23725*/
+					} /*23725*/
+					var _2c = $$.currfont(); /*23726*/
+					var _2d = _2c.StrokeWidth !== undefined; /*23726*/
+					if ($k[--$j] && _2d) { /*23731*/
+						var _2f = $$.currfont(); /*23727*/
+						var _2h = $$.currfont(); /*23728*/
+						var _2i = _2h.FontMatrix; /*23728*/
+						var _2j = _2f.StrokeWidth / 2; /*23729*/
+						var _2k = $k[--$j]; /*23730*/
+						$k[$j++] = _2k + (Math.sqrt((_2j * _2j) + (0 * 0))); /*23730*/
+					} /*23730*/
+				} /*23730*/
+				$1.textascent = $k[--$j]; /*23733*/
+				var _2n = $$.stringwidth($1.tstr); /*23734*/
+				$1.textwidth = _2n.w + (($1.tstr.length - 1) * $1.textgaps); /*23734*/
+				$1.textxpos = $1.textxoffset + (($1.x - $1.textwidth) / 2); /*23736*/
+				if ($eq($1.textxalign, "left")) { /*23737*/
+					$1.textxpos = $1.textxoffset; /*23737*/
+				} /*23737*/
+				if ($eq($1.textxalign, "right")) { /*23738*/
+					$1.textxpos = ($1.x - $1.textxoffset) - $1.textwidth; /*23738*/
+				} /*23738*/
+				if ($eq($1.textxalign, "offleft")) { /*23739*/
+					$1.textxpos = -($1.textwidth + $1.textxoffset); /*23739*/
 				} /*23739*/
-				if ($eq($1.textxalign, "right")) { /*23740*/
-					$1.textxpos = ($1.x - $1.textxoffset) - $1.textwidth; /*23740*/
+				if ($eq($1.textxalign, "offright")) { /*23740*/
+					$1.textxpos = $1.x + $1.textxoffset; /*23740*/
 				} /*23740*/
-				if ($eq($1.textxalign, "offleft")) { /*23741*/
-					$1.textxpos = -($1.textwidth + $1.textxoffset); /*23741*/
-				} /*23741*/
-				if ($eq($1.textxalign, "offright")) { /*23742*/
-					$1.textxpos = $1.x + $1.textxoffset; /*23742*/
-				} /*23742*/
-				if ($eq($1.textxalign, "justify") && ($1.textwidth < $1.x)) { /*23746*/
-					$1.textxpos = 0; /*23744*/
-					$1.textgaps = ($1.x - $1.textwidth) / ($1.tstr.length - 1); /*23745*/
-				} /*23745*/
-				$1.textypos = -(($1.textyoffset + $1.textascent) + 1); /*23747*/
-				if ($eq($1.textyalign, "above")) { /*23748*/
-					$1.textypos = ($1.textyoffset + $1.maxh) + 1; /*23748*/
-				} /*23748*/
-				if ($eq($1.textyalign, "center")) { /*23749*/
-					$1.textypos = $1.textyoffset + (($1.maxh - $1.textascent) / 2); /*23749*/
-				} /*23749*/
-				$$.moveto($1.textxpos, $1.textypos); /*23750*/
-				$$.show($1.tstr, $1.textgaps, 0); /*23750*/
-			} /*23750*/
-		} /*23750*/
-		if ($1.guardwhitespace) { /*23765*/
-			var _3P = $$.findfont("OCR-B"); /*23756*/
-			_3P.FontSize = ($1.guardheight * 2) - 1; /*23756*/
-			$$.setfont(_3P); /*23756*/
-			if ($1.guardleftpos != 0) { /*23760*/
-				$$.moveto((-$1.guardleftpos) - 1.5, ($1.guardleftypos - ($1.guardheight / 2)) - 1); /*23758*/
-				$$.show("<", 0, 0); /*23759*/
-			} /*23759*/
-			if ($1.guardrightpos != 0) { /*23764*/
-				$$.moveto(($1.guardrightpos + $1.x) - $1.guardwidth, ($1.guardrightypos - ($1.guardheight / 2)) - 1); /*23762*/
-				$$.show(">", 0, 0); /*23763*/
-			} /*23763*/
-		} /*23763*/
-		$$.restore(); /*23767*/
+				if ($eq($1.textxalign, "justify") && ($1.textwidth < $1.x)) { /*23744*/
+					$1.textxpos = 0; /*23742*/
+					$1.textgaps = ($1.x - $1.textwidth) / ($1.tstr.length - 1); /*23743*/
+				} /*23743*/
+				$1.textypos = -(($1.textyoffset + $1.textascent) + 1); /*23745*/
+				if ($eq($1.textyalign, "above")) { /*23746*/
+					$1.textypos = ($1.textyoffset + $1.maxh) + 1; /*23746*/
+				} /*23746*/
+				if ($eq($1.textyalign, "center")) { /*23747*/
+					$1.textypos = $1.textyoffset + (($1.maxh - $1.textascent) / 2); /*23747*/
+				} /*23747*/
+				$$.moveto($1.textxpos, $1.textypos); /*23748*/
+				$$.show($1.tstr, $1.textgaps, 0); /*23748*/
+			} /*23748*/
+		} /*23748*/
+		if ($1.guardwhitespace) { /*23763*/
+			var _3P = $$.findfont("OCR-B"); /*23754*/
+			_3P.FontSize = ($1.guardheight * 2) - 1; /*23754*/
+			$$.setfont(_3P); /*23754*/
+			if ($1.guardleftpos != 0) { /*23758*/
+				$$.moveto((-$1.guardleftpos) - 1.5, ($1.guardleftypos - ($1.guardheight / 2)) - 1); /*23756*/
+				$$.show("<", 0, 0); /*23757*/
+			} /*23757*/
+			if ($1.guardrightpos != 0) { /*23762*/
+				$$.moveto(($1.guardrightpos + $1.x) - $1.guardwidth, ($1.guardrightypos - ($1.guardheight / 2)) - 1); /*23760*/
+				$$.show(">", 0, 0); /*23761*/
+			} /*23761*/
+		} /*23761*/
+		$$.restore(); /*23765*/
 	};
 	$0.renmatrix = function() {
-		if ($0.bwipjs_dontdraw) { /*23785*/
-			return; /*23785*/
-		} /*23785*/
-		var $1 = {}; /*23787*/
-		$1.args = $k[--$j]; /*23789*/
-		$1.width = 1; /*23792*/
-		$1.height = 1; /*23793*/
-		$1.barcolor = "unset"; /*23794*/
-		$1.backgroundcolor = "unset"; /*23795*/
-		$1.includetext = false; /*23796*/
-		$1.txt = $a([]); /*23797*/
-		$1.textcolor = "unset"; /*23798*/
-		$1.textxalign = "unset"; /*23799*/
-		$1.textyalign = "unset"; /*23800*/
-		$1.textfont = "Courier"; /*23801*/
-		$1.textsize = 10; /*23802*/
-		$1.textxoffset = 0; /*23803*/
-		$1.textyoffset = 0; /*23804*/
-		$1.textgaps = 0; /*23805*/
-		$1.alttext = ""; /*23806*/
-		$forall($1.args, function() { /*23809*/
-			var _4 = $k[--$j]; /*23809*/
-			$1[$k[--$j]] = _4; /*23809*/
-		}); /*23809*/
-		var _6 = $1.opt; /*23810*/
-		for (var _7 in _6) { /*23810*/
-			$1[_7] = _6[_7]; /*23810*/
-		} /*23810*/
-		$1.width = +$1.width; /*23812*/
-		$1.height = +$1.height; /*23813*/
-		$1.barcolor = "" + $1.barcolor; /*23814*/
-		$1.backgroundcolor = "" + $1.backgroundcolor; /*23815*/
-		$1.inkspread = +$1.inkspread; /*23816*/
-		$1.inkspreadh = +$1.inkspreadh; /*23817*/
-		$1.inkspreadv = +$1.inkspreadv; /*23818*/
-		$1.textcolor = "" + $1.textcolor; /*23819*/
-		$1.textxalign = "" + $1.textxalign; /*23820*/
-		$1.textyalign = "" + $1.textyalign; /*23821*/
-		$1.textfont = "" + $1.textfont; /*23822*/
-		$1.textsize = +$1.textsize; /*23823*/
-		$1.textxoffset = +$1.textxoffset; /*23824*/
-		$1.textyoffset = +$1.textyoffset; /*23825*/
-		$1.textgaps = +$1.textgaps; /*23826*/
-		$1.alttext = "" + $1.alttext; /*23827*/
-		$1.pixx8 = (~~Math.ceil($1.pixx / 8)) * 8; /*23830*/
-		$k[$j++] = Infinity; /*23831*/
-		for (var _S = 0, _T = $1.pixx8 * $1.pixy; _S < _T; _S++) { /*23831*/
-			$k[$j++] = 0; /*23831*/
-		} /*23831*/
-		$1.pixs8 = $a(); /*23831*/
-		for (var _X = 0, _W = $1.pixy - 1; _X <= _W; _X += 1) { /*23835*/
-			$1.i = _X; /*23833*/
-			$puti($1.pixs8, $1.pixx8 * $1.i, $geti($1.pixs, $1.pixx * $1.i, $1.pixx)); /*23834*/
-		} /*23834*/
-		$1.pixs = $1.pixs8; /*23836*/
-		$1.imgstr = $s(~~($1.pixs.length / 8)); /*23839*/
-		for (var _l = 0, _k = $1.pixs.length - 1; _l <= _k; _l += 1) { /*23843*/
-			$1.i = _l; /*23841*/
-			var _m = $1.imgstr; /*23842*/
-			var _n = $1.i; /*23842*/
-			$put(_m, ~~(_n / 8), $get(_m, ~~(_n / 8)) + ((~~(Math.pow(2, 7 - ($1.i % 8)))) * $get($1.pixs, $1.i))); /*23842*/
-		} /*23842*/
-		$$.save(); /*23846*/
-		var _t = $$.currpos(); /*23847*/
-		$$.translate(_t.x, _t.y); /*23847*/
-		$$.scale(72 * $1.width, 72 * $1.height); /*23848*/
-		$$.moveto(0.0001, 0.0001); /*23849*/
-		$$.lineto(0.9999, 0.0001); /*23849*/
-		$$.lineto(0.9999, 0.9999); /*23849*/
-		$$.lineto(0.0001, 0.9999); /*23849*/
-		$$.closepath(); /*23849*/
-		if ($ne($1.barcolor, "unset")) { /*23852*/
-			$$.setcolor($1.barcolor); /*23852*/
-		} /*23852*/
-		$$.imagemask($1.pixx, $1.pixy, $1.imgstr); /*23857*/
-		$$.restore(); /*23858*/
-		if ($1.includetext) { /*23921*/
-			$$.save(); /*23862*/
-			if ($ne($1.textcolor, "unset")) { /*23863*/
-				$$.setcolor($1.textcolor); /*23863*/
-			} /*23863*/
-			if (($eq($1.textxalign, "unset") && $eq($1.textyalign, "unset")) && $eq($1.alttext, "")) { /*23918*/
-				$1.s = 0; /*23865*/
-				$1.fn = ""; /*23865*/
-				var _17 = $1.txt; /*23866*/
-				for (var _18 = 0, _19 = _17.length; _18 < _19; _18++) { /*23876*/
-					$forall($get(_17, _18)); /*23867*/
-					var _1B = $k[--$j]; /*23868*/
-					var _1C = $k[--$j]; /*23868*/
-					$k[$j++] = _1C; /*23874*/
-					$k[$j++] = _1B; /*23874*/
-					if ((_1B != $1.s) || $ne(_1C, $1.fn)) { /*23873*/
-						var _1F = $k[--$j]; /*23869*/
-						var _1G = $k[--$j]; /*23869*/
-						$1.s = _1F; /*23869*/
-						$1.fn = _1G; /*23869*/
-						var _1H = $$.findfont(_1G); /*23871*/
-						_1H.FontSize = _1F; /*23871*/
-						$$.setfont(_1H); /*23871*/
-					} else { /*23873*/
-						$j -= 2; /*23873*/
-					} /*23873*/
-					var _1I = $k[--$j]; /*23875*/
-					$$.moveto($k[--$j], _1I); /*23875*/
-					$$.show($k[--$j], 0, 0); /*23875*/
-				} /*23875*/
-			} else { /*23918*/
-				var _1N = $$.findfont($1.textfont); /*23878*/
-				_1N.FontSize = $1.textsize; /*23878*/
-				$$.setfont(_1N); /*23878*/
-				if ($eq($1.alttext, "")) { /*23884*/
-					$k[$j++] = Infinity; /*23880*/
-					var _1P = $1.txt; /*23880*/
-					for (var _1Q = 0, _1R = _1P.length; _1Q < _1R; _1Q++) { /*23880*/
-						$forall($get($get(_1P, _1Q), 0)); /*23880*/
-					} /*23880*/
-					$1.txt = $a(); /*23880*/
-					$1.tstr = $s($1.txt.length); /*23881*/
-					for (var _1Z = 0, _1Y = $1.txt.length - 1; _1Z <= _1Y; _1Z += 1) { /*23882*/
-						$put($1.tstr, _1Z, $get($1.txt, _1Z)); /*23882*/
-					} /*23882*/
-				} else { /*23884*/
-					$1.tstr = $1.alttext; /*23884*/
-				} /*23884*/
-				if ($1.tstr.length == 0) { /*23900*/
-					$k[$j++] = 0; /*23889*/
-				} else { /*23900*/
-					$$.save(); /*23891*/
-					$$.newpath(); /*23892*/
-					$$.moveto(0, 0); /*23892*/
-					$$.charpath("0", false); /*23892*/
-					var _1f = $$.pathbbox(); /*23892*/
-					$$.restore(); /*23894*/
-					var _1g = $$.currfont(); /*23895*/
-					var _1h = _1g.PaintType !== undefined; /*23895*/
-					$k[$j++] = _1f.ury; /*23895*/
-					if (_1h) { /*23895*/
-						var _1i = $$.currfont(); /*23895*/
-						$k[$j++] = _1i.PaintType == 2; /*23895*/
-					} else { /*23895*/
-						$k[$j++] = false; /*23895*/
-					} /*23895*/
-					var _1k = $$.currfont(); /*23896*/
-					var _1l = _1k.StrokeWidth !== undefined; /*23896*/
-					if ($k[--$j] && _1l) { /*23901*/
-						var _1n = $$.currfont(); /*23897*/
-						var _1p = $$.currfont(); /*23898*/
-						var _1q = _1p.FontMatrix; /*23898*/
-						var _1r = _1n.StrokeWidth / 2; /*23899*/
-						var _1s = $k[--$j]; /*23900*/
-						$k[$j++] = _1s + (Math.sqrt((_1r * _1r) + (0 * 0))); /*23900*/
-					} /*23900*/
-				} /*23900*/
-				$1.textascent = $k[--$j]; /*23903*/
-				var _1v = $$.stringwidth($1.tstr); /*23904*/
-				$1.textwidth = _1v.w + (($1.tstr.length - 1) * $1.textgaps); /*23904*/
-				$1.textxpos = $1.textxoffset + (($1.pixx - $1.textwidth) / 2); /*23906*/
-				if ($eq($1.textxalign, "left")) { /*23907*/
-					$1.textxpos = $1.textxoffset; /*23907*/
+		if ($0.bwipjs_dontdraw) { /*23783*/
+			return; /*23783*/
+		} /*23783*/
+		var $1 = {}; /*23785*/
+		$1.args = $k[--$j]; /*23787*/
+		$1.width = 1; /*23790*/
+		$1.height = 1; /*23791*/
+		$1.barcolor = "unset"; /*23792*/
+		$1.backgroundcolor = "unset"; /*23793*/
+		$1.includetext = false; /*23794*/
+		$1.txt = $a([]); /*23795*/
+		$1.textcolor = "unset"; /*23796*/
+		$1.textxalign = "unset"; /*23797*/
+		$1.textyalign = "unset"; /*23798*/
+		$1.textfont = "Courier"; /*23799*/
+		$1.textsize = 10; /*23800*/
+		$1.textxoffset = 0; /*23801*/
+		$1.textyoffset = 0; /*23802*/
+		$1.textgaps = 0; /*23803*/
+		$1.alttext = ""; /*23804*/
+		$forall($1.args, function() { /*23807*/
+			var _4 = $k[--$j]; /*23807*/
+			$1[$k[--$j]] = _4; /*23807*/
+		}); /*23807*/
+		var _6 = $1.opt; /*23808*/
+		for (var _7 in _6) { /*23808*/
+			$1[_7] = _6[_7]; /*23808*/
+		} /*23808*/
+		$1.width = +$1.width; /*23810*/
+		$1.height = +$1.height; /*23811*/
+		$1.barcolor = "" + $1.barcolor; /*23812*/
+		$1.backgroundcolor = "" + $1.backgroundcolor; /*23813*/
+		$1.inkspread = +$1.inkspread; /*23814*/
+		$1.inkspreadh = +$1.inkspreadh; /*23815*/
+		$1.inkspreadv = +$1.inkspreadv; /*23816*/
+		$1.textcolor = "" + $1.textcolor; /*23817*/
+		$1.textxalign = "" + $1.textxalign; /*23818*/
+		$1.textyalign = "" + $1.textyalign; /*23819*/
+		$1.textfont = "" + $1.textfont; /*23820*/
+		$1.textsize = +$1.textsize; /*23821*/
+		$1.textxoffset = +$1.textxoffset; /*23822*/
+		$1.textyoffset = +$1.textyoffset; /*23823*/
+		$1.textgaps = +$1.textgaps; /*23824*/
+		$1.alttext = "" + $1.alttext; /*23825*/
+		$1.pixx8 = (~~Math.ceil($1.pixx / 8)) * 8; /*23828*/
+		$k[$j++] = Infinity; /*23829*/
+		for (var _S = 0, _T = $1.pixx8 * $1.pixy; _S < _T; _S++) { /*23829*/
+			$k[$j++] = 0; /*23829*/
+		} /*23829*/
+		$1.pixs8 = $a(); /*23829*/
+		for (var _X = 0, _W = $1.pixy - 1; _X <= _W; _X += 1) { /*23833*/
+			$1.i = _X; /*23831*/
+			$puti($1.pixs8, $1.pixx8 * $1.i, $geti($1.pixs, $1.pixx * $1.i, $1.pixx)); /*23832*/
+		} /*23832*/
+		$1.pixs = $1.pixs8; /*23834*/
+		$1.imgstr = $s(~~($1.pixs.length / 8)); /*23837*/
+		for (var _l = 0, _k = $1.pixs.length - 1; _l <= _k; _l += 1) { /*23841*/
+			$1.i = _l; /*23839*/
+			var _m = $1.imgstr; /*23840*/
+			var _n = $1.i; /*23840*/
+			$put(_m, ~~(_n / 8), $get(_m, ~~(_n / 8)) + ((~~(Math.pow(2, 7 - ($1.i % 8)))) * $get($1.pixs, $1.i))); /*23840*/
+		} /*23840*/
+		$$.save(); /*23844*/
+		var _t = $$.currpos(); /*23845*/
+		$$.translate(_t.x, _t.y); /*23845*/
+		$$.scale(72 * $1.width, 72 * $1.height); /*23846*/
+		$$.moveto(0.0001, 0.0001); /*23847*/
+		$$.lineto(0.9999, 0.0001); /*23847*/
+		$$.lineto(0.9999, 0.9999); /*23847*/
+		$$.lineto(0.0001, 0.9999); /*23847*/
+		$$.closepath(); /*23847*/
+		if ($ne($1.barcolor, "unset")) { /*23849*/
+			$$.setcolor($1.barcolor); /*23849*/
+		} /*23849*/
+		$$.imagemask($1.pixx, $1.pixy, $1.imgstr); /*23854*/
+		$$.restore(); /*23855*/
+		if ($1.includetext) { /*23918*/
+			$$.save(); /*23859*/
+			if ($ne($1.textcolor, "unset")) { /*23860*/
+				$$.setcolor($1.textcolor); /*23860*/
+			} /*23860*/
+			if (($eq($1.textxalign, "unset") && $eq($1.textyalign, "unset")) && $eq($1.alttext, "")) { /*23915*/
+				$1.s = 0; /*23862*/
+				$1.fn = ""; /*23862*/
+				var _17 = $1.txt; /*23863*/
+				for (var _18 = 0, _19 = _17.length; _18 < _19; _18++) { /*23873*/
+					$forall($get(_17, _18)); /*23864*/
+					var _1B = $k[--$j]; /*23865*/
+					var _1C = $k[--$j]; /*23865*/
+					$k[$j++] = _1C; /*23871*/
+					$k[$j++] = _1B; /*23871*/
+					if ((_1B != $1.s) || $ne(_1C, $1.fn)) { /*23870*/
+						var _1F = $k[--$j]; /*23866*/
+						var _1G = $k[--$j]; /*23866*/
+						$1.s = _1F; /*23866*/
+						$1.fn = _1G; /*23866*/
+						var _1H = $$.findfont(_1G); /*23868*/
+						_1H.FontSize = _1F; /*23868*/
+						$$.setfont(_1H); /*23868*/
+					} else { /*23870*/
+						$j -= 2; /*23870*/
+					} /*23870*/
+					var _1I = $k[--$j]; /*23872*/
+					$$.moveto($k[--$j], _1I); /*23872*/
+					$$.show($k[--$j], 0, 0); /*23872*/
+				} /*23872*/
+			} else { /*23915*/
+				var _1N = $$.findfont($1.textfont); /*23875*/
+				_1N.FontSize = $1.textsize; /*23875*/
+				$$.setfont(_1N); /*23875*/
+				if ($eq($1.alttext, "")) { /*23881*/
+					$k[$j++] = Infinity; /*23877*/
+					var _1P = $1.txt; /*23877*/
+					for (var _1Q = 0, _1R = _1P.length; _1Q < _1R; _1Q++) { /*23877*/
+						$forall($get($get(_1P, _1Q), 0)); /*23877*/
+					} /*23877*/
+					$1.txt = $a(); /*23877*/
+					$1.tstr = $s($1.txt.length); /*23878*/
+					for (var _1Z = 0, _1Y = $1.txt.length - 1; _1Z <= _1Y; _1Z += 1) { /*23879*/
+						$put($1.tstr, _1Z, $get($1.txt, _1Z)); /*23879*/
+					} /*23879*/
+				} else { /*23881*/
+					$1.tstr = $1.alttext; /*23881*/
+				} /*23881*/
+				if ($1.tstr.length == 0) { /*23897*/
+					$k[$j++] = 0; /*23886*/
+				} else { /*23897*/
+					$$.save(); /*23888*/
+					$$.newpath(); /*23889*/
+					$$.moveto(0, 0); /*23889*/
+					$$.charpath("0", false); /*23889*/
+					var _1f = $$.pathbbox(); /*23889*/
+					$$.restore(); /*23891*/
+					var _1g = $$.currfont(); /*23892*/
+					var _1h = _1g.PaintType !== undefined; /*23892*/
+					$k[$j++] = _1f.ury; /*23892*/
+					if (_1h) { /*23892*/
+						var _1i = $$.currfont(); /*23892*/
+						$k[$j++] = _1i.PaintType == 2; /*23892*/
+					} else { /*23892*/
+						$k[$j++] = false; /*23892*/
+					} /*23892*/
+					var _1k = $$.currfont(); /*23893*/
+					var _1l = _1k.StrokeWidth !== undefined; /*23893*/
+					if ($k[--$j] && _1l) { /*23898*/
+						var _1n = $$.currfont(); /*23894*/
+						var _1p = $$.currfont(); /*23895*/
+						var _1q = _1p.FontMatrix; /*23895*/
+						var _1r = _1n.StrokeWidth / 2; /*23896*/
+						var _1s = $k[--$j]; /*23897*/
+						$k[$j++] = _1s + (Math.sqrt((_1r * _1r) + (0 * 0))); /*23897*/
+					} /*23897*/
+				} /*23897*/
+				$1.textascent = $k[--$j]; /*23900*/
+				var _1v = $$.stringwidth($1.tstr); /*23901*/
+				$1.textwidth = _1v.w + (($1.tstr.length - 1) * $1.textgaps); /*23901*/
+				$1.textxpos = $1.textxoffset + (($1.pixx - $1.textwidth) / 2); /*23903*/
+				if ($eq($1.textxalign, "left")) { /*23904*/
+					$1.textxpos = $1.textxoffset; /*23904*/
+				} /*23904*/
+				if ($eq($1.textxalign, "right")) { /*23905*/
+					$1.textxpos = ($1.pixx - $1.textxoffset) - $1.textwidth; /*23905*/
+				} /*23905*/
+				if ($eq($1.textxalign, "offleft")) { /*23906*/
+					$1.textxpos = -($1.textwidth + $1.textxoffset); /*23906*/
+				} /*23906*/
+				if ($eq($1.textxalign, "offright")) { /*23907*/
+					$1.textxpos = $1.pixx + $1.textxoffset; /*23907*/
 				} /*23907*/
-				if ($eq($1.textxalign, "right")) { /*23908*/
-					$1.textxpos = ($1.pixx - $1.textxoffset) - $1.textwidth; /*23908*/
-				} /*23908*/
-				if ($eq($1.textxalign, "offleft")) { /*23909*/
-					$1.textxpos = -($1.textwidth + $1.textxoffset); /*23909*/
-				} /*23909*/
-				if ($eq($1.textxalign, "offright")) { /*23910*/
-					$1.textxpos = $1.pixx + $1.textxoffset; /*23910*/
+				if ($eq($1.textxalign, "justify") && ($1.textwidth < $1.pixx)) { /*23911*/
+					$1.textxpos = 0; /*23909*/
+					$1.textgaps = ($1.pixx - $1.textwidth) / ($1.tstr.length - 1); /*23910*/
 				} /*23910*/
-				if ($eq($1.textxalign, "justify") && ($1.textwidth < $1.pixx)) { /*23914*/
-					$1.textxpos = 0; /*23912*/
-					$1.textgaps = ($1.pixx - $1.textwidth) / ($1.tstr.length - 1); /*23913*/
+				$1.textypos = -(($1.textyoffset + $1.textascent) + 1); /*23912*/
+				if ($eq($1.textyalign, "above")) { /*23913*/
+					$1.textypos = ($1.textyoffset + $1.pixy) + 1; /*23913*/
 				} /*23913*/
-				$1.textypos = -(($1.textyoffset + $1.textascent) + 1); /*23915*/
-				if ($eq($1.textyalign, "above")) { /*23916*/
-					$1.textypos = ($1.textyoffset + $1.pixy) + 1; /*23916*/
-				} /*23916*/
-				if ($eq($1.textyalign, "center")) { /*23917*/
-					$1.textypos = $1.textyoffset + (($1.pixy - $1.textascent) / 2); /*23917*/
-				} /*23917*/
-				$$.moveto($1.textxpos, $1.textypos); /*23918*/
-				$$.show($1.tstr, $1.textgaps, 0); /*23918*/
-			} /*23918*/
-			$$.restore(); /*23920*/
-		} /*23920*/
+				if ($eq($1.textyalign, "center")) { /*23914*/
+					$1.textypos = $1.textyoffset + (($1.pixy - $1.textascent) / 2); /*23914*/
+				} /*23914*/
+				$$.moveto($1.textxpos, $1.textypos); /*23915*/
+				$$.show($1.tstr, $1.textgaps, 0); /*23915*/
+			} /*23915*/
+			$$.restore(); /*23917*/
+		} /*23917*/
 	};
 	$0.renmaximatrix = function() {
-		if ($0.bwipjs_dontdraw) { /*23941*/
-			return; /*23941*/
-		} /*23941*/
-		var $1 = {}; /*23943*/
-		$1.args = $k[--$j]; /*23945*/
-		$1.barcolor = "unset"; /*23948*/
-		$1.backgroundcolor = "unset"; /*23949*/
-		$forall($1.args, function() { /*23952*/
-			var _3 = $k[--$j]; /*23952*/
-			$1[$k[--$j]] = _3; /*23952*/
-		}); /*23952*/
-		var _5 = $1.opt; /*23953*/
-		for (var _6 in _5) { /*23953*/
-			$1[_6] = _5[_6]; /*23953*/
-		} /*23953*/
-		$1.barcolor = "" + $1.barcolor; /*23955*/
-		$1.backgroundcolor = "" + $1.backgroundcolor; /*23956*/
-		$$.save(); /*23958*/
-		var _A = $$.currpos(); /*23960*/
-		$$.translate(_A.x, _A.y); /*23960*/
-		$$.scale(2.4945, 2.4945); /*23962*/
-		$$.moveto(0, 0); /*23964*/
-		$$.lineto(30, 0); /*23964*/
-		$$.lineto(30, 29); /*23964*/
-		$$.lineto(0, 29); /*23964*/
-		$$.closepath(); /*23964*/
-		if ($ne($1.barcolor, "unset")) { /*23967*/
-			$$.setcolor($1.barcolor); /*23967*/
-		} /*23967*/
-		$$.translate(0.5, 0.5774); /*23969*/
-		var _D = $$.findfont("OCRB"); /*23971*/
-		_D.FontSize = 2.8; /*23971*/
-		$$.setfont(_D); /*23971*/
-		$$.newpath(); /*23973*/
-		var _E = $1.pixs; /*23974*/
-		for (var _F = 0, _G = _E.length; _F < _G; _F++) { /*23982*/
-			var _H = $get(_E, _F); /*23982*/
-			$1.x = _H % 30; /*23976*/
-			$1.y = ~~(_H / 30); /*23977*/
-			if (($1.y % 2) == 0) { /*23978*/
-				$k[$j++] = $1.x; /*23978*/
-			} else { /*23978*/
-				$k[$j++] = $1.x + 0.5; /*23978*/
-			} /*23978*/
-			$$.moveto($k[--$j], (32 - $1.y) * 0.8661); /*23980*/
-			$$.show("\xae", 0, 0); /*23981*/
-		} /*23981*/
-		var _N = $$.findfont("OCRB"); /*23985*/
-		_N.FontSize = 2.85; /*23985*/
-		$$.setfont(_N); /*23985*/
-		$$.moveto(14, 13.8576); /*23986*/
-		$$.show("\xa9", 0, 0); /*23986*/
-		$$.restore(); /*23988*/
+		if ($0.bwipjs_dontdraw) { /*23938*/
+			return; /*23938*/
+		} /*23938*/
+		var $1 = {}; /*23940*/
+		$1.args = $k[--$j]; /*23942*/
+		$1.barcolor = "unset"; /*23945*/
+		$1.backgroundcolor = "unset"; /*23946*/
+		$forall($1.args, function() { /*23949*/
+			var _3 = $k[--$j]; /*23949*/
+			$1[$k[--$j]] = _3; /*23949*/
+		}); /*23949*/
+		var _5 = $1.opt; /*23950*/
+		for (var _6 in _5) { /*23950*/
+			$1[_6] = _5[_6]; /*23950*/
+		} /*23950*/
+		$1.barcolor = "" + $1.barcolor; /*23952*/
+		$1.backgroundcolor = "" + $1.backgroundcolor; /*23953*/
+		$$.save(); /*23955*/
+		var _A = $$.currpos(); /*23957*/
+		$$.translate(_A.x, _A.y); /*23957*/
+		$$.scale(2.4945, 2.4945); /*23959*/
+		$$.moveto(0, 0); /*23961*/
+		$$.lineto(30, 0); /*23961*/
+		$$.lineto(30, 29); /*23961*/
+		$$.lineto(0, 29); /*23961*/
+		$$.closepath(); /*23961*/
+		if ($ne($1.barcolor, "unset")) { /*23963*/
+			$$.setcolor($1.barcolor); /*23963*/
+		} /*23963*/
+		$$.translate(0.5, 0.5774); /*23965*/
+		var _D = $$.findfont("OCRB"); /*23967*/
+		_D.FontSize = 2.8; /*23967*/
+		$$.setfont(_D); /*23967*/
+		$$.newpath(); /*23969*/
+		var _E = $1.pixs; /*23970*/
+		for (var _F = 0, _G = _E.length; _F < _G; _F++) { /*23978*/
+			var _H = $get(_E, _F); /*23978*/
+			$1.x = _H % 30; /*23972*/
+			$1.y = ~~(_H / 30); /*23973*/
+			if (($1.y % 2) == 0) { /*23974*/
+				$k[$j++] = $1.x; /*23974*/
+			} else { /*23974*/
+				$k[$j++] = $1.x + 0.5; /*23974*/
+			} /*23974*/
+			$$.moveto($k[--$j], (32 - $1.y) * 0.8661); /*23976*/
+			$$.show("\xae", 0, 0); /*23977*/
+		} /*23977*/
+		var _N = $$.findfont("OCRB"); /*23981*/
+		_N.FontSize = 2.85; /*23981*/
+		$$.setfont(_N); /*23981*/
+		$$.moveto(14, 13.8576); /*23982*/
+		$$.show("\xa9", 0, 0); /*23982*/
+		$$.restore(); /*23984*/
 	};
 	// bwip-js/barcode-ftr.js
 	//
@@ -26076,13 +26075,13 @@ function BWIPP() {
 		}
 		opts = opts || {};
 		if (typeof opts === 'string') {
-			var tmp = opts.split(' ');
+			let tmp = opts.split(' ');
 			opts = {};
-			for (var i = 0; i < tmp.length; i++) {
+			for (let i = 0; i < tmp.length; i++) {
 				if (!tmp[i]) {
 					continue;
 				}
-				var eq = tmp[i].indexOf('=');
+				let eq = tmp[i].indexOf('=');
 				if (eq == -1) {
 					opts[tmp[i]] = true;
 				} else {
@@ -26103,7 +26102,7 @@ function BWIPP() {
 		// code from BWIPP.
 		if (opts.parse) {
 			text = text.replace(/\^(\d\d\d)/g, function($0, $1) {
-				var v = +$1;
+				let v = +$1;
 				if (v > 255) {
 					throw new Error('bwipp.rangeError:' +
 						' ^NNN out-of-range (' + $0 + ')');
