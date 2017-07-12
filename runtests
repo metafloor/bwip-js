@@ -26,7 +26,7 @@ fi
 ##
 ## Clear out previous runs
 ##
-rm -f tests/* 2>/dev/null
+rm -f tests/*.gsout tests/*.jsout 2>/dev/null
 ##rm -f coverage/* 2>/dev/null
 
 ##

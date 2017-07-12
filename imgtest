@@ -1,0 +1,26 @@
+#!/bin/bash
+## file: imgtest
+##
+## usage: imgtest seq symbol text opts
+##
+## seq is the unique test sequence number.  
+##
+## Compare a generated image against a proof image.
+##
+seq="$1"
+sym="$2"
+text="$3"
+opts="$4"
+
+## Zero-pad seq to 4 digits
+zeros=0000
+seq="${zeros:${#seq}}$seq"
+
+echo "$seq.$sym ($text) ($opts) ..."
+
+./genimg $sym "$text" $opts tests/$seq.$sym.png > /dev/null
+
+perceptualdiff proofs/$seq.$sym.png tests/$seq.$sym.png
+
+exit $?
+

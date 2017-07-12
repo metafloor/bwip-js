@@ -1,0 +1,154 @@
+#!/bin/bash
+##
+## file : bwipjs/imgtests
+##
+## Top-level image comparision test driver
+##
+## Usage:  ./imgtests [pattern]
+##
+## Pattern (fixed substring) will only run tests for the matching barcode
+## type(s).
+##
+
+PAT=
+if [ "x$1" != x ] ; then
+	PAT="$1"
+	shift
+fi
+
+##
+## Clear out previous runs
+##
+rm -f tests/*.png 2>/dev/null
+
+##
+## Test number seed
+##
+let TNO=1
+let NTESTS=0
+let NFAILS=0
+
+function run() {
+	if [[ $1 == *$PAT* ]] ; then
+		./imgtest $TNO $1 "$2" "$3"
+		if [ $? != 0 ] ; then
+			((NFAILS++))
+		fi
+		((NTESTS++))
+	fi
+	((TNO++))
+}
+
+##
+## The test cases
+##
+run "ean5" "90200" "includetext guardwhitespace"
+run "ean2" "05" "includetext guardwhitespace"
+run "ean13" "2112345678900" "includetext guardwhitespace"
+run "ean8" "02345673" "includetext guardwhitespace"
+run "upca" "416000336108" "includetext"
+run "upce" "00123457" "includetext"
+run "isbn" "978-1-56581-231-4 52250" "includetext guardwhitespace"
+run "ismn" "979-0-2605-3211-3" "includetext guardwhitespace"
+run "issn" "0311-175X 00 17" "includetext guardwhitespace"
+run "code128" "Count01234567!" "includetext"
+run "gs1-128" "(01)95012345678903(3103)000123" "includetext"
+run "ean14" "(01) 0 46 01234 56789 3" "includetext"
+run "sscc18" "(00) 0 0614141 123456789 0" "includetext"
+run "code39" "THIS IS CODE 39" "includetext includecheck includecheckintext"
+run "code39ext" "Code39 Ext!" "includetext includecheck includecheckintext"
+run "code32" "01234567" "includetext"
+run "pzn" "123456" "includetext"
+run "code93" "THIS IS CODE 93" "includetext includecheck"
+run "code93ext" "Code93 Ext!" "includetext includecheck"
+run "interleaved2of5" "2401234567" "height=0.5 includecheck includetext includecheckintext"
+run "itf14" "0 46 01234 56789 3" "includetext"
+run "identcode" "563102430313" "includetext"
+run "leitcode" "21348075016401" "includetext"
+run "databaromni" "(01)24012345678905" ""
+run "databarstacked" "(01)24012345678905" ""
+run "databarstackedomni" "(01)24012345678905" ""
+run "databartruncated" "(01)24012345678905" ""
+run "databarlimited" "(01)15012345678907" ""
+run "databarexpanded" "(01)95012345678903(3103)000123" ""
+run "databarexpandedstacked" "(01)95012345678903(3103)000123" "segments=4"
+run "gs1northamericancoupon" "(8110)106141416543213500110000310123196000" "includetext segments=8"
+run "pharmacode" "117480" "showborder"
+run "pharmacode2" "117480" "includetext showborder"
+run "code2of5" "01234567" "includetext includecheck includecheckintext"
+run "industrial2of5" "01234567" "includetext includecheck includecheckintext"
+run "iata2of5" "01234567" "includetext includecheck includecheckintext"
+run "matrix2of5" "01234567" "includetext includecheck includecheckintext"
+run "coop2of5" "01234567" "includetext includecheck includecheckintext"
+run "datalogic2of5" "01234567" "includetext includecheck includecheckintext"
+run "code11" "0123456789" "includetext includecheck includecheckintext"
+run "bc412" "BC412" "semi includetext includecheckintext"
+run "rationalizedCodabar" "A0123456789B" "includetext includecheck includecheckintext"
+run "onecode" "0123456709498765432101234567891" "barcolor=FF0000"
+run "postnet" "01234" "includetext includecheckintext"
+run "planet" "01234567890" "includetext includecheckintext"
+run "royalmail" "LE28HS9Z" "includetext barcolor=FF0000"
+run "auspost" "5956439111ABA 9" "includetext custinfoenc=character"
+run "kix" "1231FZ13XHS" "includetext"
+run "japanpost" "6540123789-A-K-Z" "includetext includecheckintext"
+run "msi" "0123456789" "includetext includecheck includecheckintext"
+run "plessey" "01234ABCD" "includetext includecheckintext"
+run "telepen" "ABCDEF" "includetext"
+run "telepennumeric" "01234567" "includetext"
+run "posicode" "ABC123" "version=b inkspread=-0.5 parsefnc includetext"
+run "codablockf" "CODABLOCK F 34567890123456789010040digit" "columns=8"
+run "code16k" "Abcd-1234567890-wxyZ" ""
+run "code49" "MULTIPLE ROWS IN CODE 49" ""
+run "channelcode" "3493" "height=0.5 includetext "
+run "flattermarken" "11099" "inkspread=-0.25 showborder borderleft=0 borderright=0"
+run "raw" "331132131313411122131311333213114131131221323" "height=0.5"
+run "daft" "FATDAFTDAD" ""
+run "symbol" "fima" "backgroundcolor=DD000011"
+run "pdf417" "This is PDF417" "columns=2"
+run "pdf417compact" "This is compact PDF417" "columns=2"
+run "micropdf417" "MicroPDF417" ""
+run "datamatrix" "This is Data Matrix!" ""
+run "datamatrixrectangular" "1234" ""
+run "qrcode" "http://goo.gl/0bis" "eclevel=M"
+run "microqrcode" "1234" ""
+run "maxicode" "[)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004" "mode=2 parse"
+run "azteccode" "This is Aztec Code" "format=full"
+run "azteccodecompact" "1234" ""
+run "aztecrune" "1" ""
+run "codeone" "Code One" ""
+run "hanxin" "This is Han Xin" ""
+run "gs1-cc" "(01)95012345678903(3103)000123" "ccversion=b cccolumns=4"
+run "ean13composite" "2112345678900|(99)1234-abcd" "includetext"
+run "ean8composite" "02345673|(21)A12345678" "includetext"
+run "upcacomposite" "416000336108|(99)1234-abcd" "includetext"
+run "upcecomposite" "00123457|(15)021231" "includetext"
+run "databaromnicomposite" "(01)03612345678904|(11)990102" ""
+run "databarstackedcomposite" "(01)03412345678900|(17)010200" ""
+run "databarstackedomnicomposite" "(01)03612345678904|(11)990102" ""
+run "databartruncatedcomposite" "(01)03612345678904|(11)990102" ""
+run "databarlimitedcomposite" "(01)03512345678907|(21)abcdefghijklmnopqrstuv" ""
+run "databarexpandedcomposite" "(01)93712345678904(3103)001234|(91)1A2B3C4D5E" ""
+run "databarexpandedstackedcomposite" "(01)00012345678905(10)ABCDEF|(21)12345678" "segments=4 "
+run "gs1-128composite" "(00)030123456789012340|(02)13012345678909(37)24(10)1234567ABCDEFG" "ccversion=c"
+run "gs1datamatrix" "(01)03453120000011(17)120508(10)ABCD1234(410)9501101020917" ""
+run "gs1datamatrixrectangular" "(01)03453120000011(17)120508(10)ABCD1234(410)9501101020917" ""
+run "gs1qrcode" "(01)03453120000011(8200)http://www.abc.net(10)ABCD1234(410)9501101020917" ""
+run "hibccode39" "A123BJC5D6E71" "includetext"
+run "hibccode128" "A123BJC5D6E71" "includetext"
+run "hibcdatamatrix" "A123BJC5D6E71" ""
+run "hibcdatamatrixrectangular" "A123BJC5D6E71" ""
+run "hibcpdf417" "A123BJC5D6E71" ""
+run "hibcmicropdf417" "A123BJC5D6E71" ""
+run "hibcqrcode" "A123BJC5D6E71" ""
+run "hibccodablockf" "A123BJC5D6E71" ""
+run "hibcazteccode" "A123BJC5D6E71" ""
+
+##
+## END OF TEST CASES
+##
+echo 
+echo "-----------------------"
+echo "Number of tests: $NTESTS"
+echo "Number of failures: $NFAILS"
+echo "-----------------------"
+

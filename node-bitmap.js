@@ -62,7 +62,7 @@ const crcCalc = [];
 module.exports = function (rot, bgcolor) {
 	let _text = "Software\0bwip-js.metafloor.com";
 	let _imgw, _imgh;		// image width/height, excluding padding
-	let _minx = 0, _miny = 0,
+	let _minx = Infinity, _miny = Infinity,
 		_maxx = 0, _maxy = 0,
 		_padx = 0, _pady = 0,
 		_clrr = 0, _clrg = 0, _clrb = 0,
@@ -154,6 +154,9 @@ module.exports = function (rot, bgcolor) {
 	// Return a PNG in a Buffer
 	// callback(err, png)
 	this.render = function(callback) {
+		if (_minx == Infinity || _miny == Infinity) {
+			_minx = _miny = 0;
+		}
 		var ts0 = Date.now();
 
 		// Determine image width and height
