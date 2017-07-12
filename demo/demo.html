@@ -285,11 +285,16 @@ function setURL() {
 	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
 	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
 	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var mono = document.getElementById('fontMono').checked;
+	var scaleX = +document.getElementById('scaleX').value || 2;
+	var scaleY = +document.getElementById('scaleY').value || scaleX;
 
 	var url = 'http://api-bwipjs.rhcloud.com/?bcid=' + elt.sym + 
-					'&text=' + encodeURIComponent(text) +
-					(altx ? '&alttext=' + encodeURIComponent(altx) : '') +
-					(opts ? '&' + opts.replace(/ /g, '&') : '');
+				'&text=' + encodeURIComponent(text) +
+				(altx ? '&alttext=' + encodeURIComponent(altx) : '') +
+				(opts ? '&' + opts.replace(/ +/g, '&') : '') +
+				(scaleX == scaleY ? `&scale=${scaleX}` : `&scaleX=${scaleX}&scaleY=${scaleY}`) +
+				(mono ? '&monochrome' : '');
 
 	document.getElementById('apiurl').href = url;
 }
@@ -297,7 +302,7 @@ function setURL() {
 </head><body>
 <div id="header">
 	<div id="bwipjs">bwip-js // Barcode Writer in Pure JavaScript</div>
-	<div id="version">bwip-js 1.3.3 (2017-06-10) / BWIPP 2017-06-09</div>
+	<div id="version">bwip-js 1.4.0 (2017-07-12) / BWIPP 2017-06-09</div>
 	<div id="fonthdr">&#x25bc; Fonts</div>
 	<div id="fontdiv" style="visibility:hidden">
 		<div class="inner">
