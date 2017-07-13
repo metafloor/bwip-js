@@ -29,25 +29,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-const zlib = require('zlib');
+var zlib = require('zlib');
 
 // We maintain a static buffer of pixel data to eliminate creating lots of GC items.
 //
 // Each pixel requires 3 entries : x,y coordinates plus a color index.
 // MAX_PIXELS is not the maximum number of pixels in the image, just the maximum
 // pixels we "set".   It puts a hard limit on maximum image size.
-const MAX_PIXELS = 4 * 1024 * 1024;
-const _pixels = [];
+var MAX_PIXELS = 4 * 1024 * 1024;
+var _pixels = [];
 
 // Math.floor() is notoriously slow.  Caching it seems to help.
-const floor = Math.floor;
+var floor = Math.floor;
 
 // Statically calculate the crc lookup table
-const crcCalc = [];
+var crcCalc = [];
 (function() {
-	for (let i = 0; i < 256; i++) {
-		let c = i;
-		for (let j = 0; j < 8; j++) {
+	for (var i = 0; i < 256; i++) {
+		var c = i;
+		for (var j = 0; j < 8; j++) {
 			if (c & 1) {
 				c = 0xedb88320 ^ (c >>> 1);
 			} else {
@@ -60,16 +60,16 @@ const crcCalc = [];
 
 // bgcolor is optional.
 module.exports = function (rot, bgcolor) {
-	let _text = "Software\0bwip-js.metafloor.com";
-	let _imgw, _imgh;		// image width/height, excluding padding
-	let _minx = Infinity, _miny = Infinity,
+	var _text = "Software\0bwip-js.metafloor.com";
+	var _imgw, _imgh;		// image width/height, excluding padding
+	var _minx = Infinity, _miny = Infinity,
 		_maxx = 0, _maxy = 0,
 		_padx = 0, _pady = 0,
 		_clrr = 0, _clrg = 0, _clrb = 0,
 		_npix = 0;
-	let _clrmap 	= { 0:0 };	// Index-0 is always the background color (black, fully trans)
-	let _palette	= [ 0 ];	// Color palette
-	let _trans		= true;		// Has transparency?
+	var _clrmap 	= { 0:0 };	// Index-0 is always the background color (black, fully trans)
+	var _palette	= [ 0 ];	// Color palette
+	var _trans		= true;		// Has transparency?
 
 	// Background color does not support alpha-channel (the alpha compositing
 	// algorithm we use cannot support it...)
@@ -87,10 +87,10 @@ module.exports = function (rot, bgcolor) {
 		_trans = (bgcolor >>> 24) < 255;
 	}
 
-	let _baka = (bgcolor >>> 24) & 0xff;	// 0 or 255 for the bg alpha
-	let _bakr = (bgcolor >>> 16) & 0xff;
-	let _bakg = (bgcolor >>>  8) & 0xff;
-	let _bakb = (bgcolor >>>  0) & 0xff;
+	var _baka = (bgcolor >>> 24) & 0xff;	// 0 or 255 for the bg alpha
+	var _bakr = (bgcolor >>> 16) & 0xff;
+	var _bakg = (bgcolor >>>  8) & 0xff;
+	var _bakb = (bgcolor >>>  0) & 0xff;
 
 	var tsX = Date.now();
 
@@ -128,13 +128,13 @@ module.exports = function (rot, bgcolor) {
 		}
 
 		// Alpha-blend with the background color
-		let na = a / 255;
-		let ia = 1 - na;
-		let newa = _baka || a;
-		let newr = (_clrr * na + _bakr * ia)|0;
-		let newg = (_clrg * na + _bakg * ia)|0;
-		let newb = (_clrb * na + _bakb * ia)|0;
-		let	argb = ((newa<<24) | (newr<<16) | (newg<<8) | newb)>>>0;
+		var na = a / 255;
+		var ia = 1 - na;
+		var newa = _baka || a;
+		var newr = (_clrr * na + _bakr * ia)|0;
+		var newg = (_clrg * na + _bakg * ia)|0;
+		var newb = (_clrb * na + _bakb * ia)|0;
+		var	argb = ((newa<<24) | (newr<<16) | (newg<<8) | newb)>>>0;
 
 		if (_clrmap[argb] === undefined) {
 			_clrmap[argb] = _palette.length;
@@ -164,7 +164,7 @@ module.exports = function (rot, bgcolor) {
 			_imgh = _maxx-_minx+1;
 			_imgw = _maxy-_miny+1;
 			// Swap padding values
-			let t = _pady;
+			var t = _pady;
 			_pady = _padx;
 			_padx = t;
 		} else {
@@ -173,8 +173,8 @@ module.exports = function (rot, bgcolor) {
 		}
 
 		// DEFLATE the image data based on color depth
-		let image;
-		let pngtype;
+		var image;
+		var pngtype;
 		if (_palette.length <= 256) {
 			image = toPalette();
 			pngtype = 3;
@@ -187,9 +187,9 @@ module.exports = function (rot, bgcolor) {
 		}
 		var ts1 = Date.now();
 
-		let bufs = [];
-		let buflen = 0;
-		let deflator = zlib.createDeflate({
+		var bufs = [];
+		var buflen = 0;
+		var deflator = zlib.createDeflate({
 				chunkSize: 32 * 1024,
 				level : zlib.Z_DEFAULT_COMPRESSION,
 				strategy: zlib.Z_DEFAULT_STRATEGY });
@@ -200,7 +200,7 @@ module.exports = function (rot, bgcolor) {
 
 		function returnPNG() {
 			var ts2 = Date.now();
-			let length = 8 + 12 + 13 + 			// PNG Header + IHDR chunk
+			var length = 8 + 12 + 13 + 			// PNG Header + IHDR chunk
 						 12 + _text.length +	// tEXt
 						 12 + buflen +			// IDAT
 						 12;					// IEND
@@ -212,8 +212,8 @@ module.exports = function (rot, bgcolor) {
 			}
 
 			// Emulate a byte-stream
-			let png = new Buffer(length);
-			let pngoff = 0;	// running offset into the png buffer
+			var png = new Buffer(length);
+			var pngoff = 0;	// running offset into the png buffer
 
 			write('\x89PNG\x0d\x0a\x1a\x0a'); // PNG file header
 			writeIHDR();
@@ -238,7 +238,7 @@ module.exports = function (rot, bgcolor) {
 
 			function writeIHDR() {
 				write32(13);	// chunk length
-				let crcoff = pngoff;
+				var crcoff = pngoff;
 
 				write('IHDR');
 				write32(_imgw + 2*_padx);
@@ -253,7 +253,7 @@ module.exports = function (rot, bgcolor) {
 			}
 			function writeTEXT() {
 				write32(_text.length);	// chunk length
-				let crcoff = pngoff;
+				var crcoff = pngoff;
 
 				write('tEXt');
 				write(_text);
@@ -261,11 +261,11 @@ module.exports = function (rot, bgcolor) {
 			}
 			function writePLTE() {
 				write32(_palette.length*3);	// chunk length
-				let crcoff = pngoff;
+				var crcoff = pngoff;
 
 				write('PLTE');
-				for (let i = 0; i < _palette.length; i++) {
-					let c = _palette[i];
+				for (var i = 0; i < _palette.length; i++) {
+					var c = _palette[i];
 					write8((c >>> 16) & 0xff);
 					write8((c >>>  8) & 0xff);
 					write8(c & 0xff);
@@ -274,20 +274,20 @@ module.exports = function (rot, bgcolor) {
 			}
 			function writeTRNS() {
 				write32(_palette.length);	// chunk length
-				let crcoff = pngoff;
+				var crcoff = pngoff;
 
 				write('tRNS');
-				for (let i = 0; i < _palette.length; i++) {
+				for (var i = 0; i < _palette.length; i++) {
 					write8((_palette[i] >>> 24) & 0xff);
 				}
 				writeCRC(crcoff);
 			}
 			function writeIDAT() {
 				write32(buflen);	// chunk length
-				let crcoff = pngoff;
+				var crcoff = pngoff;
 
 				write('IDAT');
-				for (let i = 0; i < bufs.length; i++) {
+				for (var i = 0; i < bufs.length; i++) {
 					bufs[i].copy(png, pngoff);
 					pngoff += bufs[i].length;
 				}
@@ -295,7 +295,7 @@ module.exports = function (rot, bgcolor) {
 			}
 			function writeIEND() {
 				write32(0);				// chunk length;
-				let crcoff = pngoff;
+				var crcoff = pngoff;
 
 				write('IEND');
 				writeCRC(crcoff);
@@ -317,7 +317,7 @@ module.exports = function (rot, bgcolor) {
 				png[pngoff++] = v;
 			}
 			function writeCRC(off) {
-				let crc = -1;
+				var crc = -1;
 				while (off < pngoff) {
 					crc = crcCalc[(crc ^ png[off++]) & 0xff] ^ (crc >>> 8);
 				}
@@ -327,13 +327,13 @@ module.exports = function (rot, bgcolor) {
 	}
 	function toPalette() {
 		// One extra byte per row for the filter type
-		let row = _imgw + 2*_padx + 1;
-		let buf = Buffer.alloc(row * (_imgh + 2*_pady));
-		for (let i = 0, l = _npix; i < l; i++) {
-			let m = _pixels[i];
-			let x = (m & 0xffff) - 4096 - _minx;
-			let y = (m >>> 16) - 4096 - _miny;
-			let c = (m / 0x100000000)|0;
+		var row = _imgw + 2*_padx + 1;
+		var buf = Buffer.alloc(row * (_imgh + 2*_pady));
+		for (var i = 0, l = _npix; i < l; i++) {
+			var m = _pixels[i];
+			var x = (m & 0xffff) - 4096 - _minx;
+			var y = (m >>> 16) - 4096 - _miny;
+			var c = (m / 0x100000000)|0;
 			if (rot == 'N') {
 				y = _imgh - y - 1;  // Invert y
 			} else if (rot == 'I') {
@@ -341,11 +341,11 @@ module.exports = function (rot, bgcolor) {
 			} else {
 				y = _imgw - y;      // Invert y
 				if (rot == 'L') {
-					let t = y;
+					var t = y;
 					y = _imgh - x - 1;
 					x = t - 1;
 				} else {
-					let t = x;
+					var t = x;
 					x = _imgw - y;
 					y = t;
 				}
@@ -357,13 +357,13 @@ module.exports = function (rot, bgcolor) {
 	// Convert the image data to TrueColor
 	function toTrueColor() {
 		// One extra byte per row for the filter type
-		let row = (_imgw + 2*_padx) * 3 + 1;
-		let buf = Buffer.alloc(row * (_imgh + 2*_pady));
-		for (let i = 0, l = _npix; i < l; i++) {
-			let m = _pixels[i];
-			let x = (m & 0xffff) - 4096 - _minx;
-			let y = (m >>> 16) - 4096 - _miny;
-			let c = _palette[(m / 0x100000000)|0];
+		var row = (_imgw + 2*_padx) * 3 + 1;
+		var buf = Buffer.alloc(row * (_imgh + 2*_pady));
+		for (var i = 0, l = _npix; i < l; i++) {
+			var m = _pixels[i];
+			var x = (m & 0xffff) - 4096 - _minx;
+			var y = (m >>> 16) - 4096 - _miny;
+			var c = _palette[(m / 0x100000000)|0];
 			if (rot == 'N') {
 				y = _imgh - y - 1;  // Invert y
 			} else if (rot == 'I') {
@@ -371,16 +371,16 @@ module.exports = function (rot, bgcolor) {
 			} else {
 				y = _imgw - y;      // Invert y
 				if (rot == 'L') {
-					let t = y;
+					var t = y;
 					y = _imgh - x - 1;
 					x = t - 1;
 				} else {
-					let t = x;
+					var t = x;
 					x = _imgw - y;
 					y = t;
 				}
 			}
-			let pos = row * (y + _pady) + 1 + (_padx + x) * 3;
+			var pos = row * (y + _pady) + 1 + (_padx + x) * 3;
 			buf[pos+0] = c >>> 16;		// red
 			buf[pos+1] = c >>>  8;		// green
 			buf[pos+2] = c;				// blue
@@ -390,13 +390,13 @@ module.exports = function (rot, bgcolor) {
 	// Convert the image data to TrueColor with alpha
 	function toTrueAlpha() {
 		// One extra byte per row for the filter type
-		let row = (_imgw + 2*_padx) * 4 + 1;
-		let buf = Buffer.alloc(row * (_imgh + 2*_pady));
-		for (let i = 0, l = _npix; i < l; i++) {
-			let m = _pixels[i];
-			let x = (m & 0xffff) - 4096 - _minx;
-			let y = (m >>> 16) - 4096 - _miny;
-			let c = _palette[(m / 0x100000000)|0];
+		var row = (_imgw + 2*_padx) * 4 + 1;
+		var buf = Buffer.alloc(row * (_imgh + 2*_pady));
+		for (var i = 0, l = _npix; i < l; i++) {
+			var m = _pixels[i];
+			var x = (m & 0xffff) - 4096 - _minx;
+			var y = (m >>> 16) - 4096 - _miny;
+			var c = _palette[(m / 0x100000000)|0];
 			if (rot == 'N') {
 				y = _imgh - y - 1;  // Invert y
 			} else if (rot == 'I') {
@@ -404,16 +404,16 @@ module.exports = function (rot, bgcolor) {
 			} else {
 				y = _imgw - y;      // Invert y
 				if (rot == 'L') {
-					let t = y;
+					var t = y;
 					y = _imgh - x - 1;
 					x = t - 1;
 				} else {
-					let t = x;
+					var t = x;
 					x = _imgw - y;
 					y = t;
 				}
 			}
-			let pos = row * (y + _pady) + 1 + (_padx + x) * 4;
+			var pos = row * (y + _pady) + 1 + (_padx + x) * 4;
 			buf[pos+0] = c >>> 16;		// red
 			buf[pos+1] = c >>>  8;		// green
 			buf[pos+2] = c;				// blue

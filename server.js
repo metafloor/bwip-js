@@ -7,8 +7,9 @@
 // To specify all interfaces, use * as the address
 //
 // If no address:port are specified, the default is: *:3030
-const http	 = require('http');
-const bwipjs = require('./node-bwipjs');	// ./ required for local use
+
+var http	 = require('http');
+var bwipjs = require('./node-bwipjs');	// ./ required for local use
 
 // Example of how to load a font into bwipjs. 
 //  bwipjs.loadFont(fontname, sizemult, fontdata)
@@ -19,7 +20,7 @@ const bwipjs = require('./node-bwipjs');	// ./ required for local use
 //bwipjs.loadFont('Inconsolata', 108,
 //			require('fs').readFileSync('fonts/Inconsolata.otf', 'binary'));
 
-const server = http.createServer(function(req, res) {
+var server = http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
 	// returning 400 on requests like favicon.ico.
 	if (req.url.indexOf('/?bcid=') != 0) {
@@ -32,9 +33,9 @@ const server = http.createServer(function(req, res) {
 
 })
 
-let binds = 0;
-for (let i = 2; i < process.argv.length; i++) {
-	let a = /^([^:]+):(\d+)$/.exec(process.argv[i]);
+var binds = 0;
+for (var i = 2; i < process.argv.length; i++) {
+	var a = /^([^:]+):(\d+)$/.exec(process.argv[i]);
 	if (a) {
 		if (a[1] == '*') {
 			server.listen(+a[2]);
