@@ -26075,13 +26075,13 @@ function BWIPP() {
 		}
 		opts = opts || {};
 		if (typeof opts === 'string') {
-			let tmp = opts.split(' ');
+			var tmp = opts.split(' ');
 			opts = {};
-			for (let i = 0; i < tmp.length; i++) {
+			for (var i = 0; i < tmp.length; i++) {
 				if (!tmp[i]) {
 					continue;
 				}
-				let eq = tmp[i].indexOf('=');
+				var eq = tmp[i].indexOf('=');
 				if (eq == -1) {
 					opts[tmp[i]] = true;
 				} else {
@@ -26102,7 +26102,7 @@ function BWIPP() {
 		// code from BWIPP.
 		if (opts.parse) {
 			text = text.replace(/\^(\d\d\d)/g, function($0, $1) {
-				let v = +$1;
+				var v = +$1;
 				if (v > 255) {
 					throw new Error('bwipp.rangeError:' +
 						' ^NNN out-of-range (' + $0 + ')');
