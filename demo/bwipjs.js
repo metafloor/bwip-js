@@ -3,33 +3,29 @@
 // Graphics-context interface to the BWIPP cross-compiled code
 
 // Math.floor(), etc. are notoriously slow.  Caching seems to help.
-var floor = Math.floor;
-var round = Math.round;
-var ceil  = Math.ceil;
+const floor = Math.floor;
+const round = Math.round;
+const ceil  = Math.ceil;
 
-function BWIPJS(freetype, monochrome) {
+// fontlib : fixedfont or freetype
+function BWIPJS(fontlib, monochrome) {
 	if (this.constructor !== BWIPJS) {
 		return new BWIPJS(freetype, monochrome);
 	}
-	this.bmap = null;	// bitmap interface
-	this.gstk = [];		// graphics save/restore stack
+	this.bmap	 = null;// Bitmap interface
+	this.gstk	 = [];	// Graphics save/restore stack
+	this.cmds	 = [];	// Graphics primitives to replay when rendering
+	this.rgbmap  = {};	// Unique RGB entries used with the fonts
+	this.ncolors = 0;	// Number of unique RGBA entries
+	this.fontlib = fontlib;
+
 	this.reset();
 
-	// FreeType interface
-	this.ft = {
-		monochrome:freetype.cwrap("monochrome", 'number', ['number']),
-		lookup:freetype.cwrap("find_font", 'number', ['string']),
-		bitmap:freetype.cwrap("get_bitmap", 'number',
-							['number','number','number','number']),
-		width:freetype.cwrap("get_width", 'number', []),
-		height:freetype.cwrap("get_height", 'number', []),
-		left:freetype.cwrap("get_left", 'number', []),
-		top:freetype.cwrap("get_top", 'number', []),
-		advance:freetype.cwrap("get_advance", 'number', []),
-		module:freetype,
-	};
+	// Bounding box
+	this.minx = this.miny = Infinity;
+	this.maxx = this.maxy = 0;
 
-	this.ft.monochrome(monochrome ? 1 : 0);
+	fontlib.monochrome(monochrome);
 }
 
 BWIPJS.prototype.bitmap = function(bitmap) {
@@ -91,10 +87,11 @@ BWIPJS.prototype.restore = function() {
 		this[id] = ctx[id];
 	}
 	// Color is part of the bitmap interface and must be restored separately.
-	// We can run without a bitmap when running tests.
-	if (this.bmap) {
-		this.bmap.color(this.g_rgb[0], this.g_rgb[1], this.g_rgb[2]);
-	}
+	var self = this;
+	var r = this.g_rgb[0], g = this.g_rgb[1], b = this.g_rgb[2];
+	this.cmds.push(function() {
+		self.bmap.color(r, g, b);
+	});
 }
 // Per the postscript spec:
 //	As discussed in Section 4.4.1, Current Path, points entered into a path
@@ -131,8 +128,7 @@ BWIPJS.prototype.setfont = function(f) {
 	this.g_font = f;
 }
 BWIPJS.prototype.getfont = function() {
-	// This is an internal method
-	return this.ft.lookup(this.g_font.FontName.toString());
+	return this.fontlib.lookup(this.g_font.FontName.toString());
 }
 // Special function to replace setanycolor in BWIPP
 // Takes a string of hex digits either 6 chars in length (rrggbb) or
@@ -154,7 +150,12 @@ BWIPJS.prototype.setcolor = function(s) {
 		throw 'bwipp.setcolor: invalid string length (' + s + ')' ;
 	}
 
-	this.bmap.color(r, g, b);
+	// Set the color in the bitmap
+	var self = this;
+	self.cmds.push(function() {
+		self.bmap.color(r, g, b);
+	});
+
 	this.g_rgb = [ r, g, b ];
 }
 BWIPJS.prototype.newpath = function() {
@@ -193,23 +194,20 @@ BWIPJS.prototype.rlineto = function(x,y) {
 }
 BWIPJS.prototype.stringwidth = function(str) {
 	var font = this.getfont();
-	var size = +this.g_font.FontSize || 10;
+	var size = (+this.g_font.FontSize || 10) * this.g_tsx;
 
 	// str may be a uint8-string or normal string
 	var cca = typeof str === 'string';
 
-	// width, ascent, and descent of the char-path
+	// Width, ascent, and descent of the char-path.
+	// Font metrics are always available.
 	var w = 0, a = 0, d = 0;
 	for (var i = 0; i < str.length; i++) {
 		var cd = cca ? str.charCodeAt(i) : str[i];
-		var offset = this.ft.bitmap(font,cd,size*this.g_tsx,size*this.g_tsy);
-		w += this.ft.advance();
-		if (!offset)
-			continue;
-		var h = this.ft.height();
-		var t = this.ft.top();
-		a = Math.max(a, t);
-		d = Math.max(d, h-t);
+		var glyph = this.fontlib.getglyph(font, cd, size, size); // no y-scaling
+		w += glyph.advance;
+		a = Math.max(a, glyph.top);
+		d = Math.max(d, glyph.height-glyph.top);
 	}
 	return { w:w/this.g_tsx, h:(a+d)/this.g_tsy,
 		 a:a/this.g_tsy, d:d/this.g_tsy };
@@ -245,34 +243,46 @@ BWIPJS.prototype.pathbbox = function() {
 	return rv;
 }
 BWIPJS.prototype.stroke = function() {
-	if (this.__miny === undefined)
-		this.__miny = Infinity;
+	var self = this;
 	var penx = this.g_penw*this.g_tsx;
 	var peny = this.g_penw*this.g_tsy;
+	var path = this.g_path;
 	var segs = this.g_path.length / 3;	// number of line segments
 	if (this.g_path[this.g_path.length-2][0] == 'c')
 		segs--;
-	for (var i = 0; i < this.g_path.length; ) {
-		var s = this.g_path[i++];	// start point
-		var a = this.g_path[i++];	// args
-		var e = this.g_path[i++];	// end point
-		if (this.__miny > s[1])
-			this.__miny = s[1];
-		if (this.__miny > e[1])
-			this.__miny = e[1];
-		switch (a[0]) {
-		case 'l':	// line
-			this.drawline(true, s[0], s[1], e[0], e[1], penx, peny, segs > 1);
-			break;
-		case 'c':	// closepath
-			break;
-		default:
-			throw new Error('stroke: undefined opcode: ' + a[0]);
+
+	// Track number of colors
+	var rgb = (this.g_rgb[0] << 16) | (this.g_rgb[1] << 8) | this.g_rgb[2];
+	if (!this.rgbmap[rgb]) {
+		this.rgbmap[rgb] = 1;
+		this.ncolors += 1;
+	}
+
+	// Calcuate the bounding boxes
+	for (var i = 0; i < path.length; ) {
+		var s = path[i++];	// start point
+		var a = path[i++];	// opcode
+		var e = path[i++];	// end point
+		if (a[0] == 'l') {
+			this.linebbox(s[0], s[1], e[0], e[1], penx, peny);
 		}
 	}
+
+	// Render the lines
+	this.cmds.push(function() {
+		// Draw the lines
+		for (var i = 0; i < path.length; ) {
+			var s = path[i++];	// start point
+			var a = path[i++];	// opcode
+			var e = path[i++];	// end point
+			if (a[0] == 'l') {
+				self.drawline(true, s[0], s[1], e[0], e[1], penx, peny, segs > 1);
+			}
+		}
+	});
+
 	this.g_path = [];
 }
-
 // Fix sources of rounding error by making the scale-factors integral.
 // Currently, only floor is being used.
 BWIPJS.prototype.floorscale = function() {
@@ -292,82 +302,142 @@ BWIPJS.prototype.roundscale = function() {
 // This implementation is optimized for 2D bar codes.  That is, it does not
 // distort the image due to rounding errors.  Every pixel is scaled
 // identically, so the resulting image may be smaller by a few pixels than
-// the scaling factor would require.  And the transform matrix is not used.
+// the scaling factor would require.  The transform matrix is not used.
 BWIPJS.prototype.imagemask = function(width, height, source) {
+	var tx = floor(this.g_tdx);
+	var ty = floor(this.g_tdy);
 	var sx = round(this.g_tsx);
 	var sy = round(this.g_tsy);
 	var dx = floor(sx / width);		// pixel width
-	var dy = floor(sy / height);		// pixel height
-	var rl = ceil(width / 8); 	// row length (bytes per row)
-	var y0 = floor(this.g_tdy) + height * dy;
+	var dy = floor(sy / height);	// pixel height
+	var rl = ceil(width / 8); 		// row length (bytes per row)
+	var y0 = ty + height * dy;
 	var x0;
+	var self = this;
 
 	if (!dx || !dy) {
 		throw new Error('Image scaled to zero size.');
 	}
-	for (var y = 0; y < height; y++) {
-		x0 = floor(this.g_tdx);
-		y0 -= dy;
-		for (var x = 0; x < width; x++) {
-			var by = source[y*rl + (x>>>3)];
-			var bt = by & (1 << 7-(x&7));
-			if (bt) {
-				var x1 = x0 + dx;
-				var y1 = y0 + dy;
-				for (var j = y0; j < y1; j++) {
-					for (var k = x0; k < x1; k++) {
-						this.bmap.set(k,j,255);
+
+	// Track number of colors
+	var rgb = (this.g_rgb[0] << 16) | (this.g_rgb[1] << 8) | this.g_rgb[2];
+	if (!this.rgbmap[rgb]) {
+		this.rgbmap[rgb] = 1;
+		this.ncolors += 1;
+	}
+
+	this.bbox(tx, ty, dx * width, dy * height);
+	this.cmds.push(function() {
+		var minx = self.minx;
+		var miny = self.miny;
+		for (var y = 0; y < height; y++) {
+			x0 = tx;
+			y0 -= dy;
+			for (var x = 0; x < width; x++) {
+				var by = source[y*rl + (x>>>3)];
+				var bt = by & (1 << 7-(x&7));
+				if (bt) {
+					var x1 = x0 + dx;
+					var y1 = y0 + dy;
+					for (var j = y0; j < y1; j++) {
+						for (var k = x0; k < x1; k++) {
+							self.bmap.set(k-minx,j-miny,255);
+						}
 					}
 				}
+				x0 += dx;
 			}
-			x0 += dx;
 		}
-	}
+	});
 }
 // dx,dy are inter-character gaps
-BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
-	var font = this.getfont();
-	var size = +this.g_font.FontSize || 10;
+BWIPJS.prototype.show = function(str, dx, dy) {
+	if (!str.length) {
+		return;
+	}
+
+	// Capture current graphics state
+	var self = this;
+	var font = self.getfont();
+	var size = +self.g_font.FontSize || 10;
+	var tsx	 = self.g_tsx;
+	var tsy  = self.g_tsy;
+	var posx = floor(self.g_posx);
+	var posy = floor(self.g_posy);
+	var r	 = self.g_rgb[0];
+	var g	 = self.g_rgb[1];
+	var b	 = self.g_rgb[2];
+	var szx  = floor(size * tsx);
+	var szy	 = floor(size * tsy);
 
 	// The string can be either a uint8-string or regular string
 	var cca = typeof str === 'string';
 
 	// Convert dx,dy to device space
-	dx = this.g_tsx * dx;
-	dy = this.g_tsy * dy;
+	dx = floor(self.g_tsx * dx);
+	dy = floor(self.g_tsy * dy);
 
-	// PostScript renders bottom-up, so we must render the glyphs inverted.
+	// Estimate number of colors
+	var rgb = (r << 16) | (g << 8) | b;
+	var nalpha = self.rgbmap[rgb];
+	if (!nalpha) {
+		self.ncolors += 256;
+	} else if (nalpha == 1) {
+		self.ncolors += 255;
+	}
+	self.rgbmap[rgb] = 256;
+
+	// Bounding box.  Use the actual glyph sizes.
+	var top = floor(self.g_posy) + dy;	// loop invariant
 	for (var i = 0; i < str.length; i++) {
 		var ch = cca ? str.charCodeAt(i) : str[i];
-		var offset = this.ft.bitmap(font, ch, size*this.g_tsx, size*this.g_tsy);
-		if (!offset) {
-			this.g_posx += this.ft.advance() + dx;
-			continue;
-		}
+		var glyph = self.fontlib.getglyph(font, ch, szx, szx);	// no y-scaling
 
-		// The OCR digits seem to be about a half-point right compared to the
+		// The OCR glyphs seem to be about a point right compared to the
 		// font metrics hard-coded into BWIPP.  This is especially apparent
 		// in the EAN and UPC codes where the bars mix with the text.
-		var l = this.g_posx + this.ft.left();
-		if (font <= 1 && ch >= 48 && ch <= 57)
-			l -= 0.5 * this.g_tsx;
-
-		var t = this.g_posy + this.ft.top() + dy;
-		var w = this.ft.width();
-		var h = this.ft.height();
-		var b = this.ft.module.HEAPU8.subarray(offset, offset + w * h);
-		var a;  // alpha
-
-		for (var x = 0; x < w; x++) {
-			for (var y = 0; y < h; y++) {
-				a = b[y * w + x];
-				if (a)
-					this.bmap.set(l+x, t-y, a);
-			}
+		var left = floor(this.g_posx) + glyph.left;
+		if (font <= 1) { // && ch >= 48 && ch <= 57) {
+			left -= floor(1.0 * tsx);
 		}
-
-		this.g_posx += this.ft.advance() + dx;
+		self.bbox(left, top+glyph.top-glyph.height, glyph.width, glyph.height);
+		this.g_posx += glyph.advance + dx;
 	}
+	this.g_posx -= dx;	// overshot
+	this.maxicount = 0;
+
+	self.cmds.push(function() {
+		var minx = self.minx;
+		var miny = self.miny;
+
+		// PostScript renders bottom-up, so we must render the glyphs inverted.
+		for (var i = 0; i < str.length; i++) {
+			var ch = cca ? str.charCodeAt(i) : str[i];
+			var glyph = self.fontlib.getglyph(font, ch, szx, szx);	// no y-scaling
+
+			// The OCR glyphs seem to be about a point right compared to the
+			// font metrics hard-coded into BWIPP.  This is especially apparent
+			// in the EAN and UPC codes where the bars mix with the text.
+			var top  = posy + glyph.top + dy;
+			var left = posx + glyph.left;
+			if (font <= 1) { // && ch >= 48 && ch <= 57) {
+				left -= floor(1.0 * tsx);
+			}
+			var w = glyph.width;
+			var h = glyph.height;
+			var b = glyph.bytes;
+			var o = glyph.offset;		// offset into bytes
+
+			for (var x = 0; x < w; x++) {
+				for (var y = 0; y < h; y++) {
+					var a = b[o + y * w + x];
+					if (a)
+						self.bmap.set(left+x-minx, top-y-miny, a);
+				}
+			}
+			posx += glyph.advance + dx;
+		}
+	});
 }
 
 // Line algorithm that produces a more symmetric line than Bresenham's
@@ -383,6 +453,9 @@ BWIPJS.prototype.show = function(str, dx, dy) {	// str is a psstring
 // When optmz is false, we always use the arbitrary line drawing alg, as
 // it better connects one line with the next.
 BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
+	var minx = this.minx;
+	var miny = this.miny;
+
 	if (optmz && (x1 == x2 || y1 == y2)) {
 		var lx = round(penx);
 		var ly = round(peny);
@@ -404,10 +477,11 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 			x1 = floor(x1 - (merge ? lx/2 : 0));
 			x2 = floor(x2 + (merge ? lx/2 : 0));
 		}
-		for (var y = y1; y < y2; y++)
-			for (var x = x1; x < x2; x++)
-				this.bmap.set(x,y,255);
-
+		for (var y = y1; y < y2; y++) {
+			for (var x = x1; x < x2; x++) {
+				this.bmap.set(x-minx,y-miny,255);
+			}
+		}
 		return;
 	}
 
@@ -433,8 +507,9 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 	if (du >= dv) {
 		// Increment on x
 		while (x != x2) {
-			for (var j = 0; j < pixh; j++)
-				this.bmap.set(x, y+j, 255);
+			for (var j = 0; j < pixh; j++) {
+				this.bmap.set(x-minx, y+j-miny, 255);
+			}
 			d += dv;
 			if (d >= du) {
 				d -= du;
@@ -442,13 +517,15 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 			}
 			x += kx;
 		}
-		for (var j = 0; j < pixh; j++)
-			this.bmap.set(x, y+j, 255);
+		for (var j = 0; j < pixh; j++) {
+			this.bmap.set(x-minx, y+j-miny, 255);
+		}
 	} else {
 		// Increment on y
 		while (y != y2) {
-			for (var j = 0; j < pixw; j++)
-				this.bmap.set(x+j, y, 255);
+			for (var j = 0; j < pixw; j++) {
+				this.bmap.set(x+j-minx, y-miny, 255);
+			}
 			d += du;
 			if (d >= dv) {
 				d -= dv;
@@ -456,11 +533,78 @@ BWIPJS.prototype.drawline = function(optmz, x1, y1, x2, y2, penx, peny, merge) {
 			}
 			y += ky;
 		}
-		for (var j = 0; j < pixw; j++)
-			this.bmap.set(x+j, y, 255);
+		for (var j = 0; j < pixw; j++) {
+			this.bmap.set(x+j-minx, y-miny, 255);
+		}
 	}
 } // end of drawline()
 
+// Bounding box for a line.  The renderers only draw orthogonal lines.
+// Maxicode is drawn using a font.
+BWIPJS.prototype.linebbox = function(x0, y0, x1, y1, penw, penh) {
+    if (x0 > x1) {
+		var t = x0;
+		x0 = x1;
+		x1 = t;
+    }
+    if (y0 > y1) {
+		var t = y0;
+		y0 = y1;
+		y1 = t;
+    }
+	penw = round(penw);
+	penh = round(penh);
+    if (x0 == x1) {
+        // vertical line
+		var xl = floor(x0 - penw/2);
+		var xr = floor(x0 + penw/2);
+        this.bbox(floor(xl), floor(y0), xr-xl, floor(y1-y0));
+    } else if (y0 == y1) {
+        // horizontal line
+        this.bbox(x0, y0 - penh/2, x1-x0, penh);
+    } else {
+        this.bbox(x0, y0, x1-x0, y1-y0);
+    }
+}
+// Track the bounding box of the image
+BWIPJS.prototype.bbox = function(x, y, w, h) {
+	if (this.minx > x) {
+        this.minx = x;
+    }
+    if (this.maxx < x + w - 1) {
+        this.maxx = x + w - 1;
+    }
+    if (this.miny > y) {
+        this.miny = y;
+    }
+    if (this.maxy < y + h - 1) {
+        this.maxy = y + h - 1;
+    }
+}
+BWIPJS.prototype.render = function(callback) {
+	this.minx = floor(this.minx);
+	this.miny = floor(this.miny);
+	this.maxx = floor(this.maxx);
+	this.maxy = floor(this.maxy);
+
+	// Tell the bitmap about the image
+	if (this.bmap.imageinfo) {
+		this.bmap.imageinfo(this.maxx - this.minx + 1,
+							this.maxy - this.miny + 1,
+							this.ncolors);
+	}
+
+	// Draw the image to the bitmap
+	for (var i = 0, l = this.cmds.length; i < l; i++) {
+		this.cmds[i]();
+	}
+
+	if (this.bmap.finalize) {
+		this.bmap.finalize(callback);
+	}
+}
+
+BWIPJS.VERSION = '__BWIPJS_VERS__';
 if (typeof module === 'object' && module.exports) {
 	module.exports = BWIPJS;
 }

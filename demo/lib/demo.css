@@ -21,7 +21,7 @@ body {
 	position:			absolute;
 	bottom:				21px;
 }
-#header #version {
+#header #versions {
 	font-size:			10px;
 	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
 	font-weight:		100;
