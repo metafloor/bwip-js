@@ -3,9 +3,9 @@
 // Graphics-context interface to the BWIPP cross-compiled code
 
 // Math.floor(), etc. are notoriously slow.  Caching seems to help.
-const floor = Math.floor;
-const round = Math.round;
-const ceil  = Math.ceil;
+var floor = Math.floor;
+var round = Math.round;
+var ceil  = Math.ceil;
 
 // fontlib : fixedfont or freetype
 function BWIPJS(fontlib, monochrome) {
