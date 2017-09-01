@@ -9,7 +9,7 @@ var copyr_js = fs.readFileSync('bwipp-copyr.js', 'binary');
 
 // Beautified module --> bwipp.js
 fs.writeFileSync('bwipp.js',
-				  copyr_js + beautify(bwipp_js, { indent_with_tabs:true }),
+				  copyr_js + beautify(bwipp_js, { indent_with_tabs:true }) + '\n',
 				 'binary');
 
 // Minify map of full names to their $<letter> equivalents
@@ -67,6 +67,8 @@ while (match) {
 												'$1else@$2')
 				.replace(/\s+instanceof\s+/g, '@instanceof@')
 				.replace(/\s+in\s+/g, '@in@')
+				.replace(/\s*new\s+/g, 'new@')
+				.replace(/\s*delete\s+/g, 'delete@')
 				.replace(/\s+/g, '')
 				.replace(/@/g, ' ') + match[0];
 	last = restr.lastIndex;
@@ -80,6 +82,8 @@ minified += cleaned.substr(last)
 												'$1else@$2')
 				.replace(/\s+instanceof\s+/g, '@instanceof@')
 				.replace(/\s+in\s+/g, '@in@')
+				.replace(/\s*new\s+/g, 'new@')
+				.replace(/\s*delete\s+/g, 'delete@')
 				.replace(/\s+/g, '')
 				.replace(/@/g, ' ')
 				;

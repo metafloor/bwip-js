@@ -1,16 +1,21 @@
 // file: node-bwipjs.js
 //
-// Copyright (c) 2011-2016 Mark Warren
+// Copyright (c) 2011-2017 Mark Warren
 //
 // See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
 //
+"use strict";
+
 var url	= require('url'),
 	bwipp = require(__dirname + '/bwipp'),
 	bwipjs = require(__dirname + '/bwipjs'),
 	Bitmap = require(__dirname + '/node-bitmap'),
-	freetype = require(__dirname + '/freetype')
+	fixedfont = require(__dirname + '/node-fonts')	// freetype alternative, default
 	;
+
+// freetype is the module, freefont is the font manager interface identical to fixedfont
+var freetype, freefont;
 
 // This module's primary export is the bwip-js HTTP request handler
 module.exports = function(req, res, opts) {
@@ -30,7 +35,7 @@ module.exports = function(req, res, opts) {
 	module.exports.toBuffer(args, function(err, png) {
 		if (err) {
 			res.writeHead(400, { 'Content-Type':'text/plain' });
-			res.end(err, 'ascii');
+			res.end('' + err, 'ascii');
 		} else {
 			res.writeHead(200, { 'Content-Type':'image/png' });
 			res.end(png, 'binary');
@@ -52,7 +57,7 @@ module.exports = function(req, res, opts) {
 // 		`png` is a node Buffer containing the PNG image.
 //
 module.exports.toBuffer = function(args, callback) {
-	// Set the defaults
+	// Set the bwip-js defaults
 	var scale	= args.scale || 2;
 	var scaleX	= +args.scaleX || scale;
 	var scaleY	= +args.scaleY || scaleX;
@@ -71,32 +76,34 @@ module.exports.toBuffer = function(args, callback) {
 	if (!bcid) {
 		return callback('Bar code type not specified.');
 	}
-	// Remove the non-BWIPP options
-	delete args.scale;
-	delete args.scaleX;
-	delete args.scaleY;
-	delete args.rotate;
-	delete args.text;
-	delete args.bcid;
-	delete args.monochrome;
-	delete args.paddingwidth;
-	delete args.paddingheight;
 
 	// Initialize a barcode writer object.  This is the interface between
-	// the low-level BWIPP code, freetype, and the Bitmap object.
-	var bw = new bwipjs(freetype, mono);
+	// the low-level BWIPP code, the font manager, and the Bitmap object.
+	var bw = new bwipjs(freefont || fixedfont, mono);
 
-	// Set the options
+	// Set the BWIPP options
 	var opts = {};
 	for (var id in args) {
 		opts[id] = args[id];
 	}
+
+	// Remove the non-BWIPP options
+	delete opts.bcid;
+	delete opts.text;
+	delete opts.scale;
+	delete opts.scaleX;
+	delete opts.scaleY;
+	delete opts.rotate;
+	delete opts.monochrome;
+	delete opts.paddingwidth;
+	delete opts.paddingheight;
+
 	// Fix a disconnect in the BWIPP rendering logic
 	if (opts.alttext) {
 		opts.includetext = true;
 	}
 	// We use mm rather than inches for height - except pharmacode2 height
-	// which is expected to be in mm
+	// which is already in mm.
 	if (+opts.height && bcid != 'pharmacode2') {
 		opts.height = opts.height / 25.4 || 0.5;
 	}
@@ -107,30 +114,78 @@ module.exports.toBuffer = function(args, callback) {
 
 	// Override the `backgroundcolor` option.
 	if (opts.backgroundcolor) {
-		bw.bitmap(new Bitmap(rot, parseInt(''+opts.backgroundcolor, 16)));
+		bw.bitmap(new Bitmap(rot, parseInt(''+opts.backgroundcolor, 16), opts));
 		delete opts.backgroundcolor;
 	} else {
-		bw.bitmap(new Bitmap(rot));
+		bw.bitmap(new Bitmap(rot, null, opts));
 	}
 
 	// Add optional padding and scale the image.
 	bw.bitmap().pad(padX*scaleX || 0, padY*scaleY || 0);
 	bw.scale(scaleX, scaleY);
 
-	// Call into the BWIPP cross-compiled code
+	// Call into the BWIPP cross-compiled code.
 	try {
 		var ts0 = Date.now();
 		bwipp()(bw, bcid, text, opts);
 		var ts1 = Date.now();
-		bw.bitmap().render(callback);
 	} catch (e) {
-		// Invoking this callback is synchronous.
-		callback('' + e);
+		callback(e);
 	}
-	var ts2 = Date.now();
-	//console.log('Encoded in: ' + (ts1-ts0) + ' msecs');
-	//console.log('Rendered in: ' + (ts2-ts1) + ' msecs');
-	//console.log('Elapsed: ' + (ts2-ts0) + ' msecs');
+
+	bw.render(callback);
+	// For testing...
+	//bw.render(function (err, png) {
+	//	if (err) {
+	//		callback(err);
+	//	} else {
+	//		var ts2 = Date.now();
+	//		console.log('Encoded,Rendered,Elapsed: ' + (ts1-ts0) + ',' + (ts2-ts1) +
+	//					',' + (ts2-ts0) + ' msecs');
+	//		callback(null, png);
+	//	}
+	//});
+}
+
+module.exports.useFreetype = function(useFT) {
+	if (useFT || useFT === undefined) {
+		freetype = require(__dirname + '/freetype');
+		
+		var ft_monochr	= freetype.cwrap("monochrome", 'number', ['number']);
+		var ft_lookup	= freetype.cwrap("find_font", 'number', ['string']);
+		var ft_bitmap	= freetype.cwrap("get_bitmap", 'number',
+										['number','number','number','number']);
+		var ft_width	= freetype.cwrap("get_width", 'number', []);
+		var ft_height	= freetype.cwrap("get_height", 'number', []);
+		var ft_left		= freetype.cwrap("get_left", 'number', []);
+		var ft_top		= freetype.cwrap("get_top", 'number', []);
+		var ft_advance	= freetype.cwrap("get_advance", 'number', []);
+
+		// bwipjs needs the following interfaces:
+		//	lookup(fontname)	returns fontid
+		//	monochrome(bool)	set the fonts to monochrome or anti-aliased
+		//	getglyph(fontid, charcode, width, height)
+		freefont = {
+			lookup(name) {
+				return ft_lookup(name);
+			},
+			monochrome(enable) {
+				return ft_monochr(enable ? 1 : 0);
+			},
+			getglyph(fontid, charcode, size) {
+				var offset = ft_bitmap(fontid, charcode, width, height);
+				if (offset <= 0) {
+					return { width:0, height:0, top:0, left:0, advance:ft_advance() };
+				}
+				return {
+					width:ft_width(), height:ft_height(), top:ft_top(), left:ft_left(),
+					advance:ft_advance(), bytes:freetype.HEAPU8, offset:offset
+				}
+			}
+		};
+	} else {
+		freetype = freefont = null;
+	}
 }
 
 module.exports.loadFont = function(fontname, sizemult, fontfile) {
@@ -154,5 +209,5 @@ module.exports.unloadFont = function(fontname) {
 	freetype.unlink('/' + fontname);
 }
 
-module.exports.bwipjs_version = "__BWIPJS_VERS__";
-module.exports.bwipp_version = "__BWIPP_VERS__";
+module.exports.bwipjs_version = bwipjs.VERSION;
+module.exports.bwipp_version = bwipp.VERSION;

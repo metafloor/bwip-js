@@ -1,0 +1,651 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MaxiCode Glyph Generator</title>
+<style>
+* {
+	font-family:	sans-serif;
+	font-size:		12px;
+}
+input {
+	line-height:	1.5;
+}
+a {
+	color:			#3A7BEA;
+	cursor:			pointer;
+}
+a:hover {
+	color:			orange;
+}
+#results {
+	display:none;
+}
+#glyphs {
+	padding-top:		1.25ex;
+	padding-left:		1.25ex;
+	background-color:	#AFC5EA;
+}
+</style>
+</head>
+<body>
+<table>
+<tr><td style="vertical-align:top;white-space:pre">
+<div style="line-height:2;white-space:nowrap">
+<b>Font Type</b><br>
+<label for="anti-aliased"><input type="radio" name="a-or-m" id="anti-aliased" checked><b>Anti-Aliased</b></label>
+<label for="mono-chrome"><input type="radio" name="a-or-m" id="mono-chrome"><b>Monochrome</b></label>
+<br><b>Scale</b><br>
+<label for="scale-1x"><input type="radio" name="scale" id="scale-1x"><b>1X</b></label>
+<label for="scale-2x"><input type="radio" name="scale" id="scale-2x" checked><b>2X</b></label>
+<label for="scale-3x"><input type="radio" name="scale" id="scale-3x"><b>3X</b></label>
+<label for="scale-4x"><input type="radio" name="scale" id="scale-4x"><b>4X</b></label>
+<label for="scale-5x"><input type="radio" name="scale" id="scale-5x"><b>5X</b></label>
+<label for="scale-6x"><input type="radio" name="scale" id="scale-6x"><b>6X</b></label>
+<label for="scale-7x"><input type="radio" name="scale" id="scale-7x"><b>7X</b></label>
+<label for="scale-8x"><input type="radio" name="scale" id="scale-8x"><b>8X</b></label>
+<label for="scale-9x"><input type="radio" name="scale" id="scale-9x"><b>9X</b></label>
+</div>
+  <!-- space for download links -->
+  <!-- space for download links -->
+<b>Result:</b>
+<div id="results" style="position:relative"><div style="position:absolute; right:10px; top:-55px">
+<a id="dl-proof">Download Proof Sheet</a>
+<a id="dl-binary">Download Node Binary</a>
+<a id="dl-script">Download Browser Script</a>
+</div>
+<div id="glyphs"><canvas id="glyph0"></canvas><canvas id="glyph1"></canvas><canvas id="glyph2"></canvas><canvas id="glyph3"></canvas><canvas id="glyph4"></canvas></div>
+<canvas id="matrix"></canvas>
+</div>
+<td style="vertical-align:top">
+<canvas id="proof0"></canvas>
+<canvas id="proof2"></canvas>
+<td style="vertical-align:top">
+<canvas id="proof1"></canvas>
+<canvas id="proof3"></canvas>
+<td style="vertical-align:top">
+<canvas id="proof4"></canvas>
+</table>
+<script>
+document.getElementById('anti-aliased').addEventListener('click', render, false);
+document.getElementById('mono-chrome').addEventListener('click', render, false);
+document.getElementById('scale-1x').addEventListener('click', render, false);
+document.getElementById('scale-2x').addEventListener('click', render, false);
+document.getElementById('scale-3x').addEventListener('click', render, false);
+document.getElementById('scale-4x').addEventListener('click', render, false);
+document.getElementById('scale-5x').addEventListener('click', render, false);
+document.getElementById('scale-6x').addEventListener('click', render, false);
+document.getElementById('scale-7x').addEventListener('click', render, false);
+document.getElementById('scale-8x').addEventListener('click', render, false);
+document.getElementById('scale-9x').addEventListener('click', render, false);
+document.getElementById('dl-proof').addEventListener('click', genproof, false);
+document.getElementById('dl-binary').addEventListener('click', genbinary, false);
+document.getElementById('dl-script').addEventListener('click', genmetrics, false);
+function getscale() {
+	for (var i = 1; i <= 9; i++) {
+		if (document.getElementById('scale-' + i + 'x').checked) {
+			return i;
+		}
+	}
+	return 1;
+}
+function render() {
+	let prcvs0 = document.getElementById('proof0'),
+		prctx0 = prcvs0.getContext('2d'),
+		prcvs1 = document.getElementById('proof1'),
+		prctx1 = prcvs1.getContext('2d'),
+		prcvs2 = document.getElementById('proof2'),
+		prctx2 = prcvs2.getContext('2d'),
+		prcvs3 = document.getElementById('proof3'),
+		prctx3 = prcvs3.getContext('2d'),
+		prcvs4 = document.getElementById('proof4'),
+		prctx4 = prcvs4.getContext('2d'),
+
+		glcvs0 = document.getElementById('glyph0'),
+		glcvs1 = document.getElementById('glyph1'),
+		glcvs2 = document.getElementById('glyph2'),
+		glcvs3 = document.getElementById('glyph3'),
+		glcvs4 = document.getElementById('glyph4'),
+
+		scale = getscale(),
+		monochrome = document.getElementById('mono-chrome').checked,
+
+		hexgrid = 40,
+		hexside = 2 * (scale - 0.5),
+		hexradius = hexside * hexgrid,
+		hexheight = (4 * scale + 2) * hexgrid,
+		hexwidth  = (Math.ceil(Math.sqrt(3) * scale) * 2 + 2) * hexgrid,
+
+		eyegrid = 20,
+		eyeside = 4 * scale / 2,
+		eyeinner = eyeside * eyegrid,
+		eyedelta = 1.30 * eyeside * eyegrid,
+		eyeheight = Math.ceil((eyeinner + 5 * eyedelta + eyegrid) / eyegrid) * eyegrid * 2,
+		eyewidth = Math.ceil((eyeinner + 5 * eyedelta + eyegrid) / eyegrid) * eyegrid * 2;
+
+	if (!scale) {
+		return;
+	}
+
+	prcvs0.width  = prcvs1.width  = prcvs2.width  = prcvs3.width  = hexwidth;
+	prcvs0.height = prcvs1.height = prcvs2.height = prcvs3.height = hexheight;
+	prcvs4.width  = eyewidth;
+	prcvs4.height = eyeheight;
+
+	prctx0.clearRect(0, 0, hexwidth, hexheight);
+	prctx1.clearRect(0, 0, hexwidth, hexheight);
+	prctx2.clearRect(0, 0, hexwidth, hexheight);
+	prctx3.clearRect(0, 0, hexwidth, hexheight);
+	prctx4.clearRect(0, 0, eyewidth, eyeheight);
+
+	if (!monochrome) {
+		// There is an odd visual effect at scales 5, 9, 13, ....
+		// The pairs appear too close together compared to at scales 3, 7, 11, ....
+		// It is an odd interaction between the size of the hex in comparison to the
+		// size of the grid.  This fudge factor takes care of easier.
+		if ((scale & 3) == 1) {	// i.e. scale in 5, 9, 13, ...
+			drawHex(prctx0, -30);
+			drawHex(prctx1, +30);
+			drawHex(prctx2, 75 - 30);
+			drawHex(prctx3, 75 + 30);
+		} else if (scale & 1) {
+			drawHex(prctx0, -15);
+			drawHex(prctx1, +15);
+			drawHex(prctx2, 50 - 30);
+			drawHex(prctx3, 50 + 30);
+		// At scales 4, 8, 12, ..., the rows evenly divide and there is no need to adjust
+		} else if ((scale & 3) == 0) {
+			drawHex(prctx0, 0);
+			drawHex(prctx1, 0);
+			drawHex(prctx2, 0);
+			drawHex(prctx3, 0);
+		// At scales 2, 6, 10, ..., the second rows need to shift right half a pixel
+		} else {
+			drawHex(prctx0, 0);
+			drawHex(prctx1, 0);
+			drawHex(prctx2, 50);
+			drawHex(prctx3, 50);
+		}
+	} else if (scale == 1) {
+		drawHex(prctx0, 0);
+		drawHex(prctx1, 0);
+		drawHex(prctx2, 100);
+		drawHex(prctx3, 100);
+	} else {
+		drawHex(prctx0, 0);
+		drawHex(prctx1, 0);
+		drawHex(prctx2, 0);
+		drawHex(prctx3, 0);
+	}
+	drawEye(prcvs4, prctx4);
+
+	percents(prcvs0, prctx0, glcvs0, hexgrid, monochrome ? hexPixelMono : hexPixelAnti);
+	percents(prcvs1, prctx1, glcvs1, hexgrid, monochrome ? hexPixelMono : hexPixelAnti);
+	percents(prcvs2, prctx2, glcvs2, hexgrid, monochrome ? hexPixelMono : hexPixelAnti);
+	percents(prcvs3, prctx3, glcvs3, hexgrid, monochrome ? hexPixelMono : hexPixelAnti);
+	percents(prcvs4, prctx4, glcvs4, eyegrid, monochrome ? eyePixelMono : eyePixelAnti);
+	drawGrid(prcvs0, prctx0, hexgrid);
+	drawGrid(prcvs1, prctx1, hexgrid);
+	drawGrid(prcvs2, prctx2, hexgrid);
+	drawGrid(prcvs3, prctx3, hexgrid);
+	drawGrid(prcvs4, prctx4, eyegrid);
+	drawMatrix();
+
+	document.getElementById('results').style.display = 'block';
+
+	function drawGrid(prcvs, prctx, grid) {
+		prctx.strokeStyle = 'orange';
+		let width = prcvs.width;
+		let height = prcvs.height;
+		for (let y = grid + 0.5; y < height; y += grid) {
+			prctx.beginPath();
+			prctx.moveTo(0, y);
+			prctx.lineTo(width, y);
+			prctx.stroke();
+		}
+
+		for (let x = grid + 0.5; x < width; x += grid) {
+			prctx.beginPath();
+			prctx.moveTo(x, 0);
+			prctx.lineTo(x, height);
+			prctx.stroke();
+		}
+
+	}
+	function drawEye(prcvs, prctx) {
+		let x = prcvs.width / 2;
+		let y = prcvs.height / 2;
+
+		prctx.fillStyle = '#f0f0f0';
+		prctx.beginPath();
+		prctx.arc(x, y, eyeinner, 0, 2*Math.PI, false);
+		prctx.arc(x, y, eyeinner + eyedelta, 0, 2*Math.PI, true);
+		prctx.fill();
+		prctx.beginPath();
+		prctx.arc(x, y, eyeinner + 2*eyedelta, 0, 2*Math.PI, false);
+		prctx.arc(x, y, eyeinner + 3*eyedelta, 0, 2*Math.PI, true);
+		prctx.fill();
+		prctx.beginPath();
+		prctx.arc(x, y, eyeinner + 4*eyedelta, 0, 2*Math.PI, false);
+		prctx.arc(x, y, eyeinner + 5*eyedelta, 0, 2*Math.PI, true);
+		prctx.fill();
+	}
+	// Switch sin/cos to rotate the hexagon 90 degrees
+	function drawHex(prctx, xoff) {
+		let x = hexwidth / 2 + Math.floor(xoff * hexgrid / 100);
+		let y = hexheight / 2;
+
+		prctx.beginPath();
+		prctx.moveTo(x + hexradius * Math.sin(0), y + hexradius * Math.cos(0));
+		for (let seg = 1; seg < 6; seg++) {
+		  prctx.lineTo(x + hexradius * Math.sin(seg * Math.PI / 3),
+					 y + hexradius * Math.cos(seg * Math.PI / 3));
+		}
+		prctx.closePath();
+		prctx.fillStyle = '#f0f0f0';
+		prctx.fill();
+	}
+
+	function percents(prcvs, prctx, glcvs, grid, callback) {
+		let prwidth	 = prcvs.width;
+		let prheight = prcvs.height;
+		let prdata 	 = prctx.getImageData(0, 0, prwidth, prheight).data;
+
+		let glwidth  = glcvs.width  = prwidth / grid - 2;
+		let glheight = glcvs.height = prheight / grid - 2;
+		let minX  = Infinity;
+		let minY  = Infinity;
+		let maxX  = 0;
+		let maxY  = 0;
+
+		prctx.font = '10px sans-serif'
+		prctx.fillStyle = 'orange';
+		prctx.textAlign = 'center';
+
+		let pcts = {};
+		for (let x0 = grid; x0 < prwidth ; x0 += grid) {
+			for (let y0 = grid; y0 < prheight; y0 += grid) {
+
+				let count = 0;
+				for (let y = y0; y < y0 + grid; y++) {
+					let yoff = prwidth * 4 * y;
+					for (let x = x0; x < x0 + grid; x++) {
+						if (prdata[yoff + x*4 + 3] > 8) {
+							count++;
+						}
+					}
+				}
+				let pct = Math.round(count * 100 / (grid * grid));
+				if (pct && pct < 100) {
+					prctx.fillText(pct + '%', x0 + grid / 2, y0 + grid/2);
+				}
+
+				let x = (x0 - grid) / grid;
+				let y = (y0 - grid) / grid;
+				if (pct) {
+					if (minX > x) minX = x;
+					if (minY > y) minY = y;
+					if (maxX < x) maxX = x;
+					if (maxY < y) maxY = y;
+				}
+				pcts[(x<<16)|y] = pct;
+			}
+		}
+
+		// Now render the glyph
+		let glctx = glcvs.getContext('2d');
+		glctx.clearRect(0, 0, glwidth, glheight);
+
+		let glimg = glctx.getImageData(0, 0, glwidth, glheight);
+
+		for (let y = 0; y < glheight; y++) {
+			for (let x = 0; x < glwidth; x++) {
+				callback(glimg, (y * glwidth + x) * 4, pcts[(x<<16)|y]||0);
+			}
+		}
+
+		glctx.putImageData(glimg, 0, 0);
+	}
+
+	// Sets an anti-aliased pixel in a hex glyph
+	function hexPixelAnti(glimg, off, pct) {
+		glimg.data[off++] = 0;
+		glimg.data[off++] = 0;
+		glimg.data[off++] = 0;
+		glimg.data[off++] = pct * 255 / 100;
+	}
+	// Sets a monochrome pixel in a hex glyph
+	function hexPixelMono(glimg, off, pct) {
+		glimg.data[off++] = 0;
+		glimg.data[off++] = 0;
+		glimg.data[off++] = 0;
+		glimg.data[off++] = pct >= 42 ? 255 : 0;
+	}
+	// Sets an anit-aliased pixel in the eye glyph
+	function eyePixelAnti(glimg, off, pct) {
+		glimg.data[off++] = 0;
+		glimg.data[off++] = 0;
+		glimg.data[off++] = 0;
+		glimg.data[off++] = pct * 255 / 100;
+	}
+	// Sets a monochrome pixel in the eye glyph
+	function eyePixelMono(glimg, off, pct) {
+		glimg.data[off++] = 0;
+		glimg.data[off++] = 0;
+		glimg.data[off++] = 0;
+		glimg.data[off++] = pct >= 54 ? 255 : 0; // Different from hexPixelMono()
+	}
+
+	function drawMatrix() {
+		let gldat0 = glcvs0.getContext('2d')
+						.getImageData(0, 0, glcvs0.width, glcvs0.height).data;
+		let gldat1 = glcvs1.getContext('2d')
+						.getImageData(0, 0, glcvs1.width, glcvs1.height).data;
+		let gldat2 = glcvs2.getContext('2d')
+						.getImageData(0, 0, glcvs2.width, glcvs2.height).data;
+		let gldat3 = glcvs3.getContext('2d')
+						.getImageData(0, 0, glcvs3.width, glcvs3.height).data;
+		let gldat4 = glcvs4.getContext('2d')
+						.getImageData(0, 0, glcvs4.width, glcvs4.height).data;
+
+		let dx = scale * 3.5;
+		let dy = scale * 3;
+
+		let mxcvs = document.getElementById('matrix');
+		let mxctx = mxcvs.getContext('2d');
+
+		mxcvs.width  = dx * 30
+		mxcvs.height = (33 * 3 + 1) * scale;
+
+		let mximg = mxctx.getImageData(0, 0, mxcvs.width, mxcvs.height);
+		let mxdata = mximg.data;
+
+		let map =
+		   ('010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232     2323232323232\n' +
+			'01010101010       010101010101\n' +
+			'2323232323        23232323232\n' +
+			'0101010101         10101010101\n' +
+			'232323232          3232323232\n' +
+			'010101010           0101010101\n' +
+			'232323232          3232323232\n' +
+			'0101010101         10101010101\n' +
+			'2323232323        23232323232\n' +
+			'01010101010       010101010101\n' +
+			'23232323232      323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'23232323232323232323232323232\n' +
+			'010101010101010101010101010101\n' +
+			'').split('\n');
+
+		let y0 = 0;
+		for (let i = 0; i < map.length; i++, y0 += dy) {
+			let row = map[i];
+			let x0 = (i & 1) ? Math.floor(dx / 2) : 0;
+			//let x0 = (i & 1) ? 2*scale : 0;
+			for (let j = 0; j < row.length; j++, x0 += dx) {
+				if (row[j] == '0') {
+					putImage(x0, y0, glcvs0, gldat0);
+				} else if (row[j] == '1') {
+					putImage(x0, y0, glcvs1, gldat1);
+				} else if (row[j] == '2') {
+					putImage(x0, y0, glcvs2, gldat2);
+				} else if (row[j] == '3') {
+					putImage(x0, y0, glcvs3, gldat3);
+				}
+			}
+		}
+		putImage(10 * dx, 22 * dy - glcvs4.height - ~~(scale/2), glcvs4, gldat4);
+
+		mxctx.putImageData(mximg, 0, 0);
+
+		function putImage(x0, y0, glcvs, gldata) {
+			x0 = x0|0;
+			y0 = y0|0;
+			for (let y = 0; y < glcvs.height; y++) {
+				let proff = y * glcvs.width * 4;
+				let mxoff = ((y0 + y) * mxcvs.width + x0) * 4;
+				for (let x = 0; x < glcvs.width; x++) {
+					if (gldata[proff+3]) {
+						mxdata[mxoff++] = gldata[proff++];
+						mxdata[mxoff++] = gldata[proff++];
+						mxdata[mxoff++] = gldata[proff++];
+						mxdata[mxoff++] = gldata[proff++];
+					} else {
+						mxoff += 4;
+						proff += 4;
+					}
+				}
+			}
+		}
+	}
+} // end render()
+
+function genproof(ev) {
+	let	scale  = getscale(),
+		mono   = document.getElementById('mono-chrome').checked,
+		glyphs = [],
+		gldata = [],
+		width  = 0,
+		height = 0;
+
+	for (let i = 0; i <= 4; i++) {
+		let cvs = document.getElementById('glyph' + i);
+		glyphs.push(cvs);
+		gldata.push(cvs.getContext('2d').getImageData(0, 0, cvs.width, cvs.height).data);
+		width += cvs.width;
+		if (height < cvs.height) {
+			height = cvs.height;
+		}
+	}
+	let cvs = document.createElement('canvas');
+	cvs.width  = width;
+	cvs.height = height;
+
+	let ctx = cvs.getContext('2d');
+	ctx.fillStyle = '#fff';
+	ctx.fillRect(0, 0, width, height);
+
+	let image = ctx.getImageData(0, 0, width, height);
+	let idata = image.data;
+
+	let x0 = 0;
+	for (let i = 0; i < glyphs.length; i++) {
+		let glyph = glyphs[i];
+		let data  = gldata[i];
+		let glwidth  = glyph.width;
+		let glheight = glyph.height;
+		let alphaoff = 3;	// alpha offset
+		let y0 = height - glheight;
+		for (let y = 0; y < glheight; y++) {
+			let offs = ((y0 + y) * width + x0) * 4;
+			for (let x = 0; x < glwidth; x++, offs++) {
+				let a = data[alphaoff];
+				idata[offs++] = 255 - a;
+				idata[offs++] = 255 - a;
+				idata[offs++] = 255 - a;
+				alphaoff += 4;
+			}
+		}
+		x0 += glwidth;
+	}
+
+	ctx.putImageData(image, 0, 0);
+
+	let elt = ev.target;
+	elt.download = 'fnt2' + (mono ? 'm-' : 'a-') + (scale * 10) + '.png';
+	elt.href = cvs.toDataURL();
+}
+function genbinary(ev) {
+	let	scale  = getscale(),
+		mono   = document.getElementById('mono-chrome').checked,
+		base64 = genfont();
+
+	let elt = ev.target;
+	elt.download = 'fnt2' + (mono ? 'm-' : 'a-') + (scale * 10) + '.bin';
+	elt.href = 'data:application/octet-stream;base64,' + base64;
+}
+function genscript(ev) {
+	let	scale  = getscale(),
+		mono   = document.getElementById('mono-chrome').checked,
+		base64 = genfont();
+
+	let elt = ev.target;
+	elt.download = 'fnt2' + (mono ? 'm-' : 'a-') + (scale * 10) + '.js_';
+	elt.href = 'data:application/octet-stream;base64,' + btoa(
+	        '// ' + elt.download.replace(/\.js_/, '.js') + '\n' +
+			'bwipjs_fonts.fontsets[2].' + (mono ? 'mono' : 'anti') +
+			'[' + (scale * 10) + ']={b64:"' + base64 + '"};\n'
+		);
+}
+function genmetrics(ev) {
+	let	scale  = getscale(),
+		mono   = document.getElementById('mono-chrome').checked;
+
+	let metrics = [];
+	for (let i = 0; i <= 4; i++) {
+		let cvs = document.getElementById('glyph' + i);
+		let data = cvs.getContext('2d').getImageData(0, 0, cvs.width, cvs.height).data;
+		let rect = getrect(data, cvs.width, cvs.height);
+
+		metrics.push(cvs.width);	// advance
+		metrics.push(cvs.height);	// top;
+		metrics.push(rect.left);
+		metrics.push(rect.width);
+		metrics.push(rect.height);
+	}
+
+	let elt = ev.target;
+	elt.download = 'fnt2' + (mono ? 'm-' : 'a-') + (scale * 10) + '.js_';
+	elt.href = 'data:application/octet-stream;base64,' + btoa(
+			'' + (mono ? 'm' : 'a') + (scale * 10) + ':[' + metrics.join(',') + '],\n'
+		);
+}
+function genfont() {
+	let glyphs = [],
+		gldata = [],
+		width  = 0,
+		height = 0;
+
+	let bytes = 0;
+	for (let i = 0; i <= 4; i++) {
+		let cvs = document.getElementById('glyph' + i);
+		let data = cvs.getContext('2d').getImageData(0, 0, cvs.width, cvs.height).data;
+		let rect = getrect(data, cvs.width, cvs.height);
+		rect.glwidth  = cvs.width;
+		rect.glheight = cvs.height;
+
+		bytes += 4 + 	 // directory entry
+				 5 * 2 + // font metrics
+				 rect.width * rect.height;
+
+		glyphs.push(rect);
+		gldata.push(data);
+	}
+
+	let uint8 = new Uint8Array(bytes);
+	let view  = new DataView(uint8.buffer);
+	let offs  = glyphs.length * 4;	// offset to first glyph data
+
+	for (let i = 0; i < glyphs.length; i++) {
+		let rect = glyphs[i];
+		let data = gldata[i];
+		view.setUint32(i * 4, offs, true);
+		view.setUint16(offs, rect.glwidth, true);
+		offs += 2;
+		view.setUint16(offs, rect.glheight - rect.top, true);
+		offs += 2;
+		view.setUint16(offs, rect.left, true);
+		offs += 2;
+		view.setUint16(offs, rect.width, true);
+		offs += 2;
+		view.setUint16(offs, rect.height, true);
+		offs += 2;
+		for (let y = rect.top; y <= rect.bottom; y++) {
+			let alphaoff = (y * rect.glwidth + rect.left) * 4 + 3;
+			var hex = '';
+			for (let x = rect.left; x <= rect.right; x++) {
+				uint8[offs++] = data[alphaoff];
+				hex += (data[alphaoff] < 16 ? '0' : '') + data[alphaoff].toString(16);
+				alphaoff += 4;
+			}
+		}
+	}
+	return btoa(uint8.reduce((data, byte) => data + String.fromCharCode(byte), ''));
+}
+function getrect(data, width, height) {
+	let rect = {};
+
+	// Top padding
+	outer: for (let y = 0; y < height; y++) {
+		let offs = y * width * 4 + 3;
+		for (let x = 0; x < width; x++) {
+			if (data[offs]) {
+				rect.top = y;
+				break outer;
+			}
+			offs += 4;
+		}
+	}
+
+	// Bottom padding
+	outer: for (let y = height-1; y > 0 ; y--) {
+		let offs = y * width * 4 + 3;
+		for (let x = 0; x < width; x++) {
+			if (data[offs]) {
+				rect.bottom = y;
+				break outer;
+			}
+			offs += 4;
+		}
+	}
+
+	// Left padding
+	outer: for (let x = 0; x < width; x++) {
+		let offs = x * 4 + 3;
+		for (let y = 0; y < height; y++) {
+			if (data[offs]) {
+				rect.left = x;
+				break outer;
+			}
+			offs += width * 4;
+		}
+	}
+
+	// Right padding
+	outer: for (let x = width-1; x > 0; x--) {
+		let offs = x * 4 + 3;
+		for (let y = 0; y < height; y++) {
+			if (data[offs]) {
+				rect.right = x;
+				break outer;
+			}
+			offs += width * 4;
+		}
+	}
+
+	rect.width  = rect.right - rect.left + 1;
+	rect.height = rect.bottom - rect.top + 1;
+	return rect;
+}
+</script>
+</body>
+</html>

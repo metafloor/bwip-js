@@ -1,0 +1,9 @@
+    }
+  };
+  if (typeof bwipjs_fonts == "object") {
+    bwipjs_fonts.fontsets[2] = desc;
+    bwipjs_fonts.names.SYMBOL = 2;
+  } else {
+    module.exports = desc;
+  }
+})();

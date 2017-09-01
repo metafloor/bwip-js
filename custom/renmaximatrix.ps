@@ -29,30 +29,37 @@
 
     currentpoint translate
 
-    2.4945 dup scale  % from 1pt to 1.88mm
+    %% 2.4945 dup scale  % from 1pt to 1.88mm
+    %%3.3326 dup scale  % from 1pt to 1.88mm and convert to 100dpi
 
     0 0 moveto 30 0 lineto 30 29 lineto 0 29 lineto closepath
     %backgroundcolor (unset) ne { gsave backgroundcolor setcolor fill grestore } if 
     barcolor (unset) ne { barcolor setcolor } if
 
-    0.5 0.5774 translate
+    %%0.5 0.5774 translate
 
-	(OCRB) findfont 2.8 scalefont setfont
+	%% Font is fixed at 10pt
+	%%(Symbol) findfont 3.01 scalefont setfont	%% 10pt / 2.4945
+	(Symbol) findfont 10 scalefont setfont
 
+	/chars [ (0) (1) (2) (3) ] def
     newpath
     pixs {
         dup 
         /x exch 30 mod def 
         /y exch 30 idiv def
-        y 2 mod 0 eq {x} {x 0.5 add} ifelse
-        32 y sub 0.8661 mul
-        moveto
-		<ae> show
+		chars
+		   y 2 mod 0 eq {0} {2} ifelse
+		   x 2 mod 0 eq {0} {1} ifelse
+		   add get
+		x 3.5 mul y 2 mod 1 eq {1.75 add} if
+        32 y sub 3 mul
+        moveto show
     } forall
 
     % Plot the locator symbol
-	(OCRB) findfont 2.85 scalefont setfont
-    14 13.8576 moveto <a9> show
+	(Symbol) findfont 10 scalefont setfont
+    36 36 moveto (4) show
 
     grestore
     end

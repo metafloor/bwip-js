@@ -72,7 +72,7 @@
 ##   than Courier at the same point-size).
 ##
 sed -e 's,/\(is..textfont\) /Courier,/\1 /OCR-A,' \
-    -e 's,/\(is..textsize\) 9,/\1 8.5,' \
+	-e 's,/\(is..textsize\) 9,/\1 8,' \
 	-e 's,/textyoffset -7,/textyoffset -8.5,' \
 	-e 's,/textyoffset -4,/textyoffset -4.5,' \
 	-e '/^    parse {\s*$/,/^    } if\s*$/s/^/%psc /'\
@@ -105,12 +105,22 @@ if [ ! -f barcode.js ] ; then
 fi
 
 ##
+## Get the BWIPP version (date)
+##
+BWIPP_VERSION=$(grep '% Barcode Writer in Pure PostScript - Version' barcode.ps | sed -e 's/.*Version\s*//')
+if [ "x$BWIPP_VERSION" = x ] ; then
+	echo "Unable to find the version string in barcode.ps" 1>&2
+	exit 1
+fi
+
+##
 ## Build the raw (unformatted, unminified) version of bwipp.js.
 ##
 cat <<@EOF > bwipp-raw.js
 function BWIPP() {
 $(cat barcode-hdr.js barcode.js barcode-ftr.js)
 }
+BWIPP.VERSION = '$BWIPP_VERSION';
 if (typeof module === 'object' && module.exports) {
 	module.exports = BWIPP;
 }
