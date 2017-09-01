@@ -5,56 +5,18 @@
 <meta name="keywords" content="bar code, barcode generator, online barcode generator, free barcode generator, javascript, javascript library, nodejs, QR Code, EAN, EAN 13, Code 128, UPC, ISBN, ITF 14, Code 39, GS1, GS1 128, PDF417, HIBC, DataMatrix, Data Matrix, DataBar, OCR, OCR B, OCR font, Aztec Code, PostNet, USPS, Pharmacode" />
 <meta name="description" content="JavaScript barcode generator and library.  Create any barcode in your browser." />
 <!--
-	Copyright (c) 2011-2016 Mark Warren.
+	Copyright (c) 2011-2017 Mark Warren.
 
 	See the LICENSE file in the bwip-js root directory
 	for the extended copyright notice.
 -->
 <link rel="stylesheet" type="text/css" href="lib/demo.css">
 <link rel="stylesheet" type="text/css" href="lib/jquery-ui.min.css">
-<script type="text/javascript" src="lib/jquery.js"></script>
-<script type="text/javascript" src="lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="lib/fonts.js"></script>
-<script type="text/javascript" src="lib/filedrop-min.js"></script>
-<script type="text/javascript">
-var Module = {
-	// memoryInitializerPrefixURL:'your-path-here/',
-	preRun:[ function() {
-			Module.FS_createPreloadedFile("/", "Inconsolata.otf",
-										 "fonts/Inconsolata.otf", true, false);
-	} ],
-	postRun:[ function() {
-			var load_font = Module.cwrap("load_font", 'number',
-										['string','string','number']);
-			load_font("Inconsolata.otf", "INCONSOLATA", 108);
-
-			// Load any previously saved fonts
-			for (var i = 0; i < 8; i++) {
-				if (!localStorage.getItem('bwipjsFontName' + i))
-					continue;
-
-				var fontname = localStorage.getItem('bwipjsFontName' + i);
-				var filename = localStorage.getItem('bwipjsFileName' + i);
-				var sizemult = localStorage.getItem('bwipjsSizeMult' + i);
-				var fontfile = atob(localStorage.getItem('bwipjsFontFile' + i));
-				try {
-					fontLoad(fontname, filename, sizemult, fontfile);
-					fontShow(fontname, filename, sizemult);
-				} catch (e) {
-					alert('Error: ' + fontname + ': ' + filename + ': ' + e);
-
-					localStorage.removeItem('bwipjsFontName' + i);
-					localStorage.removeItem('bwipjsFileName' + i);
-					localStorage.removeItem('bwipjsSizeMult' + i);
-					localStorage.removeItem('bwipjsFontFile' + i);
-				}
-			}
-	} ]
-};
-</script>
-<script type="text/javascript" src="freetype.js"></script>
 <script type="text/javascript" src="bwipp.js"></script>
 <script type="text/javascript" src="bwipjs.js"></script>
+<script type="text/javascript" src="lib/jquery.js"></script>
+<script type="text/javascript" src="lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="lib/xhr-fonts.js"></script>
 <script type="text/javascript" src="lib/bitmap.js"></script>
 <script type="text/javascript" src="lib/symdesc.js"></script>
 <script type="text/javascript" src="lib/canvas-toblob.js"></script>
@@ -117,8 +79,6 @@ $(document).ready(function() {
 		});
 	$('#scaleY').spinner({ min:1 });
 	$('#render').button().click(render);
-	$('#fonthdr').click(fontClick);
-	$('#addfont').button().click(fontRead);
 	$('.saveas').css('visibility', 'hidden');
 
 	if (location.search.indexOf('proofs=1') != -1) { 
@@ -132,17 +92,6 @@ $(document).ready(function() {
 		$('#proof').append(img);
 	}
 
-	// File picker
-	var zone = new FileDrop('dropzone');
-	zone.event('send', function (files) {
-		var file = files.first();
-		$('#dropzone div.droptext').css('display', 'none');
-		$('#dropzone div.dropfile').css('display', 'block').text(file.name);
-		$('#dropzone input.fd-file')[0].title = file.name;
-
-		fontSelected(file.nativeFile);		// Native browser File object
-	});
-
 	// Allow Enter to render
 	$('#params').keypress(function(ev) {
 		if (ev.which == 13) {
@@ -152,6 +101,8 @@ $(document).ready(function() {
 			return false;
 		}
 	});
+
+	document.getElementById('versions').textContent = `bwip-js ${BWIPJS.VERSION} / BWIPP ${BWIPP.VERSION}`;
 });
 
 function render() {
@@ -175,8 +126,7 @@ function render() {
 	localStorage.setItem('bwipjsLastFontMono', monochrome ? 1 : 0);
 	localStorage.setItem('bwipjsLastRotation', rot);
 
-	// Link in the freetype module and how to render fonts.
-	var bw = new BWIPJS(Module, monochrome);
+	var bw = new BWIPJS(bwipjs_fonts, monochrome);
 
 	// Clear the page
 	$('#output').text('');
@@ -187,6 +137,7 @@ function render() {
 	var canvas = document.getElementById('canvas');
 	canvas.height = 1;
 	canvas.width  = 1;
+	canvas.style.visibility = 'hidden';
 
 	// Convert the options to a dictionary object, so we can pass alttext with
 	// spaces.
@@ -221,10 +172,10 @@ function render() {
 	// BWIPP does not extend the background color into the
 	// human readable text.  Fix that in the bitmap interface.
 	if (opts.backgroundcolor) {
-		bw.bitmap(new Bitmap(opts.backgroundcolor));
+		bw.bitmap(new Bitmap(canvas, rot, opts.backgroundcolor));
 		delete opts.backgroundcolor;
 	} else {
-		bw.bitmap(new Bitmap);
+		bw.bitmap(new Bitmap(canvas, rot));
 	}
 	
 	// Set the scaling factors
@@ -235,11 +186,20 @@ function render() {
 					+opts.paddingheight*scaleY || 0);
 
 	var ts0 = Date.now();
-
-	// Render the bar code
 	try {
-		// Create a new BWIPP instance for each
+		// Call into the BWIPP cross-compiled code.
 		BWIPP()(bw, elt.sym, text, opts);
+
+		// Allow the font manager to demand-load any required fonts
+		// before calling render().
+		var ts1 = Date.now();
+		bwipjs_fonts.loadfonts(function(e) {
+			if (e) {
+				$('#output').text(e.stack || (''+e));
+			} else {
+				show();
+			}
+		});
 	} catch (e) {
 		// Watch for BWIPP generated raiseerror's.
 		var msg = ''+e;
@@ -253,27 +213,29 @@ function render() {
 		return;
 	}
 
-	var ts1 = Date.now();
+	// Draw the barcode to the canvas
+	function show() {
+		bw.render();
+		var ts2 = Date.now();
 
-	bw.bitmap().show(canvas, rot);
+		canvas.style.visibility = 'visible';
+		setURL();
+		$('#stats').text('Rendered in ' + (ts2-ts0) + ' msecs');
+		$('.saveas').css('visibility', 'visible');
+		saveCanvas.basename = elt.sym + '-' +
+				text.replace(/[^a-zA-Z0-9._]+/g, '-');
 
-	var ts2 = Date.now();
-
-	setURL();
-	$('#stats').text('Rendered in ' + (ts2-ts0) + ' msecs');
-	$('.saveas').css('visibility', 'visible');
-	saveCanvas.basename = elt.sym + '-' +
-			text.replace(/[^a-zA-Z0-9._]+/g, '-');
-
-	// Show proofs?
-	if (location.search.indexOf('proofs=1') != -1) { 
-		var img = document.getElementById('proof-img');
-		if (img) {
-			img.src = 'proofs/' + elt.sym + '.png';
-			img.style.visibility = 'visible';
+		// Show proofs?
+		if (location.search.indexOf('proofs=1') != -1) { 
+			var img = document.getElementById('proof-img');
+			if (img) {
+				img.src = 'proofs/' + elt.sym + '.png';
+				img.style.visibility = 'visible';
+			}
 		}
 	}
 }
+
 function saveCanvas(type, ext) {
 	var canvas = document.getElementById('canvas');
 	canvas.toBlob(function (blob) {
@@ -302,27 +264,7 @@ function setURL() {
 </head><body>
 <div id="header">
 	<div id="bwipjs">bwip-js // Barcode Writer in Pure JavaScript</div>
-	<div id="version">bwip-js 1.4.2 (2017-07-13) / BWIPP 2017-06-09</div>
-	<div id="fonthdr">&#x25bc; Fonts</div>
-	<div id="fontdiv" style="visibility:hidden">
-		<div class="inner">
-			PostScript Name of Font:<br>
-			<input type="text" id="fontname" style="width:32ex"><br>
-			<br>
-			Font Size Multiplier (100 = 100%):<br>
-			<input type="text" id="fontmult" style="width:6ex" value="100"><br>
-			<br>
-			<div id="dropzone">
-				<div class="content">
-					<div class="droptext">Drop file here or click to select.</div>
-					<div class="dropfile" style="display:none"></div>
-				</div>
-			</div>
-			<br>
-			<button id="addfont">Add Font</button><br>
-			<div id="fontlist" class="empty"></div>
-		</div>
-	</div>
+	<div id="versions"></div>
 </div>
 <div id="params">
 <table border=0 cellpading=0 cellspacing=0><tr>

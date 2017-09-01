@@ -7,7 +7,7 @@
 //
 // 		http://metafloor.github.io/bwip-js
 //
-// Copyright (c) 2011-2016 Mark Warren
+// Copyright (c) 2011-2017 Mark Warren
 //
 // The MIT License
 //
@@ -28,19 +28,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+"use strict";
 
 var zlib = require('zlib');
 
-// We maintain a static buffer of pixel data to eliminate creating lots of GC items.
-//
-// Each pixel requires 3 entries : x,y coordinates plus a color index.
-// MAX_PIXELS is not the maximum number of pixels in the image, just the maximum
-// pixels we "set".   It puts a hard limit on maximum image size.
-var MAX_PIXELS = 4 * 1024 * 1024;
-var _pixels = [];
-
 // Math.floor() is notoriously slow.  Caching it seems to help.
 var floor = Math.floor;
+
+var PNGTYPE_PALETTE = 3;
+var PNGTYPE_TRUEALPHA = 6;
 
 // Statically calculate the crc lookup table
 var crcCalc = [];
@@ -58,33 +54,27 @@ var crcCalc = [];
 	}
 })();
 
-// bgcolor is optional.
-module.exports = function (rot, bgcolor) {
+module.exports = function(rot, bgcolor, opts) {
+	opts = opts || {};
+
 	var _text = "Software\0bwip-js.metafloor.com";
 	var _imgw, _imgh;		// image width/height, excluding padding
-	var _minx = Infinity, _miny = Infinity,
-		_maxx = 0, _maxy = 0,
-		_padx = 0, _pady = 0,
-		_clrr = 0, _clrg = 0, _clrb = 0,
-		_npix = 0;
-	var _clrmap 	= { 0:0 };	// Index-0 is always the background color (black, fully trans)
-	var _palette	= [ 0 ];	// Color palette
-	var _trans		= true;		// Has transparency?
+	var _imgbuf, _imgrow;	// Image data and row length
+	var _pngtype;
+	var _padx = 0, _pady = 0,
+		_clrr = 0, _clrg = 0, _clrb = 0;
+	var _clrmap 	= {};		// ARGB to index mapping
+	var _palette	= [];		// Color palette
+	var _trans = false;			// Alpha colors
 
 	// Background color does not support alpha-channel (the alpha compositing
-	// algorithm we use cannot support it...)
+	// algorithm used cannot support it...)
 	if (typeof bgcolor === 'string') {
 		bgcolor = (0xff000000 | parseInt(bgcolor, 16)) >>> 0;
-	} else if (bgcolor !== undefined) {
+	} else if (bgcolor != null) {
 		bgcolor = (0xff000000 | bgcolor) >>> 0;
 	} else {
 		bgcolor = 0;	// black, fully transparent
-	}
-	if (bgcolor) {
-		_palette = [ bgcolor ];
-		_clrmap  = {};
-		_clrmap[bgcolor] = 0;
-		_trans = (bgcolor >>> 24) < 255;
 	}
 
 	var _baka = (bgcolor >>> 24) & 0xff;	// 0 or 255 for the bg alpha
@@ -96,8 +86,49 @@ module.exports = function (rot, bgcolor) {
 
 	// Optional padding.  Rotates with the image.
 	this.pad = function(width, height) {
-		_padx = width|0;
-		_pady = height|0;
+		if (rot == 'R' || rot == 'L') {
+			_pady = width|0;
+			_padx = height|0;
+		} else {
+			_padx = width|0;
+			_pady = height|0;
+		}
+	}
+
+	// ncolors is an estimate and will often exceed the actual number of colors but is
+	// designed to accurately indicate whether we can use a paletted PNG format or not.
+	this.imageinfo = function(width, height, ncolors) {
+		if (opts.sizelimit && opts.sizelimit < width * height) {
+			throw new Error("bwipjs: exceeded maximum image size");
+		}
+
+		if (rot == 'R' || rot == 'L') {
+			_imgh = width;
+			_imgw = height;
+		} else {
+			_imgw = width;
+			_imgh = height;
+		}
+
+		if (ncolors <= 256) {
+			// Palette Color
+			_imgrow  = _imgw + 2*_padx + 1;
+			_imgbuf  = Buffer.alloc(_imgrow * (_imgh + 2*_pady));
+			_pngtype = PNGTYPE_PALETTE;
+
+			_palette = [ bgcolor ];
+			_clrmap[bgcolor] = 0;
+			_trans = (bgcolor >>> 24) < 255;
+
+			this.set = setPalette;
+		} else {
+			// TrueColor with Alpha
+			_imgrow  = (_imgw + 2*_padx) * 4 + 1;
+			_imgbuf  = Buffer.alloc(_imgrow * (_imgh + 2*_pady));
+			_pngtype = PNGTYPE_TRUEALPHA;
+
+			this.set = setTrueAlpha
+		}
 	}
 	
 	this.color = function(r, g, b) {
@@ -109,23 +140,9 @@ module.exports = function (rot, bgcolor) {
 	// Set a pixel to the ARGB color.  Coordinates are in PostScript convention,
 	// with 0,0 at the bottom-left of the page. 
 	this.set = function(x, y, a) {
-		x = floor(x)|0;
-		y = floor(y)|0;
-		a = a|1;
-
-		if (x > 4095 || y > 4095 || x < -4095 || y < -4095 || _npix >= MAX_PIXELS) {
-			throw new Error("bwipjs: exceeded maximum image size");
-		}
-		if (x > _maxx) {
-			_maxx = x;
-		} else if (x < _minx) {
-			_minx = x;
-		}
-		if (y > _maxy) {
-			_maxy = y;
-		} else if (y < _miny) {
-			_miny = y;
-		}
+		x = x|0;
+		y = y|0;
+		a = a|0;
 
 		// Alpha-blend with the background color
 		var na = a / 255;
@@ -134,59 +151,133 @@ module.exports = function (rot, bgcolor) {
 		var newr = (_clrr * na + _bakr * ia)|0;
 		var newg = (_clrg * na + _bakg * ia)|0;
 		var newb = (_clrb * na + _bakb * ia)|0;
-		var	argb = ((newa<<24) | (newr<<16) | (newg<<8) | newb)>>>0;
 
-		if (_clrmap[argb] === undefined) {
-			_clrmap[argb] = _palette.length;
-			_palette.push(argb);
-			_trans = _trans || (argb >>> 24) < 255;
+		// Convert from bottom-up coordinates and add in the rotate transform.
+		if (rot == 'N') {
+			y = _imgh - y - 1;  // Invert y
+		} else if (rot == 'I') {
+			x = _imgw - x - 1;  // Invert x
+		} else {
+			y = _imgw - y;      // Invert y
+			if (rot == 'L') {
+				var t = y;
+				y = _imgh - x - 1;
+				x = t - 1;
+			} else {
+				var t = x;
+				x = _imgw - y;
+				y = t;
+			}
 		}
 
-		// Do not change the arithmetic in this expression without benchmarking.
-		// For example, changing the multiply by 0x10000 to a bitshift added 50%
-		// to the entire cost of the function!
-		//
-		// The color-index is in the upper most bits of the value so it can be
-		// expanded to 16 bits, if needed.
-		_pixels[_npix++] = (x + 4096) + (y + 4096) * 0x10000 + _clrmap[argb] * 0x100000000;
+		if (_pngtype == PNGTYPE_PALETTE) {
+			// Palette Color
+			var	argb = ((newa<<24) | (newr<<16) | (newg<<8) | newb)>>>0;
+			if (_clrmap[argb] == null) {
+				_clrmap[argb] = _palette.length;
+				_palette.push(argb);
+				_trans = _trans || newa < 255;
+			}
+			_imgbuf[_imgrow * (y + _pady) + 1 + _padx + x] = _clrmap[argb];
+		} else {
+			// TrueColor with Alpha
+			var pos = _imgrow * (y + _pady) + 1 + (_padx + x) * 4;
+			_imgbuf[pos+0] = newr;
+			_imgbuf[pos+1] = newg;
+			_imgbuf[pos+2] = newb;
+			_imgbuf[pos+3] = newa;
+		}
+	}
+
+	// Set a pixel to the ARGB color.  Coordinates are in PostScript convention,
+	// with 0,0 at the bottom-left of the page. 
+	function setPalette(x, y, a) {
+		x = x|0;
+		y = y|0;
+		a = a|0;
+
+		// Alpha-blend with the background color
+		var na = a / 255;
+		var ia = 1 - na;
+		var newa = _baka || a;
+		var newr = (_clrr * na + _bakr * ia)|0;
+		var newg = (_clrg * na + _bakg * ia)|0;
+		var newb = (_clrb * na + _bakb * ia)|0;
+
+		// Convert from bottom-up coordinates and add in the rotate transform.
+		if (rot == 'N') {
+			y = _imgh - y - 1;  // Invert y
+		} else if (rot == 'I') {
+			x = _imgw - x - 1;  // Invert x
+		} else {
+			y = _imgw - y;      // Invert y
+			if (rot == 'L') {
+				var t = y;
+				y = _imgh - x - 1;
+				x = t - 1;
+			} else {
+				var t = x;
+				x = _imgw - y;
+				y = t;
+			}
+		}
+
+		// Palette Color
+		var	argb = ((newa<<24) | (newr<<16) | (newg<<8) | newb)>>>0;
+		if (_clrmap[argb] == null) {
+			_clrmap[argb] = _palette.length;
+			_palette.push(argb);
+			_trans = _trans || newa < 255;
+		}
+		_imgbuf[_imgrow * (y + _pady) + 1 + _padx + x] = _clrmap[argb];
+	}
+
+	// Set a pixel to the ARGB color.  Coordinates are in PostScript convention,
+	// with 0,0 at the bottom-left of the page. 
+	function setTrueAlpha(x, y, a) {
+		x = x|0;
+		y = y|0;
+		a = a|0;
+
+		// Alpha-blend with the background color
+		var na = a / 255;
+		var ia = 1 - na;
+		var newa = _baka || a;
+		var newr = (_clrr * na + _bakr * ia)|0;
+		var newg = (_clrg * na + _bakg * ia)|0;
+		var newb = (_clrb * na + _bakb * ia)|0;
+
+		// Convert from bottom-up coordinates and add in the rotate transform.
+		if (rot == 'N') {
+			y = _imgh - y - 1;  // Invert y
+		} else if (rot == 'I') {
+			x = _imgw - x - 1;  // Invert x
+		} else {
+			y = _imgw - y;      // Invert y
+			if (rot == 'L') {
+				var t = y;
+				y = _imgh - x - 1;
+				x = t - 1;
+			} else {
+				var t = x;
+				x = _imgw - y;
+				y = t;
+			}
+		}
+
+		// TrueColor with Alpha
+		var pos = _imgrow * (y + _pady) + 1 + (_padx + x) * 4;
+		_imgbuf[pos+0] = newr;
+		_imgbuf[pos+1] = newg;
+		_imgbuf[pos+2] = newb;
+		_imgbuf[pos+3] = newa;
 	}
 
 	// Return a PNG in a Buffer
 	// callback(err, png)
-	this.render = function(callback) {
-		if (_minx == Infinity || _miny == Infinity) {
-			_minx = _miny = 0;
-		}
-		var ts0 = Date.now();
-
-		// Determine image width and height
-		if (rot == 'R' || rot == 'L') {
-			_imgh = _maxx-_minx+1;
-			_imgw = _maxy-_miny+1;
-			// Swap padding values
-			var t = _pady;
-			_pady = _padx;
-			_padx = t;
-		} else {
-			_imgw = _maxx-_minx+1;
-			_imgh = _maxy-_miny+1;
-		}
-
-		// DEFLATE the image data based on color depth
-		var image;
-		var pngtype;
-		if (_palette.length <= 256) {
-			image = toPalette();
-			pngtype = 3;
-		} else if (_trans) {
-			image = toTrueAlpha();
-			pngtype = 6;
-		} else {
-			image = toTrueColor();
-			pngtype = 2;
-		}
-		var ts1 = Date.now();
-
+	this.finalize = function(callback) {
+		// DEFLATE the image data
+		var ts1  = Date.now();
 		var bufs = [];
 		var buflen = 0;
 		var deflator = zlib.createDeflate({
@@ -196,7 +287,7 @@ module.exports = function (rot, bgcolor) {
 		deflator.on('error', callback);
 		deflator.on('data', function(data) { bufs.push(data); buflen += data.length; });
 		deflator.on('end', returnPNG);
-		deflator.end(image);
+		deflator.end(_imgbuf);
 
 		function returnPNG() {
 			var ts2 = Date.now();
@@ -204,7 +295,11 @@ module.exports = function (rot, bgcolor) {
 						 12 + _text.length +	// tEXt
 						 12 + buflen +			// IDAT
 						 12;					// IEND
-			if (_palette.length <= 256) {
+			if (_pngtype == PNGTYPE_PALETTE) {
+				// Should never happen...
+				if (_palette.length > 256) {
+					return callback(new Error('INTERNAL ERROR - PALETTE EXCEEDS 256'));
+				}
 				length += 12 + 3*_palette.length;	// PLTE
 				if (_trans) {
 					length += 12 + _palette.length;	// tRNS		
@@ -218,7 +313,7 @@ module.exports = function (rot, bgcolor) {
 			write('\x89PNG\x0d\x0a\x1a\x0a'); // PNG file header
 			writeIHDR();
 			writeTEXT();
-			if (_palette.length <= 256) {
+			if (_pngtype == PNGTYPE_PALETTE) {
 				writePLTE();
 				if (_trans) {
 					writeTRNS();
@@ -244,7 +339,7 @@ module.exports = function (rot, bgcolor) {
 				write32(_imgw + 2*_padx);
 				write32(_imgh + 2*_pady);
 				write8(8);		// bit depth
-				write8(pngtype);
+				write8(_pngtype);
 				write8(0);		// compression default
 				write8(0);		// filter default
 				write8(0);		// no interlace
@@ -324,101 +419,5 @@ module.exports = function (rot, bgcolor) {
 				write32((crc ^ -1) >>> 0);	// >>> 0 casts to Uint32
 			}
 		}
-	}
-	function toPalette() {
-		// One extra byte per row for the filter type
-		var row = _imgw + 2*_padx + 1;
-		var buf = Buffer.alloc(row * (_imgh + 2*_pady));
-		for (var i = 0, l = _npix; i < l; i++) {
-			var m = _pixels[i];
-			var x = (m & 0xffff) - 4096 - _minx;
-			var y = (m >>> 16) - 4096 - _miny;
-			var c = (m / 0x100000000)|0;
-			if (rot == 'N') {
-				y = _imgh - y - 1;  // Invert y
-			} else if (rot == 'I') {
-				x = _imgw - x - 1;  // Invert x
-			} else {
-				y = _imgw - y;      // Invert y
-				if (rot == 'L') {
-					var t = y;
-					y = _imgh - x - 1;
-					x = t - 1;
-				} else {
-					var t = x;
-					x = _imgw - y;
-					y = t;
-				}
-			}
-			buf[row * (y + _pady) + 1 + _padx + x] = c;
-		}
-		return buf;
-	}
-	// Convert the image data to TrueColor
-	function toTrueColor() {
-		// One extra byte per row for the filter type
-		var row = (_imgw + 2*_padx) * 3 + 1;
-		var buf = Buffer.alloc(row * (_imgh + 2*_pady));
-		for (var i = 0, l = _npix; i < l; i++) {
-			var m = _pixels[i];
-			var x = (m & 0xffff) - 4096 - _minx;
-			var y = (m >>> 16) - 4096 - _miny;
-			var c = _palette[(m / 0x100000000)|0];
-			if (rot == 'N') {
-				y = _imgh - y - 1;  // Invert y
-			} else if (rot == 'I') {
-				x = _imgw - x - 1;  // Invert x
-			} else {
-				y = _imgw - y;      // Invert y
-				if (rot == 'L') {
-					var t = y;
-					y = _imgh - x - 1;
-					x = t - 1;
-				} else {
-					var t = x;
-					x = _imgw - y;
-					y = t;
-				}
-			}
-			var pos = row * (y + _pady) + 1 + (_padx + x) * 3;
-			buf[pos+0] = c >>> 16;		// red
-			buf[pos+1] = c >>>  8;		// green
-			buf[pos+2] = c;				// blue
-		}
-		return buf;
-	}
-	// Convert the image data to TrueColor with alpha
-	function toTrueAlpha() {
-		// One extra byte per row for the filter type
-		var row = (_imgw + 2*_padx) * 4 + 1;
-		var buf = Buffer.alloc(row * (_imgh + 2*_pady));
-		for (var i = 0, l = _npix; i < l; i++) {
-			var m = _pixels[i];
-			var x = (m & 0xffff) - 4096 - _minx;
-			var y = (m >>> 16) - 4096 - _miny;
-			var c = _palette[(m / 0x100000000)|0];
-			if (rot == 'N') {
-				y = _imgh - y - 1;  // Invert y
-			} else if (rot == 'I') {
-				x = _imgw - x - 1;  // Invert x
-			} else {
-				y = _imgw - y;      // Invert y
-				if (rot == 'L') {
-					var t = y;
-					y = _imgh - x - 1;
-					x = t - 1;
-				} else {
-					var t = x;
-					x = _imgw - y;
-					y = t;
-				}
-			}
-			var pos = row * (y + _pady) + 1 + (_padx + x) * 4;
-			buf[pos+0] = c >>> 16;		// red
-			buf[pos+1] = c >>>  8;		// green
-			buf[pos+2] = c;				// blue
-			buf[pos+3] = c >>> 24;		// alpha
-		}
-		return buf;
 	}
 }

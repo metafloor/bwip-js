@@ -8,17 +8,8 @@
 //
 // If no address:port are specified, the default is: *:3030
 
-var http	 = require('http');
+var http   = require('http');
 var bwipjs = require('./node-bwipjs');	// ./ required for local use
-
-// Example of how to load a font into bwipjs. 
-//  bwipjs.loadFont(fontname, sizemult, fontdata)
-//
-// To unload a font (and free up space for another):
-//  bwipjs.unloadFont(fontname)
-//
-//bwipjs.loadFont('Inconsolata', 108,
-//			require('fs').readFileSync('fonts/Inconsolata.otf', 'binary'));
 
 var server = http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
@@ -27,8 +18,8 @@ var server = http.createServer(function(req, res) {
 		res.writeHead(404, { 'Content-Type':'text/plain' });
 		res.end('BWIP-JS: Unknown request format.', 'utf8');
 	} else {
-		// Do not allow images to grow too large (1 mega-pixel limit)
-		bwipjs(req, res, { sizelimit:1024*1024 });
+		// Do not allow images to grow too large
+		bwipjs(req, res, { sizelimit:2048*2048 });
 	}
 
 })

@@ -1894,7 +1894,7 @@ function BWIPP() {
 		$1.dontdraw = false; /*2011*/
 		$1.includetext = false; /*2012*/
 		$1.isbntextfont = "OCR-A"; /*2013*/
-		$1.isbntextsize = 8.5; /*2014*/
+		$1.isbntextsize = 8; /*2014*/
 		$1.isbntextxoffset = "unset"; /*2015*/
 		$1.isbntextyoffset = "unset"; /*2016*/
 		$1.height = 1; /*2017*/
@@ -2185,7 +2185,7 @@ function BWIPP() {
 		$1.dontdraw = false; /*2275*/
 		$1.includetext = false; /*2276*/
 		$1.ismntextfont = "OCR-A"; /*2277*/
-		$1.ismntextsize = 8.5; /*2278*/
+		$1.ismntextsize = 8; /*2278*/
 		$1.ismntextxoffset = "unset"; /*2279*/
 		$1.ismntextyoffset = "unset"; /*2280*/
 		$1.height = 1; /*2281*/
@@ -2438,7 +2438,7 @@ function BWIPP() {
 		$1.dontdraw = false; /*2518*/
 		$1.includetext = false; /*2519*/
 		$1.issntextfont = "OCR-A"; /*2520*/
-		$1.issntextsize = 8.5; /*2521*/
+		$1.issntextsize = 8; /*2521*/
 		$1.issntextxoffset = "unset"; /*2522*/
 		$1.issntextyoffset = "unset"; /*2523*/
 		$1.height = 1; /*2524*/
@@ -26025,39 +26025,41 @@ function BWIPP() {
 		$$.save(); /*23955*/
 		var _A = $$.currpos(); /*23957*/
 		$$.translate(_A.x, _A.y); /*23957*/
-		$$.scale(2.4945, 2.4945); /*23959*/
-		$$.moveto(0, 0); /*23961*/
-		$$.lineto(30, 0); /*23961*/
-		$$.lineto(30, 29); /*23961*/
-		$$.lineto(0, 29); /*23961*/
-		$$.closepath(); /*23961*/
-		if ($ne($1.barcolor, "unset")) { /*23963*/
-			$$.setcolor($1.barcolor); /*23963*/
-		} /*23963*/
-		$$.translate(0.5, 0.5774); /*23965*/
-		var _D = $$.findfont("OCRB"); /*23967*/
-		_D.FontSize = 2.8; /*23967*/
-		$$.setfont(_D); /*23967*/
-		$$.newpath(); /*23969*/
-		var _E = $1.pixs; /*23970*/
-		for (var _F = 0, _G = _E.length; _F < _G; _F++) { /*23978*/
-			var _H = $get(_E, _F); /*23978*/
-			$1.x = _H % 30; /*23972*/
-			$1.y = ~~(_H / 30); /*23973*/
-			if (($1.y % 2) == 0) { /*23974*/
-				$k[$j++] = $1.x; /*23974*/
-			} else { /*23974*/
-				$k[$j++] = $1.x + 0.5; /*23974*/
-			} /*23974*/
-			$$.moveto($k[--$j], (32 - $1.y) * 0.8661); /*23976*/
-			$$.show("\xae", 0, 0); /*23977*/
-		} /*23977*/
-		var _N = $$.findfont("OCRB"); /*23981*/
-		_N.FontSize = 2.85; /*23981*/
-		$$.setfont(_N); /*23981*/
-		$$.moveto(14, 13.8576); /*23982*/
-		$$.show("\xa9", 0, 0); /*23982*/
-		$$.restore(); /*23984*/
+		$$.moveto(0, 0); /*23962*/
+		$$.lineto(30, 0); /*23962*/
+		$$.lineto(30, 29); /*23962*/
+		$$.lineto(0, 29); /*23962*/
+		$$.closepath(); /*23962*/
+		if ($ne($1.barcolor, "unset")) { /*23964*/
+			$$.setcolor($1.barcolor); /*23964*/
+		} /*23964*/
+		var _D = $$.findfont("Symbol"); /*23970*/
+		_D.FontSize = 10; /*23970*/
+		$$.setfont(_D); /*23970*/
+		$1.chars = $a(["0", "1", "2", "3"]); /*23972*/
+		$$.newpath(); /*23973*/
+		var _F = $1.pixs; /*23974*/
+		for (var _G = 0, _H = _F.length; _G < _H; _G++) { /*23985*/
+			var _I = $get(_F, _G); /*23985*/
+			$1.x = _I % 30; /*23976*/
+			$1.y = ~~(_I / 30); /*23977*/
+			var _L = (($1.y % 2) == 0) ? 0 : 2; /*23979*/
+			var _N = (($1.x % 2) == 0) ? 0 : 1; /*23980*/
+			$k[$j++] = $get($1.chars, _L + _N); /*23982*/
+			$k[$j++] = $1.x * 3.5; /*23982*/
+			if (($1.y % 2) == 1) { /*23982*/
+				var _R = $k[--$j]; /*23982*/
+				$k[$j++] = _R + 1.75; /*23982*/
+			} /*23982*/
+			$$.moveto($k[--$j], (32 - $1.y) * 3); /*23984*/
+			$$.show($k[--$j], 0, 0); /*23984*/
+		} /*23984*/
+		var _V = $$.findfont("Symbol"); /*23988*/
+		_V.FontSize = 10; /*23988*/
+		$$.setfont(_V); /*23988*/
+		$$.moveto(36, 36); /*23989*/
+		$$.show("4", 0, 0); /*23989*/
+		$$.restore(); /*23991*/
 	};
 	// bwip-js/barcode-ftr.js
 	//
@@ -26075,13 +26077,13 @@ function BWIPP() {
 		}
 		opts = opts || {};
 		if (typeof opts === 'string') {
-			var tmp = opts.split(' ');
+			let tmp = opts.split(' ');
 			opts = {};
-			for (var i = 0; i < tmp.length; i++) {
+			for (let i = 0; i < tmp.length; i++) {
 				if (!tmp[i]) {
 					continue;
 				}
-				var eq = tmp[i].indexOf('=');
+				let eq = tmp[i].indexOf('=');
 				if (eq == -1) {
 					opts[tmp[i]] = true;
 				} else {
@@ -26102,7 +26104,7 @@ function BWIPP() {
 		// code from BWIPP.
 		if (opts.parse) {
 			text = text.replace(/\^(\d\d\d)/g, function($0, $1) {
-				var v = +$1;
+				let v = +$1;
 				if (v > 255) {
 					throw new Error('bwipp.rangeError:' +
 						' ^NNN out-of-range (' + $0 + ')');
@@ -26126,10 +26128,11 @@ function BWIPP() {
 		if ($j) {
 			return $k.splice(0, $j);
 		}
-		// Otherwise, just return ok
+
 		return true;
 	}
 }
+BWIPP.VERSION = '2017-06-09';
 if (typeof module === 'object' && module.exports) {
 	module.exports = BWIPP;
 }
