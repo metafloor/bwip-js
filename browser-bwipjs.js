@@ -106,9 +106,7 @@ module.exports = function toCanvas(cvs, opts, callback) {
 
 	// Call into the BWIPP cross-compiled code
 	try {
-		var ts0 = Date.now();
 		bwipp()(bw, bcid, text, vals);
-		var ts1 = Date.now();
 
 		// Let the font manager demand-load any fonts.
 		fontlib.loadfonts(function(err) {

@@ -52,7 +52,11 @@ var bwipjs_fonts = {
 			}
 		}
 		xhr.onerror = function (e) {
-			throw e;
+			if (bwipjs_fonts.onready) {
+				bwipjs_fonts.onready.call(e);
+			} else {
+				throw e;
+			}
 		}
 		xhr.send(null);
 	}
