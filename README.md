@@ -23,7 +23,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 1.5.1 (2017-09-01)
+* Current bwip-js version is 1.5.2 (2017-09-01)
 * Current BWIPP version is 2017-06-09
 * Node.js compatibility >= v0.10
 
@@ -74,7 +74,7 @@ import bwipjs from 'bwip-js';
 
 class App extends Component {
   constructor(props) {
-	super(props);
+    super(props);
 
     bwipjs('mycanvas', {
             bcid:        'code128',       // Barcode type
@@ -88,7 +88,7 @@ class App extends Component {
                 // Decide how to handle the error
                 // `err` may be a string or Error object
             } else {
-				// Nothing else to do in this example...
+                // Nothing else to do in this example...
             }
         });
   }
@@ -99,7 +99,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-		<canvas id="mycanvas"></canvas>
+        <canvas id="mycanvas"></canvas>
       </div>
     );
   }
@@ -127,12 +127,12 @@ to get a data URL. For example:
 ```javascript
 let canvas = document.createElement('canvas');
 bwipjs(canvas, options, function(err, cvs) {
-	if (err) {
-		// handle the error
-	} else {
-		// Don't need the second param since we have the canvas in scope...	
-		document.getElementById(myimg).src = canvas.toDataURL('image/png');
-	}
+    if (err) {
+        // handle the error
+    } else {
+        // Don't need the second param since we have the canvas in scope...    
+        document.getElementById(myimg).src = canvas.toDataURL('image/png');
+    }
 });
 ```
 
@@ -145,15 +145,15 @@ For React apps, you must copy (or link) the fonts to the `public/` directory.  I
 are using linux or unix-like:
 
     cd my-app
-	ln -s node_modules/bwip-js/fonts public/bwipjs-fonts
+    ln -s node_modules/bwip-js/fonts public/bwipjs-fonts
 
 Where `my-app` is the root of your application directory (typically created by `create-react-app`.  Under that directory, should be the `public/` and `node_modules/` directories.
 
 If you are running windows, copy the files:
 
-	cd my-app
-	mkdir public\bwipjs-fonts
-	copy node_modules\bwip-js\fonts\* public\bwipjs-fonts
+    cd my-app
+    mkdir public\bwipjs-fonts
+    copy node_modules\bwip-js\fonts\* public\bwipjs-fonts
 
 For other frameworks, you may need to take additional steps.  The font manager assumes
 there is a global variable called `process.env.PUBLIC_URL`, which is set automatically
@@ -282,27 +282,27 @@ npm install bwip-js
 
 Or the latest code from github:
 
-	https://github.com/metafloor/bwip-js
+    https://github.com/metafloor/bwip-js
 
 (The bwip-js master branch and the npm version are kept sync'd.)
 
 The software is organized as follows:
 
     bwip-js/
-        barcode.ps        # The BWIPP PostScript barcode library
-		browser-bitmap.js # Bitmap interface used by browsers.
-		browser-bwipjs.js # The primary browser import.
-		browser-fonts.js  # Browser-based font manager 
-        bwipjs.js         # Main bwip-js code, cross-platform
-        bwipp.js          # The cross-compiled BWIPP code
-        demo.html         # The bwip-js demo
-        freetype.js       # The Emscripten-compiled FreeType library
-        node-bwipjs.js    # Primary node.js module
-        node-bitmap.js    # Node.js module that implements a PNG encoder
-		node-fonts.js     # Replacement for freetype.js
-        server.js         # Node.js example server
-        fonts/            # Font files
-        lib/              # Files required by the demo
+        barcode.ps          # The BWIPP PostScript barcode library
+        browser-bitmap.js   # Bitmap interface used by browsers.
+        browser-bwipjs.js   # The primary browser import.
+        browser-fonts.js    # Browser-based font manager 
+        bwipjs.js           # Main bwip-js code, cross-platform
+        bwipp.js            # The cross-compiled BWIPP code
+        demo.html           # The bwip-js demo
+        freetype.js         # The Emscripten-compiled FreeType library
+        node-bwipjs.js      # Primary node.js module
+        node-bitmap.js      # Node.js module that implements a PNG encoder
+        node-fonts.js       # Replacement for freetype.js
+        server.js           # Node.js example server
+        fonts/              # Font files
+        lib/                # Files required by the demo
 
 The above files are part of the *master* branch.  If you wish to 
 compile bwip-js on your own, you will need to clone the *develop* branch, 

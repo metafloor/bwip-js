@@ -1,4 +1,4 @@
-// file: node-bitmap.js
+// file: bwip-js/node-bitmap.js
 //
 // Implements a PNG encoder using only the built-in zlib module.
 // No other dependencies.
