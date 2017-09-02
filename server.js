@@ -1,4 +1,4 @@
-// file : server.js
+// file : bwip-js/server.js
 //
 // Simple node HTTP server that renders bar code images using bwip-js.
 // 

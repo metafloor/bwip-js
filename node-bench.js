@@ -1,4 +1,4 @@
-// file: node-bench.js
+// file: bwip-js/node-bench.js
 //
 // Benchmark version of node-bwipjs.js.  Doesn't encode images to PNG.
 var freetype = require('./freetype');

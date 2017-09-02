@@ -1,4 +1,4 @@
-// file: browser-bwipjs.js
+// file: bwip-js/browser-bwipjs.js
 //
 // Copyright (c) 2011-2017 Mark Warren
 //
