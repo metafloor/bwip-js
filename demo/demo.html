@@ -102,7 +102,8 @@ $(document).ready(function() {
 		}
 	});
 
-	document.getElementById('versions').textContent = `bwip-js ${BWIPJS.VERSION} / BWIPP ${BWIPP.VERSION}`;
+	document.getElementById('versions').textContent =
+				'bwip-js ' + BWIPJS.VERSION + ' / BWIPP ' + BWIPP.VERSION;
 });
 
 function render() {
@@ -247,6 +248,7 @@ function setURL() {
 	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
 	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
 	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
+	var rot  = document.querySelector('input[name="rot"]:checked').value;
 	var mono = document.getElementById('fontMono').checked;
 	var scaleX = +document.getElementById('scaleX').value || 2;
 	var scaleY = +document.getElementById('scaleY').value || scaleX;
@@ -255,7 +257,9 @@ function setURL() {
 				'&text=' + encodeURIComponent(text) +
 				(altx ? '&alttext=' + encodeURIComponent(altx) : '') +
 				(opts ? '&' + opts.replace(/ +/g, '&') : '') +
-				(scaleX == scaleY ? `&scale=${scaleX}` : `&scaleX=${scaleX}&scaleY=${scaleY}`) +
+				(rot != 'N' ? '&rotate=' + rot : '') +
+				(scaleX == scaleY ? '&scale=' + scaleX
+								  : '&scaleX=' + scaleX + '&scaleY=' + scaleY) +
 				(mono ? '&monochrome' : '');
 
 	document.getElementById('apiurl').href = url;

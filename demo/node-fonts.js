@@ -1,4 +1,4 @@
-// bwipjs/node-fontlib.js
+// bwip-js/node-fontlib.js
 //
 "use strict";
 

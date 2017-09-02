@@ -388,7 +388,7 @@ BWIPJS.prototype.show = function(str, dx, dy) {
 	self.rgbmap[rgb] = 256;
 
 	// Bounding box.  Use the actual glyph sizes.
-	var top = floor(self.g_posy) + dy;	// loop invariant
+	var base = floor(self.g_posy) + dy;		// loop invariant
 	for (var i = 0; i < str.length; i++) {
 		var ch = cca ? str.charCodeAt(i) : str[i];
 		var glyph = self.fontlib.getglyph(font, ch, szx, szx);	// no y-scaling
@@ -400,7 +400,7 @@ BWIPJS.prototype.show = function(str, dx, dy) {
 		if (font <= 1) { // && ch >= 48 && ch <= 57) {
 			left -= floor(1.0 * tsx);
 		}
-		self.bbox(left, top+glyph.top-glyph.height, glyph.width, glyph.height);
+		self.bbox(left, base+glyph.top-glyph.height, glyph.width, glyph.height);
 		this.g_posx += glyph.advance + dx;
 	}
 	this.g_posx -= dx;	// overshot
@@ -418,7 +418,7 @@ BWIPJS.prototype.show = function(str, dx, dy) {
 			// The OCR glyphs seem to be about a point right compared to the
 			// font metrics hard-coded into BWIPP.  This is especially apparent
 			// in the EAN and UPC codes where the bars mix with the text.
-			var top  = posy + glyph.top + dy;
+			var top  = posy + glyph.top + dy - 1;
 			var left = posx + glyph.left;
 			if (font <= 1) { // && ch >= 48 && ch <= 57) {
 				left -= floor(1.0 * tsx);
@@ -604,7 +604,7 @@ BWIPJS.prototype.render = function(callback) {
 	}
 }
 
-BWIPJS.VERSION = '1.5.1 (2017-09-01)';
+BWIPJS.VERSION = '1.5.2 (2017-09-01)';
 if (typeof module === 'object' && module.exports) {
 	module.exports = BWIPJS;
 }

@@ -1,4 +1,4 @@
-// bwipjs/browser-fonts.js
+// file : bwip-js/browser-fonts.js
 //
 // Defines a browser-based font manager.
 //
@@ -68,7 +68,7 @@ function lookup(name) {
 }
 
 function monochrome(mono) {
-	monocolor = mono;
+	bwipjs_fonts.monocolor = mono;
 }
 
 function loadfonts(callback) {
