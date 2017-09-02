@@ -1,10 +1,10 @@
 // file: bwip-js/lib/symdesc.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2017-04-03
+// Barcode Writer in Pure PostScript - Version 2017-06-09
 //
 // Copyright (c) 2011-2017 Mark Warren
-// Copyright (c) 2004-2017 Terry Burton
+// Copyright (c) 2004-2014 Terry Burton
 //
 // Licensed MIT.  See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
@@ -28,7 +28,7 @@ var symdesc = {
 	"pzn":{ sym:"pzn",desc:"Pharmazentralnummer (PZN)",text:"123456",opts:"includetext" },
 	"code93":{ sym:"code93",desc:"Code 93",text:"THIS IS CODE 93",opts:"includetext includecheck" },
 	"code93ext":{ sym:"code93ext",desc:"Code 93 Extended",text:"Code93 Ext!",opts:"includetext includecheck" },
-	"interleaved2of5":{ sym:"interleaved2of5",desc:"Interleaved 2 of 5 (ITF)",text:"2401234567",opts:"height=0.5 includecheck includetext includecheckintext" },
+	"interleaved2of5":{ sym:"interleaved2of5",desc:"Interleaved 2 of 5 (ITF)",text:"2401234567",opts:"height=12 includecheck includetext includecheckintext" },
 	"itf14":{ sym:"itf14",desc:"ITF-14",text:"0 46 01234 56789 3",opts:"includetext" },
 	"identcode":{ sym:"identcode",desc:"Deutsche Post Identcode",text:"563102430313",opts:"includetext" },
 	"leitcode":{ sym:"leitcode",desc:"Deutsche Post Leitcode",text:"21348075016401",opts:"includetext" },
@@ -66,9 +66,9 @@ var symdesc = {
 	"codablockf":{ sym:"codablockf",desc:"Codablock F",text:"CODABLOCK F 34567890123456789010040digit",opts:"columns=8" },
 	"code16k":{ sym:"code16k",desc:"Code 16K",text:"Abcd-1234567890-wxyZ",opts:"" },
 	"code49":{ sym:"code49",desc:"Code 49",text:"MULTIPLE ROWS IN CODE 49",opts:"" },
-	"channelcode":{ sym:"channelcode",desc:"Channel Code",text:"3493",opts:"height=0.5 includetext " },
+	"channelcode":{ sym:"channelcode",desc:"Channel Code",text:"3493",opts:"height=12 includetext " },
 	"flattermarken":{ sym:"flattermarken",desc:"Flattermarken",text:"11099",opts:"inkspread=-0.25 showborder borderleft=0 borderright=0" },
-	"raw":{ sym:"raw",desc:"Custom 1D symbology",text:"331132131313411122131311333213114131131221323",opts:"height=0.5" },
+	"raw":{ sym:"raw",desc:"Custom 1D symbology",text:"331132131313411122131311333213114131131221323",opts:"height=12" },
 	"daft":{ sym:"daft",desc:"Custom 4 state symbology",text:"FATDAFTDAD",opts:"" },
 	"symbol":{ sym:"symbol",desc:"Miscellaneous symbols",text:"fima",opts:"backgroundcolor=DD000011" },
 	"pdf417":{ sym:"pdf417",desc:"PDF417",text:"This is PDF417",opts:"columns=2" },
