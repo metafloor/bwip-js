@@ -129,11 +129,12 @@ module.exports.toBuffer = function(args, callback) {
 		var ts0 = Date.now();
 		bwipp()(bw, bcid, text, opts);
 		var ts1 = Date.now();
+		bw.render(callback);
+		var ts2 = Date.now();
 	} catch (e) {
 		callback(e);
 	}
 
-	bw.render(callback);
 	// For testing...
 	//bw.render(function (err, png) {
 	//	if (err) {
