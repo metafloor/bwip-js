@@ -242,6 +242,10 @@ for (var i = 0; i < 50; i++) {
 // Display the results
 console.log('Total accrued time: ' + (times.msecs/1000).toFixed(3) +
 			' seconds');
+
+fs.writeFileSync('bench-stats.json', JSON.stringify(times, null, ' '), 'binary');
+
+if (0) {
 var arr = [];
 for (var id in times) {
 	if (typeof times[id] === 'object') {
@@ -289,4 +293,5 @@ for (var i = 0; i < arr.length; i++) {
 output += '\n';
 
 fs.writeFileSync('benchmark.md', output, 'binary');
+}
 

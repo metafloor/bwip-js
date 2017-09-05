@@ -33,7 +33,7 @@ if (/^[01]$/.test(process.argv[2])) {
 	var fontid = +process.argv[2];
 	var findex = fontid;
 	var points = process.argv.slice(3);
-	var fontname = fontid == 0 ? 'OCRA' : 'OCRB';
+	var fontname = fontid == 0 ? 'OCR-A' : 'OCR-B';
 	if (!points || !points.length) {
 		points = [ 8, 9, 10, 12 ]
 	}
@@ -244,10 +244,6 @@ function genfont(index, mono) {
 					'    bwipjs_fonts.fontsets[' + fontid + '] = desc;\n' +
 					'    bwipjs_fonts.names[' + JSON.stringify(fontname.toUpperCase()) + 
 							'] = ' + fontid + ';\n' +
-					// Alias OCRA and OCRB to OCR-A and OCR-B
-					(fontid > 1 ? '' : 
-						'    bwipjs_fonts.names["' + fontname.replace(/\w$/, '-$&') +
-								'"] = ' + fontid + ';\n') +
 					'  } else {\n' +
 					'    module.exports = desc;\n' +
 					'  }\n' +
