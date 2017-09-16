@@ -10,7 +10,7 @@ var ceil  = Math.ceil;
 // fontlib : fixedfont or freetype
 function BWIPJS(fontlib, monochrome) {
 	if (this.constructor !== BWIPJS) {
-		return new BWIPJS(freetype, monochrome);
+		return new BWIPJS(fontlib, monochrome);
 	}
 	this.bmap	 = null;// Bitmap interface
 	this.gstk	 = [];	// Graphics save/restore stack
@@ -604,7 +604,7 @@ BWIPJS.prototype.render = function(callback) {
 	}
 }
 
-BWIPJS.VERSION = '1.5.2 (2017-09-01)';
+BWIPJS.VERSION = '1.5.5 (2017-09-16)';
 if (typeof module === 'object' && module.exports) {
 	module.exports = BWIPJS;
 }
