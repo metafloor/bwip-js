@@ -7,9 +7,10 @@
 // To specify all interfaces, use * as the address
 //
 // If no address:port are specified, the default is: *:3030
+"use strict";
 
-var http   = require('http');
-var bwipjs = require('./node-bwipjs');	// ./ required for local use
+const http   = require('http');
+const bwipjs = require('./node-bwipjs');	// ./ required for local use
 
 var server = http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up

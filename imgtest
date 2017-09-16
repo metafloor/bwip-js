@@ -1,12 +1,18 @@
 #!/bin/bash
 ## file: imgtest
 ##
-## usage: imgtest seq symbol text opts
+## usage: imgtest [--refresh] seq symbol text opts
 ##
 ## seq is the unique test sequence number.  
 ##
 ## Compare a generated image against a proof image.
 ##
+REGEN=NO
+if [ "x$1" == x--refresh ] ; then
+	REGEN=YES
+	shift
+fi
+
 seq="$1"
 sym="$2"
 text="$3"
@@ -20,7 +26,11 @@ echo "$seq.$sym ($text) ($opts) ..."
 
 ./genimg $sym "$text" $opts tests/$seq.$sym.png > /dev/null
 
-perceptualdiff proofs/$seq.$sym.png tests/$seq.$sym.png
-
-exit $?
+if [ $REGEN == YES ] ; then
+	mv -f tests/$seq.$sym.png proofs/$seq.$sym.png
+	exit 0
+else
+	perceptualdiff proofs/$seq.$sym.png tests/$seq.$sym.png
+	exit $?
+fi
 

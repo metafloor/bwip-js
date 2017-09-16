@@ -63,9 +63,9 @@ gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9
 node <<@EOF
 var bwipp = require('./bwipp');
 var bwipjs = require('./bwipjs');
-var freetype = require('./freetype');
+var fontlib = require('./node-fonts');
 
-var bw = new bwipjs(freetype);
+var bw = new bwipjs(fontlib);
 try {
 	// dontdraw=true
 	var stack = bwipp()(bw, "$sym", "$jstext", "$opts", true);

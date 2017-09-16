@@ -4,13 +4,20 @@
 ##
 ## Top-level image comparision test driver
 ##
-## Usage:  ./imgtests [pattern]
+## Usage:  ./imgtests [--refresh] [pattern]
+##
+## If --refresh, then the proof images will be regenerated.
 ##
 ## Pattern (fixed substring) will only run tests for the matching barcode
 ## type(s).
 ##
 
 PAT=
+OPTS=
+if [ "x$1" == x--refresh ] ; then
+	OPTS="$1"
+	shift
+fi
 if [ "x$1" != x ] ; then
 	PAT="$1"
 	shift
@@ -30,7 +37,7 @@ let NFAILS=0
 
 function run() {
 	if [[ $1 == *$PAT* ]] ; then
-		./imgtest $TNO $1 "$2" "$3"
+		./imgtest $OPTS $TNO $1 "$2" "$3"
 		if [ $? != 0 ] ; then
 			((NFAILS++))
 		fi

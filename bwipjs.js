@@ -10,7 +10,7 @@ var ceil  = Math.ceil;
 // fontlib : fixedfont or freetype
 function BWIPJS(fontlib, monochrome) {
 	if (this.constructor !== BWIPJS) {
-		return new BWIPJS(freetype, monochrome);
+		return new BWIPJS(fontlib, monochrome);
 	}
 	this.bmap	 = null;// Bitmap interface
 	this.gstk	 = [];	// Graphics save/restore stack
