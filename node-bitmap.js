@@ -113,7 +113,7 @@ module.exports = function(rot, bgcolor, opts) {
 		if (ncolors <= 256) {
 			// Palette Color
 			_imgrow  = _imgw + 2*_padx + 1;
-			_imgbuf  = Buffer.alloc(_imgrow * (_imgh + 2*_pady));
+			_imgbuf  = new Buffer(_imgrow * (_imgh + 2*_pady));
 			_pngtype = PNGTYPE_PALETTE;
 
 			_palette = [ bgcolor ];
@@ -124,7 +124,7 @@ module.exports = function(rot, bgcolor, opts) {
 		} else {
 			// TrueColor with Alpha
 			_imgrow  = (_imgw + 2*_padx) * 4 + 1;
-			_imgbuf  = Buffer.alloc(_imgrow * (_imgh + 2*_pady));
+			_imgbuf  = new Buffer(_imgrow * (_imgh + 2*_pady));
 			_pngtype = PNGTYPE_TRUEALPHA;
 
 			this.set = setTrueAlpha
