@@ -129,6 +129,7 @@ module.exports = function(rot, bgcolor, opts) {
 
 			this.set = setTrueAlpha
 		}
+		_imgbuf.fill(0);
 	}
 	
 	this.color = function(r, g, b) {

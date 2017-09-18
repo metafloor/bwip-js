@@ -604,7 +604,7 @@ BWIPJS.prototype.render = function(callback) {
 	}
 }
 
-BWIPJS.VERSION = '1.5.5 (2017-09-16)';
+BWIPJS.VERSION = '1.5.6 (2017-09-18)';
 if (typeof module === 'object' && module.exports) {
 	module.exports = BWIPJS;
 }
