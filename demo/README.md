@@ -23,9 +23,17 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 1.5.4 (2017-09-05)
+* Current bwip-js version is 1.5.5 (2017-09-16)
 * Current BWIPP version is 2017-06-09
-* Node.js compatibility >= v0.10
+* Node.js compatibility: v0.10+
+* Browser compatibility: IE10+, Edge, Firefox, Chrome
+
+## Supported Platforms
+
+* [Browser / React App](#browser-usage)
+* [Node.js](#nodejs-request-handler)
+* [Electron](#electron-example)
+* [Command Line](#command-line-interface)
 
 ## Links
 
@@ -33,10 +41,24 @@ found at the end of this document.
 * [Repository](https://github.com/metafloor/bwip-js)
 * [Online Barcode Generator](http://metafloor.github.io/bwip-js/demo/demo.html)
 * [Online Barcode API](https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API)
-* [Node.js npm Page](https://www.npmjs.com/package/bwip-js)
+* [npm Page](https://www.npmjs.com/package/bwip-js)
 * [BWIPP Documentation](https://github.com/bwipp/postscriptbarcode/wiki)
-* [Differences between BWIPP and bwipjs](https://github.com/metafloor/bwip-js/wiki/Differences-between-BWIPP-and-bwipjs)
+* [Differences From BWIPP](https://github.com/metafloor/bwip-js/wiki/Differences-From-BWIPP)
 * [Supported Barcode Types](https://github.com/metafloor/bwip-js/wiki/BWIPP-Barcode-Types)
+
+## Installation
+
+You can download the latest npm module using:
+
+```
+npm install bwip-js
+```
+
+Or the latest code from github:
+
+    https://github.com/metafloor/bwip-js
+
+(The bwip-js master branch and the npm version are kept sync'd.)
 
 ## Online Barcode Generator
 
@@ -44,10 +66,6 @@ An [online barcode generator](http://metafloor.github.io/bwip-js/demo/demo.html)
 demonstrates all of the features of bwip-js.  As of version 1.5, the FreeType
 library is no longer supported in the demo.  Only the OCR-A and OCR-B fonts are 
 available.
-
-The demo is tested on the latest versions of Firefox and Chrome, along with IE10 and IE11.
-Microsoft Edge should work, and so should the latest versions of Opera and Safari,
-but they are untested.
 
 ## Online Barcode API
 
@@ -204,7 +222,7 @@ path as needed to implement the desired HTTP request routing.
 
 ## Node.js Image Generator
 
-You can also use bwip-js to generate PNG images directly.
+You can use bwip-js to generate PNG images directly.
 
 ```javascript
 const bwipjs = require('bwip-js');
@@ -257,6 +275,40 @@ The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor
 options.  Likewise, the discrete scaling factors `scaleX` and `scaleY` multiply the `width`
 and `height` options, respectively.
 
+## Electron Example
+
+With Electron, use the Node.js `toBuffer()` interface.  This is an example `index.html`
+file for a basic, single window app:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  <body>
+    Node.js <script>document.write(process.versions.node)</script>,
+    Chromium <script>document.write(process.versions.chrome)</script>,
+    and Electron <script>document.write(process.versions.electron)</script>.
+    <br><br><img id="myimg">
+    <pre id="output"></pre>
+  </body>
+
+  <script>
+    var bwipjs = require('bwip-js');
+    bwipjs.toBuffer({ bcid:'qrcode', text:'0123456789' }, function (err, png) {
+		if (err) {
+		  document.getElementById('output').textContent = err;
+		} else {
+		  document.getElementById('myimg').src = 'data:image/png;base64,' +
+                                                 png.toString('base64');
+		}
+	  });
+  </script>
+</html>
+```
+
 ## Command Line Interface
 
 bwip-js can be used as a command line tool.
@@ -272,19 +324,7 @@ Usage example:
 bwip-js --bcid=qrcode --text=123456789 ~/qrcode.png
 ```
 
-## Installation
-
-You can download the latest npm module using:
-
-```
-npm install bwip-js
-```
-
-Or the latest code from github:
-
-    https://github.com/metafloor/bwip-js
-
-(The bwip-js master branch and the npm version are kept sync'd.)
+## bwip-js Directory Structure
 
 The software is organized as follows:
 
@@ -310,7 +350,7 @@ which contains the cross-compiler, test framework, code-coverage files,
 benchmark framework, image proofs, etc.  Everything used to create and
 validate bwip-js.
 
-For details on how to compile and test bwip-js, see [Compiling bwipjs](https://github.com/metafloor/bwip-js/wiki/Compiling-bwipjs).
+For details on how to compile and test bwip-js, see [Compiling bwip-js](https://github.com/metafloor/bwip-js/wiki/Compiling-bwipjs).
 
 
 ## Demo Usage
@@ -327,4 +367,4 @@ You should also look at the `node-bwipjs.js` module to see how it was done for N
 
 ## Supported Barcode Types
 
-&#x2022; auspost : AusPost 4 State Customer Code &#x2022; azteccode : Aztec Code &#x2022; azteccodecompact : Compact Aztec Code &#x2022; aztecrune : Aztec Runes &#x2022; bc412 : BC412 &#x2022; channelcode : Channel Code &#x2022; codablockf : Codablock F &#x2022; code11 : Code 11 &#x2022; code128 : Code 128 &#x2022; code16k : Code 16K &#x2022; code2of5 : Code 25 &#x2022; code32 : Italian Pharmacode &#x2022; code39 : Code 39 &#x2022; code39ext : Code 39 Extended &#x2022; code49 : Code 49 &#x2022; code93 : Code 93 &#x2022; code93ext : Code 93 Extended &#x2022; codeone : Code One &#x2022; coop2of5 : COOP 2 of 5 &#x2022; daft : Custom 4 state symbology &#x2022; databarexpanded : GS1 DataBar Expanded &#x2022; databarexpandedcomposite : GS1 DataBar Expanded Composite &#x2022; databarexpandedstacked : GS1 DataBar Expanded Stacked &#x2022; databarexpandedstackedcomposite : GS1 DataBar Expanded Stacked Composite &#x2022; databarlimited : GS1 DataBar Limited &#x2022; databarlimitedcomposite : GS1 DataBar Limited Composite &#x2022; databaromni : GS1 DataBar Omnidirectional &#x2022; databaromnicomposite : GS1 DataBar Omnidirectional Composite &#x2022; databarstacked : GS1 DataBar Stacked &#x2022; databarstackedcomposite : GS1 DataBar Stacked Composite &#x2022; databarstackedomni : GS1 DataBar Stacked Omnidirectional &#x2022; databarstackedomnicomposite : GS1 DataBar Stacked Omnidirectional Composite &#x2022; databartruncated : GS1 DataBar Truncated &#x2022; databartruncatedcomposite : GS1 DataBar Truncated Composite &#x2022; datalogic2of5 : Datalogic 2 of 5 &#x2022; datamatrix : Data Matrix &#x2022; datamatrixrectangular : Data Matrix Rectangular &#x2022; ean13 : EAN-13 &#x2022; ean13composite : EAN-13 Composite &#x2022; ean14 : GS1-14 &#x2022; ean2 : EAN-2 (2 digit addon) &#x2022; ean5 : EAN-5 (5 digit addon) &#x2022; ean8 : EAN-8 &#x2022; ean8composite : EAN-8 Composite &#x2022; flattermarken : Flattermarken &#x2022; gs1-128 : GS1-128 &#x2022; gs1-128composite : GS1-128 Composite &#x2022; gs1-cc : GS1 Composite 2D Component &#x2022; gs1datamatrix : GS1 Data Matrix &#x2022; gs1datamatrixrectangular : GS1 Data Matrix Rectangular &#x2022; gs1northamericancoupon : GS1 North American Coupon &#x2022; gs1qrcode : GS1 QR Code &#x2022; hanxin : Han Xin Code &#x2022; hibcazteccode : HIBC Aztec Code &#x2022; hibccodablockf : HIBC Codablock F &#x2022; hibccode128 : HIBC Code 128 &#x2022; hibccode39 : HIBC Code 39 &#x2022; hibcdatamatrix : HIBC Data Matrix &#x2022; hibcdatamatrixrectangular : HIBC Data Matrix Rectangular &#x2022; hibcmicropdf417 : HIBC MicroPDF417 &#x2022; hibcpdf417 : HIBC PDF417 &#x2022; hibcqrcode : HIBC QR Code &#x2022; iata2of5 : IATA 2 of 5 &#x2022; identcode : Deutsche Post Identcode &#x2022; industrial2of5 : Industrial 2 of 5 &#x2022; interleaved2of5 : Interleaved 2 of 5 (ITF) &#x2022; isbn : ISBN &#x2022; ismn : ISMN &#x2022; issn : ISSN &#x2022; itf14 : ITF-14 &#x2022; japanpost : Japan Post 4 State Customer Code &#x2022; kix : Royal Dutch TPG Post KIX &#x2022; leitcode : Deutsche Post Leitcode &#x2022; matrix2of5 : Matrix 2 of 5 &#x2022; maxicode : MaxiCode &#x2022; micropdf417 : MicroPDF417 &#x2022; microqrcode : Micro QR Code &#x2022; msi : MSI Modified Plessey &#x2022; onecode : USPS Intelligent Mail &#x2022; pdf417 : PDF417 &#x2022; pdf417compact : Compact PDF417 &#x2022; pharmacode : Pharmaceutical Binary Code &#x2022; pharmacode2 : Two-track Pharmacode &#x2022; planet : USPS PLANET &#x2022; plessey : Plessey UK &#x2022; posicode : PosiCode &#x2022; postnet : USPS POSTNET &#x2022; pzn : Pharmazentralnummer (PZN) &#x2022; qrcode : QR Code &#x2022; rationalizedCodabar : Codabar &#x2022; raw : Custom 1D symbology &#x2022; royalmail : Royal Mail 4 State Customer Code &#x2022; sscc18 : SSCC-18 &#x2022; symbol : Miscellaneous symbols &#x2022; telepen : Telepen &#x2022; telepennumeric : Telepen Numeric &#x2022; upca : UPC-A &#x2022; upcacomposite : UPC-A Composite &#x2022; upce : UPC-E &#x2022; upcecomposite : UPC-E Composite &#x2022;\n
+&#x2022; auspost : AusPost 4 State Customer Code &#x2022; azteccode : Aztec Code &#x2022; azteccodecompact : Compact Aztec Code &#x2022; aztecrune : Aztec Runes &#x2022; bc412 : BC412 &#x2022; channelcode : Channel Code &#x2022; codablockf : Codablock F &#x2022; code11 : Code 11 &#x2022; code128 : Code 128 &#x2022; code16k : Code 16K &#x2022; code2of5 : Code 25 &#x2022; code32 : Italian Pharmacode &#x2022; code39 : Code 39 &#x2022; code39ext : Code 39 Extended &#x2022; code49 : Code 49 &#x2022; code93 : Code 93 &#x2022; code93ext : Code 93 Extended &#x2022; codeone : Code One &#x2022; coop2of5 : COOP 2 of 5 &#x2022; daft : Custom 4 state symbology &#x2022; databarexpanded : GS1 DataBar Expanded &#x2022; databarexpandedcomposite : GS1 DataBar Expanded Composite &#x2022; databarexpandedstacked : GS1 DataBar Expanded Stacked &#x2022; databarexpandedstackedcomposite : GS1 DataBar Expanded Stacked Composite &#x2022; databarlimited : GS1 DataBar Limited &#x2022; databarlimitedcomposite : GS1 DataBar Limited Composite &#x2022; databaromni : GS1 DataBar Omnidirectional &#x2022; databaromnicomposite : GS1 DataBar Omnidirectional Composite &#x2022; databarstacked : GS1 DataBar Stacked &#x2022; databarstackedcomposite : GS1 DataBar Stacked Composite &#x2022; databarstackedomni : GS1 DataBar Stacked Omnidirectional &#x2022; databarstackedomnicomposite : GS1 DataBar Stacked Omnidirectional Composite &#x2022; databartruncated : GS1 DataBar Truncated &#x2022; databartruncatedcomposite : GS1 DataBar Truncated Composite &#x2022; datalogic2of5 : Datalogic 2 of 5 &#x2022; datamatrix : Data Matrix &#x2022; datamatrixrectangular : Data Matrix Rectangular &#x2022; ean13 : EAN-13 &#x2022; ean13composite : EAN-13 Composite &#x2022; ean14 : GS1-14 &#x2022; ean2 : EAN-2 (2 digit addon) &#x2022; ean5 : EAN-5 (5 digit addon) &#x2022; ean8 : EAN-8 &#x2022; ean8composite : EAN-8 Composite &#x2022; flattermarken : Flattermarken &#x2022; gs1-128 : GS1-128 &#x2022; gs1-128composite : GS1-128 Composite &#x2022; gs1-cc : GS1 Composite 2D Component &#x2022; gs1datamatrix : GS1 Data Matrix &#x2022; gs1datamatrixrectangular : GS1 Data Matrix Rectangular &#x2022; gs1northamericancoupon : GS1 North American Coupon &#x2022; gs1qrcode : GS1 QR Code &#x2022; hanxin : Han Xin Code &#x2022; hibcazteccode : HIBC Aztec Code &#x2022; hibccodablockf : HIBC Codablock F &#x2022; hibccode128 : HIBC Code 128 &#x2022; hibccode39 : HIBC Code 39 &#x2022; hibcdatamatrix : HIBC Data Matrix &#x2022; hibcdatamatrixrectangular : HIBC Data Matrix Rectangular &#x2022; hibcmicropdf417 : HIBC MicroPDF417 &#x2022; hibcpdf417 : HIBC PDF417 &#x2022; hibcqrcode : HIBC QR Code &#x2022; iata2of5 : IATA 2 of 5 &#x2022; identcode : Deutsche Post Identcode &#x2022; industrial2of5 : Industrial 2 of 5 &#x2022; interleaved2of5 : Interleaved 2 of 5 (ITF) &#x2022; isbn : ISBN &#x2022; ismn : ISMN &#x2022; issn : ISSN &#x2022; itf14 : ITF-14 &#x2022; japanpost : Japan Post 4 State Customer Code &#x2022; kix : Royal Dutch TPG Post KIX &#x2022; leitcode : Deutsche Post Leitcode &#x2022; matrix2of5 : Matrix 2 of 5 &#x2022; maxicode : MaxiCode &#x2022; micropdf417 : MicroPDF417 &#x2022; microqrcode : Micro QR Code &#x2022; msi : MSI Modified Plessey &#x2022; onecode : USPS Intelligent Mail &#x2022; pdf417 : PDF417 &#x2022; pdf417compact : Compact PDF417 &#x2022; pharmacode : Pharmaceutical Binary Code &#x2022; pharmacode2 : Two-track Pharmacode &#x2022; planet : USPS PLANET &#x2022; plessey : Plessey UK &#x2022; posicode : PosiCode &#x2022; postnet : USPS POSTNET &#x2022; pzn : Pharmazentralnummer (PZN) &#x2022; qrcode : QR Code &#x2022; rationalizedCodabar : Codabar &#x2022; raw : Custom 1D symbology &#x2022; royalmail : Royal Mail 4 State Customer Code &#x2022; sscc18 : SSCC-18 &#x2022; symbol : Miscellaneous symbols &#x2022; telepen : Telepen &#x2022; telepennumeric : Telepen Numeric &#x2022; upca : UPC-A &#x2022; upcacomposite : UPC-A Composite &#x2022; upce : UPC-E &#x2022; upcecomposite : UPC-E Composite 
