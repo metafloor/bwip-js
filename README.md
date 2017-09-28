@@ -30,15 +30,17 @@ must sleep 18 hours in any 72 hour period. That is hardly comparable and does no
 
 Because of this, the existing API will likely shutdown on October 1. Sorry for the short notice. This caught me up short as well.
 
-The API has been moved to a new Amazon AWS platform:
+The API has been moved to a new Amazon AWS platform, reachable as:
 
-	http://ec2-13-58-67-69.us-east-2.compute.amazonaws.com/
+	http://bwipjs-api.metafloor.com/
+
+That more generic URL should help isolate applications in the future if/when the host platform changes.
 
 Same usage as before.
 
 ## Status 
 
-* Current bwip-js version is 1.5.6 (2017-09-27)
+* Current bwip-js version is 1.5.6 (2017-09-28)
 * Current BWIPP version is 2017-06-09
 * Node.js compatibility: 0.12+
 * Browser compatibility: IE10+, Edge, Firefox, Chrome
