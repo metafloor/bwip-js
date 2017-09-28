@@ -253,7 +253,7 @@ function setURL() {
 	var scaleX = +document.getElementById('scaleX').value || 2;
 	var scaleY = +document.getElementById('scaleY').value || scaleX;
 
-	var url = 'http://api-bwipjs.rhcloud.com/?bcid=' + elt.sym + 
+	var url = 'http://bwipjs-api.metafloor.com/?bcid=' + elt.sym + 
 				'&text=' + encodeURIComponent(text) +
 				(altx ? '&alttext=' + encodeURIComponent(altx) : '') +
 				(opts ? '&' + opts.replace(/ +/g, '&') : '') +
@@ -277,7 +277,7 @@ function setURL() {
 	<tr><th>Barcode Type:
 		<!-- Do not change the `select id="symbol"` - see develop/mkdesc -->
 		<td><select id="symbol" style="width:63.5ex">
-			<!-- Barcode Writer in Pure PostScript - Version 2017-06-09 -->
+			<!-- Barcode Writer in Pure PostScript - Version 2017-07-10 -->
 			<option value="auspost">AusPost 4 State Customer Code</option>
 			<option value="azteccode">Aztec Code</option>
 			<option value="aztecrune">Aztec Runes</option>
@@ -305,6 +305,7 @@ function setURL() {
 			<option value="datalogic2of5">Datalogic 2 of 5</option>
 			<option value="identcode">Deutsche Post Identcode</option>
 			<option value="leitcode">Deutsche Post Leitcode</option>
+			<option value="dotcode">DotCode</option>
 			<option value="ean13">EAN-13</option>
 			<option value="ean13composite">EAN-13 Composite</option>
 			<option value="ean2">EAN-2 (2 digit addon)</option>
