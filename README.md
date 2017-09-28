@@ -23,16 +23,16 @@ found at the end of this document.
 
 ## RedHat OpenShift API Discontinued
 
-I was just informed that RedHat is discontinuing their free service that is used to host the bwip-js public API. 
+I was informed during the last week of September that RedHat is discontinuing the free service that is used to host the bwip-js public API. 
 The existing solution provided up to three VPS with 24/7 availability. In place of this, they are offering a
-"starter" platform that supports a single VPS that, according to https://www.openshift.com/pricing/index.html,
+single VPS "starter" platform that, according to https://www.openshift.com/pricing/index.html,
 must sleep 18 hours in any 72 hour period. That is hardly comparable and does not serve a global user base.
 
-Because of this, the public API will likely shutdown on October 1. Sorry for the short notice. This caught me up short as well.
+Because of this, the existing API will likely shutdown on October 1. Sorry for the short notice. This caught me up short as well.
 
-The API has been moved to the new platform with OpenShift, but it may be sporadically unavailable:
+The API has been moved to a new Amazon AWS platform:
 
-http://api-bwip-js.7e14.starter-us-west-2.openshiftapps.com/
+	http://ec2-13-58-67-69.us-east-2.compute.amazonaws.com/
 
 Same usage as before.
 
