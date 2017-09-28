@@ -52,14 +52,15 @@ The existing solution provided up to three VPS with 24/7 availability. In place 
 single VPS "starter" platform that, according to <a href="https://www.openshift.com/pricing/index.html">https://www.openshift.com/pricing/index.html</a>,
 must sleep 18 hours in any 72 hour period. That is hardly comparable and does not serve a global user base.</p>
 <p>Because of this, the existing API will likely shutdown on October 1. Sorry for the short notice. This caught me up short as well.</p>
-<p>The API has been moved to a new Amazon AWS platform:</p>
-<pre><code>http://ec2-13-58-67-69.us-east-2.compute.amazonaws.com/
+<p>The API has been moved to a new Amazon AWS platform, reachable as:</p>
+<pre><code>http://bwipjs-api.metafloor.com/
 </code></pre>
+<p>That more generic URL should help isolate applications in the future if/when the host platform changes.</p>
 <p>Same usage as before.</p>
 <h2>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 <ul>
-<li>Current bwip-js version is 1.5.6 (2017-09-27)</li>
+<li>Current bwip-js version is 1.5.6 (2017-09-28)</li>
 <li>Current BWIPP version is 2017-06-09</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: IE10+, Edge, Firefox, Chrome</li>
