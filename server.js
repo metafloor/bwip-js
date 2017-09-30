@@ -41,7 +41,7 @@ for (var i = 2; i < process.argv.length; i++) {
 	binds++;
 }
 if (!binds) {
-	server.listen(3030);
+	server.listen(process.env.PORT || 3030);
 	console.log('listening on *:3030');
 }
 
