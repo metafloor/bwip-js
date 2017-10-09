@@ -15,6 +15,7 @@ fs.writeFileSync('bwipp.js',
 // Minify map of full names to their $<letter> equivalents
 var mins = {
 	//a					// array constructor
+	arrcpy:'A',			// array copy operator
 	cvs:'c',			// cvs operator
 	//d					// dict constructor
 	forall:'f',			// forall operator

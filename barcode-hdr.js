@@ -119,6 +119,15 @@ function $strcpy(dst, src) {
 	return src.length < dst.length ? dst.subarray(0, src.length) : dst;
 }
 
+// Copies source to dest and should (but doesn't) return a view of just the copied elements
+function $arrcpy(dst, src) {
+	for (var i = 0, l = src.length; i < l; i++) {
+		dst[i] = src[i];
+	}
+	dst.length = src.length;
+	return dst;
+}
+
 // cvs operator - convert a value to its string representation
 //	s : string to store into
 //	v : any value

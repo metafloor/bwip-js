@@ -70,7 +70,20 @@ module.exports = function(rot, bgcolor, opts) {
 	// Background color does not support alpha-channel (the alpha compositing
 	// algorithm used cannot support it...)
 	if (typeof bgcolor === 'string') {
-		bgcolor = (0xff000000 | parseInt(bgcolor, 16)) >>> 0;
+        if (bgcolor.length == 8) {
+			// CMYK
+            var c = parseInt(bgcolor.substr(0,2), 16) / 255;
+            var m = parseInt(bgcolor.substr(2,2), 16) / 255;
+            var y = parseInt(bgcolor.substr(4,2), 16) / 255;
+            var k = parseInt(bgcolor.substr(6,2), 16) / 255;
+            var r = Math.floor((1-c) * (1-k) * 255);
+            var g = Math.floor((1-m) * (1-k) * 255);
+            var b = Math.floor((1-y) * (1-k) * 255);
+			bgcolor = (0xff000000 | (r << 16) | (g << 8) | b) >>> 0;
+		} else {
+			// RGB
+			bgcolor = (0xff000000 | parseInt(bgcolor, 16)) >>> 0;
+		}
 	} else if (bgcolor != null) {
 		bgcolor = (0xff000000 | bgcolor) >>> 0;
 	} else {

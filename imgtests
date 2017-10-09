@@ -149,6 +149,7 @@ run "hibcmicropdf417" "A123BJC5D6E71" ""
 run "hibcqrcode" "A123BJC5D6E71" ""
 run "hibccodablockf" "A123BJC5D6E71" ""
 run "hibcazteccode" "A123BJC5D6E71" ""
+run "dotcode" "This is DotCode" "fast"
 
 ##
 ## END OF TEST CASES

@@ -262,6 +262,7 @@ fi
 
 run codeone "Code One" ""
 run hanxin "This is Han Xin" ""
+run dotcode "This is DotCode" "fast"
 run gs1-cc "(01)95012345678903(3103)000123" "ccversion=b cccolumns=4"
 run ean13composite "2112345678900|(99)1234-abcd" "includetext"
 run ean8composite "02345673|(21)A12345678" "includetext"

@@ -1025,10 +1025,19 @@ function PSC(str, flags) {
 			emit('var ' + tid + '=$strcpy(' + dst + ',' + src + ');'); // EMBED
 			st[sp-2] = { type:TYPE_STRVAL, expr:tid, seq:++seq };
 			sp--;
+		} else if (arg.type & TYPE_ARRAY) {
+			need(2);
+			var src = st[sp-2].expr;
+			var dst = st[sp-1].expr;
+			var tid = tvar();
+			// Use the internal array-copy operator
+			emit('var ' + tid + '=$arrcpy(' + dst + ',' + src + ');'); // EMBED
+			st[sp-2] = { type:TYPE_ARRAY, expr:tid, seq:++seq };
+			sp--;
 		} else {
 			// Terry used copy in some new way...
-			console.log(arg);
-			throw 'TBD';
+			dump('copy');
+			throw 'copy: UNKNOWN PARAMETERS';
 		}
 	}
 	$.roll = function() {
@@ -1545,6 +1554,24 @@ function PSC(str, flags) {
 						':' + fexec.tokens[0].token + ';');
 			st[sp++] = { type:TYPE_INTVAL, expr:tid, seq:++seq };
 			return;
+		}
+
+		// Next edge case is similar to previous:
+		//		blah {ident} {ident} ifelse
+		if (texec.tokens && texec.tokens.length == 1 &&
+				fexec.tokens && fexec.tokens.length == 1 &&
+				/^\w+$/.test(texec.tokens[0].token) &&
+				/^\w+$/.test(fexec.tokens[0].token)) {
+			var ttype = dict[texec.tokens[0].token] || TYPE_IDENT;
+			var ftype = dict[fexec.tokens[0].token] || TYPE_IDENT;
+			if (ttype === ftype && (ttype & (TYPE_INTTYP|TYPE_NUMTYP|TYPE_STRTYP))) {
+				var tid = tvar();
+				emit('var ' + tid + '=' + parens(expr) +
+							'?$1.' + texec.tokens[0].token +
+							':$1.' + fexec.tokens[0].token + ';');
+				st[sp++] = { type:ttype/*==ftype*/, expr:tid, seq:++seq };
+				return;
+			}
 		}
 
 		ctxflush();

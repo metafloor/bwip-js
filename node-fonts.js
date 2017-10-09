@@ -14,7 +14,7 @@ var fontmap = {
 (function() {
 	try {
 		for (var i = 0; i < 10; i++) {
-			var font = require('./fonts/fnt' + i + '-desc');
+			var font = require(__dirname + '/fonts/fnt' + i + '-desc');
 			fontmap.names[font.name.toUpperCase()] = i;	// font-name to font-id
 			fontmap.fontsets[i] = font;					// font-id to font-descriptor
 		}
