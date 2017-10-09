@@ -60,8 +60,8 @@ must sleep 18 hours in any 72 hour period. That is hardly comparable and does no
 <h2>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 <ul>
-<li>Current bwip-js version is 1.5.6 (2017-09-28)</li>
-<li>Current BWIPP version is 2017-06-09</li>
+<li>Current bwip-js version is 1.6.0 (2017-10-09)</li>
+<li>Current BWIPP version is 2017-07-10</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: IE10+, Edge, Firefox, Chrome</li>
 </ul>
@@ -206,6 +206,13 @@ See the <a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">O
 <div class="highlight highlight-source-js"><pre><span class="pl-c"><span class="pl-c">//</span> Simple HTTP server that renders barcode images using bwip-js.</span>
 <span class="pl-k">const</span> <span class="pl-c1">http</span>   <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>);
 <span class="pl-k">const</span> <span class="pl-c1">bwipjs</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>bwip-js<span class="pl-pds">'</span></span>);
+
+<span class="pl-c"><span class="pl-c">//</span> To use the freetype library for font rendering, you must enable it via useFreetype(),</span>
+<span class="pl-c"><span class="pl-c">//</span> then load your custom font(s).  This shows how to load the Inconsolata font, supplied</span>
+<span class="pl-c"><span class="pl-c">//</span> with the bwip-js distribution.  The path to your fonts will likely be different.</span>
+<span class="pl-c"><span class="pl-c">//</span>bwipjs.useFreetype();</span>
+<span class="pl-c"><span class="pl-c">//</span>bwipjs.loadFont('Inconsolata', 108,</span>
+<span class="pl-c"><span class="pl-c">//</span>      require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));</span>
 
 <span class="pl-smi">http</span>.<span class="pl-en">createServer</span>(<span class="pl-k">function</span>(<span class="pl-smi">req</span>, <span class="pl-smi">res</span>) {
     <span class="pl-c"><span class="pl-c">//</span> If the url does not begin /?bcid= then 404.  Otherwise, we end up</span>

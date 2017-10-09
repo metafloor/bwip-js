@@ -35,7 +35,7 @@ module.exports = function(req, res, opts) {
 	module.exports.toBuffer(args, function(err, png) {
 		if (err) {
 			res.writeHead(400, { 'Content-Type':'text/plain' });
-			res.end('' + err, 'ascii');
+			res.end('' + (err.stack || err), 'utf-8');
 		} else {
 			res.writeHead(200, { 'Content-Type':'image/png' });
 			res.end(png, 'binary');
@@ -113,8 +113,8 @@ module.exports.toBuffer = function(args, callback) {
 	}
 
 	// Override the `backgroundcolor` option.
-	if (opts.backgroundcolor) {
-		bw.bitmap(new Bitmap(rot, parseInt(''+opts.backgroundcolor, 16), opts));
+	if (opts.backgroundcolor != null) {
+		bw.bitmap(new Bitmap(rot, opts.backgroundcolor, opts));
 		delete opts.backgroundcolor;
 	} else {
 		bw.bitmap(new Bitmap(rot, null, opts));
@@ -149,7 +149,7 @@ module.exports.toBuffer = function(args, callback) {
 }
 
 module.exports.useFreetype = function(useFT) {
-	if (useFT || useFT === undefined) {
+	if (useFT || useFT == null) {
 		freetype = require(__dirname + '/freetype');
 		
 		var ft_monochr	= freetype.cwrap("monochrome", 'number', ['number']);
@@ -174,7 +174,7 @@ module.exports.useFreetype = function(useFT) {
 				return ft_monochr(enable ? 1 : 0);
 			},
 			getglyph(fontid, charcode, size) {
-				var offset = ft_bitmap(fontid, charcode, width, height);
+				var offset = ft_bitmap(fontid, charcode, size, size);
 				if (offset <= 0) {
 					return { width:0, height:0, top:0, left:0, advance:ft_advance() };
 				}
@@ -184,6 +184,11 @@ module.exports.useFreetype = function(useFT) {
 				}
 			}
 		};
+
+		// Bring in the custom symbol font for maxicode support (and dotcode when that
+		// renderer changes).
+		module.exports.loadFont('Symbol', 100,
+				require('fs').readFileSync(__dirname + '/fonts/BWIPJS-Symbol.otf', 'binary'));
 	} else {
 		freetype = freefont = null;
 	}
@@ -196,7 +201,7 @@ module.exports.loadFont = function(fontname, sizemult, fontfile) {
 										['string','string','number']);
 	var rv = load_font('/' + fontname, fontname, sizemult);
 	if (rv != 0) {
-		freetype.unlink('/' + fontname);
+		freetype.FS_unlink('/' + fontname);
 		throw 'Error: font load failed [' + rv + ']';
 	}
 }
@@ -207,7 +212,7 @@ module.exports.unloadFont = function(fontname) {
 	close_font(fontname);
 
 	// Delete from emscripten
-	freetype.unlink('/' + fontname);
+	freetype.FS_unlink('/' + fontname);
 }
 
 module.exports.bwipjs_version = bwipjs.VERSION;

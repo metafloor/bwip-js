@@ -12,6 +12,13 @@
 var http   = require('http');
 var bwipjs = require('./node-bwipjs');	// ./ required for local use
 
+// To use the freetype library for font rendering, you must enable it via useFreetype(),
+// then load your custom font(s).  This shows how to load the Inconsolata font, supplied
+// with the bwip-js distribution.  The path to your fonts will likely be different.
+//bwipjs.useFreetype();
+//bwipjs.loadFont('Inconsolata', 108,
+//		require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));
+
 var server = http.createServer(function(req, res) {
 	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
 	// returning 400 on requests like favicon.ico.
@@ -41,7 +48,7 @@ for (var i = 2; i < process.argv.length; i++) {
 	binds++;
 }
 if (!binds) {
-	server.listen(3030);
-	console.log('listening on *:3030');
+	server.listen(process.env.PORT || 3030);
+	console.log('listening on *:' + (process.env.PORT || 3030));
 }
 
