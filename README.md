@@ -40,8 +40,8 @@ Same usage as before.
 
 ## Status 
 
-* Current bwip-js version is 1.5.6 (2017-09-28)
-* Current BWIPP version is 2017-06-09
+* Current bwip-js version is 1.6.0 (2017-10-09)
+* Current BWIPP version is 2017-07-10
 * Node.js compatibility: 0.12+
 * Browser compatibility: IE10+, Edge, Firefox, Chrome
 
@@ -213,6 +213,13 @@ A working, minimal example of how to use the request handler can be found in
 // Simple HTTP server that renders barcode images using bwip-js.
 const http   = require('http');
 const bwipjs = require('bwip-js');
+
+// To use the freetype library for font rendering, you must enable it via useFreetype(),
+// then load your custom font(s).  This shows how to load the Inconsolata font, supplied
+// with the bwip-js distribution.  The path to your fonts will likely be different.
+//bwipjs.useFreetype();
+//bwipjs.loadFont('Inconsolata', 108,
+//      require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));
 
 http.createServer(function(req, res) {
     // If the url does not begin /?bcid= then 404.  Otherwise, we end up
