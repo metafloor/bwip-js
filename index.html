@@ -28,7 +28,7 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 
-<p><a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="https://camo.githubusercontent.com/bf801c201bf177a65a4b14922c0ec9d61f2bee06/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732e706e67" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js.png" style="max-width:100%;"></a>
+<p><a href="http://metafloor.github.io/bwip-js" rel="nofollow"><img alt="bwip-js" align="right" src="https://camo.githubusercontent.com/bf801c201bf177a65a4b14922c0ec9d61f2bee06/687474703a2f2f6d657461666c6f6f722e6769746875622e696f2f627769702d6a732f696d616765732f627769702d6a732e706e67" data-canonical-src="http://metafloor.github.io/bwip-js/images/bwip-js.png" style="max-width:100%;"></a>
 bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any modern browser or JavaScript-based server framework.</p>
 <p>The software has encoding modules for over 90 different barcode types and standards.
 All linear and two-dimensional barcodes in common use (and many uncommon
@@ -46,21 +46,9 @@ there may be noticeable differences.</p>
 <p>See <a href="https://github.com/metafloor/bwip-js/wiki/FreeType-Replacement">FreeType Replacement</a> for more details.</p>
 </blockquote>
 <h2>
-<a id="user-content-redhat-openshift-api-discontinued" class="anchor" href="#redhat-openshift-api-discontinued" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>RedHat OpenShift API Discontinued</h2>
-<p>I was informed during the last week of September that RedHat is discontinuing the free service that is used to host the bwip-js public API.
-The existing solution provided up to three VPS with 24/7 availability. In place of this, they are offering a
-single VPS "starter" platform that, according to <a href="https://www.openshift.com/pricing/index.html">https://www.openshift.com/pricing/index.html</a>,
-must sleep 18 hours in any 72 hour period. That is hardly comparable and does not serve a global user base.</p>
-<p>Because of this, the existing API will likely shutdown on October 1. Sorry for the short notice. This caught me up short as well.</p>
-<p>The API has been moved to a new Amazon AWS platform, reachable as:</p>
-<pre><code>http://bwipjs-api.metafloor.com/
-</code></pre>
-<p>That more generic URL should help isolate applications in the future if/when the host platform changes.</p>
-<p>Same usage as before.</p>
-<h2>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 <ul>
-<li>Current bwip-js version is 1.6.0 (2017-10-09)</li>
+<li>Current bwip-js version is 1.6.1 (2017-11-21)</li>
 <li>Current BWIPP version is 2017-07-10</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: IE10+, Edge, Firefox, Chrome</li>
@@ -76,11 +64,11 @@ must sleep 18 hours in any 72 hour period. That is hardly comparable and does no
 <h2>
 <a id="user-content-links" class="anchor" href="#links" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Links</h2>
 <ul>
-<li><a href="http://metafloor.github.io/bwip-js/">Home Page</a></li>
+<li><a href="http://metafloor.github.io/bwip-js/" rel="nofollow">Home Page</a></li>
 <li><a href="https://github.com/metafloor/bwip-js">Repository</a></li>
-<li><a href="http://metafloor.github.io/bwip-js/demo/demo.html">Online Barcode Generator</a></li>
+<li><a href="http://metafloor.github.io/bwip-js/demo/demo.html" rel="nofollow">Online Barcode Generator</a></li>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">Online Barcode API</a></li>
-<li><a href="https://www.npmjs.com/package/bwip-js">npm Page</a></li>
+<li><a href="https://www.npmjs.com/package/bwip-js" rel="nofollow">npm Page</a></li>
 <li><a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP Documentation</a></li>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/Differences-From-BWIPP">Differences From BWIPP</a></li>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/BWIPP-Barcode-Types">Supported Barcode Types</a></li>
@@ -96,7 +84,7 @@ must sleep 18 hours in any 72 hour period. That is hardly comparable and does no
 <p>(The bwip-js master branch and the npm version are kept sync'd.)</p>
 <h2>
 <a id="user-content-online-barcode-generator" class="anchor" href="#online-barcode-generator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Online Barcode Generator</h2>
-<p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online barcode generator</a>
+<p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html" rel="nofollow">online barcode generator</a>
 demonstrates all of the features of bwip-js.  As of version 1.5, the FreeType
 library is no longer supported in the demo.  Only the OCR-A and OCR-B fonts are
 available.</p>
@@ -119,9 +107,7 @@ It is based on the default <code>App.js</code> file generated by <code>create-re
 <span class="pl-k">import</span> <span class="pl-smi">bwipjs</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>bwip-js<span class="pl-pds">'</span></span>;
 
 <span class="pl-k">class</span> <span class="pl-en">App</span> <span class="pl-k">extends</span> <span class="pl-e">Component</span> {
-  <span class="pl-en">constructor</span>(<span class="pl-smi">props</span>) {
-    <span class="pl-c1">super</span>(props);
-
+  <span class="pl-en">componentDidMount</span>() {
     <span class="pl-en">bwipjs</span>(<span class="pl-s"><span class="pl-pds">'</span>mycanvas<span class="pl-pds">'</span></span>, {
             bcid<span class="pl-k">:</span>        <span class="pl-s"><span class="pl-pds">'</span>code128<span class="pl-pds">'</span></span>,       <span class="pl-c"><span class="pl-c">//</span> Barcode type</span>
             text<span class="pl-k">:</span>        <span class="pl-s"><span class="pl-pds">'</span>0123456789<span class="pl-pds">'</span></span>,    <span class="pl-c"><span class="pl-c">//</span> Text to encode</span>
@@ -165,7 +151,7 @@ This will be the same value passed in originally, either the <code>id</code> str
 </ul>
 <p>If you would prefer to display the barcode using an <code>&lt;img&gt;</code> tag or with CSS <code>background-image</code>,
 pass in a detached or hidden canvas to bwip-js, and use the canvas method
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL">HTMLCanvasElement.toDataURL</a>
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL" rel="nofollow">HTMLCanvasElement.toDataURL</a>
 to get a data URL. For example:</p>
 <div class="highlight highlight-source-js"><pre><span class="pl-k">let</span> canvas <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">createElement</span>(<span class="pl-s"><span class="pl-pds">'</span>canvas<span class="pl-pds">'</span></span>);
 <span class="pl-en">bwipjs</span>(canvas, options, <span class="pl-k">function</span>(<span class="pl-smi">err</span>, <span class="pl-smi">cvs</span>) {
@@ -212,7 +198,7 @@ See the <a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">O
 <span class="pl-c"><span class="pl-c">//</span> with the bwip-js distribution.  The path to your fonts will likely be different.</span>
 <span class="pl-c"><span class="pl-c">//</span>bwipjs.useFreetype();</span>
 <span class="pl-c"><span class="pl-c">//</span>bwipjs.loadFont('Inconsolata', 108,</span>
-<span class="pl-c"><span class="pl-c">//</span>      require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));</span>
+<span class="pl-c"><span class="pl-c">//</span>      require('fs').readFileSync('./fonts/Inconsolata.otf', 'binary'));</span>
 
 <span class="pl-smi">http</span>.<span class="pl-en">createServer</span>(<span class="pl-k">function</span>(<span class="pl-smi">req</span>, <span class="pl-smi">res</span>) {
     <span class="pl-c"><span class="pl-c">//</span> If the url does not begin /?bcid= then 404.  Otherwise, we end up</span>
@@ -372,6 +358,8 @@ freetype replacement library use XHR, which must run over HTTP.</p>
 </blockquote>
 <p>If you would like to implement your own interface to bwip-js, see <a href="https://github.com/metafloor/bwip-js/wiki/Integrating-With-Your-Code">Integrating With Your Code</a>.
 You should also look at the <code>node-bwipjs.js</code> module to see how it was done for Node.js.</p>
+<h2>
+<a id="user-content-supported-barcode-types" class="anchor" href="#supported-barcode-types" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Supported Barcode Types</h2>
 
 	</div>
     <!-- FOOTER  -->
