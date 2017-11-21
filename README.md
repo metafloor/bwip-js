@@ -21,26 +21,9 @@ found at the end of this document.
 >
 > See [FreeType Replacement](https://github.com/metafloor/bwip-js/wiki/FreeType-Replacement) for more details.
 
-## RedHat OpenShift API Discontinued
-
-I was informed during the last week of September that RedHat is discontinuing the free service that is used to host the bwip-js public API. 
-The existing solution provided up to three VPS with 24/7 availability. In place of this, they are offering a
-single VPS "starter" platform that, according to https://www.openshift.com/pricing/index.html,
-must sleep 18 hours in any 72 hour period. That is hardly comparable and does not serve a global user base.
-
-Because of this, the existing API will likely shutdown on October 1. Sorry for the short notice. This caught me up short as well.
-
-The API has been moved to a new Amazon AWS platform, reachable as:
-
-	http://bwipjs-api.metafloor.com/
-
-That more generic URL should help isolate applications in the future if/when the host platform changes.
-
-Same usage as before.
-
 ## Status 
 
-* Current bwip-js version is 1.6.0 (2017-10-09)
+* Current bwip-js version is 1.6.1 (2017-11-21)
 * Current BWIPP version is 2017-07-10
 * Node.js compatibility: 0.12+
 * Browser compatibility: IE10+, Edge, Firefox, Chrome
@@ -108,9 +91,7 @@ import './App.css';
 import bwipjs from 'bwip-js';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
+  componentDidMount() {
     bwipjs('mycanvas', {
             bcid:        'code128',       // Barcode type
             text:        '0123456789',    // Text to encode
@@ -219,7 +200,7 @@ const bwipjs = require('bwip-js');
 // with the bwip-js distribution.  The path to your fonts will likely be different.
 //bwipjs.useFreetype();
 //bwipjs.loadFont('Inconsolata', 108,
-//      require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));
+//      require('fs').readFileSync('./fonts/Inconsolata.otf', 'binary'));
 
 http.createServer(function(req, res) {
     // If the url does not begin /?bcid= then 404.  Otherwise, we end up
@@ -388,6 +369,8 @@ files, if necessary.  Then navigate your browser to `bwip-js/demo.html`.
 
 If you would like to implement your own interface to bwip-js, see [Integrating With Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-With-Your-Code).
 You should also look at the `node-bwipjs.js` module to see how it was done for Node.js.
+
+## Supported Barcode Types
 
 ## Supported Barcode Types
 

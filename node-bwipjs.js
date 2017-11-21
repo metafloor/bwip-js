@@ -8,10 +8,10 @@
 "use strict";
 
 var url	= require('url'),
-	bwipp = require(__dirname + '/bwipp'),
-	bwipjs = require(__dirname + '/bwipjs'),
-	Bitmap = require(__dirname + '/node-bitmap'),
-	fixedfont = require(__dirname + '/node-fonts')	// freetype alternative, default
+	bwipp = require('./bwipp'),
+	bwipjs = require('./bwipjs'),
+	Bitmap = require('./node-bitmap'),
+	fixedfont = require('./node-fonts')	// freetype alternative, default
 	;
 
 // freetype is the module, freefont is the font manager interface identical to fixedfont
@@ -150,7 +150,7 @@ module.exports.toBuffer = function(args, callback) {
 
 module.exports.useFreetype = function(useFT) {
 	if (useFT || useFT == null) {
-		freetype = require(__dirname + '/freetype');
+		freetype = require('./freetype');
 		
 		var ft_monochr	= freetype.cwrap("monochrome", 'number', ['number']);
 		var ft_lookup	= freetype.cwrap("find_font", 'number', ['string']);

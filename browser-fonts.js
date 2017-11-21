@@ -39,7 +39,9 @@ var bwipjs_fonts = {
 
 	function metrics(id) {
 		var xhr = new XMLHttpRequest;
-		xhr.open('GET', process.env.PUBLIC_URL + '/bwipjs-fonts/fnt' + id + '-desc.js', true);
+		var root = (typeof process == 'object' && typeof process.env == 'object' &&
+					process.env.PUBLIC_URL) || '';
+		xhr.open('GET', root + '/bwipjs-fonts/fnt' + id + '-desc.js', true);
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState == 4) {
 				// The description files always start with //
@@ -80,7 +82,9 @@ function loadfonts(callback) {
 	for (var temp in bwipjs_fonts.toload) {
 		(function(fontpath, font) {
 			var xhr = new XMLHttpRequest;
-			xhr.open('GET', process.env.PUBLIC_URL + '/bwipjs-fonts/' + fontpath, true);
+			var root = (typeof process == 'object' && typeof process.env == 'object' &&
+						process.env.PUBLIC_URL) || '';
+			xhr.open('GET', root + '/bwipjs-fonts/' + fontpath, true);
 			xhr.responseType = 'arraybuffer';
 			xhr.onload = function(e) {
 				if (xhr.status == 200) {
