@@ -23,7 +23,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 1.6.1 (2017-11-21)
+* Current bwip-js version is 1.6.2 (2017-11-22)
 * Current BWIPP version is 2017-07-10
 * Node.js compatibility: 0.12+
 * Browser compatibility: IE10+, Edge, Firefox, Chrome
@@ -369,8 +369,6 @@ files, if necessary.  Then navigate your browser to `bwip-js/demo.html`.
 
 If you would like to implement your own interface to bwip-js, see [Integrating With Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-With-Your-Code).
 You should also look at the `node-bwipjs.js` module to see how it was done for Node.js.
-
-## Supported Barcode Types
 
 ## Supported Barcode Types
 
