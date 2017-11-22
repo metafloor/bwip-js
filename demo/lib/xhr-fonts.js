@@ -23,13 +23,11 @@ var bwipjs_fonts = {
 		var xhr = new XMLHttpRequest;
 		xhr.open('GET', bwipjs_fonts.fontdir + 'fnt' + id + '-desc.js', true);
 		xhr.onreadystatechange = function () {
-			if (xhr.status == 200 && xhr.readyState == 4) {
-				try {
-					eval(xhr.responseText);
-					metrics(id+1);
-				} catch (e) {
-					console.log(e);
-				}
+			// The description files always start with //
+			if (xhr.status == 200 && xhr.readyState == 4 &&
+					/^\s*\/\//.test(xhr.responseText)) {
+				eval(xhr.responseText);
+				metrics(id+1);
 			}
 		}
 		xhr.onerror = function (e) {

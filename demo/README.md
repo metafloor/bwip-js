@@ -23,7 +23,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 1.6.1 (2017-11-09)
+* Current bwip-js version is 1.6.1 (2017-11-21)
 * Current BWIPP version is 2017-07-10
 * Node.js compatibility: 0.12+
 * Browser compatibility: IE10+, Edge, Firefox, Chrome
@@ -91,9 +91,7 @@ import './App.css';
 import bwipjs from 'bwip-js';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
+  componentDidMount() {
     bwipjs('mycanvas', {
             bcid:        'code128',       // Barcode type
             text:        '0123456789',    // Text to encode
@@ -202,7 +200,7 @@ const bwipjs = require('bwip-js');
 // with the bwip-js distribution.  The path to your fonts will likely be different.
 //bwipjs.useFreetype();
 //bwipjs.loadFont('Inconsolata', 108,
-//      require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));
+//      require('fs').readFileSync('./fonts/Inconsolata.otf', 'binary'));
 
 http.createServer(function(req, res) {
     // If the url does not begin /?bcid= then 404.  Otherwise, we end up
