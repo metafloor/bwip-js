@@ -226,6 +226,7 @@ function PSC(str, flags) {
 	var block = [];
 	var depth = 0;
 	var seq   = 0;
+	var loopdepth = 0;
 
 	// We do a two-pass compilation of each global function.  The first pass
 	// is used to find all user-defined identifiers (allowunknown=true).
@@ -467,7 +468,11 @@ function PSC(str, flags) {
 	// Emit the executable object.
 	function ctxexec(exec) {
 		if (exec.type == TYPE_IENAME) {
-			return [{ code:exec.expr + '();', lnbr:lex.lnbr, seq:++seq }]
+			if (loopdepth) {
+				return [{ code:exec.expr+'();', lnbr:lex.lnbr, seq:++seq }]
+			}
+			return [{ code:exec.expr+'();',
+					lnbr:lex.lnbr, seq:++seq }]
 		} else if (exec.type == TYPE_PRECALC) {
 			return [{ code:exec.expr, lnbr:lex.lnbr, seq:++seq }];
 		} else if (exec.type == TYPE_TOKENS) {
@@ -835,10 +840,18 @@ function PSC(str, flags) {
 					// Push state to stack before calling
 					ctxflush();
 					if (/^[A-Za-z_]\w*$/.test(tkn)) {
-						emit('$' + dlvl + '.' + tkn + '();');
+						var expr = '$' + dlvl + '.' + tkn + '()';
+						//emit('$' + dlvl + '.' + tkn + '();');
 					} else {
-						emit('$' + dlvl + '["' + tkn.replace(/[\\"]/g,'\\$&') +
-							 '"]();');
+						var expr = '$' + dlvl + '["' + tkn.replace(/[\\"]/g,'\\$&') +
+							 '"]()';
+						//emit('$' + dlvl + '["' + tkn.replace(/[\\"]/g,'\\$&') +
+						//	 '"]();');
+					}
+					if (loopdepth) {
+						emit('if(' + expr + '==$b)break;');
+					} else {
+						emit('if(' + expr + '==$b)return $b;');
 					}
 				// We cannot directly use a dictionary reference as a
 				// trace expression.  Intermediate variables must be used to
@@ -1203,6 +1216,7 @@ function PSC(str, flags) {
 			seq			 = 0;
 			dict		 = {};
 			branchno	 = -1;	// Disable for the first pass
+			loopdepth	 = 0;
 
 			// BWIPP unknowns
 			dict.$error = TYPE_DICT;
@@ -1221,6 +1235,7 @@ function PSC(str, flags) {
 			allowunknown = false;		// second pass, disallow unknowns
 			tvarno		 = 0;
 			seq			 = 0;
+			loopdepth	 = 0;
 
 			if (cfg.coverage) {
 				branchno = 0;			// enable for the 2nd pass
@@ -1594,6 +1609,10 @@ function PSC(str, flags) {
 		var exec = st[sp-1];
 		sp-=2;
 
+		// A forall is executed as a function, therefore loopdepth is temporarily zero.
+		var olddepth = loopdepth;
+		loopdepth = 0;
+
 		// azteccode forall loop breaks this...  We need better handling of
 		// if/ifelse loops where we do not flush context on exit from the
 		// blocks.  It messes up the depth counts when the branch pushes
@@ -1669,12 +1688,14 @@ function PSC(str, flags) {
 				emit(RC + ');');
 			}
 		}
+		loopdepth = olddepth;
 	}
 	$.for = function() {
 		if (sp < 4) {
 			dump('for');
 			throw 'for: INSUFFICIENT PARAMETERS';
 		}
+		loopdepth++;
 		var eini = st[sp-4].expr;
 		var tinc = st[sp-3].type;
 		var einc = st[sp-3].expr;
@@ -1690,7 +1711,6 @@ function PSC(str, flags) {
 			var vlim = elim;
 		}
 		var tid = tvar();
-
 
 		ctxflush();
 
@@ -1715,9 +1735,11 @@ function PSC(str, flags) {
 		newbranch();
 		append(ctxexec(exec));
 		emit(RC);
+		loopdepth--;
 	}
 	$.repeat = function() {
 		need(2);
+		loopdepth++;
 		var tid = tvar();
 		var lim = tvar();
 		var expr = st[sp-2].expr;
@@ -1731,9 +1753,11 @@ function PSC(str, flags) {
 		newbranch();
 		append(ctxexec(exec));
 		emit(RC);
+		loopdepth--;
 	}
 	$.loop = function() {
 		need(1);
+		loopdepth++;
 		var exec = st[sp-1];
 		sp-=1;
 
@@ -1743,10 +1767,18 @@ function PSC(str, flags) {
 		newbranch();
 		append(ctxexec(exec));
 		emit(RC);
+		loopdepth--;
 	}
 	$.exit = function() {
 		ctxflush();
-		emit('break;');
+		//if (!loopdepth) {
+		//	throw '#' + lex.lnbr + ': exit outside a loop';
+		//}
+		if (loopdepth) {
+			emit('break;');
+		} else {
+			emit('return $b;');
+		}
 	}
 
 	$.mark = function() {

@@ -13,6 +13,7 @@ var $0 = {
 
 var $j = 0;		// stack pointer
 var $k = [];	// operand stack
+var $b = {};	// break symbol
 
 // Array ctor
 //	$a()	: Build a new array up to the Infinity-marker on the stack.
@@ -325,24 +326,24 @@ function $forall(o, cb) {
 	if (o instanceof Uint8Array) {
 		for (var i = 0, l = o.length; i < l; i++) {
 			$k[$j++] = o[i];
-			cb && cb();
+			if (cb && cb() == $b) break;
 		}
 	} else if (o instanceof Array) {
 		// The array may be a view.
 		for (var a = o.b, i = o.o, l = o.o + o.length; i < l; i++) {
 			$k[$j++] = a[i];
-			cb && cb();
+			if (cb && cb() == $b) break;
 		}
 	} else if (typeof o === 'string') {
 		for (var i = 0, l = o.length; i < l; i++) {
 			$k[$j++] = o.charCodeAt(i);
-			cb && cb();
+			if (cb && cb() == $b) break;
 		}
 	} else {
 		for (var id in o) {
 			$k[$j++] = id;
 			$k[$j++] = o[id];
-			cb && cb();
+			if (cb && cb() == $b) break;
 		}
 	}
 }

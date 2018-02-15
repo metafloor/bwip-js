@@ -1,0 +1,161 @@
+% --BEGIN ENCODER channelcode--
+% --REQUIRES preamble raiseerror renlinear--
+% --DESC: Channel Code
+% --EXAM: 3493
+% --EXOP: height=0.5 includetext 
+% --RNDR: renlinear
+%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2017071000 68302 68105
+%%BeginData:        149 ASCII Lines
+/setpacking where {pop currentpacking true setpacking} if
+1 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+begin
+/channelcode {
+
+    20 dict begin                 % Confine variables to local scope
+
+    /options exch def       % We are given an option string
+    /barcode exch def       % We are given a barcode string
+
+    /dontdraw false def
+    /shortfinder false def
+    /includetext false def
+    /includecheck false def
+    /height 1 def
+    
+    % Parse the input options
+    options type /stringtype eq {
+        1 dict begin
+        options {
+            token false eq {exit} if dup length string cvs (=) search
+            true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+        } loop
+        currentdict end /options exch def
+    } if
+    options {def} forall
+
+    /height height cvr def
+
+    % Validate the input
+    barcode length 2 lt barcode length 7 gt or {
+        /bwipp.channelcodeBadLength (Channel Code must be 2 to 7 digits) //raiseerror exec
+    } if
+    barcode {
+        dup 48 lt exch 57 gt or {
+            /bwipp.channelcodeBadCharacter (Channel Code must contain only digits) //raiseerror exec
+        } if
+    } forall
+    barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {
+        /bwipp.channelcodeTooBig (The Channel Code value is too big for the number of channels) //raiseerror exec
+    } if
+
+    /nextb {
+        dup
+        dup s exch get exch
+        dup b exch 1 sub get exch
+        dup s exch 1 sub get exch
+        b exch 2 sub get exch
+        add add add 4 gt {1} {2} ifelse
+        1 index chan 2 add lt {
+            dup 1 4 index {
+                b 3 index 2 index put
+                3 index exch sub 1 add 4 index 3 index 1 add nexts
+            } for
+        } {
+            dup 3 index le {
+                b 2 index 4 index put
+                value target eq {
+                    /out [ 
+                        3 1 10 {dup s exch get exch b exch get} for
+                    ] 0 chan 2 mul getinterval def 
+                } if
+                /value value 1 add def
+            } if
+        } ifelse 
+        pop pop pop pop
+    } bind def
+
+    /nexts {
+        dup chan 2 add lt {1} {1 index} ifelse 1 3 index {
+            s 2 index 2 index put
+            2 index exch sub 1 add 3 index 2 index nextb
+        } for
+        pop pop pop
+    } bind def
+
+    /encode {
+        /chan exch def
+        /target exch def
+        /value 0 def
+        /out -1 def
+        /b [ 1 1 1 0 0 0 0 0 0 0 0 ] def
+        /s [ 0 1 1 0 0 0 0 0 0 0 0 ] def
+        chan dup 3 nexts
+        out
+    } bind def
+
+    /barlen barcode length def
+
+    % Determine finder
+    /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
+
+    % Encode the main data
+    /data barcode cvi barlen 1 add encode def
+
+    % Determine check data
+    /check [] def
+    includecheck {
+        /mod23 [
+            [] []
+            [ 13 12  4  9  3  1 ]
+            [ 13  2 12  3 18 16  4  1 ]
+            [ 11 16 17  8 20  4 10  2  5  1 ]
+            [  1  4 16 18  3 12  2  8  9 13  6  1 ]
+            [ 20 16 22 13 15 12  5  4  8  9 21  3  7  1 ]
+            [  2  6 18  8  1  3  9  4 12 13 16  2  6 18  8  1 ]
+        ] barlen get def
+        0
+        0 1 data length 1 sub {
+            dup data exch get 1 sub exch mod23 exch get mul add
+        } for
+        23 mod 3 encode /check exch def
+    } if
+
+    % Construct the symbol
+    /sbs [
+        finder aload pop
+        data aload pop
+        check aload pop
+    ] def
+
+    % Create the human readable text
+    /txt barlen array def
+    0 1 barlen 1 sub {
+        /i exch def
+        txt i [barcode i 1 getinterval 0 0 () 0] put
+    } for
+
+    % Return the arguments
+    <<
+    /ren //renlinear
+    /sbs sbs
+    /bhs [sbs length 1 add 2 idiv {height} repeat]
+    /bbs [sbs length 1 add 2 idiv {0} repeat]
+    /txt txt
+    /textxalign (center)
+    /opt options
+    >>
+
+    dontdraw not //renlinear if
+
+    end
+
+} bind def
+/channelcode dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END ENCODER channelcode--
+

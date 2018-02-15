@@ -67,34 +67,37 @@
 ##   append our custom versions below.
 ##
 ## * Replace the isbn/ismn/issn Courier with OCR-A
-##   Change the isbn/ismn/issn textsize from 9 to 8.5
+##   Change the isbn/ismn/issn textsize from 9 to 8
 ##   Change the standard text y-offset from 7pt to 8.5pt (OCR fonts are taller
 ##   than Courier at the same point-size).
 ##
-sed -e 's,/\(is..textfont\) /Courier,/\1 /OCR-A,' \
+
+cp barcode.ps barcode.tmp
+for name in $(cd custom; ls *.ps | sed -e 's/\.ps//') ; do
+	echo replacing $name...
+	sed -e "/^[/]$name [{]/,/^[}] bind def/s/^/%psc /" barcode.tmp > barcode.psc
+	mv -f barcode.psc barcode.tmp
+done
+
+## Append the customs and fixup the code
+cat barcode.tmp custom/*.ps | sed -e 's,/\(is..textfont\) /Courier,/\1 /OCR-A,' \
 	-e 's,/\(is..textsize\) 9,/\1 8,' \
 	-e 's,/textyoffset -7,/textyoffset -8.5,' \
 	-e 's,/textyoffset -4,/textyoffset -4.5,' \
 	-e '/^    parse {\s*$/,/^    } if\s*$/s/^/%psc /'\
-	-e '/--BEGIN RENDERER/,/--END RENDERER/s/^/%psc /'\
 	-e '/^currentglobal/,/^setglobal/s/^/%psc /'\
 	-e '/^\/setpacking where {pop currentpacking/,/^begin/s/^/%psc /'\
 	-e '/^\/[^ ]* dup load \/uk.co.terryburton/,/^\/setpacking where {pop setpacking} if/s/^/%psc /'\
 	-e '/^\s*options type \/stringtype eq {/,/^\s*} if/s/^\s*/%psc &/'\
-	barcode.ps > barcode.tmp
+	> barcode.psc
 
 ##
-## Append our custom renderers.
-##
-cat custom/*.ps >> barcode.tmp
-
-##
-## Cross-compile barcode.tmp into barcode.js.
+## Cross-compile barcode.psc into barcode.js.
 ##
 node <<@EOF
 var fs  = require('fs');
 var psc = require('./psc.js');// Not to be confused with this like-named script
-var pstext = fs.readFileSync('barcode.tmp', 'binary');
+var pstext = fs.readFileSync('barcode.psc', 'binary');
 var flags  = "$*".split(' ');
 fs.writeFileSync('barcode.js', psc(pstext, flags), 'binary');
 @EOF
@@ -117,6 +120,7 @@ fi
 ## Build the raw (unformatted, unminified) version of bwipp.js.
 ##
 cat <<@EOF > bwipp-raw.js
+"use strict";
 function BWIPP() {
 $(cat barcode-hdr.js barcode.js barcode-ftr.js)
 }
@@ -172,6 +176,7 @@ node pscify
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##
+rm -f barcode.psc
 rm -f barcode.tmp
 rm -f barcode.js
 rm -f bwipp-raw.js
