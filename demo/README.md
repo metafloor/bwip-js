@@ -9,7 +9,7 @@ All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.
 
-> Version 1.5 has a replacement for the emscripten-compiled FreeType library (which was causing 
+> Version 1.5 has a replacement for the emscripten-compiled FreeType library (which was causing
 > issues with popular frameworks and pre-allocated too much memory for use in embedded servers).
 > It *is* still possible to use FreeType with Node.js, but you must explicitly enable it.
 > By default, you get the replacement.  Browsers only use the replacement.
@@ -23,8 +23,8 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 1.6.2 (2017-11-22)
-* Current BWIPP version is 2017-07-10
+* Current bwip-js version is 1.6.3 (2018-02-15)
+* Current BWIPP version is 2018-02-04
 * Node.js compatibility: 0.12+
 * Browser compatibility: IE10+, Edge, Firefox, Chrome
 
@@ -151,7 +151,6 @@ bwipjs(canvas, options, function(err, cvs) {
     }
 });
 ```
-
 If you want to generate barcodes with text, you *must* do one extra step after installing
 bwip-js.  The browser-based font manager uses XHR to demand-load fonts as needed.  The
 problem is that the fonts directory where bwip-js gets installed (under `node_modules`) is
