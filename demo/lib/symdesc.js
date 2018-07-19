@@ -1,10 +1,10 @@
 // file: bwip-js/lib/symdesc.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2017-07-10
+// Barcode Writer in Pure PostScript - Version 2018-02-04
 //
-// Copyright (c) 2011-2017 Mark Warren
-// Copyright (c) 2004-2014 Terry Burton
+// Copyright (c) 2011-2018 Mark Warren
+// Copyright (c) 2004-2018 Terry Burton
 //
 // Licensed MIT.  See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.
@@ -66,7 +66,7 @@ var symdesc = {
 	"codablockf":{ sym:"codablockf",desc:"Codablock F",text:"CODABLOCK F 34567890123456789010040digit",opts:"columns=8" },
 	"code16k":{ sym:"code16k",desc:"Code 16K",text:"Abcd-1234567890-wxyZ",opts:"" },
 	"code49":{ sym:"code49",desc:"Code 49",text:"MULTIPLE ROWS IN CODE 49",opts:"" },
-	"channelcode":{ sym:"channelcode",desc:"Channel Code",text:"3493",opts:"height=12 includetext " },
+	"channelcode":{ sym:"channelcode",desc:"Channel Code",text:"3493",opts:"height=12 includetext" },
 	"flattermarken":{ sym:"flattermarken",desc:"Flattermarken",text:"11099",opts:"inkspread=-0.25 showborder borderleft=0 borderright=0" },
 	"raw":{ sym:"raw",desc:"Custom 1D symbology",text:"331132131313411122131311333213114131131221323",opts:"height=12" },
 	"daft":{ sym:"daft",desc:"Custom 4 state symbology",text:"FATDAFTDAD",opts:"" },
@@ -85,6 +85,7 @@ var symdesc = {
 	"codeone":{ sym:"codeone",desc:"Code One",text:"Code One",opts:"" },
 	"hanxin":{ sym:"hanxin",desc:"Han Xin Code",text:"This is Han Xin",opts:"" },
 	"dotcode":{ sym:"dotcode",desc:"DotCode",text:"This is DotCode",opts:"fast inkspread=0.3" },
+	"ultracode":{ sym:"ultracode",desc:"Ultracode",text:"Awesome colours!",opts:"eclevel=EC2" },
 	"gs1-cc":{ sym:"gs1-cc",desc:"GS1 Composite 2D Component",text:"(01)95012345678903(3103)000123",opts:"ccversion=b cccolumns=4" },
 	"ean13composite":{ sym:"ean13composite",desc:"EAN-13 Composite",text:"2112345678900|(99)1234-abcd",opts:"includetext" },
 	"ean8composite":{ sym:"ean8composite",desc:"EAN-8 Composite",text:"02345673|(21)A12345678",opts:"includetext" },

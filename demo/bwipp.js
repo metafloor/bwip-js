@@ -27742,185 +27742,187 @@ function BWIPP() {
 			$put(_m, ~~(_n / 8), $get(_m, ~~(_n / 8)) + ((~~(Math.pow(2, 7 - ($1.i % 8)))) * $get($1.pixs, $1.i))); /*25509*/
 		} /*25509*/
 		$$.save(); /*25513*/
-		var _t = $$.currpos(); /*25514*/
-		$$.translate(_t.x, _t.y); /*25514*/
-		$$.scale(72 * $1.width, 72 * $1.height); /*25515*/
-		$$.moveto(0.0001, 0.0001); /*25516*/
-		$$.lineto(0.9999, 0.0001); /*25516*/
-		$$.lineto(0.9999, 0.9999); /*25516*/
-		$$.lineto(0.0001, 0.9999); /*25516*/
-		$$.closepath(); /*25516*/
-		if ($ne($1.barcolor, "unset")) { /*25518*/
-			$$.setcolor($1.barcolor); /*25518*/
-		} /*25518*/
-		$$.imagemask($1.pixx, $1.pixy, $1.imgstr); /*25523*/
-		$$.restore(); /*25524*/
-		if ($1.includetext) { /*25587*/
-			$$.save(); /*25528*/
-			if ($ne($1.textcolor, "unset")) { /*25529*/
-				$$.setcolor($1.textcolor); /*25529*/
-			} /*25529*/
-			if (($eq($1.textxalign, "unset") && $eq($1.textyalign, "unset")) && $eq($1.alttext, "")) { /*25584*/
-				$1.s = 0; /*25531*/
-				$1.fn = ""; /*25531*/
-				var _17 = $1.txt; /*25532*/
-				for (var _18 = 0, _19 = _17.length; _18 < _19; _18++) { /*25542*/
-					$forall($get(_17, _18)); /*25533*/
-					var _1B = $k[--$j]; /*25534*/
-					var _1C = $k[--$j]; /*25534*/
-					$k[$j++] = _1C; /*25540*/
-					$k[$j++] = _1B; /*25540*/
-					if ((_1B != $1.s) || $ne(_1C, $1.fn)) { /*25539*/
-						var _1F = $k[--$j]; /*25535*/
-						var _1G = $k[--$j]; /*25535*/
-						$1.s = _1F; /*25535*/
-						$1.fn = _1G; /*25535*/
-						var _1H = $$.findfont(_1G); /*25537*/
-						_1H.FontSize = _1F; /*25537*/
-						$$.setfont(_1H); /*25537*/
-					} else { /*25539*/
-						$j -= 2; /*25539*/
-					} /*25539*/
-					var _1I = $k[--$j]; /*25541*/
-					$$.moveto($k[--$j], _1I); /*25541*/
-					$$.show($k[--$j], 0, 0); /*25541*/
-				} /*25541*/
-			} else { /*25584*/
-				var _1N = $$.findfont($1.textfont); /*25544*/
-				_1N.FontSize = $1.textsize; /*25544*/
-				$$.setfont(_1N); /*25544*/
-				if ($eq($1.alttext, "")) { /*25550*/
-					$k[$j++] = Infinity; /*25546*/
-					var _1P = $1.txt; /*25546*/
-					for (var _1Q = 0, _1R = _1P.length; _1Q < _1R; _1Q++) { /*25546*/
-						$forall($get($get(_1P, _1Q), 0)); /*25546*/
-					} /*25546*/
-					$1.txt = $a(); /*25546*/
-					$1.tstr = $s($1.txt.length); /*25547*/
-					for (var _1Z = 0, _1Y = $1.txt.length - 1; _1Z <= _1Y; _1Z += 1) { /*25548*/
-						$put($1.tstr, _1Z, $get($1.txt, _1Z)); /*25548*/
-					} /*25548*/
-				} else { /*25550*/
-					$1.tstr = $1.alttext; /*25550*/
-				} /*25550*/
-				if ($1.tstr.length == 0) { /*25566*/
-					$k[$j++] = 0; /*25555*/
-				} else { /*25566*/
-					$$.save(); /*25557*/
-					$$.newpath(); /*25558*/
-					$$.moveto(0, 0); /*25558*/
-					$$.charpath("0", false); /*25558*/
-					var _1f = $$.pathbbox(); /*25558*/
-					$$.restore(); /*25560*/
-					var _1g = $$.currfont(); /*25561*/
-					var _1h = _1g.PaintType !== undefined; /*25561*/
-					$k[$j++] = _1f.ury; /*25561*/
-					if (_1h) { /*25561*/
-						var _1i = $$.currfont(); /*25561*/
-						$k[$j++] = _1i.PaintType == 2; /*25561*/
-					} else { /*25561*/
-						$k[$j++] = false; /*25561*/
-					} /*25561*/
-					var _1k = $$.currfont(); /*25562*/
-					var _1l = _1k.StrokeWidth !== undefined; /*25562*/
-					if ($k[--$j] && _1l) { /*25567*/
-						var _1n = $$.currfont(); /*25563*/
-						var _1p = $$.currfont(); /*25564*/
-						var _1q = _1p.FontMatrix; /*25564*/
-						var _1r = _1n.StrokeWidth / 2; /*25565*/
-						var _1s = $k[--$j]; /*25566*/
-						$k[$j++] = _1s + (Math.sqrt((_1r * _1r) + (0 * 0))); /*25566*/
-					} /*25566*/
-				} /*25566*/
-				$1.textascent = $k[--$j]; /*25569*/
-				var _1v = $$.stringwidth($1.tstr); /*25570*/
-				$1.textwidth = _1v.w + (($1.tstr.length - 1) * $1.textgaps); /*25570*/
-				$1.textxpos = $1.textxoffset + (($1.pixx - $1.textwidth) / 2); /*25572*/
-				if ($eq($1.textxalign, "left")) { /*25573*/
-					$1.textxpos = $1.textxoffset; /*25573*/
-				} /*25573*/
-				if ($eq($1.textxalign, "right")) { /*25574*/
-					$1.textxpos = ($1.pixx - $1.textxoffset) - $1.textwidth; /*25574*/
-				} /*25574*/
-				if ($eq($1.textxalign, "offleft")) { /*25575*/
-					$1.textxpos = -($1.textwidth + $1.textxoffset); /*25575*/
-				} /*25575*/
-				if ($eq($1.textxalign, "offright")) { /*25576*/
-					$1.textxpos = $1.pixx + $1.textxoffset; /*25576*/
+		$$.floorscale(); /*25517*/
+		var _t = $$.currpos(); /*25519*/
+		$$.translate(_t.x, _t.y); /*25519*/
+		$$.scale(72 * $1.width, 72 * $1.height); /*25520*/
+		$$.moveto(0.0001, 0.0001); /*25521*/
+		$$.lineto(0.9999, 0.0001); /*25521*/
+		$$.lineto(0.9999, 0.9999); /*25521*/
+		$$.lineto(0.0001, 0.9999); /*25521*/
+		$$.closepath(); /*25521*/
+		if ($ne($1.barcolor, "unset")) { /*25523*/
+			$$.setcolor($1.barcolor); /*25523*/
+		} /*25523*/
+		$$.imagemask($1.pixx, $1.pixy, $1.imgstr); /*25528*/
+		$$.restore(); /*25529*/
+		if ($1.includetext) { /*25597*/
+			$$.save(); /*25533*/
+			$$.floorscale(); /*25537*/
+			if ($ne($1.textcolor, "unset")) { /*25539*/
+				$$.setcolor($1.textcolor); /*25539*/
+			} /*25539*/
+			if (($eq($1.textxalign, "unset") && $eq($1.textyalign, "unset")) && $eq($1.alttext, "")) { /*25594*/
+				$1.s = 0; /*25541*/
+				$1.fn = ""; /*25541*/
+				var _17 = $1.txt; /*25542*/
+				for (var _18 = 0, _19 = _17.length; _18 < _19; _18++) { /*25552*/
+					$forall($get(_17, _18)); /*25543*/
+					var _1B = $k[--$j]; /*25544*/
+					var _1C = $k[--$j]; /*25544*/
+					$k[$j++] = _1C; /*25550*/
+					$k[$j++] = _1B; /*25550*/
+					if ((_1B != $1.s) || $ne(_1C, $1.fn)) { /*25549*/
+						var _1F = $k[--$j]; /*25545*/
+						var _1G = $k[--$j]; /*25545*/
+						$1.s = _1F; /*25545*/
+						$1.fn = _1G; /*25545*/
+						var _1H = $$.findfont(_1G); /*25547*/
+						_1H.FontSize = _1F; /*25547*/
+						$$.setfont(_1H); /*25547*/
+					} else { /*25549*/
+						$j -= 2; /*25549*/
+					} /*25549*/
+					var _1I = $k[--$j]; /*25551*/
+					$$.moveto($k[--$j], _1I); /*25551*/
+					$$.show($k[--$j], 0, 0); /*25551*/
+				} /*25551*/
+			} else { /*25594*/
+				var _1N = $$.findfont($1.textfont); /*25554*/
+				_1N.FontSize = $1.textsize; /*25554*/
+				$$.setfont(_1N); /*25554*/
+				if ($eq($1.alttext, "")) { /*25560*/
+					$k[$j++] = Infinity; /*25556*/
+					var _1P = $1.txt; /*25556*/
+					for (var _1Q = 0, _1R = _1P.length; _1Q < _1R; _1Q++) { /*25556*/
+						$forall($get($get(_1P, _1Q), 0)); /*25556*/
+					} /*25556*/
+					$1.txt = $a(); /*25556*/
+					$1.tstr = $s($1.txt.length); /*25557*/
+					for (var _1Z = 0, _1Y = $1.txt.length - 1; _1Z <= _1Y; _1Z += 1) { /*25558*/
+						$put($1.tstr, _1Z, $get($1.txt, _1Z)); /*25558*/
+					} /*25558*/
+				} else { /*25560*/
+					$1.tstr = $1.alttext; /*25560*/
+				} /*25560*/
+				if ($1.tstr.length == 0) { /*25576*/
+					$k[$j++] = 0; /*25565*/
+				} else { /*25576*/
+					$$.save(); /*25567*/
+					$$.newpath(); /*25568*/
+					$$.moveto(0, 0); /*25568*/
+					$$.charpath("0", false); /*25568*/
+					var _1f = $$.pathbbox(); /*25568*/
+					$$.restore(); /*25570*/
+					var _1g = $$.currfont(); /*25571*/
+					var _1h = _1g.PaintType !== undefined; /*25571*/
+					$k[$j++] = _1f.ury; /*25571*/
+					if (_1h) { /*25571*/
+						var _1i = $$.currfont(); /*25571*/
+						$k[$j++] = _1i.PaintType == 2; /*25571*/
+					} else { /*25571*/
+						$k[$j++] = false; /*25571*/
+					} /*25571*/
+					var _1k = $$.currfont(); /*25572*/
+					var _1l = _1k.StrokeWidth !== undefined; /*25572*/
+					if ($k[--$j] && _1l) { /*25577*/
+						var _1n = $$.currfont(); /*25573*/
+						var _1p = $$.currfont(); /*25574*/
+						var _1q = _1p.FontMatrix; /*25574*/
+						var _1r = _1n.StrokeWidth / 2; /*25575*/
+						var _1s = $k[--$j]; /*25576*/
+						$k[$j++] = _1s + (Math.sqrt((_1r * _1r) + (0 * 0))); /*25576*/
+					} /*25576*/
 				} /*25576*/
-				if ($eq($1.textxalign, "justify") && ($1.textwidth < $1.pixx)) { /*25580*/
-					$1.textxpos = 0; /*25578*/
-					$1.textgaps = ($1.pixx - $1.textwidth) / ($1.tstr.length - 1); /*25579*/
-				} /*25579*/
-				$1.textypos = -(($1.textyoffset + $1.textascent) + 1); /*25581*/
-				if ($eq($1.textyalign, "above")) { /*25582*/
-					$1.textypos = ($1.textyoffset + $1.pixy) + 1; /*25582*/
-				} /*25582*/
-				if ($eq($1.textyalign, "center")) { /*25583*/
-					$1.textypos = $1.textyoffset + (($1.pixy - $1.textascent) / 2); /*25583*/
+				$1.textascent = $k[--$j]; /*25579*/
+				var _1v = $$.stringwidth($1.tstr); /*25580*/
+				$1.textwidth = _1v.w + (($1.tstr.length - 1) * $1.textgaps); /*25580*/
+				$1.textxpos = $1.textxoffset + (($1.pixx - $1.textwidth) / 2); /*25582*/
+				if ($eq($1.textxalign, "left")) { /*25583*/
+					$1.textxpos = $1.textxoffset; /*25583*/
 				} /*25583*/
-				$$.moveto($1.textxpos, $1.textypos); /*25584*/
-				$$.show($1.tstr, $1.textgaps, 0); /*25584*/
-			} /*25584*/
-			$$.restore(); /*25586*/
-		} /*25586*/
+				if ($eq($1.textxalign, "right")) { /*25584*/
+					$1.textxpos = ($1.pixx - $1.textxoffset) - $1.textwidth; /*25584*/
+				} /*25584*/
+				if ($eq($1.textxalign, "offleft")) { /*25585*/
+					$1.textxpos = -($1.textwidth + $1.textxoffset); /*25585*/
+				} /*25585*/
+				if ($eq($1.textxalign, "offright")) { /*25586*/
+					$1.textxpos = $1.pixx + $1.textxoffset; /*25586*/
+				} /*25586*/
+				if ($eq($1.textxalign, "justify") && ($1.textwidth < $1.pixx)) { /*25590*/
+					$1.textxpos = 0; /*25588*/
+					$1.textgaps = ($1.pixx - $1.textwidth) / ($1.tstr.length - 1); /*25589*/
+				} /*25589*/
+				$1.textypos = -(($1.textyoffset + $1.textascent) + 1); /*25591*/
+				if ($eq($1.textyalign, "above")) { /*25592*/
+					$1.textypos = ($1.textyoffset + $1.pixy) + 1; /*25592*/
+				} /*25592*/
+				if ($eq($1.textyalign, "center")) { /*25593*/
+					$1.textypos = $1.textyoffset + (($1.pixy - $1.textascent) / 2); /*25593*/
+				} /*25593*/
+				$$.moveto($1.textxpos, $1.textypos); /*25594*/
+				$$.show($1.tstr, $1.textgaps, 0); /*25594*/
+			} /*25594*/
+			$$.restore(); /*25596*/
+		} /*25596*/
 	};
 	$0.renmaximatrix = function() {
-		if ($0.bwipjs_dontdraw) { /*25607*/
-			return; /*25607*/
-		} /*25607*/
-		var $1 = {}; /*25609*/
-		$1.args = $k[--$j]; /*25611*/
-		$1.barcolor = "unset"; /*25614*/
-		$1.backgroundcolor = "unset"; /*25615*/
-		$forall($1.args, function() { /*25618*/
-			var _3 = $k[--$j]; /*25618*/
-			$1[$k[--$j]] = _3; /*25618*/
-		}); /*25618*/
-		var _5 = $1.opt; /*25619*/
-		for (var _6 in _5) { /*25619*/
-			$1[_6] = _5[_6]; /*25619*/
-		} /*25619*/
-		$1.barcolor = "" + $1.barcolor; /*25621*/
-		$1.backgroundcolor = "" + $1.backgroundcolor; /*25622*/
-		$$.save(); /*25624*/
-		var _A = $$.currpos(); /*25626*/
-		$$.translate(_A.x, _A.y); /*25626*/
-		$$.moveto(0, 0); /*25631*/
-		$$.lineto(30, 0); /*25631*/
-		$$.lineto(30, 29); /*25631*/
-		$$.lineto(0, 29); /*25631*/
-		$$.closepath(); /*25631*/
-		if ($ne($1.barcolor, "unset")) { /*25633*/
-			$$.setcolor($1.barcolor); /*25633*/
-		} /*25633*/
-		var _D = $$.findfont("Symbol"); /*25639*/
-		_D.FontSize = 10; /*25639*/
-		$$.setfont(_D); /*25639*/
-		$1.chars = $a(["0", "1", "2", "3"]); /*25641*/
-		$$.newpath(); /*25642*/
-		var _F = $1.pixs; /*25643*/
-		for (var _G = 0, _H = _F.length; _G < _H; _G++) { /*25654*/
-			var _I = $get(_F, _G); /*25654*/
-			$1.x = _I % 30; /*25645*/
-			$1.y = ~~(_I / 30); /*25646*/
-			var _L = (($1.y % 2) == 0) ? 0 : 2; /*25648*/
-			var _N = (($1.x % 2) == 0) ? 0 : 1; /*25649*/
-			$k[$j++] = $get($1.chars, _L + _N); /*25651*/
-			$k[$j++] = $1.x * 3.5; /*25651*/
-			if (($1.y % 2) == 1) { /*25651*/
-				var _R = $k[--$j]; /*25651*/
-				$k[$j++] = _R + 1.75; /*25651*/
-			} /*25651*/
-			$$.moveto($k[--$j], (32 - $1.y) * 3); /*25653*/
-			$$.show($k[--$j], 0, 0); /*25653*/
-		} /*25653*/
-		var _V = $$.findfont("Symbol"); /*25657*/
-		_V.FontSize = 10; /*25657*/
-		$$.setfont(_V); /*25657*/
-		$$.moveto(36, 35); /*25658*/
-		$$.show("4", 0, 0); /*25658*/
-		$$.restore(); /*25660*/
+		if ($0.bwipjs_dontdraw) { /*25617*/
+			return; /*25617*/
+		} /*25617*/
+		var $1 = {}; /*25619*/
+		$1.args = $k[--$j]; /*25621*/
+		$1.barcolor = "unset"; /*25624*/
+		$1.backgroundcolor = "unset"; /*25625*/
+		$forall($1.args, function() { /*25628*/
+			var _3 = $k[--$j]; /*25628*/
+			$1[$k[--$j]] = _3; /*25628*/
+		}); /*25628*/
+		var _5 = $1.opt; /*25629*/
+		for (var _6 in _5) { /*25629*/
+			$1[_6] = _5[_6]; /*25629*/
+		} /*25629*/
+		$1.barcolor = "" + $1.barcolor; /*25631*/
+		$1.backgroundcolor = "" + $1.backgroundcolor; /*25632*/
+		$$.save(); /*25634*/
+		var _A = $$.currpos(); /*25636*/
+		$$.translate(_A.x, _A.y); /*25636*/
+		$$.moveto(0, 0); /*25641*/
+		$$.lineto(30, 0); /*25641*/
+		$$.lineto(30, 29); /*25641*/
+		$$.lineto(0, 29); /*25641*/
+		$$.closepath(); /*25641*/
+		if ($ne($1.barcolor, "unset")) { /*25643*/
+			$$.setcolor($1.barcolor); /*25643*/
+		} /*25643*/
+		var _D = $$.findfont("Symbol"); /*25649*/
+		_D.FontSize = 10; /*25649*/
+		$$.setfont(_D); /*25649*/
+		$1.chars = $a(["0", "1", "2", "3"]); /*25651*/
+		$$.newpath(); /*25652*/
+		var _F = $1.pixs; /*25653*/
+		for (var _G = 0, _H = _F.length; _G < _H; _G++) { /*25664*/
+			var _I = $get(_F, _G); /*25664*/
+			$1.x = _I % 30; /*25655*/
+			$1.y = ~~(_I / 30); /*25656*/
+			var _L = (($1.y % 2) == 0) ? 0 : 2; /*25658*/
+			var _N = (($1.x % 2) == 0) ? 0 : 1; /*25659*/
+			$k[$j++] = $get($1.chars, _L + _N); /*25661*/
+			$k[$j++] = $1.x * 3.5; /*25661*/
+			if (($1.y % 2) == 1) { /*25661*/
+				var _R = $k[--$j]; /*25661*/
+				$k[$j++] = _R + 1.75; /*25661*/
+			} /*25661*/
+			$$.moveto($k[--$j], (32 - $1.y) * 3); /*25663*/
+			$$.show($k[--$j], 0, 0); /*25663*/
+		} /*25663*/
+		var _V = $$.findfont("Symbol"); /*25667*/
+		_V.FontSize = 10; /*25667*/
+		$$.setfont(_V); /*25667*/
+		$$.moveto(36, 35); /*25668*/
+		$$.show("4", 0, 0); /*25668*/
+		$$.restore(); /*25670*/
 	};
 	// bwip-js/barcode-ftr.js
 	//

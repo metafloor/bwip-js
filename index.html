@@ -48,7 +48,7 @@ there may be noticeable differences.</p>
 <h2>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 <ul>
-<li>Current bwip-js version is 1.6.3 (2018-02-15)</li>
+<li>Current bwip-js version is 1.7.0 (2018-07-19)</li>
 <li>Current BWIPP version is 2018-02-04</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: IE10+, Edge, Firefox, Chrome</li>
@@ -182,7 +182,8 @@ there is a global variable called <code>process.env.PUBLIC_URL</code>, which is 
 by React.  If not set by your framework, assign it manually (adapt as necessary):</p>
 <div class="highlight highlight-source-js"><pre><span class="pl-c1">window</span>.<span class="pl-smi">process</span> <span class="pl-k">=</span> { env<span class="pl-k">:</span> { <span class="pl-c1">PUBLIC_URL</span><span class="pl-k">:</span> path } };</pre></div>
 <p>Where <code>path</code> is the URL-path to the directory containing <code>bwipjs-fonts</code>.
-The font manager appends <code>/bwipjs-fonts/file-name</code> to the value when it requests a file.</p>
+If that value does not exist, empty string is used instead.</p>
+<p>The font manager appends <code>/bwipjs-fonts/file-name</code> to the value when it requests a file.</p>
 <h2>
 <a id="user-content-nodejs-request-handler" class="anchor" href="#nodejs-request-handler" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Node.js Request Handler</h2>
 <p>The online barcode API is implemented as a Node.js application.
