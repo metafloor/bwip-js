@@ -66,6 +66,11 @@
 
     % Draw the image
     gsave
+
+	% Ensures scale behaves identically between the imagemask output
+	% and the text positioning
+	floorscale
+
     currentpoint translate
     72 width mul 72 height mul scale
     .0001 .0001 moveto .9999 .0001 lineto .9999 .9999 lineto .0001 .9999 lineto closepath
@@ -81,6 +86,11 @@
     % Display the text for elements in the text array
     includetext {
 		gsave
+
+		% Ensures scale behaves identically between the imagemask output
+		% and the text positioning
+		floorscale
+
 		textcolor (unset) ne { textcolor setcolor } if
         textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
             /s 0 def /fn () def

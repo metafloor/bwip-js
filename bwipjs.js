@@ -306,10 +306,8 @@ BWIPJS.prototype.roundscale = function() {
 BWIPJS.prototype.imagemask = function(width, height, source) {
 	var tx = floor(this.g_tdx);
 	var ty = floor(this.g_tdy);
-	var sx = round(this.g_tsx);
-	var sy = round(this.g_tsy);
-	var dx = floor(sx / width);		// pixel width
-	var dy = floor(sy / height);	// pixel height
+	var dx = floor(this.g_tsx / width);		// pixel width
+	var dy = floor(this.g_tsy / height);	// pixel height
 	var rl = ceil(width / 8); 		// row length (bytes per row)
 	var y0 = ty + height * dy;
 	var x0;

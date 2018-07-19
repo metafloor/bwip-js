@@ -7,7 +7,7 @@
 //
 // 		http://metafloor.github.io/bwip-js
 //
-// Copyright (c) 2011-2017 Mark Warren
+// Copyright (c) 2011-2018 Mark Warren
 //
 // The MIT License
 //

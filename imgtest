@@ -1,9 +1,7 @@
 #!/bin/bash
 ## file: imgtest
 ##
-## usage: imgtest [--refresh] seq symbol text opts
-##
-## seq is the unique test sequence number.  
+## usage: imgtest [--refresh] symbol text opts
 ##
 ## Compare a generated image against a proof image.
 ##
@@ -13,24 +11,22 @@ if [ "x$1" == x--refresh ] ; then
 	shift
 fi
 
-seq="$1"
-sym="$2"
-text="$3"
-opts="$4"
+sym="$1"
+text="$2"
+opts="$3"
 
-## Zero-pad seq to 4 digits
-zeros=0000
-seq="${zeros:${#seq}}$seq"
+## Generate a safe file name
+filename=$(echo "$sym $text $opts" | sed -e 's/[^a-zA-Z0-9]/-/g' -e 's/^--*//' -e 's/--*$//').png
+ 
+echo "$sym ($text) ($opts) ..."
 
-echo "$seq.$sym ($text) ($opts) ..."
+./genimg $sym "$text" $opts tests/$filename > /dev/null
 
-./genimg $sym "$text" $opts tests/$seq.$sym.png > /dev/null
-
-if [ $REGEN == YES ] ; then
-	mv -f tests/$seq.$sym.png proofs/$seq.$sym.png
+if [ ! -f proofs/$filename -o $REGEN == YES ] ; then
+	mv -f tests/$filename proofs/$filename
 	exit 0
 else
-	perceptualdiff proofs/$seq.$sym.png tests/$seq.$sym.png
+	perceptualdiff proofs/$filename tests/$filename
 	exit $?
 fi
 

@@ -2,7 +2,7 @@
 // 
 // bwip-js bitmap interface for an HTML canvas.
 //
-// Copyright (c) 2011-2017 Mark Warren
+// Copyright (c) 2011-2018 Mark Warren
 //
 // Licensed MIT.  See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.

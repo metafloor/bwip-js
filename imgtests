@@ -29,21 +29,19 @@ fi
 rm -f tests/*.png 2>/dev/null
 
 ##
-## Test number seed
+## Test counters
 ##
-let TNO=1
 let NTESTS=0
 let NFAILS=0
 
 function run() {
 	if [[ $1 == *$PAT* ]] ; then
-		./imgtest $OPTS $TNO $1 "$2" "$3"
+		./imgtest $OPTS $1 "$2" "$3"
 		if [ $? != 0 ] ; then
 			((NFAILS++))
 		fi
 		((NTESTS++))
 	fi
-	((TNO++))
 }
 
 ##
@@ -80,6 +78,7 @@ run "databarlimited" "(01)15012345678907" ""
 run "databarexpanded" "(01)95012345678903(3103)000123" ""
 run "databarexpandedstacked" "(01)95012345678903(3103)000123" "segments=4"
 run "gs1northamericancoupon" "(8110)106141416543213500110000310123196000" "includetext segments=8"
+run "gs1northamericancoupon" "(8110)106141416543213500110000310123196000" "includetext segments=8 scaleX=2 scaleY=1.5"
 run "pharmacode" "117480" "showborder"
 run "pharmacode2" "117480" "includetext showborder"
 run "code2of5" "01234567" "includetext includecheck includecheckintext"
