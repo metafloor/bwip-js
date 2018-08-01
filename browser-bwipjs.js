@@ -13,17 +13,6 @@ var bwipp = require('./bwipp'),
 	fontlib = require('./browser-fonts')
 	;
 
-// Make it easy on the callers - transparent async loading of fonts.
-var fontsloaded = false;
-var pending = [];
-fontlib.onready(function() {
-	fontsloaded = true;
-	for (var i = 0; i < pending.length; i++) {
-		pending[i]();
-	}
-	pending = null;
-});
-
 // This module's one and only export is the canvas rendering.
 // `cvs` is either an id to a canvas element, or the actual canvas element.
 // `opts` is the bwip-js/BWIPP options object.
@@ -33,11 +22,6 @@ fontlib.onready(function() {
 //
 // Where cvs is the same parameter as passed into this call.
 module.exports = function toCanvas(cvs, opts, callback) {
-	if (!fontsloaded) {
-		pending.push(function() { toCanvas(cvs, opts, callback) });
-		return;
-	}
-
 	// Make a mutable copy of the user's options
 	var vals = {};
 	for (var id in opts) {
