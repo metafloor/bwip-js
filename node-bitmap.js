@@ -319,6 +319,9 @@ module.exports = function(rot, bgcolor, opts) {
 					length += 12 + _palette.length;	// tRNS		
 				}
 			}
+			if (opts.dpi) {
+				length += 12 + 9;	// pHYs
+			}
 
 			// Emulate a byte-stream
 			var png = new Buffer(length);
@@ -327,6 +330,9 @@ module.exports = function(rot, bgcolor, opts) {
 			write('\x89PNG\x0d\x0a\x1a\x0a'); // PNG file header
 			writeIHDR();
 			writeTEXT();
+			if (opts.dpi) {
+				writePHYS();
+			}
 			if (_pngtype == PNGTYPE_PALETTE) {
 				writePLTE();
 				if (_trans) {
@@ -366,6 +372,17 @@ module.exports = function(rot, bgcolor, opts) {
 
 				write('tEXt');
 				write(_text);
+				writeCRC(crcoff);
+			}
+			function writePHYS() {
+				write32(9);
+				var crcoff = pngoff;
+
+				var pxm = ((opts.dpi || 72) / 0.0254)|0;
+				write('pHYs');
+				write32(pxm);	// x-axis
+				write32(pxm);	// y-axis
+				write8(1);		// px/m (the only usable option)
 				writeCRC(crcoff);
 			}
 			function writePLTE() {
