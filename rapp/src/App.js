@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-// Symlinked to develop
-import bwipjs from 'bwip-js/browser-bwipjs';
-
+// ./bwip-js is symlinked to develop
+// Search MRW in node_modules\react-dev-utils\ModuleScopePlugin.js that allows
+// this to work (symlinks don't work with react).
+import bwipjs from './bwip-js/browser-bwipjs';
 
 class App extends Component {
   componentDidMount() {
