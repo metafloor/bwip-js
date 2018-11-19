@@ -5,6 +5,7 @@
 bwip-js is a translation to native JavaScript of the amazing code provided in [Barcode Writer in Pure PostScript](https://github.com/bwipp/postscriptbarcode).  The translated code can run on any modern browser or JavaScript-based server framework.
 
 The software has encoding modules for over 90 different barcode types and standards.
+
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.
@@ -23,10 +24,10 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
 > loading has been eliminated.  You simply load or `require()` three modules
 > (FreeType, BWIPP, and bwip-js) rather than having to create separate
 > execution contexts and asynchronously load into them.
-> 
+>
 > See [Integrating With Your Code](https://github.com/metafloor/bwip-js/wiki/Integrating-With-Your-Code) for more details.
 
-## Status 
+## Status
 
 * Current bwip-js version is 1.1.1 (2016-09-19)
 * Current BWIPP version is 2016-08-29
@@ -80,7 +81,7 @@ A working, minimal example of how to use the request handler can be found in
 var http   = require('http');
 var bwipjs = require('bwip-js');
 
-// Example of how to load a font into bwipjs. 
+// Example of how to load a font into bwipjs.
 //    bwipjs.loadFont(fontname, sizemult, fontdata)
 //
 // To unload a font (and free up space for another):
@@ -212,8 +213,8 @@ The software is organized as follows:
         fonts/           # OCR and Inconsolata font files
         lib/             # Utilities required by the demo
 
-The above files are part of the *master* branch.  If you wish to 
-compile bwip-js on your own, you will need to clone the *develop* branch, 
+The above files are part of the *master* branch.  If you wish to
+compile bwip-js on your own, you will need to clone the *develop* branch,
 which contains the cross-compiler, test framework, code-coverage files,
 benchmark framework, image proofs, etc.  Everything used to create and
 validate bwip-js.
