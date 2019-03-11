@@ -102,7 +102,11 @@ function getglyph(fontid, charcode, width, height) {
 	if (!font) {
 		// We can avoid this Sync() interface (the browser version does), but
 		// requires more work for the user.
-		var bytes = fs.readFileSync(__dirname + '/fonts/fnt' + fontid +
+		var fontdir = process.env.BWIPJS_FONTS || __dirname + '/fonts';
+		if (fontdir[fontdir.length-1] == '/') {
+			fontdir = fontdir.substr(0, fontdir.length-1);
+		}
+		var bytes = fs.readFileSync(fontdir + '/fnt' + fontid +
 									(monochr ? 'm-' : 'a-') + size + '.bin');
 		fontset.fonts[fkey] = font = { bytes:bytes, glyphs:[] };
 	} 

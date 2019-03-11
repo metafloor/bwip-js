@@ -5599,7 +5599,7 @@ begin
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 18 eq {
         barcode 17 get checksum 48 add ne {
-            /bwipp.databaromniBadCheckDigit (Incorrect GS1 DataBar Limited check digit provided) //raiseerror exec
+            /bwipp.databarlimitedBadCheckDigit (Incorrect GS1 DataBar Limited check digit provided) //raiseerror exec
         } if
     } if
     18 string
