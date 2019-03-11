@@ -48,7 +48,7 @@ there may be noticeable differences.</p>
 <h2>
 <a id="user-content-status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 <ul>
-<li>Current bwip-js version is 1.7.1 (2018-08-01)</li>
+<li>Current bwip-js version is 1.7.2 (2019-03-11)</li>
 <li>Current BWIPP version is 2018-02-04</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: IE10+, Edge, Firefox, Chrome</li>
@@ -288,16 +288,16 @@ and <code>height</code> options, respectively.</p>
 <a id="user-content-electron-example" class="anchor" href="#electron-example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Electron Example</h2>
 <p>With Electron, use the Node.js <code>toBuffer()</code> interface.  This is an example <code>index.html</code>
 file for a basic, single window app:</p>
-<div class="highlight highlight-text-html-basic"><pre>&lt;!<span class="pl-ent">DOCTYPE</span> <span class="pl-e">html</span>&gt;
+<div class="highlight highlight-text-html-basic"><pre>&lt;!DOCTYPE html&gt;
 &lt;<span class="pl-ent">html</span>&gt;
   &lt;<span class="pl-ent">head</span>&gt;
     &lt;<span class="pl-ent">meta</span> <span class="pl-e">charset</span>=<span class="pl-s"><span class="pl-pds">"</span>UTF-8<span class="pl-pds">"</span></span>&gt;
     &lt;<span class="pl-ent">title</span>&gt;Hello World!&lt;/<span class="pl-ent">title</span>&gt;
   &lt;/<span class="pl-ent">head</span>&gt;
   &lt;<span class="pl-ent">body</span>&gt;
-    Node.js &lt;<span class="pl-ent">script</span>&gt;<span class="pl-s1"><span class="pl-c1">document</span>.<span class="pl-c1">write</span>(<span class="pl-c1">process</span>.<span class="pl-smi">versions</span>.<span class="pl-smi">node</span>)</span><span class="pl-s1">&lt;</span>/<span class="pl-ent">script</span>&gt;,
-    Chromium &lt;<span class="pl-ent">script</span>&gt;<span class="pl-s1"><span class="pl-c1">document</span>.<span class="pl-c1">write</span>(<span class="pl-c1">process</span>.<span class="pl-smi">versions</span>.<span class="pl-smi">chrome</span>)</span><span class="pl-s1">&lt;</span>/<span class="pl-ent">script</span>&gt;,
-    and Electron &lt;<span class="pl-ent">script</span>&gt;<span class="pl-s1"><span class="pl-c1">document</span>.<span class="pl-c1">write</span>(<span class="pl-c1">process</span>.<span class="pl-smi">versions</span>.<span class="pl-smi">electron</span>)</span><span class="pl-s1">&lt;</span>/<span class="pl-ent">script</span>&gt;.
+    Node.js &lt;<span class="pl-ent">script</span>&gt;<span class="pl-s1"><span class="pl-c1">document</span>.<span class="pl-c1">write</span>(<span class="pl-c1">process</span>.<span class="pl-smi">versions</span>.<span class="pl-smi">node</span>)</span>&lt;/<span class="pl-ent">script</span>&gt;,
+    Chromium &lt;<span class="pl-ent">script</span>&gt;<span class="pl-s1"><span class="pl-c1">document</span>.<span class="pl-c1">write</span>(<span class="pl-c1">process</span>.<span class="pl-smi">versions</span>.<span class="pl-smi">chrome</span>)</span>&lt;/<span class="pl-ent">script</span>&gt;,
+    and Electron &lt;<span class="pl-ent">script</span>&gt;<span class="pl-s1"><span class="pl-c1">document</span>.<span class="pl-c1">write</span>(<span class="pl-c1">process</span>.<span class="pl-smi">versions</span>.<span class="pl-smi">electron</span>)</span>&lt;/<span class="pl-ent">script</span>&gt;.
     &lt;<span class="pl-ent">br</span>&gt;&lt;<span class="pl-ent">br</span>&gt;&lt;<span class="pl-ent">img</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>myimg<span class="pl-pds">"</span></span>&gt;
     &lt;<span class="pl-ent">pre</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>output<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">pre</span>&gt;
   &lt;/<span class="pl-ent">body</span>&gt;
@@ -312,7 +312,7 @@ file for a basic, single window app:</p>
 <span class="pl-s1">                                                 <span class="pl-smi">png</span>.<span class="pl-c1">toString</span>(<span class="pl-s"><span class="pl-pds">'</span>base64<span class="pl-pds">'</span></span>);</span>
 <span class="pl-s1">		}</span>
 <span class="pl-s1">	  });</span>
-<span class="pl-s1">  </span><span class="pl-s1">&lt;</span>/<span class="pl-ent">script</span>&gt;
+<span class="pl-s1">  </span>&lt;/<span class="pl-ent">script</span>&gt;
 &lt;/<span class="pl-ent">html</span>&gt;</pre></div>
 <h2>
 <a id="user-content-command-line-interface" class="anchor" href="#command-line-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command Line Interface</h2>
