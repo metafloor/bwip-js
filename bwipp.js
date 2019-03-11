@@ -4,7 +4,7 @@
 // This code was automatically generated from:
 // Barcode Writer in Pure PostScript - Version 2018-02-04
 //
-// Copyright (c) 2011-2018 Mark Warren
+// Copyright (c) 2011-2019 Mark Warren
 // Copyright (c) 2004-2014 Terry Burton
 //
 // Licensed MIT. See the LICENSE file in the bwip-js root directory.
@@ -5406,7 +5406,7 @@ function BWIPP() {
 		$1.checksum = (10 - ($1.checksum % 10)) % 10; /*5599*/
 		if ($1.barcode.length == 18) { /*5604*/
 			if ($get($1.barcode, 17) != ($1.checksum + 48)) { /*5603*/
-				$k[$j++] = "bwipp.databaromniBadCheckDigit"; /*5602*/
+				$k[$j++] = "bwipp.databarlimitedBadCheckDigit"; /*5602*/
 				$k[$j++] = "Incorrect GS1 DataBar Limited check digit provided"; /*5602*/
 				$0.raiseerror(); /*5602*/
 			} /*5602*/
