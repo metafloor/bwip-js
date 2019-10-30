@@ -15,6 +15,7 @@ class App extends Component {
             height:      10,              // Bar height, in millimeters
             includetext: true,            // Show human-readable text
             textxalign:  'center',        // Always good to set this
+			//backgroundcolor: '00ffff',
         }, function (err, cvs) {
             if (err) {
                 // Decide how to handle the error
