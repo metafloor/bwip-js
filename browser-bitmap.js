@@ -8,9 +8,11 @@
 // for the extended copyright notice.
 "use strict";
 
-module.exports = Bitmap;
+if (typeof module == 'object' && typeof exports == 'object') {
+	module.exports = Bitmap;
+}
 
-// bgcolor is optional, defaults to #fff
+// bgcolor is optional, defaults to transparent
 function Bitmap(cvsid, rot, bgcolor) {
 	var rgb  = [0, 0, 0];
 	var padx = 0;	// padding-x
@@ -46,24 +48,32 @@ function Bitmap(cvsid, rot, bgcolor) {
 		cvs.width  = imgwidth + 2*padx;
 		cvs.height = imgheight + 2*pady;
 
-		// Convert from cmyk?
-		if (bgcolor && bgcolor.length == 8) {
-			var c = parseInt(bgcolor.substr(0,2), 16) / 255;
-			var m = parseInt(bgcolor.substr(2,2), 16) / 255;
-			var y = parseInt(bgcolor.substr(4,2), 16) / 255;
-			var k = parseInt(bgcolor.substr(6,2), 16) / 255;
-			var r = Math.floor((1-c) * (1-k) * 255);
-			var g = Math.floor((1-m) * (1-k) * 255);
-			var b = Math.floor((1-y) * (1-k) * 255);
-			bgcolor = 'rgb(' + r + ',' + g + ',' + b + ')';
-		} else if (bgcolor) {
-			bgcolor = '#' + bgcolor;
-		}
-
 		ctx = cvs.getContext('2d');
-		ctx.fillStyle = bgcolor || '#fff';
-		ctx.fillRect(0, 0, cvs.width, cvs.height);
-		ctx.fillStyle = '#000';
+
+		// Convert from BWIPP cmyk?
+		if (typeof bgcolor == 'string') {
+			if (/^[0-9a-fA-F]{8}$/.test(bgcolor)) {
+				var c = parseInt(bgcolor.substr(0,2), 16) / 255;
+				var m = parseInt(bgcolor.substr(2,2), 16) / 255;
+				var y = parseInt(bgcolor.substr(4,2), 16) / 255;
+				var k = parseInt(bgcolor.substr(6,2), 16) / 255;
+				var r = Math.floor((1-c) * (1-k) * 255);
+				var g = Math.floor((1-m) * (1-k) * 255);
+				var b = Math.floor((1-y) * (1-k) * 255);
+				bgcolor = 'rgb(' + r + ',' + g + ',' + b + ')';
+			// Convert from BWIPP rgb?
+			} else if (/^[0-9a-fA-F]{6}$/.test(bgcolor)) {
+				bgcolor = '#' + bgcolor;
+			} else {
+				bgcolor = '';
+			}
+			if (bgcolor) {
+				var fill = ctx.fillStyle;
+				ctx.fillStyle = bgcolor;
+				ctx.fillRect(0, 0, cvs.width, cvs.height);
+				ctx.fillStyle = fill;
+			}
+		}
 
 		idata = ctx.getImageData(padx, pady, imgwidth, imgheight);
 		bytes = idata.data;
@@ -99,11 +109,11 @@ function Bitmap(cvsid, rot, bgcolor) {
 		bytes[idx+0] = (bytes[idx+0] * (1 - a) + rgb[0] * a)|0;
 		bytes[idx+1] = (bytes[idx+1] * (1 - a) + rgb[1] * a)|0;
 		bytes[idx+2] = (bytes[idx+2] * (1 - a) + rgb[2] * a)|0;
-		bytes[idx+3] = 255;
+		bytes[idx+3] = (bytes[idx+3] * (1 - a) + 255 * a)|0;
 	}
 
 	this.finalize = function(callback) {
 		ctx.putImageData(idata, padx, pady);
-		callback(null, cvsid);
+		callback && callback(null, cvsid);
 	}
 }
