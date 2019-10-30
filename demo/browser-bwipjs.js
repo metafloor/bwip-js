@@ -78,7 +78,7 @@ module.exports = function toCanvas(cvs, opts, callback) {
 
 	// Override the `backgroundcolor` option.
 	if (vals.backgroundcolor) {
-		bw.bitmap(new Bitmap(cvs, rot, parseInt(''+vals.backgroundcolor, 16)));
+		bw.bitmap(new Bitmap(cvs, rot, vals.backgroundcolor));
 		delete vals.backgroundcolor;
 	} else {
 		bw.bitmap(new Bitmap(cvs, rot));

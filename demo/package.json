@@ -1,6 +1,6 @@
 {
   "name": "bwip-js",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": "JavaScript barcode generator supporting over 90 types and standards.",
   "main": "node-bwipjs.js",
   "browser": "browser-bwipjs.js",

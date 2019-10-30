@@ -126,7 +126,8 @@ module.exports = function(rot, bgcolor, opts) {
 		if (ncolors <= 256) {
 			// Palette Color
 			_imgrow  = _imgw + 2*_padx + 1;
-			_imgbuf  = new Buffer(_imgrow * (_imgh + 2*_pady));
+			_imgbuf  = Buffer.alloc ? Buffer.alloc(_imgrow * (_imgh + 2*_pady))
+									: new Buffer(_imgrow * (_imgh + 2*_pady));
 			_pngtype = PNGTYPE_PALETTE;
 
 			_palette = [ bgcolor ];
@@ -137,7 +138,8 @@ module.exports = function(rot, bgcolor, opts) {
 		} else {
 			// TrueColor with Alpha
 			_imgrow  = (_imgw + 2*_padx) * 4 + 1;
-			_imgbuf  = new Buffer(_imgrow * (_imgh + 2*_pady));
+			_imgbuf  = Buffer.alloc ? Buffer.alloc(_imgrow * (_imgh + 2*_pady)) 
+									: new Buffer(_imgrow * (_imgh + 2*_pady));
 			_pngtype = PNGTYPE_TRUEALPHA;
 
 			this.set = setTrueAlpha
@@ -324,7 +326,7 @@ module.exports = function(rot, bgcolor, opts) {
 			}
 
 			// Emulate a byte-stream
-			var png = new Buffer(length);
+			var png = Buffer.alloc ? Buffer.alloc(length) : new Buffer(length);
 			var pngoff = 0;	// running offset into the png buffer
 
 			write('\x89PNG\x0d\x0a\x1a\x0a'); // PNG file header
