@@ -14,6 +14,7 @@ found at the end of this document.
 >  - [Upgrading to 2.0](https://github.com/metafloor/bwip-js/wiki/Upgrading-to-2.0)
 >  - [Draft 2.0 Readme](https://github.com/metafloor/bwip-js/wiki/README-2.0)
 >  - [Methods Reference](https://github.com/metafloor/bwip-js/wiki/Methods-Reference)
+>  - [v1.7 vs v2.0 Image Comparisons](http://metafloor.github.io/bwip-js/v2.0/imgtests.html)
 
 ## Status 
 
