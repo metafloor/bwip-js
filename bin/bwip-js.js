@@ -1,0 +1,253 @@
+#!/usr/bin/env node
+'use strict';
+
+var fs = require('fs');
+var bwipjs = require('../dist/bwip-js');
+var symdesc = require('./symdesc');
+
+function usage() {
+	console.log(
+		"Usage: bwip-js symbol-name text [options...] png-file\n" +
+		"       bwip-js --bcid=symbol-name --text=text [options...] png-file\n" +
+		"Try 'bwip-js --help' for more information.\n" +
+		"Try 'bwip-js --symbols' for a list of supported barcode symbols.\n");
+}
+function help() {
+	usage();
+	for (var i = 0; i < optlist.length; i++) {
+		console.log('  --' + optlist[i].name)
+		console.log(indent(optlist[i].desc));
+	}
+	console.log(
+		"\nThe double-dashes '--' are not required before the options.\n" +
+		"For example, you can specify '--includetext' or 'includetext'.");
+}
+// Indent the text 8 spaces
+function indent(text) {
+	return text.replace(/^/, '        ').replace(/\n/g, '\n        ');
+}
+// spec is the string "font-name,x-mult,y-mult,path-to-font-file"
+function loadfont(spec) {
+	var vals = spec.split(',');
+	try {
+		bwipjs.loadFont(vals[0], +vals[1], +vals[2], fs.readFileSync(vals[3]));
+	} catch(e) {
+		console.log('bwip-js: ' + e);
+		process.exit(1);
+	}
+}
+
+var optlist = [
+	{ name: 'help', type: 'boolean', 
+	  desc: 'Displays this help message.' },
+	{ name: 'version', type: 'boolean',
+	  desc: 'Displays the bwip-js and BWIPP version strings.' },
+	{ name: 'symbols', type: 'boolean',
+	  desc: 'Display a list of the supported barcode types.' },
+	{ name: 'loadfont', type: 'string',
+	  desc: 'Loads a truetype/opentype font.  Format of this option is:\n\n' +
+	  		'  --loadfont=font-name,x-mult,y-mult,path-to-font-file\n\n' +
+			'For example:  --loadfont=Courier,100,120,c:\\windows\\fonts\\cour.ttf' },
+
+	// bwipjs options
+	{ name: 'bcid', type: 'string',
+	  desc: 'Barcode symbol name/type. Required.' },
+	{ name: 'text', type: 'string',
+	  desc: 'The text to encode. Required.\n' +
+			'Use single quotes around the text to protect from the shell.' },
+	{ name: 'scaleX', type: 'int',
+	  desc: 'The x-axis scaling factor. Must be an integer > 0. Default is 2.' },
+	{ name: 'scaleY', type: 'int',
+	  desc: 'The y-axis scaling factor. Must be an integer > 0. Default is scaleX.' },
+	{ name: 'scale', type: 'int',
+	  desc: 'Sets both the x-axis and y-axis scaling factors. Must be an integer > 0.' },
+	{ name: 'rotate', type: 'string',
+	  desc: 'Rotates the image to one of the four orthogonal orientations.\n' +
+			'A string value. Must be one of:\n' +
+			'    N : Normal orientation.\n' +
+			'    R : Rotated right 90 degrees.\n' +
+			'    L : Rotated left 90 degrees.\n' +
+			'    I : Inverted, rotated 180 degrees.' },
+	{ name: 'padding', type: 'int',
+	  desc: 'Shorthand for setting paddingtop, paddingleft, paddingright, and paddingbottom.' },
+	{ name: 'paddingwidth', type: 'int',
+	  desc: 'Shorthand for setting paddingleft and paddingright.' },
+	{ name: 'paddingheight', type: 'int',
+	  desc: 'Shorthand for setting paddingtop and paddingbottom.' },
+	{ name: 'paddingtop', type: 'int',
+	  desc: 'Sets the height of the padding area, in points, on the top of\n' +
+			'the barcode image. Rotates and scales with the image.' },
+	{ name: 'paddingleft', type: 'int',
+	  desc: 'Sets the width of the padding area, in points, on the left side\n' +
+			'of the barcode image. Rotates and scales with the image.' },
+	{ name: 'paddingright', type: 'int',
+	  desc: 'Sets the width of the padding area, in points, on the right side\n' +
+			'of the barcode image. Rotates and scales with the image.' },
+	{ name: 'paddingbottom', type: 'int',
+	  desc: 'Sets the height of the padding area, in points, on the bottom of\n' +
+			'the barcode image. Rotates and scales with the image.' },
+//	{ name: 'monochrome', type: 'boolean',
+//	  desc: 'Sets the human-readable text to render in monochrome.\n'
+//			'Default is false which renders 256-level gray-scale anti-aliased text.' },
+
+	// bwipp options
+	{ name: 'alttext', type: 'string',
+	  desc: 'The human-readable text to use instead of the encoded text.' },
+	{ name: 'includecheck', type: 'boolean',
+	  desc: 'Generate check digit(s) for symbologies where the use of check digits is\n' +
+			'optional.' },
+	{ name: 'includecheckintext', type: 'boolean',
+	  desc: 'Show the calculated check digit in the human readable text.' },
+	{ name: 'parse', type: 'boolean',
+	  desc: 'In supporting barcode symbologies, when the parse option is specified,\n' +
+			'any instances of ^NNN in the data field are replaced with their equivalent\n' +
+			'ASCII value, useful for specifying unprintable characters.' },
+	{ name: 'parsefnc', type: 'boolean',
+	  desc: 'In supporting barcode symbologies, when the parsefnc option is specified,\n' +
+			'non-data function characters can be specified by escaped combinations such\n' +
+			'as ^FNC1, ^FNC4 and ^SFT.' },
+	{ name: 'height', type: 'float',
+	  desc: 'Height of longest bar, in millimetermillimeters.' },
+	{ name: 'width', type: 'float',
+	  desc: 'Stretch the symbol to precisely this width, in millimeters.' },
+	{ name: 'inkspread', type: 'float',
+	  desc: 'Amount by which to reduce the bar widths to compensate for inkspread,\n' +
+	  		'in points.' },
+	{ name: 'inkspreadh', type: 'float',
+	  desc: 'For matrix barcodes, the amount by which the reduce the width of dark\n' +
+			'modules to compensate for inkspread, in points.\n\n' +
+			'Note: inkspreadh is most useful for stacked-linear type barcodes such as\n' +
+			'PDF417 and Codablock F.' },
+	{ name: 'inkspreadv', type: 'float',
+	  desc: 'For matrix barcodes, the amount by which the reduce the height of dark\n' +
+			'modules to compensate for inkspread, in points.' },
+	{ name: 'dotty', type: 'boolean',
+	  desc: 'For matrix barcodes, render the modules as dots rather than squares.\n' +
+			'The dot radius can be adjusted using the inkspread option.' },
+	{ name: 'includetext', type: 'boolean',
+	  desc: 'Show human readable text for data in symbol.' },
+	{ name: 'textfont', type: 'string',
+	  desc: 'The font name to use for the text.' },
+	{ name: 'textsize', type: 'int',
+	  desc: 'The font size of the text, in points.' },
+	{ name: 'textgaps', type: 'int',
+	  desc: 'The inter-character spacing of the text.' },
+	{ name: 'textxalign', type: 'string',
+	  desc: 'Specifies where to horizontally position the text.' },
+	{ name: 'textyalign', type: 'string',
+	  desc: 'Specifies where to vertically position the text.' },
+	{ name: 'textxoffset', type: 'int',
+	  desc: 'The horizontal position of the text, in points, relative to the\n' +
+			'default position.' },
+	{ name: 'textyoffset', type: 'int',
+	  desc: 'The vertical position of the text, in points, relative to the\n' +
+			'default position.' },
+	{ name: 'showborder', type: 'boolean',
+	  desc: 'Display a border around the symbol.' },
+	{ name: 'borderwidth', type: 'int',
+	  desc: 'Width of a border, in points.' },
+	{ name: 'borderleft', type: 'int',
+	  desc: 'Left margin gap of the border, in points.' },
+	{ name: 'borderright', type: 'int',
+	  desc: 'Right margin gap of the border, in points.' },
+	{ name: 'bordertop', type: 'int',
+	  desc: 'Top margin gap of the border, in points.' },
+	{ name: 'borderbottom', type: 'int',
+	  desc: 'Bottom margin gap of the border, in points.' },
+	{ name: 'barcolor', type: 'string',
+	  desc: 'Color of the bars, either as a hex RRGGBB value or a hex CCMMYYKK value.' },
+	{ name: 'backgroundcolor', type: 'string',
+	  desc: 'Color of a the image background, either as a hex RRGGBB value or a\n' +
+	  		'hex CCMMYYKK value.  The default is a transparent background.' },
+	{ name: 'bordercolor', type: 'string',
+	  desc: 'Color of the border, either as a hex RRGGBB value or a hex CCMMYYKK value.\n' +
+	  		'You must specify --showborder for this setting to take effect.' },
+	{ name: 'textcolor', type: 'string',
+	  desc: 'Color of the text, either as a hex RRGGBB value or a hex CCMMYYKK value.' },
+	{ name: 'addontextfont', type: 'string',
+	  desc: 'The font name to use for the add-on text in ISBN, ISMN, and ISSN barcodes.' },
+	{ name: 'addontextsize', type: 'int',
+	  desc: 'The font size of the add on text, in points.' },
+	{ name: 'addontextxoffset', type: 'int',
+	  desc: 'Overrides the default positioning for the add on text.' },
+	{ name: 'addontextyoffset', type: 'int',
+	  desc: 'Overrides the default positioning for the add on text.' },
+	{ name: 'guardwhitespace', type: 'boolean',
+	  desc: 'Display white space guards.' },
+	{ name: 'guardwidth', type: 'int',
+	  desc: 'Width of white space guards, in points.' },
+	{ name: 'guardheight', type: 'int',
+	  desc: 'Height of white space guards, in points.' },
+	{ name: 'guardleftpos', type: 'int',
+	  desc: 'Amount of white space to guard to left of the symbol, in points.' },
+	{ name: 'guardrightpos', type: 'int',
+	  desc: 'Amount of white space to guard to right of the symbol, in points.' },
+	{ name: 'guardleftypos', type: 'int',
+	  desc: 'Vertical position of the guard symbols on the left, in points.' },
+	{ name: 'guardrightypos', type: 'int',
+	  desc: 'Vertical position of the guard symbols on the right, in points.' },
+];
+var optmap = optlist.reduce(function(map, elt) { map[elt.name] = elt; return map; }, {}); 
+var anon = [];
+var opts = {};
+
+for (var i = 2, l = process.argv.length; i < l; i++) {
+	var a = process.argv[i];
+	if (/^--/.test(a)) {
+		a = a.substr(2);
+	}
+	var eq = a.indexOf('=');
+	if (eq > 0) {
+		var name = a.substr(0, eq);
+		var val = a.substr(eq+1);
+		if (name == 'loadfont') {
+			loadfont(val);
+		} else {
+			opts[name] = val;
+		}
+	} else if (optmap[a]) {
+		if (optmap[a].type != 'boolean') {
+			console.log('--' + a + ' : A value is expected.');
+			help();
+			process.exit(1);
+		}
+		opts[a] = true;
+	} else {
+		anon.push(a);
+	}
+}
+
+if (process.argv.length == 2) {
+	usage();
+} else if (opts.help) {
+	help();
+} else if (opts.version) {
+	console.log('bwip-js: ' + bwipjs.VERSION + '\nBWIPP: ' + bwipjs.BWIPP.VERSION);
+} else if (opts.symbols) {
+	for (var sym in symdesc) {
+		console.log('    ' + sym + ' : ' + symdesc[sym]);
+	}
+} else {
+	if (anon.length == 1) {
+		// do nothing...
+	} else if (anon.length == 3) {
+		opts.bcid = anon.shift();
+		opts.text = anon.shift();
+	} else {
+		console.error('bwip-js: incorrect number of arguments');
+		usage();
+		process.exit(1);
+	}
+
+	bwipjs.toBuffer(opts, function (err, png) {
+		if (err) {
+			console.error(''+err);
+			process.exit(1);
+		}
+		try {
+			fs.writeFileSync(anon[0], png);
+		} catch (e) {
+			console.log('bwip-js: ' + e);
+		}
+	});
+}
