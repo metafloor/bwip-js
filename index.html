@@ -28,21 +28,32 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 
-<p><a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="http://metafloor.github.io/bwip-js/images/bwip-js.png"></a> bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any modern browser or JavaScript-based server framework.</p>
-<p>The software has encoding modules for over 100 different barcode types and standards. All linear and two-dimensional barcodes in common use (and many uncommon ones) are available.  An exhaustive list of supported barcode types can be found at the end of this document.</p>
+<p><a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="http://metafloor.github.io/bwip-js/images/bwip-js.png"></a>
+bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any modern browser or JavaScript-based server framework.</p>
+<p>The software has encoding modules for over 100 different barcode types and standards.
+All linear and two-dimensional barcodes in common use (and many uncommon
+ones) are available.  An exhaustive list of supported barcode types can be
+found at the end of this document.</p>
 <blockquote>
-<p>Version 2.0 introduces a new font rendering module based on the code at <a href="https://github.com/nothings/stb/blob/master/stb_truetype.h">stb_truetype.h</a>. This port was manually converted from the original C source and is both small and fast. It implements scalable, anti-aliased fonts and has been tuned to produce nearly identical character metrics as FreeType.  The new library is usable in both Node.js and modern browsers.</p>
-<p>The emscripten compiled freetype.js and the bitmapped fonts used in prior versions have been removed from this project.  Likewise, the extra steps needed to get the bitmapped fonts to work in the browser have been eliminated.</p>
-<p>To upgrade your code to the 2.0 release, you <em>must</em> make some minor changes. See <a href="https://github.com/metafloor/bwip-js/wiki/Upgrading-to-2.0">Upgrading to 2.0</a>.</p>
+  <p>Version 2.0 introduces a new font rendering module based on the code at
+  <a href="https://github.com/nothings/stb/blob/master/stb_truetype.h">stb_truetype.h</a>.
+  This port was manually converted from the original C source and is both small and fast.
+  It implements scalable, anti-aliased fonts and has been tuned to produce nearly identical
+  character metrics as FreeType.  The new library is usable in both Node.js and modern browsers.</p>
+  <p>The emscripten compiled freetype.js and the bitmapped fonts used in prior versions have
+  been removed from this project.  Likewise, the extra steps needed to get the bitmapped
+  fonts to work in the browser have been eliminated.</p>
+  <p>To upgrade your code to the 2.0 release, you <em>must</em> make some minor changes.
+  See <a href="https://github.com/metafloor/bwip-js/wiki/Upgrading-to-2.0">Upgrading to 2.0</a>.</p>
 </blockquote>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 2.0.0 (2019-12-13)</li>
+<li>Current bwip-js version is 2.0.1 (2019-12-13)</li>
 <li>Current BWIPP version is 2019-11-08</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
 </ul>
-<h2 id="supported-platforms">Supported Platforms</h2>
+<h2 id="supportedplatforms">Supported Platforms</h2>
 <ul>
 <li><a href="#browser-usage">Browser</a></li>
 <li><a href="#react-usage">React App</a></li>
@@ -50,13 +61,15 @@
 <li><a href="#electron-example">Electron</a></li>
 <li><a href="#command-line-interface">Command Line</a></li>
 </ul>
-<h2 id="javascript-requirements">JavaScript Requirements</h2>
-<p>Emulating PostScript is non-trivial but most of the needed functionality is available in relatively modern JavaScript.  The basic features required are:</p>
+<h2 id="javascriptrequirements">JavaScript Requirements</h2>
+<p>Emulating PostScript is non-trivial but most of the needed functionality is available
+in relatively modern JavaScript.  The basic features required are:</p>
 <ul>
 <li>Uint8Array</li>
 <li>Map (<em>for-of</em> iteration not used so older JS works)</li>
 </ul>
-<p>If your JavaScript environment does not support those, there is no way to make this code work.</p>
+<p>If your JavaScript environment does not support those, there is no way to make this
+code work.</p>
 <h2 id="links">Links</h2>
 <ul>
 <li><a href="http://metafloor.github.io/bwip-js/">Home Page</a></li>
@@ -75,16 +88,24 @@
 <h2 id="installation">Installation</h2>
 <p>You can download the latest npm module using:</p>
 <pre><code>npm install bwip-js
-</code></pre><p>Or the latest code from github:</p>
+</code></pre>
+<p>Or the latest code from github:</p>
 <pre><code>https://github.com/metafloor/bwip-js
-</code></pre><p>(The bwip-js master branch and the npm version are kept sync&#39;d.)</p>
-<h2 id="online-barcode-generator">Online Barcode Generator</h2>
-<p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online barcode generator</a> demonstrates all of the features of bwip-js.  The app is also available in the root bwip-js directory.  See <a href="#demo-apps">Demo Apps</a>.</p>
-<h2 id="online-barcode-api">Online Barcode API</h2>
-<p>A bwip-js barcode service is available online, ready to serve up barcode images on demand.</p>
-<p>You can generate barcodes from anywhere on the web.  Embed the URLs in your HTML documents or retrieve the barcode images directly from your non-JavaScript server.  (JavaScript-based servers should use the bwip-js code directly - it will be a lot more performant.)</p>
+</code></pre>
+<p>(The bwip-js master branch and the npm version are kept sync'd.)</p>
+<h2 id="onlinebarcodegenerator">Online Barcode Generator</h2>
+<p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online barcode generator</a>
+demonstrates all of the features of bwip-js.  The app is also available 
+in the root bwip-js directory.  See <a href="#demo-apps">Demo Apps</a>.</p>
+<h2 id="onlinebarcodeapi">Online Barcode API</h2>
+<p>A bwip-js barcode service is available online, ready to serve up barcode images
+on demand.</p>
+<p>You can generate barcodes from anywhere on the web.  Embed the URLs in your
+HTML documents or retrieve the barcode images directly from your non-JavaScript
+server.  (JavaScript-based servers should use the bwip-js code directly - it will
+be a lot more performant.)</p>
 <p>For details on how to use this service, see <a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">Online Barcode API</a>.</p>
-<h2 id="working-with-bwip-js-methods">Working With bwip-js Methods</h2>
+<h2 id="workingwithbwipjsmethods">Working With bwip-js Methods</h2>
 <p>Most of the public methods of the bwip-js export use an options object.  Only two values are required:</p>
 <ul>
 <li><code>bcid</code> : The name of the barcode type/symbol.</li>
@@ -94,44 +115,47 @@
 <p>The options values can be divided into two parts, bwip-js specific options and BWIPP options.</p>
 <p>The bwip-js options are:</p>
 <ul>
-<li><code>scaleX</code> : The x-axis scaling factor.  Must be an integer &gt; 0.  Default is 2.</li>
-<li><code>scaleY</code> : The y-axis scaling factor.  Must be an integer &gt; 0.  Default is <code>scaleX</code>.</li>
-<li><p><code>scale</code> : Sets both the x-axis and y-axis scaling factors.  Must be an integer &gt; 0.</p>
-</li>
+<li><p><code>scaleX</code> : The x-axis scaling factor.  Must be an integer &gt; 0.  Default is 2.</p></li>
+<li><p><code>scaleY</code> : The y-axis scaling factor.  Must be an integer &gt; 0.  Default is <code>scaleX</code>.</p></li>
+<li><p><code>scale</code> : Sets both the x-axis and y-axis scaling factors.  Must be an integer &gt; 0.</p></li>
 <li><p><code>rotate</code> : Allows rotating the image to one of the four orthogonal orientations.  A string value.  Must be one of:</p>
 <ul>
-<li><code>&#39;N&#39;</code> : Normal (not rotated).  The default.</li>
-<li><code>&#39;R&#39;</code> : Clockwise (right) 90 degree rotation.</li>
-<li><code>&#39;L&#39;</code> : Counter-clockwise (left) 90 degree rotation.</li>
-<li><code>&#39;I&#39;</code> : Inverted 180 degree rotation.</li>
+<li><code>'N'</code> : Normal (not rotated).  The default.</li>
+<li><code>'R'</code> : Clockwise (right) 90 degree rotation.</li>
+<li><code>'L'</code> : Counter-clockwise (left) 90 degree rotation.</li>
+<li><code>'I'</code> : Inverted 180 degree rotation.</li></ul></li>
+<li><p><code>padding</code> : Shorthand for setting <code>paddingtop</code>, <code>paddingleft</code>, <code>paddingright</code>, and <code>paddingbottom</code>.</p></li>
+<li><p><code>paddingwidth</code> : Shorthand for setting <code>paddingleft</code> and <code>paddingright</code>.</p></li>
+<li><p><code>paddingheight</code> : Shorthand for setting <code>paddingtop</code> and <code>paddingbottom</code>.</p></li>
+<li><p><code>paddingtop</code> : Sets the height of the padding area, in points, on the top of the barcode image. Rotates and scales with the image.</p></li>
+<li><p><code>paddingleft</code> : Sets the width of the padding area, in points, on the left side of the barcode image. Rotates and scales with the image.</p></li>
+<li><p><code>paddingright</code> : Sets the width of the padding area, in points, on the right side of the barcode image. Rotates and scales with the image.</p></li>
+<li><p><code>paddingbottom</code> : Sets the height of the padding area, in points, on the bottom of the barcode image. Rotates and scales with the image.</p></li>
+<li><p><code>backgroundcolor</code> : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Takes either a hex RRGGBB or hex CCMMYYKK string value. </p></li>
 </ul>
-</li>
-<li><p><code>padding</code> : Shorthand for setting <code>paddingtop</code>, <code>paddingleft</code>, <code>paddingright</code>, and <code>paddingbottom</code>.</p>
-</li>
-<li><code>paddingwidth</code> : Shorthand for setting <code>paddingleft</code> and <code>paddingright</code>.</li>
-<li><code>paddingheight</code> : Shorthand for setting <code>paddingtop</code> and <code>paddingbottom</code>.</li>
-<li><code>paddingtop</code> : Sets the height of the padding area, in points, on the top of the barcode image. Rotates and scales with the image.</li>
-<li><code>paddingleft</code> : Sets the width of the padding area, in points, on the left side of the barcode image. Rotates and scales with the image.</li>
-<li><code>paddingright</code> : Sets the width of the padding area, in points, on the right side of the barcode image. Rotates and scales with the image.</li>
-<li><code>paddingbottom</code> : Sets the height of the padding area, in points, on the bottom of the barcode image. Rotates and scales with the image.</li>
-<li><code>backgroundcolor</code> : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Takes either a hex RRGGBB or hex CCMMYYKK string value. </li>
-</ul>
-<p>For the BWIPP specific options, you will need to consult the <a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP documentation</a> to determine what options are available for each barcode type.</p>
-<p>Note that bwip-js normalizes the BWIPP <code>width</code> and <code>height</code> options to always be in millimeters. The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm (72 dpi / 25.4 mm/in).  The bwip-js scale options multiply the <code>width</code>, <code>height</code>, and <code>padding</code>.</p>
-<h2 id="browser-usage">Browser Usage</h2>
+<p>For the BWIPP specific options, you will need to consult the
+<a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP documentation</a>
+to determine what options are available for each barcode type.</p>
+<p>Note that bwip-js normalizes the BWIPP <code>width</code> and <code>height</code> options to always be in millimeters.
+The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm
+(72 dpi / 25.4 mm/in).  The bwip-js scale options multiply the <code>width</code>, <code>height</code>, and <code>padding</code>.</p>
+<h2 id="browserusage">Browser Usage</h2>
 <p>To use within a browser, add the following to the head of your page:</p>
-<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;file-or-url-path-to/bwip-js/dist/bwip-js-min.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>When developing your code, you may want to use <code>dist/bwip-js.js</code> to get better stack traces.</p>
-<p>If you are using <code>RequireJS</code> or another module/packaging utility, the bwip-js script is structured as a UMD and should work with your environment.</p>
+<pre><code>&lt;script type="text/javascript" src="file-or-url-path-to/bwip-js/dist/bwip-js-min.js"&gt;&lt;/script&gt;
+</code></pre>
+<p>When developing your code, you may want to use <code>dist/bwip-js.js</code> to get better stack
+traces.</p>
+<p>If you are using <code>RequireJS</code> or another module/packaging utility, the bwip-js script is
+structured as a UMD and should work with your environment.</p>
 <p>The script adds a single <code>bwipjs</code> global object.  To draw a barcode to a canvas:</p>
-<pre><code class="lang-javascript">try {
-  bwipjs.toCanvas(&#39;mycanvas&#39;, {
-        bcid:        &#39;code128&#39;,       // Barcode type
-        text:        &#39;0123456789&#39;,    // Text to encode
+<pre><code class="javascript language-javascript">try {
+  bwipjs.toCanvas('mycanvas', {
+        bcid:        'code128',       // Barcode type
+        text:        '0123456789',    // Text to encode
         scale:       3,               // 3x scaling factor
         height:      10,              // Bar height, in millimeters
         includetext: true,            // Show human-readable text
-        textxalign:  &#39;center&#39;,        // Always good to set this
+        textxalign:  'center',        // Always good to set this
     });
 } catch (e) {
     // `e` may be a string or Error object
@@ -139,36 +163,42 @@
 </code></pre>
 <p>The <code>bwipjs.toCanvas()</code> method takes two parameters:</p>
 <ul>
-<li>The canvas on which to render the barcode.  This can by an <code>id</code> string or the actual canvas element.  The rendering will automatically resize the canvas to match the barcode image.</li>
+<li>The canvas on which to render the barcode.  This can by an <code>id</code> string or the actual
+canvas element.  The rendering will automatically resize the canvas to match the
+barcode image.</li>
 <li>A bwip-js/BWIPP options object.</li>
 </ul>
 <p>On return from <code>toCanvas()</code>, the barcode image will have been fully rendered to the canvas.</p>
-<p>If you would prefer to display the barcode using an <code>&lt;img&gt;</code> tag or with CSS <code>background-image</code>, pass in a detached or hidden canvas, and use the canvas method <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL">HTMLCanvasElement.toDataURL</a> to get a data URL. For example:</p>
-<pre><code class="lang-javascript">let canvas = document.createElement(&#39;canvas&#39;);
+<p>If you would prefer to display the barcode using an <code>&lt;img&gt;</code> tag or with CSS <code>background-image</code>,
+pass in a detached or hidden canvas, and use the canvas method
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL">HTMLCanvasElement.toDataURL</a>
+to get a data URL. For example:</p>
+<pre><code class="javascript language-javascript">let canvas = document.createElement('canvas');
 try {
     bwipjs.toCanvas(canvas, options);
-    document.getElementById(myimg).src = canvas.toDataURL(&#39;image/png&#39;);
+    document.getElementById(myimg).src = canvas.toDataURL('image/png');
 } catch (e) {
     // `e` may be a string or Error object
 }
 </code></pre>
-<h2 id="react-usage">React Usage</h2>
-<p>The following is a minimal example of using bwip-js in a React app. It is based on the default <code>App.js</code> file generated by <code>create-react-app</code>.</p>
-<pre><code class="lang-javascript">import React, { Component } from &#39;react&#39;;
-import logo from &#39;./logo.svg&#39;;
-import &#39;./App.css&#39;;
-import bwipjs from &#39;bwip-js&#39;;
+<h2 id="reactusage">React Usage</h2>
+<p>The following is a minimal example of using bwip-js in a React app.
+It is based on the default <code>App.js</code> file generated by <code>create-react-app</code>.</p>
+<pre><code class="javascript language-javascript">import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import bwipjs from 'bwip-js';
 
 class App extends Component {
   componentDidMount() {
     try {
-      bwipjs.toCanvas(&#39;mycanvas&#39;, {
-            bcid:        &#39;code128&#39;,       // Barcode type
-            text:        &#39;0123456789&#39;,    // Text to encode
+      bwipjs.toCanvas('mycanvas', {
+            bcid:        'code128',       // Barcode type
+            text:        '0123456789',    // Text to encode
             scale:       3,               // 3x scaling factor
             height:      10,              // Bar height, in millimeters
             includetext: true,            // Show human-readable text
-            textxalign:  &#39;center&#39;,        // Always good to set this
+            textxalign:  'center',        // Always good to set this
         });
     } catch (e) {
         // `e` may be a string or Error object
@@ -176,12 +206,12 @@ class App extends Component {
   }
   render() {
     return (
-      &lt;div className=&quot;App&quot;&gt;
-        &lt;div className=&quot;App-header&quot;&gt;
-          &lt;img src={logo} className=&quot;App-logo&quot; alt=&quot;logo&quot; /&gt;
+      &lt;div className="App"&gt;
+        &lt;div className="App-header"&gt;
+          &lt;img src={logo} className="App-logo" alt="logo" /&gt;
           &lt;h2&gt;Welcome to React&lt;/h2&gt;
         &lt;/div&gt;
-        &lt;canvas id=&quot;mycanvas&quot;&gt;&lt;/canvas&gt;
+        &lt;canvas id="mycanvas"&gt;&lt;/canvas&gt;
       &lt;/div&gt;
     );
   }
@@ -189,24 +219,26 @@ class App extends Component {
 export default App;
 </code></pre>
 <p>See the Browser Usage section for details on the <code>toCanvas()</code> method. </p>
-<h2 id="node-js-request-handler">Node.js Request Handler</h2>
-<p>The online barcode API is implemented as a Node.js application. See the <a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">Online Barcode API</a> for details on how the URL query parameters must be structured.</p>
-<p>A working, minimal example of how to use the request handler can be found in <code>server.js</code>:</p>
-<pre><code class="lang-javascript">// Simple HTTP server that renders barcode images using bwip-js.
-const http   = require(&#39;http&#39;);
-const bwipjs = require(&#39;bwip-js&#39;);
+<h2 id="nodejsrequesthandler">Node.js Request Handler</h2>
+<p>The online barcode API is implemented as a Node.js application.
+See the <a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">Online Barcode API</a> for details on how the URL query parameters must be structured.</p>
+<p>A working, minimal example of how to use the request handler can be found in
+<code>server.js</code>:</p>
+<pre><code class="javascript language-javascript">// Simple HTTP server that renders barcode images using bwip-js.
+const http   = require('http');
+const bwipjs = require('bwip-js');
 
 // This shows how to load the Inconsolata font, supplied with the bwip-js distribution.
 // The path to your fonts will be different.
-//bwipjs.loadFont(&#39;Inconsolata&#39;, 100,
-//      require(&#39;fs&#39;).readFileSync(&#39;./fonts/Inconsolata.otf&#39;, &#39;binary&#39;));
+//bwipjs.loadFont('Inconsolata', 100,
+//      require('fs').readFileSync('./fonts/Inconsolata.otf', 'binary'));
 
 http.createServer(function(req, res) {
     // If the url does not begin /?bcid= then 404.  Otherwise, we end up
     // returning 400 on requests like favicon.ico.
-    if (req.url.indexOf(&#39;/?bcid=&#39;) != 0) {
-        res.writeHead(404, { &#39;Content-Type&#39;:&#39;text/plain&#39; });
-        res.end(&#39;BWIPJS: Unknown request format.&#39;, &#39;utf8&#39;);
+    if (req.url.indexOf('/?bcid=') != 0) {
+        res.writeHead(404, { 'Content-Type':'text/plain' });
+        res.end('BWIPJS: Unknown request format.', 'utf8');
     } else {
         bwipjs.request(req, res); // Executes asynchronously
     }
@@ -215,18 +247,21 @@ http.createServer(function(req, res) {
 </code></pre>
 <p>If you run the above code on your local machine, you can test with the following URL:</p>
 <pre><code>http://localhost:3030/?bcid=isbn&amp;text=978-1-56581-231-4+52250&amp;includetext&amp;guardwhitespace
-</code></pre><p>The bwip-js request handler only operates on the URL query parameters and ignores all path information.  Your application is free to structure the URL path as needed to implement the desired HTTP request routing.</p>
-<h2 id="node-js-image-generator">Node.js Image Generator</h2>
+</code></pre>
+<p>The bwip-js request handler only operates on the URL query parameters and
+ignores all path information.  Your application is free to structure the URL
+path as needed to implement the desired HTTP request routing.</p>
+<h2 id="nodejsimagegenerator">Node.js Image Generator</h2>
 <p>You can use bwip-js to generate PNG images directly.</p>
-<pre><code class="lang-javascript">const bwipjs = require(&#39;bwip-js&#39;);
+<pre><code class="javascript language-javascript">const bwipjs = require('bwip-js');
 
 bwipjs.toBuffer({
-        bcid:        &#39;code128&#39;,       // Barcode type
-        text:        &#39;0123456789&#39;,    // Text to encode
+        bcid:        'code128',       // Barcode type
+        text:        '0123456789',    // Text to encode
         scale:       3,               // 3x scaling factor
         height:      10,              // Bar height, in millimeters
         includetext: true,            // Show human-readable text
-        textxalign:  &#39;center&#39;,        // Always good to set this
+        textxalign:  'center',        // Always good to set this
     }, function (err, png) {
         if (err) {
             // `err` may be a string or Error object
@@ -238,14 +273,15 @@ bwipjs.toBuffer({
         }
     });
 </code></pre>
-<p>If you would prefer to work with Promises, omit the callback function and <code>toBuffer()</code> will return a Promise:</p>
-<pre><code class="lang-javascript">bwipjs.toBuffer({
-        bcid:        &#39;code128&#39;,       // Barcode type
-        text:        &#39;0123456789&#39;,    // Text to encode
+<p>If you would prefer to work with Promises, omit the callback function and
+<code>toBuffer()</code> will return a Promise:</p>
+<pre><code class="javascript language-javascript">bwipjs.toBuffer({
+        bcid:        'code128',       // Barcode type
+        text:        '0123456789',    // Text to encode
         scale:       3,               // 3x scaling factor
         height:      10,              // Bar height, in millimeters
         includetext: true,            // Show human-readable text
-        textxalign:  &#39;center&#39;,        // Always good to set this
+        textxalign:  'center',        // Always good to set this
     })
     .then(png =&gt; {
         // `png` is a Buffer as in the example above
@@ -254,53 +290,60 @@ bwipjs.toBuffer({
         // `err` may be a string or Error object
     });
 </code></pre>
-<h2 id="electron-example">Electron Example</h2>
-<p>With Electron, use the Node.js <code>toBuffer()</code> interface.  This is an example <code>index.html</code> file for a basic, single window app:</p>
-<pre><code class="lang-html">&lt;!DOCTYPE html&gt;
+<h2 id="electronexample">Electron Example</h2>
+<p>With Electron, use the Node.js <code>toBuffer()</code> interface.  This is an example <code>index.html</code>
+file for a basic, single window app:</p>
+<pre><code class="html language-html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta charset="UTF-8"&gt;
     &lt;title&gt;Hello World!&lt;/title&gt;
   &lt;/head&gt;
   &lt;body&gt;
     Node.js &lt;script&gt;document.write(process.versions.node)&lt;/script&gt;,
     Chromium &lt;script&gt;document.write(process.versions.chrome)&lt;/script&gt;,
     and Electron &lt;script&gt;document.write(process.versions.electron)&lt;/script&gt;.
-    &lt;br&gt;&lt;br&gt;&lt;img id=&quot;myimg&quot;&gt;
-    &lt;pre id=&quot;output&quot;&gt;&lt;/pre&gt;
+    &lt;br&gt;&lt;br&gt;&lt;img id="myimg"&gt;
+    &lt;pre id="output"&gt;&lt;/pre&gt;
   &lt;/body&gt;
 
   &lt;script&gt;
-    var bwipjs = require(&#39;bwip-js&#39;);
-    bwipjs.toBuffer({ bcid:&#39;qrcode&#39;, text:&#39;0123456789&#39; }, function (err, png) {
+    var bwipjs = require('bwip-js');
+    bwipjs.toBuffer({ bcid:'qrcode', text:'0123456789' }, function (err, png) {
         if (err) {
-          document.getElementById(&#39;output&#39;).textContent = err;
+          document.getElementById('output').textContent = err;
         } else {
-          document.getElementById(&#39;myimg&#39;).src = &#39;data:image/png;base64,&#39; +
-                                                 png.toString(&#39;base64&#39;);
+          document.getElementById('myimg').src = 'data:image/png;base64,' +
+                                                 png.toString('base64');
         }
       });
   &lt;/script&gt;
 &lt;/html&gt;
 </code></pre>
-<h2 id="command-line-interface">Command Line Interface</h2>
+<h2 id="commandlineinterface">Command Line Interface</h2>
 <p>bwip-js can be used as a command line tool.</p>
 <pre><code>$ npm install -g bwip-js
 $ bwip-js
 Usage: bwip-js symbol-name text [options...] png-file
        bwip-js --bcid=symbol-name --text=text [options...] png-file
-Try &#39;bwip-js --help&#39; for more information.
-Try &#39;bwip-js --symbols&#39; for a list of supported barcode symbols.
-</code></pre><p>Usage example:</p>
+Try 'bwip-js --help' for more information.
+Try 'bwip-js --symbols' for a list of supported barcode symbols.
+</code></pre>
+<p>Usage example:</p>
 <pre><code>$ bwip-js qrcode 123456789 ~/qrcode.png
-</code></pre><h2 id="demo-apps">Demo Apps</h2>
+</code></pre>
+<h2 id="demoapps">Demo Apps</h2>
 <p>There are two demonstration html apps located in the root bwip-js directory:</p>
 <ul>
-<li><code>demo.html</code> is a full featured demonstation of bwip-js barcode rendering. It uses bwip-js&#39; built-in graphics to draw to a canvas.  The images produced will match pixel-for-pixel with the images produced by node.js.</li>
-<li><code>examples/svg.html</code> is an example of how to use bwip-js with your own drawing methods.  It converts the drawing commands to the equivalent SVG. When the drawing is complete, the SVG is both rendered on the screen and displayed as text.</li>
+<li><code>demo.html</code> is a full featured demonstation of bwip-js barcode rendering.
+It uses bwip-js' built-in graphics to draw to a canvas.  The images produced
+will match pixel-for-pixel with the images produced by node.js.</li>
+<li><code>examples/svg.html</code> is an example of how to use bwip-js with your own
+drawing methods.  It converts the drawing commands to the equivalent SVG.
+When the drawing is complete, the SVG is both rendered on the screen and
+displayed as text.</li>
 </ul>
 <p>Both demos can be run directly from a modern browser using the <code>file://</code> scheme.</p>
-
 	</div>
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
