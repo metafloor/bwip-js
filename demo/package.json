@@ -1,11 +1,10 @@
 {
   "name": "bwip-js",
-  "version": "1.7.4",
+  "version": "2.0.0",
   "description": "JavaScript barcode generator supporting over 90 types and standards.",
-  "main": "node-bwipjs.js",
-  "browser": "browser-bwipjs.js",
+  "main": "./dist/bwip-js.js",
   "bin": {
-    "bwip-js": "./bin/node-bwipjs.js"
+    "bwip-js": "./bin/bwip-js.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,9 +18,9 @@
     "generator",
     "barcode",
     "javascript",
-	"node",
-	"react",
-	"browser",
+    "node",
+    "react",
+    "browser",
     "itf",
     "gs1",
     "upc",
@@ -41,8 +40,5 @@
   "bugs": {
     "url": "https://github.com/metafloor/bwip-js/issues"
   },
-  "homepage": "https://github.com/metafloor/bwip-js",
-  "dependencies": {
-    "argv": "0.0.2"
-  }
+  "homepage": "https://github.com/metafloor/bwip-js"
 }

@@ -1,99 +1,87 @@
 <!doctype html>
 <html><head><title>bwip-js - JavaScript Barcode Generator</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta charset="utf-8" />
 <meta name="keywords" content="bar code, barcode generator, online barcode generator, free barcode generator, javascript, javascript library, nodejs, QR Code, EAN, EAN 13, Code 128, UPC, ISBN, ITF 14, Code 39, GS1, GS1 128, PDF417, HIBC, DataMatrix, Data Matrix, DataBar, OCR, OCR B, OCR font, Aztec Code, PostNet, USPS, Pharmacode" />
 <meta name="description" content="JavaScript barcode generator and library.  Create any barcode in your browser." />
-<!--
-	Copyright (c) 2011-2018 Mark Warren.
-
-	See the LICENSE file in the bwip-js root directory
-	for the extended copyright notice.
--->
 <link rel="stylesheet" type="text/css" href="lib/demo.css">
-<link rel="stylesheet" type="text/css" href="lib/jquery-ui.min.css">
-<script type="text/javascript" src="bwipp.js"></script>
-<script type="text/javascript" src="bwipjs.js"></script>
-<script type="text/javascript" src="browser-bitmap.js"></script>
-<script type="text/javascript" src="lib/jquery.js"></script>
-<script type="text/javascript" src="lib/jquery-ui.min.js"></script>
-<script type="text/javascript" src="lib/xhr-fonts.js"></script>
+<script type="text/javascript" src="dist/bwip-js-min.js"></script>
 <script type="text/javascript" src="lib/symdesc.js"></script>
 <script type="text/javascript" src="lib/canvas-toblob.js"></script>
 <script type="text/javascript" src="lib/filesaver.js"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-	var lastSymbol	= localStorage.getItem('bwipjsLastSymbol');
-	var lastBarText	= localStorage.getItem('bwipjsLastBarText');
-	var lastAltText	= localStorage.getItem('bwipjsLastAltText');
-	var lastOptions = localStorage.getItem('bwipjsLastOptions');
-	var lastRotate	= localStorage.getItem('bwipjsLastRotation');
-	var lastScaleX  = +localStorage.getItem('bwipjsLastScaleX');
-	var lastScaleY  = +localStorage.getItem('bwipjsLastScaleY');
-	var lastFntMono	= +localStorage.getItem('bwipjsLastFontMono');
+window.addEventListener('load', function() {
+	var lastSymbol, lastBarText, lastAltText, lastOptions, lastRotate, lastScaleX, lastScaleY;
+	try {
+		lastSymbol	= localStorage.getItem('bwipjsLastSymbol');
+		lastBarText	= localStorage.getItem('bwipjsLastBarText');
+		lastAltText	= localStorage.getItem('bwipjsLastAltText');
+		lastOptions = localStorage.getItem('bwipjsLastOptions');
+		lastRotate	= localStorage.getItem('bwipjsLastRotate');
+		lastScaleX  = +localStorage.getItem('bwipjsLastScaleX');
+		lastScaleY  = +localStorage.getItem('bwipjsLastScaleY');
+	} catch (e) {
+	}
 
-	var $sel = $('#symbol')
-		.change(function(ev) {
-			var desc = symdesc[$(this).val()];
+	// Set up the select list of barcode types
+	var sel = document.getElementById('symbol');
+	var opts = [];
+	for (var id in symdesc) {
+		opts.push(symdesc[id]);
+	}
+	opts.sort(function (a,b) { return a.desc < b.desc ? -1 : 1 });
+	for (var i = 0, l = opts.length; i < l; i++) {
+		var elt = document.createElement('option');
+		elt.textContent = opts[i].desc;
+		elt.value = opts[i].sym;
+		sel.appendChild(elt);
+	}
+
+	sel.addEventListener('change', function(ev) {
+			var desc = symdesc[sel.value];
 			if (desc) {
-				$('#symtext').val(desc.text);
-				$('#symopts').val(desc.opts);
+				document.getElementById('symtext').value = desc.text;
+				document.getElementById('symopts').value = desc.opts;
 			} else {
-				$('#symtext').val('');
-				$('#symopts').val('');
+				document.getElementById('symtext').value = '';
+				document.getElementById('symopts').value = '';
 			}
-			$('#symaltx').val('');
-			$('.saveas').css('visibility', 'hidden');
-			$('#proof-img').css('visibility', 'hidden');
-			$('#stats').text('');
+			document.getElementById('symaltx').value = '';
+			document.getElementById('saveas').style.visibility = 'hidden';
+			document.getElementById('stats').textContent = '';
 			var canvas = document.getElementById('canvas');
 			canvas.width = canvas.width;
 		});
 
 	if (lastSymbol) {
-		$sel.val(lastSymbol);
+		sel.value = lastSymbol;
 	} else {
-		$sel.prop('selectedIndex', 0);
+		sel.selectedIndex = 0;
 	}
-	$sel.trigger('change');
+	var evt = document.createEvent("HTMLEvents");
+	evt.initEvent("change", false, true);
+	sel.dispatchEvent(evt);
 
 	if (lastBarText) {
-		$('#symtext').val(lastBarText);
-		$('#symaltx').val(lastAltText);
-		$('#symopts').val(lastOptions);
+		document.getElementById('symtext').value = lastBarText;
+		document.getElementById('symaltx').value = lastAltText;
+		document.getElementById('symopts').value = lastOptions;
 	}
 	if (lastScaleX && lastScaleY) {
-		$('#scaleX').val(lastScaleX);
-		$('#scaleY').val(lastScaleY);
+		document.getElementById('scaleX').value = lastScaleX;
+		document.getElementById('scaleY').value = lastScaleY;
 	}
 	if (lastRotate) {
-		document.getElementById('rot' + lastRotate).checked = true;
-	}
-	if (lastFntMono) {
-		document.getElementById('fontMono').checked = true;
+		document.getElementById('rotate' + lastRotate).checked = true;
 	}
 
-	$('#scaleX').spinner({ min:1 })
-		.on("spinstop", function(ev) {
-			$('#scaleY').val(this.value);
+	document.getElementById('scaleX').addEventListener('change', function(ev) {
+			document.getElementById('scaleY').value = ev.target.value;
 		});
-	$('#scaleY').spinner({ min:1 });
-	$('#render').button().click(render);
-	$('.saveas').css('visibility', 'hidden');
-
-	if (location.search.indexOf('proofs=1') != -1) { 
-		// Show the images from BWIPP with Ghostscript
-		var img = document.createElement('img');
-		img.id					= 'proof-img';
-		img.style.visibility 	= 'hidden';
-		img.style.position		= 'absolute';
-		img.style.top			= '0px';
-		img.style.left			= '0px';
-		$('#proof').append(img);
-	}
+	document.getElementById('render').addEventListener('click', render);
+	document.getElementById('saveas').style.visibility = 'hidden';
 
 	// Allow Enter to render
-	$('#params').keypress(function(ev) {
+	document.getElementById('params').addEventListener('keypress', function(ev) {
 		if (ev.which == 13) {
 			render();
 			ev.stopPropagation();
@@ -103,140 +91,93 @@ $(document).ready(function() {
 	});
 
 	document.getElementById('versions').textContent =
-				'bwip-js ' + BWIPJS.VERSION + ' / BWIPP ' + BWIPP.VERSION;
+				'bwip-js ' + bwipjs.VERSION + ' / BWIPP ' + bwipjs.BWIPP.VERSION;
 });
 
 function render() {
-	var elt  = symdesc[$('#symbol').val()];
-	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var rot  = document.querySelector('input[name="rot"]:checked').value;
-
-	// Anti-aliased or monochrome fonts and scaling factors.
-	var monochrome = document.getElementById('fontMono').checked;
+	var elt  = symdesc[document.getElementById('symbol').value];
+	var text = document.getElementById('symtext').value.trim();
+	var alttext = document.getElementById('symaltx').value.trim();
+	var options = document.getElementById('symopts').value.trim();
+	var rotate = document.querySelector('input[name="rotate"]:checked').value;
 	var scaleX = +document.getElementById('scaleX').value || 2;
 	var scaleY = +document.getElementById('scaleY').value || 2;
 
-	localStorage.setItem('bwipjsLastSymbol',  elt.sym);
-	localStorage.setItem('bwipjsLastBarText', text);
-	localStorage.setItem('bwipjsLastAltText', altx);
-	localStorage.setItem('bwipjsLastOptions', opts);
-	localStorage.setItem('bwipjsLastScaleX', scaleX);
-	localStorage.setItem('bwipjsLastScaleY', scaleY);
-	localStorage.setItem('bwipjsLastFontMono', monochrome ? 1 : 0);
-	localStorage.setItem('bwipjsLastRotation', rot);
-
-	var bw = new BWIPJS(bwipjs_fonts, monochrome);
+	try {
+		localStorage.setItem('bwipjsLastSymbol',  elt.sym);
+		localStorage.setItem('bwipjsLastBarText', text);
+		localStorage.setItem('bwipjsLastAltText', alttext);
+		localStorage.setItem('bwipjsLastOptions', options);
+		localStorage.setItem('bwipjsLastScaleX', scaleX);
+		localStorage.setItem('bwipjsLastScaleY', scaleY);
+		localStorage.setItem('bwipjsLastRotate', rotate);
+	} catch (e) {
+	}
 
 	// Clear the page
-	$('#output').text('');
-	$('#stats').text('');
-	$('#proof-img').css('visibility', 'hidden');
-	$('.saveas').css('visibility', 'hidden');
+	document.getElementById('output').value = '';
+	document.getElementById('stats').value = '';
+	document.getElementById('saveas').style.visibility = 'hidden';
+	document.getElementById('output').textContent = '';
 
 	var canvas = document.getElementById('canvas');
 	canvas.height = 1;
 	canvas.width  = 1;
 	canvas.style.visibility = 'hidden';
 
-	// Convert the options to a dictionary object, so we can pass alttext with
-	// spaces.
-	var tmp = opts.split(' '); 
-	opts = {};
-	for (var i = 0; i < tmp.length; i++) {
-		if (!tmp[i]) {
+	// Convert the options to an object.
+	let opts = {};
+	let aopts = options.split(' ');
+	for (let i = 0; i < aopts.length; i++) {
+		if (!aopts[i]) {
 			continue;
 		}
-		var eq = tmp[i].indexOf('=');
+		var eq = aopts[i].indexOf('=');
 		if (eq == -1) {
-			opts[tmp[i]] = true;
+			opts[aopts[i]] = true;
 		} else {
-			opts[tmp[i].substr(0, eq)] = tmp[i].substr(eq+1);
+			opts[aopts[i].substr(0, eq)] = aopts[i].substr(eq+1);
 		}
 	}
 
-	// Add the alternate text
-	if (altx) {
-		opts.alttext = altx;
-		opts.includetext = true;
+	// Finish up the options
+	opts.text = text;
+	opts.bcid = elt.sym;
+	opts.scaleX = scaleX;
+	opts.scaleY = scaleY;
+	opts.rotate = rotate;
+	if (alttext) {
+		opts.alttext = alttext;
 	}
-	// We use mm rather than inches for height - except pharmacode2 height
-	// which is expected to be in mm
-	if (+opts.height && elt.sym != 'pharmacode2') {
-		opts.height = opts.height / 25.4 || 0.5;
-	}
-	// Likewise, width.
-	if (+opts.width) {
-		opts.width = opts.width / 25.4 || 0;
-	}
-	// BWIPP does not extend the background color into the
-	// human readable text.  Fix that in the bitmap interface.
-	if (opts.backgroundcolor) {
-		bw.bitmap(new Bitmap(canvas, rot, opts.backgroundcolor));
-		delete opts.backgroundcolor;
-	} else {
-		bw.bitmap(new Bitmap(canvas, rot));
-	}
-	
-	// Set the scaling factors
-	bw.scale(scaleX, scaleY);
 
-	// Add optional padding to the image
-	bw.bitmap().pad(+opts.paddingwidth*scaleX || 0,
-					+opts.paddingheight*scaleY || 0);
-
-	var ts0 = Date.now();
+	// Draw the bar code to the canvas
 	try {
-		// Call into the BWIPP cross-compiled code.
-		BWIPP()(bw, elt.sym, text, opts);
-
-		// Allow the font manager to demand-load any required fonts
-		// before calling render().
-		var ts1 = Date.now();
-		bwipjs_fonts.loadfonts(function(e) {
-			if (e) {
-				$('#output').text(e.stack || (''+e));
-			} else {
-				show();
-			}
-		});
+		let ts0 = new Date;
+		bwipjs.toCanvas(canvas, opts);
+		show(ts0, new Date);
 	} catch (e) {
 		// Watch for BWIPP generated raiseerror's.
-		var msg = ''+e;
+		var msg = (''+e).trim();
 		if (msg.indexOf("bwipp.") >= 0) {
-			$('#output').text(msg);
+			document.getElementById('output').textContent = msg;
 		} else if (e.stack) {
-			$('#output').text(e.stack);
+			// GC includes the message in the stack.  FF does not.
+			document.getElementById('output').textContent = 
+					(e.stack.indexOf(msg) == -1 ? msg + '\n' : '') + e.stack;
 		} else {
-			$('#output').text(e);
+			document.getElementById('output').textContent = msg;
 		}
 		return;
 	}
 
-	// Draw the barcode to the canvas
-	function show() {
-		bw.render();
-		var ts2 = Date.now();
-
+	function show(ts0, ts1) {
 		canvas.style.visibility = 'visible';
 		setURL();
-		$('#stats').text('Rendered in ' + (ts2-ts0) + ' msecs');
-		$('.saveas').css('visibility', 'visible');
-		saveCanvas.basename = elt.sym + '-' +
-				text.replace(/[^a-zA-Z0-9._]+/g, '-');
-
-		// Show proofs?
-		if (location.search.indexOf('proofs=1') != -1) { 
-			var img = document.getElementById('proof-img');
-			if (img) {
-				img.src = 'proofs/' + elt.sym + '.png';
-				img.style.visibility = 'visible';
-			}
-		}
+		document.getElementById('stats').textContent = 'Rendered in ' + (ts1-ts0) + ' msecs.';
+		document.getElementById('saveas').style.visibility = 'visible';
+		saveCanvas.basename = elt.sym + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-');
 	}
 }
-
 function saveCanvas(type, ext) {
 	var canvas = document.getElementById('canvas');
 	canvas.toBlob(function (blob) {
@@ -244,23 +185,22 @@ function saveCanvas(type, ext) {
 				  }, type, 1);
 }
 function setURL() {
-	var elt  = symdesc[$('#symbol').val()];
-	var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
-	var rot  = document.querySelector('input[name="rot"]:checked').value;
-	var mono = document.getElementById('fontMono').checked;
+	var elt  = symdesc[document.getElementById('symbol').value];
+	var text = document.getElementById('symtext').value.trim();
+	var alttext = document.getElementById('symaltx').value.trim();
+	var options = document.getElementById('symopts').value.trim();
+	var rotate = document.querySelector('input[name="rotate"]:checked').value;
 	var scaleX = +document.getElementById('scaleX').value || 2;
 	var scaleY = +document.getElementById('scaleY').value || scaleX;
 
 	var url = 'http://bwipjs-api.metafloor.com/?bcid=' + elt.sym + 
 				'&text=' + encodeURIComponent(text) +
-				(altx ? '&alttext=' + encodeURIComponent(altx) : '') +
-				(opts ? '&' + opts.replace(/ +/g, '&') : '') +
-				(rot != 'N' ? '&rotate=' + rot : '') +
+				(alttext ? '&alttext=' + encodeURIComponent(alttext) : '') +
+				(options ? '&' + options.replace(/ +/g, '&') : '') +
+				(rotate != 'N' ? '&rotate=' + rotate : '') +
 				(scaleX == scaleY ? '&scale=' + scaleX
-								  : '&scaleX=' + scaleX + '&scaleY=' + scaleY) +
-				(mono ? '&monochrome' : '');
+								  : '&scaleX=' + scaleX + '&scaleY=' + scaleY)
+				;
 
 	document.getElementById('apiurl').href = url;
 }
@@ -274,153 +214,42 @@ function setURL() {
 <table border=0 cellpading=0 cellspacing=0><tr>
 <td style="vertical-align:top">
 	<table border=0 cellpading=0 cellspacing=0>
-	<tr><th>Barcode Type:
-		<!-- Do not change the `select id="symbol"` - see develop/mkdesc -->
-		<td><select id="symbol" style="width:63.5ex">
-			<!-- Barcode Writer in Pure PostScript - Version 2018-02-04 -->
-			<option value="auspost">AusPost 4 State Customer Code</option>
-			<option value="azteccode">Aztec Code</option>
-			<option value="aztecrune">Aztec Runes</option>
-			<option value="bc412">BC412</option>
-			<option value="coop2of5">COOP 2 of 5</option>
-			<option value="channelcode">Channel Code</option>
-			<option value="rationalizedCodabar">Codabar</option>
-			<option value="codablockf">Codablock F</option>
-			<option value="code11">Code 11</option>
-			<option value="code128">Code 128</option>
-			<option value="code16k">Code 16K</option>
-			<option value="code2of5">Code 25</option>
-			<option value="code39">Code 39</option>
-			<option value="code39ext">Code 39 Extended</option>
-			<option value="code49">Code 49</option>
-			<option value="code93">Code 93</option>
-			<option value="code93ext">Code 93 Extended</option>
-			<option value="codeone">Code One</option>
-			<option value="azteccodecompact">Compact Aztec Code</option>
-			<option value="pdf417compact">Compact PDF417</option>
-			<option value="raw">Custom 1D symbology</option>
-			<option value="daft">Custom 4 state symbology</option>
-			<option value="datamatrix">Data Matrix</option>
-			<option value="datamatrixrectangular">Data Matrix Rectangular</option>
-			<option value="datalogic2of5">Datalogic 2 of 5</option>
-			<option value="identcode">Deutsche Post Identcode</option>
-			<option value="leitcode">Deutsche Post Leitcode</option>
-			<option value="dotcode">DotCode</option>
-			<option value="ean13">EAN-13</option>
-			<option value="ean13composite">EAN-13 Composite</option>
-			<option value="ean2">EAN-2 (2 digit addon)</option>
-			<option value="ean5">EAN-5 (5 digit addon)</option>
-			<option value="ean8">EAN-8</option>
-			<option value="ean8composite">EAN-8 Composite</option>
-			<option value="flattermarken">Flattermarken</option>
-			<option value="gs1-cc">GS1 Composite 2D Component</option>
-			<option value="gs1datamatrix">GS1 Data Matrix</option>
-			<option value="gs1datamatrixrectangular">GS1 Data Matrix Rectangular</option>
-			<option value="databarexpanded">GS1 DataBar Expanded</option>
-			<option value="databarexpandedcomposite">GS1 DataBar Expanded Composite</option>
-			<option value="databarexpandedstacked">GS1 DataBar Expanded Stacked</option>
-			<option value="databarexpandedstackedcomposite">GS1 DataBar Expanded Stacked Composite</option>
-			<option value="databarlimited">GS1 DataBar Limited</option>
-			<option value="databarlimitedcomposite">GS1 DataBar Limited Composite</option>
-			<option value="databaromni">GS1 DataBar Omnidirectional</option>
-			<option value="databaromnicomposite">GS1 DataBar Omnidirectional Composite</option>
-			<option value="databarstacked">GS1 DataBar Stacked</option>
-			<option value="databarstackedcomposite">GS1 DataBar Stacked Composite</option>
-			<option value="databarstackedomni">GS1 DataBar Stacked Omnidirectional</option>
-			<option value="databarstackedomnicomposite">GS1 DataBar Stacked Omnidirectional Composite</option>
-			<option value="databartruncated">GS1 DataBar Truncated</option>
-			<option value="databartruncatedcomposite">GS1 DataBar Truncated Composite</option>
-			<option value="gs1northamericancoupon">GS1 North American Coupon</option>
-			<option value="gs1qrcode">GS1 QR Code</option>
-			<option value="gs1-128">GS1-128</option>
-			<option value="gs1-128composite">GS1-128 Composite</option>
-			<option value="ean14">GS1-14</option>
-			<option value="hibcazteccode">HIBC Aztec Code</option>
-			<option value="hibccodablockf">HIBC Codablock F</option>
-			<option value="hibccode128">HIBC Code 128</option>
-			<option value="hibccode39">HIBC Code 39</option>
-			<option value="hibcdatamatrix">HIBC Data Matrix</option>
-			<option value="hibcdatamatrixrectangular">HIBC Data Matrix Rectangular</option>
-			<option value="hibcmicropdf417">HIBC MicroPDF417</option>
-			<option value="hibcpdf417">HIBC PDF417</option>
-			<option value="hibcqrcode">HIBC QR Code</option>
-			<option value="hanxin">Han Xin Code</option>
-			<option value="iata2of5">IATA 2 of 5</option>
-			<option value="isbn">ISBN</option>
-			<option value="ismn">ISMN</option>
-			<option value="issn">ISSN</option>
-			<option value="itf14">ITF-14</option>
-			<option value="industrial2of5">Industrial 2 of 5</option>
-			<option value="interleaved2of5">Interleaved 2 of 5 (ITF)</option>
-			<option value="code32">Italian Pharmacode</option>
-			<option value="japanpost">Japan Post 4 State Customer Code</option>
-			<option value="msi">MSI Modified Plessey</option>
-			<option value="matrix2of5">Matrix 2 of 5</option>
-			<option value="maxicode">MaxiCode</option>
-			<option value="microqrcode">Micro QR Code</option>
-			<option value="micropdf417">MicroPDF417</option>
-			<option value="symbol">Miscellaneous symbols</option>
-			<option value="pdf417">PDF417</option>
-			<option value="pharmacode">Pharmaceutical Binary Code</option>
-			<option value="pzn">Pharmazentralnummer (PZN)</option>
-			<option value="plessey">Plessey UK</option>
-			<option value="posicode">PosiCode</option>
-			<option value="qrcode">QR Code</option>
-			<option value="kix">Royal Dutch TPG Post KIX</option>
-			<option value="royalmail">Royal Mail 4 State Customer Code</option>
-			<option value="sscc18">SSCC-18</option>
-			<option value="telepen">Telepen</option>
-			<option value="telepennumeric">Telepen Numeric</option>
-			<option value="pharmacode2">Two-track Pharmacode</option>
-			<option value="upca">UPC-A</option>
-			<option value="upcacomposite">UPC-A Composite</option>
-			<option value="upce">UPC-E</option>
-			<option value="upcecomposite">UPC-E Composite</option>
-			<option value="onecode">USPS Intelligent Mail</option>
-			<option value="planet">USPS PLANET</option>
-			<option value="postnet">USPS POSTNET</option>
-			<option value="ultracode">Ultracode</option>
-			</select>
-	<tr><th>Bar Text:<td><input id="symtext" type="text" style="width:63ex">
-	<tr><th>Alt Text:<td><input id="symaltx" type="text" style="width:63ex">
-	<tr><th>Options:<td><input id="symopts" type="text" style="width:63ex">
+	<tr><th>Barcode Type:<td><select id="symbol"></select>
+	<tr><th>Bar Text:<td><input id="symtext" type="text">
+	<tr><th>Alt Text:<td><input id="symaltx" type="text">
+	<tr><th>Options:<td><input id="symopts" type="text">
 	<tr><td><td>
+		<div id="saveas">
 		<a class="saveas" href="javascript:saveCanvas('image/png','.png')">Save As PNG</a>
 		&nbsp;&nbsp;
 		<a class="saveas" href="javascript:saveCanvas('image/jpeg','.jpg')">Save As JPEG</a>
 		&nbsp;&nbsp;
 		<a class="saveas" id="apiurl" href="">Goto URL</a>
 		&nbsp;&nbsp;
-		<br>
+		</div>
 		<div id="stats"></div>
 	</table>
 <td style="padding-left:10mm;vertical-align:top">
 	<table border=0 cellpading=0 cellspacing=5>
 	<tr><th>Scale X,Y:<td>
-		<input type="text" id="scaleX" value=2>
-		<input type="text" id="scaleY" value=2>
+		<input type="number" min=1 max=9 step=1 id="scaleX" value=2>
+		<input type="number" min=1 max=9 step=1 id="scaleY" value=2>
 	<tr><th>Image Rotation:<td>
-		<label for="rotN"><input type="radio" name="rot" value="N"
-			id="rotN" checked>Normal</label>
-		<label for="rotR"><input type="radio" name="rot" value="R"
-			id="rotR">Right</label>
-		<label for="rotL"><input type="radio" name="rot" value="L"
-			id="rotL">Left</label>
-		<label for="rotI"><input type="radio" name="rot" value="I"
-			id="rotI">Invert</label>
-	<tr><th>Font Rendering:<td>
-		<label for="fontAnti"><input type="radio" name="font" value="A"
-			id="fontAnti" checked>Anti-Aliased</label>
-		<label for="fontMono"><input type="radio" name="font" value="M"
-			id="fontMono">Monochrome</label>
-	<tr><td><td><button id="render">Show Barcode</button>
+		<label for="rotateN"><input type="radio" name="rotate" value="N"
+			id="rotateN" checked>Normal</label>
+		<label for="rotateR"><input type="radio" name="rotate" value="R"
+			id="rotateR">Right</label>
+		<label for="rotateL"><input type="radio" name="rotate" value="L"
+			id="rotateL">Left</label>
+		<label for="rotateI"><input type="radio" name="rotate" value="I"
+			id="rotateI">Invert</label>
+	<tr><td><td><button style="margin-top:1ex" id="render">Show Barcode</button>
 	</table>
 <tr><td><br>
 </table>
 </div>
 <div id="content">
 <canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
-<div id="proof" style="position:relative;border:1px solid #fff"></div>
 <div id="output" style="white-space:pre"></div>
 </div>
 </body>
