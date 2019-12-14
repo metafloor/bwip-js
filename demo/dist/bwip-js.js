@@ -36472,7 +36472,7 @@ return {
 		request:Request, toBuffer:ToBuffer, toCanvas:ToCanvas, render:Render, raw:Raw,
 		fixupOptions:FixupOptions,
 		loadFont:FontLib.loadFont,
-		VERSION:'__BWIPJS_VERS__',
+		VERSION:'2.0.1 (2019-12-13)',
 
 		// Internals
 		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
