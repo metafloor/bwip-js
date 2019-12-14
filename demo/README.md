@@ -24,7 +24,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 2.0.0 (2019-12-13)
+* Current bwip-js version is 2.0.1 (2019-12-13)
 * Current BWIPP version is 2019-11-08
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome

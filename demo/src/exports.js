@@ -80,6 +80,8 @@ function ToBuffer(opts, callback) {
 //
 // This function is synchronous and throws on error.
 //
+// Returns the HTMLCanvasElement.
+//
 // Browser usage only.
 function ToCanvas(opts, canvas) {
 	if (typeof canvas == 'string') {
@@ -96,6 +98,8 @@ function ToCanvas(opts, canvas) {
 	}
 	FixupOptions(opts);
 	Render(opts, DrawingCanvas(opts, canvas));
+
+	return canvas;
 }
 
 // bwipjs.fixupOptions(options)
