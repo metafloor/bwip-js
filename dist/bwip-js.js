@@ -120,6 +120,8 @@ function ToBuffer(opts, callback) {
 //
 // This function is synchronous and throws on error.
 //
+// Returns the HTMLCanvasElement.
+//
 // Browser usage only.
 function ToCanvas(opts, canvas) {
 	if (typeof canvas == 'string') {
@@ -136,6 +138,8 @@ function ToCanvas(opts, canvas) {
 	}
 	FixupOptions(opts);
 	Render(opts, DrawingCanvas(opts, canvas));
+
+	return canvas;
 }
 
 // bwipjs.fixupOptions(options)
@@ -253,7 +257,7 @@ function Render(params, drawing) {
 
 	// Call into the BWIPP cross-compiled code and render the image.
 	BWIPP()(bw, bcid, text, opts);
-	return bw.render();		// Returns whatever drawing.end() returns
+	return bw.render();		// Return whatever drawing.end() returns
 }
 
 // bwipjs.raw(options)
@@ -36472,7 +36476,7 @@ return {
 		request:Request, toBuffer:ToBuffer, toCanvas:ToCanvas, render:Render, raw:Raw,
 		fixupOptions:FixupOptions,
 		loadFont:FontLib.loadFont,
-		VERSION:'2.0.1 (2019-12-13)',
+		VERSION:'2.0.2 (2019-12-14)',
 
 		// Internals
 		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,

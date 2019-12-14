@@ -24,7 +24,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 2.0.1 (2019-12-13)
+* Current bwip-js version is 2.0.2 (2019-12-14)
 * Current BWIPP version is 2019-11-08
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -154,14 +154,15 @@ The script adds a single `bwipjs` global object.  To draw a barcode to a canvas:
 
 ```javascript
 try {
-  bwipjs.toCanvas('mycanvas', {
-        bcid:        'code128',       // Barcode type
-        text:        '0123456789',    // Text to encode
-        scale:       3,               // 3x scaling factor
-        height:      10,              // Bar height, in millimeters
-        includetext: true,            // Show human-readable text
-        textxalign:  'center',        // Always good to set this
-    });
+    // The return value is the canvas element
+    let canvas = bwipjs.toCanvas('mycanvas', {
+            bcid:        'code128',       // Barcode type
+            text:        '0123456789',    // Text to encode
+            scale:       3,               // 3x scaling factor
+            height:      10,              // Bar height, in millimeters
+            includetext: true,            // Show human-readable text
+            textxalign:  'center',        // Always good to set this
+        });
 } catch (e) {
     // `e` may be a string or Error object
 }
@@ -205,14 +206,15 @@ import bwipjs from 'bwip-js';
 class App extends Component {
   componentDidMount() {
     try {
-      bwipjs.toCanvas('mycanvas', {
-            bcid:        'code128',       // Barcode type
-            text:        '0123456789',    // Text to encode
-            scale:       3,               // 3x scaling factor
-            height:      10,              // Bar height, in millimeters
-            includetext: true,            // Show human-readable text
-            textxalign:  'center',        // Always good to set this
-        });
+      // The return value is the canvas element
+      let canvas = bwipjs.toCanvas('mycanvas', {
+                bcid:        'code128',       // Barcode type
+                text:        '0123456789',    // Text to encode
+                scale:       3,               // 3x scaling factor
+                height:      10,              // Bar height, in millimeters
+                includetext: true,            // Show human-readable text
+                textxalign:  'center',        // Always good to set this
+            });
     } catch (e) {
         // `e` may be a string or Error object
     }
