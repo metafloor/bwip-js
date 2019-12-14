@@ -198,9 +198,25 @@ function PSC(str, flags) {
 		}
 	}
 
-	// Curly-braces embedded in strings cause vim to mis-match
+	// Curly-braces and brackets embedded in strings cause vim to mis-match
 	const LC = '\x7b';
 	const RC = '\x7d';
+	const LP = '\x5b';
+	const RP = '\x5d';
+
+	// browser-based debugging using pscdbg.js/pscdbg.html
+	var pscdbg = typeof window == 'object';
+	var pscdbg_nlines = 0;
+	var pscdbg_height = 0;
+	if (pscdbg) {
+		let re = /\r\n|[\r\n]/g;
+		while (re.exec(str)) {
+			pscdbg_nlines++;
+		}
+		pscdbg_nlines -= 2;		// inserting into an <xmp> adds 2 EOLs
+		pscdbg_height = document.getElementById('barcode.ps').offsetHeight;
+		debugger;
+	}
 
 	// Home for all of the postscript operators
 	var $ = {};
@@ -226,7 +242,7 @@ function PSC(str, flags) {
 	var block = [];
 	var depth = 0;
 	var seq   = 0;
-	var loopdepth = 0;
+	var loopstate = [];
 
 	// We do a two-pass compilation of each global function.  The first pass
 	// is used to find all user-defined identifiers (allowunknown=true).
@@ -291,6 +307,7 @@ function PSC(str, flags) {
 		if (/^[A-Za-z_$][\w_$.]*$/.test(x) ||	// 'dot' expression
 			/^-?[0-9.]+$/.test(x) ||			// number literal
 			/^"([^"\\]|\\.)*"$/.test(x) ||		// string literal
+			/^'([^'\\]|\\.)*'$/.test(x) ||		// string literal
 			/^[\w_$.]+\([^;()]*\)$/.test(x)) {	// function call
 			return x;
 		}
@@ -340,7 +357,7 @@ function PSC(str, flags) {
 	//		$1.lastpairs = _X;
 	//
 	// The code swaps the values of thispairs and lastpairs and will be
-	// rendered invalid if we eliminate the var _SP declaration and
+	// rendered invalid if we eliminate the var declaration and
 	// substitute directly.
 	//
 	// But it is ok for the assignment to occur on the same line as the
@@ -468,11 +485,7 @@ function PSC(str, flags) {
 	// Emit the executable object.
 	function ctxexec(exec) {
 		if (exec.type == TYPE_IENAME) {
-			if (loopdepth) {
-				return [{ code:exec.expr+'();', lnbr:lex.lnbr, seq:++seq }]
-			}
-			return [{ code:exec.expr+'();',
-					lnbr:lex.lnbr, seq:++seq }]
+			return [{ code:exec.expr + '();', lnbr:lex.lnbr, seq:++seq }]
 		} else if (exec.type == TYPE_PRECALC) {
 			return [{ code:exec.expr, lnbr:lex.lnbr, seq:++seq }];
 		} else if (exec.type == TYPE_TOKENS) {
@@ -622,6 +635,10 @@ function PSC(str, flags) {
 			var tkn  = lex.token;
 			var lnbr = lex.lnbr;
 
+			if (pscdbg) {
+				window.scrollTo(0, (lex.lnbr-10) * pscdbg_height / pscdbg_nlines);
+			}
+
 			// Starting an exec block - wait until we determine how it is
 			// being used before compiling it.
 			if (tkn == '{') {
@@ -680,14 +697,16 @@ function PSC(str, flags) {
 					}
 
 					// Build the array at runtime
-					ctxflush();
+					if (sp && st[sp-1].type != TYPE_IDENT) {
+						ctxflush();
+					}
 					emit('$k[$j++]=Infinity;');
 					for (var i = 0; i < lines.length; i++) {
 						emit(lines[i]);
 					}
 
 					if (defsym) {
-						if (/^"\w+"$/.test(defsym)) {
+						if (/^['"]\w+['"]$/.test(defsym)) {
 							emit('$' + dlvl + '.' +
 								defsym.substr(1, defsym.length-2) + '=$a();');
 						} else {
@@ -724,8 +743,9 @@ function PSC(str, flags) {
 					while (/^var [^=]+=/.test(lines[i].code)) {
 						i++;
 					}
-					// Must be a string
-					if (!/^\$k\[\$j\+\+\]=['"].*['"];/.test(lines[i].code)) {
+					// Must be a string or number
+					if (!/^\$k\[\$j\+\+\]=['"].*['"];/.test(lines[i].code) &&
+						!/^\$k\[\$j\+\+\]=(\d+(\.\d*)?|\.\d+);/.test(lines[i].code)) {
 						break;
 					}
 					i++
@@ -743,7 +763,7 @@ function PSC(str, flags) {
 
 				// Static?
 				if (i == lines.length) {
-					var code = LC + '\n';
+					var code = '';
 					for (var i = 0; i < lines.length; i++) {
 						code += i ? ',' : '';
 
@@ -753,9 +773,11 @@ function PSC(str, flags) {
 							i++;
 						}
 
-						// Extract the property name
-						var n = /^\$k\[\$j\+\+\]=['"](.*)['"];/
-													.exec(lines[i].code);
+						// Extract the property name (or number)
+						var id = /^\$k\[\$j\+\+\]=(['"]?)([^'"]+)\1?;/.exec(lines[i].code);
+						if (!id) {
+							throw 'unknwown identifier in: ' + lines[i].code;
+						}
 						i++;
 
 						// Hoist optional var declarations
@@ -768,18 +790,19 @@ function PSC(str, flags) {
 						var a = /^\$k\[\$j\+\+\]=([\s\S]+);(\/\*[^;]*\*\/)?$/
 														.exec(lines[i].code);
 
-						// Is the ident a js-id?
-						if (/^[A-Za-z_]\w*$/.test(n[1])) {
-							code += n[1] + ':' + a[1];
+						if (!id[1]) {
+							code += LP + id[2] + ',' + a[1] + RP;
 						} else {
-							code += '"' + n[1] + '":' + a[1];
+							code += LP + '"' + id[2] + '",' + a[1] + RP;
 						}
 					}
-					emit('var ' + tid + '=' + code + '\n' + RC + ';');
+					emit('var ' + tid + '=new Map(' + LP + code + RP + ');');
 					st[sp++] = { type:TYPE_DICT, expr:tid, seq:++seq };
 				} else {
 					// Build the object at runtime
-					ctxflush();
+					if (sp && st[sp-1].type != TYPE_IDENT) {
+						ctxflush();
+					}
 					emit('$k[$j++]=Infinity;');
 					for (var i = 0; i < lines.length; i++) {
 						emit(lines[i]);
@@ -824,9 +847,9 @@ function PSC(str, flags) {
 					}
 					dict[tkn.substr(2)] = TYPE_IENAME;
 				} else {
+					// Use single-quoted strings to indicate idents.
 					var id = tkn.substr(1);
-					//var ty = dict[id] || TYPE_IDENT;
-					st[sp++] = { type:TYPE_IDENT, expr:'"' + id + '"',
+					st[sp++] = { type:TYPE_IDENT, expr:'\'' + id + '\'',
 								 seq:++seq };
 					if (!dict[id]) {
 						dict[id] = TYPE_IDENT;
@@ -840,18 +863,10 @@ function PSC(str, flags) {
 					// Push state to stack before calling
 					ctxflush();
 					if (/^[A-Za-z_]\w*$/.test(tkn)) {
-						var expr = '$' + dlvl + '.' + tkn + '()';
-						//emit('$' + dlvl + '.' + tkn + '();');
+						emit('$' + dlvl + '.' + tkn + '();');
 					} else {
-						var expr = '$' + dlvl + '["' + tkn.replace(/[\\"]/g,'\\$&') +
-							 '"]()';
-						//emit('$' + dlvl + '["' + tkn.replace(/[\\"]/g,'\\$&') +
-						//	 '"]();');
-					}
-					if (loopdepth) {
-						emit('if(' + expr + '==$b)break;');
-					} else {
-						emit('if(' + expr + '==$b)return $b;');
+						emit('$' + dlvl + '["' + tkn.replace(/[\\"]/g,'\\$&') +
+							 '"]();');
 					}
 				// We cannot directly use a dictionary reference as a
 				// trace expression.  Intermediate variables must be used to
@@ -924,6 +939,7 @@ function PSC(str, flags) {
 	// function-scoped $1 dictionary.
 	$.begin = function() {
 		need(1);
+		if (dlvl > 1) throw '--oops--dlevel-gt-one';
 		emit('var $' + (++dlvl) + '={};');
 		sp--;
 	}
@@ -939,7 +955,7 @@ function PSC(str, flags) {
 	// stack (a no-op) and for runtime created objects.
 	$.dict = function() {
 		// Ignore the size parameter.
-		st[sp-1] = { type:TYPE_DICT, expr:'{}', seq:++seq };
+		st[sp-1] = { type:TYPE_DICT, expr:'new Map', seq:++seq };
 	}
 
 	$.known = function() {
@@ -966,7 +982,7 @@ function PSC(str, flags) {
 	}
 	// Newest versions of barcode.ps are using stop rather than handleerror.
 	$.stop = function() {
-		emit('throw new Error($0.$error.errorname+": "+$0.$error.errorinfo);');
+		emit('throw new Error($0.$error.get("errorname")+": "+$0.$error.get("errorinfo"));');
 	}
 
 	// OBSOLETE:  setanycolor in the renderers has been replaced by custom
@@ -1056,20 +1072,26 @@ function PSC(str, flags) {
 	$.roll = function() {
 		var d = st[--sp];	// direction and iters
 		var n = st[--sp];	// how many elts roll
-		if (d.type != TYPE_INTLIT || n.type != TYPE_INTLIT) {
-			throw new Error('roll: parameters not constant.');
+		if (n.type != TYPE_INTLIT) {
+			dump('roll');
+			throw '#' + lex.lnbr + ': roll: count not constant.';
 		}
-		d = +d.expr;
 		n = +n.expr;
 		need(n)
-		if (d < 0) {
-			var t = st.splice(sp-n, -d);
+		if (d.type == TYPE_INTLIT) {
+			d = +d.expr;
+			if (d < 0) {
+				var t = st.splice(sp-n, -d);
+			} else {
+				var t = st.splice(sp-n, n-d);
+			}
+			st.splice.apply(st, [sp-t.length, 0].concat(t));
+			for (var i = sp-n; i < sp-1; i++) {
+				st[i].seq = ++seq;
+			}
 		} else {
-			var t = st.splice(sp-n, n-d);
-		}
-		st.splice.apply(st, [sp-t.length, 0].concat(t));
-		for (var i = sp-n; i < sp-1; i++) {
-			st[i].seq = ++seq;
+			ctxflush();
+			emit('$r(' + n + ',' + d.expr + ');');
 		}
 	}
 	// BWIPP uses index two ways:
@@ -1216,7 +1238,7 @@ function PSC(str, flags) {
 			seq			 = 0;
 			dict		 = {};
 			branchno	 = -1;	// Disable for the first pass
-			loopdepth	 = 0;
+			loopstate	 = [];
 
 			// BWIPP unknowns
 			dict.$error = TYPE_DICT;
@@ -1235,7 +1257,7 @@ function PSC(str, flags) {
 			allowunknown = false;		// second pass, disallow unknowns
 			tvarno		 = 0;
 			seq			 = 0;
-			loopdepth	 = 0;
+			loopstate	 = [];
 
 			if (cfg.coverage) {
 				branchno = 0;			// enable for the 2nd pass
@@ -1300,38 +1322,28 @@ function PSC(str, flags) {
 			$.bind();
 		}
 
+		var t1 = st[sp-1].type;
+		var t2 = st[sp-2].type;
 		var id = st[sp-2].expr;
-		var ty = st[sp-1].type;
 
 		// Convert literals to their value counter-parts
-		if (ty & (TYPE_STRLIT|TYPE_INTLIT|TYPE_NUMLIT)) {
-			ty <<= 1;
+		if (t1 & (TYPE_STRLIT|TYPE_INTLIT|TYPE_NUMLIT)) {
+			t1 <<= 1;
 		}
 
 		// And convert string value idents that are actually literals
-		if (/^"([^\\"]|\\.)*"$/.test(id)) {
-			st[sp-2].type = TYPE_STRLIT;
+		if (t2 != TYPE_IDENT && /^['"]([^\\"]|\\.)*['"]$/.test(id)) {
+			t2 = TYPE_STRLIT;
 		}
 
-		// If the previous line is `var X=<value>` and the current expression
-		// is X, then merge the two lines.
-		//if (block.length && /^var _/.test(block[block.length-1].code)) {
-		//	var assign = /^var (_[\w_$]+)=([\s\S]+);(\/\*[^;]*\*\/)?$/
-		//						.exec(block[block.length-1].code);
-		//	if (assign && assign[1] == st[sp-1].expr) {
-		//		block.pop();
-		//		st[sp-1].expr = assign[2];
-		//	}
-		//}
-
-		if (st[sp-2].type == TYPE_STRLIT || st[sp-2].type == TYPE_IDENT) {
-			if (/^"[A-Za-z_]\w*"$/.test(id)) {
+		if (t2 == TYPE_STRLIT || t2 == TYPE_IDENT) {
+			if (/^['"][A-Za-z]\w*['"]$/.test(id)) {
 				emit('$' + dlvl + '.' + id.substr(1, id.length-2) + '=' +
 							st[sp-1].expr + ';');
 			} else {
 				emit('$' + dlvl + '[' + id  + ']=' + st[sp-1].expr + ';');
 			}
-			dict[id.substr(1, id.length-2).replace(/\\(.)/g, '$1')] = ty;
+			dict[id.substr(1, id.length-2).replace(/\\(.)/g, '$1')] = t1;
 		} else {
 			emit('$' + dlvl + '[' + id + ']=' + st[sp-1].expr + ';');
 		}
@@ -1353,18 +1365,9 @@ function PSC(str, flags) {
 		var tid = tvar();
 		var id = st[sp-1].expr;
 		var ty = st[sp-2].type;
-		// String literals can be used as keys directly.  All other
-		// values must be checked.
-		if (/^"[A-Za-z_$][\w_$]*"$/.test(id)) {
-			emit('var ' + tid + '=' + st[sp-2].expr + '.' +
-						id.substr(1, id.length-2) + ';');
-		} else if (/^".*"$/.test(id)) {
-			emit('var ' + tid + '=' + st[sp-2].expr + '[' + id + '];');
-		} else {
-			// Arrays may be views of arrays.
-			// Strings may by uint8-strings or strings.
-			emit('var ' + tid + '=$get(' + st[sp-2].expr + ',' + id + ');');
-		}
+		// Arrays may be views of arrays.
+		// Strings may by uint8-strings or strings.
+		emit('var ' + tid + '=$get(' + st[sp-2].expr + ',' + id + ');');
 		if (st[sp-2].type & TYPE_STRTYP) {
 			st[sp-2] = { type:TYPE_INTVAL, expr:tid, seq:++seq };
 		} else {
@@ -1377,19 +1380,10 @@ function PSC(str, flags) {
 		need(3);
 		var id = st[sp-2].expr;
 		var ty = st[sp-3].type;
-		// String literals can be used as keys directly.  All other
-		// values must be checked.
-		if (/^"[A-Za-z_$][\w_$]*"$/.test(id)) {
-			emit(st[sp-3].expr + '.' + id.substr(1, id.length-2) + '=' +
-					st[sp-1].expr + ';');
-		} else if (/^".*"$/.test(id)) {
-			emit(st[sp-3].expr + '[' + id + ']=' + st[sp-1].expr + ';');
-		} else {
-			// Arrays may be views.
-			// Strings may be uint8-strings or strings (the latter will throw).
-			emit('$put(' + st[sp-3].expr + ',' + id + ',' +
+		// Arrays may be views.
+		// Strings may be uint8-strings or strings (the latter will throw).
+		emit('$put(' + st[sp-3].expr + ',' + id + ',' +
 					st[sp-1].expr + ');');
-		}
 		sp-=3;
 	}
 
@@ -1502,7 +1496,7 @@ function PSC(str, flags) {
 				emit('var ' + tid + '=' + st[sp-2].expr + ';');
 				st[sp-2].expr = tid;
 			}
-			emit('if(' + expr + ')' + LC);
+			emit('if(' + expr + ')' + LC + ' //no-else');
 			emit('var _=' + st[sp-1].expr + ';');
 			emit(st[sp-1].expr + '=' + st[sp-2].expr + ';');
 			emit(st[sp-2].expr + '=_;');
@@ -1512,7 +1506,7 @@ function PSC(str, flags) {
 
 		ctxflush();
 		ctxprep(exec);
-		emit('if(' + expr + ')' + LC);
+		emit('if(' + expr + ')' + LC + ' //no-else');
 		newbranch();
 		append(ctxexec(exec));
 		emit(RC);
@@ -1608,10 +1602,7 @@ function PSC(str, flags) {
 		var o    = st[sp-2];
 		var exec = st[sp-1];
 		sp-=2;
-
-		// A forall is executed as a function, therefore loopdepth is temporarily zero.
-		var olddepth = loopdepth;
-		loopdepth = 0;
+		loopstate.push('forall');
 
 		// azteccode forall loop breaks this...  We need better handling of
 		// if/ifelse loops where we do not flush context on exit from the
@@ -1651,6 +1642,9 @@ function PSC(str, flags) {
 		} else if (o.type & TYPE_DICT) {
 			var tid = tvar();
 			var val = tvar();
+			var idx = tvar();
+			var iter = tvar();
+			var size = tvar();
 			if (o.expr[0] == '_') {
 				var obj = o.expr;
 			} else {
@@ -1662,10 +1656,12 @@ function PSC(str, flags) {
 			if (obj != o.expr) {
 				emit('var ' + obj + '=' + o.expr + ';');
 			}
-			emit('for(var ' + tid + ' in ' + obj + ')' + LC);
+			emit('for(var ' + size + '=' + obj + '.size,' + iter + '=' + obj + '.keys(),' +
+					idx + '=0;' + idx + '<' + size + ';' + idx + '++)' + LC);
 			newbranch();
-			emit('var ' + val + '=' + obj + '[' + tid + '];');
-			st[sp++] = { type:TYPE_STRVAL,  expr:tid, seq:++seq };
+			emit('var ' + tid + '=' + iter + '.next().value;');
+			emit('var ' + val + '=' + obj + '.get(' + tid + ');');
+			st[sp++] = { type:TYPE_UNKNOWN, expr:tid, seq:++seq };
 			st[sp++] = { type:TYPE_UNKNOWN, expr:val, seq:++seq };
 			append(ctxexec(exec));
 			emit(RC);
@@ -1688,31 +1684,49 @@ function PSC(str, flags) {
 				emit(RC + ');');
 			}
 		}
-		loopdepth = olddepth;
+		loopstate.pop();
 	}
 	$.for = function() {
-		if (sp < 4) {
+		if (sp < 1) {
 			dump('for');
-			throw 'for: INSUFFICIENT PARAMETERS';
+			throw '#' + lex.lnbr + ': for: insufficient stack';
 		}
-		loopdepth++;
-		var eini = st[sp-4].expr;
-		var tinc = st[sp-3].type;
-		var einc = st[sp-3].expr;
-		var tlim = st[sp-2].type;
-		var elim = st[sp-2].expr;
-		var exec = st[sp-1];
-		sp-=4;
 
-		// If the limit is constant, we don't need an extra limit variable.
-		if (tlim != TYPE_INTLIT) {
+		if (sp < 4) {
+			// Flush context to the stack
+			var exec = st[--sp];
+			ctxflush();
+
+			var tinc = TYPE_UNKNOWN;
+			var tlim = TYPE_UNKNOWN;
+			var vini = tvar();
+			var vinc = tvar();
 			var vlim = tvar();
+			var elim = '$k[$j+2]';
+			var einc = '$k[$j+1]';
+			var eini = '$k[$j]';
+			emit('if ($j<3) throw "--stack-underflow--";');
+			emit('$j-=3;');
 		} else {
-			var vlim = elim;
-		}
-		var tid = tvar();
+			var eini = st[sp-4].expr;
+			var tinc = st[sp-3].type;
+			var einc = st[sp-3].expr;
+			var tlim = st[sp-2].type;
+			var elim = st[sp-2].expr;
+			var exec = st[sp-1];
+			sp-=4;
+			ctxflush();
 
-		ctxflush();
+			// If the limit is constant, we don't need an extra limit variable.
+			if (tlim != TYPE_INTLIT) {
+				var vlim = tvar();
+			} else {
+				var vlim = elim;
+			}
+		}
+
+		// internal loop variable
+		var tid = tvar();
 
 		// If increment is not known at compile time, then emit the slow path
 		if (tinc != TYPE_INTLIT) {
@@ -1730,22 +1744,24 @@ function PSC(str, flags) {
 				(tlim != TYPE_INTLIT ? ',' + vlim + '=' + elim : '') + ';' +
 				tid + '<=' + vlim + ';' + tid + '+=' + einc + ')' + LC);
 		}
+
+		loopstate.push('for');
 		ctxprep(exec);
 		st[sp++] = { type:TYPE_INTVAL, expr:tid, seq:++seq };
 		newbranch();
 		append(ctxexec(exec));
 		emit(RC);
-		loopdepth--;
+		loopstate.pop();
 	}
 	$.repeat = function() {
 		need(2);
-		loopdepth++;
 		var tid = tvar();
 		var lim = tvar();
 		var expr = st[sp-2].expr;
 		var exec = st[sp-1];
 		sp-=2;
 
+		loopstate.push('repeat');
 		ctxflush();
 		emit('for(var ' + tid + '=0,' + lim + '=' + expr + ';' +
 					tid + '<' + lim + ';' + tid + '++)' + LC);
@@ -1753,31 +1769,31 @@ function PSC(str, flags) {
 		newbranch();
 		append(ctxexec(exec));
 		emit(RC);
-		loopdepth--;
+		loopstate.pop();
 	}
 	$.loop = function() {
 		need(1);
-		loopdepth++;
 		var exec = st[sp-1];
 		sp-=1;
 
+		loopstate.push('loop');
 		ctxflush();
 		ctxprep(exec);
 		emit('for(;;)' + LC);
 		newbranch();
 		append(ctxexec(exec));
 		emit(RC);
-		loopdepth--;
+		loopstate.pop();
 	}
 	$.exit = function() {
+		if (!loopstate.length) {
+			throw '#' + lex.lnbr + ': exit outside of a loop';
+		}
 		ctxflush();
-		//if (!loopdepth) {
-		//	throw '#' + lex.lnbr + ': exit outside a loop';
-		//}
-		if (loopdepth) {
-			emit('break;');
+		if (loopstate[loopstate.length-1] == 'forall') {
+			emit('return true;');
 		} else {
-			emit('return $b;');
+			emit('break;');
 		}
 	}
 
@@ -2050,12 +2066,18 @@ function PSC(str, flags) {
 		sp--;
 	}
 
-	$.currentfont = function() {
+	$.selectfont = function() {
+		need(2);
+		var x = st[--sp].expr;
+		var f = st[--sp].expr;
+		emit('$$.selectfont(' + f + ',' + x + ');');	// CANVAS
+	}
+	$.xx_currentfont = function() {
 		var tid = tvar();
 		emit('var ' + tid + '=$$.currfont();');			// CANVAS
 		st[sp++] = { type:TYPE_DICT, expr:tid, seq:++seq };
 	}
-	$.findfont = function() {
+	$.xx_findfont = function() {
 		need(1);
 		var f = st[sp-1].expr;
 		sp-=1;
@@ -2063,7 +2085,7 @@ function PSC(str, flags) {
 		emit('var ' + tid + '=$$.findfont(' + f + ');');// CANVAS
 		st[sp++] = { type:TYPE_DICT, expr:tid, seq:++seq };
 	}
-	$.scalefont = function() {
+	$.xx_scalefont = function() {
 		need(2);
 		var x = st[sp-1].expr;
 		var f = st[sp-2].expr;
@@ -2071,7 +2093,7 @@ function PSC(str, flags) {
 		emit(parens(f) + '.FontSize=' + x + ';');		// CANVAS
 		st[sp++] = { type:TYPE_DICT, expr:f, seq:++seq };
 	}
-	$.setfont = function() {
+	$.xx_setfont = function() {
 		need(1);
 		var f = st[sp-1].expr;
 		sp-=1;
@@ -2132,8 +2154,8 @@ function PSC(str, flags) {
 		sp-=1;
 		emit('$$.setlinewidth(' + w + ');');			// CANVAS
 	}
-	// bwipjs emulated function to replace BWIPP's setanycolor
-	$.setcolor = function() {
+	// bwipjs replacement function BWIPP's setanycolor
+	$.setanycolor = function() {
 		need(1);
 		var expr = st[--sp].expr;
 		emit('$$.setcolor(' + expr + ');');				// CANVAS
@@ -2210,6 +2232,16 @@ function PSC(str, flags) {
 		var x  = st[--sp].expr;
 		emit(`$$.arc(${x},${y},${r},${a1},${a2},0);`);	// CANVAS 0 == CW
 	}
+	$.maxicode = function() {
+		need(1);
+		var pix = st[--sp].expr;
+		emit(`$$.maxicode(${pix});`);
+	}
+	// Used by jabcode - Terry's wide (gt 64k) versions
+	$.arrayw = $.array;
+	$.getw = $.get;
+	$.putw = $.put;
+	$.copyw = $.copy;
 
 	// Finally, do the actual compilation
 	if (cfg.coverage) {

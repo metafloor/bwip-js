@@ -1,14 +1,12 @@
 % --BEGIN RENDERER renmaximatrix--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2016032800 55426 55272
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2018020400 56037 55803
 %%BeginData:         79 ASCII Lines
-%% /setpacking where {pop currentpacking true setpacking} if
-%% 1 dict
-%% dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-%% begin
+%%/setpacking where {pop currentpacking true setpacking} if
+%%1 dict
+%%dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%%begin
 /renmaximatrix {
-	% true when running the test framework
-	bwipjs_dontdraw { return } if
 
     20 dict begin
 
@@ -27,47 +25,17 @@
 
     gsave
 
-    currentpoint translate
-
-    %% 2.4945 dup scale  % from 1pt to 1.88mm
-    %%3.3326 dup scale  % from 1pt to 1.88mm and convert to 100dpi
-
-    0 0 moveto 30 0 lineto 30 29 lineto 0 29 lineto closepath
-    %backgroundcolor (unset) ne { gsave backgroundcolor setcolor fill grestore } if 
-    barcolor (unset) ne { barcolor setcolor } if
-
-    %%0.5 0.5774 translate
-
-	%% Font is fixed at 10pt
-	%%(Symbol) findfont 3.01 scalefont setfont	%% 10pt / 2.4945
-	(Symbol) findfont 10 scalefont setfont
-
-	/chars [ (0) (1) (2) (3) ] def
-    newpath
-    pixs {
-        dup 
-        /x exch 30 mod def 
-        /y exch 30 idiv def
-		chars
-		   y 2 mod 0 eq {0} {2} ifelse
-		   x 2 mod 0 eq {0} {1} ifelse
-		   add get
-		x 3.5 mul y 2 mod 1 eq {1.75 add} if
-        32 y sub 3 mul
-        moveto show
-    } forall
-
-    % Plot the locator symbol
-	(Symbol) findfont 10 scalefont setfont
-    36 35 moveto (4) show
+    barcolor (unset) ne { barcolor setanycolor } if
+	pixs maxicode 
 
     grestore
+
     end
 
 } bind def
-%% /renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
-%% end
-%% /setpacking where {pop setpacking} if
+%%/renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%%end
+%%/setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RENDERER renmaximatrix--

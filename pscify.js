@@ -8,8 +8,8 @@ var bwipp_js = fs.readFileSync('bwipp-raw.js', 'binary');
 var copyr_js = fs.readFileSync('bwipp-copyr.js', 'binary');
 
 // Beautified module --> bwipp.js
-fs.writeFileSync('bwipp.js',
-				  copyr_js + beautify(bwipp_js, { indent_with_tabs:true }) + '\n',
+fs.writeFileSync('src/bwipp.js',
+				  beautify(bwipp_js, { indent_with_tabs:true }) + '\n',
 				 'binary');
 
 // Minify map of full names to their $<letter> equivalents
@@ -90,6 +90,4 @@ minified += cleaned.substr(last)
 				;
 
 // Minified module --> bwipp-min.js
-fs.writeFileSync('bwipp-min.js',
-				 copyr_js + minified,
-				 'binary');
+fs.writeFileSync('src/bwipp-min.js', minified, 'binary');

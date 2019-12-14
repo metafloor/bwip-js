@@ -62,9 +62,7 @@
 ##			<blah>
 ##		} if
 ##
-## * We use customized renderers that are a better match to the emulation and
-##   our OCR fonts.  Comment out the renderers in barcode.ps and we will 
-##   append our custom versions below.
+## * Fixup renlinear and renmatrix.  Replace renmaximatrix.
 ##
 ## * Replace the isbn/ismn/issn Courier with OCR-A
 ##   Change the isbn/ismn/issn textsize from 9 to 8
@@ -75,7 +73,7 @@
 cp barcode.ps barcode.tmp
 for name in $(cd custom; ls *.ps | sed -e 's/\.ps//') ; do
 	echo replacing $name...
-	sed -e "/^[/]$name [{]/,/^[}] bind def/s/^/%psc /" barcode.tmp > barcode.psc
+	sed -e "/^[/]$name [{]/,/^[/]setpacking where .* if/s/^/%psc /" barcode.tmp > barcode.psc
 	mv -f barcode.psc barcode.tmp
 done
 
@@ -84,11 +82,19 @@ cat barcode.tmp custom/*.ps | sed -e 's,/\(is..textfont\) /Courier,/\1 /OCR-A,' 
 	-e 's,/\(is..textsize\) 9,/\1 8,' \
 	-e 's,/textyoffset -7,/textyoffset -8.5,' \
 	-e 's,/textyoffset -4,/textyoffset -4.5,' \
-	-e '/^    parse {\s*$/,/^    } if\s*$/s/^/%psc /'\
-	-e '/^currentglobal/,/^setglobal/s/^/%psc /'\
+	-e 's/txt 11 \[barcode 11 1 getinterval textxoffset 103 add/txt 11 [barcode 11 1 getinterval textxoffset 104 add/' \
+	-e 's,^\s*backgroundcolor (unset) ne.* if,%psc &,' \
+	-e 's,^\[.*\] {null def} forall,%psc &,'\
+	-e 's,/inkspread 0\.[0-9]* def,/inkspread 0 def,'\
+	-e '/^\s*\/setanycolor {/,/^\s*} bind def/s/^/%psc /' \
+	-e '/^    parse {\s*$/,/^    } if\s*$/s/^/%psc /' \
+	-e '/^currentglobal/,/^setglobal/s/^/%psc /' \
 	-e '/^\/setpacking where {pop currentpacking/,/^begin/s/^/%psc /'\
-	-e '/^\/[^ ]* dup load \/uk.co.terryburton/,/^\/setpacking where {pop setpacking} if/s/^/%psc /'\
-	-e '/^\s*options type \/stringtype eq {/,/^\s*} if/s/^\s*/%psc &/'\
+	-e '/^\/[^ \t][^ \t]* dup load \/uk.co.terryburton/,/^\/setpacking where {pop setpacking} if/s/^/%psc /'\
+	-e '/^\s*options type \/stringtype eq {/,/^\s*} if/s/^/%psc &/'\
+	-e '/^\s*currentfont \/PaintType .* ifelse/,/^\s*} if/s/^/%psc &/'\
+	-e '/^\s*{.*} stopped {/,/^\s*} ifelse\s*$/s/^/%psc &/'\
+	-e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
 	> barcode.psc
 
 ##
@@ -120,14 +126,11 @@ fi
 ## Build the raw (unformatted, unminified) version of bwipp.js.
 ##
 cat <<@EOF > bwipp-raw.js
-"use strict";
 function BWIPP() {
+"use strict";
 $(cat barcode-hdr.js barcode.js barcode-ftr.js)
 }
 BWIPP.VERSION = '$BWIPP_VERSION';
-if (typeof module === 'object' && module.exports) {
-	module.exports = BWIPP;
-}
 @EOF
 
 ##
@@ -176,7 +179,7 @@ node pscify
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##
-rm -f barcode.psc
+##rm -f barcode.psc
 rm -f barcode.tmp
 rm -f barcode.js
 rm -f bwipp-raw.js

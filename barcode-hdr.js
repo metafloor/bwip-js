@@ -8,12 +8,11 @@ var $$ = null;
 // The global dictionary.  Each renderer and encoder declare a
 // $1 local dict.
 var $0 = {
-	$error:{}	// the postscript error object
+	$error:new Map	// the postscript error object
 };
 
 var $j = 0;		// stack pointer
 var $k = [];	// operand stack
-var $b = {};	// break symbol
 
 // Array ctor
 //	$a()	: Build a new array up to the Infinity-marker on the stack.
@@ -41,7 +40,7 @@ function $a(a) {
 // dict ctor
 //	$d() : look for the Infinity marker on the stack
 function $d() {
-	var d = {};
+	var d = new Map;
 	for (var i=$j-1;i>=0&&$k[i]!==Infinity;i-=2) {
 		if ($k[i-1]===Infinity) {
 			throw new Error('dict-malformed-stack');
@@ -50,12 +49,10 @@ function $d() {
 		// numbers and the string representation of a number.
 		var k = $k[i-1];		// "key" into the dict entry
 		var t = typeof k;
-		if (t === 'number') {
-			d['\uffff' + k]=$k[i];
-		} else if (t === 'string') {
-			d[k]=$k[i];
+		if (t == 'number' || t == 'string') {
+			d.set(k, $k[i]);
 		} else if (k instanceof Uint8Array) {
-			d[$z(k)] = $k[i];
+			d.set($z(k), $k[i]);
 		} else {
 			throw 'dict-not-a-valid-key(' + k + ')';
 		}
@@ -86,6 +83,22 @@ function $s(v) {
 		s[i] = v.charCodeAt(i);
 	}
 	return s;
+}
+
+// ... n c roll
+function $r(n, c) {
+	if ($j < n) {
+		throw 'roll: --stack-underflow--';
+	}
+	if (!c) {
+		return;
+	}
+	if (c < 0) {
+		var t = $k.splice($j-n, -c);
+	} else {
+		var t = $k.splice($j-n, n-c);
+	}
+	$k.splice.apply($k, [$j-t.length, 0].concat(t));
 }
 
 // Primarily designed to convert uint8-string to string, but will call the
@@ -165,16 +178,10 @@ function $get(s,k) {
 	if (s instanceof Array) {
 		return s.b[s.o+k];
 	}
-	// Must be a dict object : with postscript dict objects, a number key
-	// is differerent than its string representation.  postscript uses
-	// 8-bit strings, so \uffff can never be in a key value.
-	if (typeof k === 'number') {
-		return s['\uffff'+k];
-	}
 	if (k instanceof Uint8Array) {
-		return s[$z(k)];
+		return s.get($z(k));
 	}
-	return s[k];
+	return s.get(k);
 }
 
 // put operator
@@ -188,9 +195,9 @@ function $put(d,k,v) {
 		d.b[d.o+k] = v;
 	} else if (typeof d == 'object') {
 		if (k instanceof Uint8Array) {
-			d[$z(k)] = v;
+			d.set($z(k), v);
 		} else {
-			d[typeof k == 'number' ? '\uffff'+k : k] = v;
+			d.set(k, v);
 		}
 	} else {
 		throw 'put-not-writable-' + (typeof d);
@@ -321,29 +328,36 @@ function $search(str, seek) {
 }
 
 // The callback is omitted when forall is being used just to push onto the
-// stack.
+// stack.  The callback normally returns undefined.  A return of true means break.
 function $forall(o, cb) {
 	if (o instanceof Uint8Array) {
 		for (var i = 0, l = o.length; i < l; i++) {
 			$k[$j++] = o[i];
-			if (cb && cb() == $b) break;
+			if (cb && cb()) break;
 		}
 	} else if (o instanceof Array) {
 		// The array may be a view.
 		for (var a = o.b, i = o.o, l = o.o + o.length; i < l; i++) {
 			$k[$j++] = a[i];
-			if (cb && cb() == $b) break;
+			if (cb && cb()) break;
 		}
 	} else if (typeof o === 'string') {
 		for (var i = 0, l = o.length; i < l; i++) {
 			$k[$j++] = o.charCodeAt(i);
-			if (cb && cb() == $b) break;
+			if (cb && cb()) break;
+		}
+	} else if (o instanceof Map) {
+		for (var keys = o.keys(), i = 0, l = o.size; i < l; i++) {
+			var id = keys.next().value;
+			$k[$j++] = id;
+			$k[$j++] = o.get(id);
+			if (cb && cb()) break;
 		}
 	} else {
 		for (var id in o) {
 			$k[$j++] = id;
 			$k[$j++] = o[id];
-			if (cb && cb() == $b) break;
+			if (cb && cb()) break;
 		}
 	}
 }
@@ -444,6 +458,9 @@ function $or(a, b) {	// or
 }
 function $xo(a, b) {	// xor
 	return (typeof a === 'boolean') ? !a && b || a && !b : a ^ b;
+}
+function $nt(a) {
+	return typeof a == 'boolean' ? !a : ~a;
 }
 
 // DEBUG-BEGIN

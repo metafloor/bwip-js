@@ -1,0 +1,86 @@
+% --BEGIN RENDERER renmaximatrix--
+% --REQUIRES preamble raiseerror--
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2018020400 56037 55803
+%%BeginData:         79 ASCII Lines
+/setpacking where {pop currentpacking true setpacking} if
+1 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+begin
+/renmaximatrix {
+
+    20 dict begin
+
+    /args exch def   % We are given some arguments
+
+    % Default options
+    /barcolor (unset) def
+    /backgroundcolor (unset) def
+
+    % Apply the renderer options and the user options
+    args {def} forall
+    opt {def} forall
+
+    /barcolor barcolor cvlit def
+    /backgroundcolor backgroundcolor cvlit def
+
+    % Set RGB or CMYK color depending on length of given hex string
+    /setanycolor {
+        /anycolor exch def
+        anycolor length 6 eq {
+            (<      >) 8 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setrgbcolor
+        } if
+        anycolor length 8 eq {
+            (<        >) 10 string copy dup 1 anycolor putinterval cvx exec {255 div} forall setcmykcolor
+        } if
+    } bind def
+
+    gsave
+
+    currentpoint translate
+
+    2.4945 dup scale  % from 1pt to 0.88mm
+
+    0 0 moveto 30 0 lineto 30 29 lineto 0 29 lineto closepath
+    backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if 
+    barcolor (unset) ne { barcolor setanycolor } if
+
+    0.5 0.5774 translate
+
+    newpath
+    pixs {
+        dup 
+        /x exch 30 mod def 
+        /y exch 30 idiv def
+        y 2 mod 0 eq {x} {x 0.5 add} ifelse
+        32 y sub 0.8661 mul
+        moveto
+        0     0.5774 rmoveto
+        -0.5 -0.2887 rlineto
+        0    -0.5774 rlineto
+        0.5  -0.2887 rlineto
+        0.5   0.2887 rlineto
+        0     0.5774 rlineto
+        -0.5  0.2887 rlineto
+        closepath
+    } forall
+    fill
+
+    % Plot the locator symbol
+    newpath 14 13.8576 0.5774 0 360 arc closepath
+    14 13.8576 1.3359 360 0 arcn closepath fill
+    newpath 14 13.8576 2.1058 0 360 arc closepath
+    14 13.8576 2.8644 360 0 arcn closepath fill
+    newpath 14 13.8576 3.6229 0 360 arc closepath
+    14 13.8576 4.3814 360 0 arcn closepath fill
+
+    grestore
+
+    end
+
+} bind def
+/renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RENDERER renmaximatrix--

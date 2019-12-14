@@ -16,8 +16,42 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
 
 	npm install bwip-js
 
-## Status 
 
-In the future, this page will contain information on all the different scripts
-and workflow used to compile and validate bwip-js....
+## Development Requirements
+  - On windows, you must install cygwin with minimum:
+
+  	- bash
+	- sed
+	- awk
+	- grep
+
+  - node-js
+
+  - npm install -g uglifyjs
+
+## Compile Steps
+
+  - Download the *monolithic* version of BWIPP that you want to use at
+    https://github.com/bwipp/postscriptbarcode/releases.
+
+	For example: postscriptbarcode-monolithic-2019-11-08.zip
+
+  - Copy barcode.ps to the bwip-js development directory.
+
+  - Convert the postscript to javascript:
+
+    `$ ./psc`
+
+  - Optionally, run the peephole optimizations:
+
+    `$ ./optimize`
+
+  - Create the dist files
+
+    `$ ./mkdist`
+
+  - Your newly minted code is in the dist/ directory.
+
+
+
 

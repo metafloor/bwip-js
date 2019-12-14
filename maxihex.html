@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Maxi Code Hex</title>
+</head>
+<body>
+<b>Scale:&nbsp;</b>	<input type="number" min=1 max=10 step=1 id="scaleX" value=2 
+					style="width:3em">
+					<input type="number" min=1 max=10 step=1 id="scaleY" value=2 
+					style="width:3em">
+<button onclick="draw()">Draw</button>
+
+<div style="white-space:nowrap">
+<canvas id="canvas"></canvas>
+<canvas id="canvas2"></canvas>
+</div>
+<script type="text/javascript">
+window.onload = function() {
+	let sx = document.getElementById('scaleX');
+	let sy = document.getElementById('scaleY');
+	sx.addEventListener('change', function(ev) {
+				sy.value = sx.value;
+			}, false);
+};
+
+let cvs = document.getElementById('canvas');
+let ctx = cvs.getContext('2d');
+
+let cvs2 = document.getElementById('canvas2');
+let ctx2 = cvs2.getContext('2d');
+
+let width = 711;
+let height = 711;
+let x = 50, y = 50;
+
+let paths = [];
+
+cvs.width = cvs2.width = width + 100;
+cvs.height = cvs2.height = height + 100;
+
+let image = ctx.getImageData(0, 0, cvs.width, cvs.height);
+
+let coords = [469,347,672,702,283,313,312,610,379,409,704,619,518,675,310,289,349,516,471,470,549,548,579,578,608,649,648,678,708,669,668,338,381,410,441,561,560,590,621,620,547,546,576,607,606,396,427,290,321,320,351,350,651,681,1,0,31,61,60,3,33,63,5,35,64,7,6,37,36,67,66,9,39,10,41,40,71,13,12,43,42,73,72,15,14,17,16,76,18,49,48,78,21,20,51,80,23,22,52,83,25,24,84,26,57,87,117,116,115,114,113,112,111,110,109,108,138,107,106,137,166,105,104,134,164,103,102,162,100,131,130,160,98,128,158,96,94,155,154,123,122,153,90,121,120,150,181,180,183,182,212,243,184,215,187,186,216,247,189,188,248,191,190,192,223,222,252,195,194,254,197,196,226,256,199,198,229,258,200,231,230,260,203,202,262,205,204,265,207,206,267,266,297,296,326,295,294,324,354,293,292,322,353,277,276,306,337,336,274,305,304,334,273,272,332,271,301,300,331,330,361,360,420,362,393,392,422,364,395,394,424,382,413,442,384,415,414,444,387,386,416,447,477,476,537,536,475,474,504,473,514,483,482,450,571,602,545,592,564,625,566,597,596,626,656,685,714,652,682,636,666,634,695,694,693,630,660,690,720,781,752,783,782,755,726,757,756,786,728,790,732,763,762,792,735,734,765,764,795,766,739,798,770,743,742,773,745,744,804,747,837,836,866,897,896,895,894,863,893,892,831,891,890,829,828,859,889,827,886,825,824,855,885,822,852,882,850,881,818,849,879,878,817,846,877,814,845,844,874,812,842,873,811,810,841,840,870,901,900,931,933,932,962,904,935,964,907,937,936,966,909,908,939,938,969,968,911,940,970,943,942,973,914,974,947,946,977,976,978,920,951,980,922,982,925,954,985,984,957,987,986,149,208,268,298,329,358,449,448,568,598,629,718,749,748,809,808,838,868,929,928,958,989,28,29,280,281,311,457,488,500,530,670,700,677,707]
+
+
+
+
+function draw() {
+	let sx = +document.getElementById('scaleX').value;
+	let sy = +document.getElementById('scaleY').value;
+	if (!sx || sx < 1 || sx > 10 || !sy || sy < 1 || sy > 10) {
+		return;
+	}
+
+	ctx.clearRect(0, 0, cvs.width, cvs.height);
+	ctx2.clearRect(0, 0, cvs2.width, cvs2.height);
+	image = ctx.getImageData(0, 0, cvs.width, cvs.height);
+
+	// Module width.  Module height is a direct multiple of sy.
+	let twidth = 1.04 * sx * 100;
+	let mwidth = (twidth / 30)|0;
+	if (twidth - (mwidth*30-1) > 9) {
+		mwidth++;
+	}
+
+	// Dimensions needed for plotting the hexagons
+	let w, h;
+	// if (opts.??? ) {
+	//	// Create a one or two pixel gap
+	//	w = (mwidth & 1) ? mwidth-1 : mwidth-2;
+	//	h = 4 * sy;
+	// } else {
+		// Create a 1/8mm gap
+		w = mwidth - ((sx/2)|0);
+		if (w & 1) {
+			w--;
+		}
+		h = ((4*sy)|0) - ((sy/2)|0);
+	//}
+	let w2 = w / 2 - 1;			// half width
+	let qh = ((w2+1) / 2)|0;	// quarter height
+	let vh = h - 2 - 2 * qh;	// side height
+
+
+	let minx = Infinity;
+	let miny = Infinity;
+	let maxx = -Infinity;
+	let maxy = -Infinity;
+	for (let i = 0; i < coords.length; i++) {
+		let c = coords[i];
+		let x = c % 30;
+		let y = (c / 30)|0;
+
+		//y = 32 - y;
+
+		x *= mwidth;
+		if (y & 1) x += (mwidth/2)|0;
+
+		y *= (sy * 3)|0;
+		y += (sy * 2 - h/2 + 1)|0;
+
+
+		y += 50;
+		x += 50;
+		if (y < miny) miny = y;
+		if (x-1-w2 < minx) minx = x-1-w2;
+		if (x+w2 > maxx) maxx = x+w2;
+		fillseg(x-1, x, y++);
+		for (let k = 1; k < qh; k++) {
+			fillseg(x-1-2*k, x+2*k, y++);
+		}
+		for (let k = 0; k <= vh; k++) {
+			fillseg(x-1-w2, x+w2, y++);
+		}
+		for (let k = qh-1; k >= 1; k--) {
+			fillseg(x-1-2*k, x+2*k, y++);
+		}
+		if (y > maxy) maxy = y;
+		fillseg(x-1, x, y++);
+
+		canvasHex(c, sx, sy);
+	}
+
+	// To minimize error caused by integer arithmetic, recalculate radius
+	// for each ellipse.
+	let x = 50 + (14 * mwidth)|0;
+	let y = 50 + ((12 * 4 + 2) * sy)|0;
+	let rx = (2 * sx)|0;
+	let ry = (2 * sy)|0;
+	paths = [];
+	ellipse(x-rx, y-ry, x+rx, y+ry, true); 
+	rx = (2 * sx + 1 * mwidth * 0.76)|0;
+	ry = (2 * sx + 1 * mwidth * 0.76 * sy / sx)|0;
+	ellipse(x-rx, y-ry, x+rx, y+ry, false); 
+	fill(paths);
+	paths = [];
+	rx = (2 * sx + 2 * mwidth * 0.76)|0;
+	ry = (2 * sx + 2 * mwidth * 0.76 * sy / sx)|0;
+	ellipse(x-rx, y-ry, x+rx, y+ry, true); 
+	rx = (2 * sx + 3 * mwidth * 0.76)|0;
+	ry = (2 * sx + 3 * mwidth * 0.76 * sy / sx)|0;
+	ellipse(x-rx, y-ry, x+rx, y+ry, false); 
+	fill(paths);
+	paths = [];
+	rx = (2 * sx + 4 * mwidth * 0.76)|0;
+	ry = (2 * sx + 4 * mwidth * 0.76 * sy / sx)|0;
+	ellipse(x-rx, y-ry, x+rx, y+ry, true); 
+	rx = (2 * sx + 5 * mwidth * 0.76)|0;
+	ry = (2 * sx + 5 * mwidth * 0.76 * sy / sx)|0;
+	ellipse(x-rx, y-ry, x+rx, y+ry, false); 
+	fill(paths);
+
+	canvasRings(sx, sy);
+
+	ctx.putImageData(image, 0, 0);
+	console.log('dimensions: ' + (maxx-minx+1) + ' x ' + (maxy-miny+1));
+	console.log('ratio: ' + ((maxx-minx+1) / (maxy-miny+1)).toFixed(2) +
+				 ', target: ' + (1.04/0.972).toFixed(2));
+}
+
+function canvasHex(c, sx, sy) {
+	let x = c % 30;
+	let y = ~~(c / 30);
+	if (y & 1) x += 0.5;
+	// y = 32 = y;
+	y *= 0.8661;
+
+	let zx = 3.5 * sx;
+	let zy = 3.5 * sy;
+	x *= zx;
+	y *= zy;
+	x += 50;
+	y += 50;
+
+	ctx2.lineWidth = 0.5;
+	ctx2.fillStyle = '#000';
+	ctx2.beginPath();
+	ctx2.moveTo(x, y);
+	x -= zx * 0.5;  y -= zy * 0.2887;
+	ctx2.lineTo(x, y);
+	y -= zy * 0.5774;
+	ctx2.lineTo(x, y);
+	x += zx * 0.5;  y -= zy * 0.2887;
+	ctx2.lineTo(x, y);
+	x += zx * 0.5;  y += zy * 0.2887;
+	ctx2.lineTo(x, y);
+	y += zy * 0.5774;
+	ctx2.lineTo(x, y);
+	ctx2.closePath();
+	ctx2.fill();
+}
+
+function canvasRings(sx, sy) {
+	// newpath 14 13.8576 0.5774 0 360 arc closepath
+	// 14 13.8576 1.3359 360 0 arcn closepath fill
+	// newpath 14 13.8576 2.1058 0 360 arc closepath
+	// 14 13.8576 2.8644 360 0 arcn closepath fill
+	// newpath 14 13.8576 3.6229 0 360 arc closepath
+	// 14 13.8576 4.3814 360 0 arcn closepath fill
+
+	let x = 14;
+	let y = 13.8576 - 0.5774;
+	let zx = sx * 3.5;
+	let zy = sy * 3.5;
+	x *= zx;
+	y *= zy;
+	x += 50;
+	y += 50;
+
+	ctx2.fillStyle = '#000';
+	ctx2.beginPath();
+	ctx2.ellipse(x, y, 0.5774*zx, 0.5774*zy, 0, 0, 2*Math.PI, true);
+	ctx2.ellipse(x, y, 1.3359*zx, 1.3359*zy, 0, 0, 2*Math.PI, false);
+	ctx2.fill();
+	ctx2.beginPath();
+	ctx2.ellipse(x, y, 2.1058*zx, 2.1058*zy, 0, 0, 2*Math.PI, true);
+	ctx2.ellipse(x, y, 2.8644*zx, 2.8644*zy, 0, 0, 2*Math.PI, false);
+	ctx2.fill();
+	ctx2.beginPath();
+	ctx2.ellipse(x, y, 3.6229*zx, 3.6229*zy, 0, 0, 2*Math.PI, true);
+	ctx2.ellipse(x, y, 4.3814*zx, 4.3814*zy, 0, 0, 2*Math.PI, false);
+	ctx2.fill();
+}
+
+function point(x,y) {
+	x = x|0;
+	y = y|0;
+
+	let i = (y * image.width + x) * 4;
+	image.data[i++] = 0;
+	image.data[i++] = 0;
+	image.data[i++] = 0;
+	image.data[i++] = 255;
+	//console.log('x,y ',x, ',', y);
+}
+
+function fillseg(x0, x1, y) {
+	let w = image.width;
+	let b = image.data;
+	let i = (y * w + x0) * 4;
+	let j = (y * w + x1) * 4;
+	while (i <= j) {
+		b[i++] = 0;
+		b[i++] = 0;
+		b[i++] = 0;
+		b[i++] = 255;
+	}
+	//ctx.putImageData(image, 0, 0);
+}
+
+// non-zero winding rule
+function fill(paths) {
+	let maxOf = Math.max;
+	let ymin = Infinity;
+	let ymax = -Infinity;
+	for (let i = 0; i < paths.length; i++) {
+		let e = paths[i];
+		if (ymin > e.min) ymin = e.min;
+		if (ymax < e.max) ymax = e.max;
+	}
+
+	for (let y = ymin; y <= ymax; y++) {
+		let segs = [];
+		for (let i = 0; i < paths.length; i++) {
+			let e = paths[i];
+			if (y >= e.min && y <= e.max) {
+				let xs = e[y];
+				xs.dir = e.dir;
+				xs.ref = e.ref;
+				segs.push(xs);
+			}
+		}
+		if (!segs.length) {
+			continue;
+		}
+		segs.sort((a,b) => a[0]-b[0]);
+
+		let wn = 0;
+		let xl = segs[0][0];
+		for (let n = 0, nlen = segs.length; n < nlen; n++) {
+			let e = segs[n];
+			let x0 = e[0];
+			let x1 = e[1];
+			if (wn) {
+				// fill from the end of the last edge
+				fillseg(xl, x0-1, y);
+			}
+			// If we are pegged on, always draw edges.
+			// O/w, use the concept of entering/leaving an element to determine
+			// edge drawing.
+			let prev = e.dir ? wn-- : wn++;
+			let ref = e.ref[0] = !e.ref[0];
+
+			if (prev && wn || wn && ref || !wn && !ref) {
+				// fill the edge
+				fillseg(maxOf(xl, x0), x1, y);
+			}
+			xl = maxOf(xl, x1+1);
+		}
+	}
+}
+
+function edge(e, x, y) {
+	//console.log('x,y', x + ',' + y);
+	if (e.min > y) e.min = y;
+	if (e.max < y) e.max = y;
+	let xs = e[y];
+	if (xs) {
+		if (x == xs[0] - 1) {
+			xs[0] = x;
+		} else if (x == xs[1] + 1) {
+			xs[1] = x;
+		}
+	} else {
+		e[y] = [x, x];
+	}
+}
+
+// Draw an ellipse defined by rect (x0,y0), (x1,y1)
+function ellipse(x0, y0, x1, y1, dir) {
+	x0 = x0|0;
+	y0 = y0|0;
+	x1 = x1|0;
+	y1 = y1|0;
+
+	var a = Math.abs(x1-x0);
+	var b = Math.abs(y1-y0);
+	var b1 = b & 1;
+	var dx = 4*(1-a)*b*b;
+	var dy = 4*(b1+1)*a*a;
+	var err = dx + dy + b1*a*a;
+	var e2;
+
+	// Left and right edges
+	var left = [], right = [];
+	right.dir = !!dir;
+	left.dir = !dir; 
+	left.min = right.min = Infinity;
+	left.max = right.max = -Infinity;
+	left.ref = right.ref = [];
+
+	if (x0 > x1) { x0 = x1; x1 += a; }
+	if (y0 > y1) y0 = y1;
+	y0 += ((b+1)/2)|0;
+	y1 = y0 - b1;
+	a *= 8*a; b1 = 8*b*b;
+
+	do {
+		edge(right, x1, y0);	// 1st quadrant
+		edge(left, x0, y0);		// 2nd quadrant
+		edge(left, x0, y1);		// 3rd quadrant
+		edge(right, x1, y1);	// 4th quadrant
+		e2 = 2*err;
+		if (e2 >= dx) { x0++; x1--; dx += b1; err += dx; }
+		if (e2 <= dy) { y0++; y1--; dy += a;  err += dy; }
+	} while (x0 <= x1);
+
+	while (y0-y1 < b) {	// too early stop of flat ellipse
+		edge(right, x1+1, y0);
+		edge(left, x0-1, y0++);
+		edge(left, x0-1, y1);
+		edge(right, x1+1, y1--);
+	}
+
+	paths.push(left, right);
+}
+</script>
+</body>
+</html>

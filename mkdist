@@ -1,0 +1,98 @@
+#!/bin/bash
+## file : mkdist
+
+##
+## Verify we can find the BWIPP copyright notice
+##
+COPYR=$(grep '% Copyright (c)' barcode.ps | sed -e 's,%,//,')
+if [ "x$COPYR" = x ] ; then
+	echo "Unable to find the copyright notice in barcode.ps" 1>&2
+	exit 1
+fi
+
+##
+## Verify we can find the BWIPP file version
+##
+FILEV=$(grep '% Barcode Writer in Pure PostScript - Version' barcode.ps | sed -e 's,%,//,')
+if [ "x$FILEV" = x ] ; then
+	echo "Unable to find the version string in barcode.ps" 1>&2
+	exit 1
+fi
+
+## What year is it?
+YEAR="2011-$(date +%Y)"
+
+cat <<@EOF > dist/bwip-js.js
+// This file is part of the bwip-js project available at:
+//
+// 	  http://metafloor.github.io/bwip-js
+//
+// Copyright (c) $YEAR Mark Warren
+//
+// This file contains code automatically generated from:
+$FILEV
+$COPYR
+//
+// The MIT License
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
+        root.bwipjs = factory();
+	}
+}(typeof self !== 'undefined' ? self : this, function () {
+"use strict";
+@EOF
+
+cp dist/bwip-js.js dist/bwip-js-min.js
+
+cat src/exports.js src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
+
+##uglifyjs --mangle < src/stb_truetype.js >> dist/bwip-js.js
+
+cat src/bwipp-min.js >> dist/bwip-js-min.js
+cat src/exports.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js 
+
+for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
+cat - <<@EOF >> $file
+FontLib.loadFont("OCR-A", 100, 100, "$(base64 fonts/OCRA7.ttf | tr -d '\r\n\t ')");
+FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')");
+
+return {
+		// The public interface
+		request:Request, toBuffer:ToBuffer, toCanvas:ToCanvas, render:Render, raw:Raw,
+		fixupOptions:FixupOptions,
+		loadFont:FontLib.loadFont,
+		VERSION:'__BWIPJS_VERS__',
+
+		// Internals
+		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
+		DrawingBuiltin:DrawingBuiltin, DrawingCanvas:DrawingCanvas,
+		DrawingZlibPng:DrawingZlibPng,
+	};
+}));
+@EOF
+done
+
+exit 0

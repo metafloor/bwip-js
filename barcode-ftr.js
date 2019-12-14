@@ -54,9 +54,17 @@ return function(bwipjs, encoder, text, opts, dontdraw) {
 	// Don't draw? (See file runtest)
 	$0.bwipjs_dontdraw = dontdraw || false;
 
+	// Convert opts to a Map
+	var map = new Map;
+	for (var id in opts) {
+		if (opts.hasOwnProperty(id)) {
+			map.set(id, opts[id]);
+		}
+	}
+
 	// Invoke the encoder
 	$$ = bwipjs;
-	$k = [ text, opts ];
+	$k = [ text, map ];
 	$j = 2;
 	$0[encoder]();
 

@@ -16,17 +16,50 @@ text="$2"
 opts="$3"
 
 ## Generate a safe file name
-filename=$(echo "$sym $text $opts" | sed -e 's/[^a-zA-Z0-9]/-/g' -e 's/^--*//' -e 's/--*$//').png
- 
-echo "$sym ($text) ($opts) ..."
+filename=$(echo "$sym $text $opts" | sed -e 's/[^A-Za-z0-9_(.)=^!-]/@/g').png
 
-./genimg $sym "$text" $opts tests/$filename > /dev/null
+echo "$filename"
+
+./imggen $sym "$text" $opts tests/$filename > /dev/null
+status=$?
 
 if [ ! -f proofs/$filename -o $REGEN == YES ] ; then
 	mv -f tests/$filename proofs/$filename
 	exit 0
-else
-	perceptualdiff proofs/$filename tests/$filename
-	exit $?
 fi
 
+msg=$(./imgcmp proofs/$filename tests/$filename)
+
+(
+if [ ! -z "$msg" ] ; then
+	echo "<div class=\"main error\">"
+else 
+	echo "<div class=\"main\">"
+fi
+echo "<h1>$filename</h1>"
+
+node <<-@EOF
+const fs = require('fs');
+const proof = fs.readFileSync('proofs/$filename');
+const image = fs.readFileSync('tests/$filename');
+
+console.log('<div class="proof">');
+console.log('<img src="data:image/png;base64,' + proof.toString('base64') + '"><br>');
+console.log('proof: ' + proof.readUInt32BE(16) + ' x ' + proof.readUInt32BE(20)); 
+console.log('</div>');
+console.log('<div class="image">');
+console.log('<img src="data:image/png;base64,' + image.toString('base64') + '"><br>');
+console.log('image: ' + image.readUInt32BE(16) + ' x ' + image.readUInt32BE(20)); 
+console.log('</div>');
+@EOF
+if [ ! -z "$msg" ] ; then
+	echo "<br><span>$msg</span>"
+fi
+echo "</div>"
+) >> imgtests.html
+
+if [ ! -z "$msg" ] ; then
+	echo "$msg"
+	exit 1
+fi
+exit 0

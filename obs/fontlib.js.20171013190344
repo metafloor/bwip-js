@@ -1,0 +1,138 @@
+// bwip-js/fontlib.js
+//
+"use strict";
+
+// For compatibility with the global namespace in browsers, fonts automatically
+// attach themselves to the global variable bwipjs_fontlib.
+var bwipjs_monochr = false;
+var bwipjs_fontlib = {
+	fonts:[],
+	names:{},
+	glyphcache:{},
+	glyphmru:{},
+	glyphcount:0,
+
+	// bwipjs needs the following interfaces:
+	//  lookup(fontname)    returns fontid
+	//  monochrome(bool)    set the fonts to monochrome or anti-aliased
+	//  getglyph(fontid, charcode, width, height)
+	lookup:lookup,
+	monochrome:monochrome,
+	getglyph:getglyph,
+
+	// The fonts use this
+	register:function(base64, mult, name /*...*/) {
+		if (typeof Buffer == 'object') {
+			// node
+			var bytes = Buffer.from ? Buffer.from(base64, 'base64')
+									: new Buffer(base64, 'base64');
+		} else {
+			// browser
+			var s = atob(base64), l = s.length, bytes = new Uint8Array(l);
+			for (var i = 0; i < l; i++) {
+				bytes[i] = s.charCodeAt(i);
+			}
+		}
+		var font = new STBTT(bytes);
+		if (mult && mult != 100) {
+			font.ScaleFactor(mult);
+		}
+		var fontid = bwipjs_fontlib.fonts.push(font)-1;
+		for (var i = 2; i < arguments.length; i++) {
+			bwipjs_fontlib.names[arguments[i].toUpperCase()] = fontid;
+		}
+		return fontid;
+	},
+};
+
+// Sentinels to simplify moving entries around in the list.
+bwipjs_fontlib.glyphmru.next = bwipjs_fontlib.glyphmru;
+bwipjs_fontlib.glyphmru.prev = bwipjs_fontlib.glyphmru;
+
+if (typeof module == 'object' && typeof module.exports == 'object') {
+	module.exports = bwipjs_fontlib;
+}
+
+function lookup(name) {
+	var fontid = fontmap[name.toUpperCase()];
+	return fontid === undefined ? 1 : fontid;		// OCR B default
+}
+
+function monochrome(mono) {
+	bwipjs_monochr = mono;
+}
+
+// `width` and `height` are the same size, scaled respectively by the
+// x,y factors.  
+function getglyph(fontid, charcode, width, height) {
+	fontid   = fontid|0;
+	charcode = charcode|0;
+	width    = width|0;
+	height   = height|0;
+	if (!width || width < 8) {
+		width = 8;
+	}
+	if (!height || height < 8) {
+		height = width;
+	}
+	if (!fontid || fontid < 0 || fontid >= bwipjs_fontlib.fonts.length) {
+		fontid = 1;		// OCR B default
+	}
+	if (!charcode || charcode < 32) {
+		charcode = 32;
+	}
+
+	// In the cache?
+	var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height; 
+	var glyph = bwipjs_fontlib.glyphcache[cachekey];
+	if (glyph) {
+		// Unthread from the MRU
+		glyph.prev.next = glyph.next;
+		glyph.next.prev = glyph.prev;
+
+		// Thread back onto the top
+		var sntl = bwipjs_fontlib.glyphmru;
+		glyph.next = sntl.next;
+		glyph.prev = sntl;
+		sntl.next = glyph;
+		
+		return glyph;
+	}
+
+	var font = bwipjs_fontlib.fonts[fontid];
+	font.GetGlyph(charcode, width, height);
+
+	glyph = {
+			top:font.GlyphTop(),
+			left:font.GlyphLeft(),
+			width:font.GlyphWidth(),
+			height:font.GlyphHeight(),
+			advance:font.GlyphAdvance(),
+			bitmap:font.GlyphBitmap(),
+			offset:0,
+			cachekey:cachekey,
+		};
+
+	// Purge old
+	if (bwipjs_fontlib.cachecount > 250) {
+		var sntl = bwipjs_fontlib.glyphmru;
+		var temp = sntl.prev;
+		temp.prev.next = sntl;
+		sntl.prev = temp.prev;
+		temp.next = temp.prev = null;
+		delete bwipjs_fontlib.glyphcache[temp.cachekey];
+	}
+
+	// Add to cache and to the top of the MRU
+	bwipjs_fontlib.glyphcache[cachekey] = glyph;
+
+	var sntl = bwipjs_fontlib.glyphmru;
+	glyph.next = sntl.next;
+	glyph.prev = sntl;
+	sntl.next = glyph;
+
+	return glyph;
+}
+
+// DO NOT CHANGE ANYTHING BELOW THIS LINE
+//--MKFONTLIB-MARKER--

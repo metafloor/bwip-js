@@ -30,9 +30,22 @@ body {
 	bottom:				2px;
 	right:				12px;
 }
-input, select, label {
+input, select, label, button {
 	font-family:		Verdana, Arial, san-serif;
 	font-size:			10.5pt;
+}
+#symbol, #symtext, #symaltx, #symopts, #scaleX, #scaleY {
+	padding:			.5ex;
+	box-sizing:			border-box;
+	border:				1px solid #999;
+	border-radius:		4px;
+}
+#symbol, #symtext, #symaltx, #symopts, #scaleX, #scaleY {
+	width:				63ex;
+}
+#scaleX, #scaleY {
+	width:				6ex;
+
 }
 #fonthdr {
 	position:			absolute;
@@ -123,13 +136,13 @@ input, select, label {
 	text-align:			right;
 	padding-right:		1.5ex;
 }
-#scaleX, #scaleY {
-	width:				3ex;
-	font-size:			10.5pt;
-}
 a.saveas {
 	color:				blue;
 }
 a.saveas:visited {
 	color:				blue;
+}
+button {
+	padding:			.5ex 1ex;
+	min-width:			18ex;
 }

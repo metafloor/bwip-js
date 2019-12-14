@@ -1,9 +1,7 @@
 #!/bin/bash
-## file: runtest
+## runtest
 ##
-## usage: runtest seq symbol text opts
-##
-## seq is the unique test sequence number.  
+## usage: runtest symbol text opts
 ##
 ## Use BWIPP with ghostscript to compare bwipjs rendering.  Since we cannot 
 ## ensure pixel for pixel rendering between the two (especially considering
@@ -17,24 +15,20 @@ if [ ! -r tests/barcode.ps ] ; then
 	exit 1
 fi
 
-seq="$1"
-sym="$2"
-text="$3"
-opts="$4"
+sym="$1"
+text="$2"
+opts="$3"
+tid="$sym@"$(echo "$text $opts" | sed -e 's/[^A-Za-z0-9_(.)=^!-]/@/g');
 
-## Zero-pad seq to 4 digits
-zeros=0000
-seq="${zeros:${#seq}}$seq"
-
-echo "$seq.$sym ($text) ($opts) ..."
+echo "$tid ..."
 
 ## Make safe for substitution in PS and JS strings
 pstext=$(echo "$text" | sed -e 's/[()\\]/\\&/g')
 jstext=$(echo "$text" | sed -e 's/["\\]/\\&/g')
 
 ## output files
-GSOUT=tests/$seq.$sym.gsout
-JSOUT=tests/$seq.$sym.jsout
+GSOUT=tests/$tid.gsout
+JSOUT=tests/$tid.jsout
 
 ## First ghostscript and modified BWIPP
 cat tests/barcode.ps - > tests/runtest.ps <<@EOF
@@ -61,14 +55,10 @@ gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9
 ## Node/bwip-js
 (
 node <<@EOF
-var bwipp = require('./bwipp');
-var bwipjs = require('./bwipjs');
-var fontlib = require('./node-fonts');
+var bwipjs = require('.');
 
-var bw = new bwipjs(fontlib);
 try {
-	// dontdraw=true
-	var stack = bwipp()(bw, "$sym", "$jstext", "$opts", true);
+	var stack = bwipjs.raw("$sym", "$jstext", "$opts");
 } catch (e) {
 	// Example bwipp.raiseerror from ghostscript:
 	// 		Error: /bwipp.qrcodeNoValidSymbol in
@@ -106,7 +96,7 @@ for (var i = stack.length-1; i >= 0; i--) {
 diff -qb $GSOUT $JSOUT
 if [ $? != 0 ] ; then
 	echo "!!!!"
-	echo "!!!! ERROR ON $seq.$sym ($text) ($opts)"
+	echo "!!!! ERROR ON $sym ($text) ($opts)"
 	echo "!!!! BWIPP OUTPUT ($GSOUT):"
 	cat $GSOUT
 	echo "!!!! BWIP-JS OUTPUT ($JSOUT):"

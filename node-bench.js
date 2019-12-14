@@ -1,7 +1,9 @@
 // file: bwip-js/node-bench.js
 //
 // Benchmark version of node-bwipjs.js.  Doesn't encode images to PNG.
-var fontlib = require('./node-fonts');
+"use strict";
+
+var fontlib = require('./fontlib');
 var bwipjs  = require('./bwipjs');
 var bwipp   = require('./bwipp');
 
@@ -12,7 +14,6 @@ module.exports = function(args) {
 	var scaleX		= +args.scaleX || scale;
 	var scaleY		= +args.scaleY || scaleX;
 	var rot			= args.rotate || 'N';
-	var monochrome	= args.monochrome || false;
 
 	// The required parameters
 	var bcid = args.bcid;
@@ -30,14 +31,13 @@ module.exports = function(args) {
 	delete args.rotate;
 	delete args.text;
 	delete args.bcid;
-	delete args.monochrome;
 
 	// Fix a disconnect in the BWIPP rendering logic
 	if (args.alttext)
 		args.includetext = true;
 
 	// Initialize a barcode writer object
-	var bw = new bwipjs(fontlib, monochrome);
+	var bw = new bwipjs(fontlib);
 	bw.scale(scaleX, scaleY);
 	//bw.bitmap(new Bitmap);
 

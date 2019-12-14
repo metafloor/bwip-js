@@ -1,0 +1,65 @@
+#!/bin/bash
+
+if [ $# != 2 ] ; then
+	echo "Usage: imgcmp file1 file2"
+	exit 1
+fi
+
+node <<@EOF
+var fs = require('fs');
+var PNG = require('pngjs').PNG;
+
+var img1 = PNG.sync.read(fs.readFileSync("$1"), { filterType:4 });
+var img2 = PNG.sync.read(fs.readFileSync("$2"), { filterType:4 });
+
+if (Math.abs(img1.width - img2.width) > 4) {
+	console.log('images differ in width by more than 4 pixels');
+	process.exit(1);
+}
+if (Math.abs(img1.height - img2.height) > 4) {
+	console.log('images differ in height by more than 4 pixels');
+	process.exit(1);
+}
+
+// best is queried and updated by imgcmp()
+var best = 1;	// 100% difference
+imgcmp(0, 0);
+if (best) imgcmp(1, 0);
+if (best) imgcmp(2, 0);
+if (best) imgcmp(0, 1);
+if (best) imgcmp(0, 2);
+
+if (best >= 0.01) {
+	console.log((best * 100).toFixed(1) + '% difference');
+}
+process.exit(best >= 0.05 ? 1 : 0);
+
+function imgcmp(x1, x2) {
+	var w = Math.min(img1.width-x1, img2.width-x2);
+	var h = Math.min(img1.height, img2.height);
+	var d1 = img1.data;
+	var d2 = img2.data;
+	var acc = 0;
+
+	for (var y = 0; y < h; y++) {
+		var idx1 = (y * img1.width + x1) * 4;
+		var idx2 = (y * img2.width + x2) * 4;
+		for (var x = 0; x < w; x++) {
+			acc +=  Math.abs(d1[idx1+0] - d2[idx2+0]) +
+					Math.abs(d1[idx1+1] - d2[idx2+1]) +
+					Math.abs(d1[idx1+2] - d2[idx2+2]) +
+					Math.abs(d1[idx1+3] - d2[idx2+3]);
+		}
+		idx1 += 4;
+		idx2 += 4;
+	}
+
+	acc /= w * h * 255;
+	if (acc < best) {
+		best = acc;
+	}
+}
+@EOF
+
+status=$?
+exit $status

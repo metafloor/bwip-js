@@ -7,9 +7,6 @@
 %% dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %% begin
 /renlinear {
-	% true when running the test framework
-	bwipjs_dontdraw { return } if
-
     20 dict begin          % Confine variables to local scope
 
     /args exch def   % We are given some arguments
@@ -114,9 +111,6 @@
         width 72 mul x div 1 scale
     } if
 
-	% Custom interface to round down scale so bars and spaces are uniform widths.
-	floorscale
-
     % Display the border
 	newpath
 	borderleft neg borderbottom neg moveto
@@ -126,10 +120,10 @@
 	0 maxh borderbottom add bordertop add neg rlineto    
 	closepath
 
-    %backgroundcolor (unset) ne { gsave backgroundcolor setcolor fill grestore } if     
+	%backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if     
     showborder {
         gsave
-        bordercolor (unset) ne { bordercolor setcolor } if
+        bordercolor (unset) ne { bordercolor setanycolor } if
         borderwidth setlinewidth stroke
         grestore
     } if    
@@ -137,7 +131,7 @@
     % Display the bars for elements in the bars array
     gsave
     0 setlinecap
-    barcolor (unset) ne { barcolor setcolor } if
+    barcolor (unset) ne { barcolor setanycolor } if
     bars {
         dup -1 ne {
             aload pop newpath setlinewidth moveto 0 exch rlineto stroke
@@ -148,7 +142,7 @@
     grestore
     
     % Display the text for elements in the text array
-    textcolor (unset) ne { textcolor setcolor } if
+    textcolor (unset) ne { textcolor setanycolor } if
     includetext {
         textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
             /s 0 def /fn () def
@@ -156,14 +150,14 @@
                 {} forall
                 2 copy s ne exch fn ne or {
                     2 copy /s exch def /fn exch def            
-                    exch findfont exch scalefont setfont          
+					selectfont
                 } {
                     pop pop
                 } ifelse
                 moveto show
             } forall
         } {
-            textfont findfont textsize scalefont setfont
+            textfont textsize selectfont
             alttext () eq {
                 /txt [ txt { 0 get {} forall } forall ] def
                 /tstr txt length string def
@@ -180,13 +174,13 @@
                 newpath 0 0 moveto (0) false charpath pathbbox
                 4 1 roll pop pop pop
                 grestore
-                currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-                currentfont /StrokeWidth known and {
-                    currentfont /StrokeWidth get 2 div 0 exch
-                    currentfont /FontMatrix get dtransform
-                    dup mul exch dup mul add sqrt
-                    add
-                } if
+                %%currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+                %%currentfont /StrokeWidth known and {
+                %%  currentfont /StrokeWidth get 2 div 0 exch
+                %%  currentfont /FontMatrix get dtransform
+                %%  dup mul exch dup mul add sqrt
+                %%  add
+                %%} if
             } ifelse
             /textascent exch def
             /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
@@ -209,13 +203,13 @@
 
     % Display the guard elements
     guardwhitespace {
-		(OCR-B) findfont guardheight 2 mul 1 sub scalefont setfont
+		(OCR-B) guardheight 2 mul selectfont
         guardleftpos 0 ne {
-            guardleftpos neg 1.5 sub guardleftypos guardheight 2 div sub 1 sub moveto
+            guardleftpos neg 1 sub guardleftypos guardheight 2 div sub 1.5 sub moveto
 			(<) show
         } if
         guardrightpos 0 ne {
-            guardrightpos x add guardwidth sub guardrightypos guardheight 2 div sub 1 sub moveto
+            guardrightpos x add guardwidth sub 1 add guardrightypos guardheight 2 div sub 1.5 sub moveto
 			(>) show
         } if
     } if
@@ -231,4 +225,3 @@
 %%EndData
 %%EndResource
 % --END RENDERER renlinear--
-
