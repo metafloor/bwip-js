@@ -20,6 +20,8 @@ const bwipjs = (function() {
 	}
 })();
 
+console.log('bwip-js', bwipjs.VERSION, 'BWIPP', bwipjs.BWIPP.VERSION);
+
 // Optionally, load custom fonts.  This shows how to load the Inconsolata font,
 // supplied with the bwip-js distribution.  The path to your fonts will be different.
 // The second and third params, the width and height size multipliers, allow scaling

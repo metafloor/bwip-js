@@ -19,14 +19,10 @@ var PNG_CRC = (function() {
 	return precalc;
 })();
 
-var PNG_ZLIB = typeof process == 'object' && typeof process.release == 'object' &&
-				 process.release.name == 'node' ? require('zlib') : null;
+var PNG_ZLIB = require('zlib');
 
 // opts is the same options object passed into the bwipjs methods.
 function DrawingZlibPng(opts, callback) {
-	if (!PNG_ZLIB) {
-		throw new Error('Not running in node.js');
-	}
 	var image_buffer, image_width, image_height;
 
 	// Provide our specializations for the builtin drawing

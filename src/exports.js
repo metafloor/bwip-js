@@ -1,5 +1,8 @@
 // exports.js
 
+//@@BEGIN-NODE-JS-ONLY@@
+var url = require('url');
+
 // bwipjs.request(req, res [, overrides])
 //
 // Returns a PNG image from the query args of a node.js http request object.
@@ -8,10 +11,7 @@
 //
 // Node.js usage only.
 function Request(req, res, extra) {
-	if (!Request.url) {
-		Request.url = require('url');
-	}
-	var opts = Request.url.parse(req.url, true).query;
+	var opts = url.parse(req.url, true).query;
 
 	// Convert boolean empty parameters to true
 	for (var id in opts) {
@@ -68,6 +68,9 @@ function ToBuffer(opts, callback) {
 		}
 	}
 }
+//@@ENDOF-NODE-JS-ONLY@@
+
+//@@BEGIN-BROWSER-ONLY@@
 
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
@@ -100,6 +103,8 @@ function ToCanvas(opts, canvas) {
 
 	return canvas;
 }
+
+//@@ENDOF-BROWSER-ONLY@@
 
 // bwipjs.fixupOptions(options)
 //
