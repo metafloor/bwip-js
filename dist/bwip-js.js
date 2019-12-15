@@ -74,7 +74,6 @@ function Request(req, res, extra) {
 		} else {
 			res.writeHead(200, { 'Content-Type':'image/png' });
 			res.end(png, 'binary');
-			require('fs').writeFileSync('/tmp/bwipjs.png', png);
 		}
 	});
 }
@@ -36476,7 +36475,7 @@ return {
 		request:Request, toBuffer:ToBuffer, toCanvas:ToCanvas, render:Render, raw:Raw,
 		fixupOptions:FixupOptions,
 		loadFont:FontLib.loadFont,
-		VERSION:'2.0.2 (2019-12-14)',
+		VERSION:'2.0.3 (2019-12-15)',
 
 		// Internals
 		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,

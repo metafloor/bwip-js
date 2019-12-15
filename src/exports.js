@@ -34,7 +34,6 @@ function Request(req, res, extra) {
 		} else {
 			res.writeHead(200, { 'Content-Type':'image/png' });
 			res.end(png, 'binary');
-			require('fs').writeFileSync('/tmp/bwipjs.png', png);
 		}
 	});
 }
