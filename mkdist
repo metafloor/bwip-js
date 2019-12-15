@@ -65,15 +65,44 @@ $COPYR
 "use strict";
 @EOF
 
+## Separate browser and node modules
 cp dist/bwip-js.js dist/bwip-js-min.js
+cp dist/bwip-js.js dist/node-bwipjs.js
 
-cat src/exports.js src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
+## Inverted logic on the excludes (minified browser code is inlined below)
+sed -e '/@@BEGIN-BROWSER-ONLY@@/,/@@ENDOF-BROWSER-ONLY@@/d' < src/exports.js >> dist/node-bwipjs.js
+sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js >> dist/bwip-js.js
 
-##uglifyjs --mangle < src/stb_truetype.js >> dist/bwip-js.js
+## nodejs full-source - no drawing-canvas.js
+cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/node-bwipjs.js 
 
+## browser full-source - no drawing-zlibpng.js
+cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
+
+## browser minified - minified exports and no drawing-zlibpng.js
 cat src/bwipp-min.js >> dist/bwip-js-min.js
-cat src/exports.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js 
+sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js | cat - src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js 
 
+## nodejs postamble
+cat - <<@EOF >> dist/node-bwipjs.js
+FontLib.loadFont("OCR-A", 100, 100, "$(base64 fonts/OCRA7.ttf | tr -d '\r\n\t ')");
+FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')");
+
+return {
+		// The public interface
+		request:Request, toBuffer:ToBuffer, render:Render, raw:Raw,
+		fixupOptions:FixupOptions,
+		loadFont:FontLib.loadFont,
+		VERSION:'__BWIPJS_VERS__',
+
+		// Internals
+		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
+		DrawingBuiltin:DrawingBuiltin, DrawingZlibPng:DrawingZlibPng,
+	};
+}));
+@EOF
+
+## browser postamble
 for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
 cat - <<@EOF >> $file
 FontLib.loadFont("OCR-A", 100, 100, "$(base64 fonts/OCRA7.ttf | tr -d '\r\n\t ')");
@@ -81,7 +110,7 @@ FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')"
 
 return {
 		// The public interface
-		request:Request, toBuffer:ToBuffer, toCanvas:ToCanvas, render:Render, raw:Raw,
+		toCanvas:ToCanvas, render:Render, raw:Raw,
 		fixupOptions:FixupOptions,
 		loadFont:FontLib.loadFont,
 		VERSION:'__BWIPJS_VERS__',
@@ -89,7 +118,6 @@ return {
 		// Internals
 		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
 		DrawingBuiltin:DrawingBuiltin, DrawingCanvas:DrawingCanvas,
-		DrawingZlibPng:DrawingZlibPng,
 	};
 }));
 @EOF

@@ -40,42 +40,76 @@
 "use strict";
 // exports.js
 
+//@@BEGIN-NODE-JS-ONLY@@
+var url = require('url');
 
-//@@BEGIN-BROWSER-ONLY@@
+// bwipjs.request(req, res [, overrides])
+//
+// Returns a PNG image from the query args of a node.js http request object.
+//
+// This function is asynchronous.
+//
+// Node.js usage only.
+function Request(req, res, extra) {
+	var opts = url.parse(req.url, true).query;
 
-// bwipjs.toCanvas(canvas, options)
-// bwipjs.toCanvas(options, canvas)
-//
-// Uses the built-in canvas drawing.  Identical rendering as toBuffer().
-//
-// `canvas` can be an HTMLCanvasElement or an ID string or unique selector string.
-// `options` are a bwip-js/BWIPP options object.
-//
-// This function is synchronous and throws on error.
-//
-// Returns the HTMLCanvasElement.
-//
-// Browser usage only.
-function ToCanvas(opts, canvas) {
-	if (typeof canvas == 'string') {
-		canvas = document.getElementById(canvas) || document.querySelector(canvas);
-	} else if (typeof opts == 'string') {
-		opts = document.getElementById(opts) || document.querySelector(opts);
+	// Convert boolean empty parameters to true
+	for (var id in opts) {
+		if (opts[id] === '') {
+			opts[id] = true;
+		}
 	}
-	if (opts instanceof HTMLCanvasElement) {
-		var tmp = opts;
-		opts = canvas;
-		canvas = tmp;
-	} else if (!(canvas instanceof HTMLCanvasElement)) {
-		throw 'bwipjs: Not a canvas';
-	}
-	FixupOptions(opts);
-	Render(opts, DrawingCanvas(opts, canvas));
 
-	return canvas;
+	// Add in server options/overrides
+	if (extra) {
+		for (var id in extra) {
+			opts[id] = extra[id];
+		}
+	}
+
+	ToBuffer(opts, function(err, png) {
+		if (err) {
+			res.writeHead(400, { 'Content-Type':'text/plain' });
+			res.end('' + (err.stack || err), 'utf-8');
+		} else {
+			res.writeHead(200, { 'Content-Type':'image/png' });
+			res.end(png, 'binary');
+		}
+	});
 }
 
-//@@ENDOF-BROWSER-ONLY@@
+// bwipjs.toBuffer(options[, callback])
+//
+// Uses the built-in graphics drawing and zlib PNG encoding to return a
+// barcode image in a node.js Buffer.
+//
+// `options` are a bwip-js/BWIPP options object.
+// `callback` is an optional callback handler with prototype:
+//
+// 		function callback(err, png)
+//
+// 		`err` is an Error object or string.  If `err` is set, `png` is null.
+// 		`png` is a node Buffer containing the PNG image.
+//
+// If `callback` is not provided, a Promise is returned.
+//
+// Node.js usage only.
+function ToBuffer(opts, callback) {
+	try {
+		FixupOptions(opts);
+		return Render(opts, DrawingZlibPng(opts, callback));
+	} catch (e) {
+		if (callback) {
+			callback(e);
+		} else {
+			return new Promise(function(resolve, reject) {
+				reject(e);
+			});
+		}
+	}
+}
+//@@ENDOF-NODE-JS-ONLY@@
+
 
 // bwipjs.fixupOptions(options)
 //
@@ -34080,49 +34114,194 @@ function DrawingBuiltin(opts) {
 		return xp > 0 ? 1 : -1;
 	}
 }
-// drawing-canvas.js
+// drawing-zlibpng.js
 //
+var PNGTYPE_PALETTE = 3;
+var PNGTYPE_TRUEALPHA = 6;
+var PNG_TEXT = "Software\0bwip-js.metafloor.com";
+var PNG_CRC = (function() {
+	var precalc = [];
+	for (var i = 0; i < 256; i++) {
+		var c = i;
+		for (var j = 0; j < 8; j++) {
+			if (c & 1) {
+				c = 0xedb88320 ^ (c >>> 1);
+			} else {
+				c = c >>> 1;
+			}
+		}
+		precalc[i] = c;
+	}
+	return precalc;
+})();
+
+var PNG_ZLIB = require('zlib');
 
 // opts is the same options object passed into the bwipjs methods.
-function DrawingCanvas(opts, canvas) {
-	if (typeof window == null) {
-		throw new Error('DrawingCanvas: not a browser');
-	}
-
-	var img;
-	var ctx = canvas.getContext('2d');
-	var drawing = DrawingBuiltin(opts);
+function DrawingZlibPng(opts, callback) {
+	var image_buffer, image_width, image_height;
 
 	// Provide our specializations for the builtin drawing
+	var drawing = DrawingBuiltin(opts);
 	drawing.image = image;
 	drawing.end = end;
-
 	return drawing;
 
-
-	// Called by DrawingBuiltin.init() to get the ARGB bitmap for rendering.
+	// Called by DrawingBuiltin.init() to get the RGBA image data for rendering.
 	function image(width, height) {
-		canvas.width  = width;
-		canvas.height = height;
+		// PNG RGBA buffers are prefixed with a one-byte filter type
+		image_buffer = Buffer.alloc ? Buffer.alloc(width * height * 4 + height)
+									: new Buffer(width * height * 4 + height);
+		image_width = width;
+		image_height = height;
 
 		// Set background 
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
-			ctx.fillStyle = '#' + opts.backgroundcolor;
-			ctx.fillRect(0, 0, width, height);
-		} else {
-			ctx.clearRect(0, 0, width, height);
+			var rgb = opts.backgroundcolor;
+			fillRGB(parseInt(rgb.substr(0,2), 16),
+					parseInt(rgb.substr(2,2), 16),
+					parseInt(rgb.substr(4,2), 16));
 		}
 
-		// Prepare the bitmap 
-		img = ctx.getImageData(0, 0, width, height);
+		// The return value is designed to accommodate both canvas pure-RGBA buffers
+		// and PNG's row-filter prefixed RGBA buffers.
+		return { buffer:image_buffer, ispng:true };
+	}
 
-		// The return value is designed for both canvas pure-RGBA and PNG RGBA
-		return { buffer:img.data, ispng:false };
+	function fillRGB(r, g, b) {
+		var color = ((r << 24) | (g << 16) | (b << 8) | 0xff) >>> 0;
+
+		// This is made complex by the filter byte that prefixes each row...
+		var len = image_width * 4 + 1;
+		var row = Buffer.alloc ? Buffer.alloc(len) : new Buffer(len);
+		for (var i = 1; i < len; i += 4) {
+			row.writeUInt32BE(color, i);
+		}
+		image_buffer.fill(row);
 	}
 
 	function end() {
-		ctx.putImageData(img, 0, 0);
+		if (!callback) {
+			return new Promise(makePNG);
+		} else {
+			makePNG(function(png) { callback(null, png); }, function(err) { callback(err); });
+		}
+	}
+
+	function makePNG(resolve, reject) {
+		// DEFLATE the image data
+		var bufs = [];
+		var buflen = 0;
+		var deflator = PNG_ZLIB.createDeflate({
+				chunkSize: 32 * 1024,
+				level : PNG_ZLIB.Z_DEFAULT_COMPRESSION,
+				strategy: PNG_ZLIB.Z_DEFAULT_STRATEGY });
+		deflator.on('error', reject);
+		deflator.on('data', function(data) { bufs.push(data); buflen += data.length; });
+		deflator.on('end', returnPNG);
+		deflator.end(image_buffer);
+
+		function returnPNG() {
+			var length = 8 + 12 + 13 + 			// PNG Header + IHDR chunk
+						 12 + PNG_TEXT.length +	// tEXt
+						 12 + buflen +			// IDAT
+						 12;					// IEND
+			if (opts.dpi) {
+				length += 12 + 9;				// pHYs
+			}
+
+			// Emulate a byte-stream
+			var png = Buffer.alloc(length);
+			var pngoff = 0;	// running offset into the png buffer
+
+			write('\x89PNG\x0d\x0a\x1a\x0a'); // PNG file header
+			writeIHDR();
+			writeTEXT();
+			if (opts.dpi) {
+				writePHYS();
+			}
+			writeIDAT();
+			writeIEND();
+
+			// Success
+			resolve(png);
+
+			function writeIHDR() {
+				write32(13);	// chunk length
+				var crcoff = pngoff;
+
+				write('IHDR');
+				write32(image_width);
+				write32(image_height);
+				write8(8);		// bit depth
+				write8(PNGTYPE_TRUEALPHA);
+				write8(0);		// compression default
+				write8(0);		// filter default
+				write8(0);		// no interlace
+
+				writeCRC(crcoff);
+			}
+			function writeTEXT() {
+				write32(PNG_TEXT.length);	// chunk length
+				var crcoff = pngoff;
+
+				write('tEXt');
+				write(PNG_TEXT);
+				writeCRC(crcoff);
+			}
+			function writePHYS() {
+				write32(9);
+				var crcoff = pngoff;
+
+				var pxm = ((opts.dpi || 72) / 0.0254)|0;
+				write('pHYs');
+				write32(pxm);	// x-axis
+				write32(pxm);	// y-axis
+				write8(1);		// px/m (the only usable option)
+				writeCRC(crcoff);
+			}
+			function writeIDAT() {
+				write32(buflen);	// chunk length
+				var crcoff = pngoff;
+
+				write('IDAT');
+				for (var i = 0; i < bufs.length; i++) {
+					bufs[i].copy(png, pngoff);
+					pngoff += bufs[i].length;
+				}
+				writeCRC(crcoff);
+			}
+			function writeIEND() {
+				write32(0);				// chunk length;
+				var crcoff = pngoff;
+
+				write('IEND');
+				writeCRC(crcoff);
+			}
+
+			function write(s) {
+				png.write(s, pngoff, 'binary');
+				pngoff += s.length;
+			}
+			function write32(v) {
+				png.writeUInt32BE(v, pngoff);
+				pngoff += 4;
+			}
+			function write16(v) {
+				png.writeUInt16BE(v, pngoff);
+				pngoff += 2;
+			}
+			function write8(v) {
+				png[pngoff++] = v;
+			}
+			function writeCRC(off) {
+				var crc = -1;
+				while (off < pngoff) {
+					crc = PNG_CRC[(crc ^ png[off++]) & 0xff] ^ (crc >>> 8);
+				}
+				write32((crc ^ -1) >>> 0);
+			}
+		}
 	}
 }
 // fontlib.js
@@ -36214,13 +36393,13 @@ FontLib.loadFont("OCR-B", 96, 100, "AAEAAAAPAIAAAwBwRkZUTXxHn14AADmUAAAAHEdERUYA
 
 return {
 		// The public interface
-		toCanvas:ToCanvas, render:Render, raw:Raw,
+		request:Request, toBuffer:ToBuffer, render:Render, raw:Raw,
 		fixupOptions:FixupOptions,
 		loadFont:FontLib.loadFont,
 		VERSION:'__BWIPJS_VERS__',
 
 		// Internals
 		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
-		DrawingBuiltin:DrawingBuiltin, DrawingCanvas:DrawingCanvas,
+		DrawingBuiltin:DrawingBuiltin, DrawingZlibPng:DrawingZlibPng,
 	};
 }));
