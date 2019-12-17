@@ -13,11 +13,11 @@
 const http   = require('http');
 const url    = require('url');
 const bwipjs = (function() {
-	try {
-		return require('bwip-js');	// for installed usage
-	} catch (e) {
-		return require('..');		// for development use only
-	}
+    try {
+        return require('bwip-js');   // for installed usage
+    } catch (e) {
+        return require('..');        // for development use only
+    }
 })();
 
 console.log('bwip-js', bwipjs.VERSION, 'BWIPP', bwipjs.BWIPP.VERSION);
@@ -28,36 +28,36 @@ console.log('bwip-js', bwipjs.VERSION, 'BWIPP', bwipjs.BWIPP.VERSION);
 // a font to the BWIPP built-in font metrics.
 // 100 (100%) indicates to use the font's default size.
 //bwipjs.loadFont('Inconsolata', 100,
-//		require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));
+//        require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));
 
 const server = http.createServer(function(req, res) {
-	// If the url does not begin /?bcid= then 404.  Otherwise, we end up
-	// returning 400 on requests like favicon.ico.
-	if (req.url.indexOf('/?bcid=') != 0) {
-		res.writeHead(404, { 'Content-Type':'text/plain' });
-		res.end('BWIP-JS: Unknown request format.', 'utf8');
-	} else {
-		bwipjs.request(req, res, { sizelimit:1024*1024 });	// limit image size
-	}
+    // If the url does not begin /?bcid= then 404.  Otherwise, we end up
+    // returning 400 on requests like favicon.ico.
+    if (req.url.indexOf('/?bcid=') != 0) {
+        res.writeHead(404, { 'Content-Type':'text/plain' });
+        res.end('BWIP-JS: Unknown request format.', 'utf8');
+    } else {
+        bwipjs.request(req, res, { sizelimit:1024*1024 });    // limit image size
+    }
 })
 
 let binds = 0;
 for (let i = 2; i < process.argv.length; i++) {
-	let a = /^([^:]+):(\d+)$/.exec(process.argv[i]);
-	if (a) {
-		if (a[1] == '*') {
-			server.listen(+a[2]);
-		} else {
-			server.listen(+a[2], a[1]);
-		}
-	} else {
-		console.log(process.argv[i] + ': option ignored...');
-	}
-	console.log('listening on ' + process.argv[i]);
-	binds++;
+    let a = /^([^:]+):(\d+)$/.exec(process.argv[i]);
+    if (a) {
+        if (a[1] == '*') {
+            server.listen(+a[2]);
+        } else {
+            server.listen(+a[2], a[1]);
+        }
+    } else {
+        console.log(process.argv[i] + ': option ignored...');
+    }
+    console.log('listening on ' + process.argv[i]);
+    binds++;
 }
 if (!binds) {
-	server.listen(process.env.PORT || 3030);
-	console.log('listening on *:' + (process.env.PORT || 3030));
+    server.listen(process.env.PORT || 3030);
+    console.log('listening on *:' + (process.env.PORT || 3030));
 }
 

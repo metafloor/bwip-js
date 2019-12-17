@@ -21,7 +21,7 @@
         module.exports = factory();
     } else {
         root.DrawingSVG = factory();
-	}
+    }
 }(typeof self !== 'undefined' ? self : this, function () {
 "use strict";
 

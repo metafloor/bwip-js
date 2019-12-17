@@ -19,7 +19,7 @@
         module.exports = factory();
     } else {
         root.DrawingPDFKit = factory();
-	}
+    }
 }(typeof self !== 'undefined' ? self : this, function () {
 "use strict";
 
@@ -103,26 +103,26 @@ function DrawingPDFKit(doc, opts, FontLib) {
             gs_dx = padl;
             gs_dy = padt;
 
-			// Initialize defaults
-			doc.save();
-			doc.lineCap('butt');
+            // Initialize defaults
+            doc.save();
+            doc.lineCap('butt');
         },
         // Unconnected stroked lines are used to draw the bars in linear barcodes.
         // No line cap should be applied.  These lines are always orthogonal.
         line(x0, y0, x1, y1, lw, rgb) {
-			moveTo(x0, y0);
-			lineTo(x1, y1);
+            moveTo(x0, y0);
+            lineTo(x1, y1);
 
-			doc.lineWidth(lw) .stroke();
+            doc.lineWidth(lw) .stroke();
         },
         // Polygons are used to draw the connected regions in a 2d barcode.
         // These will always be unstroked, filled, non-intersecting,
         // orthogonal shapes.
         // You will see a series of polygon() calls, followed by a fill().
         polygon(pts) {
-			moveTo(pts[0][0], pts[0][1]);
+            moveTo(pts[0][0], pts[0][1]);
             for (var i = 1, n = pts.length; i < n; i++) {
-				lineTo(pts[i][0], pts[i][1]);
+                lineTo(pts[i][0], pts[i][1]);
             }
         },
         // An unstroked, filled hexagon used by maxicode.  You can choose to fill
@@ -142,15 +142,15 @@ function DrawingPDFKit(doc, opts, FontLib) {
 
             // Since we fill with even-odd, don't worry about cw/ccw
             moveTo(x - rx, y);
-			cubicTo(x - rx, y - dy, x - dx, y - ry, x,      y - ry);
-			cubicTo(x + dx, y - ry, x + rx, y - dy, x + rx, y);
-			cubicTo(x + rx, y + dy, x + dx, y + ry, x,      y + ry);
-			cubicTo(x - dx, y + ry, x - rx, y + dy, x - rx, y);
+            cubicTo(x - rx, y - dy, x - dx, y - ry, x,      y - ry);
+            cubicTo(x + dx, y - ry, x + rx, y - dy, x + rx, y);
+            cubicTo(x + rx, y + dy, x + dx, y + ry, x,      y + ry);
+            cubicTo(x - dx, y + ry, x - rx, y + dy, x - rx, y);
         },
         // PostScript's default fill rule is even-odd.
         fill(rgb) {
-			doc.fillColor('#' + rgb);
-			doc.fill('even-odd');
+            doc.fillColor('#' + rgb);
+            doc.fill('even-odd');
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
         // font is an object with properties { name, width, height, dx }
@@ -178,27 +178,27 @@ function DrawingPDFKit(doc, opts, FontLib) {
                         let seg = glyph[i];
                         if (seg.type == 'M') {
                             moveTo(seg.x + x, y - seg.y);
-						} else if (seg.type == 'L') {
+                        } else if (seg.type == 'L') {
                             lineTo(seg.x + x, y - seg.y);
                         } else if (seg.type == 'Q') {
                             quadTo(seg.cx + x, y - seg.cy, seg.x + x,  y - seg.y);
                         } else if (seg.type == 'C') {
                             cubicTo(seg.cx1 + x, y - seg.cy1,
-									seg.cx2 + x, y - seg.cy2,
-								    seg.x + x,   y - seg.y);
+                                    seg.cx2 + x, y - seg.cy2,
+                                    seg.x + x,   y - seg.y);
                         }
                     }
                 }
                 x += glyph.advance + dx;
             }
-			doc.fillColor('#' + rgb);
-			doc.fill('even-odd');
+            doc.fillColor('#' + rgb);
+            doc.fill('even-odd');
         },
         // Called after all drawing is complete.  The return value from this method
         // is the return value from `bwipjs.render()`.
         end() {
-			doc.restore();
-			return doc;
+            doc.restore();
+            return doc;
         },
     };
 
@@ -210,25 +210,25 @@ function DrawingPDFKit(doc, opts, FontLib) {
         var ty = ty0 * x + ty1 * y + ty2 * (gs_width-1) + ty3 * (gs_height-1);
         return [ tx, ty ];
     }
-	function moveTo(x, y) {
-		var p = transform(x, y);
-		doc.moveTo(p[0], p[1]);
-	}
-	function lineTo(x, y) {
-		var p = transform(x, y);
-		doc.lineTo(p[0], p[1]);
-	}
-	function quadTo(cx, cy, x, y) {
-		var p1 = transform(cx, cy);
-		var p2 = transform(x, y);
-		doc.quadraticCurveTo(p1[0], p1[1], p2[0], p2[1]);
-	}
-	function cubicTo(cx1, cy1, cx2, cy2, x, y) {
-		var p1 = transform(cx1, cy1);
-		var p2 = transform(cx2, cy2);
-		var p3 = transform(x, y);
-		doc.bezierCurveTo(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
-	}
+    function moveTo(x, y) {
+        var p = transform(x, y);
+        doc.moveTo(p[0], p[1]);
+    }
+    function lineTo(x, y) {
+        var p = transform(x, y);
+        doc.lineTo(p[0], p[1]);
+    }
+    function quadTo(cx, cy, x, y) {
+        var p1 = transform(cx, cy);
+        var p2 = transform(x, y);
+        doc.quadraticCurveTo(p1[0], p1[1], p2[0], p2[1]);
+    }
+    function cubicTo(cx1, cy1, cx2, cy2, x, y) {
+        var p1 = transform(cx1, cy1);
+        var p2 = transform(cx2, cy2);
+        var p3 = transform(x, y);
+        doc.bezierCurveTo(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
+    }
 }
 
 return DrawingPDFKit;
