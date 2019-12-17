@@ -1,6 +1,6 @@
 {
   "name": "bwip-js",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "JavaScript barcode generator supporting over 100 types and standards.",
   "main": "./dist/node-bwipjs.js",
   "browser": "./dist/bwip-js.js",
@@ -28,13 +28,13 @@
     "ean",
     "pdf417",
     "matrix",
-    "data",
     "datamatrix",
     "qrcode",
     "databar",
     "code128",
-    "code93",
-    "code39"
+    "code39",
+    "svg",
+    "pdfkit"
   ],
   "author": "Mark Warren <mwarren@metafloor.com>",
   "license": "MIT",

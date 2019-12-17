@@ -2,7 +2,7 @@
 //
 // This is an advanced demonstation of using the drawing interface.
 //
-// It converts the drawing primitives into the equivalent SVG.  Linear barcodes
+// Converts the drawing primitives into the equivalent SVG.  Linear barcodes
 // are rendered as a series of stroked paths.  2D barcodes are rendered as a 
 // series of filled paths.
 //

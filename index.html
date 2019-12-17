@@ -48,7 +48,7 @@ found at the end of this document.</p>
 </blockquote>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 2.0.4 (2019-12-15)</li>
+<li>Current bwip-js version is 2.0.5 (2019-12-16)</li>
 <li>Current BWIPP version is 2019-11-08</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
@@ -83,7 +83,7 @@ code work.</p>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/BWIPP-Barcode-Types">Supported Barcode Types</a></li>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/Using-Your-Own-Fonts">Using Your Own Fonts</a></li>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/Annotated-Example-Drawing-Object">Annotated Example Drawing Object</a></li>
-<li><a href="https://github.com/metafloor/bwip-js/wiki/Notes-on-the-Raw-BWIPP-Data">Working with BWIPP Rendering Data</a></li>
+<li><a href="https://github.com/metafloor/bwip-js/wiki/Notes-on-the-Raw-BWIPP-Data">Working with the Raw BWIPP Rendering Data</a></li>
 </ul>
 <h2 id="installation">Installation</h2>
 <p>You can download the latest npm module using:</p>
@@ -304,7 +304,9 @@ file for a basic, single window app:</p>
   &lt;body&gt;
     Node.js &lt;script&gt;document.write(process.versions.node)&lt;/script&gt;,
     Chromium &lt;script&gt;document.write(process.versions.chrome)&lt;/script&gt;,
-    and Electron &lt;script&gt;document.write(process.versions.electron)&lt;/script&gt;.
+    Electron &lt;script&gt;document.write(process.versions.electron)&lt;/script&gt;,
+    bwip-js &lt;script&gt;document.write(bwipjs.VERSION)&lt;/script&gt;,
+    and BWIPP &lt;script&gt;document.write(bwipjs.BWIPP.VERSION)&lt;/script&gt;.
     &lt;br&gt;&lt;br&gt;&lt;img id="myimg"&gt;
     &lt;pre id="output"&gt;&lt;/pre&gt;
   &lt;/body&gt;
@@ -328,24 +330,35 @@ file for a basic, single window app:</p>
 $ bwip-js
 Usage: bwip-js symbol-name text [options...] png-file
        bwip-js --bcid=symbol-name --text=text [options...] png-file
+
+Example:
+       bwip-js code128 012345678 includetext textcolor=ff0000 my-code128.png
+
 Try 'bwip-js --help' for more information.
 Try 'bwip-js --symbols' for a list of supported barcode symbols.
 </code></pre>
-<p>Usage example:</p>
-<pre><code>$ bwip-js qrcode 123456789 ~/qrcode.png
+<p>To use a custom font with the command line utility, use the <code>--loadfont</code> option.  It
+takes one of three formats:</p>
+<p><code>--loadfont=</code><em>font-name</em><code>,</code><em>y-mult</em><code>,</code><em>x-mult</em><code>,</code><em>path-to-font-file</em> <br>
+<code>--loadfont=</code><em>font-name</em><code>,</code><em>size-mult</em><code>,</code><em>path-to-font-file</em> <br>
+<code>--loadfont=</code><em>font-name</em><code>,</code><em>path-to-font-file</em> <br></p>
+<p>For example:</p>
+<pre><code>$ bwip-js code128 12345678 includetext textfont=CONS textxalign=center \
+  loadfont=CONS,250,100,../fonts/Inconsolata.otf /tmp/code128.png
 </code></pre>
-<h2 id="demoapps">Demo Apps</h2>
-<p>There are two demonstration html apps located in the root bwip-js directory:</p>
-<ul>
-<li><code>demo.html</code> is a full featured demonstation of bwip-js barcode rendering.
-It uses bwip-js' built-in graphics to draw to a canvas.  The images produced
-will match pixel-for-pixel with the images produced by node.js.</li>
-<li><code>examples/svg.html</code> is an example of how to use bwip-js with your own
-drawing methods.  It converts the drawing commands to the equivalent SVG.
-When the drawing is complete, the SVG is both rendered on the screen and
-displayed as text.</li>
-</ul>
-<p>Both demos can be run directly from a modern browser using the <code>file://</code> scheme.</p>
+<p>The above demonstrates how to maniplulate the font metrics so the characters appear
+tall and narrow.</p>
+<h2 id="demohtmlapp">Demo HTML App</h2>
+<p><code>demo.html</code> located in the root bwip-js directory is a full featured demonstation
+of bwip-js barcode rendering.  It uses bwip-js' built-in graphics to draw to a canvas.
+The images produced will match pixel-for-pixel with the images produced by the same
+nodejs usage.</p>
+<h2 id="examples">Examples</h2>
+<p>There are example html and node apps provided with the project including
+how to write your own drawing interface, generating SVG barcode images, 
+and adding scalable barcodes to a <a href="https://pdfkit.org/">pdfkit</a> document.</p>
+<p>See the examples <a href="https://github.com/metafloor/bwip-js/tree/master/examples">README</a> 
+for more details.</p>
 	</div>
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
