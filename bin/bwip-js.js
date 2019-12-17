@@ -2,13 +2,17 @@
 'use strict';
 
 var fs = require('fs');
-var bwipjs = require('../dist/bwip-js');
+var bwipjs = require('..');
 var symdesc = require('./symdesc');
 
 function usage() {
 	console.log(
 		"Usage: bwip-js symbol-name text [options...] png-file\n" +
 		"       bwip-js --bcid=symbol-name --text=text [options...] png-file\n" +
+		"\n" +
+		"Example:\n" +
+		"       bwip-js code128 012345678 includetext textcolor=ff0000 my-code128.png\n" +
+		"\n" +
 		"Try 'bwip-js --help' for more information.\n" +
 		"Try 'bwip-js --symbols' for a list of supported barcode symbols.\n");
 }
@@ -19,18 +23,30 @@ function help() {
 		console.log(indent(optlist[i].desc));
 	}
 	console.log(
-		"\nThe double-dashes '--' are not required before the options.\n" +
+		"\nThe double-dashes '--' are not required before each option.\n" +
 		"For example, you can specify '--includetext' or 'includetext'.");
 }
 // Indent the text 8 spaces
 function indent(text) {
 	return text.replace(/^/, '        ').replace(/\n/g, '\n        ');
 }
-// spec is the string "font-name,x-mult,y-mult,path-to-font-file"
+// spec is one of: "font-name,y-mult,x-mult,path-to-font-file"
+// 				   "font-name,size-mult,path-to-font-file"
+// 				   "font-name,path-to-font-file"
 function loadfont(spec) {
 	var vals = spec.split(',');
 	try {
-		bwipjs.loadFont(vals[0], +vals[1], +vals[2], fs.readFileSync(vals[3]));
+		if (vals.length == 4) {
+			bwipjs.loadFont(vals[0], +vals[1], +vals[2], fs.readFileSync(vals[3]));
+		} else if (vals.length == 3) {
+			bwipjs.loadFont(vals[0], +vals[1], fs.readFileSync(vals[2]));
+		} else if (vals.length == 2) {
+			bwipjs.loadFont(vals[0], fs.readFileSync(vals[1]));
+		} else {
+			console.log("Invalid --loadfont format.");
+			console.log("Try 'bwip-js --help' for more information.");
+			process.exit(1);
+		}
 	} catch(e) {
 		console.log('bwip-js: ' + e);
 		process.exit(1);
@@ -45,8 +61,10 @@ var optlist = [
 	{ name: 'symbols', type: 'boolean',
 	  desc: 'Display a list of the supported barcode types.' },
 	{ name: 'loadfont', type: 'string',
-	  desc: 'Loads a truetype/opentype font.  Format of this option is:\n\n' +
-	  		'  --loadfont=font-name,x-mult,y-mult,path-to-font-file\n\n' +
+	  desc: 'Loads a truetype/opentype font.  Format of this option is one of:\n\n' +
+	  		'  --loadfont=font-name,y-mult,x-mult,path-to-font-file\n' +
+	  		'  --loadfont=font-name,size-mult,path-to-font-file\n' +
+	  		'  --loadfont=font-name,path-to-font-file\n\n' +
 			'For example:  --loadfont=Courier,100,120,c:\\windows\\fonts\\cour.ttf' },
 
 	// bwipjs options

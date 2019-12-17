@@ -24,7 +24,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 2.0.4 (2019-12-15)
+* Current bwip-js version is 2.0.5 (2019-12-16)
 * Current BWIPP version is 2019-11-08
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -61,7 +61,7 @@ code work.
 * [Supported Barcode Types](https://github.com/metafloor/bwip-js/wiki/BWIPP-Barcode-Types)
 * [Using Your Own Fonts](https://github.com/metafloor/bwip-js/wiki/Using-Your-Own-Fonts)
 * [Annotated Example Drawing Object](https://github.com/metafloor/bwip-js/wiki/Annotated-Example-Drawing-Object)
-* [Working with BWIPP Rendering Data](https://github.com/metafloor/bwip-js/wiki/Notes-on-the-Raw-BWIPP-Data)
+* [Working with the Raw BWIPP Rendering Data](https://github.com/metafloor/bwip-js/wiki/Notes-on-the-Raw-BWIPP-Data)
 
 ## Installation
 
@@ -338,7 +338,9 @@ file for a basic, single window app:
   <body>
     Node.js <script>document.write(process.versions.node)</script>,
     Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    Electron <script>document.write(process.versions.electron)</script>,
+    bwip-js <script>document.write(bwipjs.VERSION)</script>,
+    and BWIPP <script>document.write(bwipjs.BWIPP.VERSION)</script>.
     <br><br><img id="myimg">
     <pre id="output"></pre>
   </body>
@@ -366,30 +368,48 @@ $ npm install -g bwip-js
 $ bwip-js
 Usage: bwip-js symbol-name text [options...] png-file
        bwip-js --bcid=symbol-name --text=text [options...] png-file
+
+Example:
+       bwip-js code128 012345678 includetext textcolor=ff0000 my-code128.png
+
 Try 'bwip-js --help' for more information.
 Try 'bwip-js --symbols' for a list of supported barcode symbols.
 ```
 
-Usage example:
+To use a custom font with the command line utility, use the `--loadfont` option.  It
+takes one of three formats:
+
+`--loadfont=`_font-name_`,`_y-mult_`,`_x-mult_`,`_path-to-font-file_ <br>
+`--loadfont=`_font-name_`,`_size-mult_`,`_path-to-font-file_ <br>
+`--loadfont=`_font-name_`,`_path-to-font-file_ <br>
+
+For example:
 
 ```
-$ bwip-js qrcode 123456789 ~/qrcode.png
+$ bwip-js code128 12345678 includetext textfont=CONS textxalign=center \
+  loadfont=CONS,250,100,../fonts/Inconsolata.otf /tmp/code128.png
 ```
 
-## Demo Apps
+The above demonstrates how to maniplulate the font metrics so the characters appear
+tall and narrow.
 
-There are two demonstration html apps located in the root bwip-js directory:
 
-  - `demo.html` is a full featured demonstation of bwip-js barcode rendering.
-    It uses bwip-js' built-in graphics to draw to a canvas.  The images produced
-    will match pixel-for-pixel with the images produced by node.js.
-  - `examples/svg.html` is an example of how to use bwip-js with your own
-    drawing methods.  It converts the drawing commands to the equivalent SVG.
-    When the drawing is complete, the SVG is both rendered on the screen and
-    displayed as text.
+## Demo HTML App
 
-Both demos can be run directly from a modern browser using the `file://` scheme.
+`demo.html` located in the root bwip-js directory is a full featured demonstation
+of bwip-js barcode rendering.  It uses bwip-js' built-in graphics to draw to a canvas.
+The images produced will match pixel-for-pixel with the images produced by the same
+nodejs usage.
 
+
+## Examples
+
+There are example html and node apps provided with the project including
+how to write your own drawing interface, generating SVG barcode images, 
+and adding scalable barcodes to a [pdfkit](https://pdfkit.org/) document.
+
+See the examples [README](https://github.com/metafloor/bwip-js/tree/master/examples) 
+for more details.
 
 ## Supported Barcode Types
 

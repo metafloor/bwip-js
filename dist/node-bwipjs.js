@@ -36396,7 +36396,7 @@ return {
 		request:Request, toBuffer:ToBuffer, render:Render, raw:Raw,
 		fixupOptions:FixupOptions,
 		loadFont:FontLib.loadFont,
-		VERSION:'2.0.4 (2019-12-15)',
+		VERSION:'2.0.5 (2019-12-16)',
 
 		// Internals
 		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
