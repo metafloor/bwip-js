@@ -36223,7 +36223,7 @@ return {
 		toCanvas:ToCanvas, render:Render, raw:Raw,
 		fixupOptions:FixupOptions,
 		loadFont:FontLib.loadFont,
-		VERSION:'__BWIPJS_VERS__',
+		VERSION:'2.0.6 (2020-01-23)',
 
 		// Internals
 		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
