@@ -558,19 +558,13 @@ function PSC(str, flags) {
 		// Don't constant fold.  Especially with division, smaller code
 		// results when not folded.  Besides, every JS compiler out there
 		// constant folds on the first pass anyway.
-		//if ((t1&(TYPE_INTLIT|TYPE_NUMLIT))&&(t2&(TYPE_INTLIT|TYPE_NUMLIT))) {
-		//	st[sp-2].type = ((t1|t2) & TYPE_NUMLIT) ? TYPE_NUMLIT : TYPE_INTLIT;
-		//	st[sp-2].expr = '' +
-		//				eval(st[sp-2].expr + ' ' + op + ' ' + st[sp-1].expr);
-		//} else {
-			if ((t1 & TYPE_INTTYP) && (t2 & TYPE_INTTYP) && op != '/') {
-				st[sp-2].type = TYPE_INTVAL;
-			} else {
-				st[sp-2].type = TYPE_NUMVAL;
-			}
-			st[sp-2].expr = parens(st[sp-2].expr) + op +
-							parens(st[sp-1].expr);
-		//}
+		if ((t1 & TYPE_INTTYP) && (t2 & TYPE_INTTYP) && op != '/') {
+			st[sp-2].type = TYPE_INTVAL;
+		} else {
+			st[sp-2].type = TYPE_NUMVAL;
+		}
+		st[sp-2].expr = parens(st[sp-2].expr) + op +
+						parens(st[sp-1].expr);
 		st[sp-2].seq = ++seq;
 		sp--;
 	}
@@ -1825,6 +1819,8 @@ function PSC(str, flags) {
 	}
 	$.div = function() {
 		binarith('/');
+		// Convert the result to single-precision float
+		//st[sp-1].expr = '$f(' + st[sp-1].expr + ')';
 	}
 	$.mod = function() {
 		binarith('%');

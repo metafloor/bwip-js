@@ -18,7 +18,8 @@ var mins = {
 	arrcpy:'A',			// array copy operator
 	cvs:'c',			// cvs operator
 	//d					// dict constructor
-	forall:'f',			// forall operator
+	//f,				// single-precision emulation
+	forall:'F',			// forall operator
 	get:'g',			// get operator
 	geti:'G',			// getinterval operator
 	// j				// stack pointer

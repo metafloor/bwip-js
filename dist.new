@@ -717,12 +717,14 @@ function BWIPP() {
 	function $nt(a) {
 		return typeof a == 'boolean' ? !a : ~a;
 	}
-	// emulate single-precision floating-point (pseudo-polyfill for Math.fround)
-	var $f = (function(fa) {
-		return function(v) {
-			return fa[0] = v, fa[0];
-		};
-	})(new Float32Array(1));
+	// emulate single-precision floating-point
+	const FLT_P = 2 << 29;
+	const FLT_M = 2 << 29;
+
+	function $f(v) {
+		// Hopefully this keeps the js optimizers at bay
+		return Math.ceil(v * 100000000) / 100000000;
+	}
 
 	// DEBUG-BEGIN
 	function $stack() {
@@ -1184,12 +1186,12 @@ function BWIPP() {
 			$1.pixs = $1.pixsorig; /*531*/
 		}; /*533*/
 		$$.save(); /*535*/
-		$1.inkspread = $1.inkspread / 2; /*538*/
-		$1.inkspreadh = $1.inkspreadh / 2; /*539*/
-		$1.inkspreadv = $1.inkspreadv / 2; /*540*/
+		$1.inkspread = $f($1.inkspread / 2); /*538*/
+		$1.inkspreadh = $f($1.inkspreadh / 2); /*539*/
+		$1.inkspreadv = $f($1.inkspreadv / 2); /*540*/
 		var _46 = $$.currpos(); /*541*/
 		$$.translate(_46.x, _46.y); /*541*/
-		$$.scale(($1.width / $1.pixx) * 72, ($1.height / $1.pixy) * 72); /*542*/
+		$$.scale($f($1.width / $1.pixx) * 72, $f($1.height / $1.pixy) * 72); /*542*/
 		$$.moveto(0, 0); /*543*/
 		$$.lineto($1.pixx, 0); /*543*/
 		$$.lineto($1.pixx, $1.pixy); /*543*/
@@ -1292,7 +1294,7 @@ function BWIPP() {
 				$1.textascent = $k[--$j]; /*599*/
 				var _5B = $$.stringwidth($1.tstr); /*600*/
 				$1.textwidth = _5B.w + (($1.tstr.length - 1) * $1.textgaps); /*600*/
-				$1.textxpos = $1.textxoffset + (($1.x - $1.textwidth) / 2); /*602*/
+				$1.textxpos = $1.textxoffset + ($f(($1.x - $1.textwidth) / 2)); /*602*/
 				if ($eq($1.textxalign, "left")) { //no-else/*603*/
 					$1.textxpos = $1.textxoffset; /*603*/
 				} /*603*/
@@ -1307,14 +1309,14 @@ function BWIPP() {
 				} /*606*/
 				if ($eq($1.textxalign, "justify") && ($1.textwidth < $1.x)) { //no-else/*610*/
 					$1.textxpos = 0; /*608*/
-					$1.textgaps = ($1.x - $1.textwidth) / ($1.tstr.length - 1); /*609*/
+					$1.textgaps = $f(($1.x - $1.textwidth) / ($1.tstr.length - 1)); /*609*/
 				} /*609*/
 				$1.textypos = -(($1.textyoffset + $1.textascent) + 1); /*611*/
 				if ($eq($1.textyalign, "above")) { //no-else/*612*/
 					$1.textypos = ($1.textyoffset + $1.pixy) + 1; /*612*/
 				} /*612*/
 				if ($eq($1.textyalign, "center")) { //no-else/*613*/
-					$1.textypos = $1.textyoffset + (($1.pixy - $1.textascent) / 2); /*613*/
+					$1.textypos = $1.textyoffset + ($f(($1.pixy - $1.textascent) / 2)); /*613*/
 				} /*613*/
 				$$.moveto($1.textxpos, $1.textypos); /*614*/
 				$$.show($1.tstr, $1.textgaps, 0); /*614*/
@@ -5653,7 +5655,7 @@ function BWIPP() {
 		$1.options = $k[--$j]; /*4897*/
 		$1.barcode = $k[--$j]; /*4898*/
 		$1.dontdraw = false; /*4900*/
-		$1.height = 33 / 72; /*4901*/
+		$1.height = $f(33 / 72); /*4901*/
 		$1.linkage = false; /*4902*/
 		$1.format = "omni"; /*4903*/
 		$1.barxmult = 33; /*4904*/
@@ -5663,7 +5665,7 @@ function BWIPP() {
 			$1[$k[--$j]] = _3; /*4915*/
 		}); /*4915*/
 		if ($eq($1.format, "truncated")) { //no-else/*4917*/
-			$1.height = 13 / 72; /*4917*/
+			$1.height = $f(13 / 72); /*4917*/
 		} /*4917*/
 		$1.height = +$1.height; /*4918*/
 		$1.barxmult = ~~$1.barxmult; /*4919*/
@@ -6351,8 +6353,8 @@ function BWIPP() {
 				["pixs", $1.pixs],
 				["pixx", 50],
 				["pixy", $1.pixy],
-				["height", $1.pixy / 72],
-				["width", 50 / 72],
+				["height", $f($1.pixy / 72)],
+				["width", $f(50 / 72)],
 				["opt", $1.options]
 			]); /*5294*/
 			$k[$j++] = _9E; /*5297*/
@@ -6576,7 +6578,7 @@ function BWIPP() {
 		$1.options = $k[--$j]; /*5591*/
 		$1.barcode = $k[--$j]; /*5592*/
 		$1.dontdraw = false; /*5594*/
-		$1.height = 10 / 72; /*5595*/
+		$1.height = $f(10 / 72); /*5595*/
 		$1.linkage = false; /*5596*/
 		$forall($1.options, function() {
 			/*5607*/
@@ -7024,7 +7026,7 @@ function BWIPP() {
 		$1.options = $k[--$j]; /*5882*/
 		$1.barcode = $k[--$j]; /*5883*/
 		$1.dontdraw = false; /*5885*/
-		$1.height = 34 / 72; /*5886*/
+		$1.height = $f(34 / 72); /*5886*/
 		$1.format = "expanded"; /*5887*/
 		$1.segments = -1; /*5888*/
 		$1.linkage = false; /*5889*/
@@ -7715,8 +7717,8 @@ function BWIPP() {
 		$1.rembits = function() {
 			var _82 = $k[--$j]; /*6225*/
 			var _83 = 48; /*6227*/
-			var _84 = (~~Math.ceil(_82 / 12)) * 12; /*6227*/
-			if (((~~Math.ceil(_82 / 12)) * 12) < 48) { //no-else/*6227*/
+			var _84 = (~~(Math.ceil($f(_82 / 12)))) * 12; /*6227*/
+			if (((~~(Math.ceil($f(_82 / 12)))) * 12) < 48) { //no-else/*6227*/
 				var _ = _83; /*6227*/
 				_83 = _84; /*6227*/
 				_84 = _; /*6227*/
@@ -8330,7 +8332,7 @@ function BWIPP() {
 		$puti(_GG, 1, $1.dxw); /*6597*/
 		$1.dxw = $geti(_GG, 0, $1.datalen + 1); /*6598*/
 		$1.datalen = $1.dxw.length; /*6599*/
-		$1.rows = $a(~~Math.ceil($1.datalen / $1.segments)); /*6602*/
+		$1.rows = $a(~~(Math.ceil($f($1.datalen / $1.segments)))); /*6602*/
 		$1.numrows = $1.rows.length; /*6603*/
 		for (var _GS = 0, _GR = $1.numrows - 1; _GS <= _GR; _GS += 1) {
 			/*6618*/
@@ -8550,8 +8552,8 @@ function BWIPP() {
 				["pixs", $1.pixs],
 				["pixx", $1.pixx],
 				["pixy", ~~($1.pixs.length / $1.pixx)],
-				["height", (~~($1.pixs.length / $1.pixx)) / 72],
-				["width", $1.pixx / 72],
+				["height", $f((~~($1.pixs.length / $1.pixx)) / 72)],
+				["width", $f($1.pixx / 72)],
 				["opt", $1.options]
 			]); /*6739*/
 			$k[$j++] = _Jd; /*6742*/
@@ -8744,7 +8746,7 @@ function BWIPP() {
 		$1.options = $k[--$j]; /*6979*/
 		$1.barcode = $k[--$j]; /*6980*/
 		$1.dontdraw = false; /*6982*/
-		$1.height = (8 * 2.835) / 72; /*6983*/
+		$1.height = $f((8 * 2.835) / 72); /*6983*/
 		$1.nwidth = 0.5 * 2.835; /*6984*/
 		$1.wwidth = 1.5 * 2.835; /*6985*/
 		$1.swidth = 1 * 2.835; /*6986*/
@@ -8877,8 +8879,8 @@ function BWIPP() {
 		$1.bhs = $a(16); /*7125*/
 		$1.bbs = $a(16); /*7126*/
 		$1.sbs = $a(32); /*7127*/
-		$1.bar = (1 / 25.4) * $1.height; /*7128*/
-		$1.spc = (1 / 25.4) * 72; /*7129*/
+		$1.bar = $f(1 / 25.4) * $1.height; /*7128*/
+		$1.spc = $f(1 / 25.4) * 72; /*7129*/
 		$1.i = 15; /*7132*/
 		$1.val = ~~$z($1.barcode); /*7133*/
 		for (;;) {
@@ -10097,20 +10099,20 @@ function BWIPP() {
 			$1.dec = ($get($1.chars, $get($1.barmap, $1.i * 4)) & (~~Math.pow(2, $get($1.barmap, ($1.i * 4) + 1)))) != 0; /*8491*/
 			$1.asc = ($get($1.chars, $get($1.barmap, ($1.i * 4) + 2)) & (~~Math.pow(2, $get($1.barmap, ($1.i * 4) + 3)))) != 0; /*8492*/
 			if ((!$1.dec) && (!$1.asc)) { //no-else/*8496*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*8494*/
-				$put($1.bhs, $1.i, (2 * $1.height) / 8); /*8495*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*8494*/
+				$put($1.bhs, $1.i, $f((2 * $1.height) / 8)); /*8495*/
 			} /*8495*/
 			if ((!$1.dec) && $1.asc) { //no-else/*8500*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*8498*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*8499*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*8498*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*8499*/
 			} /*8499*/
 			if ($1.dec && (!$1.asc)) { //no-else/*8504*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*8502*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*8503*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*8502*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*8503*/
 			} /*8503*/
 			if ($1.dec && $1.asc) { //no-else/*8508*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*8506*/
-				$put($1.bhs, $1.i, (8 * $1.height) / 8); /*8507*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*8506*/
+				$put($1.bhs, $1.i, $f((8 * $1.height) / 8)); /*8507*/
 			} /*8507*/
 		} /*8507*/
 		$k[$j++] = Infinity; /*8522*/
@@ -10217,7 +10219,7 @@ function BWIPP() {
 		for (var _m = 0, _l = $1.enc.length - 1; _m <= _l; _m += 1) {
 			/*8628*/
 			$1.j = _m; /*8626*/
-			$put($1.heights, $1.j, ((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5); /*8627*/
+			$put($1.heights, $1.j, $f(((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5)); /*8627*/
 		} /*8627*/
 		$puti($1.bhs, 0, $1.heights); /*8629*/
 		for (var _x = 0, _w = $1.barlen - 1; _x <= _w; _x += 1) {
@@ -10228,7 +10230,7 @@ function BWIPP() {
 			for (var _17 = 0, _16 = $1.enc.length - 1; _17 <= _16; _17 += 1) {
 				/*8638*/
 				$1.j = _17; /*8636*/
-				$put($1.heights, $1.j, ((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5); /*8637*/
+				$put($1.heights, $1.j, $f(((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5)); /*8637*/
 			} /*8637*/
 			$puti($1.bhs, ($1.i * 5) + 1, $1.heights); /*8639*/
 			$put($1.txt, $1.i, $a([$geti($1.barcode, $1.i, 1), (($1.i * 5) + 1) * 3.312, $1.textyoffset, $1.textfont, $1.textsize])); /*8640*/
@@ -10238,7 +10240,7 @@ function BWIPP() {
 		for (var _1Y = 0, _1X = $1.enc.length - 1; _1Y <= _1X; _1Y += 1) {
 			/*8649*/
 			$1.j = _1Y; /*8647*/
-			$put($1.heights, $1.j, ((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5); /*8648*/
+			$put($1.heights, $1.j, $f(((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5)); /*8648*/
 		} /*8648*/
 		$puti($1.bhs, ($1.barlen * 5) + 1, $1.heights); /*8650*/
 		if ($1.includecheckintext) {
@@ -10246,14 +10248,14 @@ function BWIPP() {
 			$put($1.txt, $1.barlen, $a([$geti($1.barchars, $1.checksum, 1), (($1.barlen * 5) + 1) * 3.312, $1.textyoffset, $1.textfont, $1.textsize])); /*8653*/
 		} else {
 			/*8655*/
-			$put($1.txt, $1.barlen, $a([" ", ((($1.barlen * 5) + 1) * 72) / 25, $1.textyoffset, $1.textfont, $1.textsize])); /*8655*/
+			$put($1.txt, $1.barlen, $a([" ", $f(((($1.barlen * 5) + 1) * 72) / 25), $1.textyoffset, $1.textfont, $1.textsize])); /*8655*/
 		} /*8655*/
 		$1.enc = $get($1.encs, 11); /*8659*/
 		$1.heights = $a($1.enc.length); /*8660*/
 		for (var _26 = 0, _25 = $1.enc.length - 1; _26 <= _25; _26 += 1) {
 			/*8664*/
 			$1.j = _26; /*8662*/
-			$put($1.heights, $1.j, ((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5); /*8663*/
+			$put($1.heights, $1.j, $f(((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5)); /*8663*/
 		} /*8663*/
 		$puti($1.bhs, ($1.barlen * 5) + 6, $1.heights); /*8665*/
 		$k[$j++] = Infinity; /*8676*/
@@ -10359,7 +10361,7 @@ function BWIPP() {
 		for (var _l = 0, _k = $1.enc.length - 1; _l <= _k; _l += 1) {
 			/*8783*/
 			$1.j = _l; /*8781*/
-			$put($1.heights, $1.j, ((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5); /*8782*/
+			$put($1.heights, $1.j, $f(((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5)); /*8782*/
 		} /*8782*/
 		$puti($1.bhs, 0, $1.heights); /*8784*/
 		for (var _w = 0, _v = $1.barlen - 1; _w <= _v; _w += 1) {
@@ -10370,7 +10372,7 @@ function BWIPP() {
 			for (var _16 = 0, _15 = $1.enc.length - 1; _16 <= _15; _16 += 1) {
 				/*8793*/
 				$1.j = _16; /*8791*/
-				$put($1.heights, $1.j, ((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5); /*8792*/
+				$put($1.heights, $1.j, $f(((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5)); /*8792*/
 			} /*8792*/
 			$puti($1.bhs, ($1.i * 5) + 1, $1.heights); /*8794*/
 			$put($1.txt, $1.i, $a([$geti($1.barcode, $1.i, 1), (($1.i * 5) + 1) * 3.312, $1.textyoffset, $1.textfont, $1.textsize])); /*8795*/
@@ -10380,7 +10382,7 @@ function BWIPP() {
 		for (var _1X = 0, _1W = $1.enc.length - 1; _1X <= _1W; _1X += 1) {
 			/*8804*/
 			$1.j = _1X; /*8802*/
-			$put($1.heights, $1.j, ((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5); /*8803*/
+			$put($1.heights, $1.j, $f(((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5)); /*8803*/
 		} /*8803*/
 		$puti($1.bhs, ($1.barlen * 5) + 1, $1.heights); /*8805*/
 		if ($1.includecheckintext) {
@@ -10388,14 +10390,14 @@ function BWIPP() {
 			$put($1.txt, $1.barlen, $a([$geti($1.barchars, $1.checksum, 1), (($1.barlen * 5) + 1) * 3.312, $1.textyoffset, $1.textfont, $1.textsize])); /*8808*/
 		} else {
 			/*8810*/
-			$put($1.txt, $1.barlen, $a([" ", ((($1.barlen * 5) + 1) * 72) / 25, $1.textyoffset, $1.textfont, $1.textsize])); /*8810*/
+			$put($1.txt, $1.barlen, $a([" ", $f(((($1.barlen * 5) + 1) * 72) / 25), $1.textyoffset, $1.textfont, $1.textsize])); /*8810*/
 		} /*8810*/
 		$1.enc = $get($1.encs, 11); /*8814*/
 		$1.heights = $a($1.enc.length); /*8815*/
 		for (var _25 = 0, _24 = $1.enc.length - 1; _25 <= _24; _25 += 1) {
 			/*8819*/
 			$1.j = _25; /*8817*/
-			$put($1.heights, $1.j, ((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5); /*8818*/
+			$put($1.heights, $1.j, $f(((~~$z($geti($1.enc, $1.j, 1))) * $1.height) / 5)); /*8818*/
 		} /*8818*/
 		$puti($1.bhs, ($1.barlen * 5) + 6, $1.heights); /*8820*/
 		$k[$j++] = Infinity; /*8831*/
@@ -10523,20 +10525,20 @@ function BWIPP() {
 			$1.i = _1p; /*8961*/
 			$1.enc = $geti($1.encstr, $1.i, 1); /*8962*/
 			if ($eq($1.enc, "0")) { //no-else/*8966*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*8964*/
-				$put($1.bhs, $1.i, (2 * $1.height) / 8); /*8965*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*8964*/
+				$put($1.bhs, $1.i, $f((2 * $1.height) / 8)); /*8965*/
 			} /*8965*/
 			if ($eq($1.enc, "1")) { //no-else/*8970*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*8968*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*8969*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*8968*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*8969*/
 			} /*8969*/
 			if ($eq($1.enc, "2")) { //no-else/*8974*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*8972*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*8973*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*8972*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*8973*/
 			} /*8973*/
 			if ($eq($1.enc, "3")) { //no-else/*8978*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*8976*/
-				$put($1.bhs, $1.i, (8 * $1.height) / 8); /*8977*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*8976*/
+				$put($1.bhs, $1.i, $f((8 * $1.height) / 8)); /*8977*/
 			} /*8977*/
 		} /*8977*/
 		$k[$j++] = Infinity; /*8990*/
@@ -10739,20 +10741,20 @@ function BWIPP() {
 			$1.i = _3M; /*9177*/
 			$1.enc = $geti($1.encstr, $1.i, 1); /*9178*/
 			if ($eq($1.enc, "0")) { //no-else/*9182*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*9180*/
-				$put($1.bhs, $1.i, (8 * $1.height) / 8); /*9181*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*9180*/
+				$put($1.bhs, $1.i, $f((8 * $1.height) / 8)); /*9181*/
 			} /*9181*/
 			if ($eq($1.enc, "1")) { //no-else/*9186*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*9184*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*9185*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*9184*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*9185*/
 			} /*9185*/
 			if ($eq($1.enc, "2")) { //no-else/*9190*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*9188*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*9189*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*9188*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*9189*/
 			} /*9189*/
 			if ($eq($1.enc, "3")) { //no-else/*9194*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*9192*/
-				$put($1.bhs, $1.i, (2 * $1.height) / 8); /*9193*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*9192*/
+				$put($1.bhs, $1.i, $f((2 * $1.height) / 8)); /*9193*/
 			} /*9193*/
 		} /*9193*/
 		$k[$j++] = Infinity; /*9206*/
@@ -10838,20 +10840,20 @@ function BWIPP() {
 			$1.i = _t; /*9302*/
 			$1.enc = $geti($1.encstr, $1.i, 1); /*9303*/
 			if ($eq($1.enc, "0")) { //no-else/*9307*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*9305*/
-				$put($1.bhs, $1.i, (2 * $1.height) / 8); /*9306*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*9305*/
+				$put($1.bhs, $1.i, $f((2 * $1.height) / 8)); /*9306*/
 			} /*9306*/
 			if ($eq($1.enc, "1")) { //no-else/*9311*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*9309*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*9310*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*9309*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*9310*/
 			} /*9310*/
 			if ($eq($1.enc, "2")) { //no-else/*9315*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*9313*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*9314*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*9313*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*9314*/
 			} /*9314*/
 			if ($eq($1.enc, "3")) { //no-else/*9319*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*9317*/
-				$put($1.bhs, $1.i, (8 * $1.height) / 8); /*9318*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*9317*/
+				$put($1.bhs, $1.i, $f((8 * $1.height) / 8)); /*9318*/
 			} /*9318*/
 		} /*9318*/
 		$k[$j++] = Infinity; /*9331*/
@@ -10991,8 +10993,8 @@ function BWIPP() {
 				$1.bunit = 0; /*9491*/
 				$1.hunit = 8; /*9492*/
 			} /*9492*/
-			$put($1.bbs, $1.i, ($1.bunit * $1.height) / 8); /*9494*/
-			$put($1.bhs, $1.i, ($1.hunit * $1.height) / 8); /*9495*/
+			$put($1.bbs, $1.i, $f(($1.bunit * $1.height) / 8)); /*9494*/
+			$put($1.bhs, $1.i, $f(($1.hunit * $1.height) / 8)); /*9495*/
 		} /*9495*/
 		$k[$j++] = Infinity; /*9507*/
 		var _1y = $1.bbs; /*9501*/
@@ -12709,8 +12711,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.symwid],
 			["pixy", ~~($1.pixs.length / $1.symwid)],
-			["height", (~~($1.pixs.length / $1.symwid)) / 72],
-			["width", $1.symwid / 72],
+			["height", $f((~~($1.pixs.length / $1.symwid)) / 72)],
+			["width", $f($1.symwid / 72)],
 			["opt", $1.options]
 		]); /*11047*/
 		$k[$j++] = _As; /*11050*/
@@ -13626,8 +13628,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", 81],
 			["pixy", ~~($1.pixs.length / 81)],
-			["height", (~~($1.pixs.length / 81)) / 72],
-			["width", 81 / 72],
+			["height", $f((~~($1.pixs.length / 81)) / 72)],
+			["width", $f(81 / 72)],
 			["opt", $1.options]
 		]); /*11805*/
 		$k[$j++] = _EU; /*11808*/
@@ -14181,8 +14183,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", 81],
 			["pixy", ~~($1.pixs.length / 81)],
-			["height", (~~($1.pixs.length / 81)) / 72],
-			["width", 81 / 72],
+			["height", $f((~~($1.pixs.length / 81)) / 72)],
+			["width", $f(81 / 72)],
 			["opt", $1.options]
 		]); /*12895*/
 		$k[$j++] = _7Y; /*12898*/
@@ -14367,20 +14369,20 @@ function BWIPP() {
 			$1.i = _F; /*13394*/
 			$1.enc = $geti($1.barcode, $1.i, 1); /*13395*/
 			if ($eq($1.enc, "D")) { //no-else/*13399*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*13397*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*13398*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*13397*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*13398*/
 			} /*13398*/
 			if ($eq($1.enc, "A")) { //no-else/*13403*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*13401*/
-				$put($1.bhs, $1.i, (5 * $1.height) / 8); /*13402*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*13401*/
+				$put($1.bhs, $1.i, $f((5 * $1.height) / 8)); /*13402*/
 			} /*13402*/
 			if ($eq($1.enc, "F")) { //no-else/*13407*/
-				$put($1.bbs, $1.i, (0 * $1.height) / 8); /*13405*/
-				$put($1.bhs, $1.i, (8 * $1.height) / 8); /*13406*/
+				$put($1.bbs, $1.i, $f((0 * $1.height) / 8)); /*13405*/
+				$put($1.bhs, $1.i, $f((8 * $1.height) / 8)); /*13406*/
 			} /*13406*/
 			if ($eq($1.enc, "T")) { //no-else/*13411*/
-				$put($1.bbs, $1.i, (3 * $1.height) / 8); /*13409*/
-				$put($1.bhs, $1.i, (2 * $1.height) / 8); /*13410*/
+				$put($1.bbs, $1.i, $f((3 * $1.height) / 8)); /*13409*/
+				$put($1.bhs, $1.i, $f((2 * $1.height) / 8)); /*13410*/
 			} /*13410*/
 		} /*13410*/
 		$k[$j++] = Infinity; /*13420*/
@@ -15085,18 +15087,18 @@ function BWIPP() {
 				$1.eclevel = 5; /*14025*/
 			} /*14025*/
 		} /*14025*/
-		$1.maxeclevel = (~~((Math.log((928 - 1) - $1.m)) / Math.log(2))) - 1; /*14029*/
+		$1.maxeclevel = (~~($f((Math.log((928 - 1) - $1.m)) / Math.log(2)))) - 1; /*14029*/
 		if ($1.eclevel > $1.maxeclevel) { //no-else/*14030*/
 			$1.eclevel = $1.maxeclevel; /*14030*/
 		} /*14030*/
 		$1.k = ~~Math.pow(2, $1.eclevel + 1); /*14031*/
 		if ($1.columns == 0) { //no-else/*14034*/
-			$1.columns = ~~(Math.round(Math.sqrt(($1.m + $1.k) / 3))); /*14034*/
+			$1.columns = ~~(Math.round(Math.sqrt($f(($1.m + $1.k) / 3)))); /*14034*/
 		} /*14034*/
 		if (($1.columns >= 1) && ($1.columns <= 30)) { //no-else/*14035*/
 			$1.c = $1.columns; /*14035*/
 		} /*14035*/
-		$1.r = ~~(Math.ceil((($1.m + $1.k) + 1) / $1.columns)); /*14038*/
+		$1.r = ~~(Math.ceil($f((($1.m + $1.k) + 1) / $1.columns))); /*14038*/
 		if (($1.r < $1.rows) && ($1.rows <= 90)) { //no-else/*14039*/
 			$1.r = $1.rows; /*14039*/
 		} /*14039*/
@@ -15107,8 +15109,8 @@ function BWIPP() {
 		var _C6 = $1.r; /*14043*/
 		var _C7 = $1.m; /*14043*/
 		var _C8 = 8; /*14043*/
-		var _C9 = (~~((Math.log(((_C5 * _C6) - 1) - _C7)) / Math.log(2))) - 1; /*14043*/
-		if (((~~((Math.log(((_C5 * _C6) - 1) - _C7)) / Math.log(2))) - 1) > 8) { //no-else/*14043*/
+		var _C9 = (~~($f((Math.log(((_C5 * _C6) - 1) - _C7)) / Math.log(2)))) - 1; /*14043*/
+		if (((~~($f((Math.log(((_C5 * _C6) - 1) - _C7)) / Math.log(2)))) - 1) > 8) { //no-else/*14043*/
 			var _ = _C8; /*14043*/
 			_C8 = _C9; /*14043*/
 			_C9 = _; /*14043*/
@@ -15334,8 +15336,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.rwid],
 			["pixy", $1.r],
-			["height", ($1.r / 72) * $1.rowmult],
-			["width", $1.rwid / 72],
+			["height", $f($1.r / 72) * $1.rowmult],
+			["width", $f($1.rwid / 72)],
 			["opt", $1.options]
 		]); /*14393*/
 		$k[$j++] = _FP; /*14396*/
@@ -16272,8 +16274,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.rwid],
 			["pixy", $1.r],
-			["height", ($1.r / 72) * $1.rowmult],
-			["width", $1.rwid / 72],
+			["height", $f($1.r / 72) * $1.rowmult],
+			["width", $f($1.rwid / 72)],
 			["opt", $1.options]
 		]); /*15423*/
 		$k[$j++] = _HU; /*15426*/
@@ -17030,6 +17032,7 @@ function BWIPP() {
 			} /*15798*/
 			$1.nextNonX = $a(); /*15798*/
 			$1.isD = function() {
+				//console.log($1.i, $1.k, $1.char);
 				$k[$j++] = ($1.char >= 48) && ($1.char <= 57); /*15800*/
 			}; /*15800*/
 			$1.isC = function() {
@@ -17175,7 +17178,7 @@ function BWIPP() {
 						if ($k[--$j]) {
 							/*15832*/
 							var _AK = $k[--$j]; /*15832*/
-							$k[$j++] = _AK + (1 / 2); /*15832*/
+							$k[$j++] = _AK + $f(1 / 2); /*15832*/
 						} else {
 							/*15832*/
 							$1.isEA(); /*15832*/
@@ -17197,40 +17200,41 @@ function BWIPP() {
 						if ($k[--$j]) {
 							/*15833*/
 							var _AS = $k[--$j]; /*15833*/
-							$k[$j++] = _AS + 0.66666667; /*15833*/
+							$k[$j++] = _AS + $f(2 / 3); /*15833*/
 						} else {
 							/*15833*/
 							$1.isEA(); /*15833*/
 							if ($k[--$j]) {
 								/*15833*/
 								var _AU = $k[--$j]; /*15833*/
-								$k[$j++] = _AU + 2.66666667; /*15833*/
+								$k[$j++] = _AU + $f(8 / 3); /*15833*/
 							} else {
 								/*15833*/
 								var _AV = $k[--$j]; /*15833*/
-								$k[$j++] = _AV + 1.33333334; /*15833*/
+								$k[$j++] = _AV + $f(4 / 3); /*15833*/
 							} /*15833*/
 						} /*15833*/
 						var _AW = $k[--$j]; /*15833*/
 						$1[$k[--$j]] = _AW; /*15833*/
+						//console.log('cc', $1.cc);
 						$k[$j++] = 'tc'; /*15834*/
 						$k[$j++] = $1.tc; /*15834*/
 						$1.isT(); /*15834*/
 						if ($k[--$j]) {
 							/*15834*/
 							var _Aa = $k[--$j]; /*15834*/
-							$k[$j++] = _Aa + 0.66666667; /*15834*/
+							$k[$j++] = _Aa + $f(2 / 3); /*15834*/
 						} else {
 							/*15834*/
 							$1.isEA(); /*15834*/
 							if ($k[--$j]) {
 								/*15834*/
 								var _Ac = $k[--$j]; /*15834*/
-								$k[$j++] = _Ac + 2.66666667; /*15834*/
+								$k[$j++] = _Ac + $f(8 / 3); /*15834*/
 							} else {
 								/*15834*/
 								var _Ad = $k[--$j]; /*15834*/
-								$k[$j++] = _Ad + 1.33333334; /*15834*/
+								$k[$j++] = _Ad + $f(4 / 3); /*15834*/
 							} /*15834*/
 						} /*15834*/
 						var _Ae = $k[--$j]; /*15834*/
@@ -17241,18 +17245,18 @@ function BWIPP() {
 						if ($k[--$j]) {
 							/*15835*/
 							var _Ai = $k[--$j]; /*15835*/
-							$k[$j++] = _Ai + 0.66666667; /*15835*/
+							$k[$j++] = _Ai + $f(2 / 3); /*15835*/
 						} else {
 							/*15835*/
 							$1.isEA(); /*15835*/
 							if ($k[--$j]) {
 								/*15835*/
 								var _Ak = $k[--$j]; /*15835*/
-								$k[$j++] = _Ak + 4.33333334; /*15835*/
+								$k[$j++] = _Ak + $f(13 / 3); /*15835*/
 							} else {
 								/*15835*/
 								var _Al = $k[--$j]; /*15835*/
-								$k[$j++] = _Al + 3.33333334; /*15835*/
+								$k[$j++] = _Al + $f(10 / 3); /*15835*/
 							} /*15835*/
 						} /*15835*/
 						var _Am = $k[--$j]; /*15835*/
@@ -17263,18 +17267,18 @@ function BWIPP() {
 						if ($k[--$j]) {
 							/*15836*/
 							var _Aq = $k[--$j]; /*15836*/
-							$k[$j++] = _Aq + (3 / 4); /*15836*/
+							$k[$j++] = _Aq + $f(3 / 4); /*15836*/
 						} else {
 							/*15836*/
 							$1.isEA(); /*15836*/
 							if ($k[--$j]) {
 								/*15836*/
 								var _As = $k[--$j]; /*15836*/
-								$k[$j++] = _As + (17 / 4); /*15836*/
+								$k[$j++] = _As + $f(17 / 4); /*15836*/
 							} else {
 								/*15836*/
 								var _At = $k[--$j]; /*15836*/
-								$k[$j++] = _At + (13 / 4); /*15836*/
+								$k[$j++] = _At + $f(13 / 4); /*15836*/
 							} /*15836*/
 						} /*15836*/
 						var _Au = $k[--$j]; /*15836*/
@@ -17588,7 +17592,7 @@ function BWIPP() {
 			$1.Evalstocws = function() {
 				$1.in = $k[--$j]; /*15998*/
 				$1.inlen = $1.in.length; /*15999*/
-				$1.outlen = ~~(Math.ceil(($1.in.length / 4) * 3)); /*16000*/
+				$1.outlen = ~~(Math.ceil($f($1.in.length / 4) * 3)); /*16000*/
 				$k[$j++] = Infinity; /*16001*/
 				$aload($1.in); /*16001*/
 				$k[$j++] = 0; /*16001*/
@@ -18364,8 +18368,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.cols],
 			["pixy", $1.rows],
-			["height", ($1.rows * 2) / 72],
-			["width", ($1.cols * 2) / 72],
+			["height", $f(($1.rows * 2) / 72)],
+			["width", $f(($1.cols * 2) / 72)],
 			["opt", $1.options]
 		]); /*16358*/
 		$k[$j++] = _Pz; /*16361*/
@@ -19454,7 +19458,7 @@ function BWIPP() {
 		$1.padstrs = $a(["11101100", "00010001"]); /*17132*/
 		$1.padnum = 0; /*17133*/
 		var _GA = $1.lc4b ? 5 : 1; /*17134*/
-		for (var _GC = ~~(Math.ceil($1.msgbits.length / 8) * 8), _GB = $1.dmod - _GA; _GC <= _GB; _GC += 8) {
+		for (var _GC = ~~((Math.ceil($f($1.msgbits.length / 8))) * 8), _GB = $1.dmod - _GA; _GC <= _GB; _GC += 8) {
 			/*17137*/
 			$puti($1.pad, _GC, $get($1.padstrs, $1.padnum)); /*17135*/
 			$1.padnum = ($1.padnum + 1) % 2; /*17136*/
@@ -20117,7 +20121,7 @@ function BWIPP() {
 			var _T4 = $k[--$j]; /*17520*/
 			$1[$k[--$j]] = _T4; /*17520*/
 			var _T7 = $1.size; /*17521*/
-			$1.n4 = (~~((Math.abs((($1.dark * 100) / (_T7 * _T7)) - 50)) / 5)) * 10; /*17521*/
+			$1.n4 = (~~($f((Math.abs(($f(($1.dark * 100) / (_T7 * _T7))) - 50)) / 5))) * 10; /*17521*/
 			$k[$j++] = (($1.n1 + $1.n2) + $1.n3) + $1.n4; /*17523*/
 		}; /*17524*/
 		$1.evalmicro = function() {
@@ -20254,8 +20258,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.size],
 			["pixy", $1.size],
-			["height", ($1.size * 2) / 72],
-			["width", ($1.size * 2) / 72],
+			["height", $f(($1.size * 2) / 72)],
+			["width", $f(($1.size * 2) / 72)],
 			["opt", $1.options]
 		]); /*17626*/
 		$k[$j++] = _VG; /*17629*/
@@ -21401,7 +21405,7 @@ function BWIPP() {
 			$1.icap = $get($1.m, 2); /*18666*/
 			$1.ncws = $get($1.m, 3); /*18667*/
 			$1.bpcw = $get($1.m, 4); /*18668*/
-			$1.numecw = ~~(Math.ceil((($1.ncws * $1.eclevel) / 100) + $1.ecaddchars)); /*18669*/
+			$1.numecw = ~~(Math.ceil(($f(($1.ncws * $1.eclevel) / 100)) + $1.ecaddchars)); /*18669*/
 			if ($1.msgbits.length == 0) { //no-else/*18670*/
 				$1.numecw = 0; /*18670*/
 			} /*18670*/
@@ -21416,7 +21420,7 @@ function BWIPP() {
 			if (($1.layers != -1) && ($1.layers != $1.mlyr)) { //no-else/*18675*/
 				$1.okay = false; /*18675*/
 			} /*18675*/
-			if ((~~Math.ceil($1.msgbits.length / $1.bpcw)) > $1.numdcw) { //no-else/*18676*/
+			if ((~~(Math.ceil($f($1.msgbits.length / $1.bpcw)))) > $1.numdcw) { //no-else/*18676*/
 				$1.okay = false; /*18676*/
 			} /*18676*/
 			if ($1.okay) { //no-else/*18677*/
@@ -21737,7 +21741,7 @@ function BWIPP() {
 		} /*18874*/
 		if ($eq($1.format, "full")) { //no-else/*18903*/
 			$1.fw = 13; /*18880*/
-			$1.size = (($1.fw + ($1.layers * 4)) + 2) + ((~~((($1.layers + 10.5) / 7.5) - 1)) * 2); /*18881*/
+			$1.size = (($1.fw + ($1.layers * 4)) + 2) + ((~~(($f(($1.layers + 10.5) / 7.5)) - 1)) * 2); /*18881*/
 			$1.mid = ~~(($1.size * $1.size) / 2); /*18882*/
 			$k[$j++] = Infinity; /*18883*/
 			for (var _Fr = 0, _Fs = $1.size * $1.size; _Fr < _Fs; _Fr++) {
@@ -21848,8 +21852,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.size],
 			["pixy", $1.size],
-			["height", ($1.size * 2) / 72],
-			["width", ($1.size * 2) / 72],
+			["height", $f(($1.size * 2) / 72)],
+			["width", $f(($1.size * 2) / 72)],
 			["opt", $1.options]
 		]); /*18954*/
 		$k[$j++] = _JM; /*18957*/
@@ -22693,7 +22697,7 @@ function BWIPP() {
 						if ($k[--$j]) {
 							/*19450*/
 							var _8p = $k[--$j]; /*19450*/
-							$k[$j++] = _8p + (1 / 2); /*19450*/
+							$k[$j++] = _8p + $f(1 / 2); /*19450*/
 						} else {
 							/*19450*/
 							$1.isEA(); /*19450*/
@@ -22715,18 +22719,18 @@ function BWIPP() {
 						if ($k[--$j]) {
 							/*19451*/
 							var _8x = $k[--$j]; /*19451*/
-							$k[$j++] = _8x + 0.66666667; /*19451*/
+							$k[$j++] = _8x + $f(2 / 3); /*19451*/
 						} else {
 							/*19451*/
 							$1.isEA(); /*19451*/
 							if ($k[--$j]) {
 								/*19451*/
 								var _8z = $k[--$j]; /*19451*/
-								$k[$j++] = _8z + 2.66666667; /*19451*/
+								$k[$j++] = _8z + $f(8 / 3); /*19451*/
 							} else {
 								/*19451*/
 								var _90 = $k[--$j]; /*19451*/
-								$k[$j++] = _90 + 1.33333334; /*19451*/
+								$k[$j++] = _90 + $f(4 / 3); /*19451*/
 							} /*19451*/
 						} /*19451*/
 						var _91 = $k[--$j]; /*19451*/
@@ -22737,18 +22741,18 @@ function BWIPP() {
 						if ($k[--$j]) {
 							/*19452*/
 							var _95 = $k[--$j]; /*19452*/
-							$k[$j++] = _95 + 0.66666667; /*19452*/
+							$k[$j++] = _95 + $f(2 / 3); /*19452*/
 						} else {
 							/*19452*/
 							$1.isEA(); /*19452*/
 							if ($k[--$j]) {
 								/*19452*/
 								var _97 = $k[--$j]; /*19452*/
-								$k[$j++] = _97 + 2.66666667; /*19452*/
+								$k[$j++] = _97 + $f(8 / 3); /*19452*/
 							} else {
 								/*19452*/
 								var _98 = $k[--$j]; /*19452*/
-								$k[$j++] = _98 + 1.33333334; /*19452*/
+								$k[$j++] = _98 + $f(4 / 3); /*19452*/
 							} /*19452*/
 						} /*19452*/
 						var _99 = $k[--$j]; /*19452*/
@@ -22759,18 +22763,18 @@ function BWIPP() {
 						if ($k[--$j]) {
 							/*19453*/
 							var _9D = $k[--$j]; /*19453*/
-							$k[$j++] = _9D + 0.66666667; /*19453*/
+							$k[$j++] = _9D + $f(2 / 3); /*19453*/
 						} else {
 							/*19453*/
 							$1.isEA(); /*19453*/
 							if ($k[--$j]) {
 								/*19453*/
 								var _9F = $k[--$j]; /*19453*/
-								$k[$j++] = _9F + 4.33333334; /*19453*/
+								$k[$j++] = _9F + $f(13 / 3); /*19453*/
 							} else {
 								/*19453*/
 								var _9G = $k[--$j]; /*19453*/
-								$k[$j++] = _9G + 3.33333334; /*19453*/
+								$k[$j++] = _9G + $f(10 / 3); /*19453*/
 							} /*19453*/
 						} /*19453*/
 						var _9H = $k[--$j]; /*19453*/
@@ -23689,8 +23693,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.cols],
 			["pixy", $1.rows],
-			["height", ($1.rows / 72) * 2],
-			["width", ($1.cols / 72) * 2],
+			["height", $f($1.rows / 72) * 2],
+			["width", $f($1.cols / 72) * 2],
 			["opt", $1.options]
 		]); /*19938*/
 		$k[$j++] = _NK; /*19941*/
@@ -24606,8 +24610,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.size],
 			["pixy", $1.size],
-			["height", ($1.size * 2) / 72],
-			["width", ($1.size * 2) / 72],
+			["height", $f(($1.size * 2) / 72)],
+			["width", $f(($1.size * 2) / 72)],
 			["opt", $1.options]
 		]); /*20838*/
 		$k[$j++] = _YC; /*20841*/
@@ -24638,7 +24642,7 @@ function BWIPP() {
 		$1.ratio = +$1.ratio; /*20898*/
 		$1.mask = ~~$1.mask; /*20899*/
 		if ((($1.ratio == -1) && ($1.rows == -1)) && ($1.columns == -1)) { //no-else/*20904*/
-			$1.ratio = 3 / 2; /*20903*/
+			$1.ratio = $f(3 / 2); /*20903*/
 		} /*20903*/
 		$1.barlen = $1.barcode.length; /*20927*/
 		$1.laa = -1; /*20930*/
@@ -25572,7 +25576,7 @@ function BWIPP() {
 		$1.minarea = (((($1.nd + 3) + (~~($1.nd / 2))) * 9) + 2) * 2; /*21520*/
 		if ($1.ratio != -1) {
 			/*21548*/
-			$1.hgt = Math.sqrt($1.minarea / $1.ratio); /*21522*/
+			$1.hgt = Math.sqrt($f($1.minarea / $1.ratio)); /*21522*/
 			$1.wid = Math.sqrt($1.minarea * $1.ratio); /*21523*/
 			$1.h = ~~$1.hgt; /*21524*/
 			$1.w = ~~$1.wid; /*21524*/
@@ -26212,8 +26216,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.columns],
 			["pixy", $1.rows],
-			["height", ($1.rows * 2) / 72],
-			["width", ($1.columns * 2) / 72],
+			["height", $f(($1.rows * 2) / 72)],
+			["width", $f(($1.columns * 2) / 72)],
 			["opt", $1.options]
 		]); /*21901*/
 		$k[$j++] = _Sq; /*21904*/
@@ -26638,8 +26642,8 @@ function BWIPP() {
 			["pixs", $1.pixs],
 			["pixx", $1.columns],
 			["pixy", $1.rows],
-			["height", ($1.rows / 72) * 2],
-			["width", ($1.columns / 72) * 2],
+			["height", $f($1.rows / 72) * 2],
+			["width", $f($1.columns / 72) * 2],
 			["colormap", _5p],
 			["opt", $1.options]
 		]); /*22248*/
@@ -26672,7 +26676,7 @@ function BWIPP() {
 		$1.colors = ~~$1.colors; /*22309*/
 		$1.eclevel = ~~$1.eclevel; /*22310*/
 		$1.mask = ~~$1.mask; /*22311*/
-		$1.databpm = ~~(Math.round(Math.log($1.colors) / Math.log(2))); /*22313*/
+		$1.databpm = ~~(Math.round($f(Math.log($1.colors) / Math.log(2)))); /*22313*/
 		var _B = $1.colors; /*22314*/
 		$k[$j++] = 'metabpm'; /*22314*/
 		$k[$j++] = _B; /*22314*/
@@ -26681,7 +26685,7 @@ function BWIPP() {
 			$k[$j++] = 8; /*22314*/
 		} /*22314*/
 		var _C = $k[--$j]; /*22314*/
-		$1[$k[--$j]] = ~~(Math.round(Math.log(_C) / Math.log(2))); /*22314*/
+		$1[$k[--$j]] = ~~(Math.round($f(Math.log(_C) / Math.log(2)))); /*22314*/
 		$1.barlen = $1.barcode.length; /*22337*/
 		$1.fn1 = -1; /*22340*/
 		var _G = new Map([
@@ -26817,7 +26821,7 @@ function BWIPP() {
 					var _1b = $k[--$j]; /*22434*/
 					$k[$j++] = _1b + 4; /*22434*/
 				} /*22434*/
-				var _1e = ~~(Math.ceil(($k[--$j] * 2) / $1.metabpm)); /*22437*/
+				var _1e = ~~(Math.ceil($f(($k[--$j] * 2) / $1.metabpm))); /*22437*/
 				$1.nummetabits = (_1e * $1.metabpm) + 6; /*22437*/
 				$k[$j++] = _1e + 6; /*22438*/
 			} else {
@@ -26842,7 +26846,7 @@ function BWIPP() {
 					var _1p = $k[--$j]; /*22446*/
 					$k[$j++] = _1p + $get($a([10, 12, 14, 14, 16, 16, 16, 16]), ~~((_1l - 21) / 16)); /*22446*/
 				} /*22446*/
-				var _1s = ~~(Math.ceil(($k[--$j] * 2) / $1.metabpm)); /*22450*/
+				var _1s = ~~(Math.ceil($f(($k[--$j] * 2) / $1.metabpm))); /*22450*/
 				$1.nummetabits = _1s * $1.metabpm; /*22450*/
 				$k[$j++] = _1s; /*22450*/
 			} /*22450*/
@@ -26855,7 +26859,7 @@ function BWIPP() {
 			$1.numdatabits = $1.numdatamodules * $1.databpm; /*22455*/
 		}; /*22456*/
 		$1.coderate = $get($a([0.67, 0.63, 0.57, 0.55, 0.5, 0.43, 0.34, 0.25, 0.2, 0.17, 0.14]), $1.eclevel); /*22459*/
-		$1.grosslen = ~~Math.ceil($1.bits.length / $1.coderate); /*22460*/
+		$1.grosslen = ~~(Math.ceil($f($1.bits.length / $1.coderate))); /*22460*/
 		$1.snapsize = function() {
 			var _27 = (~~Math.ceil($k[--$j])) - 18; /*22461*/
 			$k[$j++] = _27; /*22461*/
@@ -26889,7 +26893,7 @@ function BWIPP() {
 			/*22490*/
 			if (($1.columns == -1) && ($1.rows != -1)) { //no-else/*22480*/
 				$k[$j++] = 'columns'; /*22474*/
-				$k[$j++] = $1.grosslen / $1.rows; /*22474*/
+				$k[$j++] = $f($1.grosslen / $1.rows); /*22474*/
 				$1.snapsize(); /*22474*/
 				var _2P = $k[--$j]; /*22474*/
 				$1[$k[--$j]] = _2P; /*22474*/
@@ -26906,7 +26910,7 @@ function BWIPP() {
 			} /*22478*/
 			if (($1.rows == -1) && ($1.columns != -1)) { //no-else/*22488*/
 				$k[$j++] = 'rows'; /*22482*/
-				$k[$j++] = $1.grosslen / $1.columns; /*22482*/
+				$k[$j++] = $f($1.grosslen / $1.columns); /*22482*/
 				$1.snapsize(); /*22482*/
 				var _2a = $k[--$j]; /*22482*/
 				$1[$k[--$j]] = _2a; /*22482*/
@@ -27022,7 +27026,7 @@ function BWIPP() {
 			} /*22574*/
 			var _4c = $k[--$j]; /*22574*/
 			$1[$k[--$j]] = _4c; /*22574*/
-			$1.offset = ~~Math.ceil($1.Pg_sub_block / 32); /*22575*/
+			$1.offset = ~~(Math.ceil($f($1.Pg_sub_block / 32))); /*22575*/
 			$1.effwidth = $1.offset * 32; /*22576*/
 			$1.matrixA = $a($1.offset * $1.nb_pcb); /*22577*/
 			for (var _4m = 0, _4l = ($1.offset * $1.nb_pcb) - 1; _4m <= _4l; _4m += 1) {
@@ -27067,7 +27071,7 @@ function BWIPP() {
 						var _5M = $k[--$j]; /*22599*/
 						$k[$j++] = (_5M ^ 2147483648) + 2147483648; /*22599*/
 					} /*22599*/
-					$1.pos = ~~(($k[--$j] / 4294967296) * ($1.Pg_sub_block - $1.j)); /*22601*/
+					$1.pos = ~~($f($k[--$j] / 4294967296) * ($1.Pg_sub_block - $1.j)); /*22601*/
 					for (var _5T = 0, _5S = (~~($1.Pg_sub_block / $1.wr)) - 1; _5T <= _5S; _5T += 1) {
 						/*22610*/
 						$1.k = _5T; /*22603*/
@@ -27091,7 +27095,7 @@ function BWIPP() {
 		}; /*22617*/
 		$1.createMetadataMatrixA = function() {
 			$1.nb_pcb = ~~($1.Pg_sub_block / 2); /*22621*/
-			$1.offset = ~~Math.ceil($1.Pg_sub_block / 32); /*22622*/
+			$1.offset = ~~(Math.ceil($f($1.Pg_sub_block / 32))); /*22622*/
 			$1.matrixA = $a($1.offset * $1.nb_pcb); /*22623*/
 			for (var _64 = 0, _63 = ($1.offset * $1.nb_pcb) - 1; _64 <= _63; _64 += 1) {
 				/*22624*/
@@ -27106,7 +27110,7 @@ function BWIPP() {
 			$1.s1 = 0; /*22629*/
 			$1.s2 = 0; /*22629*/
 			$1.s3 = 38545; /*22629*/
-			$1.nb_once = ~~((~~((($1.nb_pcb / $1.wc) * $1.Pg_sub_block) + 3)) / $1.nb_pcb); /*22630*/
+			$1.nb_once = ~~((~~(($f($1.nb_pcb / $1.wc) * $1.Pg_sub_block) + 3)) / $1.nb_pcb); /*22630*/
 			for (var _6I = 0, _6H = $1.nb_pcb - 1; _6I <= _6H; _6I += 1) {
 				/*22645*/
 				$1.i = _6I; /*22632*/
@@ -27120,7 +27124,7 @@ function BWIPP() {
 						var _6N = $k[--$j]; /*22636*/
 						$k[$j++] = (_6N ^ 2147483648) + 2147483648; /*22636*/
 					} /*22636*/
-					$1.pos = ~~(($k[--$j] / 4294967296) * ($1.Pg_sub_block - $1.j)); /*22638*/
+					$1.pos = ~~($f($k[--$j] / 4294967296) * ($1.Pg_sub_block - $1.j)); /*22638*/
 					var _6R = $1.matrixA; /*22639*/
 					var _6S = $1.i; /*22639*/
 					var _6T = $1.offset; /*22639*/
@@ -27146,7 +27150,7 @@ function BWIPP() {
 			} /*22651*/
 			var _6q = $k[--$j]; /*22651*/
 			$1[$k[--$j]] = _6q; /*22651*/
-			$1.offset = ~~Math.ceil($1.Pg_sub_block / 32); /*22652*/
+			$1.offset = ~~(Math.ceil($f($1.Pg_sub_block / 32))); /*22652*/
 			var _6t = $1.matrixA; /*22653*/
 			$1.matrixH = $arrcpy($a(_6t.length), _6t); /*22653*/
 			$k[$j++] = Infinity; /*22654*/
@@ -27306,9 +27310,9 @@ function BWIPP() {
 		}; /*22776*/
 		$1.createGeneratorMatrix = function() {
 			$1.pn = $1.Pg_sub_block - $1.matrix_rank; /*22780*/
-			$1.offset = ~~Math.ceil($1.pn / 32); /*22781*/
+			$1.offset = ~~(Math.ceil($f($1.pn / 32))); /*22781*/
 			$1.effwidth = $1.offset * 32; /*22782*/
-			$1.offset_cap = ~~Math.ceil($1.Pg_sub_block / 32); /*22783*/
+			$1.offset_cap = ~~(Math.ceil($f($1.Pg_sub_block / 32))); /*22783*/
 			$1.G = $a($1.offset * $1.Pg_sub_block); /*22784*/
 			for (var _Ar = 0, _Aq = ($1.offset * $1.Pg_sub_block) - 1; _Ar <= _Aq; _Ar += 1) {
 				/*22787*/
@@ -27362,7 +27366,7 @@ function BWIPP() {
 			$1.Pn = $1.data.length; /*22821*/
 			if ($1.wr != -1) {
 				/*22836*/
-				$1.Pg = ~~((Math.ceil((Math.ceil(($1.Pn * $1.wr) / ($1.wr - $1.wc))) / $1.wr)) * $1.wr); /*22823*/
+				$1.Pg = ~~((Math.ceil($f((Math.ceil($f(($1.Pn * $1.wr) / ($1.wr - $1.wc)))) / $1.wr))) * $1.wr); /*22823*/
 				$1.nb_sub_blocks = (~~($1.Pg / 2700)) + 1; /*22824*/
 				$1.Pg_sub_block = (~~((~~($1.Pg / $1.nb_sub_blocks)) / $1.wr)) * $1.wr; /*22825*/
 				$1.Pn_sub_block = ~~(($1.Pg_sub_block * ($1.wr - $1.wc)) / $1.wr); /*22826*/
@@ -27388,7 +27392,7 @@ function BWIPP() {
 			$1.GaussJordan(); /*22838*/
 			$1.createGeneratorMatrix(); /*22839*/
 			$1.ecc_encoded_data = $a($1.Pg); /*22841*/
-			$1.offset = ~~(Math.ceil(($1.Pg_sub_block - $1.matrix_rank) / 32)); /*22843*/
+			$1.offset = ~~(Math.ceil($f(($1.Pg_sub_block - $1.matrix_rank) / 32))); /*22843*/
 			for (var _CG = 0, _CF = $1.encoding_iterations - 1; _CG <= _CF; _CG += 1) {
 				/*22859*/
 				$1.iter = _CG; /*22845*/
@@ -27416,7 +27420,7 @@ function BWIPP() {
 				$1.createMatrixA(); /*22866*/
 				$1.GaussJordan(); /*22867*/
 				$1.createGeneratorMatrix(); /*22868*/
-				$1.offset = ~~(Math.ceil(($1.Pg_sub_block - $1.matrix_rank) / 32)); /*22869*/
+				$1.offset = ~~(Math.ceil($f(($1.Pg_sub_block - $1.matrix_rank) / 32))); /*22869*/
 				for (var _Cy = 0, _Cx = $1.Pg_sub_block - 1; _Cy <= _Cx; _Cy += 1) {
 					/*22882*/
 					$1.i = _Cy; /*22871*/
@@ -27461,7 +27465,7 @@ function BWIPP() {
 				var _Da = $k[--$j]; /*22902*/
 				$k[$j++] = (_Da ^ 2147483648) + 2147483648; /*22902*/
 			} /*22902*/
-			$1.r = ~~(($k[--$j] / 4294967296) * ($1.l + 1)); /*22904*/
+			$1.r = ~~($f($k[--$j] / 4294967296) * ($1.l + 1)); /*22904*/
 			$put($1.bits, $1.l, $get($1.bits, $1.r)); /*22906*/
 			$put($1.bits, $1.r, $get($1.bits, $1.l)); /*22907*/
 		} /*22907*/
@@ -27522,7 +27526,7 @@ function BWIPP() {
 			for (var _Eb = 0, _Ea = _EZ; _Eb <= _Ea; _Eb += 1) {
 				/*22942*/
 				var _Ec = $k[--$j]; /*22942*/
-				$k[$j++] = ~~(Math.round(_Eb * (255 / _Ec))); /*22942*/
+				$k[$j++] = ~~(Math.round(_Eb * $f(255 / _Ec))); /*22942*/
 				$k[$j++] = _Ec; /*22942*/
 			} /*22942*/
 			$j--; /*22942*/
@@ -27538,7 +27542,7 @@ function BWIPP() {
 			for (var _El = 0, _Ek = _Ej; _El <= _Ek; _El += 1) {
 				/*22943*/
 				var _Em = $k[--$j]; /*22943*/
-				$k[$j++] = ~~(Math.round(_El * (255 / _Em))); /*22943*/
+				$k[$j++] = ~~(Math.round(_El * $f(255 / _Em))); /*22943*/
 				$k[$j++] = _Em; /*22943*/
 			} /*22943*/
 			$j--; /*22943*/
@@ -27554,7 +27558,7 @@ function BWIPP() {
 			for (var _Ev = 0, _Eu = _Et; _Ev <= _Eu; _Ev += 1) {
 				/*22944*/
 				var _Ew = $k[--$j]; /*22944*/
-				$k[$j++] = ~~(Math.round(_Ev * (255 / _Ew))); /*22944*/
+				$k[$j++] = ~~(Math.round(_Ev * $f(255 / _Ew))); /*22944*/
 				$k[$j++] = _Ew; /*22944*/
 			} /*22944*/
 			$j--; /*22944*/
@@ -27723,23 +27727,23 @@ function BWIPP() {
 		} /*23029*/
 		$1.algnpat0 = $a([$a([$1.ki, $1.ki, -1]), $a([$1.ki, $1.wi, $1.ki]), $a([-1, $1.ki, $1.ki])]); /*23038*/
 		$1.algnpat1 = $a([$a([-1, $1.ki, $1.ki]), $a([$1.ki, $1.wi, $1.ki]), $a([$1.ki, $1.ki, -1])]); /*23043*/
-		$1.num = (~~Math.round($1.cols / 16)) - 1; /*23044*/
+		$1.num = (~~(Math.round($f($1.cols / 16)))) - 1; /*23044*/
 		$1.algnrpos = $a([3, 17]); /*23045*/
 		if ($1.num > 0) { //no-else/*23048*/
 			$k[$j++] = Infinity; /*23047*/
 			for (var _IG = 0, _IF = $1.num; _IG <= _IF; _IG += 1) {
 				/*23047*/
-				$k[$j++] = (~~(_IG * (($1.cols - 7) / $1.num))) + 3; /*23047*/
+				$k[$j++] = (~~(_IG * ($f(($1.cols - 7) / $1.num)))) + 3; /*23047*/
 			} /*23047*/
 			$1.algnrpos = $a(); /*23047*/
 		} /*23047*/
-		$1.num = (~~Math.round($1.rows / 16)) - 1; /*23049*/
+		$1.num = (~~(Math.round($f($1.rows / 16)))) - 1; /*23049*/
 		$1.algncpos = $a([3, 17]); /*23050*/
 		if ($1.num > 0) { //no-else/*23053*/
 			$k[$j++] = Infinity; /*23052*/
 			for (var _IP = 0, _IO = $1.num; _IP <= _IO; _IP += 1) {
 				/*23052*/
-				$k[$j++] = (~~(_IP * (($1.rows - 7) / $1.num))) + 3; /*23052*/
+				$k[$j++] = (~~(_IP * ($f(($1.rows - 7) / $1.num)))) + 3; /*23052*/
 			} /*23052*/
 			$1.algncpos = $a(); /*23052*/
 		} /*23052*/
@@ -28439,7 +28443,7 @@ function BWIPP() {
 		$1.q = 0; /*23340*/
 		if (!$1.slave) {
 			/*23395*/
-			$k[$j++] = (~~(Math.round(Math.log($1.colors) / Math.log(2)))) - 1; /*23345*/
+			$k[$j++] = (~~(Math.round($f(Math.log($1.colors) / Math.log(2))))) - 1; /*23345*/
 			$k[$j++] = 3; /*23345*/
 			$1.tofixedbits(); /*23345*/
 			$1.addtometapart(); /*23345*/
@@ -28625,8 +28629,8 @@ function BWIPP() {
 			["pixx", $1.cols],
 			["pixy", $1.rows],
 			["colormap", $1.palette],
-			["height", ($1.rows * 2) / 72],
-			["width", ($1.cols * 2) / 72],
+			["height", $f(($1.rows * 2) / 72)],
+			["width", $f(($1.cols * 2) / 72)],
 			["opt", $1.options]
 		]); /*23428*/
 		$k[$j++] = _TH; /*23431*/
@@ -29449,7 +29453,7 @@ function BWIPP() {
 					["c", -1]
 				]); /*23837*/
 				var _7Z = $get(_7X, $1.ccversion); /*23837*/
-				var _7b = ~~Math.ceil($1.used / 8); /*23838*/
+				var _7b = ~~(Math.ceil($f($1.used / 8))); /*23838*/
 				$1.m = ((~~(_7b / 6)) * 5) + (_7b % 6); /*23838*/
 				if ($1.m <= 40) { //no-else/*23839*/
 					$k[$j++] = 8; /*23839*/
@@ -29469,7 +29473,7 @@ function BWIPP() {
 				if ((~~($1.m / $1.c)) > 90) { //no-else/*23846*/
 					$1.c = $1.c + 1; /*23846*/
 				} /*23846*/
-				$1.r = ~~Math.ceil($1.m / $1.c); /*23847*/
+				$1.r = ~~(Math.ceil($f($1.m / $1.c))); /*23847*/
 				var _7u = (($1.c * $1.r) - $1.eccws) - 3; /*23848*/
 				$1.tgt = (((~~(_7u / 5)) * 6) + (_7u % 5)) * 8; /*23848*/
 				if ($1.used <= 8296) {
@@ -30032,9 +30036,9 @@ function BWIPP() {
 		$k[$j++] = 'pixy'; /*24181*/
 		$k[$j++] = 3; /*24181*/
 		$k[$j++] = 'height'; /*24181*/
-		$k[$j++] = 6 / 72; /*24181*/
+		$k[$j++] = $f(6 / 72); /*24181*/
 		$k[$j++] = 'width'; /*24181*/
-		$k[$j++] = 97 / 72; /*24181*/
+		$k[$j++] = $f(97 / 72); /*24181*/
 		$k[$j++] = 'opt'; /*24181*/
 		$k[$j++] = $1.options; /*24181*/
 		var _M = $d(); /*24181*/
@@ -30112,9 +30116,9 @@ function BWIPP() {
 		$k[$j++] = 'pixy'; /*24268*/
 		$k[$j++] = 3; /*24268*/
 		$k[$j++] = 'height'; /*24268*/
-		$k[$j++] = 6 / 72; /*24268*/
+		$k[$j++] = $f(6 / 72); /*24268*/
 		$k[$j++] = 'width'; /*24268*/
-		$k[$j++] = 69 / 72; /*24268*/
+		$k[$j++] = $f(69 / 72); /*24268*/
 		$k[$j++] = 'opt'; /*24268*/
 		$k[$j++] = $1.options; /*24268*/
 		var _M = $d(); /*24268*/
@@ -30194,9 +30198,9 @@ function BWIPP() {
 		$k[$j++] = 'pixy'; /*24356*/
 		$k[$j++] = 3; /*24356*/
 		$k[$j++] = 'height'; /*24356*/
-		$k[$j++] = 6 / 72; /*24356*/
+		$k[$j++] = $f(6 / 72); /*24356*/
 		$k[$j++] = 'width'; /*24356*/
-		$k[$j++] = 97 / 72; /*24356*/
+		$k[$j++] = $f(97 / 72); /*24356*/
 		$k[$j++] = 'opt'; /*24356*/
 		$k[$j++] = $1.options; /*24356*/
 		var _M = $d(); /*24356*/
@@ -30265,9 +30269,9 @@ function BWIPP() {
 		$k[$j++] = 'pixy'; /*24433*/
 		$k[$j++] = 3; /*24433*/
 		$k[$j++] = 'height'; /*24433*/
-		$k[$j++] = 6 / 72; /*24433*/
+		$k[$j++] = $f(6 / 72); /*24433*/
 		$k[$j++] = 'width'; /*24433*/
-		$k[$j++] = 53 / 72; /*24433*/
+		$k[$j++] = $f(53 / 72); /*24433*/
 		$k[$j++] = 'opt'; /*24433*/
 		$k[$j++] = $1.options; /*24433*/
 		$1.sep = $d(); /*24434*/
@@ -30316,9 +30320,9 @@ function BWIPP() {
 		$k[$j++] = 'pixy'; /*24457*/
 		$k[$j++] = 3; /*24457*/
 		$k[$j++] = 'height'; /*24457*/
-		$k[$j++] = 6 / 72; /*24457*/
+		$k[$j++] = $f(6 / 72); /*24457*/
 		$k[$j++] = 'width'; /*24457*/
-		$k[$j++] = 53 / 72; /*24457*/
+		$k[$j++] = $f(53 / 72); /*24457*/
 		$k[$j++] = 'opt'; /*24457*/
 		$k[$j++] = $1.options; /*24457*/
 		var _V = $d(); /*24457*/
@@ -30431,8 +30435,8 @@ function BWIPP() {
 			["pixs", $1.sep],
 			["pixx", $1.sep.length],
 			["pixy", 1],
-			["height", 1 / 72],
-			["width", $1.sep.length / 72],
+			["height", $f(1 / 72)],
+			["width", $f($1.sep.length / 72)],
 			["opt", $1.options]
 		]); /*24571*/
 		$k[$j++] = _19; /*24572*/
@@ -30526,8 +30530,8 @@ function BWIPP() {
 			["pixs", $1.sep],
 			["pixx", $1.sep.length],
 			["pixy", 1],
-			["height", 1 / 72],
-			["width", $1.sep.length / 72],
+			["height", $f(1 / 72)],
+			["width", $f($1.sep.length / 72)],
 			["opt", $1.options]
 		]); /*24681*/
 		$k[$j++] = _11; /*24682*/
@@ -30621,8 +30625,8 @@ function BWIPP() {
 			["pixs", $1.sep],
 			["pixx", $1.sep.length],
 			["pixy", 1],
-			["height", 1 / 72],
-			["width", $1.sep.length / 72],
+			["height", $f(1 / 72)],
+			["width", $f($1.sep.length / 72)],
 			["opt", $1.options]
 		]); /*24791*/
 		$k[$j++] = _11; /*24792*/
@@ -30734,8 +30738,8 @@ function BWIPP() {
 			["pixs", $1.sep],
 			["pixx", $1.sep.length],
 			["pixy", 1],
-			["height", 1 / 72],
-			["width", $1.sep.length / 72],
+			["height", $f(1 / 72)],
+			["width", $f($1.sep.length / 72)],
 			["opt", $1.options]
 		]); /*24905*/
 		$k[$j++] = _19; /*24906*/
@@ -30804,8 +30808,8 @@ function BWIPP() {
 			["pixs", $1.sep],
 			["pixx", $1.sep.length],
 			["pixy", 1],
-			["height", 1 / 72],
-			["width", $1.sep.length / 72],
+			["height", $f(1 / 72)],
+			["width", $f($1.sep.length / 72)],
 			["opt", $1.options]
 		]); /*24996*/
 		$k[$j++] = _c; /*24997*/
@@ -30920,8 +30924,8 @@ function BWIPP() {
 			["pixs", $1.sep],
 			["pixx", $1.sep.length],
 			["pixy", 1],
-			["height", 1 / 72],
-			["width", $1.sep.length / 72],
+			["height", $f(1 / 72)],
+			["width", $f($1.sep.length / 72)],
 			["opt", $1.options]
 		]); /*25110*/
 		$k[$j++] = _17; /*25111*/
@@ -31018,8 +31022,8 @@ function BWIPP() {
 			["pixs", $1.sep],
 			["pixx", $1.sep.length],
 			["pixy", 1],
-			["height", 1 / 72],
-			["width", $1.sep.length / 72],
+			["height", $f(1 / 72)],
+			["width", $f($1.sep.length / 72)],
 			["opt", $1.options]
 		]); /*25218*/
 		$k[$j++] = _z; /*25219*/
@@ -31127,8 +31131,8 @@ function BWIPP() {
 			["pixs", $1.sep],
 			["pixx", $1.sep.length],
 			["pixy", 1],
-			["height", 1 / 72],
-			["width", $1.sep.length / 72],
+			["height", $f(1 / 72)],
+			["width", $f($1.sep.length / 72)],
 			["opt", $1.options]
 		]); /*25324*/
 		$k[$j++] = _t; /*25325*/
@@ -32713,7 +32717,7 @@ function BWIPP() {
 				if ($get($1.sbs, $1.i) != 0) {
 					/*26895*/
 					$1.h = $get($1.bhs, ~~($1.i / 2)) * 72; /*26888*/
-					$1.c = ($1.d / 2) + $1.x; /*26889*/
+					$1.c = $f($1.d / 2) + $1.x; /*26889*/
 					$1.y = $get($1.bbs, ~~($1.i / 2)) * 72; /*26890*/
 					$1.w = $1.d - $1.inkspread; /*26891*/
 					$put($1.bars, ~~($1.i / 2), $a([$1.h, $1.c, $1.y, $1.w])); /*26892*/
@@ -32734,7 +32738,7 @@ function BWIPP() {
 		var _1P = $$.currpos(); /*26905*/
 		$$.translate(_1P.x, _1P.y); /*26905*/
 		if ($1.width != 0) { //no-else/*26910*/
-			$$.scale(($1.width * 72) / $1.x, 1); /*26909*/
+			$$.scale($f(($1.width * 72) / $1.x), 1); /*26909*/
 		} /*26909*/
 		$$.newpath(); /*26913*/
 		$$.moveto(-$1.borderleft, -$1.borderbottom); /*26914*/
@@ -32844,7 +32848,7 @@ function BWIPP() {
 				$1.textascent = $k[--$j]; /*26983*/
 				var _2b = $$.stringwidth($1.tstr); /*26984*/
 				$1.textwidth = _2b.w + (($1.tstr.length - 1) * $1.textgaps); /*26984*/
-				$1.textxpos = $1.textxoffset + (($1.x - $1.textwidth) / 2); /*26986*/
+				$1.textxpos = $1.textxoffset + ($f(($1.x - $1.textwidth) / 2)); /*26986*/
 				if ($eq($1.textxalign, "left")) { //no-else/*26987*/
 					$1.textxpos = $1.textxoffset; /*26987*/
 				} /*26987*/
@@ -32859,14 +32863,14 @@ function BWIPP() {
 				} /*26990*/
 				if ($eq($1.textxalign, "justify") && ($1.textwidth < $1.x)) { //no-else/*26994*/
 					$1.textxpos = 0; /*26992*/
-					$1.textgaps = ($1.x - $1.textwidth) / ($1.tstr.length - 1); /*26993*/
+					$1.textgaps = $f(($1.x - $1.textwidth) / ($1.tstr.length - 1)); /*26993*/
 				} /*26993*/
 				$1.textypos = -(($1.textyoffset + $1.textascent) + 1); /*26995*/
 				if ($eq($1.textyalign, "above")) { //no-else/*26996*/
 					$1.textypos = ($1.textyoffset + $1.maxh) + 1; /*26996*/
 				} /*26996*/
 				if ($eq($1.textyalign, "center")) { //no-else/*26997*/
-					$1.textypos = $1.textyoffset + (($1.maxh - $1.textascent) / 2); /*26997*/
+					$1.textypos = $1.textyoffset + ($f(($1.maxh - $1.textascent) / 2)); /*26997*/
 				} /*26997*/
 				$$.moveto($1.textxpos, $1.textypos); /*26998*/
 				$$.show($1.tstr, $1.textgaps, 0); /*26998*/
@@ -32875,11 +32879,11 @@ function BWIPP() {
 		if ($1.guardwhitespace) { //no-else/*27013*/
 			$$.selectfont("OCR-B", $1.guardheight * 2); /*27004*/
 			if ($1.guardleftpos != 0) { //no-else/*27008*/
-				$$.moveto((-$1.guardleftpos) - 1, ($1.guardleftypos - ($1.guardheight / 2)) - 1.5); /*27006*/
+				$$.moveto((-$1.guardleftpos) - 1, ($1.guardleftypos - $f($1.guardheight / 2)) - 1.5); /*27006*/
 				$$.show("<", 0, 0); /*27007*/
 			} /*27007*/
 			if ($1.guardrightpos != 0) { //no-else/*27012*/
-				$$.moveto((($1.guardrightpos + $1.x) - $1.guardwidth) + 1, ($1.guardrightypos - ($1.guardheight / 2)) - 1.5); /*27010*/
+				$$.moveto((($1.guardrightpos + $1.x) - $1.guardwidth) + 1, ($1.guardrightypos - $f($1.guardheight / 2)) - 1.5); /*27010*/
 				$$.show(">", 0, 0); /*27011*/
 			} /*27011*/
 		} /*27011*/

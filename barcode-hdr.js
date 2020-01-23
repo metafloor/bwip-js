@@ -462,6 +462,12 @@ function $xo(a, b) {	// xor
 function $nt(a) {
 	return typeof a == 'boolean' ? !a : ~a;
 }
+// emulate single-precision floating-point (pseudo-polyfill for Math.fround)
+var $f = (function (fa) {
+	return function(v) {
+		return fa[0] = v, fa[0];
+	};
+})(new Float32Array(1));
 
 // DEBUG-BEGIN
 function $stack() {

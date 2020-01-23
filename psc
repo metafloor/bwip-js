@@ -69,6 +69,14 @@
 ##   Change the standard text y-offset from 7pt to 8.5pt (OCR fonts are taller
 ##   than Courier at the same point-size).
 ##
+## * There is problems with floating-point rounding in the datamatrix encoders
+##	 due to differences between single- and double-precision arithmetic.  Perform
+##   explicit constant folding for the following expressions:
+##		13 3 div -> 4.33333334
+##		10 3 div -> 3.33333334
+##		 8 3 div -> 2.66666667
+##		 4 3 div -> 1.33333334
+##		 2 3 div -> 0.66666667
 
 cp barcode.ps barcode.tmp
 for name in $(cd custom; ls *.ps | sed -e 's/\.ps//') ; do
@@ -95,6 +103,11 @@ cat barcode.tmp custom/*.ps | sed -e 's,/\(is..textfont\) /Courier,/\1 /OCR-A,' 
 	-e '/^\s*currentfont \/PaintType .* ifelse/,/^\s*} if/s/^/%psc &/'\
 	-e '/^\s*{.*} stopped {/,/^\s*} ifelse\s*$/s/^/%psc &/'\
 	-e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
+	-e 's/{\s*13 3 div /{ 4.33333334 /g'\
+	-e 's/{\s*10 3 div /{ 3.33333334 /g'\
+	-e 's/{\s*8 3 div /{ 2.66666667 /g'\
+	-e 's/{\s*4 3 div /{ 1.33333334 /g'\
+	-e 's/{\s*2 3 div /{ 0.66666667 /g'\
 	> barcode.psc
 
 ##
