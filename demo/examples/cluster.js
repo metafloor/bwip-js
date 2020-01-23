@@ -14,33 +14,33 @@ var cluster = require('cluster');
 var http    = require('http');
 var numCPUs = require('os').cpus().length;
 var bwipjs = (function() {
-	try {
-		return require('bwip-js');	// for installed usage
-	} catch (e) {
-		return require('..');		// for development use only
-	}
+    try {
+        return require('bwip-js');   // for installed usage
+    } catch (e) {
+        return require('..');        // for development use only
+    }
 })();
 
 if (cluster.isMaster) {
-	// Use a de-escalation scheme to prevent forking too quickly.
-	var nworkers = 0;
-	var nwaiting = 0;
+    // Use a de-escalation scheme to prevent forking too quickly.
+    var nworkers = 0;
+    var nwaiting = 0;
 
     // Fork the initial workers.
     for (var i = 0; i < numCPUs; i++) {
         cluster.fork();
-		nworkers++;
+        nworkers++;
     }
 
     cluster.on('exit', function(worker, code, signal) {
         console.log('worker ' + worker.process.pid + ' died');
-		nworkers--;
-		nwaiting++;
-	    setTimeout(function() { 
-				cluster.fork();
-				nwaiting--;
-				nworkers++;
-			}, 1000 * nwaiting); 
+        nworkers--;
+        nwaiting++;
+        setTimeout(function() { 
+                cluster.fork();
+                nwaiting--;
+                nworkers++;
+            }, 1000 * nwaiting); 
     });
 } else {
     // All the workers will share the HTTP server
@@ -55,21 +55,21 @@ if (cluster.isMaster) {
         }
     });
 
-	var binds = 0;
-	for (let i = 2; i < process.argv.length; i++) {
-		let a = /^([^:]+):(\d+)$/.exec(process.argv[i]);
-		if (a) {
-			if (a[1] == '*') {
-				server.listen(+a[2]);
-			} else {
-				server.listen(+a[2], a[1]);
-			}
-		} else {
-			console.log(process.argv[i] + ': option ignored...');
-		}
-		binds++;
-	}
-	if (!binds) {
-		server.listen(process.env.PORT || 3030);
-	}
+    var binds = 0;
+    for (let i = 2; i < process.argv.length; i++) {
+        let a = /^([^:]+):(\d+)$/.exec(process.argv[i]);
+        if (a) {
+            if (a[1] == '*') {
+                server.listen(+a[2]);
+            } else {
+                server.listen(+a[2], a[1]);
+            }
+        } else {
+            console.log(process.argv[i] + ': option ignored...');
+        }
+        binds++;
+    }
+    if (!binds) {
+        server.listen(process.env.PORT || 3030);
+    }
 }
