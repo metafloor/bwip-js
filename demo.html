@@ -8,6 +8,7 @@
 <script type="text/javascript" src="lib/symdesc.js"></script>
 <script type="text/javascript" src="lib/canvas-toblob.js"></script>
 <script type="text/javascript" src="lib/filesaver.js"></script>
+<script type="text/javascript" src="lib/inconsolata.js"></script>
 <script type="text/javascript">
 window.addEventListener('load', function() {
 	var lastSymbol, lastBarText, lastAltText, lastOptions, lastRotate, lastScaleX, lastScaleY;
@@ -92,6 +93,9 @@ window.addEventListener('load', function() {
 
 	document.getElementById('versions').textContent =
 				'bwip-js ' + bwipjs.VERSION + ' / BWIPP ' + bwipjs.BWIPP.VERSION;
+
+    // A reasonable match to OCR-B metrics.
+    bwipjs.loadFont("Inconsolata", 95, 105, Inconsolata);
 });
 
 function render() {

@@ -85,40 +85,71 @@ sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js | c
 
 ## nodejs postamble
 cat - <<@EOF >> dist/node-bwipjs.js
+function toUint8Array(data) {
+    if (typeof data == "string") {
+        var binary = /[^A-Za-z0-9+\/=\s]/.test(data);
+        return Buffer.from ? Buffer.from(data, binary ? 'binary' : 'base64')
+                           : new Buffer(data, binary ? 'binary' : 'base64');
+    } else if (data instanceof Uint8Array) {
+        return data;
+    } else if (data instanceof ArrayBuffer) {
+        return new Uint8Array(data);
+    }
+    throw new ReferenceError("data must be a binary or base64 encoded string or a Buffer/Uint8Array");
+}
+
 FontLib.loadFont("OCR-A", 100, 100, "$(base64 fonts/OCRA7.ttf | tr -d '\r\n\t ')");
 FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')");
 
 return {
-		// The public interface
-		request:Request, toBuffer:ToBuffer, render:Render, raw:Raw,
-		fixupOptions:FixupOptions,
-		loadFont:FontLib.loadFont,
-		VERSION:'__BWIPJS_VERS__',
+        // The public interface
+        request:Request, toBuffer:ToBuffer, render:Render, raw:Raw,
+        fixupOptions:FixupOptions,
+        loadFont:FontLib.loadFont,
+        VERSION:'__BWIPJS_VERS__',
 
-		// Internals
-		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
-		DrawingBuiltin:DrawingBuiltin, DrawingZlibPng:DrawingZlibPng,
-	};
+        // Internals
+        BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
+        DrawingBuiltin:DrawingBuiltin, DrawingZlibPng:DrawingZlibPng,
+    };
 }));
 @EOF
 
 ## browser postamble
 for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
 cat - <<@EOF >> $file
+function toUint8Array(data) {
+    if (typeof data == "string") {
+        var binary = /[^A-Za-z0-9+\/=\s]/.test(data);
+        var bstr = binary ? data : atob(data),
+            len = bstr.length,
+            bytes = new Uint8Array(len);
+        for (var i = 0; i < len; i++) {
+            bytes[i] = bstr.charCodeAt(i);
+        }
+        return bytes;
+    } else if (data instanceof Uint8Array) {
+        return data;
+    } else if (data instanceof ArrayBuffer) {
+        return new Uint8Array(data);
+    }
+    throw new ReferenceError("data must be a binary or base64 encoded string or Uint8Array");
+}
+
 FontLib.loadFont("OCR-A", 100, 100, "$(base64 fonts/OCRA7.ttf | tr -d '\r\n\t ')");
 FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')");
 
 return {
-		// The public interface
-		toCanvas:ToCanvas, render:Render, raw:Raw,
-		fixupOptions:FixupOptions,
-		loadFont:FontLib.loadFont,
-		VERSION:'__BWIPJS_VERS__',
+        // The public interface
+        toCanvas:ToCanvas, render:Render, raw:Raw,
+        fixupOptions:FixupOptions,
+        loadFont:FontLib.loadFont,
+        VERSION:'__BWIPJS_VERS__',
 
-		// Internals
-		BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
-		DrawingBuiltin:DrawingBuiltin, DrawingCanvas:DrawingCanvas,
-	};
+        // Internals
+        BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
+        DrawingBuiltin:DrawingBuiltin, DrawingCanvas:DrawingCanvas,
+    };
 }));
 @EOF
 done
