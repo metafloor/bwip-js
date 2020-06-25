@@ -636,7 +636,10 @@ BWIPJS.prototype.bbox = function(x0, y0, x1, y1) {
 };
 BWIPJS.prototype.render = function() {
 	if (this.minx === Infinity) {
-		return callback(new Error('--empty-drawing-surface--'));
+        // Most likely, `dontdraw` was set in the options
+        return new Promise(function (resolve, reject) {
+            resolve(null);
+        });
 	}
 	// Draw the image
 	this.drawing.init(this.maxx - this.minx + 1, this.maxy - this.miny + 1,
