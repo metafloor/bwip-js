@@ -24,7 +24,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 2.0.6 (2020-01-23)
+* Current bwip-js version is 2.0.7 (2020-06-03)
 * Current BWIPP version is 2019-11-08
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -135,6 +135,41 @@ to determine what options are available for each barcode type.
 Note that bwip-js normalizes the BWIPP `width` and `height` options to always be in millimeters.
 The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm
 (72 dpi / 25.4 mm/in).  The bwip-js scale options multiply the `width`, `height`, and `padding`.
+
+| :warning: An important note about the BWIPP `width` and `height` parameters. |
+|---------------|
+
+Barcodes have the concept of module width (and height if a two-dimensional barcode).  For
+linear barcodes, the module width is the width of the narrowest bar, and all other bar widths are
+a multiple of it.  For 2D symbols, module width and height are the dimensions of the square
+or rectangle that defines the symbol's layout grid.
+
+For a barcode to be "in spec", the individual module dimensions must be consistent throughout the
+symbol.  With high resolution printing, you can add/subtract a dot to adjust the size of individual
+modules so the overall image meets the requested width or height, while still keeping the module
+size within spec.  This is the intention behind BWIPP's `width` and `height` parameters.
+
+bwip-js is designed for web usage, with a target display resolution of 72dpi.  (All of BWIPP's
+internals are calculated in points and bwip-js just maps 1pt to 1px.)  At that low
+resolution, it is not possible to add or subtract pixels without causing the symbol to go
+out of spec.  Imagine a fairly common module width of 2px.  If you add or subtract a pixel,
+you have changed the size by 50%.  Typical barcode specs require module sizes to be within 
+5-10 pecent of nominal.
+
+For this reason, bwip-js uses a constant module size so the resulting image is as 
+large as possible, without exceeding the requested `width` or `height`.
+The design causes the rendered barcodes to grow in "quantums".  An image will be
+X-pixels wide with a module with of 2px, and Y-pixels wide with a module width of 3px,
+and can not vary between those two sizes.
+
+With bwip-js, the `scale` parameters can be thought of as requesting a particular module
+width.  `scale=1` maps to a 1px module.  `scale=2` is a 2px module.  Etc.
+
+When you specify `width`, you are effectively changing the scale of the final image.
+Internally, bwip-js calcuates the requested `width x scale`, then divides
+by the number of modules the symbol requires.  The floor of that value is the
+module width (scale) of the rendered barcode.
+
 
 ## Browser Usage
 
@@ -325,8 +360,18 @@ bwipjs.toBuffer({
 
 ## Electron Example
 
-With Electron, use the Node.js `toBuffer()` interface.  This is an example `index.html`
-file for a basic, single window app:
+There has been some changes to the Electron bundler, and it may pull in either the
+nodejs or browser module, depending on your version of Electron.  The example below
+shows using the nodejs module.
+
+If you try this example and get the error `bwipjs.toBuffer is not a function`, the
+Electron bundler grabbed the browser module.  See the [Browser Usage](#browser-usage)
+section above and draw to a canvas instead.
+
+If you happen to know how the Electron bundler changed its behavior and how to
+fix it in a project's `package.json`, please raise an issue at [github issues page](https://github.com/metafloor/bwip-js/issues).  
+
+This is an example `index.html` file for a basic, single window app:
 
 ```html
 <!DOCTYPE html>
