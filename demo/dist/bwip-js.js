@@ -32967,7 +32967,7 @@ function BWIPP() {
 		}
 
 		// Don't draw? (See file runtest)
-		$0.bwipjs_dontdraw = dontdraw || false;
+		$0.bwipjs_dontdraw = opts.dontdraw || dontdraw || false;
 
 		// Convert opts to a Map
 		var map = new Map;
@@ -32984,7 +32984,7 @@ function BWIPP() {
 		$0[encoder]();
 
 		// Return what is left on the stack.  This branch should only be taken
-		// when running tests with the dontdraw option.
+		// when running with the dontdraw option.
 		if ($j) {
 			return $k.splice(0, $j);
 		}
@@ -34227,6 +34227,7 @@ var FontLib = (function() {
 
             // Thread back onto the top
             var sntl = glyphmru;
+            sntl.next.prev = glyph;
             glyph.next = sntl.next;
             glyph.prev = sntl;
             sntl.next = glyph;
@@ -34269,6 +34270,7 @@ var FontLib = (function() {
         glyphcache[cachekey] = glyph;
 
         var sntl = glyphmru;
+        sntl.next.prev = glyph;
         glyph.next = sntl.next;
         glyph.prev = sntl;
         sntl.next = glyph;
@@ -36230,7 +36232,7 @@ return {
         toCanvas:ToCanvas, render:Render, raw:Raw,
         fixupOptions:FixupOptions,
         loadFont:FontLib.loadFont,
-        VERSION:'2.0.8 (2020-06-25)',
+        VERSION:'2.0.9 (2020-07-08)',
 
         // Internals
         BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
