@@ -91,6 +91,7 @@ var FontLib = (function() {
 
             // Thread back onto the top
             var sntl = glyphmru;
+            sntl.next.prev = glyph;
             glyph.next = sntl.next;
             glyph.prev = sntl;
             sntl.next = glyph;
@@ -133,6 +134,7 @@ var FontLib = (function() {
         glyphcache[cachekey] = glyph;
 
         var sntl = glyphmru;
+        sntl.next.prev = glyph;
         glyph.next = sntl.next;
         glyph.prev = sntl;
         sntl.next = glyph;
