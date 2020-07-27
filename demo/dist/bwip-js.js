@@ -33153,7 +33153,7 @@ BWIPJS.prototype.getRGB = function() {
 	var r = this.g_rgb[0].toString(16);
 	var g = this.g_rgb[1].toString(16);
 	var b = this.g_rgb[2].toString(16);
-	return '00'.substr(r.length) + r + '00'.substr(g.length) + g + '00'.substr(g.length) + g;
+	return '00'.substr(r.length) + r + '00'.substr(g.length) + g + '00'.substr(b.length) + b;
 };
 BWIPJS.prototype.newpath = function() {
 	this.g_path = [];
@@ -36232,7 +36232,7 @@ return {
         toCanvas:ToCanvas, render:Render, raw:Raw,
         fixupOptions:FixupOptions,
         loadFont:FontLib.loadFont,
-        VERSION:'2.0.9 (2020-07-08)',
+        VERSION:'2.0.10 (2020-07-27)',
 
         // Internals
         BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
