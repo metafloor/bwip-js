@@ -100,12 +100,25 @@ function DrawingPDFKit(doc, opts, FontLib) {
             var swap = rot == 'L' || rot == 'R';
             gs_width  = swap ? height : width;
             gs_height = swap ? width : height;
-            gs_dx = padl;
-            gs_dy = padt;
 
             // Initialize defaults
             doc.save();
             doc.lineCap('butt');
+
+            if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
+                gs_dx = gs_dy = 0;
+                moveTo(0, 0);
+                lineTo(width, 0);
+                lineTo(width, height);
+                lineTo(0, height);
+                lineTo(0, 0);
+                doc.fillColor('#' + opts.backgroundcolor);
+                doc.fill('even-odd');
+            }
+
+            // Now add in the effects of the padding
+            gs_dx = padl;
+            gs_dy = padt;
         },
         // Unconnected stroked lines are used to draw the bars in linear barcodes.
         // No line cap should be applied.  These lines are always orthogonal.

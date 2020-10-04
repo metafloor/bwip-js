@@ -16924,6 +16924,7 @@ bind def
                     [ 1  1  1  e  e  1  1] KbeforeE {K exit} if
                     numK 1 ge {B exit} if
                     [ 6  7  8  e  e  3  4] AbeforeB {A exit} if
+                    [ 1  1  1  e  1  1  1] AbeforeN {A exit} if
                     [ 1  1  1  e  1  1  1] AbeforeE {A exit} if
                     numA 1 ge {
                         ver vM2 ne {B} {A} ifelse exit
