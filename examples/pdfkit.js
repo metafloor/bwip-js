@@ -12,6 +12,9 @@ at(100, 100, {
         bcid: 'ean13composite',
         text: '2112345678900|(99)1234-abcd',
         includetext: true,
+        padding: 8,
+        backgroundcolor: 'dddddd',
+        rotate:  'L',
     });
 at(300, 100, {
         bcid: 'qrcode',
