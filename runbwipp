@@ -1,5 +1,5 @@
 ## This code was automatically generated from:
-## Barcode Writer in Pure PostScript - Version 2019-11-08
+## Barcode Writer in Pure PostScript - Version 2020-10-02
 run 0 "ean5" "90200" "includetext guardwhitespace"
 run 0 "ean2" "05" "includetext guardwhitespace"
 run 0 "ean13" "2112345678900" "includetext guardwhitespace"
@@ -71,11 +71,11 @@ run 0 "datamatrixrectangularextension" "1234" "version=8x96"
 run 0 "mailmark" "JGB 012100123412345678AB19XY1A 0             www.xyz.com" "type=29"
 run 0 "qrcode" "http://goo.gl/0bis" "eclevel=M"
 run 0 "microqrcode" "1234" ""
+run 0 "rectangularmicroqrcode" "1234" "version=R17x139"
 run 0 "maxicode" "[)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004" "mode=2 parse"
 run 0 "azteccode" "This is Aztec Code" "format=full"
 run 0 "azteccodecompact" "1234" ""
 run 0 "aztecrune" "1" ""
-run 0 "jabcode" "This is JAB Code" "eclevel=6"
 run 0 "codeone" "Code One" ""
 run 0 "hanxin" "This is Han Xin" ""
 run 0 "dotcode" "This is DotCode" "inkspread=0.16"
