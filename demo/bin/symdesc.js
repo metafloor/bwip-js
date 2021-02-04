@@ -1,7 +1,7 @@
 // file: bwip-js/bin/symdesc.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2019-11-08
+// Barcode Writer in Pure PostScript - Version 2020-10-02
 //
 module.exports = {
 	"auspost": "AusPost 4 State Customer Code",
@@ -98,6 +98,7 @@ module.exports = {
 	"qrcode": "QR Code",
 	"rationalizedCodabar": "Codabar",
 	"raw": "Custom 1D symbology",
+	"rectangularmicroqrcode": "Rectangular Micro QR Code",
 	"royalmail": "Royal Mail 4 State Customer Code",
 	"sscc18": "SSCC-18",
 	"symbol": "Miscellaneous symbols",
