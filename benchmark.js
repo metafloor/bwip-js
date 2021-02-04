@@ -12,9 +12,7 @@ if (!global.gc) {
 // Keep output to a minimum
 var verbose = process.argv.indexOf('--verbose') > 0;
 
-// node-bench does everything the normal node-bwipjs module does except
-// generate the PNG image.
-var bwipjs = require('./node-bench');
+var bwipjs = require('./dist/node-bwipjs.js');
 
 // Use a seedable PRNG so we generate the same random strings for each
 // run.
@@ -205,7 +203,7 @@ function runround(times) {
 		}
 		var id = round[i].bcid;
 		var t0 = process.hrtime();
-		bwipjs(round[i]);
+		bwipjs.raw(round[i]);
 		var t1 = process.hrtime(t0);
 		if (!times[id]) {
 			times[id] = { id:id, count:0, msecs:0 };

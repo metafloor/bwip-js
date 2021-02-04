@@ -65,14 +65,17 @@ function PSLEX(str) {
 
 	// We only allow peeking when there is an existing token stream i.e.
 	// we are inside an executable block which is almost everywhere.
-	this.peek = function() {
+	this.peek = function(n) {
 		if (!stack.length || !stack[stack.length-1].length) {
 			return null;
 		}
-		var elt = stack[stack.length-1][0];
-		this.token = elt.token;
-		this.lnbr  = elt.lnbr;
-		return elt.token;
+        // If an index is passed in, the caller wants the entire token.
+        // O/w just the token value at the top of the stack.
+        if (typeof n == 'number') {
+            return stack[stack.length-1][n];
+        } else {
+            return stack[stack.length-1][0].token;
+        }
 	}
 			
 	// The main lexer function.  Returns the next token; null if no more
@@ -173,7 +176,6 @@ function PSLEX(str) {
 		return this.token;
 	}
 }
-
 
 // PostScript Cross-Compiler
 function PSC(str, flags) {
@@ -457,13 +459,16 @@ function PSC(str, flags) {
 	// optimized the emitted code.
 	function ctxflush() {
 		for (var i = 0; i < sp; i++) {
-			if (st[i].expr === undefined) {
-				dump('ctxflush');
-				throw 'ctxflush: missing expression';
-			} else {
-				block.push({ code:'$k[$j++]=' + st[i].expr + ';',
-							 lnbr:lex.lnbr, seq:++seq });
+			if (st[i].expr == null) {
+                if (st[i].tokens) {
+                    st[i] = { type:TYPE_FUNCTION, expr:codeblock(st[i].tokens), seq:++seq };
+                } else {
+                    console.log('st[' + i + '] =', st[i]);
+                    dump('ctxflush');
+                    throw new Error('ctxflush: missing expression');
+                }
 			}
+            block.push({ code:'$k[$j++]=' + st[i].expr + ';', lnbr:lex.lnbr, seq:++seq });
 		}
 		sp = 0;
 	}
@@ -633,12 +638,10 @@ function PSC(str, flags) {
 				window.scrollTo(0, (lex.lnbr-10) * pscdbg_height / pscdbg_nlines);
 			}
 
-			// Starting an exec block - wait until we determine how it is
-			// being used before compiling it.
+			// Start of an exec block.
 			if (tkn == '{') {
 				var tokens = readtokens('}');
-
-				st[sp++] = { type:TYPE_TOKENS, tokens:tokens, seq:++seq };
+                st[sp++] = { type:TYPE_TOKENS, tokens:tokens, seq:++seq };
 			} else if (tkn == '[') {
 				// emit the code to build the array at runtime
 				ctxpush(readtokens(']'));
@@ -685,8 +688,7 @@ function PSC(str, flags) {
 					// If so, we can inline the array creation with the dict
 					// assignment.
 					var defsym = '';
-					if (sp && st[sp-1].type == TYPE_IDENT &&
-							lex.peek() == 'def') {
+					if (sp && st[sp-1].type == TYPE_IDENT && lex.peek() == 'def') {
 						defsym = st[--sp].expr;
 					}
 
@@ -969,14 +971,14 @@ function PSC(str, flags) {
 
 	// $0.$error is defined in bwipp-hdr.js.
 	$.handleerror = function() {
-		emit('throw new Error($0.$error.errorname+": "+$0.$error.errorinfo);');
+		emit('throw new Error($z($0.$error.errorname)+": "+$z($0.$error.errorinfo));');
 	}
 	$.quit = function() {
 		// no-op : handlerror throws
 	}
 	// Newest versions of barcode.ps are using stop rather than handleerror.
 	$.stop = function() {
-		emit('throw new Error($0.$error.get("errorname")+": "+$0.$error.get("errorinfo"));');
+		emit('throw new Error($z($0.$error.get("errorname"))+": "+$z($0.$error.get("errorinfo")));');
 	}
 
 	// OBSOLETE:  setanycolor in the renderers has been replaced by custom
@@ -999,7 +1001,11 @@ function PSC(str, flags) {
 			// Most likely a function call.  If we guess wrong, we will
 			// get a runtime error...
 			ctxflush();
-			emit(parens(expr) + '();');
+            if (loopstate.length && loopstate[loopstate.length-1] != 'forall') {
+                emit('if(' + parens(expr) + '()===true){break;}');
+            } else {
+                emit('if(' + parens(expr) + '()===true){return true;}');
+            }
 		}
 	}
 
@@ -1064,16 +1070,13 @@ function PSC(str, flags) {
 		}
 	}
 	$.roll = function() {
+        need(2);
 		var d = st[--sp];	// direction and iters
 		var n = st[--sp];	// how many elts roll
-		if (n.type != TYPE_INTLIT) {
-			dump('roll');
-			throw '#' + lex.lnbr + ': roll: count not constant.';
-		}
-		n = +n.expr;
-		need(n)
-		if (d.type == TYPE_INTLIT) {
+		if (n.type == TYPE_INTLIT && d.type == TYPE_INTLIT) {
+            n = +n.expr;
 			d = +d.expr;
+            need(n)
 			if (d < 0) {
 				var t = st.splice(sp-n, -d);
 			} else {
@@ -1085,7 +1088,7 @@ function PSC(str, flags) {
 			}
 		} else {
 			ctxflush();
-			emit('$r(' + n + ',' + d.expr + ');');
+			emit('$r(' + n.expr + ',' + d.expr + ');');
 		}
 	}
 	// BWIPP uses index two ways:
@@ -1217,13 +1220,7 @@ function PSC(str, flags) {
 		st[sp-1].seq   = ++seq;
 	}
 
-	$.bind = function() {
-		var tkns = st[--sp].tokens;
-		if (!tkns) {
-			dump('bind');
-			throw 'bind: exec not tokens';
-		}
-
+    function codeblock(tkns) {
 		// If we are defining a global function, reset our global state.
 		if (dlvl == 0) {
 			// First pass to define all identifers (in dict)
@@ -1305,7 +1302,18 @@ function PSC(str, flags) {
 			branchno = -1;
 		}
 		code += RC;
-		st[sp++] = { type:TYPE_FUNCTION, expr:code, seq:++seq };
+        return code;
+    }
+
+	$.bind = function() {
+		var tkns = st[--sp].tokens;
+		if (!tkns) {
+			dump('bind');
+			throw 'bind: exec not tokens';
+		}
+        //console.log('bind', tkns[0].lnbr, tkns[tkns.length-1].lnbr);
+
+		st[sp++] = { type:TYPE_FUNCTION, expr:codeblock(tkns), seq:++seq };
 	}
 
 	$.def = function() {
@@ -1341,6 +1349,11 @@ function PSC(str, flags) {
 		} else {
 			emit('$' + dlvl + '[' + id + ']=' + st[sp-1].expr + ';');
 		}
+		sp-=2;
+	}
+	$.undef = function() {
+		need(2);
+        emit('delete ' + st[sp-2].expr + '[' + st[sp-1].expr + '];');
 		sp-=2;
 	}
 
@@ -1780,11 +1793,10 @@ function PSC(str, flags) {
 		loopstate.pop();
 	}
 	$.exit = function() {
-		if (!loopstate.length) {
-			throw '#' + lex.lnbr + ': exit outside of a loop';
-		}
 		ctxflush();
-		if (loopstate[loopstate.length-1] == 'forall') {
+		if (!loopstate.length) {
+			emit('return true;');
+		} else if (loopstate[loopstate.length-1] == 'forall') {
 			emit('return true;');
 		} else {
 			emit('break;');
@@ -2156,6 +2168,13 @@ function PSC(str, flags) {
 		var expr = st[--sp].expr;
 		emit('$$.setcolor(' + expr + ');');				// CANVAS
 	}
+	$.setrgbcolor = function() {
+        need(3);
+		var b = st[--sp].expr;
+		var g = st[--sp].expr;
+		var r = st[--sp].expr;
+		emit('$$.setrgbcolor(' + r + ',' + g + ',' + b + ');');				// CANVAS
+    }
 	// no-op
 	$.setlinecap = function() {
 		need(1);
@@ -2170,6 +2189,9 @@ function PSC(str, flags) {
 		sp-=1;
 		//emit('$$.setlinejoin('+c+');');					// CANVAS
 	}
+    $.clip = function() {
+		emit('$$.clip();'); 							// CANVAS
+    }
 	$.stroke = function() {
 		emit('$$.stroke();');							// CANVAS
 	}
@@ -2244,6 +2266,7 @@ function PSC(str, flags) {
 		emit('var $bwipjs_functions=[];');
 	}
 	compile();
+	console.log(st.slice(0, sp));
 	if (cfg.coverage) {
 		emit('typeof require=="function"&&' +
 			 'require("fs").writeFileSync("coverage/functions",' +

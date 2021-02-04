@@ -75,6 +75,7 @@ run 0 "maxicode" "[)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^0
 run 0 "azteccode" "This is Aztec Code" "format=full"
 run 0 "azteccodecompact" "1234" ""
 run 0 "aztecrune" "1" ""
+run 0 "jabcode" "This is JAB Code" "eclevel=6"
 run 0 "codeone" "Code One" ""
 run 0 "hanxin" "This is Han Xin" ""
 run 0 "dotcode" "This is DotCode" "inkspread=0.16"

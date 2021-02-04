@@ -40,28 +40,32 @@ function $a(a) {
 // dict ctor
 //	$d() : look for the Infinity marker on the stack
 function $d() {
-	var d = new Map;
-	for (var i=$j-1;i>=0&&$k[i]!==Infinity;i-=2) {
-		if ($k[i-1]===Infinity) {
-			throw new Error('dict-malformed-stack');
-		}
-		// Unlike javascript, postscript dict keys differentiate between
-		// numbers and the string representation of a number.
-		var k = $k[i-1];		// "key" into the dict entry
-		var t = typeof k;
-		if (t == 'number' || t == 'string') {
-			d.set(k, $k[i]);
-		} else if (k instanceof Uint8Array) {
-			d.set($z(k), $k[i]);
-		} else {
-			throw 'dict-not-a-valid-key(' + k + ')';
-		}
-	}
-	if (i < 0) {
-		throw 'dict-marker-not-found';
-	}
-	$j=i;
-	return d;
+    // Build the dictionary in the order the keys/values were pushed so enumeration
+    // occurs in the correct sequence.
+    for (var mark = $j - 1; mark >= 0 && $k[mark] !== Infinity; mark -= 2) {
+        if ($k[mark - 1] === Infinity) {
+            throw new Error('dict-malformed-stack');
+        }
+    }
+    if (mark < 0) {
+        throw 'dict-marker-not-found';
+    }
+    var d = new Map;
+    for (var i = mark+1; i < $j; i += 2) {
+        // Unlike javascript, postscript dict keys differentiate between
+        // numbers and the string representation of a number.
+        var k = $k[i]; // "key" into the dict entry
+        var t = typeof k;
+        if (t == 'number' || t == 'string') {
+            d.set(k, $k[i+1]);
+        } else if (k instanceof Uint8Array) {
+            d.set($z(k), $k[i+1]);
+        } else {
+            throw 'dict-not-a-valid-key(' + k + ')';
+        }
+    }
+    $j = mark;
+    return d;
 }
 
 // string ctor
@@ -332,6 +336,9 @@ function $search(str, seek) {
 function $forall(o, cb) {
 	if (o instanceof Uint8Array) {
 		for (var i = 0, l = o.length; i < l; i++) {
+            if (!o[i]) {
+                break;
+            }
 			$k[$j++] = o[i];
 			if (cb && cb()) break;
 		}

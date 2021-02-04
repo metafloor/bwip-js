@@ -2,19 +2,22 @@
 'use strict';
 
 var fs = require('fs');
-var bwipjs = require('..');
+var bwipjs = require('./dist/node-bwipjs');
 var symdesc = require('./symdesc');
 
 function usage() {
 	console.log(
-		"Usage: bwip-js symbol-name text [options...] png-file\n" +
-		"       bwip-js --bcid=symbol-name --text=text [options...] png-file\n" +
+		"Usage: bwipjs symbol-name text [options...] png-file\n" +
+		"       bwipjs --bcid=symbol-name --text=text [options...] png-file\n" +
 		"\n" +
 		"Example:\n" +
-		"       bwip-js code128 012345678 includetext textcolor=ff0000 my-code128.png\n" +
+		"       bwipjs code128 012345678 includetext textcolor=ff0000 my-code128.png\n" +
 		"\n" +
-		"Try 'bwip-js --help' for more information.\n" +
-		"Try 'bwip-js --symbols' for a list of supported barcode symbols.\n");
+		"Try 'bwipjs --help' for more information.\n" +
+		"Try 'bwipjs --symbols' for a list of supported barcode symbols.\n" +
+		"Try 'bwipjs --version' for bwip-js and BWIPP versions.\n" +
+        "Try 'bwipjs --benchmark' for time statistics.\n" +
+        "");
 }
 function help() {
 	usage();
@@ -44,11 +47,11 @@ function loadfont(spec) {
 			bwipjs.loadFont(vals[0], fs.readFileSync(vals[1]));
 		} else {
 			console.log("Invalid --loadfont format.");
-			console.log("Try 'bwip-js --help' for more information.");
+			console.log("Try 'bwipjs --help' for more information.");
 			process.exit(1);
 		}
 	} catch(e) {
-		console.log('bwip-js: ' + e);
+		console.log('bwipjs: ' + (e.stack || e));
 		process.exit(1);
 	}
 }
@@ -206,25 +209,56 @@ var optlist = [
 	  desc: 'Vertical position of the guard symbols on the right, in points.' },
 ];
 var optmap = optlist.reduce(function(map, elt) { map[elt.name] = elt; return map; }, {}); 
-var opts = {};
 
 if (process.argv.length < 5) {
-    usage();
-}
-if (!/bcid=/.test(process.argv[2])) {
-    process.argv[2] = 'bcid=' + process.argv[2];
-}
-if (!/text=/.test(process.argv[2])) {
-    process.argv[3] = 'text=' + process.argv[3];
+    if (process.argv[2] == '--help') {
+        help();
+    } else if (process.argv[2] == '--version') {
+        console.log('bwipjs: ' + bwipjs.VERSION + '\nBWIPP: ' + bwipjs.BWIPP.VERSION);
+    } else if (process.argv[2] == '--symbols') {
+        for (var sym in symdesc) {
+            console.log('    ' + sym + ' : ' + symdesc[sym]);
+        }
+    } else {
+        usage();
+        process.exit(1);
+    }
+    process.exit(0);
 }
 var pngfile = process.argv[process.argv.length-1];
 if (!/\.png$/.test(pngfile)) {
-    console.log("bwip-js: missing png-file");
+    console.log("bwipjs: expected png-file as last argument");
     usage();
     process.exit(1);
 }
 
-for (var i = 2, l = process.argv.length - 1; i < l; i++) {
+// Build up the options object
+var opts = {};
+
+// argv[2] must be the symbol name
+if (process.argv[2].substr(0,7) != '--bcid=') {
+    if (process.argv[2].substr(0,2) == '--') {
+        console.log('bwipjs: missing barcode symbol');
+        usage();
+        process.exit(1);
+    }
+    opts.bcid = process.argv[2];
+} else {
+    opts.bcid = process.argv[2].substr(7);
+}
+// argv[3] must be the barcode text
+if (process.argv[3].substr(0,7) != '--text=') {
+    if (process.argv[3].substr(0,2) == '--') {
+        console.log('bwipjs: missing barcode text');
+        usage();
+        process.exit(1);
+    }
+    opts.text = process.argv[3];
+} else {
+    opts.text = process.argv[3].substr(7);
+}
+
+for (var i = 4, l = process.argv.length - 1; i < l; i++) {
 	var a = process.argv[i];
 	if (/^--/.test(a)) {
 		a = a.substr(2);
@@ -250,27 +284,40 @@ for (var i = 2, l = process.argv.length - 1; i < l; i++) {
 	}
 }
 
-if (process.argv.length == 2) {
-	usage();
-} else if (opts.help) {
-	help();
-} else if (opts.version && !opts.bcid) {
-	console.log('bwip-js: ' + bwipjs.VERSION + '\nBWIPP: ' + bwipjs.BWIPP.VERSION);
-} else if (opts.symbols && !opts.bcid) {
-	for (var sym in symdesc) {
-		console.log('    ' + sym + ' : ' + symdesc[sym]);
-	}
+if (opts.benchmark) {
+    let ts;
+    let msecs = 0;
+    let count = 0;
+    const done = (err, png) => {
+        if (err) {
+            console.error(err);
+            process.exit(1);
+        }
+        msecs += Date.now() - ts;
+        count++;
+        console.log(count + '...');
+        if (count == 5) {
+            console.log("Benchmarking...");
+            msecs = 0;
+        } else if (count == 10) {
+            console.log("Average time: " + Math.round(msecs / 10) + "msecs");
+            process.exit(0);
+        }
+        ts = Date.now();
+        bwipjs.toBuffer(Object.assign({}, opts), done);
+    };
+    console.log("Warming up...");
+    bwipjs.toBuffer(Object.assign({}, opts), done);
 } else {
-
-	bwipjs.toBuffer(opts, function (err, png) {
-		if (err) {
-			console.error(''+err);
-			process.exit(1);
-		}
-		try {
-			fs.writeFileSync(pngfile, png);
-		} catch (e) {
-			console.log('bwip-js: ' + e);
-		}
-	});
+    bwipjs.toBuffer(opts, function (err, png) {
+        if (err) {
+            console.error(err);
+            process.exit(1);
+        }
+        try {
+            fs.writeFileSync(pngfile, png);
+        } catch (e) {
+            console.log('bwipjs: ' + (e.stack || e));
+        }
+    });
 }

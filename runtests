@@ -231,7 +231,7 @@ run 0 qrcode "QR CODE 1234" "version=4 eclevel=H"
 run 0 qrcode "QR Code" ""
 run 0 qrcode "QR ^067ode" "parse"
 run 0 qrcode "QR CODE 7890" "format=micro"
-run 0 qrcode "QR CODE 7890" "format=any"
+##run 0 qrcode "QR CODE 7890" "format=any"  ## no longer suppoted
 run 0 qrcode "QR CODE 7890" "format=full"
 run 0 qrcode "QR CODE 7890" "format=micro eclevel=L"
 run 0 qrcode "QR CODE 7890" "format=micro eclevel=M"

@@ -86,7 +86,11 @@ for name in $(cd custom; ls *.ps | sed -e 's/\.ps//') ; do
 done
 
 ## Append the customs and fixup the code
-cat barcode.tmp custom/*.ps | sed -e 's,/\(is..textfont\) /Courier,/\1 /OCR-A,' \
+cat barcode.tmp custom/*.ps | sed \
+    -e 's,/\(is..textfont\) /Courier,/\1 /OCR-A,' \
+    -e 's,/Helvetica,(OCR-B),' \
+    -e 's,/Courier,(OCR-B),' \
+    -e 's,(Courier),(OCR-B),' \
 	-e 's,/\(is..textsize\) 9,/\1 8,' \
 	-e 's,/textyoffset -7,/textyoffset -8.5,' \
 	-e 's,/textyoffset -4,/textyoffset -4.5,' \
