@@ -206,10 +206,25 @@ var optlist = [
 	  desc: 'Vertical position of the guard symbols on the right, in points.' },
 ];
 var optmap = optlist.reduce(function(map, elt) { map[elt.name] = elt; return map; }, {}); 
-var anon = [];
 var opts = {};
 
-for (var i = 2, l = process.argv.length; i < l; i++) {
+if (process.argv.length < 5) {
+    usage();
+}
+if (!/bcid=/.test(process.argv[2])) {
+    process.argv[2] = 'bcid=' + process.argv[2];
+}
+if (!/text=/.test(process.argv[2])) {
+    process.argv[3] = 'text=' + process.argv[3];
+}
+var pngfile = process.argv[process.argv.length-1];
+if (!/\.png$/.test(pngfile)) {
+    console.log("bwip-js: missing png-file");
+    usage();
+    process.exit(1);
+}
+
+for (var i = 2, l = process.argv.length - 1; i < l; i++) {
 	var a = process.argv[i];
 	if (/^--/.test(a)) {
 		a = a.substr(2);
@@ -231,7 +246,7 @@ for (var i = 2, l = process.argv.length; i < l; i++) {
 		}
 		opts[a] = true;
 	} else {
-		anon.push(a);
+        opts[a] = true;
 	}
 }
 
@@ -239,23 +254,13 @@ if (process.argv.length == 2) {
 	usage();
 } else if (opts.help) {
 	help();
-} else if (opts.version) {
+} else if (opts.version && !opts.bcid) {
 	console.log('bwip-js: ' + bwipjs.VERSION + '\nBWIPP: ' + bwipjs.BWIPP.VERSION);
-} else if (opts.symbols) {
+} else if (opts.symbols && !opts.bcid) {
 	for (var sym in symdesc) {
 		console.log('    ' + sym + ' : ' + symdesc[sym]);
 	}
 } else {
-	if (anon.length == 1) {
-		// do nothing...
-	} else if (anon.length == 3) {
-		opts.bcid = anon.shift();
-		opts.text = anon.shift();
-	} else {
-		console.error('bwip-js: incorrect number of arguments');
-		usage();
-		process.exit(1);
-	}
 
 	bwipjs.toBuffer(opts, function (err, png) {
 		if (err) {
@@ -263,7 +268,7 @@ if (process.argv.length == 2) {
 			process.exit(1);
 		}
 		try {
-			fs.writeFileSync(anon[0], png);
+			fs.writeFileSync(pngfile, png);
 		} catch (e) {
 			console.log('bwip-js: ' + e);
 		}
