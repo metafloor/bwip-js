@@ -209,20 +209,22 @@ BWIPJS.prototype.rmoveto = function(x,y) {
 	this.g_posy += this.g_tsy * y;
 };
 BWIPJS.prototype.lineto = function(x,y) {
-	var x0 = this.g_posx;
-	var y0 = this.g_posy;
-	var x1 = this.g_posx = this.g_tdx + this.g_tsx * x;
-	var y1 = this.g_posy = this.g_tdy + this.g_tsy * y;
+	var x0 = round(this.g_posx);
+	var y0 = round(this.g_posy);
+	this.g_posx = this.g_tdx + this.g_tsx * x;
+	this.g_posy = this.g_tdy + this.g_tsy * y;
+	var x1 = round(this.g_posx);
+	var y1 = round(this.g_posy);
 
 	this.g_path.push({ op:'l', x0:x0, y0:y0, x1:x1, y1:y1 });
 };
 BWIPJS.prototype.rlineto = function(x,y) {
-	var x0 = this.g_posx;
-	var y0 = this.g_posy;
+	var x0 = round(this.g_posx);
+	var y0 = round(this.g_posy);
 	this.g_posx += this.g_tsx * x;
 	this.g_posy += this.g_tsy * y;
-	var x1 = this.g_posx;
-	var y1 = this.g_posy;
+	var x1 = round(this.g_posx);
+	var y1 = round(this.g_posy);
 
 	this.g_path.push({ op:'l', x0:x0, y0:y0, x1:x1, y1:y1 });
 };
