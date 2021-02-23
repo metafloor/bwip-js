@@ -6,9 +6,12 @@ var bwipjs = require('./dist/node-bwipjs');
 var symdesc = require('./symdesc');
 
 function usage() {
+    let bmark = bwipjs.VERSION == "__BWIPJS_VERS__"
+                ? "Try 'bwipjs --benchmark' for time statistics.\n"
+                : "";
 	console.log(
-		"Usage: bwipjs symbol-name text [options...] png-file\n" +
-		"       bwipjs --bcid=symbol-name --text=text [options...] png-file\n" +
+		"Usage: bwipjs symbol-name text [options...] file.png\n" +
+		"       bwipjs --bcid=symbol-name --text=text [options...] file.png\n" +
 		"\n" +
 		"Example:\n" +
 		"       bwipjs code128 012345678 includetext textcolor=ff0000 my-code128.png\n" +
@@ -16,7 +19,7 @@ function usage() {
 		"Try 'bwipjs --help' for more information.\n" +
 		"Try 'bwipjs --symbols' for a list of supported barcode symbols.\n" +
 		"Try 'bwipjs --version' for bwip-js and BWIPP versions.\n" +
-        "Try 'bwipjs --benchmark' for time statistics.\n" +
+        bmark +
         "");
 }
 function help() {
@@ -62,7 +65,7 @@ var optlist = [
 	{ name: 'version', type: 'boolean',
 	  desc: 'Displays the bwip-js and BWIPP version strings.' },
 	{ name: 'symbols', type: 'boolean',
-	  desc: 'Display a list of the supported barcode types.' },
+	  desc: 'Displays a list of the supported barcode types.' },
 	{ name: 'loadfont', type: 'string',
 	  desc: 'Loads a truetype/opentype font.  Format of this option is one of:\n\n' +
 	  		'  --loadfont=font-name,y-mult,x-mult,path-to-font-file\n' +
@@ -227,7 +230,7 @@ if (process.argv.length < 5) {
 }
 var pngfile = process.argv[process.argv.length-1];
 if (!/\.png$/.test(pngfile)) {
-    console.log("bwipjs: expected png-file as last argument");
+    console.log("bwipjs: expected a png file name as last argument");
     usage();
     process.exit(1);
 }
@@ -238,7 +241,7 @@ var opts = {};
 // argv[2] must be the symbol name
 if (process.argv[2].substr(0,7) != '--bcid=') {
     if (process.argv[2].substr(0,2) == '--') {
-        console.log('bwipjs: missing barcode symbol');
+        console.log('bwipjs: expected barcode symbol name as first argument');
         usage();
         process.exit(1);
     }
@@ -249,7 +252,7 @@ if (process.argv[2].substr(0,7) != '--bcid=') {
 // argv[3] must be the barcode text
 if (process.argv[3].substr(0,7) != '--text=') {
     if (process.argv[3].substr(0,2) == '--') {
-        console.log('bwipjs: missing barcode text');
+        console.log('bwipjs: expected barcode text as second argument');
         usage();
         process.exit(1);
     }
@@ -274,7 +277,7 @@ for (var i = 4, l = process.argv.length - 1; i < l; i++) {
 		}
 	} else if (optmap[a]) {
 		if (optmap[a].type != 'boolean') {
-			console.log('--' + a + ' : A value is expected.');
+			console.error('--' + a + ' : A value is expected.');
 			help();
 			process.exit(1);
 		}

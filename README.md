@@ -42,10 +42,6 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
 
     `$ ./psc`
 
-  - Optionally, run the peephole optimizations:
-
-    `$ ./optimize`
-
   - Create the dist files
 
     `$ ./mkdist`

@@ -69,7 +69,7 @@
 ##   Change the standard text y-offset from 7pt to 8.5pt (OCR fonts are taller
 ##   than Courier at the same point-size).
 ##
-## * There is problems with floating-point rounding in the datamatrix encoders
+## * There are problems with floating-point rounding in the datamatrix encoders
 ##	 due to differences between single- and double-precision arithmetic.  Perform
 ##   explicit constant folding for the following expressions:
 ##		13 3 div -> 4.33333334
@@ -92,8 +92,8 @@ cat barcode.tmp custom/*.ps | sed \
     -e 's,/Courier,(OCR-B),' \
     -e 's,(Courier),(OCR-B),' \
 	-e 's,/\(is..textsize\) 9,/\1 8,' \
-	-e 's,/textyoffset -7,/textyoffset -8.5,' \
-	-e 's,/textyoffset -4,/textyoffset -4.5,' \
+	-e 's,/textyoffset -7,/textyoffset -8,' \
+	-e 's,/textyoffset -4,/textyoffset -4,' \
 	-e 's/txt 11 \[barcode 11 1 getinterval textxoffset 103 add/txt 11 [barcode 11 1 getinterval textxoffset 104 add/' \
 	-e 's,^\s*backgroundcolor (unset) ne.* if,%psc &,' \
 	-e 's,^\[.*\] {null def} forall,%psc &,'\
@@ -129,6 +129,11 @@ if [ ! -f barcode.js ] ; then
 	echo "psc.js exited with error."
 	exit 1
 fi
+
+##
+## Peephole optimize
+##
+node optimize
 
 ##
 ## Get the BWIPP version (date)
@@ -198,6 +203,6 @@ node pscify
 ##
 ##rm -f barcode.psc
 rm -f barcode.tmp
-rm -f barcode.js
+##rm -f barcode.js
 rm -f bwipp-raw.js
 rm -f bwipp-copyr.js

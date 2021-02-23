@@ -73,10 +73,10 @@ cp dist/bwip-js.js dist/node-bwipjs.js
 sed -e '/@@BEGIN-BROWSER-ONLY@@/,/@@ENDOF-BROWSER-ONLY@@/d' < src/exports.js >> dist/node-bwipjs.js
 sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js >> dist/bwip-js.js
 
-## nodejs full-source - no drawing-canvas.js
+## nodejs plain-source - no drawing-canvas.js
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/node-bwipjs.js 
 
-## browser full-source - no drawing-zlibpng.js
+## browser plain-source - no drawing-zlibpng.js
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
 
 ## browser minified - minified exports and no drawing-zlibpng.js

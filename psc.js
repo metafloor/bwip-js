@@ -387,7 +387,7 @@ function PSC(str, flags) {
 		//		var _X = $k[--$j];
 		//		var _X = $0.textmap[blah];
 		//		var _X = $1.func(blah,blah).Ident;
-		var redecl = /^var (_[\w$_]+)=([\w_$.]+(\(.*\))?(\[.+\])?(\.[\w_$]+)*);(\/\*[^;]*\*\/)?$/;
+		var redecl = /^var (_[\w$_]+)=([\w_$.]+(\(.*\))?(\[.+\])?(\.[\w_$]+)*);(\/\/.*)?$/;
 
 		for (var i = 0; i < lines.length; i++) {
 			var decl = redecl.exec(lines[i].code);
@@ -443,6 +443,11 @@ function PSC(str, flags) {
 					if (assign && assign < where) {
 						continue;
 					}
+                    // If the expression contains && or || and the decl contains --$j,
+                    // no substitution allowed due to short-circuit evaluation.
+                    if (/&&|\|\|/.test(lines[where].code) && /--\$j/.test(decl[2])) {
+                        continue;
+                    }
 
 					// Safe to make the substitution.  $ is meaninful to
 					// replace(), so double them up.
@@ -565,11 +570,17 @@ function PSC(str, flags) {
 		// constant folds on the first pass anyway.
 		if ((t1 & TYPE_INTTYP) && (t2 & TYPE_INTTYP) && op != '/') {
 			st[sp-2].type = TYPE_INTVAL;
+            st[sp-2].expr = parens(st[sp-2].expr) + op +
+                            parens(st[sp-1].expr);
+		} else if (op == '+' || op == '-') {
+			st[sp-2].type = TYPE_NUMVAL;
+            st[sp-2].expr = '$f(' + parens(st[sp-2].expr) + op +
+                                    parens(st[sp-1].expr) + ')';
 		} else {
 			st[sp-2].type = TYPE_NUMVAL;
-		}
-		st[sp-2].expr = parens(st[sp-2].expr) + op +
-						parens(st[sp-1].expr);
+            st[sp-2].expr = parens(st[sp-2].expr) + op +
+                            parens(st[sp-1].expr);
+        }
 		st[sp-2].seq = ++seq;
 		sp--;
 	}
@@ -1016,6 +1027,10 @@ function PSC(str, flags) {
 		st[sp-2] = t;
 		st[sp-2].seq = ++seq;
 		st[sp-1].seq = ++seq;
+
+        if (lex.peek() == 'pop') {
+            ctxflush();
+        }
 	}
 	$.dup = function() {
 		need(1);
@@ -1286,7 +1301,7 @@ function PSC(str, flags) {
 			code += '$bwipjs_coverage[' + (thisbranchno) + ']=1;\n';
 		}
 		for (var i = 0; i < lines.length; i++) {
-			code += lines[i].code + '/*' + lines[i].lnbr + '*/\n';
+            code += lines[i].code + '//#' + lines[i].lnbr + '\n';
 		}
 		if (dlvl == 0 && cfg.coverage && fname) {
 			code += '}catch(e){\n' +
@@ -1503,7 +1518,7 @@ function PSC(str, flags) {
 				emit('var ' + tid + '=' + st[sp-2].expr + ';');
 				st[sp-2].expr = tid;
 			}
-			emit('if(' + expr + ')' + LC + ' //no-else');
+			emit('if(' + expr + ')' + LC);
 			emit('var _=' + st[sp-1].expr + ';');
 			emit(st[sp-1].expr + '=' + st[sp-2].expr + ';');
 			emit(st[sp-2].expr + '=_;');
@@ -1513,7 +1528,7 @@ function PSC(str, flags) {
 
 		ctxflush();
 		ctxprep(exec);
-		emit('if(' + expr + ')' + LC + ' //no-else');
+		emit('if(' + expr + ')' + LC);
 		newbranch();
 		append(ctxexec(exec));
 		emit(RC);
@@ -1831,8 +1846,6 @@ function PSC(str, flags) {
 	}
 	$.div = function() {
 		binarith('/');
-		// Convert the result to single-precision float
-		//st[sp-1].expr = '$f(' + st[sp-1].expr + ')';
 	}
 	$.mod = function() {
 		binarith('%');
@@ -2001,9 +2014,9 @@ function PSC(str, flags) {
 		var tid = tvar();
 		emit(`var ${tid}=$geti(${src},${off},${len});`);	// EMBED
 		if (typ & TYPE_STRTYP) {
-			st[sp++] = { type:TYPE_INTVAL, expr:tid, seq:++seq };
+			st[sp++] = { type:TYPE_STRVAL, expr:tid, seq:++seq };
 		} else {
-			st[sp++] = { type:TYPE_UNKNOWN, expr:tid, seq:++seq };
+			st[sp++] = { type:TYPE_ARRAY, expr:tid, seq:++seq };
 		}
 	}
 	$.putinterval = function() {
@@ -2266,7 +2279,6 @@ function PSC(str, flags) {
 		emit('var $bwipjs_functions=[];');
 	}
 	compile();
-	console.log(st.slice(0, sp));
 	if (cfg.coverage) {
 		emit('typeof require=="function"&&' +
 			 'require("fs").writeFileSync("coverage/functions",' +

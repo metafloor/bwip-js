@@ -24,8 +24,7 @@ echo "$filename"
 status=$?
 
 if [ ! -f proofs/$filename -o $REGEN == YES ] ; then
-	mv -f tests/$filename proofs/$filename
-	exit 0
+	cp -f tests/$filename proofs/$filename
 fi
 
 msg=$(./imgcmp proofs/$filename tests/$filename)
@@ -42,6 +41,7 @@ node <<-@EOF
 const fs = require('fs');
 const proof = fs.readFileSync('proofs/$filename');
 const image = fs.readFileSync('tests/$filename');
+const bwipp = fs.readFileSync('proofs/$sym.png');
 
 console.log('<div class="proof">');
 console.log('<img src="data:image/png;base64,' + proof.toString('base64') + '"><br>');
@@ -50,6 +50,10 @@ console.log('</div>');
 console.log('<div class="image">');
 console.log('<img src="data:image/png;base64,' + image.toString('base64') + '"><br>');
 console.log('image: ' + image.readUInt32BE(16) + ' x ' + image.readUInt32BE(20)); 
+console.log('</div>');
+console.log('<div class="bwipp">');
+console.log('<img src="data:image/png;base64,' + bwipp.toString('base64') + '"><br>');
+console.log('postscript: ' + bwipp.readUInt32BE(16) + ' x ' + bwipp.readUInt32BE(20)); 
 console.log('</div>');
 @EOF
 if [ ! -z "$msg" ] ; then

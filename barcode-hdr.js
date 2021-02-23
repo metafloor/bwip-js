@@ -472,7 +472,7 @@ function $nt(a) {
 // emulate single-precision floating-point (pseudo-polyfill for Math.fround)
 var $f = (function (fa) {
 	return function(v) {
-		return fa[0] = v, fa[0];
+		return Number.isInteger(v) ? v : (fa[0] = v, fa[0]);
 	};
 })(new Float32Array(1));
 

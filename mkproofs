@@ -1,0 +1,34 @@
+#!/bin/bash
+##
+## file : bwipjs/mkproofs
+##
+## Top-level image comparision test driver
+##
+## Usage:  ./mkproofs [pattern]
+##
+## Pattern (fixed substring) will only make proof images for the matching barcode
+## type(s).
+##
+
+PAT=
+OPTS=
+if [ "x$1" != x ] ; then
+	PAT="$1"
+	shift
+fi
+
+## run level encoder text opts
+function run() {
+	if [[ $2 == *$PAT* ]] ; then
+        ## convert from mm to in
+        TMP=$(echo "$4" | sed -e 's/height=12/height=0.5/')
+        echo $2 "$3" "$TMP"
+		./mkproof $2 "$3" "$TMP"
+	fi
+}
+
+##
+## Run the test cases
+##
+. runbwipp
+

@@ -1,9 +1,9 @@
 %!PS
 
-% Barcode Writer in Pure PostScript - Version 2020-10-02
+% Barcode Writer in Pure PostScript - Version 2021-02-06
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2019 Terry Burton
+% Copyright (c) 2004-2021 Terry Burton
 %
 % Permission is hereby granted, free of charge, to any
 % person obtaining a copy of this software and associated
@@ -32,7 +32,7 @@
 % --BEGIN TEMPLATE--
 
 % --BEGIN RESOURCE preamble--
-%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2020100200 29629 32838
+%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2021020600 29629 32838
 %%BeginData:          6 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -46,7 +46,7 @@
 
 % --BEGIN RESOURCE raiseerror--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2020100200 39041 38872
+%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2021020600 39041 38872
 %%BeginData:         15 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -67,9 +67,1828 @@ bind def
 %%EndResource
 % --END RESOURCE raiseerror--
 
+% --BEGIN RESOURCE parseinput--
+% --REQUIRES preamble raiseerror--
+%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2021020600 58305 58204
+%%BeginData:        129 ASCII Lines
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 4 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+/parseinput {
+
+    6 dict begin
+
+    /fncvals exch def
+    /barcode exch def
+
+    /parse     dup dup fncvals exch get def fncvals exch undef
+    /parsefnc  dup dup fncvals exch get def fncvals exch undef
+    /parseonly dup dup fncvals exch known def fncvals exch undef
+    /eci       dup dup fncvals exch known def fncvals exch undef
+
+    /msg barcode length array def
+    /j 0 def
+    barcode {  % loop
+        (^) search exch
+        % Copy characters up to a "^"
+        dup length exch
+        msg exch j exch [ exch {} forall ] putinterval
+        j add /j exch def
+        {  % Found a "^" escape character
+            pop
+            1 {  % common exit
+
+                parse not parsefnc not and {  % "^" as is
+                    msg j 94 put
+                    /j j 1 add def
+                    exit
+                } if
+
+                % Encode "^" to start with
+                msg j 94 put
+                /j j 1 add def
+
+                % parse
+                parse {
+                    dup length 3 ge {
+                        dup 0 3 getinterval true exch {
+                            dup 48 lt exch 57 gt or { pop false } if
+                        } forall
+                        {  % "^NNN" to byte
+                            dup 0 3 getinterval cvi dup 255 gt {
+                                pop pop
+                                /bwipp.invalidOrdinal (Ordinal must be 000 to 255) //raiseerror exec
+                            } if
+                            /j j 1 sub def  % Replace "^" with ordinal
+                            msg exch j exch put
+                            /j j 1 add def
+                            dup length 3 sub 3 exch getinterval
+                        } if
+                    } if
+                } if
+
+                parseonly
+                parsefnc not or
+                msg j 1 sub get 94 ne  % Carat was substituted away
+                or {exit} if
+
+                % parsefnc
+                /j j 1 sub def
+                dup length 3 lt {
+                    pop
+                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
+                } if
+                dup 0 get 94 eq {  % "^^" -> "^"
+                    msg j 94 put
+                    /j j 1 add def
+                    dup length 1 sub 1 exch getinterval
+                    exit
+                } if
+                dup 0 3 getinterval (ECI) eq eci and {  % "^ECInnnnnn" -> -1nnnnnn
+                    dup length 9 lt {
+                        pop
+                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
+                    } if
+                    dup 3 6 getinterval
+                    dup {
+                        dup 48 lt exch 57 gt or {
+                            pop pop
+                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
+                        } if
+                    } forall
+                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
+                    msg exch j exch put
+                    /j j 1 add def
+                    dup length 9 sub 9 exch getinterval
+                    exit
+                } if
+                dup length 4 lt {  % "^FNCx" -> fncvals{FNCx}
+                    pop
+                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
+                } if
+                dup 0 4 getinterval dup fncvals exch known not {
+                    dup length 28 add string dup 28 4 -1 roll putinterval
+                    dup 0 (Unknown function character: ) putinterval
+                    exch pop
+                    /bwipp.unknownFNC exch //raiseerror exec
+                } if
+                fncvals exch get
+                msg exch j exch put
+                /j j 1 add def
+                dup length 4 sub 4 exch getinterval
+                exit
+
+            } repeat
+        } {  % No more "^" characters
+            exit
+        }  ifelse
+    } loop
+
+    parseonly not {
+        msg 0 j getinterval
+    } {
+        j string
+        0 1 j 1 sub { 1 index exch dup msg exch get put } for
+    } ifelse
+
+    end
+
+}
+%psc [/barcode] {null def} forall
+bind def
+%psc /parseinput dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RESOURCE parseinput--
+
+% --BEGIN RESOURCE gs1lint--
+% --REQUIRES preamble raiseerror--
+%%BeginResource: uk.co.terryburton.bwipp gs1lint 0.0 2021020600 360967 368615
+%%BeginData:       1674 ASCII Lines
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 2 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+/gs1lint {
+
+    20 dict begin
+
+    /vals exch def
+    /ais exch def
+
+    /lintnumeric {
+        true exch {
+            dup 48 lt exch 57 gt or { pop false exit } if
+        } forall
+        not { pop /bwipp.GS1notNumeric (Not numeric) false exit } if
+    } bind def
+
+    /lintcset82 {
+        true exch {
+            1 string dup 0 4 -1 roll put
+            (!"%&'()*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz)
+            exch search not { pop pop false exit } if
+            pop pop pop
+        } forall
+        not { pop /bwipp.GS1badCSET82character (Invalid CSET 82 character) false exit } if
+    } bind def
+
+    /lintcset39 {
+        true exch {
+            1 string dup 0 4 -1 roll put
+            (#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ)
+            exch search not { pop pop false exit } if
+            pop pop pop
+        } forall
+        not { pop /bwipp.GS1badCSET39character  (Invalid CSET 39 character) false exit } if
+    } bind def
+
+    /lintkey {
+        dup length 2 lt { pop pop /bwipp.GS1keyTooShort (Key is too short) false exit } if
+        dup 0 get dup 48 lt exch 57 gt or exch
+        1 get dup 48 lt exch 57 gt or or {
+            pop /bwipp.GS1badGCP (Non-numeric company prefix) false exit
+        } if
+    } bind def
+
+    /lintimporteridx {
+        (-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz)
+        exch search not {pop pop /bwipp.GS1badImporterIndex (Invalid importer index) false exit} if
+        pop pop pop
+    } bind def
+
+    /lintcsum {
+        mark exch
+        dup length 2 mod 0 eq {3} {1} ifelse
+        exch { 48 sub 1 index mul exch 4 exch sub } forall pop
+        0 counttomark 1 sub {add} repeat exch pop
+        10 mod 0 ne { pop /bwipp.GS1badChecksum (Bad checksum) false exit } if
+    } bind def
+
+    /cset82 <<
+        0 (!"%&'\(\)*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz)
+        { exch dup 1 add } forall pop
+    >> def
+
+    /cset32 <<
+        0 (23456789ABCDEFGHJKLMNPQRSTUVWXYZ)
+        { exch dup 1 add } forall pop
+    >> def
+
+    /lintcsumalpha {
+        dup length 2 lt { pop pop /bwipp.GS1alphaTooShort (Alphanumeric string is too short to check) false exit} if
+        dup length 2 sub
+        2 copy
+        0 exch getinterval mark exch {
+            dup cset82 exch known { cset82 exch get } { -1 exit } ifelse
+        } forall
+        dup -1 eq { cleartomark pop pop pop /bwipp.GS1UnknownCSET82Character (Unknown CSET 82 character) false exit} if
+        counttomark array astore exch pop
+        3 1 roll
+        2 getinterval mark exch {
+            dup cset32 exch known { cset32 exch get } { -1 exit } ifelse
+        } forall
+        dup -1 eq { cleartomark pop pop /bwipp.GS1UnknownCSET32Character (Unknown CSET 32 character) false exit} if
+        counttomark array astore exch pop
+        dup 0 get 5 bitshift exch 1 get add exch
+        [ 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 ]
+        1 index length
+        dup 2 index length gt { pop pop pop pop pop /bwipp.GS1alphaTooLong (Alphanumeric string is too long to check) false exit} if
+        0 exch getinterval {exch} forall
+        0 exch { 3 -1 roll exch mul add } forall 1021 mod
+        ne { pop /bwipp.GS1badAlphaCheckCharacters (Bad alphanumeric check characters) false exit} if
+    } bind def
+
+    /iso3166 << [
+        /004 /008 /010 /012 /016 /020 /024 /028 /031 /032 /036 /040 /044 /048
+        /050 /051 /052 /056 /060 /064 /068 /070 /072 /074 /076 /084 /086 /090 /092 /096
+        /100 /104 /108 /112 /116 /120 /124 /132 /136 /140 /144 /148
+        /152 /156 /158 /162 /166 /170 /174 /175 /178 /180 /184 /188 /191 /192 /196
+        /203 /204 /208 /212 /214 /218 /222 /226 /231 /232 /233 /234 /238 /239 /242 /246 /248
+        /250 /254 /258 /260 /262 /266 /268 /270 /275 /276 /288 /292 /296
+        /300 /304 /308 /312 /316 /320 /324 /328 /332 /334 /336 /340 /344 /348
+        /352 /356 /360 /364 /368 /372 /376 /380 /384 /388 /392 /398
+        /400 /404 /408 /410 /414 /417 /418 /422 /426 /428 /430 /434 /438 /440 /442 /446
+        /450 /454 /458 /462 /466 /470 /474 /478 /480 /484 /492 /496 /498 /499
+        /500 /504 /508 /512 /516 /520 /524 /528 /531 /533 /534 /535 /540 /548
+        /554 /558 /562 /566 /570 /574 /578 /580 /581 /583 /584 /585 /586 /591 /598
+        /600 /604 /608 /612 /616 /620 /624 /626 /630 /634 /638 /642 /643 /646
+        /652 /654 /659 /660 /662 /663 /666 /670 /674 /678 /682 /686 /688 /690 /694
+        /702 /703 /704 /705 /706 /710 /716 /724 /728 /729 /732 /740 /744 /748
+        /752 /756 /760 /762 /764 /768 /772 /776 /780 /784 /788 /792 /795 /796 /798
+        /800 /804 /807 /818 /826 /831 /832 /833 /834 /840
+        /850 /854 /858 /860 /862 /876 /882 /887 /894
+    ] {dup} forall >> def
+
+    /lintiso3166 {
+        iso3166 exch known not { pop /bwipp.GS1UnknownCountry (Unknown country code) false exit } if
+    } bind def
+
+    /lintiso3166999 {
+        dup /999 ne {
+            iso3166 exch known not { pop /bwipp.GS1UnknownCountryOr999 (Unknown country code or not 999) false exit } if
+        } {
+            pop
+        } ifelse
+    } bind def
+
+    /lintiso3166list {
+        dup length 3 mod 0 ne {
+            pop pop /bwipp.GS1BadCountryListLength (Not a group of three-digit country codes) false exit
+        } if
+        true
+        0 3 3 index length 1 sub {
+            2 index exch 3 getinterval
+            iso3166 exch known not { pop pop false exit } if
+        } for
+        not { pop /bwipp.GS1UnknownCountry (Unknown country code) false exit } if
+        pop
+    } bind def
+
+    /iso3166alpha2 << [
+        /AD /AE /AF /AG /AI /AL /AM /AO /AQ /AR /AS /AT /AU /AW /AX /AZ
+        /BA /BB /BD /BE /BF /BG /BH /BI /BJ /BL /BM /BN /BO /BQ /BR /BS /BT /BV /BW /BY /BZ
+        /CA /CC /CD /CF /CG /CH /CI /CK /CL /CM /CN /CO /CR /CU /CV /CW /CX /CY /CZ
+        /DE /DJ /DK /DM /DO /DZ
+        /EC /EE /EG /EH /ER /ES /ET
+        /FI /FJ /FK /FM /FO /FR
+        /GA /GB /GD /GE /GF /GG /GH /GI /GL /GM /GN /GP /GQ /GR /GS /GT /GU /GW /GY
+        /HK /HM /HN /HR /HT /HU
+        /ID /IE /IL /IM /IN /IO /IQ /IR /IS /IT /JE /JM /JO /JP
+        /KE /KG /KH /KI /KM /KN /KP /KR /KW /KY /KZ
+        /LA /LB /LC /LI /LK /LR /LS /LT /LU /LV /LY
+        /MA /MC /MD /ME /MF /MG /MH /MK /ML /MM /MN /MO /MP /MQ /MR /MS /MT /MU /MV /MW /MX /MY /MZ
+        /NA /NC /NE /NF /NG /NI /NL /NO /NP /NR /NU /NZ
+        /OM
+        /PA /PE /PF /PG /PH /PK /PL /PM /PN /PR /PS /PT /PW /PY
+        /QA
+        /RE /RO /RS /RU /RW
+        /SA /SB /SC /SD /SE /SG /SH /SI /SJ /SK /SL /SM /SN /SO /SR /SS /ST /SV /SX /SY /SZ
+        /TC /TD /TF /TG /TH /TJ /TK /TL /TM /TN /TO /TR /TT /TV /TW /TZ
+        /UA /UG /UM /US /UY /UZ
+        /VA /VC /VE /VG /VI /VN /VU
+        /WF /WS
+        /YE /YT
+        /ZA /ZM /ZW
+    ] {dup} forall >> def
+
+    /lintiso3166alpha2 {
+        iso3166alpha2 exch known not { pop /bwipp.GS1UnknownCountryAlpha (Unknown country alpha code) false exit } if
+    } bind def
+
+    /iso4217 << [
+        /008 /012 /032 /036 /044 /048
+        /050 /051 /052 /060 /064 /068 /072 /084 /090 /096
+        /104 /108 /116 /124 /132 /136 /144
+        /152 /156 /170 /174 /188 /191 /192
+        /203 /208 /214 /222 /230 /232 /238 /242 /262 /270 /292
+        /320 /324 /328 /332 /340 /344 /348
+        /352 /356 /360 /364 /368 /376 /388 /392 /398
+        /400 /404 /408 /410 /414 /417 /418
+        /422 /426 /430 /434 /446
+        /454 /458 /462 /480 /484 /496 /498
+        /504 /512 /516 /524 /532 /533 /548
+        /554 /558 /566 /578 /586 /590 /598
+        /600 /604 /608 /634 /643 /646 /654 /682 /690 /694
+        /702 /704 /706 /710 /728 /748
+        /752 /756 /760 /764 /776 /780 /784 /788
+        /800 /807 /818 /826 /834 /840 /858 /860 /882 /886
+        /901 /927 /928 /929 /930 /931 /932 /933 /934 /936 /938
+        /940 /941 /943 /944 /946 /947 /948 /949
+        /950 /951 /952 /953 /955 /956 /957 /958 /959
+        /960 /961 /962 /963 /964 /965 /967 /968 /969
+        /970 /971 /972 /973 /975 /976 /977 /978 /979
+        /980 /981 /984 /985 /986 /990 /994 /997 /999
+    ] {dup} forall >> def
+
+    /lintiso4217 {
+        iso4217 exch known not { pop /bwipp.GS1UnknownCurrency (Unknown currency code) false exit } if
+    } bind def
+
+    /lintiban {
+        dup length 4 lt { pop pop /bwipp.GS1tooShort (IBAN too short) false exit } if
+        dup true exch {
+            1 string dup 0 4 -1 roll put
+            (0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ)
+            exch search not { pop pop false exit } if
+            pop pop pop
+        } forall
+        not { pop /bwipp.GS1badIBANcharacter (Invalid IBAN character) false exit } if
+        dup mark exch mark exch {} forall counttomark -4 roll counttomark array astore exch pop {
+            48 sub dup 9 gt {7 sub dup 10 idiv exch 10 mod} if
+        } forall counttomark array astore exch pop
+        0 exch {exch 10 mul add 97 mod} forall
+        1 ne { pop pop /bwipp.GS1badIBANchecksum (IBAN checksum incorrect) false exit } if
+        0 2 getinterval lintiso3166alpha2
+    } bind def
+
+    /lintzero {
+        (0) ne { pop /bwipp.GS1zeroRequired (Zero is required) false exit } if
+    } bind def
+
+    /lintnonzero {
+        false exch { 48 ne {pop true} if } forall
+        not { pop /bwipp.GS1zeroNotPermitted (Zero not permitted) false exit } if
+    } bind def
+
+    /lintnozeroprefix {
+        dup length 1 gt exch 0 get 48 eq and {
+            pop /bwipp.GS1badZeroPrefix (Zero prefix is not permitted) false exit
+        } if
+    } bind def
+
+    /lintyymmd0 {
+        dup 2 2 getinterval cvi dup 1 lt exch 12 gt or { pop /bwipp.GS1badMonth (Invalid month) false exit } if
+        dup 0 2 getinterval cvi dup  21  sub  % Update 20YY periodically for century calculation
+        dup 51 ge {pop 1900 add} { -50 le {2100 add} {2000 add} ifelse} ifelse  % YYYY
+        dup 400 mod 0 eq exch dup 4 mod 0 eq exch 100 mod 0 ne and or           % Leap year?
+        [ 31  3 -1 roll {29} {28} ifelse  31 30 31 30 31 31 30 31 30 31 ]
+        1 index 2 2 getinterval cvi 1 sub get
+        exch 4 2 getinterval cvi lt { pop /bwipp.GS1badDay (Invalid day of month) false exit } if
+    } bind def
+
+    /lintyymmdd {
+        dup length 6 ne { pop /bwipp.GS1badDateLength (Invalid length for date) false exit } if
+        dup 4 2 getinterval cvi 1 lt { pop /bwipp.GS1badDay (Invalid day of month) false exit } if
+        lintyymmd0
+    } bind def
+
+    /lintyymmddhh {
+        dup length 8 ne { pop /bwipp.GS1badYYMMDDHHLength (Invalid length for date with hour) false exit } if
+        dup 6 2 getinterval cvi 23 gt { pop pop /bwipp.GS1badHour (Invalid hour of day) false exit } if
+        0 6 getinterval lintyymmdd
+    } bind def
+
+    /linthhmm {
+        dup 0 2 getinterval cvi 23 gt { pop pop /bwipp.GS1badHour (Invalid hour of day) false exit } if
+        2 2 getinterval cvi 59 gt { pop /bwipp.GS1badMinute (Invalid minute in the hour) false exit } if
+    } bind def
+
+    /lintmmoptss {
+        dup length dup 2 ne exch 4 ne and {
+            pop /bwipp.GS1badTimeLength (Invalid length for optional minutes and seconds) false exit
+        } if
+        dup 0 2 getinterval cvi 59 gt { pop pop /bwipp.GS1badMinute (Invalid minute in the hour) false exit } if
+        dup length 4 ge {
+            dup 2 2 getinterval cvi 59 gt { pop pop /bwipp.GS1badSecond (Invalid second in the minute) false exit } if
+        } if
+        pop
+    } bind def
+
+    /lintyesno {
+        dup (0) ne exch (1) ne and {
+            pop /bwipp.GS1badBoolean (Neither 0 nor 1 for yes or no) false exit
+        } if
+    } bind def
+
+    /lintwinding {
+        dup (0) ne exch dup (1) ne exch (9) ne and and {
+            pop /bwipp.GS1badWinding (Invalid winding direction) false exit
+        } if
+    } bind def
+
+    /lintpieceoftotal {
+        dup length 2 mod 0 ne { pop pop /bwipp.GS1badPieceTotalLength (Invalid piece/total length) false exit } if
+        dup dup length 2 idiv 0 exch getinterval cvi
+        dup 0 eq { pop pop pop /bwipp.GS1badPieceNumber (Invalid piece number) false exit } if
+        exch dup length 2 idiv dup getinterval cvi
+        dup 0 eq { pop pop pop /bwipp.GS1badPieceTotal (Invalid total number) false exit } if
+        gt { pop /bwipp.GS1pieceExceedsTotal (Piece number exceeds total) false exit } if
+    } bind def
+
+    /lintpcenc {
+        {
+            (%) search not {pop exit} if
+            pop pop dup length 2 lt { pop pop /bwipp.GS1badPercentEscape (Invalid % escape) false exit } if
+            dup 0 2 getinterval true exch {
+                1 string dup 0 4 -1 roll put
+                (0123456789ABCDEFabcdef)
+                exch search not { pop pop false exit } if
+                pop pop pop
+            } forall
+            not { pop pop /bwipp.GS1badPercentChars (Invalid characters for percent encoding) false exit } if
+        } loop
+    } bind def
+
+    /lintcouponcode {
+        dup true exch {
+            dup 48 lt exch 57 gt or { pop false exit } if
+        } forall
+        not { pop pop /bwipp.GS1couponNotNumeric (Coupon not numeric) false exit } if
+
+        % GCP VLI and value
+        dup length 1 lt {
+            pop pop /bwipp.GS1couponTooShortGCPVLI (Coupon too short: Missing GCP VLI) false exit
+        } if
+        dup 0 1 getinterval cvi dup 6 gt {
+            pop pop /bwipp.GS1couponBadGCPVLI (Coupon GCP length indicator must be 0-6) false exit
+        } if
+        6 add 1 add
+        2 copy exch length gt {
+            pop pop pop /bwipp.GS1couponTooShortGCP (Coupon too short: GCP truncated) false exit
+        } if
+        dup 2 index length exch sub getinterval
+
+        % Offer Code
+        dup length 6 lt {
+            pop pop /bwipp.GS1couponTooShortOfferCode (Coupon too short: Offer Code truncated) false exit
+        } if
+        dup length 6 sub 6 exch getinterval
+
+        % Save Value VLI and value
+        dup length 1 lt {
+            pop pop /bwipp.GS1couponTooShortSaveValueVLI (Coupon too short: Missing Save Value VLI) false exit
+        } if
+        dup 0 1 getinterval cvi dup dup 1 lt exch 5 gt or {
+            pop pop /bwipp.GS1couponBadSaveValueVLI (Coupon Save Value length indicator must be 1-5) false exit
+        } if
+        1 add
+        2 copy exch length gt {
+            pop pop pop /bwipp.GS1couponTooShortSaveValue (Coupon too short: Save Value truncated) false exit
+        } if
+        dup 2 index length exch sub getinterval
+
+        % 1st Purchase Requirement VLI and value
+        dup length 1 lt {
+            pop pop /bwipp.GS1couponTooShort1stPurchaseRequirementVLI (Coupon too short: Missing 1st Purchase Requirement VLI) false exit
+        } if
+        dup 0 1 getinterval cvi dup dup 1 lt exch 5 gt or {
+            pop pop /bwipp.GS1couponBad1stPurchaseRequirementVLI (Coupon 1st Purchase Requirement length indicator must be 1-5) false exit
+        } if
+        1 add
+        2 copy exch length gt {
+            pop pop pop /bwipp.GS1couponTooShort1stPurchaseRequirement (Coupon too short: 1st Purchase Requirement truncated) false exit
+        } if
+        dup 2 index length exch sub getinterval
+
+        % 1st Purchase Requirement Code
+        dup length 1 lt {
+            pop pop /bwipp.GS1couponTooShort1stPurchaseRequirementCode (Coupon too short: Missing 1st Purchase Requirement Code) false exit
+        } if
+        dup 0 1 getinterval cvi dup 4 gt exch 9 ne and {
+            pop pop /bwipp.GS1couponBad1stPurchaseRequirementCode (Coupon 1st Purchase Requirement Code must be 0-4 or 9) false exit
+        } if
+        dup length 1 sub 1 exch getinterval
+
+        % 1st Purchase Family Code
+        dup length 3 lt {
+            pop pop /bwipp.GS1couponTooShort1stPurchaseFamilyCode (Coupon too short: 1st Purchase Family Code truncated) false exit
+        } if
+        dup length 3 sub 3 exch getinterval
+
+        % Optional field 1
+        dup length 1 ge { dup 0 1 getinterval cvi 1 eq {
+            1 dup 2 index length exch sub getinterval
+
+            % Additional Purchase Rules Code
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShortAdditionalPurchaseRulesCode (Coupon too short: Missing Additional Purchase Rules Code) false exit
+            } if
+            dup 0 1 getinterval cvi 3 gt {
+                pop pop /bwipp.GS1couponBadAdditionalPurchaseRulesCode (Coupon Additional Purchase Rules Code must be 0-3) false exit
+            } if
+            dup length 1 sub 1 exch getinterval
+
+            % 2nd Purchase RequirementVLI and value
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShort2ndPurchaseRequirementVLI (Coupon too short: Missing 2nd Purchase Requirement VLI) false exit
+            } if
+            dup 0 1 getinterval cvi dup dup 1 lt exch 5 gt or {
+                pop pop /bwipp.GS1couponBad2ndPurchaseRequirementVLI (Coupon 2nd Purchase Requirement length indicator must be 1-5) false exit
+            } if
+            1 add
+            2 copy exch length gt {
+                pop pop pop /bwipp.GS1couponTooShort2ndPurchaseRequirement (Coupon too short: 2nd Purchase Requirement truncated) false exit
+            } if
+            dup 2 index length exch sub getinterval
+
+            % 2nd Purchase Requirement Code
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShort2ndPurchaseRequirementCode (Coupon too short: Missing 2nd Purchase Requirement Code) false exit
+            } if
+            dup 0 1 getinterval cvi dup 4 gt exch 9 ne and {
+                pop pop /bwipp.GS1couponBad2ndPurchaseRequirementCode (Coupon 2nd Purchase Requirement Code must be 0-4 or 9) false exit
+            } if
+            dup length 1 sub 1 exch getinterval
+
+            % 2nd Purchase Family Code
+            dup length 3 lt {
+                pop pop /bwipp.GS1couponTooShort2ndPurchaseFamilyCode (Coupon too short: 2nd Purchase Family Code truncated) false exit
+            } if
+            dup length 3 sub 3 exch getinterval
+
+            % 2nd Purchase GCP VLI and value
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShort2ndPurchaseGCPVLI (Coupon too short: Missing 2nd Purchase GCP VLI) false exit
+            } if
+            dup 0 1 getinterval cvi dup dup 6 gt exch 9 ne and {
+                pop pop /bwipp.GS1couponBad2ndPurchaseGCPVLI (Coupon 2nd Purchase GCP length indicator must be 0-6 or 9) false exit
+            } if
+            dup 9 ne {6 add} {pop 0} ifelse 1 add
+            2 copy exch length gt {
+                pop pop pop /bwipp.GS1couponTooShort2ndPurchaseGCP (Coupon too short: 2nd Purchase GCP truncated) false exit
+            } if
+            dup 2 index length exch sub getinterval
+
+        } if } if
+
+        % Optional field 2
+        dup length 1 ge { dup 0 1 getinterval cvi 2 eq {
+            1 dup 2 index length exch sub getinterval
+
+            % 3rd Purchase RequirementVLI and value
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShort3rdPurchaseRequirementVLI (Coupon too short: Missing 3rd Purchase Requirement VLI) false exit
+            } if
+            dup 0 1 getinterval cvi dup dup 1 lt exch 5 gt or {
+                pop pop /bwipp.GS1couponBad3rdPurchaseRequirementVLI (Coupon 3rd Purchase Requirement length indicator must be 1-5) false exit
+            } if
+            1 add
+            2 copy exch length gt {
+                pop pop pop /bwipp.GS1couponTooShort3rdPurchaseRequirement (Coupon too short: 3rd Purchase Requirement truncated) false exit
+            } if
+            dup 2 index length exch sub getinterval
+
+            % 3rd Purchase Requirement Code
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShort3rdPurchaseRequirementCode (Coupon too short: Missing 3rd Purchase Requirement Code) false exit
+            } if
+            dup 0 1 getinterval cvi dup 4 gt exch 9 ne and {
+                pop pop /bwipp.GS1couponBad3rdPurchaseRequirementCode (Coupon 3rd Purchase Requirement Code must be 0-4 or 9) false exit
+            } if
+            dup length 1 sub 1 exch getinterval
+
+            % 3rd Purchase Family Code
+            dup length 3 lt {
+                pop pop /bwipp.GS1couponTooShort3rdPurchaseFamilyCode (Coupon too short: 3rd Purchase Family Code truncated) false exit
+            } if
+            dup length 3 sub 3 exch getinterval
+
+            % 3rd Purchase GCP VLI and value
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShort3rdPurchaseGCPVLI (Coupon too short: Missing 3rd Purchase GCP VLI) false exit
+            } if
+            dup 0 1 getinterval cvi dup dup 6 gt exch 9 ne and {
+                pop pop /bwipp.GS1couponBad3rdPurchaseGCPVLI (Coupon 3rd Purchase GCP length indicator must be 0-6 or 9) false exit
+            } if
+            dup 9 ne {6 add} {pop 0} ifelse 1 add
+            2 copy exch length gt {
+                pop pop pop /bwipp.GS1couponTooShort3rdPurchaseGCP (Coupon too short: 3rd Purchase GCP truncated) false exit
+            } if
+            dup 2 index length exch sub getinterval
+
+        } if } if
+
+        % Optional field 3
+        /couponexpire -1 def
+        dup length 1 ge { dup 0 1 getinterval cvi 3 eq {
+            1 dup 2 index length exch sub getinterval
+
+            % Expiration date
+            dup length 6 lt {
+                pop pop /bwipp.GS1couponTooShortExpirationDate (Coupon too short: Expiration date) false exit
+            } if
+            dup 2 2 getinterval cvi dup 1 lt exch 12 gt or { pop pop /bwipp.GS1couponExpirationDateBadMonth (Invalid month in expiration date) false exit } if
+            dup 0 2 getinterval cvi dup 21 sub  % Update 20YY periodically for century calculation
+            dup 51 ge {pop 1900 add} { -50 le {2100 add} {2000 add} ifelse} ifelse  % YYYY
+            dup 400 mod 0 eq exch dup 4 mod 0 eq exch 100 mod 0 ne and or           % Leap year?
+            [ 31  3 -1 roll {29} {28} ifelse  31 30 31 30 31 31 30 31 30 31 ]
+            1 index 2 2 getinterval cvi 1 sub get
+            1 index 4 2 getinterval cvi dup 3 1 roll lt
+            exch 1 lt or { pop pop /bwipp.GS1couponExpirationDateBadDay (Invalid day of month in expiration date) false exit } if
+            dup 0 6 getinterval cvi /couponexpire exch def
+            dup length 6 sub 6 exch getinterval
+
+        } if } if
+
+        % Optional field 4
+        dup length 1 ge { dup 0 1 getinterval cvi 4 eq {
+            1 dup 2 index length exch sub getinterval
+
+            % Start date
+            dup length 6 lt {
+                pop pop /bwipp.GS1couponTooShortStartDate (Coupon too short: Start date) false exit
+            } if
+            dup 2 2 getinterval cvi dup 1 lt exch 12 gt or { pop pop /bwipp.GS1couponStartDateBadMonth (Invalid month in start date) false exit } if
+            dup 0 2 getinterval cvi dup 21 sub  % Update 20YY periodically for century calculation
+            dup 51 ge {pop 1900 add} { -50 le {2100 add} {2000 add} ifelse} ifelse  % YYYY
+            dup 400 mod 0 eq exch dup 4 mod 0 eq exch 100 mod 0 ne and or           % Leap year?
+            [ 31  3 -1 roll {29} {28} ifelse  31 30 31 30 31 31 30 31 30 31 ]
+            1 index 2 2 getinterval cvi 1 sub get
+            1 index 4 2 getinterval cvi dup 3 1 roll lt
+            exch 1 lt or { pop pop /bwipp.GS1couponStartDateBadDay (Invalid day of month in start date) false exit } if
+            dup 0 6 getinterval cvi /couponstart exch def
+            couponexpire -1 ne couponexpire couponstart lt and {
+                pop pop /bwipp.GS1couponExpireDateBeforeStartDate (Coupon expires before it starts) false exit
+            } if
+            dup length 6 sub 6 exch getinterval
+
+        } if } if
+
+        % Optional field 5
+        dup length 1 ge { dup 0 1 getinterval cvi 5 eq {
+            1 dup 2 index length exch sub getinterval
+
+            % Serial Number VLI and value
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShortSerialNumberVLI (Coupon too short: Missing Serial Number VLI) false exit
+            } if
+            dup 0 1 getinterval cvi 6 add 1 add
+            2 copy exch length gt {
+                pop pop pop /bwipp.GS1couponTooShortSerialNumber (Coupon too short: Serial Number truncated) false exit
+            } if
+            dup 2 index length exch sub getinterval
+
+        } if } if
+
+        % Optional field 6
+        dup length 1 ge { dup 0 1 getinterval cvi 6 eq {
+            1 dup 2 index length exch sub getinterval
+
+            % Retailer GCP/GLN VLI and value
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShortRetailerGCPGLNVLI (Coupon too short: Missing Retailer GCP/GLN VLI) false exit
+            } if
+            dup 0 1 getinterval cvi dup dup 1 lt exch 7 gt or {
+                pop pop /bwipp.GS1couponBadRetailerGCPGLNVLI (Coupon Retailer GCP/GLN length indicator must be 1-7) false exit
+            } if
+            6 add 1 add
+            2 copy exch length gt {
+                pop pop pop /bwipp.GS1couponTooShortRetailerGCPGLN (Coupon too short: Retailer GCP/GLN truncated) false exit
+            } if
+            dup 2 index length exch sub getinterval
+
+        } if } if
+
+        % Optional field 9
+        dup length 1 ge { dup 0 1 getinterval cvi 9 eq {
+            1 dup 2 index length exch sub getinterval
+
+            % Save Value Code
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShortSaveValueCode (Coupon too short: Missing Save Value Code) false exit
+            } if
+            dup 0 1 getinterval cvi dup 6 gt exch dup 3 eq exch 4 eq or or {
+                pop pop /bwipp.GS1couponBadSaveValueCode (Coupon Save Value Code must be 0,1,2,5 or 6) false exit
+            } if
+            dup length 1 sub 1 exch getinterval
+
+            % Save Value Applies to Item
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShortSaveValueAppliesToItem (Coupon too short: Missing Save Value Applies to Item) false exit
+            } if
+            dup 0 1 getinterval cvi 2 gt {
+                pop pop /bwipp.GS1couponBadSaveValueAppliesToItem (Coupon Save Value Applies to Item must be 0-2) false exit
+            } if
+            dup length 1 sub 1 exch getinterval
+
+            % Store Coupon Flag
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShortStoreCouponFlag (Coupon too short: Missing Store Coupon Flag) false exit
+            } if
+            dup length 1 sub 1 exch getinterval
+
+            % Don't Multiply Flag
+            dup length 1 lt {
+                pop pop /bwipp.GS1couponTooShortDontMultiplyFlag (Coupon too short: Missing Don't Multiply Flag) false exit
+            } if
+            dup 0 1 getinterval cvi 1 gt {
+                pop pop /bwipp.GS1couponBadDontMultiplyFlag (Don't Multiply Flag must be 0 or 1) false exit
+            } if
+            dup length 1 sub 1 exch getinterval
+
+        } if } if
+
+        dup length 0 ne {
+            pop pop /bwipp.GS1couponUnrecognisedOptionalField (Coupon fields must be 1,2,3,4,5,6 or 9, increasing order) false exit
+        } if
+        pop
+    } bind def
+
+    /lintcouponposoffer {
+        dup true exch {
+            dup 48 lt exch 57 gt or { pop false exit } if
+        } forall
+        not { pop pop /bwipp.GS1couponNotNumeric (Coupon not numeric) false exit } if
+        % Format Code
+        dup length 1 lt {
+            pop pop /bwipp.GS1couponTooShortFormatCode (Coupon too short: Missing Format Code) false exit
+        } if
+        dup 0 1 getinterval dup (0) ne exch (1) ne and {
+            pop pop /bwipp.GS1couponBadFormatCode (Coupon format must be 0 or 1) false exit
+        } if
+        dup length 1 sub 1 exch getinterval
+        % Funder ID VLI and Funder ID
+        dup length 1 lt {
+            pop pop /bwipp.GS1couponTooShortFunderVLI (Coupon too short: Missing Funder VLI) false exit
+        } if
+        dup 0 1 getinterval cvi dup 6 gt {
+            pop pop pop /bwipp.GS1couponBadFunderVLI (Coupon Funder length indicator must be 0-6) false exit
+        } if
+        6 add 1 add
+        2 copy exch length gt {
+            pop pop pop /bwipp.GS1couponTooShortFunder (Coupon too short: Truncated Funder ID) false exit
+        } if
+        dup 2 index length exch sub getinterval
+        % Offer Code
+        dup length 6 lt {
+            pop pop /bwipp.GS1couponTooShortOfferCode (Coupon too short: Truncated Offer Code) false exit
+        } if
+        dup length 6 sub 6 exch getinterval
+        % Serial Number VLI and Serial Number
+        dup length 1 lt {
+            pop pop /bwipp.GS1couponTooShortSnVLI (Coupon too short: Missing SN VLI) false exit
+        } if
+        dup 0 1 getinterval cvi
+        6 add 1 add
+        2 copy exch length gt {
+            pop pop pop /bwipp.GS1couponTooShortSn (Coupon too short: Truncated SN) false exit
+        } if
+        dup 2 index length exch sub getinterval
+        dup length 0 ne {
+            pop pop /bwipp.GS1couponTooLong (Coupon too long) false exit
+        } if
+        pop
+    } bind def
+
+    /gs1syntax <<
+
+        [
+        << /cset /N  /min 18  /max 18  /check [ /lintcsum /lintkey ] >>
+        ]
+        (00) exch dup
+        pop
+
+        [
+        << /cset /N  /min 14  /max 14  /check [ /lintcsum /lintkey ] >>
+        ]
+        (01) exch dup
+        (02) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (10) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [ /lintyymmd0 ] >>
+        ]
+        (11) exch dup
+        (12) exch dup
+        (13) exch dup
+        (14) exch dup
+        (15) exch dup
+        (16) exch dup
+        (17) exch dup
+        pop
+
+        [
+        << /cset /N  /min  2  /max  2  /check [] >>
+        ]
+        (20) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (21) exch dup
+        (22) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 28  /check [] >>
+        ]
+        (235) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [] >>
+        ]
+        (240) exch dup
+        (241) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max  6  /check [] >>
+        ]
+        (242) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (243) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [] >>
+        ]
+        (250) exch dup
+        (251) exch dup
+        pop
+
+        [
+        << /cset /N  /min 13  /max 13  /check [ /lintcsum /lintkey ] >>
+        << /cset /X  /min  0  /max 17  /check [] >>
+        ]
+        (253) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (254) exch dup
+        pop
+
+        [
+        << /cset /N  /min 13  /max 13  /check [ /lintcsum /lintkey ] >>
+        << /cset /N  /min  0  /max 12  /check [] >>
+        ]
+        (255) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max  8  /check [] >>
+        ]
+        (30) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [] >>
+        ]
+        (3100) exch dup
+        (3101) exch dup
+        (3102) exch dup
+        (3103) exch dup
+        (3104) exch dup
+        (3105) exch dup
+        (3110) exch dup
+        (3111) exch dup
+        (3112) exch dup
+        (3113) exch dup
+        (3114) exch dup
+        (3115) exch dup
+        (3120) exch dup
+        (3121) exch dup
+        (3122) exch dup
+        (3123) exch dup
+        (3124) exch dup
+        (3125) exch dup
+        (3130) exch dup
+        (3131) exch dup
+        (3132) exch dup
+        (3133) exch dup
+        (3134) exch dup
+        (3135) exch dup
+        (3140) exch dup
+        (3141) exch dup
+        (3142) exch dup
+        (3143) exch dup
+        (3144) exch dup
+        (3145) exch dup
+        (3150) exch dup
+        (3151) exch dup
+        (3152) exch dup
+        (3153) exch dup
+        (3154) exch dup
+        (3155) exch dup
+        (3160) exch dup
+        (3161) exch dup
+        (3162) exch dup
+        (3163) exch dup
+        (3164) exch dup
+        (3165) exch dup
+        (3200) exch dup
+        (3201) exch dup
+        (3202) exch dup
+        (3203) exch dup
+        (3204) exch dup
+        (3205) exch dup
+        (3210) exch dup
+        (3211) exch dup
+        (3212) exch dup
+        (3213) exch dup
+        (3214) exch dup
+        (3215) exch dup
+        (3220) exch dup
+        (3221) exch dup
+        (3222) exch dup
+        (3223) exch dup
+        (3224) exch dup
+        (3225) exch dup
+        (3230) exch dup
+        (3231) exch dup
+        (3232) exch dup
+        (3233) exch dup
+        (3234) exch dup
+        (3235) exch dup
+        (3240) exch dup
+        (3241) exch dup
+        (3242) exch dup
+        (3243) exch dup
+        (3244) exch dup
+        (3245) exch dup
+        (3250) exch dup
+        (3251) exch dup
+        (3252) exch dup
+        (3253) exch dup
+        (3254) exch dup
+        (3255) exch dup
+        (3260) exch dup
+        (3261) exch dup
+        (3262) exch dup
+        (3263) exch dup
+        (3264) exch dup
+        (3265) exch dup
+        (3270) exch dup
+        (3271) exch dup
+        (3272) exch dup
+        (3273) exch dup
+        (3274) exch dup
+        (3275) exch dup
+        (3280) exch dup
+        (3281) exch dup
+        (3282) exch dup
+        (3283) exch dup
+        (3284) exch dup
+        (3285) exch dup
+        (3290) exch dup
+        (3291) exch dup
+        (3292) exch dup
+        (3293) exch dup
+        (3294) exch dup
+        (3295) exch dup
+        (3300) exch dup
+        (3301) exch dup
+        (3302) exch dup
+        (3303) exch dup
+        (3304) exch dup
+        (3305) exch dup
+        (3310) exch dup
+        (3311) exch dup
+        (3312) exch dup
+        (3313) exch dup
+        (3314) exch dup
+        (3315) exch dup
+        (3320) exch dup
+        (3321) exch dup
+        (3322) exch dup
+        (3323) exch dup
+        (3324) exch dup
+        (3325) exch dup
+        (3330) exch dup
+        (3331) exch dup
+        (3332) exch dup
+        (3333) exch dup
+        (3334) exch dup
+        (3335) exch dup
+        (3340) exch dup
+        (3341) exch dup
+        (3342) exch dup
+        (3343) exch dup
+        (3344) exch dup
+        (3345) exch dup
+        (3350) exch dup
+        (3351) exch dup
+        (3352) exch dup
+        (3353) exch dup
+        (3354) exch dup
+        (3355) exch dup
+        (3360) exch dup
+        (3361) exch dup
+        (3362) exch dup
+        (3363) exch dup
+        (3364) exch dup
+        (3365) exch dup
+        (3370) exch dup
+        (3371) exch dup
+        (3372) exch dup
+        (3373) exch dup
+        (3374) exch dup
+        (3375) exch dup
+        (3400) exch dup
+        (3401) exch dup
+        (3402) exch dup
+        (3403) exch dup
+        (3404) exch dup
+        (3405) exch dup
+        (3410) exch dup
+        (3411) exch dup
+        (3412) exch dup
+        (3413) exch dup
+        (3414) exch dup
+        (3415) exch dup
+        (3420) exch dup
+        (3421) exch dup
+        (3422) exch dup
+        (3423) exch dup
+        (3424) exch dup
+        (3425) exch dup
+        (3430) exch dup
+        (3431) exch dup
+        (3432) exch dup
+        (3433) exch dup
+        (3434) exch dup
+        (3435) exch dup
+        (3440) exch dup
+        (3441) exch dup
+        (3442) exch dup
+        (3443) exch dup
+        (3444) exch dup
+        (3445) exch dup
+        (3450) exch dup
+        (3451) exch dup
+        (3452) exch dup
+        (3453) exch dup
+        (3454) exch dup
+        (3455) exch dup
+        (3460) exch dup
+        (3461) exch dup
+        (3462) exch dup
+        (3463) exch dup
+        (3464) exch dup
+        (3465) exch dup
+        (3470) exch dup
+        (3471) exch dup
+        (3472) exch dup
+        (3473) exch dup
+        (3474) exch dup
+        (3475) exch dup
+        (3480) exch dup
+        (3481) exch dup
+        (3482) exch dup
+        (3483) exch dup
+        (3484) exch dup
+        (3485) exch dup
+        (3490) exch dup
+        (3491) exch dup
+        (3492) exch dup
+        (3493) exch dup
+        (3494) exch dup
+        (3495) exch dup
+        (3500) exch dup
+        (3501) exch dup
+        (3502) exch dup
+        (3503) exch dup
+        (3504) exch dup
+        (3505) exch dup
+        (3510) exch dup
+        (3511) exch dup
+        (3512) exch dup
+        (3513) exch dup
+        (3514) exch dup
+        (3515) exch dup
+        (3520) exch dup
+        (3521) exch dup
+        (3522) exch dup
+        (3523) exch dup
+        (3524) exch dup
+        (3525) exch dup
+        (3530) exch dup
+        (3531) exch dup
+        (3532) exch dup
+        (3533) exch dup
+        (3534) exch dup
+        (3535) exch dup
+        (3540) exch dup
+        (3541) exch dup
+        (3542) exch dup
+        (3543) exch dup
+        (3544) exch dup
+        (3545) exch dup
+        (3550) exch dup
+        (3551) exch dup
+        (3552) exch dup
+        (3553) exch dup
+        (3554) exch dup
+        (3555) exch dup
+        (3560) exch dup
+        (3561) exch dup
+        (3562) exch dup
+        (3563) exch dup
+        (3564) exch dup
+        (3565) exch dup
+        (3570) exch dup
+        (3571) exch dup
+        (3572) exch dup
+        (3573) exch dup
+        (3574) exch dup
+        (3575) exch dup
+        (3600) exch dup
+        (3601) exch dup
+        (3602) exch dup
+        (3603) exch dup
+        (3604) exch dup
+        (3605) exch dup
+        (3610) exch dup
+        (3611) exch dup
+        (3612) exch dup
+        (3613) exch dup
+        (3614) exch dup
+        (3615) exch dup
+        (3620) exch dup
+        (3621) exch dup
+        (3622) exch dup
+        (3623) exch dup
+        (3624) exch dup
+        (3625) exch dup
+        (3630) exch dup
+        (3631) exch dup
+        (3632) exch dup
+        (3633) exch dup
+        (3634) exch dup
+        (3635) exch dup
+        (3640) exch dup
+        (3641) exch dup
+        (3642) exch dup
+        (3643) exch dup
+        (3644) exch dup
+        (3645) exch dup
+        (3650) exch dup
+        (3651) exch dup
+        (3652) exch dup
+        (3653) exch dup
+        (3654) exch dup
+        (3655) exch dup
+        (3660) exch dup
+        (3661) exch dup
+        (3662) exch dup
+        (3663) exch dup
+        (3664) exch dup
+        (3665) exch dup
+        (3670) exch dup
+        (3671) exch dup
+        (3672) exch dup
+        (3673) exch dup
+        (3674) exch dup
+        (3675) exch dup
+        (3680) exch dup
+        (3681) exch dup
+        (3682) exch dup
+        (3683) exch dup
+        (3684) exch dup
+        (3685) exch dup
+        (3690) exch dup
+        (3691) exch dup
+        (3692) exch dup
+        (3693) exch dup
+        (3694) exch dup
+        (3695) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max  8  /check [] >>
+        ]
+        (37) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max 15  /check [] >>
+        ]
+        (3900) exch dup
+        (3901) exch dup
+        (3902) exch dup
+        (3903) exch dup
+        (3904) exch dup
+        (3905) exch dup
+        (3906) exch dup
+        (3907) exch dup
+        (3908) exch dup
+        (3909) exch dup
+        pop
+
+        [
+        << /cset /N  /min  3  /max  3  /check [ /lintiso4217 ] >>
+        << /cset /N  /min  1  /max 15  /check [] >>
+        ]
+        (3910) exch dup
+        (3911) exch dup
+        (3912) exch dup
+        (3913) exch dup
+        (3914) exch dup
+        (3915) exch dup
+        (3916) exch dup
+        (3917) exch dup
+        (3918) exch dup
+        (3919) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max 15  /check [] >>
+        ]
+        (3920) exch dup
+        (3921) exch dup
+        (3922) exch dup
+        (3923) exch dup
+        (3924) exch dup
+        (3925) exch dup
+        (3926) exch dup
+        (3927) exch dup
+        (3928) exch dup
+        (3929) exch dup
+        pop
+
+        [
+        << /cset /N  /min  3  /max  3  /check [ /lintiso4217 ] >>
+        << /cset /N  /min  1  /max 15  /check [] >>
+        ]
+        (3930) exch dup
+        (3931) exch dup
+        (3932) exch dup
+        (3933) exch dup
+        (3934) exch dup
+        (3935) exch dup
+        (3936) exch dup
+        (3937) exch dup
+        (3938) exch dup
+        (3939) exch dup
+        pop
+
+        [
+        << /cset /N  /min  4  /max  4  /check [] >>
+        ]
+        (3940) exch dup
+        (3941) exch dup
+        (3942) exch dup
+        (3943) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [] >>
+        ]
+        (3950) exch dup
+        (3951) exch dup
+        (3952) exch dup
+        (3953) exch dup
+        (3954) exch dup
+        (3955) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [] >>
+        ]
+        (400) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [ /lintkey ] >>
+        ]
+        (401) exch dup
+        pop
+
+        [
+        << /cset /N  /min 17  /max 17  /check [ /lintcsum /lintkey ] >>
+        ]
+        (402) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [] >>
+        ]
+        (403) exch dup
+        pop
+
+        [
+        << /cset /N  /min 13  /max 13  /check [ /lintcsum /lintkey ] >>
+        ]
+        (410) exch dup
+        (411) exch dup
+        (412) exch dup
+        (413) exch dup
+        (414) exch dup
+        (415) exch dup
+        (416) exch dup
+        (417) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (420) exch dup
+        pop
+
+        [
+        << /cset /N  /min  3  /max  3  /check [ /lintiso3166 ] >>
+        << /cset /X  /min  1  /max  9  /check [] >>
+        ]
+        (421) exch dup
+        pop
+
+        [
+        << /cset /N  /min  3  /max  3  /check [ /lintiso3166 ] >>
+        ]
+        (422) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max 15  /check [ /lintiso3166list ] >>
+        ]
+        (423) exch dup
+        pop
+
+        [
+        << /cset /N  /min  3  /max  3  /check [ /lintiso3166 ] >>
+        ]
+        (424) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max 15  /check [ /lintiso3166list ] >>
+        ]
+        (425) exch dup
+        pop
+
+        [
+        << /cset /N  /min  3  /max  3  /check [ /lintiso3166 ] >>
+        ]
+        (426) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max  3  /check [] >>
+        ]
+        (427) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 35  /check [ /lintpcenc ] >>
+        ]
+        (4300) exch dup
+        (4301) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 70  /check [ /lintpcenc ] >>
+        ]
+        (4302) exch dup
+        (4303) exch dup
+        (4304) exch dup
+        (4305) exch dup
+        (4306) exch dup
+        pop
+
+        [
+        << /cset /X  /min  2  /max  2  /check [ /lintiso3166alpha2 ] >>
+        ]
+        (4307) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [] >>
+        ]
+        (4308) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 35  /check [ /lintpcenc ] >>
+        ]
+        (4310) exch dup
+        (4311) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 70  /check [ /lintpcenc ] >>
+        ]
+        (4312) exch dup
+        (4313) exch dup
+        (4314) exch dup
+        (4315) exch dup
+        (4316) exch dup
+        pop
+
+        [
+        << /cset /X  /min  2  /max  2  /check [ /lintiso3166alpha2 ] >>
+        ]
+        (4317) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (4318) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [] >>
+        ]
+        (4319) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 35  /check [ /lintpcenc ] >>
+        ]
+        (4320) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max  1  /check [ /lintyesno ] >>
+        ]
+        (4321) exch dup
+        (4322) exch dup
+        (4323) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [ /lintyymmd0 ] >>
+        << /cset /N  /min  4  /max  4  /check [ /linthhmm ] >>
+        ]
+        (4324) exch dup
+        (4325) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [ /lintyymmdd ] >>
+        ]
+        (4326) exch dup
+        pop
+
+        [
+        << /cset /N  /min 13  /max 13  /check [] >>
+        ]
+        (7001) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [] >>
+        ]
+        (7002) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [ /lintyymmdd ] >>
+        << /cset /N  /min  4  /max  4  /check [ /linthhmm ] >>
+        ]
+        (7003) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max  4  /check [] >>
+        ]
+        (7004) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 12  /check [] >>
+        ]
+        (7005) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [ /lintyymmdd ] >>
+        ]
+        (7006) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [ /lintyymmdd ] >>
+        << /cset /N  /min  0  /max  6  /check [ /lintyymmdd ] >>
+        ]
+        (7007) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max  3  /check [] >>
+        ]
+        (7008) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 10  /check [] >>
+        ]
+        (7009) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max  2  /check [] >>
+        ]
+        (7010) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (7020) exch dup
+        (7021) exch dup
+        (7022) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [ /lintkey ] >>
+        ]
+        (7023) exch dup
+        pop
+
+        [
+        << /cset /N  /min  3  /max  3  /check [ /lintiso3166999 ] >>
+        << /cset /X  /min  1  /max 27  /check [] >>
+        ]
+        (7030) exch dup
+        (7031) exch dup
+        (7032) exch dup
+        (7033) exch dup
+        (7034) exch dup
+        (7035) exch dup
+        (7036) exch dup
+        (7037) exch dup
+        (7038) exch dup
+        (7039) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max  1  /check [] >>
+        << /cset /X  /min  1  /max  1  /check [] >>
+        << /cset /X  /min  1  /max  1  /check [] >>
+        << /cset /X  /min  1  /max  1  /check [ /lintimporteridx ] >>
+        ]
+        (7040) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (710) exch dup
+        (711) exch dup
+        (712) exch dup
+        (713) exch dup
+        (714) exch dup
+        pop
+
+        [
+        << /cset /X  /min  2  /max  2  /check [] >>
+        << /cset /X  /min  1  /max 28  /check [] >>
+        ]
+        (7230) exch dup
+        (7231) exch dup
+        (7232) exch dup
+        (7233) exch dup
+        (7234) exch dup
+        (7235) exch dup
+        (7236) exch dup
+        (7237) exch dup
+        (7238) exch dup
+        (7239) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (7240) exch dup
+        pop
+
+        [
+        << /cset /N  /min  4  /max  4  /check [ /lintnonzero ] >>
+        << /cset /N  /min  5  /max  5  /check [ /lintnonzero ] >>
+        << /cset /N  /min  3  /max  3  /check [ /lintnonzero ] >>
+        << /cset /N  /min  1  /max  1  /check [ /lintwinding ] >>
+        << /cset /N  /min  1  /max  1  /check [] >>
+        ]
+        (8001) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (8002) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max  1  /check [ /lintzero ] >>
+        << /cset /N  /min 13  /max 13  /check [ /lintcsum /lintkey ] >>
+        << /cset /X  /min  0  /max 16  /check [] >>
+        ]
+        (8003) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [ /lintkey ] >>
+        ]
+        (8004) exch dup
+        pop
+
+        [
+        << /cset /N  /min  6  /max  6  /check [] >>
+        ]
+        (8005) exch dup
+        pop
+
+        [
+        << /cset /N  /min 14  /max 14  /check [ /lintcsum ] >>
+        << /cset /N  /min  4  /max  4  /check [ /lintpieceoftotal ] >>
+        ]
+        (8006) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 34  /check [ /lintiban ] >>
+        ]
+        (8007) exch dup
+        pop
+
+        [
+        << /cset /N  /min  8  /max  8  /check [ /lintyymmddhh ] >>
+        << /cset /N  /min  0  /max  4  /check [ /lintmmoptss ] >>
+        ]
+        (8008) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 50  /check [] >>
+        ]
+        (8009) exch dup
+        pop
+
+        [
+        << /cset /C  /min  1  /max 30  /check [ /lintkey ] >>
+        ]
+        (8010) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max 12  /check [ /lintnozeroprefix ] >>
+        ]
+        (8011) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 20  /check [] >>
+        ]
+        (8012) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 25  /check [ /lintcsumalpha /lintkey ] >>
+        ]
+        (8013) exch dup
+        pop
+
+        [
+        << /cset /N  /min 18  /max 18  /check [ /lintcsum ] >>
+        ]
+        (8017) exch dup
+        (8018) exch dup
+        pop
+
+        [
+        << /cset /N  /min  1  /max 10  /check [] >>
+        ]
+        (8019) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 25  /check [] >>
+        ]
+        (8020) exch dup
+        pop
+
+        [
+        << /cset /N  /min 14  /max 14  /check [ /lintcsum ] >>
+        << /cset /N  /min  4  /max  4  /check [ /lintpieceoftotal ] >>
+        ]
+        (8026) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 70  /check [ /lintcouponcode ] >>
+        ]
+        (8110) exch dup
+        pop
+
+        [
+        << /cset /N  /min  4  /max  4  /check [] >>
+        ]
+        (8111) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 70  /check [ /lintcouponposoffer ] >>
+        ]
+        (8112) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 70  /check [] >>
+        ]
+        (8200) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 30  /check [] >>
+        ]
+        (90) exch dup
+        pop
+
+        [
+        << /cset /X  /min  1  /max 90  /check [] >>
+        ]
+        (91) exch dup
+        (92) exch dup
+        (93) exch dup
+        (94) exch dup
+        (95) exch dup
+        (96) exch dup
+        (97) exch dup
+        (98) exch dup
+        (99) exch dup
+        pop
+
+    >> def
+
+    true
+    0 1 vals length 1 sub {
+        dup ais exch get /ai exch def
+        vals exch get /val exch def
+        gs1syntax ai known {
+            gs1syntax ai get {  % For each element of the AI
+                /props exch def
+                props /max get val length 2 copy gt {exch} if pop
+                val exch 0 exch getinterval /eval exch def
+                /val val eval length dup val length exch sub getinterval def
+                eval length props /min get lt {
+                    pop /bwipp.GS1valueTooShort (Too short) false exit
+                } if
+                << /N /lintnumeric  /X /lintcset82  /C /lintcset39 >> props /cset get get eval exch load exec
+                eval length 0 gt {
+                    props /check get { eval exch load exec } forall
+                } if
+            } forall
+            dup not {exit} if
+            val length 0 ne {
+                pop /bwipp.GS1valueTooLong (Too long) false exit
+            } if
+        } {
+            pop /bwipp.GS1unknownAI (Unrecognised AI) false exit
+        } ifelse
+    } for
+    not {
+        dup length ai length add 5 add string
+        dup 0 (AI ) putinterval
+        dup 3 ai putinterval
+        dup 3 ai length add (: ) putinterval
+        dup 5 ai length add 4 -1 roll putinterval
+        //raiseerror exec
+    } if
+    true
+
+    end
+
+}
+%psc [/barcode] {null def} forall
+bind def
+%psc /gs1lint dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RESOURCE gs1lint--
+
 % --BEGIN RENDERER renlinear--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2020100200 74728 73842
+%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2021020600 74728 73842
 %%BeginData:        239 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -316,7 +2135,7 @@ bind def
 
 % --BEGIN RENDERER renmatrix--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2020100200 90359 89573
+%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2021020600 90359 89573
 %%BeginData:        306 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -631,7 +2450,7 @@ bind def
 
 % --BEGIN RENDERER renmaximatrix--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2020100200 50046 50044
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2021020600 50046 50044
 %%BeginData:         81 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -724,7 +2543,7 @@ bind def
 % --EXAM: 90200
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2020100200 58142 57836
+%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2021020600 58118 57836
 %%BeginData:        137 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -873,7 +2692,7 @@ bind def
 % --EXAM: 05
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2020100200 56723 56466
+%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2021020600 56699 56466
 %%BeginData:        122 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -1007,7 +2826,7 @@ bind def
 % --EXAM: 2112345678900
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2020100200 81040 77231
+%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2021020600 80936 77207
 %%BeginData:        217 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -1028,7 +2847,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 12 def
     /textxoffset -10 def
-    /textyoffset -4.5 def
+    /textyoffset -4 def
     /height 1 def
     /addongap 12 def
     /addontextfont (unset) def
@@ -1236,7 +3055,7 @@ bind def
 % --EXAM: 02345673
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2020100200 78158 74434
+%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2021020600 78158 74434
 %%BeginData:        198 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -1257,7 +3076,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 12 def
     /textxoffset 4 def
-    /textyoffset -4.5 def
+    /textyoffset -4 def
     /height 1 def
     /addongap 12 def
     /addontextfont (unset) def
@@ -1446,7 +3265,7 @@ bind def
 % --EXAM: 416000336108
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2020100200 85897 81982
+%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2021020600 86001 81982
 %%BeginData:        250 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -1467,7 +3286,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 12 def
     /textxoffset -7 def
-    /textyoffset -4.5 def
+    /textyoffset -4 def
     /height 1 def
     /addongap 12 def
     /addontextfont (unset) def
@@ -1708,7 +3527,7 @@ bind def
 % --EXAM: 00123457
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2020100200 90606 86630
+%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2021020600 90606 86630
 %%BeginData:        289 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -1729,7 +3548,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 12 def
     /textxoffset -7 def
-    /textyoffset -4.5 def
+    /textyoffset -4 def
     /height 1 def
     /addongap 12 def
     /addontextfont (unset) def
@@ -2009,7 +3828,7 @@ bind def
 % --EXAM: 978-1-56581-231-4 90000
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2020100200 86046 88625
+%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2021020600 86022 88625
 %%BeginData:        254 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -2275,7 +4094,7 @@ bind def
 % --EXAM: 979-0-2605-3211-3
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2020100200 82722 85314
+%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2021020600 82594 85418
 %%BeginData:        233 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -2520,7 +4339,7 @@ bind def
 % --EXAM: 0311-175X 00 17
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2020100200 74050 77078
+%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2021020600 74026 77078
 %%BeginData:        178 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -2705,16 +4524,17 @@ bind def
 % --END ENCODER issn--
 
 % --BEGIN ENCODER code128--
-% --REQUIRES preamble raiseerror renlinear--
+% --REQUIRES preamble raiseerror parseinput renlinear--
 % --DESC: Code 128
 % --EXAM: Count01234567!
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2020100200 126507 125472
-%%BeginData:        484 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2021020600 120103 123035
+%%BeginData:        425 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /code128 {
@@ -2729,7 +4549,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
     /encoding (auto) def
     /raw false def
@@ -2753,35 +4573,27 @@ bind def
     /textyoffset textyoffset cvr def
     /height height cvr def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
     % Special function characters
     /sta  -1 def  /stb  -2 def  /stc  -3 def
     /swa  -4 def  /swb  -5 def  /swc  -6 def
     /fn1  -7 def  /fn2  -8 def  /fn3  -9 def
     /fn4 -10 def  /sft -11 def  /stp -12 def
     /lka -13 def  /lkc -14 def  % CC-A/B and CC-C linkage
+
+    % Parse the input
+    /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
+        (FNC1) fn1
+        (FNC1) fn1
+        (FNC2) fn2
+        (FNC3) fn3
+%        (FNC4) fn4    Not user accessible as encoded automatically
+        (LNKA) lka
+        (LNKC) lkc
+    >> def
+    /msg barcode fncvals //parseinput exec def
+    /msglen msg length def
 
     % Character maps for each state
     /charmaps [
@@ -2847,10 +4659,10 @@ bind def
     raw {/encoding (raw) def} if
 
     encoding (raw) eq {
-        /cws barlen array def
+        /cws barcode length array def
         /i 0 def /j 0 def
         { % loop
-            i barlen eq {exit} if
+            i barcode length eq {exit} if
             /cw barcode i 1 add 3 getinterval cvi def
             cws j cw put
             /i i 4 add def
@@ -2862,63 +4674,11 @@ bind def
 
     encoding (auto) eq {
 
-        /fncvals <<
-            (FNC1) fn1
-            (FNC2) fn2
-            (FNC3) fn3
-%            (FNC4) fn4    Not user accessible as encoded automatically
-            (LNKA) lka
-            (LNKC) lkc
-        >> def
-
-        % Convert input into bytes accounting for FNC and LNK characters
-        /msg barlen array def
-        /text barlen string def
-        /i 0 def /j 0 def {
-            i barlen eq {exit} if
-            /char barcode i get def
-            text j char put
-            /i i 1 add def
-            parsefnc char 94 eq and i barlen lt and {
-                barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                    text j ( ) putinterval
-                    i barlen 3 sub ge {
-                        /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                    } if
-                    barcode i 4 getinterval
-                    dup 0 3 getinterval (ECI) ne {
-                        dup fncvals exch known not {
-                            dup length 28 add string dup 28 4 -1 roll putinterval
-                            dup 0 (Unknown function character: ) putinterval
-                            /bwipp.unknownFNC exch //raiseerror exec
-                        } if
-                        fncvals exch get
-                        /i i 4 add def
-                    } {  % "^ECInnnnnn" -> -nnnnnn
-                        pop
-                        i barlen 8 sub ge {
-                            /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                        } if
-                        barcode i 3 add 6 getinterval
-                        dup {
-                            dup 48 lt exch 57 gt or {
-                                /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                            } if
-                        } forall
-                        0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                        /i i 9 add def
-                    } ifelse
-                    /char exch def
-                } {  % "^^" -> "^"
-                    /i i 1 add def
-                } ifelse
-            } if
-            msg j char put
-            /j j 1 add def
-        } loop
-        /msg msg 0 j getinterval def
-        /msglen msg length def
-        /text text 0 j getinterval def
+        /text msglen string def
+        0 1 msglen 1 sub {
+            /i exch def
+            text i msg i get dup 0 lt { pop 32 } if put
+        } for
 
         % Standard and extended ASCII runlength at position
         /numSA [ msglen {0} repeat 0 ] def
@@ -3201,16 +4961,18 @@ bind def
 % --END ENCODER code128--
 
 % --BEGIN ENCODER gs1-128--
-% --REQUIRES preamble raiseerror renlinear code128--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear code128--
 % --DESC: GS1-128
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2020100200 68298 71503
-%%BeginData:        160 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2021020600 84649 81205
+%%BeginData:        156 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1lint dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /code128 dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -3226,10 +4988,12 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 0.5 def
     /linkagea false def
     /linkagec false def
+    /parse false def
+    /dontlint false def
 
     % Parse the input options
 %psc     options type /stringtype eq {
@@ -3252,23 +5016,12 @@ bind def
 
     % Expand ordinals of the form ^NNN to ASCII
     /expand {
-        /in exch def
-        /out in length string def
-        /j 0 def
-        in
-        { % loop
-            (^) search {
-                dup out exch j exch putinterval
-                length j add 1 add /j exch def
-                pop
-                dup 0 3 getinterval cvi out exch j 1 sub exch put
-                dup length 3 sub 3 exch getinterval
-            } {
-                dup out exch j exch putinterval
-                length j add /j exch def
-                out 0 j getinterval exit
-            } ifelse
-        } loop
+        /fncvals <<
+            /parse parse
+            /parseonly true
+            /parsefnc false
+        >> def
+        fncvals //parseinput exec
     } bind def
 
     % Parse out AIs
@@ -3289,6 +5042,8 @@ bind def
         pop pop
     } loop
     pop
+
+    dontlint not { ais vals //gs1lint exec pop } if
 
     % Pre-defined fixed length data field AIs
     % any AI whose prefix is not included in this table must be
@@ -3348,6 +5103,7 @@ bind def
     /barcode barcode 0 j getinterval def
 
     % Get the result of encoding with code128
+    options (parse) undef
     options (height) height put
     options (dontdraw) true put
     options (parsefnc) true put
@@ -3373,12 +5129,12 @@ bind def
 % --END ENCODER gs1-128--
 
 % --BEGIN ENCODER ean14--
-% --REQUIRES preamble raiseerror renlinear code128--
+% --REQUIRES preamble raiseerror parseinput renlinear code128--
 % --DESC: GS1-14
 % --EXAM: (01) 0 46 01234 56789 3
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2020100200 60545 63743
+%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2021020600 66848 63140
 %%BeginData:        107 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -3398,7 +5154,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -3492,12 +5248,12 @@ bind def
 % --END ENCODER ean14--
 
 % --BEGIN ENCODER sscc18--
-% --REQUIRES preamble raiseerror renlinear code128--
+% --REQUIRES preamble raiseerror parseinput renlinear code128--
 % --DESC: SSCC-18
 % --EXAM: (00) 0 0614141 123456789 0
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2020100200 60557 63750
+%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2021020600 66860 63147
 %%BeginData:        107 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -3517,7 +5273,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -3616,7 +5372,7 @@ bind def
 % --EXAM: THIS IS CODE 39
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2020100200 62946 62641
+%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2021020600 62922 62513
 %%BeginData:        143 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -3638,7 +5394,7 @@ bind def
     /hidestars false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -3766,16 +5522,17 @@ bind def
 % --END ENCODER code39--
 
 % --BEGIN ENCODER code39ext--
-% --REQUIRES preamble raiseerror renlinear code39--
+% --REQUIRES preamble raiseerror parseinput renlinear code39--
 % --DESC: Code 39 Extended
 % --EXAM: Code39 Ext!
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2020100200 61296 64490
-%%BeginData:        112 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2021020600 65075 61411
+%%BeginData:        100 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /code39 dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -3802,25 +5559,14 @@ bind def
     options {def} forall
 
     % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
+    /fncvals <<
+        /parse parse
+        /parseonly true
+        /parsefnc false
+    >> def
+    /barcode barcode fncvals //parseinput exec def
+    /barlen barcode length def
+    options (parse) undef
 
     % Validate the input
     barcode {
@@ -3828,8 +5574,6 @@ bind def
             /bwipp.code39extBadCharacter (Code 39 Extended must contain only ASCII characters) //raiseerror exec
         } if
     } forall
-
-    /barlen barcode length def
 
     % Extended alphabet to non-extended alphabet
     /extencs
@@ -3895,7 +5639,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2020100200 58289 61504
+%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2021020600 58289 61504
 %%BeginData:        101 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -3914,7 +5658,7 @@ bind def
     /includetext false def  % Enable/disable code32 text
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /textxoffset 0 def
     /height 1 def
 
@@ -4008,7 +5752,7 @@ bind def
 % --EXAM: 123456
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2020100200 58384 61524
+%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2021020600 58384 61524
 %%BeginData:        102 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -4027,7 +5771,7 @@ bind def
     /includetext false def  % Enable/disable code32 text
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /textxoffset 0 def
     /height 1 def
     /pzn8 false def
@@ -4117,16 +5861,17 @@ bind def
 % --END ENCODER pzn--
 
 % --BEGIN ENCODER code93--
-% --REQUIRES preamble raiseerror renlinear--
+% --REQUIRES preamble raiseerror parseinput renlinear--
 % --DESC: Code 93
 % --EXAM: THIS IS CODE 93
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2020100200 65993 65460
-%%BeginData:        175 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2021020600 62124 65325
+%%BeginData:        134 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /code93 {
@@ -4141,8 +5886,9 @@ bind def
     /includetext false def   % Enable/disable text
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
+    /parse false def
     /parsefnc false def
 
     % Parse the input options
@@ -4177,60 +5923,17 @@ bind def
     % Create a string of the available characters
     /barchars (0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%) def
 
-    /barlen barcode length def
-
     % Special function characters
     /sft1 -1 def  /sft2 -2 def  /sft3 -3 def  /sft4 -4 def
     /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
         (SFT$) sft1
         (SFT%) sft2
         (SFT/) sft3
         (SFT+) sft4
     >> def
-
-    % Convert input into bytes accounting for shift characters
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
+    /msg barcode fncvals //parseinput exec def
     /msglen msg length def
 
     includecheck {
@@ -4304,16 +6007,17 @@ bind def
 % --END ENCODER code93--
 
 % --BEGIN ENCODER code93ext--
-% --REQUIRES preamble raiseerror renlinear code93--
+% --REQUIRES preamble raiseerror parseinput renlinear code93--
 % --DESC: Code 93 Extended
 % --EXAM: Code93 Ext!
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2020100200 61665 64891
-%%BeginData:        116 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2021020600 65429 61772
+%%BeginData:        104 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /code93 dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -4340,27 +6044,14 @@ bind def
     options {def} forall
 
     % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
+    /fncvals <<
+        /parse parse
+        /parseonly true
+        /parsefnc false
+    >> def
+    /barcode barcode fncvals //parseinput exec def
     /barlen barcode length def
+    options (parse) undef
 
     % Extended alphabet to non-extended alphabet
     /extencs
@@ -4437,7 +6128,7 @@ bind def
 % --EXAM: 2401234567
 % --EXOP: height=0.5 includecheck includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2020100200 61533 61096
+%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2021020600 61405 61096
 %%BeginData:        152 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -4457,7 +6148,7 @@ bind def
     /includecheckintext false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -4601,7 +6292,7 @@ bind def
 % --EXAM: 0 46 01234 56789 3
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2020100200 60879 64093
+%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2021020600 60983 64117
 %%BeginData:        111 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -4724,7 +6415,7 @@ bind def
 % --EXAM: 563102430313
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2020100200 57310 60628
+%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2021020600 57310 60628
 %%BeginData:         93 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -4744,7 +6435,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -4829,7 +6520,7 @@ bind def
 % --EXAM: 21348075016401
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2020100200 57302 60624
+%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2021020600 57302 60624
 %%BeginData:         93 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -4849,7 +6540,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -4934,7 +6625,7 @@ bind def
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2020100200 105701 108053
+%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2021020600 105701 108261
 %%BeginData:        425 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -5371,7 +7062,7 @@ bind def
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2020100200 61648 57939
+%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2021020600 61520 58043
 %%BeginData:         75 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -5458,7 +7149,7 @@ bind def
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2020100200 61748 58019
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2021020600 61620 58123
 %%BeginData:         75 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -5545,7 +7236,7 @@ bind def
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2020100200 61674 57955
+%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2021020600 61546 58059
 %%BeginData:         75 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -5632,7 +7323,7 @@ bind def
 % --EXAM: (01)15012345678907
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2020100200 81204 80353
+%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2021020600 81076 80249
 %%BeginData:        278 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -5917,16 +7608,18 @@ bind def
 % --END ENCODER databarlimited--
 
 % --BEGIN ENCODER databarexpanded--
-% --REQUIRES preamble raiseerror renlinear renmatrix--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix--
 % --DESC: GS1 DataBar Expanded
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2020100200 187930 210732
-%%BeginData:        882 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2021020600 242700 244887
+%%BeginData:        886 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1lint dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -5937,6 +7630,8 @@ bind def
     /options exch def  % We are given an option string
     /barcode exch def  % We are given a barcode string
 
+    /parse false def
+    /dontlint false def
     /dontdraw false def
     /height 34 72 div def
     /format (expanded) def
@@ -5961,27 +7656,20 @@ bind def
 
     segments -1 eq {
         /segments format (expandedstacked) eq {4} {22} ifelse def
-    } if
+    } {
+        segments 2 lt segments 22 gt or segments 2 mod 0 ne or {
+            /bwipp.gs1databarexpandedBadSegments (The number of segments must be even from 2 to 22) //raiseerror exec
+        } if
+    } ifelse
 
     % Expand ordinals of the form ^NNN to ASCII
     /expand {
-        /in exch def
-        /out in length string def
-        /j 0 def
-        in
-        { % loop
-            (^) search {
-                dup out exch j exch putinterval
-                length j add 1 add /j exch def
-                pop
-                dup 0 3 getinterval cvi out exch j 1 sub exch put
-                dup length 3 sub 3 exch getinterval
-            } {
-                dup out exch j exch putinterval
-                length j add /j exch def
-                out 0 j getinterval exit
-            } ifelse
-        } loop
+        /fncvals <<
+            /parse parse
+            /parseonly true
+            /parsefnc false
+        >> def
+        fncvals //parseinput exec
     } bind def
 
     % Parse out AIs
@@ -6002,6 +7690,8 @@ bind def
         pop pop
     } loop
     pop
+
+    dontlint not { ais vals //gs1lint exec pop } if
 
     % Method selection
     {  % common exit
@@ -6046,7 +7736,8 @@ bind def
                ais length 3 eq {
                    vals 0 get 0 1 getinterval (9) eq
                    vals 1 get cvi 99999 le and
-                   vals 2 get cvi 999999 le and {
+                   vals 2 get 2 2 getinterval cvi dup 1 ge exch 12 le and and  % Month 1-12
+                   vals 2 get 4 2 getinterval cvi dup 0 ge exch 31 le and and {  % Day 0-31
                        ai310x ais 2 get (11) eq and { (0111000) false exit } if
                        ai320x ais 2 get (11) eq and { (0111001) false exit } if
                        ai310x ais 2 get (13) eq and { (0111010) false exit } if
@@ -6112,6 +7803,8 @@ bind def
         dup 3 -1 roll 2 2 index length string cvrs dup length 2 index length exch sub exch putinterval
     } bind def
 
+    /fnc1 -1 def /lnumeric -2 def /lalphanumeric -3 def /liso646 -4 def
+
     method (00) eq {
         /cdf [] def
         /gpf [] def
@@ -6176,7 +7869,7 @@ bind def
         cdf  0 vals 0 get 1 12 getinterval conv12to40 putinterval
         cdf 40 ais  1 get 3  1 getinterval cvi 2 tobin putinterval
         /cdf [ cdf {48 sub} forall ] def
-        /gpf [ vals 1 get {} forall ] def
+        /gpf [ vals 1 get {} forall ais length 2 gt { fnc1 } if ] def
         /ais  ais  2 ais  length 2 sub getinterval def
         /vals vals 2 vals length 2 sub getinterval def
     } if
@@ -6187,7 +7880,7 @@ bind def
         cdf 40 ais  1 get 3  1 getinterval cvi 2 tobin putinterval
         cdf 42 vals 1 get 0  3 getinterval cvi 10 tobin putinterval
         /cdf [ cdf {48 sub} forall ] def
-        /gpf [ vals 1 get dup length 3 sub 3 exch getinterval {} forall ] def
+        /gpf [ vals 1 get dup length 3 sub 3 exch getinterval {} forall ais length 2 gt { fnc1 } if ] def
         /ais  ais  2 ais  length 2 sub getinterval def
         /vals vals 2 vals length 2 sub getinterval def
     } if
@@ -6216,8 +7909,6 @@ bind def
     ] {
         10 2 string cvrs dup aifixed 3 1 roll put
     } forall
-
-    /fnc1 -1 def /lnumeric -2 def /lalphanumeric -3 def /liso646 -4 def
 
     /numeric <<
         0 1 119 {
@@ -6438,7 +8129,7 @@ bind def
         } if
     } if
 
-    % Concatinate fields
+    % Concatenate fields
     /binval [
         linkage {1} {0} ifelse
         method {48 sub} forall
@@ -6687,6 +8378,8 @@ bind def
             1 1
         ] def
 
+        options (parse) undef
+
         <<
         /ren //renlinear
         /sbs sbs
@@ -6784,6 +8477,8 @@ bind def
             } for
         ] def
 
+        options (parse) undef
+
         <<
         /ren //renmatrix
         /pixs pixs
@@ -6811,12 +8506,12 @@ bind def
 % --END ENCODER databarexpanded--
 
 % --BEGIN ENCODER databarexpandedstacked--
-% --REQUIRES preamble raiseerror renlinear renmatrix databarexpanded--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databarexpanded--
 % --DESC: GS1 DataBar Expanded Stacked
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: segments=4
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2020100200 56861 53295
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2021020600 66639 63073
 %%BeginData:         45 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -6868,16 +8563,18 @@ bind def
 % --END ENCODER databarexpandedstacked--
 
 % --BEGIN ENCODER gs1northamericancoupon--
-% --REQUIRES preamble raiseerror renlinear renmatrix databarexpanded databarexpandedstacked--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databarexpanded databarexpandedstacked--
 % --DESC: GS1 North American Coupon
 % --EXAM: (8110)106141416543213500110000310123196000
 % --EXOP: includetext segments=8
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2020100200 70200 76769
-%%BeginData:        135 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2021020600 82792 82511
+%%BeginData:        131 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1lint dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databarexpandedstacked dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -6895,6 +8592,8 @@ bind def
     /coupontextsize 9 def
     /coupontextxoffset (unset) def
     /coupontextyoffset (unset) def
+    /parse false def
+    /dontlint false def
 
     % Parse the input options
 %psc     options type /stringtype eq {
@@ -6914,23 +8613,12 @@ bind def
 
     % Expand ordinals of the form ^NNN to ASCII
     /expand {
-        /in exch def
-        /out in length string def
-        /j 0 def
-        in
-        { % loop
-            (^) search {
-                dup out exch j exch putinterval
-                length j add 1 add /j exch def
-                pop
-                dup 0 3 getinterval cvi out exch j 1 sub exch put
-                dup length 3 sub 3 exch getinterval
-            } {
-                dup out exch j exch putinterval
-                length j add /j exch def
-                out 0 j getinterval exit
-            } ifelse
-        } loop
+        /fncvals <<
+            /parse parse
+            /parseonly true
+            /parsefnc false
+        >> def
+        fncvals //parseinput exec
     } bind def
 
     % Parse out AIs
@@ -6960,6 +8648,8 @@ bind def
       /bwipp.gs1northamericancouponBadAIStructure (A GS1 North American Coupon should consist of a single AI (8110)) //raiseerror exec
     } if
 
+    dontlint not { ais vals //gs1lint exec pop } if
+
     % Parse out the Company Prefix and Offer Code
     /val vals 0 get def
     /vli val 0 get 48 sub def
@@ -6974,6 +8664,7 @@ bind def
     coupontext gcp length 1 add cod putinterval
 
     % Get the result of encoding with databarexpandedstacked
+    options (parse) undef
     options (dontdraw) true put
 
     /args barcode options //databarexpandedstacked exec def
@@ -7020,7 +8711,7 @@ bind def
 % --EXAM: 117480
 % --EXOP: showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2020100200 55122 54752
+%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2021020600 54994 54752
 %%BeginData:         93 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7125,7 +8816,7 @@ bind def
 % --EXAM: 117480
 % --EXOP: includetext showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2020100200 55953 55610
+%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2021020600 55929 55610
 %%BeginData:         98 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7235,7 +8926,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2020100200 63541 62953
+%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2021020600 63389 62953
 %%BeginData:        153 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7256,7 +8947,7 @@ bind def
     /includecheckintext false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
     /version (industrial) def
 
@@ -7400,7 +9091,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2020100200 51614 55042
+%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2021020600 51614 55042
 %%BeginData:         57 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7420,7 +9111,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -7469,7 +9160,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2020100200 51584 55018
+%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2021020600 51584 55018
 %%BeginData:         57 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7489,7 +9180,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -7538,7 +9229,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2020100200 51594 55026
+%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2021020600 51594 55026
 %%BeginData:         57 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7558,7 +9249,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -7607,7 +9298,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2020100200 51584 55018
+%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2021020600 51584 55018
 %%BeginData:         57 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7627,7 +9318,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -7676,7 +9367,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2020100200 51609 55038
+%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2021020600 51609 55038
 %%BeginData:         57 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7696,7 +9387,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -7745,7 +9436,7 @@ bind def
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2020100200 64947 64410
+%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2021020600 64819 64410
 %%BeginData:        160 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7766,7 +9457,7 @@ bind def
     /includecheckintext false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -7917,7 +9608,7 @@ bind def
 % --EXAM: BC412
 % --EXOP: semi includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2020100200 60520 60057
+%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2021020600 60392 60057
 %%BeginData:        150 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -7940,7 +9631,7 @@ bind def
     /semi false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -8079,7 +9770,7 @@ bind def
 % --EXAM: A0123456789B
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2020100200 65443 64950
+%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2021020600 65419 64822
 %%BeginData:        158 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -8101,7 +9792,7 @@ bind def
     /includecheckintext false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -8249,7 +9940,7 @@ bind def
 % --EXAM: 0123456709498765432101234567891
 % --EXOP: barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2020100200 99173 98718
+%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2021020600 99045 98718
 %%BeginData:        337 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -8598,7 +10289,7 @@ bind def
 % --EXAM: 01234
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2020100200 61318 60891
+%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2021020600 61190 60891
 %%BeginData:        142 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -8618,7 +10309,7 @@ bind def
     /includecheckintext false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 0.125 def
 
     % Parse the input options
@@ -8752,7 +10443,7 @@ bind def
 % --EXAM: 01234567890
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2020100200 61178 60755
+%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2021020600 61050 60755
 %%BeginData:        143 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -8772,7 +10463,7 @@ bind def
     /includecheckintext false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 0.125 def
 
     % Parse the input options
@@ -8907,7 +10598,7 @@ bind def
 % --EXAM: LE28HS9Z
 % --EXOP: includetext barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2020100200 61989 61521
+%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2021020600 61861 61521
 %%BeginData:        147 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -8927,7 +10618,7 @@ bind def
     /includecheckintext false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 0.175 def
 
     % Parse the input options
@@ -9066,7 +10757,7 @@ bind def
 % --EXAM: 5956439111ABA 9
 % --EXOP: includetext custinfoenc=character
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2020100200 72801 72415
+%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2021020600 72777 72519
 %%BeginData:        204 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -9084,7 +10775,7 @@ bind def
     /includetext false def         % Enable/disable text
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 0.175 def
     /custinfoenc (character) def
 
@@ -9282,7 +10973,7 @@ bind def
 % --EXAM: 1231FZ13XHS
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2020100200 57131 56916
+%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2021020600 57107 56916
 %%BeginData:        113 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -9300,7 +10991,7 @@ bind def
     /includetext false def          % Enable/disable text
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 0.175 def
 
     % Parse the input options
@@ -9407,7 +11098,7 @@ bind def
 % --EXAM: 6540123789-A-K-Z
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2020100200 62150 61757
+%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2021020600 62126 61757
 %%BeginData:        164 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -9426,7 +11117,7 @@ bind def
     /includecheckintext false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 0.175 def
 
     % Parse the input options
@@ -9583,7 +11274,7 @@ bind def
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2020100200 67193 66798
+%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2021020600 67169 66798
 %%BeginData:        141 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -9605,7 +11296,7 @@ bind def
     /badmod11 false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -9736,7 +11427,7 @@ bind def
 % --EXAM: 01234ABCD
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2020100200 63687 63197
+%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2021020600 63559 63197
 %%BeginData:        148 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -9757,7 +11448,7 @@ bind def
     /unidirectional false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -9891,16 +11582,17 @@ bind def
 % --END ENCODER plessey--
 
 % --BEGIN ENCODER telepen--
-% --REQUIRES preamble raiseerror renlinear--
+% --REQUIRES preamble raiseerror parseinput renlinear--
 % --DESC: Telepen
 % --EXAM: ABCDEF
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2020100200 65093 64780
-%%BeginData:        175 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2021020600 65612 68821
+%%BeginData:        165 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /telepen {
@@ -9915,7 +11607,7 @@ bind def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
     /parse false def
 
@@ -9936,25 +11628,14 @@ bind def
     /height height cvr def
 
     % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
+    /fncvals <<
+        /parse parse
+        /parseonly true
+        /parsefnc false
+    >> def
+    /barcode barcode fncvals //parseinput exec def
+    /barlen barcode length def
+    options (parse) undef
 
     % Create an array containing the character mappings
     /encs
@@ -10078,12 +11759,12 @@ bind def
 % --END ENCODER telepen--
 
 % --BEGIN ENCODER telepennumeric--
-% --REQUIRES preamble raiseerror renlinear telepen--
+% --REQUIRES preamble raiseerror parseinput renlinear telepen--
 % --DESC: Telepen Numeric
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2020100200 51594 55046
+%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2021020600 57921 54339
 %%BeginData:         57 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -10103,7 +11784,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
 
     % Parse the input options
@@ -10147,16 +11828,17 @@ bind def
 % --END ENCODER telepennumeric--
 
 % --BEGIN ENCODER posicode--
-% --REQUIRES preamble raiseerror renlinear--
+% --REQUIRES preamble raiseerror parseinput renlinear--
 % --DESC: PosiCode
 % --EXAM: ABC123
 % --EXOP: version=b inkspread=-0.5 parsefnc includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2020100200 113556 112699
-%%BeginData:        450 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2021020600 107180 110082
+%%BeginData:        390 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /posicode {
@@ -10171,7 +11853,7 @@ bind def
     /textfont (OCR-B) def
     /textsize 10 def
     /textxoffset 0 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 1 def
     /encoding (auto) def
     /version (a) def
@@ -10199,29 +11881,6 @@ bind def
     /version version cvlit def
     /checkoffset checkoffset cvi def
     /height height cvr def
-
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
 
     % Special function characters
     /la0  -1 def  /la1  -2 def  /la2  -3 def
@@ -10290,10 +11949,10 @@ bind def
     raw {/encoding (raw) def} if
 
     encoding (raw) eq {
-        /cws barlen array def
+        /cws barcode length array def
         /i 0 def /j 0 def
         { % loop
-            i barlen eq {exit} if
+            i barcode length eq {exit} if
             /cw barcode i 1 add 3 getinterval cvi def
             cws j cw put
             /i i 4 add def
@@ -10305,61 +11964,23 @@ bind def
 
     encoding (auto) eq {
 
+        % Parse the input
         /fncvals <<
+            /parse parse
+            /parsefnc parsefnc
             (FNC1) fn1
             (FNC2) fn2
             (FNC3) fn3
 %            (FNC4) fn4        Not user accessible as encoded automatically
         >> def
-
-        % Convert input into bytes accounting for FNC characters
-        /msg barlen array def
-        /text barlen string def
-        /i 0 def /j 0 def {
-            i barlen eq {exit} if
-            /char barcode i get def
-            text j char put
-            /i i 1 add def
-            parsefnc char 94 eq and i barlen lt and {
-                barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                    text j ( ) putinterval
-                    i barlen 3 sub ge {
-                        /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                    } if
-                    barcode i 4 getinterval
-                    dup 0 3 getinterval (ECI) ne {
-                        dup fncvals exch known not {
-                            dup length 28 add string dup 28 4 -1 roll putinterval
-                            dup 0 (Unknown function character: ) putinterval
-                            /bwipp.unknownFNC exch //raiseerror exec
-                        } if
-                        fncvals exch get
-                        /i i 4 add def
-                    } {  % "^ECInnnnnn" -> -nnnnnn
-                        pop
-                        i barlen 8 sub ge {
-                            /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                        } if
-                        barcode i 3 add 6 getinterval
-                        dup {
-                            dup 48 lt exch 57 gt or {
-                                /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                            } if
-                        } forall
-                        0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                        /i i 9 add def
-                    } ifelse
-                    /char exch def
-                } {  % "^^" -> "^"
-                    /i i 1 add def
-                } ifelse
-            } if
-            msg j char put
-            /j j 1 add def
-        } loop
-        /msg msg 0 j getinterval def
+        /msg barcode fncvals //parseinput exec def
         /msglen msg length def
-        /text text 0 j getinterval def
+
+        /text msglen string def
+        0 1 msglen 1 sub {
+            /i exch def
+            text i msg i get dup 0 lt { pop 32 } if put
+        } for
 
         % Standard and extended ASCII runlength at position
         /numSA [ msglen {0} repeat 0 ] def
@@ -10609,16 +12230,17 @@ bind def
 % --END ENCODER posicode--
 
 % --BEGIN ENCODER codablockf--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: Codablock F
 % --EXAM: CODABLOCK F 34567890123456789010040digit
 % --EXOP: columns=8
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2020100200 135474 134664
-%%BeginData:        548 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2021020600 128847 131632
+%%BeginData:        488 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /codablockf {
@@ -10655,33 +12277,31 @@ bind def
     /c columns 4 ge columns 62 le and {columns} {8} ifelse def
     /rows rows 2 ge rows 44 le and {rows} {-1} ifelse def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
     % Convert input into bytes accounting for FNC characters
     /swa -1 def  /swb -2 def  /swc -3 def  /sft -4 def
     /fn1 -5 def  /fn2 -6 def  /fn3 -7 def  /fn4 -8 def
     /sta -9 def  /stp -10 def
+
+    % Parse the input
+    /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
+        (FNC1) fn1
+%        (FNC2) fn2      Not permitted for Codablock F
+        (FNC3) fn3
+%        (FNC4) fn4      Not user accessible as encoded automatically
+    >> def
+    /msg barcode fncvals //parseinput exec def
+    /msglen msg length def
+
+    % FNC4 codeword insertion for extended ASCII
+    /msgtmp [] def
+    msg {
+        /char exch def
+        /msgtmp [ msgtmp aload pop char 128 lt {char} {fn4 char 127 and} ifelse ] def
+    } forall
+    /msg msgtmp def
+    /msglen msg length def
 
     % Character maps for each state
     /charmaps [
@@ -10737,65 +12357,6 @@ bind def
     /seta charvals 0 get def
     /setb charvals 1 get def
     /setc charvals 2 get def
-
-    /fncvals <<
-        (FNC1) fn1
-%        (FNC2) fn2      Not permitted for Codablock F
-        (FNC3) fn3
-%        (FNC4) fn4      Not user accessible as encoded automatically
-    >> def
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
-    /msglen msg length def
-
-    % FNC4 codeword insertion for extended ASCII
-    /msgtmp [] def
-    msg {
-        /char exch def
-        /msgtmp [ msgtmp aload pop char 128 lt {char} {fn4 char 127 and} ifelse ] def
-    } forall
-    /msg msgtmp def
-    /msglen msg length def
 
     % Determine digit runlength and characters from given position
     /numsscr {
@@ -11169,16 +12730,17 @@ bind def
 % --END ENCODER codablockf--
 
 % --BEGIN ENCODER code16k--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: Code 16K
 % --EXAM: Abcd-1234567890-wxyZ
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2020100200 160044 159280
-%%BeginData:        771 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2021020600 153473 155912
+%%BeginData:        711 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /code16k {
@@ -11217,29 +12779,6 @@ bind def
     /sepheight sepheight cvi def
 
     pos -1 ne {/rows 16 def} if
-
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
 
     % Convert input into bytes accounting for FNC characters
     /swa  -1 def  /swb  -2 def  /swc  -3 def
@@ -11307,69 +12846,31 @@ bind def
     raw {/encoding (raw) def} if
 
     encoding (raw) eq {
-        /cws barlen array def
+        /cws barcode length array def
         /i 0 def /j 0 def
         { % loop
-            i barlen eq {exit} if
+            i barcode length eq {exit} if
             /cw barcode i 1 add 3 getinterval cvi def
             cws j cw put
             /i i 4 add def
             /j j 1 add def
         } loop
         /cws cws 0 j getinterval def
-        /text () def
     } if
 
     encoding (auto) eq {
 
+        % Parse the input
         /fncvals <<
+            /parse parse
+            /parsefnc parsefnc
+            /eci true
             (FNC1) fn1
             (FNC2) fn2
             (FNC3) fn3
 %            (FNC4) fn4        Not user accessible as encoded automatically
         >> def
-        /msg barlen array def
-        /i 0 def /j 0 def {
-            i barlen eq {exit} if
-            /char barcode i get def
-            /i i 1 add def
-            parsefnc char 94 eq and i barlen lt and {
-                barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                    i barlen 3 sub ge {
-                        /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                    } if
-                    barcode i 4 getinterval
-                    dup 0 3 getinterval (ECI) ne {
-                        dup fncvals exch known not {
-                            dup length 28 add string dup 28 4 -1 roll putinterval
-                            dup 0 (Unknown function character: ) putinterval
-                            /bwipp.unknownFNC exch //raiseerror exec
-                        } if
-                        fncvals exch get
-                        /i i 4 add def
-                    } {  % "^ECInnnnnn" -> -nnnnnn
-                        pop
-                        i barlen 8 sub ge {
-                            /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                        } if
-                        barcode i 3 add 6 getinterval
-                        dup {
-                            dup 48 lt exch 57 gt or {
-                                /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                            } if
-                        } forall
-                        0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                        /i i 9 add def
-                    } ifelse
-                    /char exch def
-                } {  % "^^" -> "^"
-                    /i i 1 add def
-                } ifelse
-            } if
-            msg j char put
-            /j j 1 add def
-        } loop
-        /msg msg 0 j getinterval def
+        /msg barcode fncvals //parseinput exec def
         /msglen msg length def
 
         % Standard and extended ASCII runlength at position
@@ -11952,16 +13453,17 @@ bind def
 % --END ENCODER code16k--
 
 % --BEGIN ENCODER code49--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: Code 49
 % --EXAM: MULTIPLE ROWS IN CODE 49
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2020100200 262149 271600
-%%BeginData:       1103 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2021020600 255462 258120
+%%BeginData:       1042 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /code49 {
@@ -11997,78 +13499,16 @@ bind def
     /rowheight rowheight cvi def
     /sepheight sepheight cvi def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
-    % Convert input into bytes accounting for FNC characters
+     % Parse the input
     /s1 -1 def /s2 -2 def /fn1 -3 def /fn2 -4 def /fn3 -5 def /ns -6 def
     /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
         (FNC1) fn1
         (FNC2) fn2
         (FNC3) fn3
     >> def
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
+    /msg barcode fncvals //parseinput exec def
     /msglen msg length def
 
     % Character encodings
@@ -13072,7 +14512,7 @@ bind def
 % --EXAM: 3493
 % --EXOP: height=0.5 includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2020100200 125448 124333
+%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2021020600 125424 124333
 %%BeginData:        250 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -13334,7 +14774,7 @@ bind def
 % --EXAM: 11099
 % --EXOP: inkspread=-0.25 showborder borderleft=0 borderright=0
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2020100200 53933 53728
+%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2021020600 53805 53752
 %%BeginData:         95 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -13352,7 +14792,7 @@ bind def
     /includetext false def   % Enable/disable text
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /height 0.3 def
 
     % Validate the input
@@ -13441,7 +14881,7 @@ bind def
 % --EXAM: 331132131313411122131311333213114131131221323
 % --EXOP: height=0.5
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2020100200 49535 49415
+%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2021020600 49511 49415
 %%BeginData:         54 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -13507,7 +14947,7 @@ bind def
 % --EXAM: FATDAFTDAD
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2020100200 52789 52642
+%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2021020600 52765 52642
 %%BeginData:         78 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -13597,7 +15037,7 @@ bind def
 % --EXAM: fima
 % --EXOP: backgroundcolor=DD000011
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2020100200 52393 52217
+%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2021020600 52369 52217
 %%BeginData:         74 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -13678,16 +15118,17 @@ bind def
 % --END ENCODER symbol--
 
 % --BEGIN ENCODER pdf417--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: PDF417
 % --EXAM: This is PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2020100200 203678 202455
-%%BeginData:        955 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2021020600 195945 198071
+%%BeginData:        893 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /pdf417 {
@@ -13725,37 +15166,14 @@ bind def
     /rows rows cvi def
     /rowmult rowmult cvr def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
     raw {/encoding (raw) def} if
 
     % Convert input into array of codewords
     encoding (raw) eq {
-        /datcws barlen array def
+        /datcws barcode length array def
         /i 0 def /j 0 def
         { % loop
-            i barlen eq {exit} if
+            i barcode length eq {exit} if
             /cw barcode i 1 add 3 getinterval cvi def
             datcws j cw put
             /i i 4 add def
@@ -13803,6 +15221,7 @@ bind def
     } bind def
 
     encoding (byte) eq encoding (ccc) eq or {
+        /barlen barcode length def
         /datcws barlen 6 idiv 5 mul barlen 6 mod add 1 add array def
         datcws 0 barlen 6 mod 0 eq {924} {901} ifelse put
         datcws 1 [ barcode {} forall ] encb putinterval
@@ -13811,52 +15230,14 @@ bind def
 
     encoding (auto) eq {
 
-        % Convert input into bytes accounting for FNC characters
+        % Parse the input
         /fncvals <<
+            /parse parse
+            /parsefnc parsefnc
+            /eci true
             % Predates FNC non-data codewords, but supports ECI
         >> def
-        /msg barlen array def
-        /i 0 def /j 0 def {
-            i barlen eq {exit} if
-            /char barcode i get def
-            /i i 1 add def
-            parsefnc char 94 eq and i barlen lt and {
-                barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                    i barlen 3 sub ge {
-                        /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                    } if
-                    barcode i 4 getinterval
-                    dup 0 3 getinterval (ECI) ne {
-                        dup fncvals exch known not {
-                            dup length 28 add string dup 28 4 -1 roll putinterval
-                            dup 0 (Unknown function character: ) putinterval
-                            /bwipp.unknownFNC exch //raiseerror exec
-                        } if
-                        fncvals exch get
-                        /i i 4 add def
-                    } {  % "^ECInnnnnn" -> -nnnnnn
-                        pop
-                        i barlen 8 sub ge {
-                            /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                        } if
-                        barcode i 3 add 6 getinterval
-                        dup {
-                            dup 48 lt exch 57 gt or {
-                                /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                            } if
-                        } forall
-                        0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                        /i i 9 add def
-                    } ifelse
-                    /char exch def
-                } {  % "^^" -> "^"
-                    /i i 1 add def
-                } ifelse
-            } if
-            msg j char put
-            /j j 1 add def
-        } loop
-        /msg msg 0 j getinterval def
+        /msg barcode fncvals //parseinput exec def
         /msglen msg length def
 
         % Modes and text submodes
@@ -13969,19 +15350,19 @@ bind def
         /seq [] def /seqlen 0 def /state T def /p 0 def {  % loop
             p msglen eq {exit} if
             iseci p get {
+                /eci msg p get def
                 /seq [
                     seq aload pop
-                    [ msg p get ]
+                    [ eci ]
                 ] def
                 /p p 1 add def
-                /seqlen seqlen 1 add def
+                /seqlen seqlen eci -1810900 le {2} {eci -1000900 le {3} {2} ifelse} ifelse add def
             } {
             /n numdigits p get def
             n 13 ge {
                 /seq [
                     seq aload pop
                     nl
-                    p 0 gt {iseci p 1 sub get {exch} if} if
                     [ msg p n getinterval aload pop ]
                 ] def
                 /state N def
@@ -13994,7 +15375,6 @@ bind def
                     seq aload pop
                     state T ne {
                         tl
-                        p 0 gt {iseci p 1 sub get {exch} if} if
                     } if
                     [ msg p t getinterval aload pop ]
                 ] def
@@ -14007,7 +15387,6 @@ bind def
                 /seq [
                     seq aload pop
                     bs
-                    p 0 gt {iseci p 1 sub get {exch} if} if
                     [ msg p get ]
                 ] def
                 /p p b add def
@@ -14016,7 +15395,6 @@ bind def
                 /seq [
                     seq aload pop
                     b 6 mod 0 ne {bl} {bl6} ifelse
-                    p 0 gt {iseci p 1 sub get {exch} if} if
                     [ msg p b getinterval aload pop ]
                 ] def
                 /state B def
@@ -14213,7 +15591,7 @@ bind def
             } { dup 810899 le {  % ECI 000900 - 810899
                 926 exch dup 900 idiv 1 sub exch 900 mod 3 array astore
             } { dup 811799 le {  % ECI 810900 - 811799
-                925 exch 810900 sub 2 array
+                925 exch 810900 sub 2 array astore
             } {
                 /bwipp.pdf417badECI (PDF417 supports ECIs 000000 to 811799) //raiseerror exec
             } ifelse } ifelse } ifelse
@@ -14645,12 +16023,12 @@ bind def
 % --END ENCODER pdf417--
 
 % --BEGIN ENCODER pdf417compact--
-% --REQUIRES preamble raiseerror renmatrix pdf417--
+% --REQUIRES preamble raiseerror parseinput renmatrix pdf417--
 % --DESC: Compact PDF417
 % --EXAM: This is compact PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2020100200 50612 53913
+%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2021020600 56787 53230
 %%BeginData:         45 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -14702,16 +16080,17 @@ bind def
 % --END ENCODER pdf417compact--
 
 % --BEGIN ENCODER micropdf417--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: MicroPDF417
 % --EXAM: MicroPDF417
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2020100200 214720 220255
-%%BeginData:       1042 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2021020600 207003 209127
+%%BeginData:        980 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /micropdf417 {
@@ -14754,38 +16133,15 @@ bind def
     /rows rows cvi def
     /rowmult rowmult cvr def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
     raw {/encoding (raw) def} if
     cca {/encoding (cca) def} if
 
     % Convert input into array of codewords
     encoding (raw) eq encoding (cca) eq or {
-        /datcws barlen array def
+        /datcws barcode length array def
         /i 0 def /j 0 def
         { % loop
-            i barlen eq {exit} if
+            i barcode length eq {exit} if
             /cw barcode i 1 add 3 getinterval cvi def
             datcws j cw put
             /i i 4 add def
@@ -14833,6 +16189,7 @@ bind def
     } bind def
 
     encoding (byte) eq encoding (ccb) eq or {
+        /barlen barcode length def
         /datcws barlen 6 idiv 5 mul barlen 6 mod add 1 add array def
         datcws 0 barlen 6 mod 0 eq {924} {901} ifelse put
         datcws 1 [ barcode {} forall ] encb putinterval
@@ -14841,52 +16198,14 @@ bind def
 
     encoding (auto) eq {
 
-        % Convert input into bytes accounting for FNC characters
+        % Parse the input
         /fncvals <<
+            /parse parse
+            /parsefnc parsefnc
+            /eci true
             % Predates FNC non-data codewords, but supports ECI
         >> def
-        /msg barlen array def
-        /i 0 def /j 0 def {
-            i barlen eq {exit} if
-            /char barcode i get def
-            /i i 1 add def
-            parsefnc char 94 eq and i barlen lt and {
-                barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                    i barlen 3 sub ge {
-                        /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                    } if
-                    barcode i 4 getinterval
-                    dup 0 3 getinterval (ECI) ne {
-                        dup fncvals exch known not {
-                            dup length 28 add string dup 28 4 -1 roll putinterval
-                            dup 0 (Unknown function character: ) putinterval
-                            /bwipp.unknownFNC exch //raiseerror exec
-                        } if
-                        fncvals exch get
-                        /i i 4 add def
-                    } {  % "^ECInnnnnn" -> -nnnnnn
-                        pop
-                        i barlen 8 sub ge {
-                            /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                        } if
-                        barcode i 3 add 6 getinterval
-                        dup {
-                            dup 48 lt exch 57 gt or {
-                                /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                            } if
-                        } forall
-                        0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                        /i i 9 add def
-                    } ifelse
-                    /char exch def
-                } {  % "^^" -> "^"
-                    /i i 1 add def
-                } ifelse
-            } if
-            msg j char put
-            /j j 1 add def
-        } loop
-        /msg msg 0 j getinterval def
+        /msg barcode fncvals //parseinput exec def
         /msglen msg length def
 
         % Modes and text submodes
@@ -14999,19 +16318,19 @@ bind def
         /seq [] def /seqlen 0 def /state B def /p 0 def {  % loop
             p msglen eq {exit} if
             iseci p get {
+                /eci msg p get def
                 /seq [
                     seq aload pop
-                    [ msg p get ]
+                    [ eci ]
                 ] def
                 /p p 1 add def
-                /seqlen seqlen 1 add def
+                /seqlen seqlen eci -1810900 le {2} {eci -1000900 le {3} {2} ifelse} ifelse add def
             } {
             /n numdigits p get def
             n 13 ge {
                 /seq [
                     seq aload pop
                     nl
-                    p 0 gt {iseci p 1 sub get {exch} if} if
                     [ msg p n getinterval aload pop ]
                 ] def
                 /state N def
@@ -15024,7 +16343,6 @@ bind def
                     seq aload pop
                     state T ne {
                         tl
-                        p 0 gt {iseci p 1 sub get {exch} if} if
                     } if
                     [ msg p t getinterval aload pop ]
                 ] def
@@ -15037,7 +16355,6 @@ bind def
                 /seq [
                     seq aload pop
                     bs
-                    p 0 gt {iseci p 1 sub get {exch} if} if
                     [ msg p get ]
                 ] def
                 /p p b add def
@@ -15046,7 +16363,6 @@ bind def
                 /seq [
                     seq aload pop
                     b 6 mod 0 ne {bl} {bl6} ifelse
-                    p 0 gt {iseci p 1 sub get {exch} if} if
                     [ msg p b getinterval aload pop ]
                 ] def
                 /state B def
@@ -15244,7 +16560,7 @@ bind def
             } { dup 810899 le {  % ECI 000900 - 810899
                 926 exch dup 900 idiv 1 sub exch 900 mod 3 array astore
             } { dup 811799 le {  % ECI 810900 - 811799
-                925 exch 810900 sub 2 array
+                925 exch 810900 sub 2 array astore
             } {
                 /bwipp.pdf417badECI (PDF417 supports ECIs 000000 to 811799) //raiseerror exec
             } ifelse } ifelse } ifelse
@@ -15756,16 +17072,17 @@ bind def
 % --END ENCODER micropdf417--
 
 % --BEGIN ENCODER datamatrix--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: Data Matrix
 % --EXAM: This is Data Matrix!
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2020100200 213681 236037
-%%BeginData:        977 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2021020600 208097 216597
+%%BeginData:        917 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /datamatrix {
@@ -15808,27 +17125,6 @@ bind def
 
     /columns columns cvi def
     /rows rows cvi def
-
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
 
     /isodmre dmre def
 
@@ -15938,82 +17234,42 @@ bind def
 
     encoding (auto) eq {
 
-        % Macro 05/06 compression of [)>{RS}05/06{GS}...{RS}{EOT} structured data
-        /mac05comp false def
-        /mac06comp false def
-        barcode length 9 ge {
-            barcode 0 7 getinterval
-            dup  ([\)>\03605\035) eq
-            exch ([\)>\03606\035) eq or
-            barcode barcode length 2 sub 2 getinterval (\036\004) eq and {
-                barcode 5 get 53 eq {/mac05comp} {/mac06comp} ifelse true def
-                /barcode barcode 7 barcode length 9 sub getinterval def
-            } if
-        } if
-        /barlen barcode length def
+        % Special characters
+        /fnc1  -1 def  /prog  -2 def  /m05   -3 def  /m06   -4 def
+        /lC    -5 def  /lB    -6 def  /lX    -7 def  /lT    -8 def  /lE    -9 def  /unl -10 def
+        /sapp -11 def  /usft -12 def  /sft1 -13 def  /sft2 -14 def  /sft3 -15 def  /eci -16 def  /pad -17 def
+        /unlcw 254 def
 
-        % Convert input into bytes accounting for FNC characters
-        /fnc1 -1 def  /prog -2 def  /m05 -3 def  /m06 -4 def
+        % Parse the input
         /fncvals <<
+            /parse parse
+            /parsefnc parsefnc
+            /eci true
             (FNC1) fnc1
             (PROG) prog
 %            (MAC5) m05    Encoded automatically
 %            (MAC6) m06    Encoded automatically
         >> def
-        /msg barlen array def
-        /i 0 def /j 0 def {
-            i barlen eq {exit} if
-            /char barcode i get def
-            /i i 1 add def
-            parsefnc char 94 eq and i barlen lt and {
-                barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                    i barlen 3 sub ge {
-                        /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
+        /msg barcode fncvals //parseinput exec def
+        /msglen msg length def
+
+        % Macro 05/06 compression of [)>{RS}05/06{GS}...{RS}{EOT} structured data
+        msglen 9 ge {
+            msg 0 7 getinterval aload pop
+            29 eq exch pop exch 48 eq and exch  % [)>{RS}0*{GS}...
+            30 eq and exch 62 eq and exch 41 eq and exch 91 eq and {
+                msg msglen 2 sub 2 getinterval aload pop
+                4 eq exch 30 eq and {           %              ...{RS}{EOT}
+                    msg 5 get 53 eq {           %      ...5...
+                        /msg [ m05 msg 7 msg length 9 sub getinterval aload pop ] def
                     } if
-                    barcode i 4 getinterval
-                    dup 0 3 getinterval (ECI) ne {
-                        dup fncvals exch known not {
-                            dup length 28 add string dup 28 4 -1 roll putinterval
-                            dup 0 (Unknown function character: ) putinterval
-                            /bwipp.unknownFNC exch //raiseerror exec
-                        } if
-                        fncvals exch get
-                        /i i 4 add def
-                    } {  % "^ECInnnnnn" -> -nnnnnn
-                        pop
-                        i barlen 8 sub ge {
-                            /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                        } if
-                        barcode i 3 add 6 getinterval
-                        dup {
-                            dup 48 lt exch 57 gt or {
-                                /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                            } if
-                        } forall
-                        0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                        /i i 9 add def
-                    } ifelse
-                    /char exch def
-                } {  % "^^" -> "^"
-                    /i i 1 add def
-                } ifelse
+                    msg 5 get 54 eq {           %      ...6...
+                        /msg [ m06 msg 7 msg length 9 sub getinterval aload pop ] def
+                    } if
+                } if
             } if
-            msg j char put
-            /j j 1 add def
-        } loop
-        /msg msg 0 j getinterval def
+        } if
         /msglen msg length def
-
-        % Prefix the Macro 05/06 compression indicator
-        mac05comp { /msg [ m05 msg aload pop ] def } if
-        mac06comp { /msg [ m06 msg aload pop ] def } if
-
-        /msglen msg length def
-
-        % Special characters
-        /lC    -5 def  /lB    -6 def  /lX    -7 def  /lT    -8 def  /lE    -9 def  /unl -10 def
-        /sapp -11 def  /usft -12 def  /sft1 -13 def  /sft2 -14 def  /sft3 -15 def  /eci -16 def  /pad -17 def
-        /unlcw 254 def
 
         /Avals <<
             0 1 128 {dup 1 add} for
@@ -16745,12 +18001,12 @@ bind def
 % --END ENCODER datamatrix--
 
 % --BEGIN ENCODER datamatrixrectangular--
-% --REQUIRES preamble raiseerror renmatrix datamatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix datamatrix--
 % --DESC: Data Matrix Rectangular
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2020100200 50668 53961
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2021020600 56843 53278
 %%BeginData:         45 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -16802,12 +18058,12 @@ bind def
 % --END ENCODER datamatrixrectangular--
 
 % --BEGIN ENCODER datamatrixrectangularextension--
-% --REQUIRES preamble raiseerror renmatrix datamatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix datamatrix--
 % --DESC: Data Matrix Rectangular Extension
 % --EXAM: 1234
 % --EXOP: version=8x96
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2020100200 51447 54731
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2021020600 57622 54152
 %%BeginData:         55 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -16869,16 +18125,17 @@ bind def
 % --END ENCODER datamatrixrectangularextension--
 
 % --BEGIN ENCODER mailmark--
-% --REQUIRES preamble raiseerror renmatrix datamatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix datamatrix--
 % --DESC: Royal Mail Mailmark
 % --EXAM: JGB 012100123412345678AB19XY1A 0             www.xyz.com
 % --EXOP: type=29
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2020100200 56406 59663
-%%BeginData:         90 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2021020600 60223 56712
+%%BeginData:         80 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -16905,25 +18162,14 @@ bind def
     options {def} forall
 
     % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
+    /fncvals <<
+        /parse parse
+        /parseonly true
+        /parsefnc false
+    >> def
+    /barcode barcode fncvals //parseinput exec def
+    /barlen barcode length def
+    options (parse) undef
 
     % Map the given type to a format and version of Data Matrix
     <<
@@ -16971,16 +18217,17 @@ bind def
 % --END ENCODER mailmark--
 
 % --BEGIN ENCODER qrcode--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: QR Code
 % --EXAM: http://goo.gl/0bis
 % --EXOP: eclevel=M
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2020100200 326356 367957
-%%BeginData:       1347 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2021020600 313702 355309
+%%BeginData:       1291 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /qrcode {
@@ -17023,76 +18270,18 @@ bind def
         format (unset) eq { /format (full) def } if  % Default to full
     } ifelse
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
+    % Default error correction level
+    eclevel (unset) eq {/eclevel format (micro) ne {(M)} {(L)} ifelse def} if
 
-    /barlen barcode length def
-
-    % Convert input into bytes accounting for FNC characters
+    % Parse the input
     /fn1 -1 def
     /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
+        /eci true
         (FNC1) fn1
     >> def
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
+    /msg barcode fncvals //parseinput exec def
     /msglen msg length def
 
     % If FNC1 in first position then escape % as %%
@@ -17104,9 +18293,6 @@ bind def
             /msglen msg length def
         } if
     } if
-
-    % Default error correction level
-    eclevel (unset) eq {/eclevel format (micro) ne {(M)} {(L)} ifelse def} if
 
     % Enumerate vergrps
     [
@@ -17722,6 +18908,8 @@ bind def
     % Short final data byte in M1 and M3 symbols has high-order value
     lc4b {cws cws length 1 sub 2 copy get 4 bitshift put} if
 
+    options /debugcws known { /bwipp.debugcws cws //raiseerror exec } if
+
     % Calculate the log and anti-log tables
     /rsalog [ 1 255 { dup 2 mul dup 256 ge {285 xor} if } repeat ] def
     /rslog 256 array def
@@ -17819,6 +19007,8 @@ bind def
         } for
         cws ncws 1 sub cws ncws 1 sub get 15 and 4 bitshift put
     } if
+
+    options /debugecc known { /bwipp.debugecc cws //raiseerror exec } if
 
     % Create the bitmap
     /pixs [ rows cols mul {-1} repeat ] def
@@ -18027,23 +19217,23 @@ bind def
     % Calculate the mask patterns
     /maskfuncs <<
         (full) [
-            {add 2 mod} bind
-            {exch pop 2 mod} bind
-            {pop 3 mod} bind
-            {add 3 mod} bind
-            {2 idiv exch 3 idiv add 2 mod} bind
-            {mul dup 2 mod exch 3 mod add} bind
-            {mul dup 2 mod exch 3 mod add 2 mod} bind
-            {2 copy mul 3 mod 3 1 roll add 2 mod add 2 mod} bind
+            {add 2 mod}
+            {exch pop 2 mod}
+            {pop 3 mod}
+            {add 3 mod}
+            {2 idiv exch 3 idiv add 2 mod}
+            {mul dup 2 mod exch 3 mod add}
+            {mul dup 2 mod exch 3 mod add 2 mod}
+            {2 copy mul 3 mod 3 1 roll add 2 mod add 2 mod}
         ]
         (micro) [
-            {exch pop 2 mod} bind
-            {2 idiv exch 3 idiv add 2 mod} bind
-            {mul dup 2 mod exch 3 mod add 2 mod} bind
-            {2 copy mul 3 mod 3 1 roll add 2 mod add 2 mod} bind
+            {exch pop 2 mod}
+            {2 idiv exch 3 idiv add 2 mod}
+            {mul dup 2 mod exch 3 mod add 2 mod}
+            {2 copy mul 3 mod 3 1 roll add 2 mod add 2 mod}
         ]
         (rmqr) [
-            {2 idiv exch 3 idiv add 2 mod} bind
+            {2 idiv exch 3 idiv add 2 mod}
         ]
     >> format get def
     mask -1 ne {  % User specifies a mask
@@ -18330,163 +19520,151 @@ bind def
 % --END ENCODER qrcode--
 
 % --BEGIN ENCODER swissqrcode--
-% --REQUIRES preamble raiseerror renmatrix qrcode--
+% --REQUIRES preamble raiseerror parseinput renmatrix qrcode--
 % --DESC: Swiss QR Code
 % --EXAM:
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2020100200 62078 65245
-%%BeginData:        139 ASCII Lines
-%% /setpacking where {pop currentpacking true setpacking} if
-%% 1 dict
-%% dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-%% dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-%% dup /qrcode dup /uk.co.terryburton.bwipp findresource put
-%% begin
-%% /swissqrcode {
-%% 
-%%     20 dict begin            % Confine variables to local scope
-%% 
-%%     /options exch def  % We are given an option string
-%%     /barcode exch def  % We are given a barcode string
-%% 
-%%     /dontdraw false def
-%% 
-%%     /parse false def
-%% 
-%%     % Parse the input options
-%%     options type /stringtype eq {
-%%         1 dict begin
-%%         options {
-%%             token false eq {exit} if dup length string cvs (=) search
-%%             true eq {cvlit exch pop exch def} {cvlit true def} ifelse
-%%         } loop
-%%         currentdict end /options exch def
-%%     } if
-%%     options {def} forall
-%% 
-%%     % Parse ordinals of the form ^NNN to ASCII
-%%     parse {
-%%         /msg barcode length string def
-%%         /j 0 def
-%%         barcode
-%%         { % loop
-%%             (^) search {
-%%                 dup msg exch j exch putinterval
-%%                 length j add 1 add /j exch def
-%%                 pop
-%%                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%%                 dup length 3 sub 3 exch getinterval
-%%             } {
-%%                 dup msg exch j exch putinterval
-%%                 length j add /j exch def
-%%                 /barcode msg 0 j getinterval def
-%%                 exit
-%%             } ifelse
-%%         } loop
-%%     } if
-%% 
-%%     /barlen barcode length def
-%% 
-%%     % Validate the input length
-%%     barcode length 997 gt {
-%%         /bwipp.swissqrcodeBadLength (Swiss QR Code input must not exceed 997 digits) //raiseerror exec
-%%     } if
-%% 
-%%     % Get the result of encoding with qrcode
-%%     options (dontdraw) true put
-%%     /args barcode options //qrcode exec def
-%% 
-%%     args (opt) options put
-%%     args
-%% 
-%%     % The 7mm-wide Swiss Cross is defined by the specification as being an
-%%     % overlaid image, i.e. not made out of "modules", so very likely a
-%%     % different pitch. It cannot therefore be represented by our standard image
-%%     % dictionary and would be a nightmare to gridfit. The application assumes a
-%%     % sufficient high-resolution print process that such issues do not matter.
-%%     %
-%%     % So for now we simply do as we're told and paint over the top of the
-%%     % barcode image that has been scaled to 46mm, user be damned!
-%%     %
-%%     dontdraw not {
-%% 
-%%         gsave
-%%         currentpoint translate
-%%         72 25.4 div dup scale  % pt to mm
-%% 
-%%         % Clipping path with 7mm hole for the Swiss Cross
-%%         gsave
-%%         newpath
-%%          0  0 moveto
-%%         46  0 lineto
-%%         46 46 lineto
-%%          0 46 lineto
-%%         closepath
-%%         19.5 19.5 moveto
-%%         19.5 26.5 lineto
-%%         26.5 26.5 lineto
-%%         26.5 19.5 lineto
-%%         closepath
-%%         clip
-%% 
-%%         % Scale the QR Code to fit within 46mm
-%%         gsave
-%%         0 0 moveto
-%%         46 args (pixx) get div 2 div dup scale
-%%         //renmatrix exec
-%%         grestore
-%% 
-%%         grestore  % Clipping
-%% 
-%%         % Draw Swiss Cross
-%%         19.5 dup translate
-%%         7 83 div dup scale
-%% 
-%%         newpath
-%%          6  6 moveto
-%%          6 77 lineto
-%%         77 77 lineto
-%%         77  6 lineto
-%%         closepath
-%%         49 18 moveto
-%%         49 34 lineto
-%%         65 34 lineto
-%%         65 49 lineto
-%%         49 49 lineto
-%%         49 65 lineto
-%%         34 65 lineto
-%%         34 49 lineto
-%%         18 49 lineto
-%%         18 34 lineto
-%%         34 34 lineto
-%%         34 18 lineto
-%%         closepath
-%%         0 0 0 setrgbcolor fill
-%% 
-%%         grestore
-%% 
-%%     } if
-%% 
-%%     end
-%% 
-%% }
-%% [/barcode] {null def} forall
-%% bind def
-%% /swissqrcode dup load /uk.co.terryburton.bwipp defineresource pop
-%% end
-%% /setpacking where {pop setpacking} if
+%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2021020600 62487 58862
+%%BeginData:        127 ASCII Lines
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 1 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+/swissqrcode {
+
+    20 dict begin            % Confine variables to local scope
+
+    /options exch def  % We are given an option string
+    /barcode exch def  % We are given a barcode string
+
+    /dontdraw false def
+
+    /parse false def
+
+    % Parse the input options
+%psc     options type /stringtype eq {
+%psc         1 dict begin
+%psc         options {
+%psc             token false eq {exit} if dup length string cvs (=) search
+%psc             true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+%psc         } loop
+%psc         currentdict end /options exch def
+%psc     } if
+    options {def} forall
+
+    % Parse ordinals of the form ^NNN to ASCII
+    /fncvals <<
+        /parse parse
+        /parseonly true
+        /parsefnc false
+    >> def
+    /barcode barcode fncvals //parseinput exec def
+    /barlen barcode length def
+    options (parse) undef
+
+    % Validate the input length
+    barcode length 997 gt {
+        /bwipp.swissqrcodeBadLength (Swiss QR Code input must not exceed 997 digits) //raiseerror exec
+    } if
+
+    % Get the result of encoding with qrcode
+    options (dontdraw) true put
+    /args barcode options //qrcode exec def
+
+    args (opt) options put
+    args
+
+    % The 7mm-wide Swiss Cross is defined by the specification as being an
+    % overlaid image, i.e. not made out of "modules", so very likely a
+    % different pitch. It cannot therefore be represented by our standard image
+    % dictionary and would be a nightmare to gridfit. The application assumes a
+    % sufficient high-resolution print process that such issues do not matter.
+    %
+    % So for now we simply do as we're told and paint over the top of the
+    % barcode image that has been scaled to 46mm, user be damned!
+    %
+    dontdraw not {
+
+        gsave
+        currentpoint translate
+        72 25.4 div dup scale  % pt to mm
+
+        % Clipping path with 7mm hole for the Swiss Cross
+        gsave
+        newpath
+         0  0 moveto
+        46  0 lineto
+        46 46 lineto
+         0 46 lineto
+        closepath
+        19.5 19.5 moveto
+        19.5 26.5 lineto
+        26.5 26.5 lineto
+        26.5 19.5 lineto
+        closepath
+        clip
+
+        % Scale the QR Code to fit within 46mm
+        gsave
+        0 0 moveto
+        46 args (pixx) get div 2 div dup scale
+        //renmatrix exec
+        grestore
+
+        grestore  % Clipping
+
+        % Draw Swiss Cross
+        19.5 dup translate
+        7 83 div dup scale
+
+        newpath
+         6  6 moveto
+         6 77 lineto
+        77 77 lineto
+        77  6 lineto
+        closepath
+        49 18 moveto
+        49 34 lineto
+        65 34 lineto
+        65 49 lineto
+        49 49 lineto
+        49 65 lineto
+        34 65 lineto
+        34 49 lineto
+        18 49 lineto
+        18 34 lineto
+        34 34 lineto
+        34 18 lineto
+        closepath
+        0 0 0 setrgbcolor fill
+
+        grestore
+
+    } if
+
+    end
+
+}
+%psc [/barcode] {null def} forall
+bind def
+%psc /swissqrcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER swissqrcode--
 
 % --BEGIN ENCODER microqrcode--
-% --REQUIRES preamble raiseerror renmatrix qrcode--
+% --REQUIRES preamble raiseerror parseinput renmatrix qrcode--
 % --DESC: Micro QR Code
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2020100200 50852 57613
+%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2021020600 57179 53578
 %%BeginData:         45 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -18538,12 +19716,12 @@ bind def
 % --END ENCODER microqrcode--
 
 % --BEGIN ENCODER rectangularmicroqrcode--
-% --REQUIRES preamble raiseerror renmatrix qrcode--
+% --REQUIRES preamble raiseerror parseinput renmatrix qrcode--
 % --DESC: Rectangular Micro QR Code
 % --EXAM: 1234
 % --EXOP: version=R17x139
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2020100200 50895 57645
+%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2021020600 57222 53610
 %%BeginData:         45 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -18595,16 +19773,17 @@ bind def
 % --END ENCODER rectangularmicroqrcode--
 
 % --BEGIN ENCODER maxicode--
-% --REQUIRES preamble raiseerror renmaximatrix--
+% --REQUIRES preamble raiseerror parseinput renmaximatrix--
 % --DESC: MaxiCode
 % --EXAM: [)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004
 % --EXOP: mode=2 parse
 % --RNDR: renmaximatrix
-%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2020100200 132378 131116
-%%BeginData:        643 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2021020600 126819 129324
+%%BeginData:        596 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmaximatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /maxicode {
@@ -18634,32 +19813,30 @@ bind def
     /mode mode cvi def
     /sam sam cvi def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-    /barlen barcode length def
+    % Parse the input
+    /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
+        /eci true
+        % ECIs only
+    >> def
+    /msg barcode fncvals //parseinput exec def
+    /msglen msg length def
 
     % Special message handling for modes 2 and 3
     mode 2 eq mode 3 eq or {
 
-        % Normalise messages that begin with a field identifier [)>RS01GSyy
+        % Convert to a string for extracting the structured data
+        /barcode msglen string def
+        0 1 msglen 1 sub {
+            /i exch def
+            msg i get 0 gt {
+                barcode i msg i get put
+            } if
+        } for
+        /barlen barcode length def
+
+        % Normalise messages that begin with a field identifier [)>{RS}01{GS}yy
         barcode 0 7 getinterval <5b293e1e30311d> eq {
             /fid barcode 0 9 getinterval def
             /barcode barcode 9 barlen 9 sub getinterval def
@@ -18680,56 +19857,10 @@ bind def
         /barcode exch def
         /barlen barcode length def
 
-    } if
+        /msg [ barcode {} forall ] def
+        /msglen msg length def
 
-    % Convert input into bytes accounting for FNC characters
-    /fn1 -1 def
-    /fncvals <<
-        % ECIs only
-    >> def
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
-    /msglen msg length def
+    } if
 
     % Special function characters
     /eci -1 def  /pad -2 def  /ns -3 def
@@ -19250,16 +20381,17 @@ bind def
 % --END ENCODER maxicode--
 
 % --BEGIN ENCODER azteccode--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: Aztec Code
 % --EXAM: This is Aztec Code
 % --EXOP: format=full
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2020100200 181206 190283
-%%BeginData:        775 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2021020600 174571 176659
+%%BeginData:        714 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /azteccode {
@@ -19294,76 +20426,15 @@ bind def
     /eclevel eclevel cvr def
     /ecaddchars ecaddchars cvi def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
-    % Convert input into bytes accounting for FNC characters
+    % Parse the input
     /fn1 -1 def
     /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
+        /eci true
         (FNC1) fn1
     >> def
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
+    /msg barcode fncvals //parseinput exec def
     /msglen msg length def
 
     % Convert from input into message bitstream
@@ -19614,25 +20685,24 @@ bind def
         /encd {charvals D get exch get 4 tobin} bind def
 
         /encp {
-            dup 0 ge {
-                charvals P get exch get 5 tobin
+            dup fn1 eq {  % FNC1: Flg(0)
+                pop (00000000)
             } {
-                dup fn1 eq {  % FNC1: Flg(0)
-                    pop (00000000)
-                } {  % ECI: Flg(n) + n-Digits
-                    neg 1000000 sub dup dup 0 eq {pop 1} if
-                    ln 10 ln div cvi
-                    dup 1 add 4 mul 8 add string
-                    dup 0 (00000) putinterval  % Flg(n)
-                    dup 2 index 1 add 3 tobin 5 exch putinterval  % len
-                    3 1 roll -1 0 {   % ECI digits in "Digit" encoding
-                        4 mul 8 add exch
-                        dup 10 idiv 3 index 4 2 roll
-                        10 mod 2 add 4 tobin putinterval
-                    } for
-                    pop
-                } ifelse
-            } ifelse
+            dup -1000000 le {  % ECI: Flg(n) + n-Digits
+                neg 1000000 sub dup dup 0 eq {pop 1} if
+                ln 10 ln div cvi
+                dup 1 add 4 mul 8 add string
+                dup 0 (00000) putinterval  % Flg(n)
+                dup 2 index 1 add 3 tobin 5 exch putinterval  % len
+                3 1 roll -1 0 {  % ECI digits in "Digit" encoding
+                    4 mul 8 add exch
+                    dup 10 idiv 3 index 4 2 roll
+                    10 mod 2 add 4 tobin putinterval
+                } for
+                pop
+            } {
+                charvals P get exch get 5 tobin
+            } ifelse } ifelse
         } bind def
 
         /encfuncs [ /encu /encl /encm /encp /encd ] def
@@ -20037,12 +21107,12 @@ bind def
 % --END ENCODER azteccode--
 
 % --BEGIN ENCODER azteccodecompact--
-% --REQUIRES preamble raiseerror renmatrix azteccode--
+% --REQUIRES preamble raiseerror parseinput renmatrix azteccode--
 % --DESC: Compact Aztec Code
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2020100200 50516 53942
+%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2021020600 56819 53387
 %%BeginData:         45 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -20094,12 +21164,12 @@ bind def
 % --END ENCODER azteccodecompact--
 
 % --BEGIN ENCODER aztecrune--
-% --REQUIRES preamble raiseerror renmatrix azteccode--
+% --REQUIRES preamble raiseerror parseinput renmatrix azteccode--
 % --DESC: Aztec Runes
 % --EXAM: 1
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2020100200 50485 53918
+%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2021020600 56788 53363
 %%BeginData:         45 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -20151,16 +21221,17 @@ bind def
 % --END ENCODER aztecrune--
 
 % --BEGIN ENCODER codeone--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: Code One
 % --EXAM: Code One
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2020100200 197660 213034
-%%BeginData:        914 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2021020600 196386 201586
+%%BeginData:        883 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /codeone {
@@ -20185,29 +21256,6 @@ bind def
 %psc         currentdict end /options exch def
 %psc     } if
     options {def} forall
-
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
 
     /stype version 0 1 getinterval (S) eq def
 
@@ -20264,6 +21312,8 @@ bind def
             a
         } bind def
 
+        /barlen barcode length def
+
         % Convert value plus one to binary
         /v [ 1 ] def
         0 1 barlen 1 sub {
@@ -20296,52 +21346,13 @@ bind def
         % Convert input into bytes accounting for FNC characters
         /fnc1 -1 def  /fnc3 -2 def
         /fncvals <<
+            /parse parse
+            /parsefnc parsefnc
+            /eci true
             (FNC1) fnc1
             (FNC3) fnc3
         >> def
-        /msg barlen array def
-        /i 0 def /j 0 def /numecis 0 def {
-            i barlen eq {exit} if
-            /char barcode i get def
-            /i i 1 add def
-            parsefnc char 94 eq and i barlen lt and {
-                barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                    i barlen 3 sub ge {
-                        /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                    } if
-                    barcode i 4 getinterval
-                    dup 0 3 getinterval (ECI) ne {
-                        dup fncvals exch known not {
-                            dup length 28 add string dup 28 4 -1 roll putinterval
-                            dup 0 (Unknown function character: ) putinterval
-                            /bwipp.unknownFNC exch //raiseerror exec
-                        } if
-                        fncvals exch get
-                        /i i 4 add def
-                    } {  % "^ECInnnnnn" -> -nnnnnn
-                        pop
-                        i barlen 8 sub ge {
-                            /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                        } if
-                        barcode i 3 add 6 getinterval
-                        dup {
-                            dup 48 lt exch 57 gt or {
-                                /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                            } if
-                        } forall
-                        0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                        /numecis numecis 1 add def
-                        /i i 9 add def
-                    } ifelse
-                    /char exch def
-                } {  % "^^" -> "^"
-                    /i i 1 add def
-                } ifelse
-            } if
-            msg j char put
-            /j j 1 add def
-        } loop
-        /msg msg 0 j getinterval def
+        /msg barcode fncvals //parseinput exec def
         /msglen msg length def
 
         % Special characters
@@ -20351,6 +21362,7 @@ bind def
 
         % Code One stores ECIs in data
         /eciesc 16#5c def  % We choose \ as a typical default
+        /numecis 0 msg { -1000000 le {1 add} if } forall def
         numecis 0 gt {
             /msgtmp msg length 2 mul numecis 6 mul add 2 add array def
             msgtmp 0 pad put
@@ -20576,15 +21588,15 @@ bind def
                     /tc tc isT { 0.66666667 add} {isEA { 2.66666667 add } { 1.33333334 add } ifelse} ifelse def
                     /xc xc isX { 0.66666667 add} {isEA { 4.33333334 add } { 3.33333334 add } ifelse} ifelse def
                     /bc bc isFN {3 add} {1 add} ifelse def
-                    k 3 ge {
+                    k 3 ge {  % Checking after at least 4 characters (cf. Data Matrix), not 3 as in spec Step Q
                         true [ac cc tc xc   ] {bc 1 add exch ceiling le and} forall {B exit} if
                         true [   cc tc xc bc] {ac 1 add exch ceiling le and} forall {A exit} if
-                        true [ac cc    xc bc] {tc 1 add exch ceiling le and} forall {T exit} if
-                        true [ac    tc      ] {cc 1 add exch ceiling le and} forall {
+                        true [ac cc    xc bc] {tc ceiling 1 add exch ceiling le and} forall {T exit} if
+                        true [ac    tc      ] {cc ceiling 1 add exch ceiling le and} forall {
                             cc ceiling xc ceiling lt {C exit} if
                             cc xc eq {i k add 1 add XtermFirst {X exit} {C exit} ifelse} if
                         } if
-                        true [ac cc tc    bc] {xc 1 add exch lt and} forall {X exit} if
+                        true [ac cc tc    bc] {xc ceiling 1 add exch ceiling le and} forall {X exit} if
                     } if
                     /k k 1 add def
                 } loop
@@ -20664,24 +21676,43 @@ bind def
             % Lookup the values for each character
             {
                 i msglen eq {exit} if
-                encvals mode get msg i get known not {exit} if
                 p 3 mod 0 eq {
                     numD i get 12 ge {
-                        [unlcw] addtocws
-                        /mode A def
-                        exit
-                    } if
-                    numD i get dup 8 ge exch i add msglen eq and {
-                        [unlcw] addtocws
-                        /mode A def
-                        exit
-                    } if
-                    lookup mode ne {
                         ctxvals 0 p getinterval CTXvalstocws addtocws
                         [unlcw] addtocws
                         /mode A def
                         exit
                     } if
+                    numD i get dup 8 ge exch i add msglen eq and {
+                        ctxvals 0 p getinterval CTXvalstocws addtocws
+                        [unlcw] addtocws
+                        /mode A def
+                        exit
+                    } if
+                    mode X eq {  % Steps E1c, E2
+                        Xvals msg i get known not {
+                            ctxvals 0 p getinterval CTXvalstocws addtocws
+                            % Unlatch to ASCII unless one codeword left and single ASCII to encode
+                            numremcws j get 1 ne msg i get 127 gt or {
+                                [unlcw] addtocws
+                            } if
+                            /mode A def
+                            exit
+                        } if
+                        i 1 add msglen lt {
+                            Xvals msg i 1 add get known not {exit} if
+                            i 2 add msglen lt {
+                                Xvals msg i 2 add get known not {exit} if
+                            } if
+                        } if
+                    } {
+                        lookup mode ne {
+                            ctxvals 0 p getinterval CTXvalstocws addtocws
+                            [unlcw] addtocws
+                            /mode A def
+                            exit
+                        } if
+                    } ifelse
                     msglen i sub 3 le {  % Check end of data conditions
                         /remcws numremcws j p 3 idiv 2 mul add get def
                         /remvals [
@@ -20775,11 +21806,17 @@ bind def
                     /remcws numremcws j Dbits length 8 idiv add get def
 
                     % Final codeword with no data
-                    numremcws j Dbits length 8 idiv add 1 sub get 1 sub 0 eq
-                    i msglen eq and {exit} if
+                    numremcws j Dbits length 8 idiv add 1 sub get 1 sub 0 eq Drem 0 eq and  % No remaining codewords and no bits
+                    remcws 1 eq Drem 0 ne and or  % Or 1 remaining codeword and some bits
+                    i msglen eq and {
+                        Drem 4 eq Drem 6 eq or { /Dbits [ Dbits aload pop 1 1 1 1 ] def } if
+                        Drem 2 eq Drem 6 eq or { /Dbits [ Dbits aload pop 0 1 ] def } if
+                        exit
+                    } if
 
-                    % Final digit into final codeword as ASCII
+                    % Final digit or double-digit into final codeword as ASCII
                     i msglen 1 sub eq numD i get 1 eq and
+                    i msglen 2 sub eq numD i get 2 eq and or
                     remcws 1 eq and Drem 0 eq and {exit} if
 
                     % Latch to ASCII unless 4 or 6 bits remain in final codeword
@@ -20888,6 +21925,8 @@ bind def
     } {
         /cws [ dcws cws length sub {0} repeat cws aload pop ] def
     } ifelse
+
+    options /debugcws known { /bwipp.debugcws cws //raiseerror exec } if
 
     % De-interleave the codewords into blocks
     /cwbs rsbl array def  % Array of data codeword blocks
@@ -21077,16 +22116,17 @@ bind def
 % --END ENCODER codeone--
 
 % --BEGIN ENCODER hanxin--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: Han Xin Code
 % --EXAM: This is Han Xin
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2020100200 309433 356124
-%%BeginData:        913 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2021020600 299418 335780
+%%BeginData:        852 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /hanxin {
@@ -21116,75 +22156,13 @@ bind def
 
     /mask mask cvi def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
-    % Convert input into bytes accounting for FNC characters
+    % Parse the input
     /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
         % No FNC characters defined
     >> def
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
+    /msg barcode fncvals //parseinput exec def
     /msglen msg length def
 
     % Default error correction level
@@ -22002,16 +22980,17 @@ bind def
 % --END ENCODER hanxin--
 
 % --BEGIN ENCODER dotcode--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: DotCode
 % --EXAM: This is DotCode
 % --EXOP: inkspread=0.16
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2020100200 238549 267770
-%%BeginData:       1097 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2021020600 231730 243734
+%%BeginData:       1035 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /dotcode {
@@ -22052,29 +23031,6 @@ bind def
         /ratio 3 2 div def
     } if
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
     % Convert input into bytes accounting for FNC characters
     /laa  -1 def  /lab  -2 def  /lac  -3 def  /bin  -4 def
     /sfa  -5 def  /sfb  -6 def  /sb2  -7 def  /sb3  -8 def
@@ -22085,6 +23041,36 @@ bind def
     /fn1 -25 def  /fn2 -26 def  /fn3 -27 def  /crl -28 def
     /aim -29 def  /m05 -30 def  /m06 -31 def  /m12 -32 def
     /mac -33 def
+
+    % Parse the input
+    /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
+        /eci true
+        (FNC1) fn1
+        % (FNC2) fn2  %  Use ^ECInnnnnn for ECI; Structured append not supported
+        (FNC3) fn3
+    >> def
+    /msg barcode fncvals //parseinput exec def
+    /msglen msg length def
+
+    % Special FNC2 semantics: Expand ECI characters into ^FNC2nnnnnn
+    /numecis 0 msg { -1000000 le {1 add} if } forall def
+    /msgtmp msg length numecis 6 mul add array def
+    /j 0 def
+    0 1 msg length 1 sub {
+        msg exch get dup -1000000 le {
+            neg 10 7 string cvrs 1 6 getinterval {} forall 6 array astore
+            msgtmp exch j 1 add exch putinterval
+            msgtmp j fn2 put
+            /j j 7 add def
+        } {
+            msgtmp exch j exch put
+            /j j 1 add def
+        } ifelse
+    } for
+    /msg msgtmp def
+    /msglen msg length def
 
     % Character maps for each state
     /charmaps [
@@ -22150,76 +23136,6 @@ bind def
     /BINvals <<
         102 [ sc2 sc3 sc4 sc5 sc6 sc7 tma tmb tmc tms ] {exch 1 add dup} forall pop
     >> def
-
-    /fncvals <<
-        (FNC1) fn1
-        % (FNC2) fn2  %  Use ^ECInnnnnn for ECI; Structured append not supported
-        (FNC3) fn3
-    >> def
-    /msg barlen array def
-    /i 0 def /j 0 def /numecis 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 811799) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    dup -1811799 lt {
-                        pop
-                        /bwipp.invalidECI (ECI must be 000000 to 811799) //raiseerror exec
-                    } if
-                    /numecis numecis 1 add def
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
-
-    % Special FNC2 semantics: Expand ECI characters into ^FNC2nnnnnn
-    /msgtmp msg length numecis 6 mul add array def
-    /j 0 def
-    0 1 msg length 1 sub {
-        msg exch get dup -1000000 le {
-            neg 10 7 string cvrs 1 6 getinterval {} forall 6 array astore
-            msgtmp exch j 1 add exch putinterval
-            msgtmp j fn2 put
-            /j j 7 add def
-        } {
-            msgtmp exch j exch put
-            /j j 1 add def
-        } ifelse
-    } for
-    /msg msgtmp def
-    /msglen msg length def
 
     % Pre-compute properties of the input at each point
     /nDigits      [ msglen 1 add {0} repeat     ] def
@@ -22690,7 +23606,7 @@ bind def
         } repeat
     } bind def
 
-    /cws barlen 2 mul 1 add array def
+    /cws msglen 2 mul 1 add array def
     /mode C def
     /bvals 5 array def  /bpos 0 def
     /inmac 0 def  /segstart 0 def  /segend UntilEndSeg 0 get def
@@ -23111,16 +24027,17 @@ bind def
 % --END ENCODER dotcode--
 
 % --BEGIN ENCODER ultracode--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: Ultracode
 % --EXAM: Awesome colours!
 % --EXOP: eclevel=EC2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2020100200 91004 90327
-%%BeginData:        360 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2021020600 84301 87023
+%%BeginData:        299 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /ultracode {
@@ -23146,77 +24063,15 @@ bind def
 %psc     } if
     options {def} forall
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
-    % Convert input into bytes accounting for FNC characters
+    % Parse the input
     /fn1 -1 def  /fn3 -2 def
     /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
         (FNC1) fn1
         (FNC3) fn3
     >> def
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
+    /msg barcode fncvals //parseinput exec def
     /msglen msg length def
 
     % Basic high level encoding
@@ -23483,16 +24338,17 @@ bind def
 % --END ENCODER ultracode--
 
 % --BEGIN ENCODER jabcode--
-% --REQUIRES preamble raiseerror renmatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix--
 % --DESC: JAB Code (Beta)
 % --EXAM: This is JAB Code
 % --EXOP: eclevel=6
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2020100200 250004 285163
-%%BeginData:       1193 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2021020600 243685 265291
+%%BeginData:       1132 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /jabcode {
@@ -23533,76 +24389,14 @@ bind def
     /databpm colors ln 2 ln div round cvi def
     /metabpm colors dup 8 gt {pop 8} if ln 2 ln div round cvi def
 
-    % Parse ordinals of the form ^NNN to ASCII
-%psc     parse {
-%psc         /msg barcode length string def
-%psc         /j 0 def
-%psc         barcode
-%psc         { % loop
-%psc             (^) search {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add 1 add /j exch def
-%psc                 pop
-%psc                 dup 0 3 getinterval cvi msg exch j 1 sub exch put
-%psc                 dup length 3 sub 3 exch getinterval
-%psc             } {
-%psc                 dup msg exch j exch putinterval
-%psc                 length j add /j exch def
-%psc                 /barcode msg 0 j getinterval def
-%psc                 exit
-%psc             } ifelse
-%psc         } loop
-%psc     } if
-
-    /barlen barcode length def
-
-    % Convert input into bytes accounting for FNC characters
+     % Parse the input
     /fn1 -1 def
     /fncvals <<
+        /parse parse
+        /parsefnc parsefnc
         (FNC1) fn1
     >> def
-    /msg barlen array def
-    /i 0 def /j 0 def {
-        i barlen eq {exit} if
-        /char barcode i get def
-        /i i 1 add def
-        parsefnc char 94 eq and i barlen lt and {
-            barcode i get 94 ne {  % "^FNCx" -> fncvals{FNCx}
-                i barlen 3 sub ge {
-                    /bwipp.truncatedFNC (Function character truncated) //raiseerror exec
-                } if
-                barcode i 4 getinterval
-                dup 0 3 getinterval (ECI) ne {
-                    dup fncvals exch known not {
-                        dup length 28 add string dup 28 4 -1 roll putinterval
-                        dup 0 (Unknown function character: ) putinterval
-                        /bwipp.unknownFNC exch //raiseerror exec
-                    } if
-                    fncvals exch get
-                    /i i 4 add def
-                } {  % "^ECInnnnnn" -> -nnnnnn
-                    pop
-                    i barlen 8 sub ge {
-                        /bwipp.truncatedECI (ECI truncated) //raiseerror exec
-                    } if
-                    barcode i 3 add 6 getinterval
-                    dup {
-                        dup 48 lt exch 57 gt or {
-                            /bwipp.invalidECI (ECI must be 000000 to 999999) //raiseerror exec
-                        } if
-                    } forall
-                    0 exch {48 sub sub 10 mul} forall 10 idiv 1000000 sub
-                    /i i 9 add def
-                } ifelse
-                /char exch def
-            } {  % "^^" -> "^"
-                /i i 1 add def
-            } ifelse
-        } if
-        msg j char put
-        /j j 1 add def
-    } loop
-    /msg msg 0 j getinterval def
+    /msg barcode fncvals //parseinput exec def
     /msglen msg length def
 
     % Wide array support, as needed
@@ -24688,16 +25482,18 @@ bind def
 % --END ENCODER jabcode--
 
 % --BEGIN ENCODER gs1-cc--
-% --REQUIRES preamble raiseerror renmatrix micropdf417 pdf417--
+% --REQUIRES preamble raiseerror parseinput gs1lint renmatrix micropdf417 pdf417--
 % --DESC: GS1 Composite 2D Component
 % --EXAM: (01)95012345678903(3103)000123
 % --EXOP: ccversion=b cccolumns=4
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2020100200 190776 186408
-%%BeginData:        661 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2021020600 208615 207592
+%%BeginData:        659 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1lint dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /pdf417 dup /uk.co.terryburton.bwipp findresource put
 %psc dup /micropdf417 dup /uk.co.terryburton.bwipp findresource put
@@ -24709,6 +25505,8 @@ bind def
     /options exch def  % We are given an option string
     /barcode exch def  % We are given a barcode string
 
+    /parse false def
+    /dontlint false def
     /dontdraw false def
     /ccversion (a) def
     /cccolumns -1 def
@@ -24750,23 +25548,12 @@ bind def
 
     % Expand ordinals of the form ^NNN to ASCII
     /expand {
-        /in exch def
-        /out in length string def
-        /j 0 def
-        in
-        { % loop
-            (^) search {
-                dup out exch j exch putinterval
-                length j add 1 add /j exch def
-                pop
-                dup 0 3 getinterval cvi out exch j 1 sub exch put
-                dup length 3 sub 3 exch getinterval
-            } {
-                dup out exch j exch putinterval
-                length j add /j exch def
-                out 0 j getinterval exit
-            } ifelse
-        } loop
+        /fncvals <<
+            /parse parse
+            /parseonly true
+            /parsefnc false
+        >> def
+        fncvals //parseinput exec
     } bind def
 
     % Parse out AIs
@@ -24787,6 +25574,8 @@ bind def
         pop pop
     } loop
     pop
+
+    dontlint not { ais vals //gs1lint exec pop } if
 
     % Method selection
     /isupper {dup 65 ge exch 90 le and} bind def  % A-Z
@@ -25312,6 +26101,7 @@ bind def
             dup length 4 exch sub exch putinterval
             barcode i 4 mul 3 -1 roll putinterval
         } for
+        options (parse) undef
         options (dontdraw) true put
         options (cca) true put
         options (columns) cccolumns put
@@ -25325,6 +26115,7 @@ bind def
             bits i 8 mul 8 getinterval 0 exch {add 2 mul} forall 2 idiv
             barcode exch i exch put
         } for
+        options (parse) undef
         options (dontdraw) true put
         options (ccb) true put
         options (columns) cccolumns put
@@ -25338,6 +26129,7 @@ bind def
             bits i 8 mul 8 getinterval 0 exch {add 2 mul} forall 2 idiv
             barcode exch i exch put
         } for
+        options (parse) undef
         options (dontdraw) true put
         options (ccc) true put
         options (columns) cccolumns put
@@ -25361,12 +26153,12 @@ bind def
 % --END ENCODER gs1-cc--
 
 % --BEGIN ENCODER ean13composite--
-% --REQUIRES preamble raiseerror renlinear renmatrix ean5 ean2 ean13 micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix ean5 ean2 ean13 micropdf417 pdf417 gs1-cc--
 % --DESC: EAN-13 Composite
 % --EXAM: 2112345678900|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2020100200 80617 73467
+%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2021020600 83015 86399
 %%BeginData:         74 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -25447,12 +26239,12 @@ bind def
 % --END ENCODER ean13composite--
 
 % --BEGIN ENCODER ean8composite--
-% --REQUIRES preamble raiseerror renlinear renmatrix ean5 ean2 ean8 micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix ean5 ean2 ean8 micropdf417 pdf417 gs1-cc--
 % --DESC: EAN-8 Composite
 % --EXAM: 02345673|(21)A12345678
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2020100200 80958 73809
+%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2021020600 83356 86741
 %%BeginData:         77 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -25536,12 +26328,12 @@ bind def
 % --END ENCODER ean8composite--
 
 % --BEGIN ENCODER upcacomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix ean5 ean2 upca micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix ean5 ean2 upca micropdf417 pdf417 gs1-cc--
 % --DESC: UPC-A Composite
 % --EXAM: 416000336108|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2020100200 80609 76892
+%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2021020600 79561 86378
 %%BeginData:         74 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -25622,12 +26414,12 @@ bind def
 % --END ENCODER upcacomposite--
 
 % --BEGIN ENCODER upcecomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix ean5 ean2 upce micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix ean5 ean2 upce micropdf417 pdf417 gs1-cc--
 % --DESC: UPC-E Composite
 % --EXAM: 00123457|(15)021231
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2020100200 77997 77963
+%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2021020600 84275 87649
 %%BeginData:         89 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -25723,12 +26515,12 @@ bind def
 % --END ENCODER upcecomposite--
 
 % --BEGIN ENCODER databaromnicomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix databaromni micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databaromni micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Omnidirectional Composite
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2020100200 77568 80888
+%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2021020600 87598 83950
 %%BeginData:        102 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -25837,12 +26629,12 @@ bind def
 % --END ENCODER databaromnicomposite--
 
 % --BEGIN ENCODER databarstackedcomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix databaromni databarstacked micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databaromni databarstacked micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Stacked Composite
 % --EXAM: (01)03412345678900|(17)010200
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2020100200 79502 82577
+%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2021020600 89442 89213
 %%BeginData:         98 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -25947,12 +26739,12 @@ bind def
 % --END ENCODER databarstackedcomposite--
 
 % --BEGIN ENCODER databarstackedomnicomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix databaromni databarstackedomni micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databaromni databarstackedomni micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Stacked Omnidirectional Composite
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2020100200 79530 82601
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2021020600 89470 89237
 %%BeginData:         98 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -26057,12 +26849,12 @@ bind def
 % --END ENCODER databarstackedomnicomposite--
 
 % --BEGIN ENCODER databartruncatedcomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix databaromni databartruncated micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databaromni databartruncated micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Truncated Composite
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2020100200 80572 83631
+%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2021020600 90512 90267
 %%BeginData:        102 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -26171,12 +26963,12 @@ bind def
 % --END ENCODER databartruncatedcomposite--
 
 % --BEGIN ENCODER databarlimitedcomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix databarlimited micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databarlimited micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Limited Composite
 % --EXAM: (01)03512345678907|(21)abcdefghijklmnopqrstuv
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2020100200 70785 74246
+%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2021020600 83919 80260
 %%BeginData:         81 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -26264,12 +27056,12 @@ bind def
 % --END ENCODER databarlimitedcomposite--
 
 % --BEGIN ENCODER databarexpandedcomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix databarexpanded micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databarexpanded micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Expanded Composite
 % --EXAM: (01)93712345678904(3103)001234|(91)1A2B3C4D5E
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2020100200 77111 76984
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2021020600 83389 83262
 %%BeginData:        100 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -26376,12 +27168,12 @@ bind def
 % --END ENCODER databarexpandedcomposite--
 
 % --BEGIN ENCODER databarexpandedstackedcomposite--
-% --REQUIRES preamble raiseerror renlinear renmatrix databarexpanded databarexpandedstacked micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix databarexpanded databarexpandedstacked micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Expanded Stacked Composite
 % --EXAM: (01)00012345678905(10)ABCDEF|(21)12345678
 % --EXOP: segments=4
 % --RNDR: renmatrix renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2020100200 79689 86153
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2021020600 89173 85493
 %%BeginData:         97 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -26450,7 +27242,7 @@ bind def
         } for
     } bind def
     /sep [ bot {1 exch sub} forall ] def
-    sep 0 [ 0 0 0 ] putinterval
+    sep 0 [ 0 0 0 0 ] putinterval
     sep sep length 4 sub [ 0 0 0 0 ] putinterval
     [  % Finder pattern module positions
         19 98 bot length 13 sub {} for
@@ -26485,12 +27277,12 @@ bind def
 % --END ENCODER databarexpandedstackedcomposite--
 
 % --BEGIN ENCODER gs1-128composite--
-% --REQUIRES preamble raiseerror renlinear renmatrix code128 gs1-128 micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror parseinput gs1lint renlinear renmatrix code128 gs1-128 micropdf417 pdf417 gs1-cc--
 % --DESC: GS1-128 Composite
 % --EXAM: (00)030123456789012340|(02)13012345678909(37)24(10)1234567ABCDEFG
 % --EXOP: ccversion=c
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2020100200 80672 80293
+%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2021020600 90060 89809
 %%BeginData:        102 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 2 dict
@@ -26599,16 +27391,18 @@ bind def
 % --END ENCODER gs1-128composite--
 
 % --BEGIN ENCODER gs1datamatrix--
-% --REQUIRES preamble raiseerror renmatrix datamatrix--
+% --REQUIRES preamble raiseerror parseinput gs1lint renmatrix datamatrix--
 % --DESC: GS1 Data Matrix
 % --EXAM: (01)03453120000011(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2020100200 65703 68932
-%%BeginData:        137 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2021020600 77808 74426
+%%BeginData:        133 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1lint dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -26620,6 +27414,8 @@ bind def
     /barcode exch def  % We are given a barcode string
 
     /dontdraw false def
+    /parse false def
+    /dontlint false def
 
     % Parse the input options
 %psc     options type /stringtype eq {
@@ -26634,23 +27430,12 @@ bind def
 
     % Expand ordinals of the form ^NNN to ASCII
     /expand {
-        /in exch def
-        /out in length string def
-        /j 0 def
-        in
-        { % loop
-            (^) search {
-                dup out exch j exch putinterval
-                length j add 1 add /j exch def
-                pop
-                dup 0 3 getinterval cvi out exch j 1 sub exch put
-                dup length 3 sub 3 exch getinterval
-            } {
-                dup out exch j exch putinterval
-                length j add /j exch def
-                out 0 j getinterval exit
-            } ifelse
-        } loop
+        /fncvals <<
+            /parse parse
+            /parseonly true
+            /parsefnc false
+        >> def
+        fncvals //parseinput exec
     } bind def
 
     % Parse out AIs
@@ -26671,6 +27456,8 @@ bind def
         pop pop
     } loop
     pop
+
+    dontlint not { ais vals //gs1lint exec pop } if
 
     % Pre-defined fixed length data field AIs
     % any AI whose prefix is not included in this table must be
@@ -26726,6 +27513,7 @@ bind def
     /barcode barcode 0 j getinterval def
 
     % Get the result of encoding with datamatrix
+    options (parse) undef
     options (dontdraw) true put
     options (parsefnc) true put
     /args barcode options //datamatrix exec def
@@ -26748,16 +27536,18 @@ bind def
 % --END ENCODER gs1datamatrix--
 
 % --BEGIN ENCODER gs1datamatrixrectangular--
-% --REQUIRES preamble raiseerror renmatrix datamatrix--
+% --REQUIRES preamble raiseerror parseinput gs1lint renmatrix datamatrix--
 % --DESC: GS1 Data Matrix Rectangular
 % --EXAM: (01)03453120000011(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2020100200 65906 69124
-%%BeginData:        138 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2021020600 78011 78026
+%%BeginData:        134 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1lint dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -26768,6 +27558,8 @@ bind def
     /options exch def  % We are given an option string
     /barcode exch def  % We are given a barcode string
 
+    /parse false def
+    /dontlint false def
     /dontdraw false def
 
     % Parse the input options
@@ -26783,23 +27575,12 @@ bind def
 
     % Expand ordinals of the form ^NNN to ASCII
     /expand {
-        /in exch def
-        /out in length string def
-        /j 0 def
-        in
-        { % loop
-            (^) search {
-                dup out exch j exch putinterval
-                length j add 1 add /j exch def
-                pop
-                dup 0 3 getinterval cvi out exch j 1 sub exch put
-                dup length 3 sub 3 exch getinterval
-            } {
-                dup out exch j exch putinterval
-                length j add /j exch def
-                out 0 j getinterval exit
-            } ifelse
-        } loop
+        /fncvals <<
+            /parse parse
+            /parseonly true
+            /parsefnc false
+        >> def
+        fncvals //parseinput exec
     } bind def
 
     % Parse out AIs
@@ -26820,6 +27601,8 @@ bind def
         pop pop
     } loop
     pop
+
+    dontlint not { ais vals //gs1lint exec pop } if
 
     % Pre-defined fixed length data field AIs
     % any AI whose prefix is not included in this table must be
@@ -26875,6 +27658,7 @@ bind def
     /barcode barcode 0 j getinterval def
 
     % Get the result of encoding with datamatrix
+    options (parse) undef
     options (dontdraw) true put
     options (parsefnc) true put
     options (format) (rectangle) put
@@ -26898,15 +27682,17 @@ bind def
 % --END ENCODER gs1datamatrixrectangular--
 
 % --BEGIN ENCODER gs1qrcode--
-% --REQUIRES preamble raiseerror renmatrix qrcode--
+% --REQUIRES preamble raiseerror parseinput gs1lint renmatrix qrcode--
 % --DESC: GS1 QR Code
 % --EXAM: (01)03453120000011(8200)http://www.abc.net(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2020100200 70995 77662
-%%BeginData:        136 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2021020600 81227 74382
+%%BeginData:        132 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1lint dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -26917,6 +27703,8 @@ bind def
     /options exch def  % We are given an option string
     /barcode exch def  % We are given a barcode string
 
+    /parse false def
+    /dontlint false def
     /dontdraw false def
 
     % Parse the input options
@@ -26932,23 +27720,12 @@ bind def
 
     % Expand ordinals of the form ^NNN to ASCII
     /expand {
-        /in exch def
-        /out in length string def
-        /j 0 def
-        in
-        { % loop
-            (^) search {
-                dup out exch j exch putinterval
-                length j add 1 add /j exch def
-                pop
-                dup 0 3 getinterval cvi out exch j 1 sub exch put
-                dup length 3 sub 3 exch getinterval
-            } {
-                dup out exch j exch putinterval
-                length j add /j exch def
-                out 0 j getinterval exit
-            } ifelse
-        } loop
+        /fncvals <<
+            /parse parse
+            /parseonly true
+            /parsefnc false
+        >> def
+        fncvals //parseinput exec
     } bind def
 
     % Parse out AIs
@@ -26969,6 +27746,8 @@ bind def
         pop pop
     } loop
     pop
+
+    dontlint not { ais vals //gs1lint exec pop } if
 
     % Pre-defined fixed length data field AIs
     % any AI whose prefix is not included in this table must be
@@ -27024,6 +27803,7 @@ bind def
     /barcode barcode 0 j getinterval def
 
     % Get the result of encoding with qrcode
+    options (parse) undef
     options (dontdraw) true put
     options (parsefnc) true put
     /args barcode options //qrcode exec def
@@ -27045,13 +27825,158 @@ bind def
 %%EndResource
 % --END ENCODER gs1qrcode--
 
+% --BEGIN ENCODER gs1dotcode--
+% --REQUIRES preamble raiseerror parseinput gs1lint renmatrix dotcode--
+% --DESC: GS1 DotCode
+% --EXAM: (235)5vBZIF%!<B;?oa%(01)01234567890128(8008)19052001
+% --EXOP: rows=16
+% --RNDR: renmatrix
+%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2021020600 77802 77819
+%%BeginData:        133 ASCII Lines
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 1 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1lint dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /dotcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+/gs1dotcode {
+
+    20 dict begin            % Confine variables to local scope
+
+    /options exch def  % We are given an option string
+    /barcode exch def  % We are given a barcode string
+
+    /dontdraw false def
+    /parse false def
+    /dontlint false def
+
+    % Parse the input options
+%psc     options type /stringtype eq {
+%psc         1 dict begin
+%psc         options {
+%psc             token false eq {exit} if dup length string cvs (=) search
+%psc             true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+%psc         } loop
+%psc         currentdict end /options exch def
+%psc     } if
+    options {def} forall
+
+    % Expand ordinals of the form ^NNN to ASCII
+    /expand {
+        /fncvals <<
+            /parse parse
+            /parseonly true
+            /parsefnc false
+        >> def
+        fncvals //parseinput exec
+    } bind def
+
+    % Parse out AIs
+    /ais  [] def
+    /vals [] def
+    barcode dup length 1 sub 1 exch getinterval
+    {  % loop
+        dup () eq {exit} if
+        (\)) search pop
+        exch pop
+        exch (\() search {
+            exch pop exch 3 1 roll
+        } {
+            () 3 1 roll
+        } ifelse
+        [ ais  aload pop counttomark 2 add index ] /ais exch def
+        [ vals aload pop counttomark 1 add index expand ] /vals exch def
+        pop pop
+    } loop
+    pop
+
+    dontlint not { ais vals //gs1lint exec pop } if
+
+    % Pre-defined fixed length data field AIs
+    % any AI whose prefix is not included in this table must be
+    % terminated with "FNC1", even if it's fixed length
+    /aifixed 23 dict def
+    [
+        0 1 4 {} for
+    ] {
+        (00) 2 string copy dup dup 1 5 -1 roll 48 add put aifixed 3 1 roll put
+    } forall
+    [
+        11 1 20 {} for
+        23
+        31 1 36 {} for
+        41
+    ] {
+        10 2 string cvrs dup aifixed 3 1 roll put
+    } forall
+
+    % Create the dotcode data
+    /fnc1 -1 def
+    /dmtx [ fnc1 ] def
+    0 1 ais length 1 sub {
+        /i exch def
+        /ai ais i get def
+        /val vals i get def
+        dmtx length ai length add val length add array
+        dup 0 dmtx putinterval
+        dup dmtx length ai [ exch {} forall ] putinterval
+        dup dmtx length ai length add val [ exch {} forall ] putinterval
+        /dmtx exch def
+        i ais length 1 sub ne aifixed ai 0 2 getinterval known not and {  % Append FNC1
+            dmtx length 1 add array
+            dup 0 dmtx putinterval
+            dup dmtx length fnc1 put
+            /dmtx exch def
+        } if
+    } for
+
+    % Compose input to dotcode
+    /barcode dmtx length 1 add 5 mul string def
+    /i 0 def /j 0 def {
+        i dmtx length eq {exit} if
+        dmtx i get dup fnc1 eq {
+            pop barcode j (^FNC1) putinterval
+            /j j 4 add def
+        } {
+            barcode exch j exch put
+        } ifelse
+        /i i 1 add def
+        /j j 1 add def
+    } loop
+    /barcode barcode 0 j getinterval def
+
+    % Get the result of encoding with dotcode
+    options (parse) undef
+    options (dontdraw) true put
+    options (parsefnc) true put
+    /args barcode options //dotcode exec def
+
+    args (opt) options put
+    args
+
+    dontdraw not //renmatrix if
+
+    end
+
+}
+%psc [/barcode] {null def} forall
+bind def
+%psc /gs1dotcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END ENCODER gs1dotcode--
+
 % --BEGIN ENCODER hibccode39--
 % --REQUIRES preamble raiseerror renlinear code39--
 % --DESC: HIBC Code 39
 % --EXAM: A123BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2020100200 57669 60912
+%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2021020600 57669 61040
 %%BeginData:         94 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -27069,7 +27994,7 @@ bind def
     /dontdraw false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /textxoffset 0 def
     /validatecheck false def
 
@@ -27152,12 +28077,12 @@ bind def
 % --END ENCODER hibccode39--
 
 % --BEGIN ENCODER hibccode128--
-% --REQUIRES preamble raiseerror renlinear code128--
+% --REQUIRES preamble raiseerror parseinput renlinear code128--
 % --DESC: HIBC Code 128
 % --EXAM: A123BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2020100200 57572 60899
+%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2021020600 63889 60320
 %%BeginData:         93 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -27175,7 +28100,7 @@ bind def
     /dontdraw false def
     /textfont (OCR-B) def
     /textsize 10 def
-    /textyoffset -8.5 def
+    /textyoffset -8 def
     /textxoffset 0 def
     /validatecheck false def
 
@@ -27257,12 +28182,12 @@ bind def
 % --END ENCODER hibccode128--
 
 % --BEGIN ENCODER hibcdatamatrix--
-% --REQUIRES preamble raiseerror renmatrix datamatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix datamatrix--
 % --DESC: HIBC Data Matrix
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2020100200 55167 58213
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2021020600 61356 57634
 %%BeginData:         76 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -27345,12 +28270,12 @@ bind def
 % --END ENCODER hibcdatamatrix--
 
 % --BEGIN ENCODER hibcdatamatrixrectangular--
-% --REQUIRES preamble raiseerror renmatrix datamatrix--
+% --REQUIRES preamble raiseerror parseinput renmatrix datamatrix--
 % --DESC: HIBC Data Matrix Rectangular
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2020100200 55520 58637
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2021020600 61709 57954
 %%BeginData:         77 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -27434,12 +28359,12 @@ bind def
 % --END ENCODER hibcdatamatrixrectangular--
 
 % --BEGIN ENCODER hibcpdf417--
-% --REQUIRES preamble raiseerror renmatrix pdf417--
+% --REQUIRES preamble raiseerror parseinput renmatrix pdf417--
 % --DESC: HIBC PDF417
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2020100200 55564 58742
+%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2021020600 61739 58059
 %%BeginData:         80 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -27526,12 +28451,12 @@ bind def
 % --END ENCODER hibcpdf417--
 
 % --BEGIN ENCODER hibcmicropdf417--
-% --REQUIRES preamble raiseerror renmatrix micropdf417--
+% --REQUIRES preamble raiseerror parseinput renmatrix micropdf417--
 % --DESC: HIBC MicroPDF417
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2020100200 55718 58777
+%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2021020600 61789 58094
 %%BeginData:         80 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -27618,12 +28543,12 @@ bind def
 % --END ENCODER hibcmicropdf417--
 
 % --BEGIN ENCODER hibcqrcode--
-% --REQUIRES preamble raiseerror renmatrix qrcode--
+% --REQUIRES preamble raiseerror parseinput renmatrix qrcode--
 % --DESC: HIBC QR Code
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2020100200 59299 62375
+%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2021020600 62368 58652
 %%BeginData:         76 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -27706,12 +28631,12 @@ bind def
 % --END ENCODER hibcqrcode--
 
 % --BEGIN ENCODER hibccodablockf--
-% --REQUIRES preamble raiseerror renmatrix codablockf--
+% --REQUIRES preamble raiseerror parseinput renmatrix codablockf--
 % --DESC: HIBC Codablock F
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2020100200 55019 58341
+%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2021020600 61336 57866
 %%BeginData:         76 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -27794,12 +28719,12 @@ bind def
 % --END ENCODER hibccodablockf--
 
 % --BEGIN ENCODER hibcazteccode--
-% --REQUIRES preamble raiseerror renmatrix azteccode--
+% --REQUIRES preamble raiseerror parseinput renmatrix azteccode--
 % --DESC: HIBC Aztec Code
 % --EXAM: A123BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2020100200 55013 58310
+%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2021020600 61330 57627
 %%BeginData:         76 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict

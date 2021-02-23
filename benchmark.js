@@ -28,6 +28,17 @@ function numeric(x) {
 	return s;
 }
 
+// Return a GTIN check-digited string
+function gtin(x) {
+    let val = ('000000000000000' + '1' +  numeric(x-2)).slice(-17);
+    let sum = 0;
+    for (let i = 0; i < 17; i++) {
+        sum += ((i&1) ? 1 : 3) * val[i];
+    }
+    sum = sum % 10;
+    return val.slice(-x+1) + String.fromCharCode(48 + (10-sum)%10);
+}
+
 // return an alpha-numeric uppercase string x bytes long
 function alnum(x) {
 	var s = '';
@@ -160,34 +171,46 @@ function genround() {
 	a.push({ bcid:'hanxin',		text:extended(48)	});
 
 	a.push({ bcid:'databarexpanded',
-			 text:'(01)' + numeric(14) + '(3103)' + numeric(6)	});
+			 text:'(01)' + gtin(14) + '(3103)' + numeric(6)	});
 	a.push({ bcid:'databarexpandedcomposite',
-			 text:'(01)' + numeric(14) + '(3103)' + numeric(6) +
+			 text:'(01)' + gtin(14) + '(3103)' + numeric(6) +
 			 		'|(99)' + mixed(20) });
 	a.push({ bcid:'databarexpandedstacked', segments:4,
-			 text:'(01)' + numeric(14) + '(3103)' + numeric(6)	});
+			 text:'(01)' + gtin(14) + '(3103)' + numeric(6)	});
 	a.push({ bcid:'databarexpandedstackedcomposite',
-			 text:'(01)' + numeric(14) + '(3103)' + numeric(6) +
+			 text:'(01)' + gtin(14) + '(3103)' + numeric(6) +
 			 		'|(99)' + mixed(20) });
-	a.push({ bcid:'databarlimited', text:'(01)0' + numeric(12)  });
+	a.push({ bcid:'databarlimited', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databarlimitedcomposite',
-			 text:'(01)0' + numeric(12) + '|(99)' + mixed(20) });
-	a.push({ bcid:'databaromni', text:'(01)' + numeric(13)  });
+			 text:'(01)' + gtin(13) + '|(99)' + mixed(20) });
+	a.push({ bcid:'databaromni', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databaromnicomposite',
-			 text:'(01)' + numeric(13) + '|(99)' + mixed(20) });
-	a.push({ bcid:'databarstacked', text:'(01)' + numeric(13)  });
+			 text:'(01)' + gtin(13) + '|(99)' + mixed(20) });
+	a.push({ bcid:'databarstacked', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databarstackedcomposite',
-			 text:'(01)' + numeric(13) + '|(99)' + mixed(20) });
-	a.push({ bcid:'databarstackedomni', text:'(01)' + numeric(13)  });
+			 text:'(01)' + gtin(13) + '|(99)' + mixed(20) });
+	a.push({ bcid:'databarstackedomni', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databarstackedomnicomposite',
-			 text:'(01)' + numeric(13) + '|(99)' + mixed(20) });
-	a.push({ bcid:'databartruncated', text:'(01)' + numeric(13)  });
+			 text:'(01)' + gtin(13) + '|(99)' + mixed(20) });
+	a.push({ bcid:'databartruncated', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databartruncatedcomposite',
-			 text:'(01)' + numeric(13) + '|(99)' + mixed(20) });
+			 text:'(01)' + gtin(14) + '|(99)' + mixed(20) });
 	a.push({ bcid:'gs1-128composite',
-			 text:'(00)' + numeric(18) + '|(99)' + mixed(20) });
+			 text:'(00)' + gtin(18) + '|(99)' + mixed(20) });
 
 	a.push({ bcid:'maxicode', text:numeric(24) + mixed(64) });
+
+	a.push({ bcid:'ultracode',	text:numeric(80),	eclevel:"EC2"	});
+	a.push({ bcid:'ultracode',	text:alnum(64),		eclevel:"EC2"	});
+	a.push({ bcid:'ultracode',	text:mixed(64),		eclevel:"EC2"	});
+	a.push({ bcid:'ultracode',	text:ascii(64),		eclevel:"EC2"	});
+	a.push({ bcid:'ultracode',	text:extended(48),	eclevel:"EC2"	});
+
+	a.push({ bcid:'dotcode',	text:numeric(24)	});
+	a.push({ bcid:'dotcode',	text:alnum(20)		});
+	a.push({ bcid:'dotcode',	text:mixed(20)		});
+	a.push({ bcid:'dotcode',	text:ascii(20)		});
+
 
 	return a;
 }
@@ -213,10 +236,11 @@ function runround(times) {
 		rec.msecs += t1[0] * 1000 + t1[1] / 1000000;
 		times.msecs += t1[0] * 1000 + t1[1] / 1000000;
 		times.count++;
+        global.gc();
 	}
 
 	// Because we never return to the event loop, we must manually GC.
-	global.gc();
+	//global.gc();
 }
 
 // Warm up the js engine
@@ -230,7 +254,7 @@ for (var i = 0; i < 10; i++) {
 
 // Now the actual benchmark
 var times = {};
-for (var i = 0; i < 50; i++) {
+for (var i = 0; i < 25; i++) {
 	var t0 = Date.now();
 	runround(times);
 	var t1 = Date.now();
