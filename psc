@@ -147,7 +147,7 @@ fi
 ##
 ## Build the raw (unformatted, unminified) version of bwipp.js.
 ##
-cat <<@EOF > bwipp-raw.js
+cat <<@EOF > bwipp.js
 function BWIPP() {
 "use strict";
 $(cat barcode-hdr.js barcode.js barcode-ftr.js)
@@ -192,17 +192,13 @@ $COPYR
 // Licensed MIT. See the LICENSE file in the bwip-js root directory.
 @EOF
 
-##
-## Build the full/debug version (bwipp.js) and the minified version
-## (bwipp.min.js).
-##
-node pscify
+uglifyjs bwipp.js --beautify > src/bwipp.js
 
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##
 ##rm -f barcode.psc
 rm -f barcode.tmp
-##rm -f barcode.js
-rm -f bwipp-raw.js
+rm -f barcode.js
+rm -f bwipp.js
 rm -f bwipp-copyr.js

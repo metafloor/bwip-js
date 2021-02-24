@@ -79,8 +79,15 @@ cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src
 ## browser plain-source - no drawing-zlibpng.js
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
 
+##
+## Shorten the postscript operator names rather than use random variable
+## name mangling.
+##
+node rename
+uglifyjs bwipp-min.js >> dist/bwip-js-min.js
+rm -f bwipp-min.js
+
 ## browser minified - minified exports and no drawing-zlibpng.js
-cat src/bwipp-min.js >> dist/bwip-js-min.js
 sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js | cat - src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js 
 
 ## nodejs postamble
