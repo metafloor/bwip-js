@@ -133,7 +133,9 @@ fi
 ##
 ## Peephole optimize
 ##
-node optimize
+
+## MRW 19-Mar-2021 Way too buggy...
+##node optimize
 
 ##
 ## Get the BWIPP version (date)
@@ -143,17 +145,6 @@ if [ "x$BWIPP_VERSION" = x ] ; then
 	echo "Unable to find the version string in barcode.ps" 1>&2
 	exit 1
 fi
-
-##
-## Build the raw (unformatted, unminified) version of bwipp.js.
-##
-cat <<@EOF > bwipp.js
-function BWIPP() {
-"use strict";
-$(cat barcode-hdr.js barcode.js barcode-ftr.js)
-}
-BWIPP.VERSION = '$BWIPP_VERSION';
-@EOF
 
 ##
 ## Verify we can find the BWIPP copyright notice
@@ -177,9 +168,9 @@ fi
 YEAR="2011-$(date +%Y)"
 
 ##
-## Emit the copyright header for pscify to use.
+## Build the raw (unformatted, unminified) version of bwipp.js.
 ##
-cat <<@EOF > bwipp-copyr.js
+cat <<@EOF > bwipp.js
 // bwip-js // Barcode Writer in Pure JavaScript
 // https://github.com/metafloor/bwip-js
 //
@@ -190,15 +181,19 @@ $FILEV
 $COPYR
 //
 // Licensed MIT. See the LICENSE file in the bwip-js root directory.
+function BWIPP() {
+"use strict";
+$(cat barcode-hdr.js barcode.js barcode-ftr.js)
+}
+BWIPP.VERSION = '$BWIPP_VERSION';
 @EOF
 
-uglifyjs bwipp.js --beautify > src/bwipp.js
+js-beautify bwipp.js > src/bwipp.js
 
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##
 ##rm -f barcode.psc
 rm -f barcode.tmp
-rm -f barcode.js
+##rm -f barcode.js
 rm -f bwipp.js
-rm -f bwipp-copyr.js

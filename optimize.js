@@ -2,7 +2,21 @@
 
 const fs = require('fs');
 const lines = fs.readFileSync('barcode.js', 'utf-8').split(/\r\n|[\r\n]/g);
-const verbose = false;
+const verbose = true;
+
+function before(i, n) {
+    console.log('<<<');
+    for (let j = 0; j < n; j++) {
+        console.log(lines[i+j]);
+    }
+}
+function after(i, n) {
+    console.log('>>>');
+    for (let j = 0; j < n; j++) {
+        console.log(lines[i+j]);
+    }
+    console.log('');
+}
 
 let re01 = /^\s*\$k\[\$j\+\+\]\s*=\s*(.*)(;\s*\/\/.*)$/;
 let re23 = /^\s*var (_\w+)\s*=\s*(\$k\[--\$j\];.*)$/;
@@ -32,15 +46,12 @@ for (let i = 0; i < lines.length; i++) {
 		let m6 = re01.exec(lines[i+6]);
 		if (m2[1] == m4[1] && m3[1] == m5[1]) {
             if (verbose) {
-                console.log(lines[i]);
-                console.log(lines[i+1]);
-                console.log(lines[i+2]);
-                console.log(lines[i+3]);
-                console.log(lines[i+4]);
-                console.log(lines[i+5]);
-                console.log('');
+                before(i, 6);
             }
 			lines.splice(i, 6, lines[i+1], lines[i]);
+            if (verbose) {
+                after(i, 2);
+            }
 			i++;
 		} else if (m6 && m2[1] == m4[1] && m3[1] == m6[1]) {
 			// line 5 cannot contain any reference to m2[1] or m3[1]
@@ -50,16 +61,12 @@ for (let i = 0; i < lines.length; i++) {
 				continue;
 			} else {
                 if (verbose) {
-                    console.log(lines[i]);
-                    console.log(lines[i+1]);
-                    console.log(lines[i+2]);
-                    console.log(lines[i+3]);
-                    console.log(lines[i+4]);
-                    console.log(lines[i+5]);
-                    console.log(lines[i+6]);
-                    console.log('');
+                    before(i, 7);
                 }
 				lines.splice(i, 7, lines[i+1], lines[i+5], lines[i]);
+                if (verbose) {
+                    after(i, 3);
+                }
 				i += 2;
 			}
 		} else {
@@ -84,44 +91,42 @@ for (let i = 0; i < lines.length; i++) {
 		let m4 = re01.exec(lines[i+4]);
 		if (m1[1] == 'Infinity' && m4[1] == m2[1]) {
             if (verbose) {
-                console.log(lines[i]);
-                console.log(lines[i+1]);
-                console.log(lines[i+2]);
-                console.log(lines[i+3]);
-                console.log(lines[i+4]);
-                console.log('');
+                before(i, 5);
             }
 			lines.splice(i, 5, 
 					lines[i+1],
 					lines[i+3].substr(0, lines[i+3].length - m3[2].length) + m0[1] + m0[2]);
+            if (verbose) {
+                after(i, 2);
+            }
 		}
 	// $j--;
 	// $k[$j++] = ...
 	} else if (/^\s*\$j--;/.test(lines[i]) &&
 			/^\s*\$k\[\$j\+\+\] = /.test(lines[i+1])) {
         if (verbose) {
-            console.log(lines[i]);
-            console.log(lines[i+1]);
-            console.log('');
+            before(i, 2);
         }
 		let m = /^(\s*)\$k\[\$j\+\+\] = /.exec(lines[i+1]);
 		lines.splice(i, 2,
-				m[1] + '$k[$j-1] = ' +
-				lines[i+1].substr(m[0].length));
+				m[1] + '$k[$j-1] = ' + lines[i+1].substr(m[0].length));
+        if (verbose) {
+            after(i, 1);
+        }
 		i++;
 	// $j -= 2;
 	// $k[$j++] = ...
 	} else if (/^\s*\$j -= 2;/.test(lines[i]) &&
 			/^\s*\$k\[\$j\+\+\] = /.test(lines[i+1])) {
         if (verbose) {
-            console.log(lines[i]);
-            console.log(lines[i+1]);
-            console.log('');
+            before(i, 2);
         }
 		let m = /^(\s*)\$k\[\$j\+\+\] = /.exec(lines[i+1]);
 		lines.splice(i, 2,
-				m[1] + '$k[--$j - 1] = ' +
-				lines[i+1].substr(m[0].length));
+				m[1] + '$k[--$j - 1] = ' + lines[i+1].substr(m[0].length));
+        if (verbose) {
+            after(i, 1);
+        }
 		i++;
 
 	// $k[$j++] = 'ismntextxoffset'; //#2483
@@ -142,10 +147,10 @@ for (let i = 0; i < lines.length; i++) {
 				let m1 = /^\s*var (_\w+) = /.exec(lines[i-1]);
 				if (m1 && m1[1] == mi[2]) {
                     if (verbose) {
+                        console.log('>>>');
                         console.log(lines[i-j]);
                         console.log(lines[i-1]);
                         console.log(lines[i]);
-                        console.log('');
                     }
 					let expr = lines[i-1].substr(m1[0].length);
 					if (/^[A-Za-z_]\w*$/.test(id)) {
@@ -153,11 +158,14 @@ for (let i = 0; i < lines.length; i++) {
 					} else {
 						lines.splice(i-1, 2, mi[1] + '$1[\'' + id + '\'] = ' + expr);
 					}
+                    if (verbose) {
+                        after(i-1, 2);
+                    }
 				} else {
                     if (verbose) {
+                        console.log('>>>');
                         console.log(lines[i-j]);
                         console.log(lines[i]);
-                        console.log('');
                     }
 					let expr = mi[2] + mi[3];
 					if (/^[A-Za-z_]\w*$/.test(id)) {
@@ -165,6 +173,9 @@ for (let i = 0; i < lines.length; i++) {
 					} else {
 						lines[i] = mi[1] + '$1[\'' + id + '\'] = ' + expr;
 					}
+                    if (verbose) {
+                        after(i, 1);
+                    }
 				}
 				lines.splice(i-j, 1);
 				break;

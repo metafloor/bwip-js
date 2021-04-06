@@ -3,7 +3,7 @@
 
 var fs = require('fs');
 var bwipjs = require('./dist/node-bwipjs');
-var symdesc = require('./symdesc');
+var symdesc = require('./lib/symdesc');
 
 function usage() {
     let bmark = bwipjs.VERSION == "__BWIPJS_VERS__"
