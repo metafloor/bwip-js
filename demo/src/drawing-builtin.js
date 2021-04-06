@@ -127,10 +127,10 @@ function DrawingBuiltin(opts) {
 			var w2 = (lw/2)|0;
 			if (x0 == x1) {
 				// Vertical line
-				x0 = x0 - w2;
-				x1 = x1 + lw - w2 - 1;
+				x0 = x0 - lw + w2;  // big half
+				x1 = x1 + w2 - 1;   // small half
 			} else {
-				// Horizontal line
+				// Horizontal line (inverted halves)
 				y0 = y0 - w2;
 				y1 = y1 + lw - w2 - 1;
 			}
