@@ -591,9 +591,6 @@ function BWIPP() {
     function $forall(o, cb) {
         if (o instanceof Uint8Array) {
             for (var i = 0, l = o.length; i < l; i++) {
-                if (!o[i]) {
-                    break;
-                }
                 $k[$j++] = o[i];
                 if (cb && cb()) break;
             }
@@ -35021,8 +35018,7 @@ function BWIPP() {
         return true;
     }
 }
-BWIPP.VERSION = '2021-02-06';
-// file : bwipjs.js
+BWIPP.VERSION = '2021-02-06';// file : bwipjs.js
 //
 // Graphics-context interface to the BWIPP cross-compiled code
 
@@ -38263,7 +38259,7 @@ return {
         toCanvas:ToCanvas, render:Render, raw:Raw,
         fixupOptions:FixupOptions,
         loadFont:FontLib.loadFont,
-        VERSION:'2.1.2 (2021-04-06)',
+        VERSION:'2.1.3 (2021-04-08)',
 
         // Internals
         BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
