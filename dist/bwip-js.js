@@ -591,9 +591,6 @@ function BWIPP() {
     function $forall(o, cb) {
         if (o instanceof Uint8Array) {
             for (var i = 0, l = o.length; i < l; i++) {
-                if (!o[i]) {
-                    break;
-                }
                 $k[$j++] = o[i];
                 if (cb && cb()) break;
             }
@@ -35021,8 +35018,7 @@ function BWIPP() {
         return true;
     }
 }
-BWIPP.VERSION = '2021-02-06';
-// file : bwipjs.js
+BWIPP.VERSION = '2021-02-06';// file : bwipjs.js
 //
 // Graphics-context interface to the BWIPP cross-compiled code
 

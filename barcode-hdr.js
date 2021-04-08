@@ -336,9 +336,6 @@ function $search(str, seek) {
 function $forall(o, cb) {
 	if (o instanceof Uint8Array) {
 		for (var i = 0, l = o.length; i < l; i++) {
-            if (!o[i]) {
-                break;
-            }
 			$k[$j++] = o[i];
 			if (cb && cb()) break;
 		}
