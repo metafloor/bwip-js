@@ -11,7 +11,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 2.1.1 (2021-02-24)
+* Current bwip-js version is 2.1.2 (2021-04-06)
 * Current BWIPP version is 2021-02-06
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -443,6 +443,112 @@ and adding scalable barcodes to a [pdfkit](https://pdfkit.org/) document.
 See the examples [README](https://github.com/metafloor/bwip-js/tree/master/examples) 
 for more details.
 
+
 ## Supported Barcode Types
 
-&#x2022; auspost : AusPost 4 State Customer Code &#x2022; azteccode : Aztec Code &#x2022; azteccodecompact : Compact Aztec Code &#x2022; aztecrune : Aztec Runes &#x2022; bc412 : BC412 &#x2022; channelcode : Channel Code &#x2022; codablockf : Codablock F &#x2022; code11 : Code 11 &#x2022; code128 : Code 128 &#x2022; code16k : Code 16K &#x2022; code2of5 : Code 25 &#x2022; code32 : Italian Pharmacode &#x2022; code39 : Code 39 &#x2022; code39ext : Code 39 Extended &#x2022; code49 : Code 49 &#x2022; code93 : Code 93 &#x2022; code93ext : Code 93 Extended &#x2022; codeone : Code One &#x2022; coop2of5 : COOP 2 of 5 &#x2022; daft : Custom 4 state symbology &#x2022; databarexpanded : GS1 DataBar Expanded &#x2022; databarexpandedcomposite : GS1 DataBar Expanded Composite &#x2022; databarexpandedstacked : GS1 DataBar Expanded Stacked &#x2022; databarexpandedstackedcomposite : GS1 DataBar Expanded Stacked Composite &#x2022; databarlimited : GS1 DataBar Limited &#x2022; databarlimitedcomposite : GS1 DataBar Limited Composite &#x2022; databaromni : GS1 DataBar Omnidirectional &#x2022; databaromnicomposite : GS1 DataBar Omnidirectional Composite &#x2022; databarstacked : GS1 DataBar Stacked &#x2022; databarstackedcomposite : GS1 DataBar Stacked Composite &#x2022; databarstackedomni : GS1 DataBar Stacked Omnidirectional &#x2022; databarstackedomnicomposite : GS1 DataBar Stacked Omnidirectional Composite &#x2022; databartruncated : GS1 DataBar Truncated &#x2022; databartruncatedcomposite : GS1 DataBar Truncated Composite &#x2022; datalogic2of5 : Datalogic 2 of 5 &#x2022; datamatrix : Data Matrix &#x2022; datamatrixrectangular : Data Matrix Rectangular &#x2022; datamatrixrectangularextension : Data Matrix Rectangular Extension &#x2022; dotcode : DotCode &#x2022; ean13 : EAN-13 &#x2022; ean13composite : EAN-13 Composite &#x2022; ean14 : GS1-14 &#x2022; ean2 : EAN-2 (2 digit addon) &#x2022; ean5 : EAN-5 (5 digit addon) &#x2022; ean8 : EAN-8 &#x2022; ean8composite : EAN-8 Composite &#x2022; flattermarken : Flattermarken &#x2022; gs1-128 : GS1-128 &#x2022; gs1-128composite : GS1-128 Composite &#x2022; gs1-cc : GS1 Composite 2D Component &#x2022; gs1datamatrix : GS1 Data Matrix &#x2022; gs1datamatrixrectangular : GS1 Data Matrix Rectangular &#x2022; gs1dotcode : GS1 DotCode &#x2022; gs1northamericancoupon : GS1 North American Coupon &#x2022; gs1qrcode : GS1 QR Code &#x2022; hanxin : Han Xin Code &#x2022; hibcazteccode : HIBC Aztec Code &#x2022; hibccodablockf : HIBC Codablock F &#x2022; hibccode128 : HIBC Code 128 &#x2022; hibccode39 : HIBC Code 39 &#x2022; hibcdatamatrix : HIBC Data Matrix &#x2022; hibcdatamatrixrectangular : HIBC Data Matrix Rectangular &#x2022; hibcmicropdf417 : HIBC MicroPDF417 &#x2022; hibcpdf417 : HIBC PDF417 &#x2022; hibcqrcode : HIBC QR Code &#x2022; iata2of5 : IATA 2 of 5 &#x2022; identcode : Deutsche Post Identcode &#x2022; industrial2of5 : Industrial 2 of 5 &#x2022; interleaved2of5 : Interleaved 2 of 5 (ITF) &#x2022; isbn : ISBN &#x2022; ismn : ISMN &#x2022; issn : ISSN &#x2022; itf14 : ITF-14 &#x2022; japanpost : Japan Post 4 State Customer Code &#x2022; kix : Royal Dutch TPG Post KIX &#x2022; leitcode : Deutsche Post Leitcode &#x2022; mailmark : Royal Mail Mailmark &#x2022; matrix2of5 : Matrix 2 of 5 &#x2022; maxicode : MaxiCode &#x2022; micropdf417 : MicroPDF417 &#x2022; microqrcode : Micro QR Code &#x2022; msi : MSI Modified Plessey &#x2022; onecode : USPS Intelligent Mail &#x2022; pdf417 : PDF417 &#x2022; pdf417compact : Compact PDF417 &#x2022; pharmacode : Pharmaceutical Binary Code &#x2022; pharmacode2 : Two-track Pharmacode &#x2022; planet : USPS PLANET &#x2022; plessey : Plessey UK &#x2022; posicode : PosiCode &#x2022; postnet : USPS POSTNET &#x2022; pzn : Pharmazentralnummer (PZN) &#x2022; qrcode : QR Code &#x2022; rationalizedCodabar : Codabar &#x2022; raw : Custom 1D symbology &#x2022; rectangularmicroqrcode : Rectangular Micro QR Code &#x2022; royalmail : Royal Mail 4 State Customer Code &#x2022; sscc18 : SSCC-18 &#x2022; swissqrcode : Swiss QR Code &#x2022; symbol : Miscellaneous symbols &#x2022; telepen : Telepen &#x2022; telepennumeric : Telepen Numeric &#x2022; ultracode : Ultracode &#x2022; upca : UPC-A &#x2022; upcacomposite : UPC-A Composite &#x2022; upce : UPC-E &#x2022; upcecomposite : UPC-E Composite 
+ * auspost &#x2022; AusPost 4 State Customer Code
+ * azteccode &#x2022; Aztec Code
+ * azteccodecompact &#x2022; Compact Aztec Code
+ * aztecrune &#x2022; Aztec Runes
+ * bc412 &#x2022; BC412
+ * channelcode &#x2022; Channel Code
+ * codablockf &#x2022; Codablock F
+ * code11 &#x2022; Code 11
+ * code128 &#x2022; Code 128
+ * code16k &#x2022; Code 16K
+ * code2of5 &#x2022; Code 25
+ * code32 &#x2022; Italian Pharmacode
+ * code39 &#x2022; Code 39
+ * code39ext &#x2022; Code 39 Extended
+ * code49 &#x2022; Code 49
+ * code93 &#x2022; Code 93
+ * code93ext &#x2022; Code 93 Extended
+ * codeone &#x2022; Code One
+ * coop2of5 &#x2022; COOP 2 of 5
+ * daft &#x2022; Custom 4 state symbology
+ * databarexpanded &#x2022; GS1 DataBar Expanded
+ * databarexpandedcomposite &#x2022; GS1 DataBar Expanded Composite
+ * databarexpandedstacked &#x2022; GS1 DataBar Expanded Stacked
+ * databarexpandedstackedcomposite &#x2022; GS1 DataBar Expanded Stacked Composite
+ * databarlimited &#x2022; GS1 DataBar Limited
+ * databarlimitedcomposite &#x2022; GS1 DataBar Limited Composite
+ * databaromni &#x2022; GS1 DataBar Omnidirectional
+ * databaromnicomposite &#x2022; GS1 DataBar Omnidirectional Composite
+ * databarstacked &#x2022; GS1 DataBar Stacked
+ * databarstackedcomposite &#x2022; GS1 DataBar Stacked Composite
+ * databarstackedomni &#x2022; GS1 DataBar Stacked Omnidirectional
+ * databarstackedomnicomposite &#x2022; GS1 DataBar Stacked Omnidirectional Composite
+ * databartruncated &#x2022; GS1 DataBar Truncated
+ * databartruncatedcomposite &#x2022; GS1 DataBar Truncated Composite
+ * datalogic2of5 &#x2022; Datalogic 2 of 5
+ * datamatrix &#x2022; Data Matrix
+ * datamatrixrectangular &#x2022; Data Matrix Rectangular
+ * datamatrixrectangularextension &#x2022; Data Matrix Rectangular Extension
+ * dotcode &#x2022; DotCode
+ * ean13 &#x2022; EAN-13
+ * ean13composite &#x2022; EAN-13 Composite
+ * ean14 &#x2022; GS1-14
+ * ean2 &#x2022; EAN-2 (2 digit addon)
+ * ean5 &#x2022; EAN-5 (5 digit addon)
+ * ean8 &#x2022; EAN-8
+ * ean8composite &#x2022; EAN-8 Composite
+ * flattermarken &#x2022; Flattermarken
+ * gs1-128 &#x2022; GS1-128
+ * gs1-128composite &#x2022; GS1-128 Composite
+ * gs1-cc &#x2022; GS1 Composite 2D Component
+ * gs1datamatrix &#x2022; GS1 Data Matrix
+ * gs1datamatrixrectangular &#x2022; GS1 Data Matrix Rectangular
+ * gs1dotcode &#x2022; GS1 DotCode
+ * gs1northamericancoupon &#x2022; GS1 North American Coupon
+ * gs1qrcode &#x2022; GS1 QR Code
+ * hanxin &#x2022; Han Xin Code
+ * hibcazteccode &#x2022; HIBC Aztec Code
+ * hibccodablockf &#x2022; HIBC Codablock F
+ * hibccode128 &#x2022; HIBC Code 128
+ * hibccode39 &#x2022; HIBC Code 39
+ * hibcdatamatrix &#x2022; HIBC Data Matrix
+ * hibcdatamatrixrectangular &#x2022; HIBC Data Matrix Rectangular
+ * hibcmicropdf417 &#x2022; HIBC MicroPDF417
+ * hibcpdf417 &#x2022; HIBC PDF417
+ * hibcqrcode &#x2022; HIBC QR Code
+ * iata2of5 &#x2022; IATA 2 of 5
+ * identcode &#x2022; Deutsche Post Identcode
+ * industrial2of5 &#x2022; Industrial 2 of 5
+ * interleaved2of5 &#x2022; Interleaved 2 of 5 (ITF)
+ * isbn &#x2022; ISBN
+ * ismn &#x2022; ISMN
+ * issn &#x2022; ISSN
+ * itf14 &#x2022; ITF-14
+ * japanpost &#x2022; Japan Post 4 State Customer Code
+ * kix &#x2022; Royal Dutch TPG Post KIX
+ * leitcode &#x2022; Deutsche Post Leitcode
+ * mailmark &#x2022; Royal Mail Mailmark
+ * matrix2of5 &#x2022; Matrix 2 of 5
+ * maxicode &#x2022; MaxiCode
+ * micropdf417 &#x2022; MicroPDF417
+ * microqrcode &#x2022; Micro QR Code
+ * msi &#x2022; MSI Modified Plessey
+ * onecode &#x2022; USPS Intelligent Mail
+ * pdf417 &#x2022; PDF417
+ * pdf417compact &#x2022; Compact PDF417
+ * pharmacode &#x2022; Pharmaceutical Binary Code
+ * pharmacode2 &#x2022; Two-track Pharmacode
+ * planet &#x2022; USPS PLANET
+ * plessey &#x2022; Plessey UK
+ * posicode &#x2022; PosiCode
+ * postnet &#x2022; USPS POSTNET
+ * pzn &#x2022; Pharmazentralnummer (PZN)
+ * qrcode &#x2022; QR Code
+ * rationalizedCodabar &#x2022; Codabar
+ * raw &#x2022; Custom 1D symbology
+ * rectangularmicroqrcode &#x2022; Rectangular Micro QR Code
+ * royalmail &#x2022; Royal Mail 4 State Customer Code
+ * sscc18 &#x2022; SSCC-18
+ * symbol &#x2022; Miscellaneous symbols
+ * telepen &#x2022; Telepen
+ * telepennumeric &#x2022; Telepen Numeric
+ * ultracode &#x2022; Ultracode
+ * upca &#x2022; UPC-A
+ * upcacomposite &#x2022; UPC-A Composite
+ * upce &#x2022; UPC-E
+ * upcecomposite &#x2022; UPC-E Composite
