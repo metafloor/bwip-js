@@ -3,7 +3,6 @@
 // Graphics-context interface to the BWIPP cross-compiled code
 
 var BWIPJS = (function() {
-"use strict";
 
 // Math.floor(), etc. are notoriously slow.  Caching seems to help.
 var floor = Math.floor;

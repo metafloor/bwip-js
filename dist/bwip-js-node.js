@@ -38769,7 +38769,7 @@ module.exports = {
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions:FixupOptions,
     loadFont:FontLib.loadFont,
-    BWIPJS_VERSION:'__BWIPJS_VERS__',
+    BWIPJS_VERSION:'3.0.0 (2021-04-28)',
     BWIPP_VERSION:BWIPP_VERSION,
     // Internals
     BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
