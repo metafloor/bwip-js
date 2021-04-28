@@ -1,4 +1,5 @@
 // exports.js
+"use strict";
 
 //@@BEGIN-NODE-JS-ONLY@@
 var url = require('url');
@@ -56,8 +57,21 @@ function Request(req, res, extra) {
 // Node.js usage only.
 function ToBuffer(opts, callback) {
 	try {
-		FixupOptions(opts);
-		return Render(opts, DrawingZlibPng(opts, callback));
+		return _Render(bwipp_lookup(opts.bcid), opts, DrawingZlibPng(opts, callback));
+	} catch (e) {
+		if (callback) {
+			callback(e);
+		} else {
+			return new Promise(function(resolve, reject) {
+				reject(e);
+			});
+		}
+	}
+}
+// Entry point for the symbol-specific exports
+function _ToBuffer(encoder, opts, callback) {
+	try {
+		return _Render(encoder, opts, DrawingZlibPng(opts, callback));
 	} catch (e) {
 		if (callback) {
 			callback(e);
@@ -86,6 +100,8 @@ function ToBuffer(opts, callback) {
 //
 // Browser usage only.
 function ToCanvas(opts, canvas) {
+    // This code has to be duplicated with _ToCanvas() to keep the bwipp_lookup() out
+    // of the latter.
 	if (typeof canvas == 'string') {
 		canvas = document.getElementById(canvas) || document.querySelector(canvas);
 	} else if (typeof opts == 'string') {
@@ -98,17 +114,29 @@ function ToCanvas(opts, canvas) {
 	} else if (!(canvas instanceof HTMLCanvasElement)) {
 		throw 'bwipjs: Not a canvas';
 	}
-	FixupOptions(opts);
-	Render(opts, DrawingCanvas(opts, canvas));
-
-	return canvas;
+    _Render(bwipp_lookup(opts.bcid), opts, DrawingCanvas(opts, canvas));
+    return canvas;
+}
+// Entry point for the symbol-specific exports
+function _ToCanvas(encoder, opts, canvas) {
+	if (typeof canvas == 'string') {
+		canvas = document.getElementById(canvas) || document.querySelector(canvas);
+	} else if (typeof opts == 'string') {
+		opts = document.getElementById(opts) || document.querySelector(opts);
+	}
+	if (opts instanceof HTMLCanvasElement) {
+		var tmp = opts;
+		opts = canvas;
+		canvas = tmp;
+	} else if (!(canvas instanceof HTMLCanvasElement)) {
+		throw 'bwipjs: Not a canvas';
+	}
+    _Render(encoder, opts, DrawingCanvas(opts, canvas));
+    return canvas;
 }
 
 //@@ENDOF-BROWSER-ONLY@@
 
-// bwipjs.fixupOptions(options)
-//
-// Call this before passing your options object to a drawing constructor.
 function FixupOptions(opts) {
 	var scale	= opts.scale || 2;
 	var scaleX	= +opts.scaleX || scale;
@@ -171,23 +199,25 @@ var BWIPJS_OPTIONS = {
 // Renders a barcode using the provided drawing object.
 //
 // This function is synchronous and throws on error.
+//
+// Browser and nodejs usage.
 function Render(params, drawing) {
+    return _Render(bwipp_lookup(params.bcid), params, drawing);
+}
+
+// Called by the public exports
+function _Render(encoder, params, drawing) {
+	var text = params.text;
+	if (!text) {
+		throw new ReferenceError('bwip-js: bar code text not specified.');
+	}
+
 	// Set the bwip-js defaults
+    FixupOptions(params);
 	var scale	= params.scale || 2;
 	var scaleX	= +params.scaleX || scale;
 	var scaleY	= +params.scaleY || scaleX;
 	var rotate	= params.rotate || 'N';
-
-	// The required parameters
-	var bcid = params.bcid;
-	var text = params.text;
-
-	if (!text) {
-		throw new ReferenceError('bwip-js: bar code text not specified.');
-	}
-	if (!bcid) {
-		throw new ReferenceError('bwip-js: bar code type not specified.');
-	}
 
 	// Create a barcode writer object.  This is the interface between
 	// the low-level BWIPP code, the bwip-js graphics context, and the
@@ -208,7 +238,7 @@ function Render(params, drawing) {
 	}
 	// We use mm rather than inches for height - except pharmacode2 height
 	// which is already in mm.
-	if (+opts.height && bcid != 'pharmacode2') {
+	if (+opts.height && encoder != bwipp_pharmacode2) {
 		opts.height = opts.height / 25.4 || 0.5;
 	}
 	// Likewise, width
@@ -220,26 +250,28 @@ function Render(params, drawing) {
 	bw.scale(scaleX, scaleY);
 
 	// Call into the BWIPP cross-compiled code and render the image.
-	BWIPP()(bw, bcid, text, opts);
+    bwipp_encode(bw, encoder, text, opts);
 	return bw.render();		// Return whatever drawing.end() returns
 }
 
 // bwipjs.raw(options)
-// bwipjs.raw(encoder, text, opts-string)
+// bwipjs.raw(bcid, text, opts-string)
 //
 // Invokes the low level BWIPP code and returns the raw encoding data.
 //
 // This function is synchronous and throws on error.
-function Raw(encoder, text, options) {
+//
+// Browser and nodejs usage.
+function ToRaw(bcid, text, options) {
 	if (arguments.length == 1) {
-		options = encoder;
-		encoder = options.bcid;
+		options = bcid;
+		bcid = options.bcid;
 		text = options.text;
 	}
 
 	// The drawing interface is just needed for the pre-init() calls.
 	var bw = new BWIPJS(DrawingBuiltin({}));
-	var stack = BWIPP()(bw, encoder, text, options, true);
+	var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
 
 	// bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
 	// are not a typical/expected return value.  Convert to plain-old-objects.

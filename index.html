@@ -34,9 +34,23 @@ bwip-js is a translation to native JavaScript of the amazing code provided in <a
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.</p>
+<blockquote>
+  <p>Version 3.0 provides support for ES6 modules with the individual encoders as named exports.
+  This will allow webpack and other bundlers to tree shake the large BWIPP cross-compiled
+  code into something more managable.</p>
+  <p>The ES6 module is only available on the browser.   Support for nodejs is planned.</p>
+  <p>There is minor API breakage versus version 2.  The exported version strings have changed
+  since there is no longer a <code>BWIPP</code> object - its contents were hoisted to module scope to
+  enable dead code elimination.</p>
+  <p>|  Old Version String      |  3.0 Version String      |
+   | :------------------------| :------------------------|
+   |  <code>bwipjs.VERSION</code>        |  <code>bwipjs.BWIPJS_VERSION</code> |
+   |  <code>bwipjs.BWIPP.VERSION</code>  |  <code>bwipjs.BWIPP_VERSION</code>  |</p>
+  <p>See the section <a href="#es6-browser-module-usage">ES6 Browser Module Usage</a> for details of the new capabilities.</p>
+</blockquote>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 2.1.3 (2021-04-08)</li>
+<li>Current bwip-js version is 3.0.0 (2021-04-28)</li>
 <li>Current BWIPP version is 2021-02-06</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
@@ -49,15 +63,6 @@ found at the end of this document.</p>
 <li><a href="#electron-example">Electron</a></li>
 <li><a href="#command-line-interface">Command Line</a></li>
 </ul>
-<h2 id="javascriptrequirements">JavaScript Requirements</h2>
-<p>Emulating PostScript is non-trivial but most of the needed functionality is available
-in relatively modern JavaScript.  The basic features required are:</p>
-<ul>
-<li>Uint8Array</li>
-<li>Map (<em>for-of</em> iteration not used so older JS works)</li>
-</ul>
-<p>If your JavaScript environment does not support those, there is no way to make this
-code work.</p>
 <h2 id="links">Links</h2>
 <ul>
 <li><a href="http://metafloor.github.io/bwip-js/">Home Page</a></li>
@@ -127,8 +132,9 @@ to determine what options are available for each barcode type.</p>
 <p>Note that bwip-js normalizes the BWIPP <code>width</code> and <code>height</code> options to always be in millimeters.
 The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm
 (72 dpi / 25.4 mm/in).  The bwip-js scale options multiply the <code>width</code>, <code>height</code>, and <code>padding</code>.</p>
-<p>| :warning: An important note about the BWIPP <code>width</code> and <code>height</code> parameters. |
-|---------------|</p>
+<blockquote>
+  <p>An important note about the BWIPP <code>width</code> and <code>height</code> parameters.</p>
+</blockquote>
 <p>Barcodes have the concept of module width (and height if a two-dimensional barcode).  For
 linear barcodes, the module width is the width of the narrowest bar, and all other bar widths are
 a multiple of it.  For 2D symbols, module width and height are the dimensions of the square
@@ -158,11 +164,11 @@ module width (scale) of the rendered barcode.</p>
 <p>To use within a browser, add the following to the head of your page:</p>
 <pre><code>&lt;script type="text/javascript" src="file-or-url-path-to/bwip-js/dist/bwip-js-min.js"&gt;&lt;/script&gt;
 </code></pre>
-<p>When developing your code, you may want to use <code>dist/bwip-js.js</code> to get better stack
+<p>While developing your project, you may want to use <code>dist/bwip-js.js</code> to get better stack
 traces.</p>
-<p>If you are using <code>RequireJS</code> or another module/packaging utility, the bwip-js script is
-structured as a UMD and should work with your environment.</p>
-<p>The script adds a single <code>bwipjs</code> global object.  To draw a barcode to a canvas:</p>
+<p>If you are using <code>RequireJS</code> or a common-js bundling utility, the bwip-js scripts are
+structured as UMDs and should work with your environment.</p>
+<p>The scripts adds a single <code>bwipjs</code> global object.  To draw a barcode to a canvas:</p>
 <pre><code class="javascript language-javascript">try {
     // The return value is the canvas element
     let canvas = bwipjs.toCanvas('mycanvas', {
@@ -192,13 +198,31 @@ to get a data URL. For example:</p>
 <pre><code class="javascript language-javascript">let canvas = document.createElement('canvas');
 try {
     bwipjs.toCanvas(canvas, options);
-    document.getElementById(myimg).src = canvas.toDataURL('image/png');
+    document.getElementById('my-img').src = canvas.toDataURL('image/png');
+} catch (e) {
+    // `e` may be a string or Error object
+}
+</code></pre>
+<h2 id="es6browsermoduleusage">ES6 Browser Module Usage</h2>
+<p>The ESM provides the same API as the standard browser module using:</p>
+<pre><code class="javascript language-javascript">import bwipjs from 'bwip-js';
+
+// ... identical bwipjs.toCanvas() interface as above ...
+</code></pre>
+<p>The ESM also facilitates bundler tree shaking by providing the individual encoders as named exports.
+Each exported encoder functions identically to <code>bwipjs.toCanvas()</code>.</p>
+<p>The exported names are the same as the <code>bcid</code> names, with the caveat that dashes <code>-</code> are replaced with
+underscores <code>_</code>.  For example, if you want to import the <code>gs1-128</code> encoder, you would use:</p>
+<pre><code class="javascript language-javascript">import { gs1_128 } from 'bwip-js';
+
+try {
+    gs1_128('my-canvas', options);
 } catch (e) {
     // `e` may be a string or Error object
 }
 </code></pre>
 <h2 id="reactusage">React Usage</h2>
-<p>The following is a minimal example of using bwip-js in a React app.
+<p>The following is a minimal example of bwip-js in a React app.
 It is based on the default <code>App.js</code> file generated by <code>create-react-app</code>.</p>
 <pre><code class="javascript language-javascript">import React, { Component } from 'react';
 import logo from './logo.svg';
@@ -236,6 +260,7 @@ class App extends Component {
 export default App;
 </code></pre>
 <p>See the Browser Usage section for details on the <code>toCanvas()</code> method. </p>
+<p>See the ES6 Browser Module Usage section for details on importing encoders directly.</p>
 <h2 id="nodejsrequesthandler">Node.js Request Handler</h2>
 <p>The online barcode API is implemented as a Node.js application.
 See the <a href="https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API">Online Barcode API</a> for details on how the URL query parameters must be structured.</p>
@@ -310,12 +335,10 @@ bwipjs.toBuffer({
 <h2 id="electronexample">Electron Example</h2>
 <p>There has been some changes to the Electron bundler, and it may pull in either the
 nodejs or browser module, depending on your version of Electron.  The example below
-shows using the nodejs module.</p>
+assumes the nodejs module.</p>
 <p>If you try this example and get the error <code>bwipjs.toBuffer is not a function</code>, the
 Electron bundler grabbed the browser module.  See the <a href="#browser-usage">Browser Usage</a>
 section above and draw to a canvas instead.</p>
-<p>If you happen to know how the Electron bundler changed its behavior and how to
-fix it in a project's <code>package.json</code>, please raise an issue at <a href="https://github.com/metafloor/bwip-js/issues">github issues page</a>.  </p>
 <p>This is an example <code>index.html</code> file for a basic, single window app:</p>
 <pre><code class="html language-html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -347,7 +370,7 @@ fix it in a project's <code>package.json</code>, please raise an issue at <a hre
 &lt;/html&gt;
 </code></pre>
 <h2 id="commandlineinterface">Command Line Interface</h2>
-<p>bwip-js can be used as a command line tool.</p>
+<p>bwip-js can be used as a command line tool when installed globally:</p>
 <pre><code>$ npm install -g bwip-js
 $ bwip-js
 Usage: bwip-js symbol-name text [options...] png-file

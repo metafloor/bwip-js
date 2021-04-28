@@ -32,7 +32,6 @@
 // SOFTWARE.
 
 var STBTT = (function () {
-	"use strict";
 
 var	STBTT_vmove	 = 1,
 	STBTT_vline	 = 2,
