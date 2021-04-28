@@ -1,18 +1,16 @@
 // bwip-js/barcode-hdr.js
 //
-// This code is injected above the cross-compiled barcode.ps.
+// This code is injected above the cross-compiled barcode.js.
 
 // The BWIPJS object (graphics interface)
 var $$ = null;
-
-// The global dictionary.  Each renderer and encoder declare a
-// $1 local dict.
-var $0 = {
-	$error:new Map	// the postscript error object
-};
-
 var $j = 0;		// stack pointer
 var $k = [];	// operand stack
+
+// Global state defined at runtime
+var $0 = {
+    $error : new Map,
+};
 
 // Array ctor
 //	$a()	: Build a new array up to the Infinity-marker on the stack.

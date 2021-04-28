@@ -88,7 +88,7 @@ node <<@EOF
 var bwipjs = require('.');
 
 try {
-	var stack = bwipjs.raw("$sym", "$jstext", "$opts");
+	var stack = bwipjs.toRaw("$sym", "$jstext", "$opts");
 } catch (e) {
 	// Example bwipp.raiseerror from ghostscript:
 	// 		Error: /bwipp.qrcodeNoValidSymbol in

@@ -210,6 +210,7 @@ var opts = {};
 
 if (process.argv.length < 5) {
     usage();
+    process.exit(1);
 }
 if (!/bcid=/.test(process.argv[2])) {
     process.argv[2] = 'bcid=' + process.argv[2];
@@ -255,7 +256,7 @@ if (process.argv.length == 2) {
 } else if (opts.help) {
 	help();
 } else if (opts.version && !opts.bcid) {
-	console.log('bwip-js: ' + bwipjs.VERSION + '\nBWIPP: ' + bwipjs.BWIPP.VERSION);
+	console.log('bwip-js: ' + bwipjs.BWIPJS_VERSION + '\nBWIPP: ' + bwipjs.BWIPP_VERSION);
 } else if (opts.symbols && !opts.bcid) {
 	for (var sym in symdesc) {
 		console.log('    ' + sym + ' : ' + symdesc[sym]);

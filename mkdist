@@ -53,6 +53,17 @@ $COPYR
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+@EOF
+
+## Separate browser and node modules
+cp dist/bwip-js.js dist/bwip-js-min.js
+cp dist/bwip-js.js dist/bwip-js.mjs
+cp dist/bwip-js.js dist/bwip-js-node.js
+cp dist/bwip-js.js dist/bwip-js-node.mjs
+
+## Add a UMD around the minified and non-minified legacy browser versions
+for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
+cat - <<@EOF >> $file
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define([], factory);
@@ -62,22 +73,23 @@ $COPYR
         root.bwipjs = factory();
 	}
 }(typeof self !== 'undefined' ? self : this, function () {
-"use strict";
 @EOF
+done
 
-## Separate browser and node modules
-cp dist/bwip-js.js dist/bwip-js-min.js
-cp dist/bwip-js.js dist/node-bwipjs.js
 
 ## Inverted logic on the excludes (minified browser code is inlined below)
-sed -e '/@@BEGIN-BROWSER-ONLY@@/,/@@ENDOF-BROWSER-ONLY@@/d' < src/exports.js >> dist/node-bwipjs.js
+sed -e '/@@BEGIN-BROWSER-ONLY@@/,/@@ENDOF-BROWSER-ONLY@@/d' < src/exports.js >> dist/bwip-js-node.js
+sed -e '/@@BEGIN-BROWSER-ONLY@@/,/@@ENDOF-BROWSER-ONLY@@/d' < src/exports.js >> dist/bwip-js-node.mjs
 sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js >> dist/bwip-js.js
+sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js >> dist/bwip-js.mjs
 
 ## nodejs plain-source - no drawing-canvas.js
-cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/node-bwipjs.js 
+cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.js 
+cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.mjs 
 
 ## browser plain-source - no drawing-zlibpng.js
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
+cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.mjs 
 
 ##
 ## Shorten the postscript operator names rather than use random variable
@@ -91,7 +103,8 @@ rm -f bwipp-min.js
 sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js | cat - src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js 
 
 ## nodejs postamble
-cat - <<@EOF >> dist/node-bwipjs.js
+for file in dist/bwip-js-node.js dist/bwip-js-node.mjs ; do
+cat - <<@EOF >> $file
 function toUint8Array(data) {
     if (typeof data == "string") {
         var binary = /[^A-Za-z0-9+\/=\s]/.test(data);
@@ -107,23 +120,11 @@ function toUint8Array(data) {
 
 FontLib.loadFont("OCR-A", 100, 100, "$(base64 fonts/OCRA7.ttf | tr -d '\r\n\t ')");
 FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')");
-
-return {
-        // The public interface
-        request:Request, toBuffer:ToBuffer, render:Render, raw:Raw,
-        fixupOptions:FixupOptions,
-        loadFont:FontLib.loadFont,
-        VERSION:'__BWIPJS_VERS__',
-
-        // Internals
-        BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
-        DrawingBuiltin:DrawingBuiltin, DrawingZlibPng:DrawingZlibPng,
-    };
-}));
 @EOF
+done
 
 ## browser postamble
-for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
+for file in  dist/bwip-js.js dist/bwip-js.mjs dist/bwip-js-min.js ; do
 cat - <<@EOF >> $file
 function toUint8Array(data) {
     if (typeof data == "string") {
@@ -145,20 +146,81 @@ function toUint8Array(data) {
 
 FontLib.loadFont("OCR-A", 100, 100, "$(base64 fonts/OCRA7.ttf | tr -d '\r\n\t ')");
 FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')");
+@EOF
+done
 
-return {
+## exports for the cjs nodejs version
+cat - <<@EOF >> dist/bwip-js-node.js
+module.exports = {
+    // The public interface
+    request:Request, toBuffer:ToBuffer, render:Render, toRaw:ToRaw,
+    fixupOptions:FixupOptions,
+    loadFont:FontLib.loadFont,
+    BWIPJS_VERSION:'__BWIPJS_VERS__',
+    BWIPP_VERSION:BWIPP_VERSION,
+    // Internals
+    BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
+    DrawingBuiltin:DrawingBuiltin, DrawingZlibPng:DrawingZlibPng,
+};
+@EOF
+
+# exports for the esm node version
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,cvs) { return _ToBuffer(bwipp_\1,opts,cvs); };/' \
+        -e 's/-/_/g' >> dist/bwip-js-node.mjs
+
+cat - <<@EOF >> dist/bwip-js-node.mjs
+export default {
+    // The public interface
+    request:Request, toBuffer:ToBuffer, render:Render, toRaw:ToRaw,
+    fixupOptions : FixupOptions,
+    loadFont : FontLib.loadFont,
+    BWIPJS_VERSION : '__BWIPJS_VERS__',
+    BWIPP_VERSION : BWIPP_VERSION,
+    // Internals
+    BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,
+};
+@EOF
+
+# exports for the esm browser version
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,cvs) { return _ToCanvas(bwipp_\1,opts,cvs); };/' \
+        -e 's/-/_/g' >> dist/bwip-js.mjs
+
+cat - <<@EOF >> dist/bwip-js.mjs
+export default {
+    // The public interface
+    toCanvas : ToCanvas,
+    toRaw : ToRaw,
+    render : Render,
+    fixupOptions : FixupOptions,
+    loadFont : FontLib.loadFont,
+    BWIPJS_VERSION : '__BWIPJS_VERS__',
+    BWIPP_VERSION : BWIPP_VERSION,
+    // Internals
+    BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingCanvas,
+};
+@EOF
+
+# exports for the UMD browser versions
+for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
+cat - <<@EOF >> $file
+    return {
         // The public interface
-        toCanvas:ToCanvas, render:Render, raw:Raw,
+        toCanvas:ToCanvas, render:Render, toRaw:ToRaw,
         fixupOptions:FixupOptions,
         loadFont:FontLib.loadFont,
-        VERSION:'__BWIPJS_VERS__',
-
+        BWIPJS_VERSION:'__BWIPJS_VERS__',
+        BWIPP_VERSION:BWIPP_VERSION,
         // Internals
-        BWIPJS:BWIPJS, BWIPP:BWIPP, STBTT:STBTT, FontLib:FontLib,
+        BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
         DrawingBuiltin:DrawingBuiltin, DrawingCanvas:DrawingCanvas,
     };
 }));
 @EOF
 done
+
+## broken for now...
+rm -f dist/bwip-js-node.mjs
 
 exit 0

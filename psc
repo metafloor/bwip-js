@@ -53,15 +53,6 @@
 ##   No loss in functionality as the bwipp.js interface automatically
 ##   converts an options string to an options object.
 ##
-## * The `parse` option conflicts with the `parsefnc` option, causing
-##	 invalid char-codes to be generated.  Replace BWIPP's parse logic
-##	 with our own (in bwipp-ftr.js) and comment it out here.
-##   It looks like:
-##		% Parse ordinals of the form ^NNN to ASCII
-##		parse {
-##			<blah>
-##		} if
-##
 ## * Fixup renlinear and renmatrix.  Replace renmaximatrix.
 ##
 ## * Replace the isbn/ismn/issn Courier with OCR-A
@@ -77,6 +68,23 @@
 ##		 8 3 div -> 2.66666667
 ##		 4 3 div -> 1.33333334
 ##		 2 3 div -> 0.66666667
+
+##
+## Build up the exports.
+##
+(
+##grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u |\
+##    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/function bwipp_\1(bwipjs,text,options,dontdraw) { return bwipp_encode(bwipjs,$0_\1,text,options,dontdraw); }/' -e 's/-/_/g'
+echo 'function bwipp_lookup(symbol) {'
+echo '  if (!symbol) { throw new Error("bwipp.undefinedEncoder: bcid is not defined"); }'
+echo '  switch (symbol.replace(/-/g, "_")) {'
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u |\
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    case "\1":return bwipp_\1;/' -e 's/-/_/g'
+echo '  }'
+echo '  throw new Error("bwipp.unknownEncoder: unknown encoder name: " + symbol);'
+echo '}'
+) > barcode-exports.js
+
 
 cp barcode.ps barcode.tmp
 for name in $(cd custom; ls *.ps | sed -e 's/\.ps//') ; do
@@ -99,7 +107,6 @@ cat barcode.tmp custom/*.ps | sed \
 	-e 's,^\[.*\] {null def} forall,%psc &,'\
 	-e 's,/inkspread 0\.[0-9]* def,/inkspread 0 def,'\
 	-e '/^\s*\/setanycolor {/,/^\s*} bind def/s/^/%psc /' \
-	-e '/^    parse {\s*$/,/^    } if\s*$/s/^/%psc /' \
 	-e '/^currentglobal/,/^setglobal/s/^/%psc /' \
 	-e '/^\/setpacking where {pop currentpacking/,/^begin/s/^/%psc /'\
 	-e '/^\/[^ \t][^ \t]* dup load \/uk.co.terryburton/,/^\/setpacking where {pop setpacking} if/s/^/%psc /'\
@@ -181,14 +188,12 @@ $FILEV
 $COPYR
 //
 // Licensed MIT. See the LICENSE file in the bwip-js root directory.
-function BWIPP() {
-"use strict";
-$(cat barcode-hdr.js barcode.js barcode-ftr.js)
-}
-BWIPP.VERSION = '$BWIPP_VERSION';
+$(cat barcode-hdr.js barcode.js barcode-ftr.js barcode-exports.js)
+var BWIPP_VERSION = '$BWIPP_VERSION';
+
 @EOF
 
-js-beautify bwipp.js > src/bwipp.js
+js-beautify --preserve-newlines bwipp.js > src/bwipp.js
 
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.

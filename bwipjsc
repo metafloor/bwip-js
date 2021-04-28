@@ -3,7 +3,7 @@
 'use strict';
 
 var fs = require('fs');
-var bwipjs = require('./node-bwipjs');
+var bwipjs = require('.');
 
 if (process.argv.length < 5) {
 	console.log('Usage: bwipjsc type text [options] outfile');

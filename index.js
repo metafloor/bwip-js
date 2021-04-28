@@ -1,2 +1,2 @@
 
-module.exports = require('./dist/node-bwipjs');
+module.exports = require('./dist/bwip-js-node');

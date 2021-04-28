@@ -23,7 +23,7 @@ for (let i = 5; i < process.argv.length; i++) {
     opts += ' ' + process.argv[i];
 }
 
-let stack = bwipjs.raw(sym, text, opts);
+let stack = bwipjs.toRaw(sym, text, opts);
 for (let i = 0; i < stack.length; i++) {
     console.log('' + i + ':');
     let obj = stack[i];

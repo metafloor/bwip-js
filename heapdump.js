@@ -10,7 +10,7 @@
 "use strict";
 
 const http   = require('http');
-const bwipjs = require('./node-bwipjs');	// ./ required for local use
+const bwipjs = require('.');
 
 // Hide temp vars
 (function() {

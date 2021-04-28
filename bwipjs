@@ -2,11 +2,11 @@
 'use strict';
 
 var fs = require('fs');
-var bwipjs = require('./dist/node-bwipjs');
+var bwipjs = require('.');
 var symdesc = require('./lib/symdesc');
 
 function usage() {
-    let bmark = bwipjs.VERSION == "__BWIPJS_VERS__"
+    let bmark = bwipjs.BWIPJS_VERSION == "__BWIPJS_VERS__"
                 ? "Try 'bwipjs --benchmark' for time statistics.\n"
                 : "";
 	console.log(
@@ -217,7 +217,7 @@ if (process.argv.length < 5) {
     if (process.argv[2] == '--help') {
         help();
     } else if (process.argv[2] == '--version') {
-        console.log('bwipjs: ' + bwipjs.VERSION + '\nBWIPP: ' + bwipjs.BWIPP.VERSION);
+        console.log('bwipjs: ' + bwipjs.BWIPJS_VERSION + '\nBWIPP: ' + bwipjs.BWIPP_VERSION);
     } else if (process.argv[2] == '--symbols') {
         for (var sym in symdesc) {
             console.log('    ' + sym + ' : ' + symdesc[sym]);

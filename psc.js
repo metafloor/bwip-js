@@ -840,18 +840,10 @@ function PSC(str, flags) {
 							 seq:++seq
 						};
 			} else if (tkn[0] == '/') {
-				// Watch for immediately evaluated names (IEN).  With BWIPP,
-				// these are always globally defined (on the $0 dict).
+				// Watch for immediately evaluated names (IEN).  With BWIPP, these are always globally defined.
 				if (tkn[1] == '/') {
 					// Simple ident or needs quotes?
-					if (/\/\/[A-Za-z_]\w*$/.test(tkn)) {
-						st[sp++] = { type:TYPE_IENAME, expr:'$0.'+tkn.substr(2),
-									 seq:++seq };
-					} else {
-						st[sp++] = { type:TYPE_IENAME,
-									 expr:'$0["' + tkn.substr(2) + '"]',
-									 seq:++seq };
-					}
+                    st[sp++] = { type:TYPE_IENAME, expr:'bwipp_'+tkn.substr(2).replace(/-/g, '_'), seq:++seq };
 					dict[tkn.substr(2)] = TYPE_IENAME;
 				} else {
 					// Use single-quoted strings to indicate idents.
@@ -980,9 +972,9 @@ function PSC(str, flags) {
 		st[sp-1] = { type:TYPE_BOOLEAN, expr:parse[2], seq:++seq };
 	}
 
-	// $0.$error is defined in bwipp-hdr.js.
+	// $error is defined in bwipp-hdr.js.
 	$.handleerror = function() {
-		emit('throw new Error($z($0.$error.errorname)+": "+$z($0.$error.errorinfo));');
+		emit('throw new Error($z($0.$error.get("errorname"))+": "+$z($0.$error.get("errorinfo")));');
 	}
 	$.quit = function() {
 		// no-op : handlerror throws
@@ -1354,13 +1346,17 @@ function PSC(str, flags) {
 		}
 
 		if (t2 == TYPE_STRLIT || t2 == TYPE_IDENT) {
-			if (/^['"][A-Za-z]\w*['"]$/.test(id)) {
-				emit('$' + dlvl + '.' + id.substr(1, id.length-2) + '=' +
-							st[sp-1].expr + ';');
+            if (dlvl == 0) {
+                emit('function bwipp_' + id.substr(1, id.length-2).replace(/-/g, '_') +
+                    st[sp-1].expr.replace(/^\s*function/, ''));
+            } else if (/^['"][A-Za-z]\w*['"]$/.test(id)) {
+				emit('$' + dlvl + '.' + id.substr(1, id.length-2) + '=' + st[sp-1].expr + ';');
 			} else {
 				emit('$' + dlvl + '[' + id  + ']=' + st[sp-1].expr + ';');
 			}
 			dict[id.substr(1, id.length-2).replace(/\\(.)/g, '$1')] = t1;
+        } else if (dlvl == 0) {
+            emit('var $0_' + id.substr(1, id.length-2).replace(/-/g, '_') + '=' + st[sp-1].expr + ';');
 		} else {
 			emit('$' + dlvl + '[' + id + ']=' + st[sp-1].expr + ';');
 		}

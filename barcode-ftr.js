@@ -1,13 +1,9 @@
 // bwip-js/barcode-ftr.js
 //
-// This code is injected below the cross-compiled barcode.ps.
+// This code is injected below the cross-compiled barcode.js.
 
-// The BWIPP symbol is a factory object.  When called, it returns this
-// function, which is a re-usable postscript emulation for BWIPP.
-return function(bwipjs, encoder, text, opts, dontdraw) {
-	if (!$0[encoder]) {
-		throw new Error('bwipp.unknownEncoder: ' + encoder);
-	}
+// `encoder` is one of the $0_* BWIPP functions
+function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
 	if (typeof text !== 'string') {
 		throw new Error('bwipp.typeError: barcode text not a string (' +
 						text + ')');
@@ -36,21 +32,6 @@ return function(bwipjs, encoder, text, opts, dontdraw) {
 		text = unescape(encodeURIComponent(text));
 	}
 		
-	// Handle the `parse` option here rather than in BWIPP - eliminates
-	// conflict with the parsefnc option and allows removing the parsing
-	// code from BWIPP.
-	if (opts.parse) {
-		text = text.replace(/\^(\d\d\d)/g, function ($0,$1) {
-				var v = +$1;
-				if (v > 255) {
-					throw new Error('bwipp.rangeError:' +
-							' ^NNN out-of-range (' + $0 + ')');
-				}
-				return String.fromCharCode(v);
-			});
-		delete opts.parse;
-	}
-
 	// Don't draw? (See file runtest)
 	$0.bwipjs_dontdraw = opts.dontdraw || dontdraw || false;
 
@@ -66,7 +47,7 @@ return function(bwipjs, encoder, text, opts, dontdraw) {
 	$$ = bwipjs;
 	$k = [ text, map ];
 	$j = 2;
-	$0[encoder]();
+	encoder();
 
 	// Return what is left on the stack.  This branch should only be taken
 	// when running with the dontdraw option.

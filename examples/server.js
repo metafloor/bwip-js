@@ -20,7 +20,7 @@ const bwipjs = (function() {
     }
 })();
 
-console.log('bwip-js', bwipjs.VERSION, 'BWIPP', bwipjs.BWIPP.VERSION);
+console.log('bwip-js ' + bwipjs.BWIPJS_VERSION + ' / BWIPP ' + bwipjs.BWIPP_VERSION);
 
 // Optionally, load custom fonts.  This shows how to load the Inconsolata font,
 // supplied with the bwip-js distribution.  The path to your fonts will be different.

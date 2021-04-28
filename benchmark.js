@@ -12,7 +12,7 @@ if (!global.gc) {
 // Keep output to a minimum
 var verbose = process.argv.indexOf('--verbose') > 0;
 
-var bwipjs = require('./dist/node-bwipjs.js');
+var bwipjs = require('.');
 
 // Use a seedable PRNG so we generate the same random strings for each
 // run.
@@ -226,7 +226,7 @@ function runround(times) {
 		}
 		var id = round[i].bcid;
 		var t0 = process.hrtime();
-		bwipjs.raw(round[i]);
+		bwipjs.toRaw(round[i]);
 		var t1 = process.hrtime(t0);
 		if (!times[id]) {
 			times[id] = { id:id, count:0, msecs:0 };
