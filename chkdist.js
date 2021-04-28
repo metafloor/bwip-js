@@ -31,9 +31,11 @@ min.toCanvas(canvas, { bcid:'code128', text:'01234566789', includetext:true });
 console.log('browser-min ok');
 
 let _import = require('esm')(module);
-let besm = _import('./dist/bwip-js.mjs').default;
-besm.toCanvas(canvas, { bcid:'code128', text:'01234566789', includetext:true });
-console.log('browser-esm ok');
+let besm = _import('./dist/bwip-js.mjs');
+besm.default.toCanvas(canvas, { bcid:'code128', text:'01234566789', includetext:true });
+console.log('browser-esm toCanvas ok');
+besm.gs1_128(canvas, { text:'(01)95012345678903', includetext:true });
+console.log('browser-esm named export ok');
 
 let ncjs = require('./dist/bwip-js-node.js');
 ncjs.toBuffer({ bcid:'code128', text:'01234566789', includetext:true })

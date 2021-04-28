@@ -56,14 +56,21 @@ function Request(req, res, extra) {
 //
 // Node.js usage only.
 function ToBuffer(opts, callback) {
-    return _ToBuffer(null, opts, callback);
+	try {
+		return _Render(bwipp_lookup(opts.bcid), opts, DrawingZlibPng(opts, callback));
+	} catch (e) {
+		if (callback) {
+			callback(e);
+		} else {
+			return new Promise(function(resolve, reject) {
+				reject(e);
+			});
+		}
+	}
 }
 // Entry point for the symbol-specific exports
 function _ToBuffer(encoder, opts, callback) {
 	try {
-        if (!encoder) {
-            encoder = bwipp_lookup(opts.bcid);
-        }
 		return _Render(encoder, opts, DrawingZlibPng(opts, callback));
 	} catch (e) {
 		if (callback) {
@@ -93,7 +100,22 @@ function _ToBuffer(encoder, opts, callback) {
 //
 // Browser usage only.
 function ToCanvas(opts, canvas) {
-    return _ToCanvas(null, opts, canvas);
+    // This code has to be duplicated with _ToCanvas() to keep the bwipp_lookup() out
+    // of the latter.
+	if (typeof canvas == 'string') {
+		canvas = document.getElementById(canvas) || document.querySelector(canvas);
+	} else if (typeof opts == 'string') {
+		opts = document.getElementById(opts) || document.querySelector(opts);
+	}
+	if (opts instanceof HTMLCanvasElement) {
+		var tmp = opts;
+		opts = canvas;
+		canvas = tmp;
+	} else if (!(canvas instanceof HTMLCanvasElement)) {
+		throw 'bwipjs: Not a canvas';
+	}
+    _Render(bwipp_lookup(opts.bcid), opts, DrawingCanvas(opts, canvas));
+    return canvas;
 }
 // Entry point for the symbol-specific exports
 function _ToCanvas(encoder, opts, canvas) {
@@ -109,9 +131,6 @@ function _ToCanvas(encoder, opts, canvas) {
 	} else if (!(canvas instanceof HTMLCanvasElement)) {
 		throw 'bwipjs: Not a canvas';
 	}
-    if (!encoder) {
-        encoder = bwipp_lookup(opts.bcid);
-    }
     _Render(encoder, opts, DrawingCanvas(opts, canvas));
     return canvas;
 }
@@ -235,8 +254,8 @@ function _Render(encoder, params, drawing) {
 	return bw.render();		// Return whatever drawing.end() returns
 }
 
-// bwipjs.toRaw(options)
-// bwipjs.toRaw(bcid, text, opts-string)
+// bwipjs.raw(options)
+// bwipjs.raw(bcid, text, opts-string)
 //
 // Invokes the low level BWIPP code and returns the raw encoding data.
 //

@@ -226,7 +226,7 @@ function runround(times) {
 		}
 		var id = round[i].bcid;
 		var t0 = process.hrtime();
-		bwipjs.toRaw(round[i]);
+		bwipjs.raw(round[i]);
 		var t1 = process.hrtime(t0);
 		if (!times[id]) {
 			times[id] = { id:id, count:0, msecs:0 };

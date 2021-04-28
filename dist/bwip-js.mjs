@@ -48,7 +48,22 @@
 //
 // Browser usage only.
 function ToCanvas(opts, canvas) {
-    return _ToCanvas(null, opts, canvas);
+    // This code has to be duplicated with _ToCanvas() to keep the bwipp_lookup() out
+    // of the latter.
+	if (typeof canvas == 'string') {
+		canvas = document.getElementById(canvas) || document.querySelector(canvas);
+	} else if (typeof opts == 'string') {
+		opts = document.getElementById(opts) || document.querySelector(opts);
+	}
+	if (opts instanceof HTMLCanvasElement) {
+		var tmp = opts;
+		opts = canvas;
+		canvas = tmp;
+	} else if (!(canvas instanceof HTMLCanvasElement)) {
+		throw 'bwipjs: Not a canvas';
+	}
+    _Render(bwipp_lookup(opts.bcid), opts, DrawingCanvas(opts, canvas));
+    return canvas;
 }
 // Entry point for the symbol-specific exports
 function _ToCanvas(encoder, opts, canvas) {
@@ -64,9 +79,6 @@ function _ToCanvas(encoder, opts, canvas) {
 	} else if (!(canvas instanceof HTMLCanvasElement)) {
 		throw 'bwipjs: Not a canvas';
 	}
-    if (!encoder) {
-        encoder = bwipp_lookup(opts.bcid);
-    }
     _Render(encoder, opts, DrawingCanvas(opts, canvas));
     return canvas;
 }
@@ -190,8 +202,8 @@ function _Render(encoder, params, drawing) {
 	return bw.render();		// Return whatever drawing.end() returns
 }
 
-// bwipjs.toRaw(options)
-// bwipjs.toRaw(bcid, text, opts-string)
+// bwipjs.raw(options)
+// bwipjs.raw(bcid, text, opts-string)
 //
 // Invokes the low level BWIPP code and returns the raw encoding data.
 //
@@ -38691,9 +38703,7 @@ export function upce(opts,cvs) { return _ToCanvas(bwipp_upce,opts,cvs); };
 export function upcecomposite(opts,cvs) { return _ToCanvas(bwipp_upcecomposite,opts,cvs); };
 export default {
     // The public interface
-    toCanvas : ToCanvas,
-    toRaw : ToRaw,
-    render : Render,
+    toCanvas : ToCanvas, render : Render, raw : ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
     BWIPJS_VERSION : '__BWIPJS_VERS__',

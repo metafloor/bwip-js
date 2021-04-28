@@ -153,7 +153,7 @@ done
 cat - <<@EOF >> dist/bwip-js-node.js
 module.exports = {
     // The public interface
-    request:Request, toBuffer:ToBuffer, render:Render, toRaw:ToRaw,
+    request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions:FixupOptions,
     loadFont:FontLib.loadFont,
     BWIPJS_VERSION:'__BWIPJS_VERS__',
@@ -172,7 +172,7 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
 cat - <<@EOF >> dist/bwip-js-node.mjs
 export default {
     // The public interface
-    request:Request, toBuffer:ToBuffer, render:Render, toRaw:ToRaw,
+    request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
     BWIPJS_VERSION : '__BWIPJS_VERS__',
@@ -190,9 +190,7 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
 cat - <<@EOF >> dist/bwip-js.mjs
 export default {
     // The public interface
-    toCanvas : ToCanvas,
-    toRaw : ToRaw,
-    render : Render,
+    toCanvas : ToCanvas, render : Render, raw : ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
     BWIPJS_VERSION : '__BWIPJS_VERS__',
@@ -207,7 +205,7 @@ for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
 cat - <<@EOF >> $file
     return {
         // The public interface
-        toCanvas:ToCanvas, render:Render, toRaw:ToRaw,
+        toCanvas:ToCanvas, render:Render, raw:ToRaw,
         fixupOptions:FixupOptions,
         loadFont:FontLib.loadFont,
         BWIPJS_VERSION:'__BWIPJS_VERS__',
