@@ -29,6 +29,8 @@ console.log('bwip-js ' + bwipjs.BWIPJS_VERSION + ' / BWIPP ' + bwipjs.BWIPP_VERS
 // 100 (100%) indicates to use the font's default size.
 //bwipjs.loadFont('Inconsolata', 100,
 //        require('fs').readFileSync(__dirname + '/fonts/Inconsolata.otf', 'binary'));
+bwipjs.loadFont('Verdana', 100,
+        require('fs').readFileSync('c:/downloads/verdana.otf', 'binary'));
 
 const server = http.createServer(function(req, res) {
     // If the url does not begin /?bcid= then 404.  Otherwise, we end up
