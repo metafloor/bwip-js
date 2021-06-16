@@ -36509,7 +36509,7 @@ var PNG_CRC = (function() {
 })();
 
 var PNG_ZLIB = require('zlib');
-require('stream');  // fix for https://github.com/nodejs/node/issues/37021
+var __unused = require('stream');  // fix for https://github.com/nodejs/node/issues/37021
 
 // opts is the same options object passed into the bwipjs methods.
 function DrawingZlibPng(opts, callback) {
@@ -38769,7 +38769,7 @@ module.exports = {
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions:FixupOptions,
     loadFont:FontLib.loadFont,
-    BWIPJS_VERSION:'3.0.0 (2021-04-28)',
+    BWIPJS_VERSION:'3.0.1 (2021-06-16)',
     BWIPP_VERSION:BWIPP_VERSION,
     // Internals
     BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
