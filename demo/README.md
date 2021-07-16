@@ -28,7 +28,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 3.0.0 (2021-04-28)
+* Current bwip-js version is 3.0.1 (2021-06-16)
 * Current BWIPP version is 2021-02-06
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -233,7 +233,7 @@ The ESM also facilitates bundler tree shaking by providing the individual encode
 Each exported encoder functions identically to `bwipjs.toCanvas()`.
 
 The exported names are the same as the `bcid` names, with the caveat that dashes `-` are replaced with
-underscores `_`.  For example, if you want to import the `gs1-128` encoder, you would use:
+underscores `_`.  For example, to import the `gs1-128` encoder, you would use:
 
 ```javascript
 import { gs1_128 } from 'bwip-js';

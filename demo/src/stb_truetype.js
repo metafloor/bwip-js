@@ -1165,10 +1165,12 @@ function stbtt__run_charstring(info, glyph_index, c) {
                 return 0;
             }
             if (b0 == 255) {
-                f = stbtt__buf_get(b, 4) / 0x10000;
+                // f = (float)(stbtt_int32)stbtt__buf_get32(&b) / 0x10000;
+                f = (stbtt__buf_get(b, 4)|0) / 0x10000;
             } else {
                 stbtt__buf_skip(b, -1);
-                f = stbtt__cff_int(b);
+                // f = (float)(stbtt_int16)stbtt__cff_int(&b);
+                f = ((stbtt__cff_int(b)<<16)|0)>>16;
             }
             if (sp >= 48) {
                 return 0;
