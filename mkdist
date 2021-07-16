@@ -87,6 +87,9 @@ sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js >> 
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.js 
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.mjs 
 
+# change the require()s to imports for the node esm (\x27 == apos)
+sed -i -E -e 's/var (\w+)\s*=\s*require\((\x27\w+\x27)\)/import \1 from \2/' dist/bwip-js-node.mjs
+
 ## browser plain-source - no drawing-zlibpng.js
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.mjs 
@@ -217,8 +220,5 @@ cat - <<@EOF >> $file
 }));
 @EOF
 done
-
-## broken for now...
-rm -f dist/bwip-js-node.mjs
 
 exit 0

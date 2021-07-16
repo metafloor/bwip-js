@@ -195,6 +195,9 @@ var BWIPP_VERSION = '$BWIPP_VERSION';
 
 js-beautify --preserve-newlines bwipp.js > src/bwipp.js
 
+## js-beautify does not put a ending newline on the file
+echo "" >> src/bwipp.js
+
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##

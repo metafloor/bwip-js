@@ -35390,7 +35390,8 @@ function bwipp_lookup(symbol) {
     }
     throw new Error("bwipp.unknownEncoder: unknown encoder name: " + symbol);
 }
-var BWIPP_VERSION = '2021-02-06';// file : bwipjs.js
+var BWIPP_VERSION = '2021-02-06';
+// file : bwipjs.js
 //
 // Graphics-context interface to the BWIPP cross-compiled code
 
@@ -36509,7 +36510,7 @@ var PNG_CRC = (function() {
 })();
 
 var PNG_ZLIB = require('zlib');
-require('stream');  // fix for https://github.com/nodejs/node/issues/37021
+var __unused = require('stream');  // fix for https://github.com/nodejs/node/issues/37021
 
 // opts is the same options object passed into the bwipjs methods.
 function DrawingZlibPng(opts, callback) {
@@ -38013,10 +38014,12 @@ function stbtt__run_charstring(info, glyph_index, c) {
                 return 0;
             }
             if (b0 == 255) {
-                f = stbtt__buf_get(b, 4) / 0x10000;
+                // f = (float)(stbtt_int32)stbtt__buf_get32(&b) / 0x10000;
+                f = (stbtt__buf_get(b, 4)|0) / 0x10000;
             } else {
                 stbtt__buf_skip(b, -1);
-                f = stbtt__cff_int(b);
+                // f = (float)(stbtt_int16)stbtt__cff_int(&b);
+                f = ((stbtt__cff_int(b)<<16)|0)>>16;
             }
             if (sp >= 48) {
                 return 0;
