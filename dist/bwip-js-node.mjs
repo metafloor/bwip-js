@@ -35390,7 +35390,8 @@ function bwipp_lookup(symbol) {
     }
     throw new Error("bwipp.unknownEncoder: unknown encoder name: " + symbol);
 }
-var BWIPP_VERSION = '2021-02-06';// file : bwipjs.js
+var BWIPP_VERSION = '2021-02-06';
+// file : bwipjs.js
 //
 // Graphics-context interface to the BWIPP cross-compiled code
 
@@ -38013,10 +38014,12 @@ function stbtt__run_charstring(info, glyph_index, c) {
                 return 0;
             }
             if (b0 == 255) {
-                f = stbtt__buf_get(b, 4) / 0x10000;
+                // f = (float)(stbtt_int32)stbtt__buf_get32(&b) / 0x10000;
+                f = (stbtt__buf_get(b, 4)|0) / 0x10000;
             } else {
                 stbtt__buf_skip(b, -1);
-                f = stbtt__cff_int(b);
+                // f = (float)(stbtt_int16)stbtt__cff_int(&b);
+                f = ((stbtt__cff_int(b)<<16)|0)>>16;
             }
             if (sp >= 48) {
                 return 0;
@@ -38877,7 +38880,7 @@ export default {
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '3.0.1 (2021-06-16)',
+    BWIPJS_VERSION : '3.0.2 (2021-07-16)',
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,
