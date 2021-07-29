@@ -17433,9 +17433,9 @@ bind def
                     } if
                     /char msg i k add get def
                     /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {ceiling 1 add} ifelse} ifelse def
-                    /cc cc isC { 0.66666667 add} {isEA { 2.66666667 add } { 1.33333334 add } ifelse} ifelse def
-                    /tc tc isT { 0.66666667 add} {isEA { 2.66666667 add } { 1.33333334 add } ifelse} ifelse def
-                    /xc xc isX { 0.66666667 add} {isEA { 4.33333334 add } { 3.33333334 add } ifelse} ifelse def
+                    /cc cc isC { 0.6666667 add} {isEA { 2.6666667 add } { 1.3333334 add } ifelse} ifelse def
+                    /tc tc isT { 0.6666667 add} {isEA { 2.6666667 add } { 1.3333334 add } ifelse} ifelse def
+                    /xc xc isX { 0.6666667 add} {isEA { 4.3333334 add } { 3.3333334 add } ifelse} ifelse def
                     /ec ec isE {3 4 div add} {isEA {17 4 div add } {13 4 div add } ifelse} ifelse def
                     /bc bc isFN {4 add} {1 add} ifelse def
                     k 4 ge {
@@ -21584,9 +21584,9 @@ bind def
                     } if
                     /char msg i k add get def
                     /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {ceiling 1 add} ifelse} ifelse def
-                    /cc cc isC { 0.66666667 add} {isEA { 2.66666667 add } { 1.33333334 add } ifelse} ifelse def
-                    /tc tc isT { 0.66666667 add} {isEA { 2.66666667 add } { 1.33333334 add } ifelse} ifelse def
-                    /xc xc isX { 0.66666667 add} {isEA { 4.33333334 add } { 3.33333334 add } ifelse} ifelse def
+                    /cc cc isC { 0.6666667 add} {isEA { 2.6666667 add } { 1.3333334 add } ifelse} ifelse def
+                    /tc tc isT { 0.6666667 add} {isEA { 2.6666667 add } { 1.3333334 add } ifelse} ifelse def
+                    /xc xc isX { 0.6666667 add} {isEA { 4.3333334 add } { 3.3333334 add } ifelse} ifelse def
                     /bc bc isFN {3 add} {1 add} ifelse def
                     k 3 ge {  % Checking after at least 4 characters (cf. Data Matrix), not 3 as in spec Step Q
                         true [ac cc tc xc   ] {bc 1 add exch ceiling le and} forall {B exit} if
