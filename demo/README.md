@@ -13,22 +13,11 @@ found at the end of this document.
 > This will allow webpack and other bundlers to tree shake the large BWIPP cross-compiled
 > code into something more managable.
 >
-> The ES6 module is only available on the browser.   Support for nodejs is planned.
->
-> There is minor API breakage versus version 2.  The exported version strings have changed
-> since there is no longer a `BWIPP` object - its contents were hoisted to module scope to
-> enable dead code elimination.
->
->  |  Old Version String      |  3.0 Version String      |
->  | :------------------------| :------------------------|
->  |  `bwipjs.VERSION`        |  `bwipjs.BWIPJS_VERSION` |
->  |  `bwipjs.BWIPP.VERSION`  |  `bwipjs.BWIPP_VERSION`  |
->
-> See the section [ES6 Browser Module Usage](#es6-browser-module-usage) for details of the new capabilities.
+> See the section [Browser ES6 Module Usage](#browser-es6-module-usage) and [Node.js ES6 Module Usage](#nodejs-es6-module-usage) for details of the new capabilities.
 
 ## Status 
 
-* Current bwip-js version is 3.0.1 (2021-06-16)
+* Current bwip-js version is 3.0.2 (2021-07-16)
 * Current BWIPP version is 2021-02-06
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -163,6 +152,7 @@ by the number of modules the symbol requires.  The floor of that value is the
 module width (scale) of the rendered barcode.
 
 
+<a name="browser-usage"></a>
 ## Browser Usage
 
 To use within a browser, add the following to the head of your page:
@@ -219,7 +209,8 @@ try {
 }
 ```
 
-## ES6 Browser Module Usage
+<a name="browser-es6-module-usage"></a>
+## Browser ES6 Module Usage
 
 The ESM provides the same API as the standard browser module using:
 
@@ -245,6 +236,7 @@ try {
 }
 ```
 
+<a name="react-usage"></a>
 ## React Usage
 
 The following is a minimal example of bwip-js in a React app.
@@ -291,6 +283,7 @@ See the Browser Usage section for details on the `toCanvas()` method.
 
 See the ES6 Browser Module Usage section for details on importing encoders directly.
 
+<a name="nodejs-request-handler"></a>
 ## Node.js Request Handler
 
 The online barcode API is implemented as a Node.js application.
@@ -332,6 +325,7 @@ The bwip-js request handler only operates on the URL query parameters and
 ignores all path information.  Your application is free to structure the URL
 path as needed to implement the desired HTTP request routing.
 
+<a name="nodejs-image-generator"></a>
 ## Node.js Image Generator
 
 You can use bwip-js to generate PNG images directly.
@@ -378,6 +372,32 @@ bwipjs.toBuffer({
     });
 ```
 
+<a name="nodejs-es6-module-usage"></a>
+## Node.js ES6 Module Usage
+
+The ESM provides the same API as `require('bwip-js')` using:
+
+```javascript
+import bwipjs from 'bwip-js';
+
+// ... identical to the examples above ...
+```
+
+The ESM also facilitates bundler tree shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to `bwipjs.toBuffer()`.
+
+The exported names are the same as the `bcid` names, with the caveat that dashes `-` are replaced with underscores `_`.  For example, to import the `gs1-128` encoder, you would use:
+
+```javascript
+import { gs1_128 } from 'bwip-js';
+
+try {
+    let buf = await gs1_128(options);
+} catch (e) {
+    // `e` may be a string or Error object
+}
+```
+
+<a name="electron-example"></a>
 ## Electron Example
 
 There has been some changes to the Electron bundler, and it may pull in either the
@@ -421,6 +441,7 @@ This is an example `index.html` file for a basic, single window app:
 </html>
 ```
 
+<a name="command-line-interface"></a>
 ## Command Line Interface
 
 bwip-js can be used as a command line tool when installed globally:
