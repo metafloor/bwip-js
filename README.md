@@ -17,7 +17,7 @@ found at the end of this document.
 
 ## Status 
 
-* Current bwip-js version is 3.0.3 (2021-07-29)
+* Current bwip-js version is 3.0.4 (2021-08-05)
 * Current BWIPP version is 2021-02-06
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -595,6 +595,7 @@ for more details.
  * rectangularmicroqrcode &#x2022; Rectangular Micro QR Code
  * royalmail &#x2022; Royal Mail 4 State Customer Code
  * sscc18 &#x2022; SSCC-18
+ * swissqrcode &#x2022; Swiss QR Code
  * symbol &#x2022; Miscellaneous symbols
  * telepen &#x2022; Telepen
  * telepennumeric &#x2022; Telepen Numeric

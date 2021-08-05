@@ -41,6 +41,7 @@ BWIPJS.prototype.reset = function() {
 	this.g_path	= [];		// current path
 	this.g_font	= null;		// current font object
 	this.g_rgb  = [0,0,0];	// current color (black)
+    this.g_clip = false;    // clip region active
 };
 BWIPJS.prototype.save = function() {
 	// clone all g_ properties
@@ -73,7 +74,13 @@ BWIPJS.prototype.restore = function() {
 	if (!this.gstk.length) {
 		throw new Error('grestore: stack underflow');
 	}
-	var ctx = this.gstk.pop();
+	var ctx  = this.gstk.pop();
+    var self = this;
+    if (this.g_clip && !ctx.g_clip) {
+        this.cmds.push(function() {
+                self.drawing.unclip();
+            });
+    }
 	for (var id in ctx) {
 		this[id] = ctx[id];
 	}
@@ -151,6 +158,10 @@ BWIPJS.prototype.setcolor = function(s) {
 		var b = round((1-y) * (1-k) * 255);
 		this.g_rgb = [ r, g, b ];
 	}
+};
+// Used only by swissqrcode
+BWIPJS.prototype.setrgbcolor = function(r,g,b) {
+    this.g_rgb = [ r, g, b ];
 };
 // Returns the current rgb values as a 'RRGGBB'
 BWIPJS.prototype.getRGB = function() {
@@ -484,6 +495,27 @@ BWIPJS.prototype.fill = function() {
 			}
 		}
 		self.drawing.fill(rgb);
+	});
+};
+BWIPJS.prototype.clip = function() {
+	var path = this.g_path;
+	this.g_path = [];
+    this.g_clip = true;
+
+	var self = this;
+	this.cmds.push(function() {
+        var polys = [];
+		for (var i = 0; i < path.length; i++) {
+			var a = path[i];
+			if (a.op == 'p') {
+				var pts = a.poly
+				self.transform(pts);
+                polys.push(pts);
+			} else {
+                throw new Error('clip: only polygon regions supported');
+			}
+		}
+		self.drawing.clip(polys);
 	});
 };
 
