@@ -102,6 +102,7 @@ module.exports = {
 	"rectangularmicroqrcode": "Rectangular Micro QR Code",
 	"royalmail": "Royal Mail 4 State Customer Code",
 	"sscc18": "SSCC-18",
+	"swissqrcode": "Swiss QR Code",
 	"symbol": "Miscellaneous symbols",
 	"telepen": "Telepen",
 	"telepennumeric": "Telepen Numeric",
