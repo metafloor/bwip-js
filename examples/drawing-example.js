@@ -155,9 +155,11 @@ function DrawingExample(opts, canvas) {
         },
         // Draw text.
         // `y` is the baseline.
+        //
         // `font` is an object with properties { name, width, height, dx }
         //
         // `name` will be the same as the font name in `measure()`.
+        //
         // `width` and `height` are the font cell size.
         // `dx` is extra space requested between characters (usually zero).
         //

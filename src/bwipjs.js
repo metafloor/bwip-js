@@ -128,10 +128,10 @@ BWIPJS.prototype.getfont = function() {
 BWIPJS.prototype.jsstring = function(s) {
 	if (s instanceof Uint8Array) {
 		// Postscript (like C) treats nul-char as end of string.
-		for (var i = 0, l = s.length; i < l && s[i]; i++);
-		if (i < l) {
-			return String.fromCharCode.apply(null,s.subarray(0, i));
-		}
+		//for (var i = 0, l = s.length; i < l && s[i]; i++);
+		//if (i < l) {
+		//	return String.fromCharCode.apply(null,s.subarray(0, i));
+		//}
 		return String.fromCharCode.apply(null,s)
 	}
 	return ''+s;
@@ -263,7 +263,7 @@ BWIPJS.prototype.stringwidth = function(str) {
 	var size = +this.g_font.FontSize || 10;
 
 	// The string can be either a uint8-string or regular string
-	str = this.jsstring(str);
+	str = this.toUCS2(this.jsstring(str));
 
 	var bbox = this.drawing.measure(str, this.g_font.FontName, size*tsx, size*tsy);
 
@@ -612,7 +612,22 @@ BWIPJS.prototype.maxicode = function(pix) {
 
 	});
 };
-
+// UTF-8 to UCS-2 (no surrogates)
+BWIPJS.prototype.toUCS2 = function(str) {
+    return str.replace(/[\xc0-\xdf][\x80-\xbf]|[\xe0-\xff][\x80-\xbf]{2}/g,
+                      function(s) {
+                          var code;
+                          if (s.length == 2) {
+                              code = ((s.charCodeAt(0)&0x1f)<<6)|
+                                     (s.charCodeAt(1)&0x3f);
+                          } else {
+                              code = ((s.charCodeAt(0)&0x0f)<<12)|
+                                     ((s.charCodeAt(1)&0x3f)<<6)|
+                                     (s.charCodeAt(2)&0x3f);
+                          }
+                          return String.fromCharCode(code);
+                      });
+};
 // dx,dy are inter-character gaps
 BWIPJS.prototype.show = function(str, dx, dy) {
 	if (!str.length) {
@@ -630,8 +645,8 @@ BWIPJS.prototype.show = function(str, dx, dy) {
 	var posy = this.g_posy;
 	var rgb  = this.getRGB();
 
-	// The string can be either a uint8-string or regular string
-	str = this.jsstring(str);
+	// The string can be either a uint8-string or regular string.
+	str = this.toUCS2(this.jsstring(str));
 
 	// Convert dx,dy to device space
 	dx = tsx * dx || 0;

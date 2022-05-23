@@ -4,7 +4,7 @@
 // This code was automatically generated from:
 // Barcode Writer in Pure PostScript - Version 2021-02-06
 //
-// Copyright (c) 2011-2021 Mark Warren
+// Copyright (c) 2011-2022 Mark Warren
 // Copyright (c) 2004-2021 Terry Burton
 //
 // Licensed MIT. See the LICENSE file in the bwip-js root directory.
@@ -119,10 +119,10 @@ function $z(s) {
     if (s instanceof Uint8Array) {
         // Postscript treats nul-char as end of string, even if string is
         // longer.
-        for (var i = 0, l = s.length; i < l && s[i]; i++);
-        if (i < l) {
-            return String.fromCharCode.apply(null, s.subarray(0, i));
-        }
+        //for (var i = 0, l = s.length; i < l && s[i]; i++);
+        //if (i < l) {
+        //	return String.fromCharCode.apply(null,s.subarray(0, i));
+        //}
         return String.fromCharCode.apply(null, s)
     }
     return '' + s;
