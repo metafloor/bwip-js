@@ -7,18 +7,12 @@ bwip-js is a translation to native JavaScript of the amazing code provided in [B
 The software has encoding modules for over 100 different barcode types and standards.
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
-found at the end of this document.
-
-> Version 3.0 provides support for ES6 modules with the individual encoders as named exports.
-> This will allow webpack and other bundlers to tree shake the large BWIPP cross-compiled
-> code into something more managable.
->
-> See the section [Browser ES6 Module Usage](#browser-es6-module-usage) and [Node.js ES6 Module Usage](#nodejs-es6-module-usage) for details of the new capabilities.
+found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).
 
 ## Status 
 
-* Current bwip-js version is 3.0.5 (2022-05-22)
-* Current BWIPP version is 2021-02-06
+* Current bwip-js version is 3.1.0 (2022-06-20)
+* Current BWIPP version is 2022-06-10
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
 
@@ -383,7 +377,7 @@ import bwipjs from 'bwip-js';
 // ... identical to the examples above ...
 ```
 
-The ESM also facilitates bundler tree shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to `bwipjs.toBuffer()`.
+The ESM also facilitates bundler tree-shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to `bwipjs.toBuffer()`.
 
 The exported names are the same as the `bcid` names, with the caveat that dashes `-` are replaced with underscores `_`.  For example, to import the `gs1-128` encoder, you would use:
 
@@ -397,10 +391,12 @@ try {
 }
 ```
 
+When named encoders are imported, the `bcid` value in the options object is ignored.
+
 <a name="electron-example"></a>
 ## Electron Example
 
-There has been some changes to the Electron bundler, and it may pull in either the
+There have been some changes to the Electron bundler, and it may pull in either the
 nodejs or browser module, depending on your version of Electron.  The example below
 assumes the nodejs module.
 
@@ -449,11 +445,13 @@ bwip-js can be used as a command line tool when installed globally:
 ```
 $ npm install -g bwip-js
 $ bwip-js
-Usage: bwip-js symbol-name text [options...] png-file
-       bwip-js --bcid=symbol-name --text=text [options...] png-file
+Usage: bwip-js symbol-name text [options...] file-name
+       bwip-js --bcid=symbol-name --text=text [options...] file-name
 
 Example:
        bwip-js code128 012345678 includetext textcolor=ff0000 my-code128.png
+
+file-name must be type png.
 
 Try 'bwip-js --help' for more information.
 Try 'bwip-js --symbols' for a list of supported barcode symbols.
@@ -494,113 +492,3 @@ and adding scalable barcodes to a [pdfkit](https://pdfkit.org/) document.
 See the examples [README](https://github.com/metafloor/bwip-js/tree/master/examples) 
 for more details.
 
-
-## Supported Barcode Types
-
- * auspost &#x2022; AusPost 4 State Customer Code
- * azteccode &#x2022; Aztec Code
- * azteccodecompact &#x2022; Compact Aztec Code
- * aztecrune &#x2022; Aztec Runes
- * bc412 &#x2022; BC412
- * channelcode &#x2022; Channel Code
- * codablockf &#x2022; Codablock F
- * code11 &#x2022; Code 11
- * code128 &#x2022; Code 128
- * code16k &#x2022; Code 16K
- * code2of5 &#x2022; Code 25
- * code32 &#x2022; Italian Pharmacode
- * code39 &#x2022; Code 39
- * code39ext &#x2022; Code 39 Extended
- * code49 &#x2022; Code 49
- * code93 &#x2022; Code 93
- * code93ext &#x2022; Code 93 Extended
- * codeone &#x2022; Code One
- * coop2of5 &#x2022; COOP 2 of 5
- * daft &#x2022; Custom 4 state symbology
- * databarexpanded &#x2022; GS1 DataBar Expanded
- * databarexpandedcomposite &#x2022; GS1 DataBar Expanded Composite
- * databarexpandedstacked &#x2022; GS1 DataBar Expanded Stacked
- * databarexpandedstackedcomposite &#x2022; GS1 DataBar Expanded Stacked Composite
- * databarlimited &#x2022; GS1 DataBar Limited
- * databarlimitedcomposite &#x2022; GS1 DataBar Limited Composite
- * databaromni &#x2022; GS1 DataBar Omnidirectional
- * databaromnicomposite &#x2022; GS1 DataBar Omnidirectional Composite
- * databarstacked &#x2022; GS1 DataBar Stacked
- * databarstackedcomposite &#x2022; GS1 DataBar Stacked Composite
- * databarstackedomni &#x2022; GS1 DataBar Stacked Omnidirectional
- * databarstackedomnicomposite &#x2022; GS1 DataBar Stacked Omnidirectional Composite
- * databartruncated &#x2022; GS1 DataBar Truncated
- * databartruncatedcomposite &#x2022; GS1 DataBar Truncated Composite
- * datalogic2of5 &#x2022; Datalogic 2 of 5
- * datamatrix &#x2022; Data Matrix
- * datamatrixrectangular &#x2022; Data Matrix Rectangular
- * datamatrixrectangularextension &#x2022; Data Matrix Rectangular Extension
- * dotcode &#x2022; DotCode
- * ean13 &#x2022; EAN-13
- * ean13composite &#x2022; EAN-13 Composite
- * ean14 &#x2022; GS1-14
- * ean2 &#x2022; EAN-2 (2 digit addon)
- * ean5 &#x2022; EAN-5 (5 digit addon)
- * ean8 &#x2022; EAN-8
- * ean8composite &#x2022; EAN-8 Composite
- * flattermarken &#x2022; Flattermarken
- * gs1-128 &#x2022; GS1-128
- * gs1-128composite &#x2022; GS1-128 Composite
- * gs1-cc &#x2022; GS1 Composite 2D Component
- * gs1datamatrix &#x2022; GS1 Data Matrix
- * gs1datamatrixrectangular &#x2022; GS1 Data Matrix Rectangular
- * gs1dotcode &#x2022; GS1 DotCode
- * gs1northamericancoupon &#x2022; GS1 North American Coupon
- * gs1qrcode &#x2022; GS1 QR Code
- * hanxin &#x2022; Han Xin Code
- * hibcazteccode &#x2022; HIBC Aztec Code
- * hibccodablockf &#x2022; HIBC Codablock F
- * hibccode128 &#x2022; HIBC Code 128
- * hibccode39 &#x2022; HIBC Code 39
- * hibcdatamatrix &#x2022; HIBC Data Matrix
- * hibcdatamatrixrectangular &#x2022; HIBC Data Matrix Rectangular
- * hibcmicropdf417 &#x2022; HIBC MicroPDF417
- * hibcpdf417 &#x2022; HIBC PDF417
- * hibcqrcode &#x2022; HIBC QR Code
- * iata2of5 &#x2022; IATA 2 of 5
- * identcode &#x2022; Deutsche Post Identcode
- * industrial2of5 &#x2022; Industrial 2 of 5
- * interleaved2of5 &#x2022; Interleaved 2 of 5 (ITF)
- * isbn &#x2022; ISBN
- * ismn &#x2022; ISMN
- * issn &#x2022; ISSN
- * itf14 &#x2022; ITF-14
- * japanpost &#x2022; Japan Post 4 State Customer Code
- * kix &#x2022; Royal Dutch TPG Post KIX
- * leitcode &#x2022; Deutsche Post Leitcode
- * mailmark &#x2022; Royal Mail Mailmark
- * matrix2of5 &#x2022; Matrix 2 of 5
- * maxicode &#x2022; MaxiCode
- * micropdf417 &#x2022; MicroPDF417
- * microqrcode &#x2022; Micro QR Code
- * msi &#x2022; MSI Modified Plessey
- * onecode &#x2022; USPS Intelligent Mail
- * pdf417 &#x2022; PDF417
- * pdf417compact &#x2022; Compact PDF417
- * pharmacode &#x2022; Pharmaceutical Binary Code
- * pharmacode2 &#x2022; Two-track Pharmacode
- * planet &#x2022; USPS PLANET
- * plessey &#x2022; Plessey UK
- * posicode &#x2022; PosiCode
- * postnet &#x2022; USPS POSTNET
- * pzn &#x2022; Pharmazentralnummer (PZN)
- * qrcode &#x2022; QR Code
- * rationalizedCodabar &#x2022; Codabar
- * raw &#x2022; Custom 1D symbology
- * rectangularmicroqrcode &#x2022; Rectangular Micro QR Code
- * royalmail &#x2022; Royal Mail 4 State Customer Code
- * sscc18 &#x2022; SSCC-18
- * swissqrcode &#x2022; Swiss QR Code
- * symbol &#x2022; Miscellaneous symbols
- * telepen &#x2022; Telepen
- * telepennumeric &#x2022; Telepen Numeric
- * ultracode &#x2022; Ultracode
- * upca &#x2022; UPC-A
- * upcacomposite &#x2022; UPC-A Composite
- * upce &#x2022; UPC-E
- * upcecomposite &#x2022; UPC-E Composite
