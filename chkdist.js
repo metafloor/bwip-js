@@ -15,6 +15,7 @@ function HTMLCanvasElement() {
     }
 }
 
+global.window = {};
 global.HTMLCanvasElement = HTMLCanvasElement;
 global.atob = function(str) {
     return Buffer.from(str, 'base64').toString('binary');
@@ -43,13 +44,13 @@ ncjs.toBuffer({ bcid:'code128', text:'01234566789', includetext:true })
         console.log('nodejs-cjs ok');
     });
 
-/*
-let nesm = _import('./dist/bwip-js-node.mjs').default;
-nesm.toBuffer({ bcid:'code128', text:'01234566789', includetext:true })
+let nesm = _import('./dist/bwip-js-node.mjs');
+nesm.default.toBuffer({ bcid:'code128', text:'01234566789', includetext:true })
     .then((png) => {
-        console.log('nodejs-esm ok');
-        console.log(png);
+        console.log('nodejs-esm toBuffer ok');
     });
-*/
-
+nesm.gs1_128({ text:'(01)95012345678903', includetext:true })
+    .then((png) => {
+        console.log('nodejs-esm named export ok');
+    });
 

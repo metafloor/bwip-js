@@ -17,6 +17,7 @@ var mins = {
 	forall:'F',			// forall operator
 	get:'g',			// get operator
 	geti:'G',			// getinterval operator
+    cvi:'i',            // cvi operator
 	// j				// stack pointer
 	// k				// operand stack
 	cleartomark:'l',	// cleartomark operator

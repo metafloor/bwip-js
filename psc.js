@@ -1131,7 +1131,11 @@ function PSC(str, flags) {
 			st[sp-1] = { type:TYPE_INTVAL, expr:'~~' + parens(st[sp-1].expr),
 						 seq:++seq };
 		} else {
-			st[sp-1] = { type:TYPE_INTVAL, expr:'~~$z(' + st[sp-1].expr + ')',
+            // javascript's string-to-number functionality does not perfectly
+            // sync with postscript's.  Specifically, nul-chars on the end of
+            // a string are ignored by postscript, but cause js to return a zero
+            // result.
+			st[sp-1] = { type:TYPE_INTVAL, expr:'$cvi(' + st[sp-1].expr + ')',
 						 seq:++seq };
 		}
 	}

@@ -107,13 +107,7 @@ function $r(n, c) {
 // the toString() method on any value.
 function $z(s) {
 	if (s instanceof Uint8Array) {
-		// Postscript treats nul-char as end of string, even if string is
-		// longer.
-		for (var i = 0, l = s.length; i < l && s[i]; i++);
-		if (i < l) {
-			return String.fromCharCode.apply(null,s.subarray(0, i));
-		}
-		return String.fromCharCode.apply(null,s)
+		return String.fromCharCode.apply(null,s);
 	}
 	return ''+s;
 }
@@ -159,6 +153,16 @@ function $cvs(s,v) {
 	}
 	$k[$j++] = i < s.length ? s.subarray(0, i) : s;
 }
+// cvi operator - converts a numeric string value to integer.
+function $cvi(s) {
+	if (s instanceof Uint8Array) {
+        // nul-chars on the end of a string are ignored by postscript but cause javascript
+        // to return a zero result.
+		return String.fromCharCode.apply(null,s).replace(/\0+$/, '')|0;
+	}
+	return (''+s)|0;
+}
+
 // cvrs operator - convert a number to a radix string
 //	s : string to store into
 //	n : number
