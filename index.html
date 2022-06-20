@@ -33,17 +33,11 @@ bwip-js is a translation to native JavaScript of the amazing code provided in <a
 <p>The software has encoding modules for over 100 different barcode types and standards.
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
-found at the end of this document.</p>
-<blockquote>
-  <p>Version 3.0 provides support for ES6 modules with the individual encoders as named exports.
-  This will allow webpack and other bundlers to tree shake the large BWIPP cross-compiled
-  code into something more managable.</p>
-  <p>See the section <a href="#browser-es6-module-usage">Browser ES6 Module Usage</a> and <a href="#nodejs-es6-module-usage">Node.js ES6 Module Usage</a> for details of the new capabilities.</p>
-</blockquote>
+found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).</p>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 3.0.5 (2022-05-22)</li>
-<li>Current BWIPP version is 2021-02-06</li>
+<li>Current bwip-js version is 3.1.0 (2022-06-20)</li>
+<li>Current BWIPP version is 2022-06-10</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
 </ul>
@@ -336,7 +330,7 @@ bwipjs.toBuffer({
 
 // ... identical to the examples above ...
 </code></pre>
-<p>The ESM also facilitates bundler tree shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to <code>bwipjs.toBuffer()</code>.</p>
+<p>The ESM also facilitates bundler tree-shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to <code>bwipjs.toBuffer()</code>.</p>
 <p>The exported names are the same as the <code>bcid</code> names, with the caveat that dashes <code>-</code> are replaced with underscores <code>_</code>.  For example, to import the <code>gs1-128</code> encoder, you would use:</p>
 <pre><code class="javascript language-javascript">import { gs1_128 } from 'bwip-js';
 
@@ -346,9 +340,10 @@ try {
     // `e` may be a string or Error object
 }
 </code></pre>
+<p>When named encoders are imported, the <code>bcid</code> value in the options object is ignored.</p>
 <p><a name="electron-example"></a></p>
 <h2 id="electronexample">Electron Example</h2>
-<p>There has been some changes to the Electron bundler, and it may pull in either the
+<p>There have been some changes to the Electron bundler, and it may pull in either the
 nodejs or browser module, depending on your version of Electron.  The example below
 assumes the nodejs module.</p>
 <p>If you try this example and get the error <code>bwipjs.toBuffer is not a function</code>, the
@@ -389,11 +384,13 @@ section above and draw to a canvas instead.</p>
 <p>bwip-js can be used as a command line tool when installed globally:</p>
 <pre><code>$ npm install -g bwip-js
 $ bwip-js
-Usage: bwip-js symbol-name text [options...] png-file
-       bwip-js --bcid=symbol-name --text=text [options...] png-file
+Usage: bwip-js symbol-name text [options...] file-name
+       bwip-js --bcid=symbol-name --text=text [options...] file-name
 
 Example:
        bwip-js code128 012345678 includetext textcolor=ff0000 my-code128.png
+
+file-name must be type png.
 
 Try 'bwip-js --help' for more information.
 Try 'bwip-js --symbols' for a list of supported barcode symbols.
