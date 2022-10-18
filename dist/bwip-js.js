@@ -38985,10 +38985,49 @@ return {
 }
 
 })();
+
+var decode = function(input) {
+    var REGEX_SPACE_CHARACTERS = /[\t\n\f\r ]/g;
+	var TABLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    input = String(input)
+        .replace(REGEX_SPACE_CHARACTERS, '');
+    var length = input.length;
+    if (length % 4 == 0) {
+        input = input.replace(/==?$/, '');
+        length = input.length;
+    }
+    if (
+        length % 4 == 1 ||
+        // http://whatwg.org/C#alphanumeric-ascii-characters
+        /[^+a-zA-Z0-9/]/.test(input)
+    ) {
+        error(
+            'Invalid character: the string to be decoded is not correctly encoded.'
+        );
+    }
+    var bitCounter = 0;
+    var bitStorage;
+    var buffer;
+    var output = '';
+    var position = -1;
+    while (++position < length) {
+        buffer = TABLE.indexOf(input.charAt(position));
+        bitStorage = bitCounter % 4 ? bitStorage * 64 + buffer : buffer;
+        // Unless this is the first of a group of 4 characters…
+        if (bitCounter++ % 4) {
+            // …convert the first 8 bits to a single ASCII character.
+            output += String.fromCharCode(
+                0xFF & bitStorage >> (-2 * bitCounter & 6)
+            );
+        }
+    }
+    return output;
+};
+
 function toUint8Array(data) {
     if (typeof data == "string") {
         var binary = /[^A-Za-z0-9+\/=\s]/.test(data);
-        var bstr = binary ? data : atob(data),
+        var bstr = binary ? data : decode(data),
             len = bstr.length,
             bytes = new Uint8Array(len);
         for (var i = 0; i < len; i++) {
