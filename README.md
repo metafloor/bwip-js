@@ -20,6 +20,7 @@ found at the end of this document.  Barcode images are generated as png (node-js
 
 * [Browser](#browser-usage)
 * [React App](#react-usage)
+* [React Native](#react-native-usage)
 * [Node.js](#nodejs-request-handler)
 * [Electron](#electron-example)
 * [Command Line](#command-line-interface)
@@ -277,6 +278,27 @@ See the Browser Usage section for details on the `toCanvas()` method.
 
 See the ES6 Browser Module Usage section for details on importing encoders directly.
 
+<a name="react-native-usage"></a>
+## React Native usage
+```javascript
+import React from "react"
+import { SvgXml } from "react-native-svg";
+import bwipjs from 'bwip-js'
+import DrawingSVG from 'bwip-js/examples/drawing-svg.js'
+
+export const BarCode = (options) => {
+    let xml = null;
+    try {
+        bwipjs.fixupOptions(options);
+        xml = bwipjs.render(options, DrawingSVG(options, bwipjs.FontLib));
+    } catch (e) {
+
+    }
+    return (
+        <SvgXml xml={xml} />
+    )
+}
+```
 <a name="nodejs-request-handler"></a>
 ## Node.js Request Handler
 
