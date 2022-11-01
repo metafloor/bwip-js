@@ -16,6 +16,7 @@
           "require": "./dist/bwip-js-node.js"
       }
   },
+  "react-native": "./dist/bwip-js-node.js",
   "bin": {
     "bwip-js": "./bin/bwip-js.js"
   },
@@ -53,5 +54,8 @@
   "bugs": {
     "url": "https://github.com/metafloor/bwip-js/issues"
   },
-  "homepage": "https://github.com/metafloor/bwip-js"
+  "homepage": "https://github.com/metafloor/bwip-js",
+  "dependencies": {
+    "react-zlib-js": "^1.0.5"
+  }
 }

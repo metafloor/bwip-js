@@ -36909,8 +36909,7 @@ var PNG_CRC = (function() {
 	return precalc;
 })();
 
-var PNG_ZLIB = require('zlib');
-var __unused = require('stream');  // fix for https://github.com/nodejs/node/issues/37021
+var PNG_ZLIB = require('react-zlib-js');
 
 // opts is the same options object passed into the bwipjs methods.
 function DrawingZlibPng(opts, callback) {
@@ -39155,7 +39154,8 @@ return {
 function toUint8Array(data) {
     if (typeof data == "string") {
         var binary = /[^A-Za-z0-9+\/=\s]/.test(data);
-        return Buffer.from ? Buffer.from(data, binary ? 'binary' : 'base64')
+        let b = require('buffer').Buffer
+        return b.from ? b.from(data, binary ? 'binary' : 'base64')
                            : new Buffer(data, binary ? 'binary' : 'base64');
     } else if (data instanceof Uint8Array) {
         return data;
