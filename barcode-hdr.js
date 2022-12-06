@@ -171,6 +171,26 @@ function $cvrs(s,n,r) {
 	return $strcpy(s,(~~n).toString(r).toUpperCase());
 }
 
+// cvx - convert to executable.
+// This is only used by BWIPP to convert <XX> string literals.
+function $cvx(s) {
+    s = $z(s)
+    var m = /^\s*<((?:[0-9a-fA-F]{2})+)>\s*$/.exec(s);
+    if (!m) {
+        throw 'cvx: not a <HH> hex string literal';
+    }
+    var h = m[1];
+    var l = h.length >> 1;
+    var u = new Uint8Array(l);
+    for (var i = 0, j = 0; i < l; i++) {
+        var c0 = h.charCodeAt(j++);
+        var c1 = h.charCodeAt(j++);
+        u[i] = ((c0 < 58 ? c0 - 48 : (c0 & 15) + 9) << 4) +
+                (c1 < 58 ? c1 - 48 : (c1 & 15) + 9);
+    }
+    return u;
+}
+
 // get operator
 //	s : source
 //	k : key
@@ -263,7 +283,7 @@ function $puti(d,o,s) {
 // type operator
 function $type(v) {
 	// null can be mis-typed - get it out of the way
-	if (v === null || v === undefined) {
+	if (v == null) {
 		return 'nulltype';
 	}
 	var t = typeof v;
@@ -291,6 +311,36 @@ function $type(v) {
 	// savetype
 }
 
+// anchorsearch operator
+//		string seek anchorsearch suffix seek true %if-found
+//						         string false	  %if-not-found
+function $anchorsearch(str, seek) {
+	if (!(str instanceof Uint8Array)) {
+		str = $s(str);
+	}
+	var i = 0, ls = str.length, lk = seek.length;
+
+	// Optimize for single characters.
+	if (lk == 1) {
+		var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
+        i = str[0] == cd ? 1 : ls;
+	} else if (seek.length <= ls) {
+		// Slow path, 
+		if (!(seek instanceof Uint8Array)) {
+			seek = $s(seek);
+		}
+        for ( ; i < lk && str[i] == seek[i]; i++) ;
+	}
+	if (i == lk) {
+		$k[$j++] = str.subarray(lk);
+		$k[$j++] = str.subarray(0, lk);
+		$k[$j++] = true;
+	} else {
+		$k[$j++] = str;
+		$k[$j++] = false;
+	}
+}
+
 // search operator
 //		string seek search suffix match prefix true %if-found
 //						   string false				%if-not-found
@@ -309,7 +359,7 @@ function $search(str, seek) {
 	} else {
 		// Slow path, 
 		if (!(seek instanceof Uint8Array)) {
-			seek = $(seek);
+			seek = $s(seek);
 		}
 		var lk = seek.length;
 		var cd = seek[0];
@@ -475,6 +525,64 @@ var $f = (function (fa) {
 	};
 })(new Float32Array(1));
 
+// This is a replacement for the BWIPP processoptions function.
+// We cannot use the BWIPP version due to two reasons:
+// - legacy code allows strings to be numbers and numbers to be strings
+// - in javascript, there is no way to tell the difference between a real
+//   number that is an integer, and an actual integer.
+//
+// options currentdict processoptions exec -> options
+function bwipp_processoptions() {
+    var dict = $k[--$j];
+    var opts = $k[$j-1];
+    var map = opts instanceof Map;
+    for (var id in dict) {
+        var val;
+        if (map) {
+            if (!opts.has(id)) {
+                continue;
+            }
+            val = opts.get(id);
+        } else {
+            if (!opts.hasOwnProperty(id)) {
+                continue;
+            }
+            val = opts[id];
+        }
+        var def = dict[id];
+        var typ = typeof def;
+
+        // null is a placeholder for realtype
+        if (def == null || typ == 'number') {
+            // This allows for numeric strings
+            if (!isFinite(+val)) {
+                throw new ReferenceError('/bwipp.invalidOptionType: ' + id + 
+                        ': not a realtype: ' + val);
+            }
+            if (typeof val == 'string') {
+                val = +val;
+                map ? opts.set(id, val) : (opts[id] = val);
+            }
+        } else if (typ == 'boolean') {
+            if (val !== true && val !== false) {
+                throw new ReferenceError('/bwipp.invalidOptionType: ' + id + 
+                        ': not a booleantype: ' + val);
+            }
+        } else if (typ == 'string' || def instanceof Uint8Array) {
+            // This allows numbers to be strings
+            if (typeof val == 'number') {
+                val = ''+val;
+                map ? opts.set(id, val) : (opts[id] = val);
+            } else if (typeof val != 'string' && !(val instanceof Uint8Array)) {
+                throw new ReferenceError('/bwipp.invalidOptionType: ' + id + 
+                        ': not a stringtype: ' + val);
+            }
+        }
+        // Set the option into the dictionary
+        dict[id] = val;
+    }
+}
+
 // DEBUG-BEGIN
 function $stack() {
 	console.log('[[[');
@@ -497,10 +605,16 @@ function $stack() {
 			return s + ']';
 		} else if (v instanceof Uint8Array) {
 			return '(' + $z[v] + ')';
+		} else if (v instanceof Map) {
+			var s = '<<';
+            for (var elt of v) {
+				s += (s.length == 2 ? '' : ',') + elt[0] + ':' + tostring(elt[1]);
+			}
+			return s + '>>';
 		} else if (typeof v === 'object') {
 			var s = '<<';
 			for (var id in v) {
-				s += (s.length == 7 ? '' : ',') + id + ':' + tostring(v[id]);
+				s += (s.length == 2 ? '' : ',') + id + ':' + tostring(v[id]);
 			}
 			return s + '>>';
 		} else if (typeof v === 'string') {

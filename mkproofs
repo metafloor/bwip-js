@@ -2,7 +2,7 @@
 ##
 ## file : bwipjs/mkproofs
 ##
-## Top-level image comparision test driver
+## Builds the postscript proof images using ghostscript.
 ##
 ## Usage:  ./mkproofs [pattern]
 ##

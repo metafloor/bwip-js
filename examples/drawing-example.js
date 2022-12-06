@@ -13,7 +13,7 @@
 // See example.html.
 function DrawingExample(opts, canvas) {
 
-    let ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d', { willReadFrequently:true });
 
     // PostScript transparently creates compound path regions.
     // We must do it explicitly with canvas.

@@ -70,11 +70,9 @@
 ##		 2 3 div -> 0.6666667
 
 ##
-## Build up the exports.
+## Create the lookup function
 ##
 (
-##grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u |\
-##    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/function bwipp_\1(bwipjs,text,options,dontdraw) { return bwipp_encode(bwipjs,$0_\1,text,options,dontdraw); }/' -e 's/-/_/g'
 echo 'function bwipp_lookup(symbol) {'
 echo '  if (!symbol) { throw new Error("bwipp.undefinedEncoder: bcid is not defined"); }'
 echo '  switch (symbol.replace(/-/g, "_")) {'
@@ -83,7 +81,7 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u |\
 echo '  }'
 echo '  throw new Error("bwipp.unknownEncoder: unknown encoder name: " + symbol);'
 echo '}'
-) > barcode-exports.js
+) > barcode-lookup.js
 
 
 cp barcode.ps barcode.tmp
@@ -106,7 +104,7 @@ cat barcode.tmp custom/*.ps | sed \
 	-e 's,^\s*backgroundcolor (unset) ne.* if,%psc &,' \
 	-e 's,^\[.*\] {null def} forall,%psc &,'\
 	-e 's,/inkspread 0\.[0-9]* def,/inkspread 0 def,'\
-	-e '/^\s*\/setanycolor {/,/^\s*} bind def/s/^/%psc /' \
+	-e '/^\s*\/setanycolor {/,/^\s*}\s*def/s/^/%psc /' \
 	-e '/^currentglobal/,/^setglobal/s/^/%psc /' \
 	-e '/^\/setpacking where {pop currentpacking/,/^begin/s/^/%psc /'\
 	-e '/^\/[^ \t][^ \t]* dup load \/uk.co.terryburton/,/^\/setpacking where {pop setpacking} if/s/^/%psc /'\
@@ -114,12 +112,26 @@ cat barcode.tmp custom/*.ps | sed \
 	-e '/^\s*currentfont \/PaintType .* ifelse/,/^\s*} if/s/^/%psc &/'\
 	-e '/^\s*{.*} stopped {/,/^\s*} ifelse\s*$/s/^/%psc &/'\
 	-e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
+    -e 's,/\S\S* //loadctx exec,%psc &,'\
+    -e 's,//unloadctx exec,%psc &,'\
+    -e 's,//processoptions,currentdict //processoptions,'\
 	-e 's/{\s*13 3 div /{ 4.3333334 /g'\
 	-e 's/{\s*10 3 div /{ 3.3333334 /g'\
 	-e 's/{\s*8 3 div /{ 2.6666667 /g'\
 	-e 's/{\s*4 3 div /{ 1.3333334 /g'\
 	-e 's/{\s*2 3 div /{ 0.6666667 /g'\
 	> barcode.psc
+
+##
+## Update pscdbg.html
+##
+(
+sed -e '/^<xmp/q' pscdbg.html
+##nl -s '| ' -b a barcode.psc
+cat barcode.psc
+tac pscdbg.html | sed -e '/^<\/xmp>/q' | tac
+) > pscdbg.tmp
+mv pscdbg.tmp pscdbg.html
 
 ##
 ## Cross-compile barcode.psc into barcode.js.
@@ -188,7 +200,7 @@ $FILEV
 $COPYR
 //
 // Licensed MIT. See the LICENSE file in the bwip-js root directory.
-$(cat barcode-hdr.js barcode.js barcode-ftr.js barcode-exports.js)
+$(cat barcode-hdr.js barcode.js barcode-ftr.js barcode-lookup.js)
 var BWIPP_VERSION = '$BWIPP_VERSION';
 
 @EOF

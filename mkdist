@@ -53,13 +53,32 @@ $COPYR
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+"use strict";
+
 @EOF
 
-## Separate browser and node modules
 cp dist/bwip-js.js dist/bwip-js-min.js
-cp dist/bwip-js.js dist/bwip-js.mjs
 cp dist/bwip-js.js dist/bwip-js-node.js
+cp dist/bwip-js.js dist/bwipp.mjs
+cp dist/bwip-js.js dist/bwip-js.mjs
 cp dist/bwip-js.js dist/bwip-js-node.mjs
+cp dist/bwip-js.js dist/bwip-js-rn.mjs
+
+## This returns the list of bwipp exports
+bwipp_exports() {
+    grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+        sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/bwipp_\1/' -e 's/-/_/g' | tr -s '[:space:]' ','
+        echo "bwipp_lookup,bwipp_encode,BWIPP_VERSION"
+}
+
+## Finish the bwipp.mjs module
+cat src/bwipp.js >> dist/bwipp.mjs
+echo "export { $(bwipp_exports) };" >> dist/bwipp.mjs
+
+## Bring in the bwipp.mjs imports for the ESMs
+echo "import { $(bwipp_exports) } from './bwipp.mjs';" >> dist/bwip-js.mjs
+echo "import { $(bwipp_exports) } from './bwipp.mjs';" >> dist/bwip-js-node.mjs
+echo "import { $(bwipp_exports) } from './bwipp.mjs';" >> dist/bwip-js-rn.mjs
 
 ## Add a UMD around the minified and non-minified legacy browser versions
 for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
@@ -76,23 +95,42 @@ cat - <<@EOF >> $file
 @EOF
 done
 
+## Add in the exports for each module
 
-## Inverted logic on the excludes (minified browser code is inlined below)
-sed -e '/@@BEGIN-BROWSER-ONLY@@/,/@@ENDOF-BROWSER-ONLY@@/d' < src/exports.js >> dist/bwip-js-node.js
-sed -e '/@@BEGIN-BROWSER-ONLY@@/,/@@ENDOF-BROWSER-ONLY@@/d' < src/exports.js >> dist/bwip-js-node.mjs
-sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js >> dist/bwip-js.js
-sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js >> dist/bwip-js.mjs
+exports() {
+    awk "\
+BEGIN { EMIT=1; } \
+/@@BEGIN-/ { EMIT=0; } \
+/@@BEGIN-$1-EXPORTS/ { EMIT=1; } \
+/@@ENDOF-EXPORTS/ { EMIT=1; } \
+/@@BEGIN-/ { next } \
+/@@ENDOF-/ { next } \
+(EMIT == 1) { print }" < src/exports.js
+}
 
-## nodejs plain-source - no drawing-canvas.js
+
+exports NODE-JS >> dist/bwip-js-node.js
+exports NODE-JS >> dist/bwip-js-node.mjs
+exports BROWSER >> dist/bwip-js.js
+exports BROWSER >> dist/bwip-js.mjs
+exports REACT-NV >> dist/bwip-js-rn.mjs
+
+## nodejs and react-native plain-source - no drawing-canvas.js
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.js 
-cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.mjs 
+
+## no bwipp in the ESMs
+cat src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.mjs 
+cat src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-rn.mjs 
 
 # change the require()s to imports for the node esm (\x27 == apos)
 sed -i -E -e 's/var (\w+)\s*=\s*require\((\x27\w+\x27)\)/import \1 from \2/' dist/bwip-js-node.mjs
+sed -i -E -e 's/require\((\x27\w+\x27)\)/import \1/' dist/bwip-js-node.mjs
 
 ## browser plain-source - no drawing-zlibpng.js
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
-cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.mjs 
+
+## no bwipp in the ESM
+cat src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.mjs 
 
 ##
 ## Shorten the postscript operator names rather than use random variable
@@ -103,10 +141,10 @@ uglifyjs bwipp-min.js >> dist/bwip-js-min.js
 rm -f bwipp-min.js
 
 ## browser minified - minified exports and no drawing-zlibpng.js
-sed -e '/@@BEGIN-NODE-JS-ONLY@@/,/@@ENDOF-NODE-JS-ONLY@@/d' < src/exports.js | cat - src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js 
+exports BROWSER | cat - src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js 
 
-## nodejs postamble
-for file in dist/bwip-js-node.js dist/bwip-js-node.mjs ; do
+## nodejs and react-native postamble
+for file in dist/bwip-js-node.js dist/bwip-js-node.mjs dist/bwip-js-rn.mjs ; do
 cat - <<@EOF >> $file
 function toUint8Array(data) {
     if (typeof data == "string") {
@@ -200,6 +238,24 @@ export default {
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingCanvas,
+};
+@EOF
+
+# exports for the react-native ESM version
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts) { return _ToDataURL(bwipp_\1,opts); };/' \
+        -e 's/-/_/g' >> dist/bwip-js-rn.mjs
+
+cat - <<@EOF >> dist/bwip-js-rn.mjs
+export default {
+    // The public interface
+    toDataURL:ToDataURL, render:Render, raw:ToRaw,
+    fixupOptions : FixupOptions,
+    loadFont : FontLib.loadFont,
+    BWIPJS_VERSION : '__BWIPJS_VERS__',
+    BWIPP_VERSION : BWIPP_VERSION,
+    // Internals
+    BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,
 };
 @EOF
 

@@ -902,6 +902,8 @@ function PSC(str, flags) {
 			} else {
 				// If you get here, most likely Terry used a new postscript
 				// operator that we haven't seen before.
+                // The other possibility is a global variable (e.g. dontlint) that
+                // you need to define during dict setup.  Search:  BWIPP unknowns
 				console.log('UNKNOWN IDENT: (' + tkn + ') #' + lnbr);
 				dump(tkn);
 				throw 'UNKNOWN IDENT: (' + tkn + ') #' + lnbr;
@@ -950,6 +952,11 @@ function PSC(str, flags) {
 		dlvl--;
 	}
 
+    // Push the current dictionary
+    $.currentdict = function() {
+		st[sp++] = { type:TYPE_DICT, expr:'$' + dlvl, seq:++seq };
+    };
+
 	// Create an dictionary on the stack.  Used both for the dictionary
 	// stack (a no-op) and for runtime created objects.
 	$.dict = function() {
@@ -990,8 +997,9 @@ function PSC(str, flags) {
 	// literals in the form <rrggbb> and <ccmmyykk>.  Implemented in $eval().
 	$.exec = function() {
 		need(1);
-		var type = st[sp-1].type;
-		var expr = st[--sp].expr;
+        var exec = st[--sp];
+		var type = exec.type;
+		var expr = exec.expr;
 		if (type == TYPE_IENAME) {
 			ctxflush();
 			emit(expr + '();');
@@ -1011,6 +1019,17 @@ function PSC(str, flags) {
             }
 		}
 	}
+
+    // BWIPP-specific operator
+    $.ctxdef = function() {
+		need(1);
+        var exec = st[--sp];
+        if (exec.type != TYPE_TOKENS) {
+            throw 'ctxdef: expected exec block';
+        }
+        ctxprep(exec);
+        append(ctxexec(exec));
+    }
 
 	$.exch = function() {
 		need(2);
@@ -1162,11 +1181,19 @@ function PSC(str, flags) {
 		need(2);
 		var str = st[--sp].expr;
 		var any = st[--sp].expr;
-		emit('$cvs(' + str + ',' + any + ');');		// EMBED
+		st[sp++] = { type:TYPE_STRVAL, expr:'$cvs('+str+','+any+')', seq:++seq }; // EMBED
 	}
 
-	// Convert to executable (no-op)
+	// Convert to executable
+    // Currently, BWIPP only uses this to convert runtime created <HH>
+    // hex strings to integer.
 	$.cvx = function() {
+        need(1);
+        if (st[sp-1].type != TYPE_STRVAL) {
+            throw 'cvx: expected string';
+        }
+		var str = st[sp-1].expr;
+		st[sp-1] = { type:TYPE_INTVAL, expr:'$cvx(' + str + ')', seq:++seq }; // EMBED
 	}
 
 	// Convert to real
@@ -1243,11 +1270,13 @@ function PSC(str, flags) {
 			loopstate	 = [];
 
 			// BWIPP unknowns
-			dict.$error = TYPE_DICT;
-			dict.opt	= TYPE_DICT;
-			dict.pixx	= TYPE_INTVAL;
-			dict.pixy	= TYPE_INTVAL;
-			dict.pixs	= TYPE_ARRAY;
+			dict.$error     = TYPE_DICT;
+			dict.opt	    = TYPE_DICT;
+			dict.pixx	    = TYPE_INTVAL;
+			dict.pixy	    = TYPE_INTVAL;
+			dict.pixs	    = TYPE_ARRAY;
+            dict.dontlint   = TYPE_BOOLEAN;
+            dict.lintreqs   = TYPE_BOOLEAN;
 
 			// bwipjs special symbols
 			dict.bwipjs_dontdraw = TYPE_BOOLEAN;
@@ -1368,8 +1397,10 @@ function PSC(str, flags) {
 	}
 	$.undef = function() {
 		need(2);
-        emit('delete ' + st[sp-2].expr + '[' + st[sp-1].expr + '];');
-		sp-=2;
+        var name = st[--sp];
+        var dict = st[--sp];
+        ctxflush();
+        emit('delete ' + dict.expr + '[' + name.expr + '];');
 	}
 
 	// load looks up key the same way the interpreter looks up executable
@@ -1818,6 +1849,12 @@ function PSC(str, flags) {
 		}
 	}
 
+    $.stopped = function() {
+        emit('try{');
+        ctxflush();
+        emit('$k[$j++]=false}catch(e){$k[$j++]=true}');
+    }
+
 	$.mark = function() {
 		ctxflush();
 		emit('$k[$j++]=Infinity;');
@@ -2026,6 +2063,18 @@ function PSC(str, flags) {
 		var dst = st[--sp].expr;
 		emit('$puti(' + dst + ',' + off + ',' + src + ');');	// EMBED
 	}
+
+	// string seek anchorsearch post seek true % if found
+    //                          string false   % if not found
+	$.anchorsearch = function() {
+		need(2);
+		var sub = st[--sp].expr;
+		var src = st[--sp].expr;
+
+		// The stack state is unknown after anchorsearch returns.
+		ctxflush();
+		emit(`$anchorsearch(${src},${sub});`);		// EMBED
+	};
 
 	// haystack needle search post match pre true
 	//                        haystack false

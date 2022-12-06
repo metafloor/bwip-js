@@ -27,9 +27,11 @@ var mins = {
 	aload:'q',			// aload operator
 	astore:'r',			// astore operator
 	cvrs:'R',			// cvrs operator
+    anchorsearch:'S',   // anchorsearch operator
 	s:'s',				// string constructor
 	type:'t',			// type operator
-	search:'x',			// search operator
+    cvx:'x',            // cvx operator
+	search:'X',			// search operator
 	//z					// toString operator (internal use only)
 	strcpy:'Z',			// cvrs and copy operators helper (internal use only)
 };

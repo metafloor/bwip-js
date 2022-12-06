@@ -1,7 +1,7 @@
 // file: bwip-js/bin/symdesc.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2021-02-06
+// Barcode Writer in Pure PostScript - Version 2022-10-19
 //
 module.exports = {
 	"auspost": "AusPost 4 State Customer Code",
@@ -56,6 +56,8 @@ module.exports = {
 	"gs1-cc": "GS1 Composite 2D Component",
 	"gs1datamatrix": "GS1 Data Matrix",
 	"gs1datamatrixrectangular": "GS1 Data Matrix Rectangular",
+	"gs1dldatamatrix": "GS1 Digital Link Data Matrix",
+	"gs1dlqrcode": "GS1 Digital Link QR Code",
 	"gs1dotcode": "GS1 DotCode",
 	"gs1northamericancoupon": "GS1 North American Coupon",
 	"gs1qrcode": "GS1 QR Code",
@@ -81,6 +83,7 @@ module.exports = {
 	"kix": "Royal Dutch TPG Post KIX",
 	"leitcode": "Deutsche Post Leitcode",
 	"mailmark": "Royal Mail Mailmark",
+	"mands": "Marks & Spencer",
 	"matrix2of5": "Matrix 2 of 5",
 	"maxicode": "MaxiCode",
 	"micropdf417": "MicroPDF417",

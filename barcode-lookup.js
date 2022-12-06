@@ -53,6 +53,8 @@ function bwipp_lookup(symbol) {
     case "gs1_cc":return bwipp_gs1_cc;
     case "gs1datamatrix":return bwipp_gs1datamatrix;
     case "gs1datamatrixrectangular":return bwipp_gs1datamatrixrectangular;
+    case "gs1dldatamatrix":return bwipp_gs1dldatamatrix;
+    case "gs1dlqrcode":return bwipp_gs1dlqrcode;
     case "gs1dotcode":return bwipp_gs1dotcode;
     case "gs1northamericancoupon":return bwipp_gs1northamericancoupon;
     case "gs1qrcode":return bwipp_gs1qrcode;
@@ -79,6 +81,7 @@ function bwipp_lookup(symbol) {
     case "kix":return bwipp_kix;
     case "leitcode":return bwipp_leitcode;
     case "mailmark":return bwipp_mailmark;
+    case "mands":return bwipp_mands;
     case "matrix2of5":return bwipp_matrix2of5;
     case "maxicode":return bwipp_maxicode;
     case "micropdf417":return bwipp_micropdf417;
