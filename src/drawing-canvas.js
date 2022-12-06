@@ -8,7 +8,7 @@ function DrawingCanvas(opts, canvas) {
 	}
 
 	var img;
-	var ctx = canvas.getContext('2d');
+	var ctx = canvas.getContext('2d', { willReadFrequently:true });
 	var drawing = DrawingBuiltin(opts);
 
 	// Provide our specializations for the builtin drawing

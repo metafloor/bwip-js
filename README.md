@@ -9,10 +9,17 @@ All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).
 
+> Version 3 is on its last planned release.  Version 4 will be ESM-only,
+> scheduled for January 2023.  Internet Explorer will no longer be supported.
+> Node.js will require at least version 12.  SVG output on all platforms will be officially
+> supported.
+>
+> Please prepare your code for the migration.
+
 ## Status 
 
-* Current bwip-js version is 3.1.0 (2022-06-20)
-* Current BWIPP version is 2022-06-10
+* Current bwip-js version is 3.2.0 (2022-12-06)
+* Current BWIPP version is 2022-10-19
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
 
@@ -21,6 +28,7 @@ found at the end of this document.  Barcode images are generated as png (node-js
 * [Browser](#browser-usage)
 * [React App](#react-usage)
 * [Node.js](#nodejs-request-handler)
+* [React Native](#react-native)
 * [Electron](#electron-example)
 * [Command Line](#command-line-interface)
 
@@ -393,6 +401,49 @@ try {
 
 When named encoders are imported, the `bcid` value in the options object is ignored.
 
+<a name="react-native"></a>
+## React Native Usage
+
+> Note: The react-native module requires an external dependency to polyfill
+> missing nodejs built-ins `zlib` and `Buffer`.
+>
+> You _must_ manually add it to your project.  The dependency will not
+> be included in bwip-js as it is only needed for react-native.  To install:
+
+```
+npm install react-zlib-js --save
+```
+
+The react-native module provides a specialized version of the `toBuffer()` method, 
+called `toDataURL()`.  The return value is an object with the following properties:
+
+- `height` : The height of the image, in pixels.
+- `width` : The width of the image, in pixels.
+- `uri` : A string containing the data URL for the image.
+	
+The returned object is designed to be used with the `<Image>` component:
+
+```javascript
+import React from 'react';
+import 'react-zlib-js'; // side effects only
+import bwipjs from 'bwip-js';
+
+const BarCode = (options) => {
+    let img = null;
+    try {
+        img = await bwipjs.toDataURL(options);
+    } catch (e) {
+		// `e` may be a string or Error object
+    }
+    return (
+        <Image
+		   style={{ height:img.height, width:img.width }}
+		   source={{ uri:img.uri }}
+		/>
+    );
+};
+```
+
 <a name="electron-example"></a>
 ## Electron Example
 
@@ -492,3 +543,116 @@ and adding scalable barcodes to a [pdfkit](https://pdfkit.org/) document.
 See the examples [README](https://github.com/metafloor/bwip-js/tree/master/examples) 
 for more details.
 
+
+## Supported Barcode Types
+
+ * auspost &#x2022; AusPost 4 State Customer Code
+ * azteccode &#x2022; Aztec Code
+ * azteccodecompact &#x2022; Compact Aztec Code
+ * aztecrune &#x2022; Aztec Runes
+ * bc412 &#x2022; BC412
+ * channelcode &#x2022; Channel Code
+ * codablockf &#x2022; Codablock F
+ * code11 &#x2022; Code 11
+ * code128 &#x2022; Code 128
+ * code16k &#x2022; Code 16K
+ * code2of5 &#x2022; Code 25
+ * code32 &#x2022; Italian Pharmacode
+ * code39 &#x2022; Code 39
+ * code39ext &#x2022; Code 39 Extended
+ * code49 &#x2022; Code 49
+ * code93 &#x2022; Code 93
+ * code93ext &#x2022; Code 93 Extended
+ * codeone &#x2022; Code One
+ * coop2of5 &#x2022; COOP 2 of 5
+ * daft &#x2022; Custom 4 state symbology
+ * databarexpanded &#x2022; GS1 DataBar Expanded
+ * databarexpandedcomposite &#x2022; GS1 DataBar Expanded Composite
+ * databarexpandedstacked &#x2022; GS1 DataBar Expanded Stacked
+ * databarexpandedstackedcomposite &#x2022; GS1 DataBar Expanded Stacked Composite
+ * databarlimited &#x2022; GS1 DataBar Limited
+ * databarlimitedcomposite &#x2022; GS1 DataBar Limited Composite
+ * databaromni &#x2022; GS1 DataBar Omnidirectional
+ * databaromnicomposite &#x2022; GS1 DataBar Omnidirectional Composite
+ * databarstacked &#x2022; GS1 DataBar Stacked
+ * databarstackedcomposite &#x2022; GS1 DataBar Stacked Composite
+ * databarstackedomni &#x2022; GS1 DataBar Stacked Omnidirectional
+ * databarstackedomnicomposite &#x2022; GS1 DataBar Stacked Omnidirectional Composite
+ * databartruncated &#x2022; GS1 DataBar Truncated
+ * databartruncatedcomposite &#x2022; GS1 DataBar Truncated Composite
+ * datalogic2of5 &#x2022; Datalogic 2 of 5
+ * datamatrix &#x2022; Data Matrix
+ * datamatrixrectangular &#x2022; Data Matrix Rectangular
+ * datamatrixrectangularextension &#x2022; Data Matrix Rectangular Extension
+ * dotcode &#x2022; DotCode
+ * ean13 &#x2022; EAN-13
+ * ean13composite &#x2022; EAN-13 Composite
+ * ean14 &#x2022; GS1-14
+ * ean2 &#x2022; EAN-2 (2 digit addon)
+ * ean5 &#x2022; EAN-5 (5 digit addon)
+ * ean8 &#x2022; EAN-8
+ * ean8composite &#x2022; EAN-8 Composite
+ * flattermarken &#x2022; Flattermarken
+ * gs1-128 &#x2022; GS1-128
+ * gs1-128composite &#x2022; GS1-128 Composite
+ * gs1-cc &#x2022; GS1 Composite 2D Component
+ * gs1datamatrix &#x2022; GS1 Data Matrix
+ * gs1datamatrixrectangular &#x2022; GS1 Data Matrix Rectangular
+ * gs1dldatamatrix &#x2022; GS1 Digital Link Data Matrix
+ * gs1dlqrcode &#x2022; GS1 Digital Link QR Code
+ * gs1dotcode &#x2022; GS1 DotCode
+ * gs1northamericancoupon &#x2022; GS1 North American Coupon
+ * gs1qrcode &#x2022; GS1 QR Code
+ * hanxin &#x2022; Han Xin Code
+ * hibcazteccode &#x2022; HIBC Aztec Code
+ * hibccodablockf &#x2022; HIBC Codablock F
+ * hibccode128 &#x2022; HIBC Code 128
+ * hibccode39 &#x2022; HIBC Code 39
+ * hibcdatamatrix &#x2022; HIBC Data Matrix
+ * hibcdatamatrixrectangular &#x2022; HIBC Data Matrix Rectangular
+ * hibcmicropdf417 &#x2022; HIBC MicroPDF417
+ * hibcpdf417 &#x2022; HIBC PDF417
+ * hibcqrcode &#x2022; HIBC QR Code
+ * iata2of5 &#x2022; IATA 2 of 5
+ * identcode &#x2022; Deutsche Post Identcode
+ * industrial2of5 &#x2022; Industrial 2 of 5
+ * interleaved2of5 &#x2022; Interleaved 2 of 5 (ITF)
+ * isbn &#x2022; ISBN
+ * ismn &#x2022; ISMN
+ * issn &#x2022; ISSN
+ * itf14 &#x2022; ITF-14
+ * japanpost &#x2022; Japan Post 4 State Customer Code
+ * kix &#x2022; Royal Dutch TPG Post KIX
+ * leitcode &#x2022; Deutsche Post Leitcode
+ * mailmark &#x2022; Royal Mail Mailmark
+ * mands &#x2022; Marks & Spencer
+ * matrix2of5 &#x2022; Matrix 2 of 5
+ * maxicode &#x2022; MaxiCode
+ * micropdf417 &#x2022; MicroPDF417
+ * microqrcode &#x2022; Micro QR Code
+ * msi &#x2022; MSI Modified Plessey
+ * onecode &#x2022; USPS Intelligent Mail
+ * pdf417 &#x2022; PDF417
+ * pdf417compact &#x2022; Compact PDF417
+ * pharmacode &#x2022; Pharmaceutical Binary Code
+ * pharmacode2 &#x2022; Two-track Pharmacode
+ * planet &#x2022; USPS PLANET
+ * plessey &#x2022; Plessey UK
+ * posicode &#x2022; PosiCode
+ * postnet &#x2022; USPS POSTNET
+ * pzn &#x2022; Pharmazentralnummer (PZN)
+ * qrcode &#x2022; QR Code
+ * rationalizedCodabar &#x2022; Codabar
+ * raw &#x2022; Custom 1D symbology
+ * rectangularmicroqrcode &#x2022; Rectangular Micro QR Code
+ * royalmail &#x2022; Royal Mail 4 State Customer Code
+ * sscc18 &#x2022; SSCC-18
+ * swissqrcode &#x2022; Swiss QR Code
+ * symbol &#x2022; Miscellaneous symbols
+ * telepen &#x2022; Telepen
+ * telepennumeric &#x2022; Telepen Numeric
+ * ultracode &#x2022; Ultracode
+ * upca &#x2022; UPC-A
+ * upcacomposite &#x2022; UPC-A Composite
+ * upce &#x2022; UPC-E
+ * upcecomposite &#x2022; UPC-E Composite

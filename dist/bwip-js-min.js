@@ -66,7 +66,7 @@ FontLib.loadFont("OCR-B", 96, 100, "AAEAAAAPAIAAAwBwRkZUTXxHn14AADmUAAAAHEdERUYA
         toCanvas:ToCanvas, render:Render, raw:ToRaw,
         fixupOptions:FixupOptions,
         loadFont:FontLib.loadFont,
-        BWIPJS_VERSION:'__BWIPJS_VERS__',
+        BWIPJS_VERSION:'3.2.0 (2022-12-06)',
         BWIPP_VERSION:BWIPP_VERSION,
         // Internals
         BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,

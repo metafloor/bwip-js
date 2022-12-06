@@ -42,6 +42,14 @@ at(200, 300, {
         scale:2,    // matched set with the 0.36 below (72dpi / 200dpi)
     }, 0.36);
 
+at(350, 300, {
+        bcid: 'swissqrcode',
+        text: 'SPC^CR^LF0200^CR^LF1^CR^LFCH5800791123000889012^CR^LFS^CR^LFRobert Schneider AG^CR^LFRue du Lac^CR^LF1268^CR^LF2501^CR^LFBiel^CR^LFCH^CR^LF^CR^LF^CR^LF^CR^LF^CR^LF^CR^LF^CR^LF^CR^LF199.95^CR^LFCHF^CR^LFK^CR^LFPia-Maria Rutschmann-Schnyder^CR^LFGrosse Marktgasse 28^CR^LF9400 Rorschach^CR^LF^CR^LF^CR^LFCH^CR^LFSCOR^CR^LFRF18539007547034^CR^LF^CR^LFEPD',
+        parse: true,
+        scale:2,
+    });
+
+
 doc.end();
 console.log('saved as bwip-js.pdf');
 

@@ -1,16 +1,15 @@
 // exports.js
-"use strict";
 
-//@@BEGIN-NODE-JS-ONLY@@
+//@@BEGIN-NODE-JS-EXPORTS@@
 var url = require('url');
+var PNG_ZLIB = require('zlib');
+require('stream');  // fix for https://github.com/nodejs/node/issues/37021
 
 // bwipjs.request(req, res [, overrides])
 //
 // Returns a PNG image from the query args of a node.js http request object.
 //
 // This function is asynchronous.
-//
-// Node.js usage only.
 function Request(req, res, extra) {
 	var opts = url.parse(req.url, true).query;
 
@@ -53,8 +52,6 @@ function Request(req, res, extra) {
 // 		`png` is a node Buffer containing the PNG image.
 //
 // If `callback` is not provided, a Promise is returned.
-//
-// Node.js usage only.
 function ToBuffer(opts, callback) {
 	try {
 		return _Render(bwipp_lookup(opts.bcid), opts, DrawingZlibPng(opts, callback));
@@ -82,10 +79,7 @@ function _ToBuffer(encoder, opts, callback) {
 		}
 	}
 }
-//@@ENDOF-NODE-JS-ONLY@@
-
-//@@BEGIN-BROWSER-ONLY@@
-
+//@@BEGIN-BROWSER-EXPORTS@@
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
 //
@@ -97,8 +91,6 @@ function _ToBuffer(encoder, opts, callback) {
 // This function is synchronous and throws on error.
 //
 // Returns the HTMLCanvasElement.
-//
-// Browser usage only.
 function ToCanvas(opts, canvas) {
     // This code has to be duplicated with _ToCanvas() to keep the bwipp_lookup() out
     // of the latter.
@@ -134,8 +126,67 @@ function _ToCanvas(encoder, opts, canvas) {
     _Render(encoder, opts, DrawingCanvas(opts, canvas));
     return canvas;
 }
+//@@BEGIN-REACT-NV-EXPORTS@@
+import PNG_ZLIB from 'react-zlib-js';
+import Buffer from 'react-zlib-js/buffer.js';
 
-//@@ENDOF-BROWSER-ONLY@@
+// bwipjs.toDataURL(options[, callback])
+//
+// Uses the built-in graphics drawing and zlib PNG encoding to generate a
+// barcode image.
+//
+// `options` are a bwip-js/BWIPP options object.
+// `callback` is an optional callback handler with prototype:
+//
+// 		function callback(err, png)
+//
+// 		`err` is an Error object or string.  If `err` is set, `png` is null.
+// 		`png` is an object with properties:
+//          `width`  : The width of the image, in pixels.
+//          `height` : The height of the image, in pixels.
+//          `uri`    : A base64 encoded data URL.
+//
+// If `callback` is not provided, a Promise is returned.
+function ToDataURL(opts, callback) {
+    return _ToDataURL(bwipp_lookup(opts.bcid), opts, callback);
+}
+
+function _ToDataURL(encoder, opts, callback) {
+    if (callback) {
+        try {
+            _Render(encoder, opts, 
+                        DrawingZlibPng(opts, function (err, buf) {
+                                if (err) {
+                                    callback(err);
+                                } else {
+                                    return {
+                                        width:buf.readUInt32BE(16),
+                                        height:buf.readUInt32BE(20),
+                                        uri:'data:image/png;base64,' + buf.toString('base64')
+                                    };
+                                }
+                            }));
+        } catch (e) {
+            callback(e);
+        }
+    } else {
+        return new Promise(function (resolve, reject) {
+                _Render(encoder, opts,
+                        DrawingZlibPng(opts, function (err, buf) {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    resolve({
+                                        width:buf.readUInt32BE(16),
+                                        height:buf.readUInt32BE(20),
+                                        uri:'data:image/png;base64,' + buf.toString('base64')
+                                    });
+                                }
+                            }));
+            });
+    }
+}
+//@@ENDOF-EXPORTS@@
 
 function FixupOptions(opts) {
 	var scale	= opts.scale || 2;

@@ -153,18 +153,37 @@ function DrawingPDFKit(doc, opts, FontLib) {
             var dx = rx * ELLIPSE_MAGIC;
             var dy = ry * ELLIPSE_MAGIC;
 
-            // Since we fill with non-zero, don't worry about cw/ccw
+            // Since we fill with even-odd, don't worry about cw/ccw
             moveTo(x - rx, y);
             cubicTo(x - rx, y - dy, x - dx, y - ry, x,      y - ry);
             cubicTo(x + dx, y - ry, x + rx, y - dy, x + rx, y);
             cubicTo(x + rx, y + dy, x + dx, y + ry, x,      y + ry);
             cubicTo(x - dx, y + ry, x - rx, y + dy, x - rx, y);
         },
-        // PostScript's default fill rule is non-zero
+        // PostScript's default fill rule is non-zero but there are never intersecting
+        // regions, so we use even-odd as it is easier to work with.
         fill(rgb) {
             doc.fillColor('#' + rgb);
-            doc.fill('non-zero');
+            doc.fill('even-odd');
         },
+        // Currently only used by swissqrcode.  The `polys` area is an array of
+        // arrays of points.  Each array of points is identical to the `pts`
+        // parameter passed to polygon().  The postscript default clipping rule,
+        // like the fill rule, is non-zero winding.
+        clip : function(polys) {
+            doc.save();
+            for (let j = 0; j < polys.length; j++) {
+                let pts = polys[j];
+                moveTo(pts[0][0], pts[0][1]);
+                for (let i = 1; i < pts.length; i++) {
+                    lineTo(pts[i][0], pts[i][1]);
+                }
+            }
+            doc.clip('non-zero');
+        },
+        unclip : function() {
+			doc.restore();
+		},
         // Draw text with optional inter-character spacing.  `y` is the baseline.
         // font is an object with properties { name, width, height, dx }
         // width and height are the font cell size.

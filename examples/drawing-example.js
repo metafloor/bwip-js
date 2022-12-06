@@ -153,6 +153,29 @@ function DrawingExample(opts, canvas) {
             ctx.fill(compound, 'nonzero');
             compound = undefined;
         },
+        // Currently only used by swissqrcode.  The `polys` area is an array of
+        // arrays of points.  Each array of points is identical to the `pts`
+        // parameter passed to polygon().  The clipping rule, like the fill rule,
+        // defaults to non-zero winding.
+        clip : function(polys) {
+			ctx.save();
+
+            let region = new Path2D();
+			for (let j = 0; j < polys.length; j++) {
+				let pts = polys[j];
+				let path = new Path2D();
+				path.moveTo(pts[0][0], pts[0][1]);
+				for (let i = 1; i < pts.length; i++) {
+					path.lineTo(pts[i][0], pts[i][1]);
+				}
+				path.closePath();
+                region.addPath(path);
+			}
+            ctx.clip(region, 'nonzero');
+        },
+        unclip : function() {
+			ctx.restore();
+		},
         // Draw text.
         // `y` is the baseline.
         // `font` is an object with properties { name, width, height, dx }
