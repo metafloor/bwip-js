@@ -113,7 +113,7 @@ function DrawingPDFKit(doc, opts, FontLib) {
                 lineTo(0, height);
                 lineTo(0, 0);
                 doc.fillColor('#' + opts.backgroundcolor);
-                doc.fill('even-odd');
+                doc.fill('non-zero');
             }
 
             // Now add in the effects of the padding
@@ -160,11 +160,30 @@ function DrawingPDFKit(doc, opts, FontLib) {
             cubicTo(x + rx, y + dy, x + dx, y + ry, x,      y + ry);
             cubicTo(x - dx, y + ry, x - rx, y + dy, x - rx, y);
         },
-        // PostScript's default fill rule is even-odd.
+        // PostScript's default fill rule is non-zero but there are never intersecting
+        // regions, so we use even-odd as it is easier to work with.
         fill(rgb) {
             doc.fillColor('#' + rgb);
             doc.fill('even-odd');
         },
+        // Currently only used by swissqrcode.  The `polys` area is an array of
+        // arrays of points.  Each array of points is identical to the `pts`
+        // parameter passed to polygon().  The postscript default clipping rule,
+        // like the fill rule, is non-zero winding.
+        clip : function(polys) {
+            doc.save();
+            for (let j = 0; j < polys.length; j++) {
+                let pts = polys[j];
+                moveTo(pts[0][0], pts[0][1]);
+                for (let i = 1; i < pts.length; i++) {
+                    lineTo(pts[i][0], pts[i][1]);
+                }
+            }
+            doc.clip('non-zero');
+        },
+        unclip : function() {
+			doc.restore();
+		},
         // Draw text with optional inter-character spacing.  `y` is the baseline.
         // font is an object with properties { name, width, height, dx }
         // width and height are the font cell size.
@@ -205,7 +224,7 @@ function DrawingPDFKit(doc, opts, FontLib) {
                 x += glyph.advance + dx;
             }
             doc.fillColor('#' + rgb);
-            doc.fill('even-odd');
+            doc.fill('non-zero');
         },
         // Called after all drawing is complete.  The return value from this method
         // is the return value from `bwipjs.render()`.

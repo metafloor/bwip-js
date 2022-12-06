@@ -954,7 +954,7 @@ function DrawingBuiltin(opts) {
 	var gs_width, gs_height;	// image size, in pixels
 	var gs_dx, gs_dy;			// x,y translate (padding)
 	var gs_r, gs_g, gs_b;		// rgb
-	var gs_xymap;				// even-odd edge map
+	var gs_xymap;				// edge map
     var gs_xyclip;              // clip region map (similar to xymap)
 
 	return {
@@ -1184,7 +1184,8 @@ function DrawingBuiltin(opts) {
 		ellipse : function(x, y, rx, ry, ccw) {
 			drawEllipse((x-rx)|0, (y-ry)|0, (x+rx)|0, (y+ry)|0, ccw);
 		},
-		// PostScript's default fill rule is even-odd.
+		// PostScript's default fill rule is non-zero but since there are never
+        // intersecting regions, we use the easier to implement even-odd.
 		fill : function(rgb) {
 			gs_r = parseInt(rgb.substr(0,2), 16);
 			gs_g = parseInt(rgb.substr(2,2), 16);
@@ -1196,8 +1197,8 @@ function DrawingBuiltin(opts) {
 		},
         // Currently only used by swissqrcode.  The `polys` area is an array of
         // arrays of points.  Each array of points is identical to the `pts`
-        // parameter passed to polygon().  The clipping rule, like the fill rule,
-        // uses even-odd logic.
+        // parameter passed to polygon().  The postscript default clipping rule,
+        // like the fill rule, is even-odd winding.
         clip : function(polys) {
             if (!gs_xyclip) {
                 gs_xyclip = [];

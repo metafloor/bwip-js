@@ -32,6 +32,8 @@ function DrawingSVG(opts, FontLib) {
 
     var svg = '';
     var path;
+    var clipid = '';
+	var clips = [];
     var lines = {};
 
     // Magic number to approximate an ellipse/circle using 4 cubic beziers.
@@ -104,8 +106,6 @@ function DrawingSVG(opts, FontLib) {
             gs_height = swap ? width : height;
             gs_dx = padl;
             gs_dy = padt;
-
-            svg = '';
         },
         // Unconnected stroked lines are used to draw the bars in linear barcodes.
         // No line cap should be applied.  These lines are always orthogonal.
@@ -171,7 +171,7 @@ function DrawingSVG(opts, FontLib) {
             var dx = rx * ELLIPSE_MAGIC;
             var dy = ry * ELLIPSE_MAGIC;
 
-            // Since we fill with even-odd, don't worry about cw/ccw
+            // Since there are never overlapping regions, we don't worry about cw/ccw.
             path += 'M' + transform(x - rx, y) +
                     'C' + transform(x - rx, y - dy) + ' ' +
                           transform(x - dx, y - ry) + ' ' +
@@ -187,13 +187,38 @@ function DrawingSVG(opts, FontLib) {
                           transform(x - rx, y) + 
                     'Z';
         },
-        // PostScript's default fill rule is even-odd.
+        // PostScript's default fill rule is non-zero but there are never intersecting
+        // regions so use even-odd as it is easier to work with.
         fill(rgb) {
             if (path) {
-                svg += path + '" fill="#' + rgb + '" fill-rule="evenodd" />\n';
+                svg += path + '" fill="#' + rgb + '" fill-rule="evenodd"' +
+					   (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
+					   ' />\n';
                 path = null;
             }
         },
+        // Currently only used by swissqrcode.  The `polys` area is an array of
+        // arrays of points.  Each array of points is identical to the `pts`
+        // parameter passed to polygon().  The clipping rule, like the fill rule,
+        // defaults to non-zero winding.
+        clip : function(polys) {
+			var path = '<clipPath id="clip' + clips.length + '"><path d="';
+            for (let j = 0; j < polys.length; j++) {
+                let pts = polys[j];
+				path += 'M' + transform(pts[0][0], pts[0][1]);
+				for (var i = 1, n = pts.length; i < n; i++) {
+					var p = pts[i];
+					path += 'L' + transform(p[0], p[1]);
+				}
+				path += 'Z';
+            }
+		    path += '" clip-rule="nonzero" /></clipPath>';
+			clipid = "clip" + clips.length;
+			clips.push(path);
+        },
+        unclip : function() {
+			clipid = '';
+		},
         // Draw text with optional inter-character spacing.  `y` is the baseline.
         // font is an object with properties { name, width, height, dx }
         // width and height are the font cell size.
@@ -248,6 +273,7 @@ function DrawingSVG(opts, FontLib) {
             var bg = opts.backgroundcolor;
             return '<svg version="1.1" width="' + gs_width + '" height="' + gs_height +
                         '" xmlns="http://www.w3.org/2000/svg">\n' +
+						(clips.length ? '<defs>' + clips.join('') + '</defs>' : '') +
                         (/^[0-9A-Fa-f]{6}$/.test(''+bg)
                             ? '<rect width="100%" height="100%" fill="#' + bg + '" />\n'
                             : '') +
