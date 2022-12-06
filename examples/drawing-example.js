@@ -13,7 +13,7 @@
 // See example.html.
 function DrawingExample(opts, canvas) {
 
-    let ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d', { willReadFrequently:true });
 
     // PostScript transparently creates compound path regions.
     // We must do it explicitly with canvas.
@@ -144,22 +144,20 @@ function DrawingExample(opts, canvas) {
             path.ellipse(x, y, rx, ry, 0, 0, 2*Math.PI, ccw);
             compound.addPath(path);
         },
-        // PostScript's default fill rule is even-odd.
+        // PostScript's default fill rule is non-zero.
         fill(rgb) {
             if (!compound) {
                 return;
             }
             ctx.fillStyle = '#' + rgb;
-            ctx.fill(compound, 'evenodd');
+            ctx.fill(compound, 'nonzero');
             compound = undefined;
         },
         // Draw text.
         // `y` is the baseline.
-        //
         // `font` is an object with properties { name, width, height, dx }
         //
         // `name` will be the same as the font name in `measure()`.
-        //
         // `width` and `height` are the font cell size.
         // `dx` is extra space requested between characters (usually zero).
         //

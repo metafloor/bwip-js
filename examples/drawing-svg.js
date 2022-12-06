@@ -171,7 +171,7 @@ function DrawingSVG(opts, FontLib) {
             var dx = rx * ELLIPSE_MAGIC;
             var dy = ry * ELLIPSE_MAGIC;
 
-            // Since we fill with even-odd, don't worry about cw/ccw
+            // Since there are never overlapping regions, we don't worry about cw/ccw.
             path += 'M' + transform(x - rx, y) +
                     'C' + transform(x - rx, y - dy) + ' ' +
                           transform(x - dx, y - ry) + ' ' +
@@ -187,10 +187,10 @@ function DrawingSVG(opts, FontLib) {
                           transform(x - rx, y) + 
                     'Z';
         },
-        // PostScript's default fill rule is even-odd.
+        // PostScript's default fill rule is non-zero
         fill(rgb) {
             if (path) {
-                svg += path + '" fill="#' + rgb + '" fill-rule="evenodd" />\n';
+                svg += path + '" fill="#' + rgb + '" fill-rule="nonzero" />\n';
                 path = null;
             }
         },

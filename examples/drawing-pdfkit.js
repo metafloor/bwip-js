@@ -113,7 +113,7 @@ function DrawingPDFKit(doc, opts, FontLib) {
                 lineTo(0, height);
                 lineTo(0, 0);
                 doc.fillColor('#' + opts.backgroundcolor);
-                doc.fill('even-odd');
+                doc.fill('non-zero');
             }
 
             // Now add in the effects of the padding
@@ -153,17 +153,17 @@ function DrawingPDFKit(doc, opts, FontLib) {
             var dx = rx * ELLIPSE_MAGIC;
             var dy = ry * ELLIPSE_MAGIC;
 
-            // Since we fill with even-odd, don't worry about cw/ccw
+            // Since we fill with non-zero, don't worry about cw/ccw
             moveTo(x - rx, y);
             cubicTo(x - rx, y - dy, x - dx, y - ry, x,      y - ry);
             cubicTo(x + dx, y - ry, x + rx, y - dy, x + rx, y);
             cubicTo(x + rx, y + dy, x + dx, y + ry, x,      y + ry);
             cubicTo(x - dx, y + ry, x - rx, y + dy, x - rx, y);
         },
-        // PostScript's default fill rule is even-odd.
+        // PostScript's default fill rule is non-zero
         fill(rgb) {
             doc.fillColor('#' + rgb);
-            doc.fill('even-odd');
+            doc.fill('non-zero');
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
         // font is an object with properties { name, width, height, dx }
@@ -205,7 +205,7 @@ function DrawingPDFKit(doc, opts, FontLib) {
                 x += glyph.advance + dx;
             }
             doc.fillColor('#' + rgb);
-            doc.fill('even-odd');
+            doc.fill('non-zero');
         },
         // Called after all drawing is complete.  The return value from this method
         // is the return value from `bwipjs.render()`.
