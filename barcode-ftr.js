@@ -2,7 +2,7 @@
 //
 // This code is injected below the cross-compiled barcode.js.
 
-// `encoder` is one of the $0_* BWIPP functions
+// `encoder` is one of the bwipp_ functions
 function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
 	if (typeof text !== 'string') {
 		throw new Error('bwipp.typeError: barcode text not a string (' +

@@ -100,7 +100,7 @@ try {
 	var msg = '' + e;
 	if (msg.indexOf('Error: bwipp.') >= 0) {
 		// Watch out for shell replacement of $-prefixed subst-markers!!!
-		console.log(msg.replace(/Error: bwipp\.([^:]+):\s*(.*)$/,
+		console.log(msg.replace(/Error: bwipp\.([^:#]+)(?:#\d+)?:\s*(.*)$/,
 						'Error: /bwipp.\$1 in\n' +
 						'Additional information: (\$2)\n' +
 						'Current allocation mode is local'));

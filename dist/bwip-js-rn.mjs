@@ -65,11 +65,11 @@ function _ToDataURL(encoder, opts, callback) {
                                 if (err) {
                                     callback(err);
                                 } else {
-                                    return {
+                                    callback(null, {
                                         width:buf.readUInt32BE(16),
                                         height:buf.readUInt32BE(20),
                                         uri:'data:image/png;base64,' + buf.toString('base64')
-                                    };
+                                    });
                                 }
                             }));
         } catch (e) {

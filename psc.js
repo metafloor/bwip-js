@@ -331,7 +331,7 @@ function PSC(str, flags) {
 			block.push({ code:lines[i].code, lnbr:lines[i].lnbr, seq:++seq });
 		}
 	}
-	
+
 	// Perform some simple code elimination.  need() generates code that is
 	// often of the form:
 	//		var X = $k[--$j];		// need()
@@ -848,6 +848,9 @@ function PSC(str, flags) {
 				} else {
 					// Use single-quoted strings to indicate idents.
 					var id = tkn.substr(1);
+                    if (id.indexOf('bwipp.') == 0) {    // raiseerror message identifier
+                        id += '#' + lex.lnbr;
+                    }
 					st[sp++] = { type:TYPE_IDENT, expr:'\'' + id + '\'',
 								 seq:++seq };
 					if (!dict[id]) {
@@ -936,12 +939,36 @@ function PSC(str, flags) {
 		emit('return;');
 	}
 
+    // BWIPP-specific operator
+    $.ctxdef = function() {
+		need(1);
+        var exec = st[--sp];
+        if (exec.type != TYPE_TOKENS) {
+            throw 'ctxdef: expected exec block';
+        }
+        var lnbr = lex.lnbr;
+        emit('if (!@FUNCTION@.$ctx._' + lnbr + ') ' + LC);
+        emit('(function() ' + LC);
+        emit('var $ctx = Object.create($1);');
+        ctxprep(exec);
+        var lines = ctxexec(exec);
+		for (var i = 0; i < lines.length; i++) {
+			block.push({ code:lines[i].code.replace(/\$1\./g, '$ctx.'),
+                         lnbr:lines[i].lnbr, seq:++seq });
+		}
+        var t = tvar();
+        emit('for (var ' +t+ ' in $ctx) { $ctx.hasOwnProperty(' +t+ ') && (@FUNCTION@.$ctx[' +t+ ']= $ctx[' +t+ ']); }'); 
+        emit('@FUNCTION@.$ctx._' + lnbr + ' = 1;');
+        emit(RC + ')();');
+        emit(RC);
+    };
+
 	// Push the current dictionary.  We use this operator to create the
 	// function-scoped $1 dictionary.
 	$.begin = function() {
 		need(1);
-		if (dlvl > 1) throw '--oops--dlevel-gt-one';
-		emit('var $' + (++dlvl) + '={};');
+		if (++dlvl != 1) throw '--oops--dlevel-gt-one';
+        emit('var $1 = Object.create(@FUNCTION@.$ctx || (@FUNCTION@.$ctx = {}));');
 		sp--;
 	}
 
@@ -973,7 +1000,6 @@ function PSC(str, flags) {
 			throw 'known: could not parse $.get output';
 		}
 
-		// And then append !==undefined
 		block[block.length-1].code = parse[1] + '!==undefined;' +
 									(parse[3] || '');
 		st[sp-1] = { type:TYPE_BOOLEAN, expr:parse[2], seq:++seq };
@@ -1019,17 +1045,6 @@ function PSC(str, flags) {
             }
 		}
 	}
-
-    // BWIPP-specific operator
-    $.ctxdef = function() {
-		need(1);
-        var exec = st[--sp];
-        if (exec.type != TYPE_TOKENS) {
-            throw 'ctxdef: expected exec block';
-        }
-        ctxprep(exec);
-        append(ctxexec(exec));
-    }
 
 	$.exch = function() {
 		need(2);
@@ -1380,8 +1395,10 @@ function PSC(str, flags) {
 
 		if (t2 == TYPE_STRLIT || t2 == TYPE_IDENT) {
             if (dlvl == 0) {
-                emit('function bwipp_' + id.substr(1, id.length-2).replace(/-/g, '_') +
-                    st[sp-1].expr.replace(/^\s*function/, ''));
+                var jsid = 'bwipp_' + id.substr(1, id.length-2).replace(/-/g, '_');
+                emit('function ' + jsid +
+                    st[sp-1].expr.replace(/^\s*function/, '')
+                                 .replace(/@FUNCTION@/g, jsid));
             } else if (/^['"][A-Za-z]\w*['"]$/.test(id)) {
 				emit('$' + dlvl + '.' + id.substr(1, id.length-2) + '=' + st[sp-1].expr + ';');
 			} else {
@@ -1389,7 +1406,7 @@ function PSC(str, flags) {
 			}
 			dict[id.substr(1, id.length-2).replace(/\\(.)/g, '$1')] = t1;
         } else if (dlvl == 0) {
-            emit('var $0_' + id.substr(1, id.length-2).replace(/-/g, '_') + '=' + st[sp-1].expr + ';');
+            throw 'invalid $0[' + id + '] constructed reference';
 		} else {
 			emit('$' + dlvl + '[' + id + ']=' + st[sp-1].expr + ';');
 		}

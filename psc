@@ -112,6 +112,7 @@ cat barcode.tmp custom/*.ps | sed \
 	-e '/^\s*currentfont \/PaintType .* ifelse/,/^\s*} if/s/^/%psc &/'\
 	-e '/^\s*{.*} stopped {/,/^\s*} ifelse\s*$/s/^/%psc &/'\
 	-e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
+    -e 's,/ctx null def,%psc &,'\
     -e 's,/\S\S* //loadctx exec,%psc &,'\
     -e 's,//unloadctx exec,%psc &,'\
     -e 's,//processoptions,currentdict //processoptions,'\

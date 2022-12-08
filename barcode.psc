@@ -3908,7 +3908,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /textfont (OCR-B) def
@@ -4051,7 +4051,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /textfont (OCR-B) def
@@ -4182,7 +4182,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /textfont (OCR-B) def
@@ -4399,7 +4399,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def              % Enable/disable text
     /textfont (OCR-B) def
@@ -4597,7 +4597,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /textfont (OCR-B) def
@@ -4847,7 +4847,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def               % Enable/disable text
     /textfont (OCR-B) def
@@ -5133,7 +5133,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def  % Enable/disable ISBN text
     /isbntextfont /OCR-A def
@@ -5383,7 +5383,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /ismntextfont /OCR-A def
@@ -5612,7 +5612,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /issntextfont /OCR-A def
@@ -5784,7 +5784,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
 
@@ -5871,7 +5871,7 @@ bind def
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -6307,7 +6307,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -6415,7 +6415,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -6519,7 +6519,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -6624,7 +6624,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def
     /validatecheck false def
@@ -6775,7 +6775,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /parse false def
@@ -6883,7 +6883,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def  % Enable/disable code32 text
     /textfont (OCR-B) def
@@ -6982,7 +6982,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def  % Enable/disable code32 text
     /textfont (OCR-B) def
@@ -7083,7 +7083,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def  % Enable/disable checkdigit
     /includetext false def   % Enable/disable text
@@ -7230,7 +7230,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /parse false def
@@ -7343,7 +7343,7 @@ bind def
 
     20 dict begin         % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def         % Enable/disable checkdigit
     /includetext false def          % Enable/disable text
@@ -7501,7 +7501,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /includecheckintext true def
@@ -7606,7 +7606,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -7696,7 +7696,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -7788,7 +7788,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 33.0 72 div def
     /linkage false def
@@ -8222,7 +8222,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -8300,7 +8300,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -8378,7 +8378,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -8457,7 +8457,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 10.0 72 div def
     /linkage false def
@@ -8750,7 +8750,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
@@ -9608,7 +9608,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -9657,7 +9657,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def  % Enable/disable coupon text
     /coupontextfont (OCR-B) def
@@ -9757,7 +9757,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 8.0 2.835 mul 72 div def
     /nwidth 0.5 2.835 mul def
@@ -9848,7 +9848,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def      % Enable/disable text
     /height 4.0 def             % Height of short bars in millimetres
@@ -9949,7 +9949,7 @@ bind def
 
     20 dict begin                 % Confine variable to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def
     /validatecheck false def
@@ -10110,7 +10110,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -10164,7 +10164,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -10218,7 +10218,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -10272,7 +10272,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -10326,7 +10326,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -10381,7 +10381,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def
     /validatecheck false def
@@ -10547,7 +10547,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def
     /validatecheck false def
@@ -10747,7 +10747,7 @@ bind def
 
     20 dict begin                    % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /altstartstop false def
     /includecheck false def     % Enable/disable checkdigit
@@ -10911,7 +10911,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 0.15 def
 
@@ -11259,7 +11259,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /validatecheck false def
@@ -11407,7 +11407,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /validatecheck false def
@@ -11556,7 +11556,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /validatecheck false def
@@ -11709,7 +11709,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def         % Enable/disable text
     /textfont (OCR-B) def
@@ -11921,7 +11921,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /textfont (OCR-B) def
@@ -12040,7 +12040,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /includecheckintext false def
@@ -12219,7 +12219,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def  % Enable/disable checkdigit
     /includetext false def   % Enable/disable text
@@ -12373,7 +12373,7 @@ bind def
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /validatecheck false def
@@ -12528,7 +12528,7 @@ bind def
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /numeric false def
     /dontdraw false def
     /includetext false def    % Enable/disable text
@@ -12697,7 +12697,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -12753,7 +12753,7 @@ bind def
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /textfont (OCR-B) def
@@ -13145,7 +13145,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /rows -1 def
     /columns 8 def
@@ -13672,7 +13672,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /mode -1 def
     /pos -1 def
@@ -14398,7 +14398,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /mode -1 def
     /pos -1 def
@@ -15456,7 +15456,7 @@ bind def
 %psc 
 %psc     20 dict begin                 % Confine variables to local scope
 %psc 
-%psc     /ctx null def
+%psc     %psc /ctx null def
 %psc     /dontdraw false def
 %psc     /shortfinder false def
 %psc     /includetext false def
@@ -15718,7 +15718,7 @@ bind def
 
     20 dict begin                 % Confine variable to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def   % Enable/disable text
     /textfont (OCR-B) def
@@ -15810,7 +15810,7 @@ bind def
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 1.0 def
 
@@ -15865,7 +15865,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 0.175 def
 
@@ -15944,7 +15944,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -16029,7 +16029,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /compact false def
     /eclevel -1 def
@@ -16935,7 +16935,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -16985,7 +16985,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /version (unset) def
     /columns 0 def
@@ -17981,7 +17981,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /columns 0 def
     /rows 0 def
@@ -18916,7 +18916,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -18964,7 +18964,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /dmre false def
     /dindmre false def
@@ -19021,7 +19021,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /type (unset) def  % 7, 9 or 29
     /parse false def
     /dontdraw false def
@@ -19105,7 +19105,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /format (unset) def    % full or micro. rMQR symbols are specified using version
     /version (unset) def   % 1-40 or M1-M4 or R7x43, etc
@@ -20473,7 +20473,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /parse false def
 
@@ -20601,7 +20601,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -20649,7 +20649,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -20699,7 +20699,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /mode -1 def
     /sam -1 def
@@ -21305,7 +21305,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /format (unset) def    % full, compact or rune
     /readerinit false def
@@ -22095,7 +22095,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -22143,7 +22143,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
     currentdict //processoptions exec /options exch def
@@ -22193,7 +22193,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /version (unset) def
     /parse false def
@@ -23098,7 +23098,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /version (unset) def   % 1-84
     /eclevel (unset) def   % L1, L2, L3 or L4
@@ -23961,7 +23961,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /rows -1 def
     /columns -1 def
@@ -25025,7 +25025,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /eclevel (EC2) def     % EC0-EC5
     /encoding (auto) def
@@ -25382,7 +25382,7 @@ bind def
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /rows -1 def
     /columns -1 def
@@ -26515,7 +26515,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs false def
@@ -27152,7 +27152,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -27313,7 +27313,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -27477,7 +27477,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -27638,7 +27638,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -27799,7 +27799,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -27956,7 +27956,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -28109,7 +28109,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -28263,7 +28263,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -28421,7 +28421,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -28570,7 +28570,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -28727,7 +28727,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -28876,7 +28876,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
@@ -29049,7 +29049,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /parse false def
     /dontlint false def
@@ -29142,7 +29142,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
@@ -29236,7 +29236,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
@@ -29296,7 +29296,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
@@ -29388,7 +29388,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
@@ -29449,7 +29449,7 @@ bind def
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /parse false def
     /dontlint false def
@@ -29542,7 +29542,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /textfont (OCR-B) def
     /textsize 10.0 def
@@ -29642,7 +29642,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /textfont (OCR-B) def
     /textsize 10.0 def
@@ -29741,7 +29741,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
@@ -29828,7 +29828,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
@@ -29916,7 +29916,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /columns 2 def
     /validatecheck false def
@@ -30005,7 +30005,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /columns 2 def
     /validatecheck false def
@@ -30094,7 +30094,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
@@ -30181,7 +30181,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
@@ -30268,7 +30268,7 @@ bind def
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 

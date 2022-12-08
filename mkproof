@@ -8,6 +8,7 @@ sym="$1"
 text="$2"
 opts="$3"
 
+echo "($text)"
 ## First, use ghostscript to give us the bounding box
 BBOX=$(
 cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=bbox - 2>&1 | grep '%%HiResBoundingBox'

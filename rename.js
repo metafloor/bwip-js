@@ -11,6 +11,8 @@ var bwipp_js = fs.readFileSync('src/bwipp.js', 'binary');
 var mins = {
 	//a					// array constructor
 	arrcpy:'A',			// array copy operator
+    astore:'as',
+    anchorsearch:'ax',
 	cvs:'c',			// cvs operator
 	//d					// dict constructor
 	//f,				// single-precision emulation
@@ -25,9 +27,8 @@ var mins = {
 	put:'p',			// put operator
 	puti:'P',			// putinterval operator
 	aload:'q',			// aload operator
-	astore:'r',			// astore operator
+	// r			    // roll operator
 	cvrs:'R',			// cvrs operator
-    anchorsearch:'S',   // anchorsearch operator
 	s:'s',				// string constructor
 	type:'t',			// type operator
     cvx:'x',            // cvx operator
