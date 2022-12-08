@@ -65,11 +65,11 @@ function _ToDataURL(encoder, opts, callback) {
                                 if (err) {
                                     callback(err);
                                 } else {
-                                    return {
+                                    callback(null, {
                                         width:buf.readUInt32BE(16),
                                         height:buf.readUInt32BE(20),
                                         uri:'data:image/png;base64,' + buf.toString('base64')
-                                    };
+                                    });
                                 }
                             }));
         } catch (e) {
@@ -3843,7 +3843,7 @@ export default {
     toDataURL:ToDataURL, render:Render, raw:ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '3.2.0 (2022-12-06)',
+    BWIPJS_VERSION : '3.2.1 (2022-12-07)',
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,
