@@ -18,7 +18,7 @@ found at the end of this document.  Barcode images are generated as png (Node.js
 
 ## Status 
 
-* Current bwip-js version is 3.2.1 (2022-12-07)
+* Current bwip-js version is 3.2.2 (2022-12-11)
 * Current BWIPP version is 2022-10-19
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome

@@ -3862,7 +3862,7 @@ export default {
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '3.2.1 (2022-12-07)',
+    BWIPJS_VERSION : '3.2.2 (2022-12-11)',
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,

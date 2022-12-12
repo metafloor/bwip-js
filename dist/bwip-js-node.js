@@ -865,8 +865,19 @@ function bwipp_processoptions() {
             }
         } else if (typ == 'boolean') {
             if (val !== true && val !== false) {
-                throw new ReferenceError('/bwipp.invalidOptionType: ' + id +
-                    ': not a booleantype: ' + val);
+                // In keeping with the ethos of javascript, allow a more relaxed
+                // interpretation of boolean.
+                if (val == null || (val | 0) === val) {
+                    val = !!val;
+                } else if (val == 'true') {
+                    val = true;
+                } else if (val == 'false') {
+                    val = false;
+                } else {
+                    throw new ReferenceError('/bwipp.invalidOptionType: ' + id +
+                        ': not a booleantype: ' + val);
+                }
+                map ? opts.set(id, val) : (opts[id] = val);
             }
         } else if (typ == 'string' || def instanceof Uint8Array) {
             // This allows numbers to be strings
@@ -42625,7 +42636,7 @@ module.exports = {
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions:FixupOptions,
     loadFont:FontLib.loadFont,
-    BWIPJS_VERSION:'3.2.1 (2022-12-07)',
+    BWIPJS_VERSION:'3.2.2 (2022-12-11)',
     BWIPP_VERSION:BWIPP_VERSION,
     // Internals
     BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
