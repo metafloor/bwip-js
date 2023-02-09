@@ -17989,7 +17989,8 @@ begin
     /parse false def
     /parsefnc false def
     /encoding (auto) def
-    /mailmark false def
+    /c40headerdatamatrix false def
+    /c40headerlength 45 def
     /raw false def
     /dmre false def      % Alias for isodmre
     /dindmre false def
@@ -18308,7 +18309,7 @@ begin
             mode B eq {/bc 0 def} if
             1 {  % common exit
                 isECI i get {A exit} if  % ECI only in ASCII
-                mailmark i 45 lt and {C exit} if  % Mailmark is C40 only for 45 characters
+                c40headerdatamatrix i c40headerlength lt and {C exit} if  % Matrix is C40 only for given number of characters. Mailmark should be set to 45 characters (default value).
                 /k 0 def {  % loop
                     i k add msglen eq {
                         [/ac /cc /tc /xc /ec /bc] {dup load ceiling def} forall
@@ -19063,7 +19064,7 @@ begin
     options (dontdraw) true put
     options (version) version put
     options (format) format put
-    options (mailmark) true put
+    options (c40headerdatamatrix) true put
     /args barcode options //datamatrix exec def
 
     args (opt) options put
@@ -30332,5 +30333,70 @@ end
 %%EndData
 %%EndResource
 % --END ENCODER hibcazteccode--
+
+% --BEGIN ENCODER c40headerdatamatrix--
+% --REQUIRES preamble loadctx unloadctx raiseerror processoptions parseinput renmatrix datamatrix--
+% --DESC: Data Matrix with C40 encoded header
+% --EXAM: IS010000000000000000000000S1110086322083060S21.2.250.1.213.1.4.8^029S3MICHELINE JEANNE DENISE^029S4MICHU^029S5FS611/05/1945S706220
+% --EXOP: c40headerlength=26
+% --RNDR: renmatrix
+%%BeginResource: uk.co.terryburton.bwipp c40headerdatamatrix 0.0 2022101900 66797 66682
+%%BeginData:         71 ASCII Lines
+/setpacking where {pop currentpacking true setpacking} if
+10 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+begin
+/c40headerdatamatrix {
+
+    20 dict begin            % Confine variables to local scope
+
+    /ctx null def
+    /parse false def
+    /dontdraw false def
+    /c40headerlength 45 def
+
+    //processoptions exec /options exch def
+    /barcode exch def
+
+    % Parse ordinals of the form ^NNN to ASCII
+    /fncvals <<
+        /parse parse
+        /parseonly true
+        /parsefnc false
+    >> def
+    /barcode barcode fncvals //parseinput exec def
+    /barlen barcode length def
+    options (parse) undef
+
+    % Validate the input
+    barcode length c40headerlength lt {
+        /bwipp.c40headerdatamatrixBadLength (The input data must contain at least a set number of characters (by default 45)) //raiseerror exec
+    } if
+
+    % Get the result of encoding with datamatrix
+    options (dontdraw) true put
+    options (c40headerdatamatrix) true put
+    /args barcode options //datamatrix exec def
+
+    args (opt) options put
+    args
+
+    dontdraw not //renmatrix if
+
+    end
+
+}
+[/barcode] {null def} forall
+bind def
+/c40headerdatamatrix dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END ENCODER c40headerdatamatrix--
 
 % --END TEMPLATE--
