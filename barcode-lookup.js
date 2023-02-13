@@ -6,6 +6,7 @@ function bwipp_lookup(symbol) {
     case "azteccodecompact":return bwipp_azteccodecompact;
     case "aztecrune":return bwipp_aztecrune;
     case "bc412":return bwipp_bc412;
+    case "c40headerdatamatrix":return bwipp_c40headerdatamatrix;
     case "channelcode":return bwipp_channelcode;
     case "codablockf":return bwipp_codablockf;
     case "code11":return bwipp_code11;

@@ -114,4 +114,5 @@ module.exports = {
 	"upcacomposite": "UPC-A Composite",
 	"upce": "UPC-E",
 	"upcecomposite": "UPC-E Composite",
+	"c40headermatrix": 'Data Matrix with C40 encoded header'
 };
