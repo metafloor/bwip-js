@@ -2,10 +2,10 @@
 //
 // 	  http://metafloor.github.io/bwip-js
 //
-// Copyright (c) 2011-2022 Mark Warren
+// Copyright (c) 2011-2023 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2022-10-19
+// Barcode Writer in Pure PostScript - Version 2023-02-16
 // Copyright (c) 2004-2022 Terry Burton
 //
 // The MIT License
@@ -3843,7 +3843,7 @@ export default {
     toDataURL:ToDataURL, render:Render, raw:ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '3.2.2 (2022-12-11)',
+    BWIPJS_VERSION : '3.3.0 (2023-02-16)',
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,

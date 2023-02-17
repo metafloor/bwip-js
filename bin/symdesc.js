@@ -1,7 +1,7 @@
 // file: bwip-js/bin/symdesc.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2022-10-19
+// Barcode Writer in Pure PostScript - Version 2023-02-16
 //
 module.exports = {
 	"auspost": "AusPost 4 State Customer Code",
