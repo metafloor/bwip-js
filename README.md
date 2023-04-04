@@ -9,16 +9,9 @@ All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.  Barcode images are generated as png (Node.js) or to a canvas (browser).
 
-> Version 3 is on its last planned release.  Version 4 will be ESM-only,
-> scheduled for April 2023.  Internet Explorer will no longer be supported.
-> Node.js will require at least version 12.  SVG output on all platforms will be officially
-> supported.
->
-> Please prepare your code for the migration.
-
 ## Status 
 
-* Current bwip-js version is 3.3.0 (2023-02-16)
+* Current bwip-js version is 3.3.1 (2023-04-04)
 * Current BWIPP version is 2023-02-16
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome

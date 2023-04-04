@@ -3688,7 +3688,7 @@ export default {
     toCanvas : ToCanvas, render : Render, raw : ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '3.3.0 (2023-02-16)',
+    BWIPJS_VERSION : '3.3.1 (2023-04-04)',
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingCanvas,
