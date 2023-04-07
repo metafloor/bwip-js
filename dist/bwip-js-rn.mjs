@@ -5,8 +5,8 @@
 // Copyright (c) 2011-2023 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2023-02-16
-// Copyright (c) 2004-2022 Terry Burton
+// Barcode Writer in Pure PostScript - Version 2023-04-03
+// Copyright (c) 2004-2023 Terry Burton
 //
 // The MIT License
 //
@@ -1742,6 +1742,8 @@ var FontLib = (function() {
 
         var font = fonts[fontid];
         var glyph = STBTT.GetGlyph(font, charcode, width * font.bwipjs_multx / 100,
+                                                   height * font.bwipjs_multy / 100) ||
+                    STBTT.GetGlyph(font, 0, width * font.bwipjs_multx / 100,
                                                    height * font.bwipjs_multy / 100);
         
         glyph.bytes = glyph.pixels;
@@ -3843,7 +3845,7 @@ export default {
     toDataURL:ToDataURL, render:Render, raw:ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '3.3.2 (2023-04-04)',
+    BWIPJS_VERSION : '3.4.0 (2023-04-06)',
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,

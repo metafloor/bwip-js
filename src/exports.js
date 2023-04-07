@@ -59,9 +59,7 @@ function ToBuffer(opts, callback) {
 		if (callback) {
 			callback(e);
 		} else {
-			return new Promise(function(resolve, reject) {
-				reject(e);
-			});
+			return Promise.reject(e);
 		}
 	}
 }
@@ -73,9 +71,7 @@ function _ToBuffer(encoder, opts, callback) {
 		if (callback) {
 			callback(e);
 		} else {
-			return new Promise(function(resolve, reject) {
-				reject(e);
-			});
+			return Promise.reject(e);
 		}
 	}
 }

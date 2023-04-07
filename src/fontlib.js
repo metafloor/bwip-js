@@ -101,12 +101,10 @@ var FontLib = (function() {
 
         var font = fonts[fontid];
         var glyph = STBTT.GetGlyph(font, charcode, width * font.bwipjs_multx / 100,
+                                                   height * font.bwipjs_multy / 100) ||
+                    STBTT.GetGlyph(font, 0, width * font.bwipjs_multx / 100,
                                                    height * font.bwipjs_multy / 100);
         
-        if (!glyph) {
-           glyph = STBTT.GetGlyph(font, 0, width * font.bwipjs_multx / 100,
-                                                   height * font.bwipjs_multy / 100);
-        }
         glyph.bytes = glyph.pixels;
         glyph.cachekey = cachekey;
         glyph.offset = 0;
