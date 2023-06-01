@@ -5,8 +5,8 @@
 // Copyright (c) 2011-2023 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2023-04-03
-// Copyright (c) 2004-2023 Terry Burton
+// Barcode Writer in Pure PostScript - Version 2023-02-16
+// Copyright (c) 2004-2022 Terry Burton
 //
 // The MIT License
 //
@@ -39408,6 +39408,26 @@ function bwipp_renmaximatrix() {
 //
 // This code is injected below the cross-compiled barcode.js.
 
+// RE for testing whether a string contains code points greater than 255 or contains
+// byte-sequences that are not valid utf-8 (i.e. any of the 8-bit unicode code points).
+// Adapted from:
+// https://stackoverflow.com/questions/11709410/regex-to-detect-invalid-utf-8-string
+var bwipp_notUtf8 = new RegExp(String.raw`
+    [\u0100-\uffff] # Code points greater than 255
+    | [\xC0-\xC1] # Invalid UTF-8 bytes
+    | [\xF5-\xFF] # Invalid UTF-8 bytes
+    | \xE0[\x80-\x9F] # Overlong encoding of prior code point
+    | \xF0[\x80-\x8F] # Overlong encoding of prior code point
+    | [\xC2-\xDF](?![\x80-\xBF]) # Invalid UTF-8 Sequence Start
+    | [\xE0-\xEF](?![\x80-\xBF]{2}) # Invalid UTF-8 Sequence Start
+    | [\xF0-\xF4](?![\x80-\xBF]{3}) # Invalid UTF-8 Sequence Start
+    | (?<=[\x00-\x7F\xF5-\xFF])[\x80-\xBF] # Invalid UTF-8 Sequence Middle
+    | (?<![\xC2-\xDF]|[\xE0-\xEF]|[\xE0-\xEF][\x80-\xBF]|[\xF0-\xF4]|[\xF0-\xF4][\x80-\xBF]|[\xF0-\xF4][\x80-\xBF]{2})[\x80-\xBF] # Overlong Sequence
+    | (?<=[\xE0-\xEF])[\x80-\xBF](?![\x80-\xBF]) # Short 3 byte sequence
+    | (?<=[\xF0-\xF4])[\x80-\xBF](?![\x80-\xBF]{2}) # Short 4 byte sequence
+    | (?<=[\xF0-\xF4][\x80-\xBF])[\x80-\xBF](?![\x80-\xBF]) # Short 4 byte sequence (2)
+`.replace(/ # .*/g, '').replace(/\s+/g, ''));
+
 // `encoder` is one of the bwipp_ functions
 function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
     if (typeof text !== 'string') {
@@ -39433,8 +39453,8 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
         throw new Error('bwipp.typeError: options not an object');
     }
 
-    // Convert utf-16 to utf-8 but leave binary (8-bit) strings untouched.
-    if (/[\u0100-\uffff]/.test(text)) {
+    // Convert to utf-8 except leave already-utf-8-encoded strings unchanged.
+    if (bwipp_notUtf8.test(text)) {
         text = unescape(encodeURIComponent(text));
     }
 
