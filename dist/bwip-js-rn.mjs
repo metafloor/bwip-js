@@ -3860,7 +3860,7 @@ export default {
     toDataURL:ToDataURL, render:Render, raw:ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '3.4.2',
+    BWIPJS_VERSION : '3.4.3',
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,
