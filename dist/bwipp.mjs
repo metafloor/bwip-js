@@ -5,8 +5,8 @@
 // Copyright (c) 2011-2023 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2023-02-16
-// Copyright (c) 2004-2022 Terry Burton
+// Barcode Writer in Pure PostScript - Version 2023-04-03
+// Copyright (c) 2004-2023 Terry Burton
 //
 // The MIT License
 //
@@ -86,7 +86,7 @@ function $d() {
         }
     }
     if (mark < 0) {
-        throw 'dict-marker-not-found';
+        throw new Error('dict-marker-not-found');
     }
     var d = new Map;
     for (var i = mark + 1; i < $j; i += 2) {
@@ -99,7 +99,7 @@ function $d() {
         } else if (k instanceof Uint8Array) {
             d.set($z(k), $k[i + 1]);
         } else {
-            throw 'dict-not-a-valid-key(' + k + ')';
+            throw new Error('dict-not-a-valid-key(' + k + ')');
         }
     }
     $j = mark;
@@ -130,7 +130,7 @@ function $s(v) {
 // ... n c roll
 function $r(n, c) {
     if ($j < n) {
-        throw 'roll: --stack-underflow--';
+        throw new Error('roll: --stack-underflow--');
     }
     if (!c) {
         return;
@@ -217,7 +217,7 @@ function $cvx(s) {
     s = $z(s)
     var m = /^\s*<((?:[0-9a-fA-F]{2})+)>\s*$/.exec(s);
     if (!m) {
-        throw 'cvx: not a <HH> hex string literal';
+        throw new Error('cvx: not a <HH> hex string literal');
     }
     var h = m[1];
     var l = h.length >> 1;
@@ -266,7 +266,7 @@ function $put(d, k, v) {
             d.set(k, v);
         }
     } else {
-        throw 'put-not-writable-' + (typeof d);
+        throw new Error('put-not-writable-' + (typeof d));
     }
 }
 
@@ -316,7 +316,7 @@ function $puti(d, o, s) {
             darr[doff + i] = sarr[soff + i];
         }
     } else {
-        throw 'putinterval-not-writable-' + (typeof d);
+        throw new Error('putinterval-not-writable-' + (typeof d));
     }
 }
 
@@ -39433,8 +39433,13 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
         throw new Error('bwipp.typeError: options not an object');
     }
 
-    // Convert to utf-8 if necessary
-    if (/[\u0080-\uffff]/.test(text)) {
+    // Convert utf-16 to utf-8 unless caller has pre-encoded the text.
+    if (opts.binarytext) {
+        // No 16-bit chars allowed.
+        if (/[\u0100-\uffff]/.test(text)) {
+            throw new Error('bwip-js: 16-bit chars not allowed with binarytext');
+        }
+    } else if (/[\u0080-\uffff]/.test(text)) {
         text = unescape(encodeURIComponent(text));
     }
 

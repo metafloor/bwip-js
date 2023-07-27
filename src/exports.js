@@ -195,21 +195,34 @@ function FixupOptions(opts) {
 	opts.paddingtop = padding(opts.paddingtop, opts.paddingheight, opts.padding, scaleY);
 	opts.paddingbottom = padding(opts.paddingbottom, opts.paddingheight, opts.padding, scaleY);
 
-	// We override BWIPP's background color functionality.  If in CMYK, convert to RGB so
-	// the drawing interface is consistent.
-	if (/^[0-9a-fA-F]{8}$/.test(''+opts.backgroundcolor)) {
-		var cmyk = opts.backgroundcolor;
-		var c = parseInt(cmyk.substr(0,2), 16) / 255;
-		var m = parseInt(cmyk.substr(2,2), 16) / 255;
-		var y = parseInt(cmyk.substr(4,2), 16) / 255;
-		var k = parseInt(cmyk.substr(6,2), 16) / 255;
-		var r = Math.floor((1-c) * (1-k) * 255).toString(16);
-		var g = Math.floor((1-m) * (1-k) * 255).toString(16);
-		var b = Math.floor((1-y) * (1-k) * 255).toString(16);
-		opts.backgroundcolor = (r.length == 1 ? '0' : '') + r +
-							   (g.length == 1 ? '0' : '') + g +
-							   (b.length == 1 ? '0' : '') + b;
-	}
+	// We override BWIPP's background color functionality.  If in CMYK, convert to RRGGBB so
+	// the drawing interface is consistent.  Likewise, if in CSS-style #rgb or #rrggbb.
+    if (opts.backgroundcolor) {
+        var bgc = ''+opts.backgroundcolor;
+        if (/^[0-9a-fA-F]{8}$/.test(bgc)) {
+            var c = parseInt(bgc.substr(0,2), 16) / 255;
+            var m = parseInt(bgc.substr(2,2), 16) / 255;
+            var y = parseInt(bgc.substr(4,2), 16) / 255;
+            var k = parseInt(bgc.substr(6,2), 16) / 255;
+            var r = Math.floor((1-c) * (1-k) * 255).toString(16);
+            var g = Math.floor((1-m) * (1-k) * 255).toString(16);
+            var b = Math.floor((1-y) * (1-k) * 255).toString(16);
+            opts.backgroundcolor = (r.length == 1 ? '0' : '') + r +
+                                   (g.length == 1 ? '0' : '') + g +
+                                   (b.length == 1 ? '0' : '') + b;
+        } else {
+            if (bgc[0] == '#') {
+                bgc = bgc.substr(1);
+            }
+            if (/^[0-9a-fA-F]{6}$/.test(bgc)) {
+                opts.backgroundcolor = bgc;
+            } else if (/^[0-9a-fA-F]{3}$/.test(bgc)) {
+                opts.backgroundcolor = bgc[0] + bgc[0] + bgc[1] + bgc[1] + bgc[2] + bgc[2];
+            } else {
+                throw new Error('bwip-js: invalid backgroundcolor: ' + opts.backgroundcolor);
+            }
+        }
+    }
 
 	return opts;
 
@@ -227,6 +240,7 @@ function FixupOptions(opts) {
 var BWIPJS_OPTIONS = {
 	bcid:1,
 	text:1,
+    binarytext:1,
 	scale:1,
 	scaleX:1,
 	scaleY:1,

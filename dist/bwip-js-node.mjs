@@ -5,8 +5,8 @@
 // Copyright (c) 2011-2023 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2023-02-16
-// Copyright (c) 2004-2022 Terry Burton
+// Barcode Writer in Pure PostScript - Version 2023-04-03
+// Copyright (c) 2004-2023 Terry Burton
 //
 // The MIT License
 //
@@ -119,21 +119,34 @@ function FixupOptions(opts) {
 	opts.paddingtop = padding(opts.paddingtop, opts.paddingheight, opts.padding, scaleY);
 	opts.paddingbottom = padding(opts.paddingbottom, opts.paddingheight, opts.padding, scaleY);
 
-	// We override BWIPP's background color functionality.  If in CMYK, convert to RGB so
-	// the drawing interface is consistent.
-	if (/^[0-9a-fA-F]{8}$/.test(''+opts.backgroundcolor)) {
-		var cmyk = opts.backgroundcolor;
-		var c = parseInt(cmyk.substr(0,2), 16) / 255;
-		var m = parseInt(cmyk.substr(2,2), 16) / 255;
-		var y = parseInt(cmyk.substr(4,2), 16) / 255;
-		var k = parseInt(cmyk.substr(6,2), 16) / 255;
-		var r = Math.floor((1-c) * (1-k) * 255).toString(16);
-		var g = Math.floor((1-m) * (1-k) * 255).toString(16);
-		var b = Math.floor((1-y) * (1-k) * 255).toString(16);
-		opts.backgroundcolor = (r.length == 1 ? '0' : '') + r +
-							   (g.length == 1 ? '0' : '') + g +
-							   (b.length == 1 ? '0' : '') + b;
-	}
+	// We override BWIPP's background color functionality.  If in CMYK, convert to RRGGBB so
+	// the drawing interface is consistent.  Likewise, if in CSS-style #rgb or #rrggbb.
+    if (opts.backgroundcolor) {
+        var bgc = ''+opts.backgroundcolor;
+        if (/^[0-9a-fA-F]{8}$/.test(bgc)) {
+            var c = parseInt(bgc.substr(0,2), 16) / 255;
+            var m = parseInt(bgc.substr(2,2), 16) / 255;
+            var y = parseInt(bgc.substr(4,2), 16) / 255;
+            var k = parseInt(bgc.substr(6,2), 16) / 255;
+            var r = Math.floor((1-c) * (1-k) * 255).toString(16);
+            var g = Math.floor((1-m) * (1-k) * 255).toString(16);
+            var b = Math.floor((1-y) * (1-k) * 255).toString(16);
+            opts.backgroundcolor = (r.length == 1 ? '0' : '') + r +
+                                   (g.length == 1 ? '0' : '') + g +
+                                   (b.length == 1 ? '0' : '') + b;
+        } else {
+            if (bgc[0] == '#') {
+                bgc = bgc.substr(1);
+            }
+            if (/^[0-9a-fA-F]{6}$/.test(bgc)) {
+                opts.backgroundcolor = bgc;
+            } else if (/^[0-9a-fA-F]{3}$/.test(bgc)) {
+                opts.backgroundcolor = bgc[0] + bgc[0] + bgc[1] + bgc[1] + bgc[2] + bgc[2];
+            } else {
+                throw new Error('bwip-js: invalid backgroundcolor: ' + opts.backgroundcolor);
+            }
+        }
+    }
 
 	return opts;
 
@@ -151,6 +164,7 @@ function FixupOptions(opts) {
 var BWIPJS_OPTIONS = {
 	bcid:1,
 	text:1,
+    binarytext:1,
 	scale:1,
 	scaleX:1,
 	scaleY:1,
@@ -411,19 +425,33 @@ BWIPJS.prototype.jsstring = function(s) {
 	}
 	return ''+s;
 };
-// Special function to replace setanycolor in BWIPP
-// Takes a string of hex digits either 6 chars in length (rrggbb) or
-// 8 chars (ccmmyykk).
+// Special function to replace setanycolor in BWIPP.
+// Converts a string of hex digits either rgb, rrggbb or ccmmyykk.
+// Or CSS-style #rgb and #rrggbb.
 BWIPJS.prototype.setcolor = function(s) {
 	if (s instanceof Uint8Array) {
 		s = this.jsstring(s);
 	}
-	if (s.length == 6) {
+    if (!s) {
+        return;
+    }
+    if (!/^(?:#?[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|[0-9a-fA-F]{8})$/.test(s)) {
+        throw new Error('bwip-js: invalid color: ' + s); 
+    }
+    if (s[0] == '#') {
+        s = s.substr(1);
+    }
+    if (s.length == 3) {
+		var r = parseInt(s[0], 16);
+		var g = parseInt(s[1], 16);
+		var b = parseInt(s[2], 16);
+		this.g_rgb = [ r<<4|r, g<<4|g, b<<4|b ];
+    } else if (s.length == 6) {
 		var r = parseInt(s.substr(0,2), 16);
 		var g = parseInt(s.substr(2,2), 16);
 		var b = parseInt(s.substr(4,2), 16);
 		this.g_rgb = [ r, g, b ];
-	} else if (s.length == 8) {
+	} else {
 		var c = parseInt(s.substr(0,2), 16) / 255;
 		var m = parseInt(s.substr(2,2), 16) / 255;
 		var y = parseInt(s.substr(4,2), 16) / 255;
@@ -432,7 +460,7 @@ BWIPJS.prototype.setcolor = function(s) {
 		var g = round((1-m) * (1-k) * 255);
 		var b = round((1-y) * (1-k) * 255);
 		this.g_rgb = [ r, g, b ];
-	}
+    }
 };
 // Used only by swissqrcode
 BWIPJS.prototype.setrgbcolor = function(r,g,b) {
@@ -1708,7 +1736,7 @@ var FontLib = (function() {
             multx = +arguments[2] || 100;
             data = arguments[3];
         } else {
-            throw new Error("loadFont(): invalid number of arguments");
+            throw new Error("bwipjs: loadFont: invalid number of arguments");
         }
 
         var font = STBTT.InitFont(toUint8Array(data));
@@ -1730,7 +1758,7 @@ var FontLib = (function() {
     // Not supported by stbtt
     function monochrome(mono) {
         if (mono) {
-            throw new Error('fontlib: monochrome not implemented');
+            throw new Error('bwipjs: monochrome fonts not implemented');
         }
     }
 
@@ -3875,7 +3903,7 @@ export default {
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions : FixupOptions,
     loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '3.4.3',
+    BWIPJS_VERSION : '3.4.4 (2023-07-27)',
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,
