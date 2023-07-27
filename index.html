@@ -36,8 +36,8 @@ ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).</p>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 3.1.0 (2022-06-20)</li>
-<li>Current BWIPP version is 2022-06-10</li>
+<li>Current bwip-js version is 3.4.4 (2023-07-27)</li>
+<li>Current BWIPP version is 2023-04-03</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
 </ul>
@@ -103,6 +103,7 @@ be a lot more performant.)</p>
 <li><code>'R'</code> : Clockwise (right) 90 degree rotation.</li>
 <li><code>'L'</code> : Counter-clockwise (left) 90 degree rotation.</li>
 <li><code>'I'</code> : Inverted 180 degree rotation.</li></ul></li>
+<li><p><code>binarytext</code> : The default behavior is to encode the <code>text</code> string as UTF-8 binary bytes.  If the text is already 8-bit encoded, you can disable this behavior by setting the flag to <code>true</code>.</p></li>
 <li><p><code>padding</code> : Shorthand for setting <code>paddingtop</code>, <code>paddingleft</code>, <code>paddingright</code>, and <code>paddingbottom</code>.</p></li>
 <li><p><code>paddingwidth</code> : Shorthand for setting <code>paddingleft</code> and <code>paddingright</code>.</p></li>
 <li><p><code>paddingheight</code> : Shorthand for setting <code>paddingtop</code> and <code>paddingbottom</code>.</p></li>
@@ -110,11 +111,12 @@ be a lot more performant.)</p>
 <li><p><code>paddingleft</code> : Sets the width of the padding area, in points, on the left side of the barcode image. Rotates and scales with the image.</p></li>
 <li><p><code>paddingright</code> : Sets the width of the padding area, in points, on the right side of the barcode image. Rotates and scales with the image.</p></li>
 <li><p><code>paddingbottom</code> : Sets the height of the padding area, in points, on the bottom of the barcode image. Rotates and scales with the image.</p></li>
-<li><p><code>backgroundcolor</code> : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Takes either a hex RRGGBB or hex CCMMYYKK string value. </p></li>
+<li><p><code>backgroundcolor</code> : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Takes either a hex RRGGBB or hex CCMMYYKK string value or CSS-style #RGB or #RRGGBB string value.</p></li>
 </ul>
 <p>For the BWIPP specific options, you will need to consult the
 <a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP documentation</a>
 to determine what options are available for each barcode type.</p>
+<p>The BWIPP color options (e.g. <code>barcolor</code>, <code>textcolor</code>, <code>bordercolor</code>) can be specified using either the BWIPP RRGGBB and CCMMYYKK formats or the CSS-style #RGB and #RRGGBB formats.</p>
 <p>Note that bwip-js normalizes the BWIPP <code>width</code> and <code>height</code> options to always be in millimeters.
 The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm
 (72 dpi / 25.4 mm/in).  The bwip-js scale options multiply the <code>width</code>, <code>height</code>, and <code>padding</code>.</p>

@@ -7,18 +7,12 @@ bwip-js is a translation to native JavaScript of the amazing code provided in [B
 The software has encoding modules for over 100 different barcode types and standards.
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
-found at the end of this document.
-
-> Version 3.0 provides support for ES6 modules with the individual encoders as named exports.
-> This will allow webpack and other bundlers to tree shake the large BWIPP cross-compiled
-> code into something more managable.
->
-> See the section [Browser ES6 Module Usage](#browser-es6-module-usage) and [Node.js ES6 Module Usage](#nodejs-es6-module-usage) for details of the new capabilities.
+found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).
 
 ## Status 
 
-* Current bwip-js version is 3.0.5 (2022-05-22)
-* Current BWIPP version is 2021-02-06
+* Current bwip-js version is 3.4.4 (2023-07-27)
+* Current BWIPP version is 2023-04-03
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
 
@@ -101,6 +95,7 @@ The bwip-js options are:
     - `'L'` : Counter-clockwise (left) 90 degree rotation.
     - `'I'` : Inverted 180 degree rotation.
 
+- `binarytext` : The default behavior is to encode the `text` string as UTF-8 binary bytes.  If the text is already 8-bit encoded, you can disable this behavior by setting the flag to `true`.
 - `padding` : Shorthand for setting `paddingtop`, `paddingleft`, `paddingright`, and `paddingbottom`.
 - `paddingwidth` : Shorthand for setting `paddingleft` and `paddingright`.
 - `paddingheight` : Shorthand for setting `paddingtop` and `paddingbottom`.
@@ -108,11 +103,13 @@ The bwip-js options are:
 - `paddingleft` : Sets the width of the padding area, in points, on the left side of the barcode image. Rotates and scales with the image.
 - `paddingright` : Sets the width of the padding area, in points, on the right side of the barcode image. Rotates and scales with the image.
 - `paddingbottom` : Sets the height of the padding area, in points, on the bottom of the barcode image. Rotates and scales with the image.
-- `backgroundcolor` : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Takes either a hex RRGGBB or hex CCMMYYKK string value. 
+- `backgroundcolor` : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Takes either a hex RRGGBB or hex CCMMYYKK string value or CSS-style #RGB or #RRGGBB string value.
 
 For the BWIPP specific options, you will need to consult the
 [BWIPP documentation](https://github.com/bwipp/postscriptbarcode/wiki)
 to determine what options are available for each barcode type.
+
+The BWIPP color options (e.g. `barcolor`, `textcolor`, `bordercolor`) can be specified using either the BWIPP RRGGBB and CCMMYYKK formats or the CSS-style #RGB and #RRGGBB formats.
 
 Note that bwip-js normalizes the BWIPP `width` and `height` options to always be in millimeters.
 The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm
@@ -383,7 +380,7 @@ import bwipjs from 'bwip-js';
 // ... identical to the examples above ...
 ```
 
-The ESM also facilitates bundler tree shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to `bwipjs.toBuffer()`.
+The ESM also facilitates bundler tree-shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to `bwipjs.toBuffer()`.
 
 The exported names are the same as the `bcid` names, with the caveat that dashes `-` are replaced with underscores `_`.  For example, to import the `gs1-128` encoder, you would use:
 
@@ -397,10 +394,12 @@ try {
 }
 ```
 
+When named encoders are imported, the `bcid` value in the options object is ignored.
+
 <a name="electron-example"></a>
 ## Electron Example
 
-There has been some changes to the Electron bundler, and it may pull in either the
+There have been some changes to the Electron bundler, and it may pull in either the
 nodejs or browser module, depending on your version of Electron.  The example below
 assumes the nodejs module.
 
@@ -449,11 +448,13 @@ bwip-js can be used as a command line tool when installed globally:
 ```
 $ npm install -g bwip-js
 $ bwip-js
-Usage: bwip-js symbol-name text [options...] png-file
-       bwip-js --bcid=symbol-name --text=text [options...] png-file
+Usage: bwip-js symbol-name text [options...] file-name
+       bwip-js --bcid=symbol-name --text=text [options...] file-name
 
 Example:
        bwip-js code128 012345678 includetext textcolor=ff0000 my-code128.png
+
+file-name must be type png.
 
 Try 'bwip-js --help' for more information.
 Try 'bwip-js --symbols' for a list of supported barcode symbols.
@@ -549,6 +550,8 @@ for more details.
  * gs1-cc &#x2022; GS1 Composite 2D Component
  * gs1datamatrix &#x2022; GS1 Data Matrix
  * gs1datamatrixrectangular &#x2022; GS1 Data Matrix Rectangular
+ * gs1dldatamatrix &#x2022; GS1 Digital Link Data Matrix
+ * gs1dlqrcode &#x2022; GS1 Digital Link QR Code
  * gs1dotcode &#x2022; GS1 DotCode
  * gs1northamericancoupon &#x2022; GS1 North American Coupon
  * gs1qrcode &#x2022; GS1 QR Code
@@ -574,6 +577,7 @@ for more details.
  * kix &#x2022; Royal Dutch TPG Post KIX
  * leitcode &#x2022; Deutsche Post Leitcode
  * mailmark &#x2022; Royal Mail Mailmark
+ * mands &#x2022; Marks & Spencer
  * matrix2of5 &#x2022; Matrix 2 of 5
  * maxicode &#x2022; MaxiCode
  * micropdf417 &#x2022; MicroPDF417
