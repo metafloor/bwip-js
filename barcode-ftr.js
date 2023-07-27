@@ -27,8 +27,13 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
 		throw new Error('bwipp.typeError: options not an object');
 	}
 
-	// Convert utf-16 to utf-8 but leave binary (8-bit) strings untouched.
-	if (/[\u0100-\uffff]/.test(text)) {
+	// Convert utf-16 to utf-8 unless caller has pre-encoded the text.
+    if (opts.binarytext) {
+        // No 16-bit chars allowed.
+        if (/[\u0100-\uffff]/.test(text)) {
+            throw new Error('bwip-js: 16-bit chars not allowed with binarytext');
+        }
+    } else if (/[\u0080-\uffff]/.test(text)) {
 		text = unescape(encodeURIComponent(text));
 	}
 		

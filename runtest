@@ -19,6 +19,7 @@ sym="$1"
 text="$2"
 opts="$3"
 tid="$sym@"$(echo "$text $opts" | sed -e 's/[^A-Za-z0-9_(.)=^!-]/@/g');
+tid="${tid:0:128}"
 
 echo "$tid ..."
 

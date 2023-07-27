@@ -947,18 +947,19 @@ function PSC(str, flags) {
             throw 'ctxdef: expected exec block';
         }
         var lnbr = lex.lnbr;
-        emit('if (!@FUNCTION@.$ctx._' + lnbr + ') ' + LC);
+        emit('if (!@FUNCTION@.__' + lnbr + '__) ' + LC);
         emit('(function() ' + LC);
         emit('var $ctx = Object.create($1);');
         ctxprep(exec);
         var lines = ctxexec(exec);
 		for (var i = 0; i < lines.length; i++) {
-			block.push({ code:lines[i].code.replace(/\$1\./g, '$ctx.'),
+			block.push({ code:lines[i].code.replace(/\$1\./g, '$ctx.')
+                                           .replace(/\$1\[/g, '$ctx['),
                          lnbr:lines[i].lnbr, seq:++seq });
 		}
         var t = tvar();
-        emit('for (var ' +t+ ' in $ctx) { $ctx.hasOwnProperty(' +t+ ') && (@FUNCTION@.$ctx[' +t+ ']= $ctx[' +t+ ']); }'); 
-        emit('@FUNCTION@.$ctx._' + lnbr + ' = 1;');
+        emit('for (var id in $ctx) $ctx.hasOwnProperty(id) && (@FUNCTION@.$ctx[id] = $ctx[id]);');
+        emit('@FUNCTION@.__' + lnbr + '__ = 1;');
         emit(RC + ')();');
         emit(RC);
     };
@@ -1038,10 +1039,10 @@ function PSC(str, flags) {
 			// Most likely a function call.  If we guess wrong, we will
 			// get a runtime error...
 			ctxflush();
-            if (loopstate.length && loopstate[loopstate.length-1] != 'forall') {
-                emit('if(' + parens(expr) + '()===true){break;}');
-            } else {
+            if (!loopstate.length || loopstate[loopstate.length-1] == 'function') {
                 emit('if(' + parens(expr) + '()===true){return true;}');
+            } else {
+                emit('if(' + parens(expr) + '()===true){break;}');
             }
 		}
 	}
@@ -1672,7 +1673,6 @@ function PSC(str, flags) {
 		var o    = st[sp-2];
 		var exec = st[sp-1];
 		sp-=2;
-		loopstate.push('forall');
 
 		// azteccode forall loop breaks this...  We need better handling of
 		// if/ifelse loops where we do not flush context on exit from the
@@ -1699,6 +1699,7 @@ function PSC(str, flags) {
 			var len = tvar();
 			var val = tvar();
 
+            loopstate.push('loop');
 			ctxflush();
 			ctxprep(exec);
 			emit('for(var ' + tid + '=0,' + len + '=' + o.expr + '.length;' +
@@ -1721,6 +1722,7 @@ function PSC(str, flags) {
 				var obj = tvar();
 			}
 
+            loopstate.push('loop');
 			ctxflush();
 			ctxprep(exec);
 			if (obj != o.expr) {
@@ -1736,6 +1738,7 @@ function PSC(str, flags) {
 			append(ctxexec(exec));
 			emit(RC);
 		} else {
+            loopstate.push('function');
 			ctxflush();
 
 			// Most forall's in BWIPP where we cannot determine object type
@@ -1815,7 +1818,7 @@ function PSC(str, flags) {
 				tid + '<=' + vlim + ';' + tid + '+=' + einc + ')' + LC);
 		}
 
-		loopstate.push('for');
+		loopstate.push('loop');
 		ctxprep(exec);
 		st[sp++] = { type:TYPE_INTVAL, expr:tid, seq:++seq };
 		newbranch();
@@ -1831,7 +1834,7 @@ function PSC(str, flags) {
 		var exec = st[sp-1];
 		sp-=2;
 
-		loopstate.push('repeat');
+		loopstate.push('loop');
 		ctxflush();
 		emit('for(var ' + tid + '=0,' + lim + '=' + expr + ';' +
 					tid + '<' + lim + ';' + tid + '++)' + LC);
@@ -1857,9 +1860,7 @@ function PSC(str, flags) {
 	}
 	$.exit = function() {
 		ctxflush();
-		if (!loopstate.length) {
-			emit('return true;');
-		} else if (loopstate[loopstate.length-1] == 'forall') {
+		if (!loopstate.length || loopstate[loopstate.length-1] == 'function') {
 			emit('return true;');
 		} else {
 			emit('break;');

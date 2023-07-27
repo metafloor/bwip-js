@@ -8,9 +8,7 @@ var $j = 0;		// stack pointer
 var $k = [];	// operand stack
 
 // Global state defined at runtime
-var $0 = {
-    $error : new Map,
-};
+var $0 = {};
 
 // Array ctor
 //	$a()	: Build a new array up to the Infinity-marker on the stack.
@@ -46,7 +44,7 @@ function $d() {
         }
     }
     if (mark < 0) {
-        throw 'dict-marker-not-found';
+        throw new Error('dict-marker-not-found');
     }
     var d = new Map;
     for (var i = mark+1; i < $j; i += 2) {
@@ -59,7 +57,7 @@ function $d() {
         } else if (k instanceof Uint8Array) {
             d.set($z(k), $k[i+1]);
         } else {
-            throw 'dict-not-a-valid-key(' + k + ')';
+            throw new Error('dict-not-a-valid-key(' + k + ')');
         }
     }
     $j = mark;
@@ -90,7 +88,7 @@ function $s(v) {
 // ... n c roll
 function $r(n, c) {
 	if ($j < n) {
-		throw 'roll: --stack-underflow--';
+		throw new Error('roll: --stack-underflow--');
 	}
 	if (!c) {
 		return;
@@ -177,7 +175,7 @@ function $cvx(s) {
     s = $z(s)
     var m = /^\s*<((?:[0-9a-fA-F]{2})+)>\s*$/.exec(s);
     if (!m) {
-        throw 'cvx: not a <HH> hex string literal';
+        throw new Error('cvx: not a <HH> hex string literal');
     }
     var h = m[1];
     var l = h.length >> 1;
@@ -226,7 +224,7 @@ function $put(d,k,v) {
 			d.set(k, v);
 		}
 	} else {
-		throw 'put-not-writable-' + (typeof d);
+		throw new Error('put-not-writable-' + (typeof d));
 	}
 }
 
@@ -276,7 +274,7 @@ function $puti(d,o,s) {
 			darr[doff+i] = sarr[soff+i];
 		}
 	} else {
-		throw 'putinterval-not-writable-' + (typeof d);
+		throw new Error('putinterval-not-writable-' + (typeof d));
 	}
 }
 
@@ -525,6 +523,20 @@ var $f = (function (fa) {
 	};
 })(new Float32Array(1));
 
+// This is a replacement for the BWIPP raiseerror function.
+// function bwipp_raiseerror(){
+//    $put($0.$error,'errorinfo',$k[--$j]);//#115
+//    $put($0.$error,'errorname',$k[--$j]);//#116
+//    $put($0.$error,'command',null);//#117
+//    $put($0.$error,'newerror',true);//#118
+//    throw new Error($z($0.$error.get("errorname"))+": "+$z($0.$error.get("errorinfo")));//#119
+//}
+function bwipp_raiseerror() {
+    var info = $k[--$j];
+    var name = $k[--$j];
+    throw new Error($z(name) + ": " + $z(info));
+}
+
 // This is a replacement for the BWIPP processoptions function.
 // We cannot use the BWIPP version due to two reasons:
 // - legacy code allows strings to be numbers and numbers to be strings
@@ -556,7 +568,7 @@ function bwipp_processoptions() {
         if (def == null || typ == 'number') {
             // This allows for numeric strings
             if (!isFinite(+val)) {
-                throw new ReferenceError('/bwipp.invalidOptionType: ' + id + 
+                throw new Error('bwipp.invalidOptionType: ' + id + 
                         ': not a realtype: ' + val);
             }
             if (typeof val == 'string') {
@@ -574,7 +586,7 @@ function bwipp_processoptions() {
                 } else if (val == 'false') {
                     val = false;
                 } else {
-                    throw new ReferenceError('/bwipp.invalidOptionType: ' + id + 
+                    throw new Error('bwipp.invalidOptionType: ' + id + 
                             ': not a booleantype: ' + val);
                 }
                 map ? opts.set(id, val) : (opts[id] = val);
@@ -585,7 +597,7 @@ function bwipp_processoptions() {
                 val = ''+val;
                 map ? opts.set(id, val) : (opts[id] = val);
             } else if (typeof val != 'string' && !(val instanceof Uint8Array)) {
-                throw new ReferenceError('/bwipp.invalidOptionType: ' + id + 
+                throw new Error('bwipp.invalidOptionType: ' + id + 
                         ': not a stringtype: ' + val);
             }
         }

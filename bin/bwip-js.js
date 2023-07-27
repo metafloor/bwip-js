@@ -207,25 +207,9 @@ var optlist = [
 ];
 var optmap = optlist.reduce(function(map, elt) { map[elt.name] = elt; return map; }, {}); 
 var opts = {};
+var pngfile;
 
-if (process.argv.length < 5) {
-    usage();
-    process.exit(1);
-}
-if (!/bcid=/.test(process.argv[2])) {
-    process.argv[2] = 'bcid=' + process.argv[2];
-}
-if (!/text=/.test(process.argv[2])) {
-    process.argv[3] = 'text=' + process.argv[3];
-}
-var pngfile = process.argv[process.argv.length-1];
-if (!/\.png$/.test(pngfile)) {
-    console.log("bwip-js: missing png-file");
-    usage();
-    process.exit(1);
-}
-
-for (var i = 2, l = process.argv.length - 1; i < l; i++) {
+for (var i = 2, l = process.argv.length; i < l; i++) {
 	var a = process.argv[i];
 	if (/^--/.test(a)) {
 		a = a.substr(2);
@@ -246,7 +230,18 @@ for (var i = 2, l = process.argv.length - 1; i < l; i++) {
 			process.exit(1);
 		}
 		opts[a] = true;
-	} else {
+	} else if (i == 2) {
+		opts.bcid = process.argv[2];
+    } else if (i == 3) {
+		opts.text = process.argv[3];
+    } else if (i == l-1) {
+        pngfile = process.argv[process.argv.length-1];
+        if (!/\.png$/.test(pngfile)) {
+            console.log("bwip-js: missing png-file");
+            usage();
+            process.exit(1);
+        }
+    } else {
         opts[a] = true;
 	}
 }
@@ -262,7 +257,6 @@ if (process.argv.length == 2) {
 		console.log('    ' + sym + ' : ' + symdesc[sym]);
 	}
 } else {
-
 	bwipjs.toBuffer(opts, function (err, png) {
 		if (err) {
 			console.error(''+err);
