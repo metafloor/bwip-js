@@ -19,8 +19,9 @@ var PNG_CRC = (function() {
 	return precalc;
 })();
 
-var PNG_ZLIB = require('zlib');
-var __unused = require('stream');  // fix for https://github.com/nodejs/node/issues/37021
+// This has been moved to the nodejs-only section of exports.js due to 
+// react-native polyfils.
+//var PNG_ZLIB = require('zlib');
 
 // opts is the same options object passed into the bwipjs methods.
 function DrawingZlibPng(opts, callback) {

@@ -1,17 +1,15 @@
-// bwip-js/examples/drawing-svg.js
+// bwip-js/examples/drawing-pdfkit.js
 //
-// This is an advanced demonstation of using the drawing interface.
-//
-// Converts the drawing primitives into the equivalent SVG.  Linear barcodes
+// Converts the drawing primitives into pdfkit graphics.  Linear barcodes
 // are rendered as a series of stroked paths.  2D barcodes are rendered as a 
 // series of filled paths.
 //
-// Rotation is handled during drawing.  The resulting SVG will contain the 
-// already-rotated barcode without an SVG transform.
+// Rotation is handled during drawing.  The resulting graphic will contain the 
+// already-rotated barcode without need for a transform.
 //
 // If the requested barcode image contains text, the glyph paths are 
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
-// and added as filled SVG paths.
+// and added as filled paths.
 //
 // This code can run in the browser and in nodejs.
 (function (root, factory) {
@@ -20,20 +18,18 @@
     } else if (typeof module === 'object' && module.exports) {
         module.exports = factory();
     } else {
-        root.DrawingSVG = factory();
+        root.DrawingPDFKit = factory();
     }
 }(typeof self !== 'undefined' ? self : this, function () {
 "use strict";
 
-function DrawingSVG(opts, FontLib) {
+// `doc` is an instance of PDFKit.PDFDocument
+function DrawingPDFKit(doc, opts, FontLib) {
     // Unrolled x,y rotate/translate matrix
     var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
     var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
-    var svg = '';
     var path;
-    var clipid = '';
-	var clips = [];
     var lines = {};
 
     // Magic number to approximate an ellipse/circle using 4 cubic beziers.
@@ -104,54 +100,43 @@ function DrawingSVG(opts, FontLib) {
             var swap = rot == 'L' || rot == 'R';
             gs_width  = swap ? height : width;
             gs_height = swap ? width : height;
+
+            // Initialize defaults
+            doc.save();
+            doc.lineCap('butt');
+
+            if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
+                gs_dx = gs_dy = 0;
+                moveTo(0, 0);
+                lineTo(width, 0);
+                lineTo(width, height);
+                lineTo(0, height);
+                lineTo(0, 0);
+                doc.fillColor('#' + opts.backgroundcolor);
+                doc.fill('non-zero');
+            }
+
+            // Now add in the effects of the padding
             gs_dx = padl;
             gs_dy = padt;
         },
         // Unconnected stroked lines are used to draw the bars in linear barcodes.
         // No line cap should be applied.  These lines are always orthogonal.
         line(x0, y0, x1, y1, lw, rgb) {
-            // Try to get non-blurry lines...
-            x0 = x0|0;
-            y0 = y0|0;
-            x1 = x1|0;
-            y1 = y1|0;
-            lw = Math.round(lw);
+            moveTo(x0, y0);
+            lineTo(x1, y1);
 
-            // Try to keep the lines "crisp" by using with the SVG line drawing spec to
-            // our advantage.
-            if (lw & 1) {
-                if (x0 == x1) {
-                    x0 += 0.5;
-                    x1 += 0.5;
-                }
-                if (y0 == y1) {
-                    y0 += 0.5;
-                    y1 += 0.5;
-                }
-            }
-
-            // Group together all lines of the same width and emit as single paths.
-            // Dramatically reduces resulting text size.
-            var key = '' + lw + '#' + rgb;
-            if (!lines[key]) {
-                lines[key] = '<path stroke="#' + rgb + '" stroke-width="' + lw + '" d="';
-            }
-            lines[key] += 'M' + transform(x0, y0) + 'L' + transform(x1, y1);
+            doc.lineWidth(lw) .stroke();
         },
         // Polygons are used to draw the connected regions in a 2d barcode.
         // These will always be unstroked, filled, non-intersecting,
         // orthogonal shapes.
         // You will see a series of polygon() calls, followed by a fill().
         polygon(pts) {
-            if (!path) {
-                path = '<path d="';
-            }
-            path += 'M' + transform(pts[0][0], pts[0][1]);
+            moveTo(pts[0][0], pts[0][1]);
             for (var i = 1, n = pts.length; i < n; i++) {
-                var p = pts[i];
-                path += 'L' + transform(p[0], p[1]);
+                lineTo(pts[i][0], pts[i][1]);
             }
-            path += 'Z';
         },
         // An unstroked, filled hexagon used by maxicode.  You can choose to fill
         // each individually, or wait for the final fill().
@@ -165,59 +150,39 @@ function DrawingSVG(opts, FontLib) {
         // to create the bullseye rings.  dotcode issues all of its ellipses then a
         // fill().
         ellipse(x, y, rx, ry, ccw) {
-            if (!path) {
-                path = '<path d="';
-            }
             var dx = rx * ELLIPSE_MAGIC;
             var dy = ry * ELLIPSE_MAGIC;
 
-            // Since there are never overlapping regions, we don't worry about cw/ccw.
-            path += 'M' + transform(x - rx, y) +
-                    'C' + transform(x - rx, y - dy) + ' ' +
-                          transform(x - dx, y - ry) + ' ' +
-                          transform(x,      y - ry) +
-                    'C' + transform(x + dx, y - ry) + ' ' +
-                          transform(x + rx, y - dy) + ' ' +
-                          transform(x + rx, y) + 
-                    'C' + transform(x + rx, y + dy) + ' ' +
-                          transform(x + dx, y + ry) + ' ' +
-                          transform(x,      y + ry) +  
-                    'C' + transform(x - dx, y + ry) + ' ' +
-                          transform(x - rx, y + dy) + ' ' +
-                          transform(x - rx, y) + 
-                    'Z';
+            // Since we fill with even-odd, don't worry about cw/ccw
+            moveTo(x - rx, y);
+            cubicTo(x - rx, y - dy, x - dx, y - ry, x,      y - ry);
+            cubicTo(x + dx, y - ry, x + rx, y - dy, x + rx, y);
+            cubicTo(x + rx, y + dy, x + dx, y + ry, x,      y + ry);
+            cubicTo(x - dx, y + ry, x - rx, y + dy, x - rx, y);
         },
         // PostScript's default fill rule is non-zero but there are never intersecting
-        // regions so use even-odd as it is easier to work with.
+        // regions, so we use even-odd as it is easier to work with.
         fill(rgb) {
-            if (path) {
-                svg += path + '" fill="#' + rgb + '" fill-rule="evenodd"' +
-					   (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
-					   ' />\n';
-                path = null;
-            }
+            doc.fillColor('#' + rgb);
+            doc.fill('even-odd');
         },
         // Currently only used by swissqrcode.  The `polys` area is an array of
         // arrays of points.  Each array of points is identical to the `pts`
-        // parameter passed to polygon().  The clipping rule, like the fill rule,
-        // defaults to non-zero winding.
+        // parameter passed to polygon().  The postscript default clipping rule,
+        // like the fill rule, is non-zero winding.
         clip : function(polys) {
-			var path = '<clipPath id="clip' + clips.length + '"><path d="';
+            doc.save();
             for (let j = 0; j < polys.length; j++) {
                 let pts = polys[j];
-				path += 'M' + transform(pts[0][0], pts[0][1]);
-				for (var i = 1, n = pts.length; i < n; i++) {
-					var p = pts[i];
-					path += 'L' + transform(p[0], p[1]);
-				}
-				path += 'Z';
+                moveTo(pts[0][0], pts[0][1]);
+                for (let i = 1; i < pts.length; i++) {
+                    lineTo(pts[i][0], pts[i][1]);
+                }
             }
-		    path += '" clip-rule="nonzero" /></clipPath>';
-			clipid = "clip" + clips.length;
-			clips.push(path);
+            doc.clip('non-zero');
         },
         unclip : function() {
-			clipid = '';
+			doc.restore();
 		},
         // Draw text with optional inter-character spacing.  `y` is the baseline.
         // font is an object with properties { name, width, height, dx }
@@ -243,54 +208,60 @@ function DrawingSVG(opts, FontLib) {
                     // C is cubic bezier curve-to
                     for (var i = 0, l = glyph.length; i < l; i++) {
                         let seg = glyph[i];
-                        if (seg.type == 'M' || seg.type == 'L') {
-                            path += seg.type + transform(seg.x + x, y - seg.y);
+                        if (seg.type == 'M') {
+                            moveTo(seg.x + x, y - seg.y);
+                        } else if (seg.type == 'L') {
+                            lineTo(seg.x + x, y - seg.y);
                         } else if (seg.type == 'Q') {
-                            path += seg.type + transform(seg.cx + x, y - seg.cy) + ' ' +
-                                               transform(seg.x + x,  y - seg.y);
+                            quadTo(seg.cx + x, y - seg.cy, seg.x + x,  y - seg.y);
                         } else if (seg.type == 'C') {
-                            path += seg.type + transform(seg.cx1 + x, y - seg.cy1) + ' ' +
-                                               transform(seg.cx2 + x, y - seg.cy2) + ' ' +
-                                               transform(seg.x + x,   y - seg.y);
+                            cubicTo(seg.cx1 + x, y - seg.cy1,
+                                    seg.cx2 + x, y - seg.cy2,
+                                    seg.x + x,   y - seg.y);
                         }
                     }
-                    // Close the shape
-                    path += 'Z';
                 }
                 x += glyph.advance + dx;
             }
-            if (path) {
-                svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
-            }
+            doc.fillColor('#' + rgb);
+            doc.fill('non-zero');
         },
         // Called after all drawing is complete.  The return value from this method
         // is the return value from `bwipjs.render()`.
         end() {
-            var linesvg = '';
-            for (var key in lines) {
-                linesvg += lines[key] + '" />\n';
-            }
-            var bg = opts.backgroundcolor;
-            return '<svg version="1.1" width="' + gs_width + '" height="' + gs_height +
-                        '" xmlns="http://www.w3.org/2000/svg">\n' +
-						(clips.length ? '<defs>' + clips.join('') + '</defs>' : '') +
-                        (/^[0-9A-Fa-f]{6}$/.test(''+bg)
-                            ? '<rect width="100%" height="100%" fill="#' + bg + '" />\n'
-                            : '') +
-                        linesvg + svg + '</svg>\n';
+            doc.restore();
+            return doc;
         },
     };
 
-    // translate/rotate and return as an SVG coordinate pair
+    // translate/rotate and return as a coordinate pair
     function transform(x, y) {
         x += gs_dx;
         y += gs_dy;
         var tx = tx0 * x + tx1 * y + tx2 * (gs_width-1) + tx3 * (gs_height-1);
         var ty = ty0 * x + ty1 * y + ty2 * (gs_width-1) + ty3 * (gs_height-1);
-        return '' + ((tx|0) == tx ? tx : tx.toFixed(2)) + ' ' +
-                    ((ty|0) == ty ? ty : ty.toFixed(2));
+        return [ tx, ty ];
+    }
+    function moveTo(x, y) {
+        var p = transform(x, y);
+        doc.moveTo(p[0], p[1]);
+    }
+    function lineTo(x, y) {
+        var p = transform(x, y);
+        doc.lineTo(p[0], p[1]);
+    }
+    function quadTo(cx, cy, x, y) {
+        var p1 = transform(cx, cy);
+        var p2 = transform(x, y);
+        doc.quadraticCurveTo(p1[0], p1[1], p2[0], p2[1]);
+    }
+    function cubicTo(cx1, cy1, cx2, cy2, x, y) {
+        var p1 = transform(cx1, cy1);
+        var p2 = transform(cx2, cy2);
+        var p3 = transform(x, y);
+        doc.bezierCurveTo(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
     }
 }
 
-return DrawingSVG;
+return DrawingPDFKit;
 }));

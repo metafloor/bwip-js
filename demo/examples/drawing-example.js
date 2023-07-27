@@ -13,7 +13,7 @@
 // See example.html.
 function DrawingExample(opts, canvas) {
 
-    let ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d', { willReadFrequently:true });
 
     // PostScript transparently creates compound path regions.
     // We must do it explicitly with canvas.
@@ -144,22 +144,43 @@ function DrawingExample(opts, canvas) {
             path.ellipse(x, y, rx, ry, 0, 0, 2*Math.PI, ccw);
             compound.addPath(path);
         },
-        // PostScript's default fill rule is even-odd.
+        // PostScript's default fill rule is non-zero.
         fill(rgb) {
             if (!compound) {
                 return;
             }
             ctx.fillStyle = '#' + rgb;
-            ctx.fill(compound, 'evenodd');
+            ctx.fill(compound, 'nonzero');
             compound = undefined;
         },
+        // Currently only used by swissqrcode.  The `polys` area is an array of
+        // arrays of points.  Each array of points is identical to the `pts`
+        // parameter passed to polygon().  The clipping rule, like the fill rule,
+        // defaults to non-zero winding.
+        clip : function(polys) {
+			ctx.save();
+
+            let region = new Path2D();
+			for (let j = 0; j < polys.length; j++) {
+				let pts = polys[j];
+				let path = new Path2D();
+				path.moveTo(pts[0][0], pts[0][1]);
+				for (let i = 1; i < pts.length; i++) {
+					path.lineTo(pts[i][0], pts[i][1]);
+				}
+				path.closePath();
+                region.addPath(path);
+			}
+            ctx.clip(region, 'nonzero');
+        },
+        unclip : function() {
+			ctx.restore();
+		},
         // Draw text.
         // `y` is the baseline.
-        //
         // `font` is an object with properties { name, width, height, dx }
         //
         // `name` will be the same as the font name in `measure()`.
-        //
         // `width` and `height` are the font cell size.
         // `dx` is extra space requested between characters (usually zero).
         //
