@@ -216,5 +216,6 @@ echo "" >> src/bwipp.js
 ##
 ##rm -f barcode.psc
 rm -f barcode.tmp
+rm -f barcode-lookup.js
 ##rm -f barcode.js
 rm -f bwipp.js

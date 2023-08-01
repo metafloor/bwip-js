@@ -1692,6 +1692,12 @@ var FontLib = (function() {
     }
 })();
 
+// This is needed to make the default exports traceable by esbuild
+// during its tree shaking phase.  See issue #298.
+function LoadFont() {
+    return FontLib.loadFont.apply(FontLib, Array.prototype.slice.call(arguments));
+}
+
 // bwip-js/stb_trutype.js
 //
 // JavaScript implementation of stb_truetype.h @ https://github.com/nothings/stb.
@@ -3728,12 +3734,13 @@ export function upca(opts,cvs) { return _ToCanvas(bwipp_upca,opts,cvs); };
 export function upcacomposite(opts,cvs) { return _ToCanvas(bwipp_upcacomposite,opts,cvs); };
 export function upce(opts,cvs) { return _ToCanvas(bwipp_upce,opts,cvs); };
 export function upcecomposite(opts,cvs) { return _ToCanvas(bwipp_upcecomposite,opts,cvs); };
+const BWIPJS_VERSION = '__BWIPJS_VERS__';
+export { BWIPJS_VERSION, BWIPP_VERSION, LoadFont as loadFont };
 export default {
     // The public interface
     toCanvas : ToCanvas, render : Render, raw : ToRaw,
-    fixupOptions : FixupOptions,
-    loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '__BWIPJS_VERS__',
+    fixupOptions : FixupOptions, loadFont : LoadFont,
+    BWIPJS_VERSION : BWIPJS_VERSION,
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingCanvas,

@@ -195,8 +195,7 @@ cat - <<@EOF >> dist/bwip-js-node.js
 module.exports = {
     // The public interface
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
-    fixupOptions:FixupOptions,
-    loadFont:FontLib.loadFont,
+    fixupOptions:FixupOptions, loadFont:LoadFont,
     BWIPJS_VERSION:'__BWIPJS_VERS__',
     BWIPP_VERSION:BWIPP_VERSION,
     // Internals
@@ -211,12 +210,13 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
         -e 's/-/_/g' >> dist/bwip-js-node.mjs
 
 cat - <<@EOF >> dist/bwip-js-node.mjs
+const BWIPJS_VERSION = '__BWIPJS_VERS__';
+export { BWIPJS_VERSION, BWIPP_VERSION, LoadFont as loadFont };
 export default {
     // The public interface
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
-    fixupOptions : FixupOptions,
-    loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '__BWIPJS_VERS__',
+    fixupOptions : FixupOptions, loadFont : LoadFont,
+    BWIPJS_VERSION : BWIPJS_VERSION,
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,
@@ -229,12 +229,13 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
         -e 's/-/_/g' >> dist/bwip-js.mjs
 
 cat - <<@EOF >> dist/bwip-js.mjs
+const BWIPJS_VERSION = '__BWIPJS_VERS__';
+export { BWIPJS_VERSION, BWIPP_VERSION, LoadFont as loadFont };
 export default {
     // The public interface
     toCanvas : ToCanvas, render : Render, raw : ToRaw,
-    fixupOptions : FixupOptions,
-    loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '__BWIPJS_VERS__',
+    fixupOptions : FixupOptions, loadFont : LoadFont,
+    BWIPJS_VERSION : BWIPJS_VERSION,
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingCanvas,
@@ -247,12 +248,13 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
         -e 's/-/_/g' >> dist/bwip-js-rn.mjs
 
 cat - <<@EOF >> dist/bwip-js-rn.mjs
+const BWIPJS_VERSION = '__BWIPJS_VERS__';
+export { BWIPJS_VERSION, BWIPP_VERSION, LoadFont as loadFont };
 export default {
     // The public interface
     toDataURL:ToDataURL, render:Render, raw:ToRaw,
-    fixupOptions : FixupOptions,
-    loadFont : FontLib.loadFont,
-    BWIPJS_VERSION : '__BWIPJS_VERS__',
+    fixupOptions : FixupOptions, loadFont : LoadFont,
+    BWIPJS_VERSION : BWIPJS_VERSION,
     BWIPP_VERSION : BWIPP_VERSION,
     // Internals
     BWIPJS, STBTT, FontLib, DrawingBuiltin, DrawingZlibPng,
@@ -265,8 +267,7 @@ cat - <<@EOF >> $file
     return {
         // The public interface
         toCanvas:ToCanvas, render:Render, raw:ToRaw,
-        fixupOptions:FixupOptions,
-        loadFont:FontLib.loadFont,
+        fixupOptions:FixupOptions, loadFont:LoadFont,
         BWIPJS_VERSION:'__BWIPJS_VERS__',
         BWIPP_VERSION:BWIPP_VERSION,
         // Internals

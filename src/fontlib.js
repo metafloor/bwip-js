@@ -168,3 +168,9 @@ var FontLib = (function() {
     }
 })();
 
+// This is needed to make the default exports traceable by esbuild
+// during its tree shaking phase.  See issue #298.
+function LoadFont() {
+    return FontLib.loadFont.apply(FontLib, Array.prototype.slice.call(arguments));
+}
+
