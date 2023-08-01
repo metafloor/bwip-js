@@ -37,7 +37,7 @@ var FontLib = (function() {
             multx = +arguments[2] || 100;
             data = arguments[3];
         } else {
-            throw new Error("loadFont(): invalid number of arguments");
+            throw new Error("bwipjs: loadFont: invalid number of arguments");
         }
 
         var font = STBTT.InitFont(toUint8Array(data));
@@ -59,7 +59,7 @@ var FontLib = (function() {
     // Not supported by stbtt
     function monochrome(mono) {
         if (mono) {
-            throw new Error('fontlib: monochrome not implemented');
+            throw new Error('bwipjs: monochrome fonts not implemented');
         }
     }
 
@@ -167,4 +167,10 @@ var FontLib = (function() {
                                               height * font.bwipjs_multy / 100);
     }
 })();
+
+// This is needed to make the default exports traceable by esbuild
+// during its tree shaking phase.  See issue #298.
+function LoadFont() {
+    return FontLib.loadFont.apply(FontLib, Array.prototype.slice.call(arguments));
+}
 

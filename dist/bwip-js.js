@@ -897,48 +897,6 @@ function bwipp_processoptions() {
     }
 }
 
-// DEBUG-BEGIN
-function $stack() {
-    console.log('[[[');
-    for (var i = $j - 1; i >= 0; i--) {
-        console.log(tostring($k[i]));
-    }
-    console.log(']]]');
-
-    function tostring(v) {
-        // null can be mis-typed - get it out of the way
-        if (v === null) {
-            return 'null';
-        } else if (v === undefined) {
-            return '<undefined>';
-        } else if (v instanceof Array) {
-            var s = '<array,' + v.o + ',' + v.length + '>[';
-            for (var j = v.o, a = v.b, l = v.length + v.o; j < l; j++) {
-                s += (j == v.o ? '' : ',') + tostring(a[j]);
-            }
-            return s + ']';
-        } else if (v instanceof Uint8Array) {
-            return '(' + $z[v] + ')';
-        } else if (v instanceof Map) {
-            var s = '<<';
-            for (var elt of v) {
-                s += (s.length == 2 ? '' : ',') + elt[0] + ':' + tostring(elt[1]);
-            }
-            return s + '>>';
-        } else if (typeof v === 'object') {
-            var s = '<<';
-            for (var id in v) {
-                s += (s.length == 2 ? '' : ',') + id + ':' + tostring(v[id]);
-            }
-            return s + '>>';
-        } else if (typeof v === 'string') {
-            return '"' + v + '"';
-        } else {
-            return '' + v;
-        }
-    }
-}
-// DEBUG-END
 function bwipp_parseinput() {
     var $1 = Object.create(bwipp_parseinput.$ctx || (bwipp_parseinput.$ctx = {})); //#200
     $1.fncvals = $k[--$j]; //#204
@@ -41370,6 +41328,12 @@ var FontLib = (function() {
     }
 })();
 
+// This is needed to make the default exports traceable by esbuild
+// during its tree shaking phase.  See issue #298.
+function LoadFont() {
+    return FontLib.loadFont.apply(FontLib, Array.prototype.slice.call(arguments));
+}
+
 // bwip-js/stb_trutype.js
 //
 // JavaScript implementation of stb_truetype.h @ https://github.com/nothings/stb.
@@ -43298,9 +43262,8 @@ FontLib.loadFont("OCR-B", 96, 100, "AAEAAAAPAIAAAwBwRkZUTXxHn14AADmUAAAAHEdERUYA
     return {
         // The public interface
         toCanvas:ToCanvas, render:Render, raw:ToRaw,
-        fixupOptions:FixupOptions,
-        loadFont:FontLib.loadFont,
-        BWIPJS_VERSION:'3.4.4 (2023-07-27)',
+        fixupOptions:FixupOptions, loadFont:LoadFont,
+        BWIPJS_VERSION:'3.4.5 (2023-08-01)',
         BWIPP_VERSION:BWIPP_VERSION,
         // Internals
         BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
