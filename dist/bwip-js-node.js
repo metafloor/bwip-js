@@ -31,6 +31,7 @@
 "use strict";
 
 // exports.js
+var BWIPJS_VERSION = '__BWIPJS_VERS__';
 
 var url = require('url');
 var PNG_ZLIB = require('zlib');
@@ -43424,7 +43425,7 @@ module.exports = {
     // The public interface
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions:FixupOptions, loadFont:LoadFont,
-    BWIPJS_VERSION:'__BWIPJS_VERS__',
+    BWIPJS_VERSION: BWIPJS_VERSION,
     BWIPP_VERSION:BWIPP_VERSION,
     // Internals
     BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,

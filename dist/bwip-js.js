@@ -40,6 +40,7 @@
 	}
 }(typeof self !== 'undefined' ? self : this, function () {
 // exports.js
+var BWIPJS_VERSION = '__BWIPJS_VERS__';
 
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
@@ -43263,7 +43264,7 @@ FontLib.loadFont("OCR-B", 96, 100, "AAEAAAAPAIAAAwBwRkZUTXxHn14AADmUAAAAHEdERUYA
         // The public interface
         toCanvas:ToCanvas, render:Render, raw:ToRaw,
         fixupOptions:FixupOptions, loadFont:LoadFont,
-        BWIPJS_VERSION:'__BWIPJS_VERS__',
+        BWIPJS_VERSION: BWIPJS_VERSION,
         BWIPP_VERSION:BWIPP_VERSION,
         // Internals
         BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,

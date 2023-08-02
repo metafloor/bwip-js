@@ -196,7 +196,7 @@ module.exports = {
     // The public interface
     request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
     fixupOptions:FixupOptions, loadFont:LoadFont,
-    BWIPJS_VERSION:'__BWIPJS_VERS__',
+    BWIPJS_VERSION: BWIPJS_VERSION,
     BWIPP_VERSION:BWIPP_VERSION,
     // Internals
     BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
@@ -210,7 +210,6 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
         -e 's/-/_/g' >> dist/bwip-js-node.mjs
 
 cat - <<@EOF >> dist/bwip-js-node.mjs
-const BWIPJS_VERSION = '__BWIPJS_VERS__';
 export { BWIPJS_VERSION, BWIPP_VERSION, LoadFont as loadFont };
 export default {
     // The public interface
@@ -229,7 +228,6 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
         -e 's/-/_/g' >> dist/bwip-js.mjs
 
 cat - <<@EOF >> dist/bwip-js.mjs
-const BWIPJS_VERSION = '__BWIPJS_VERS__';
 export { BWIPJS_VERSION, BWIPP_VERSION, LoadFont as loadFont };
 export default {
     // The public interface
@@ -248,7 +246,6 @@ grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
         -e 's/-/_/g' >> dist/bwip-js-rn.mjs
 
 cat - <<@EOF >> dist/bwip-js-rn.mjs
-const BWIPJS_VERSION = '__BWIPJS_VERS__';
 export { BWIPJS_VERSION, BWIPP_VERSION, LoadFont as loadFont };
 export default {
     // The public interface
@@ -268,7 +265,7 @@ cat - <<@EOF >> $file
         // The public interface
         toCanvas:ToCanvas, render:Render, raw:ToRaw,
         fixupOptions:FixupOptions, loadFont:LoadFont,
-        BWIPJS_VERSION:'__BWIPJS_VERS__',
+        BWIPJS_VERSION: BWIPJS_VERSION,
         BWIPP_VERSION:BWIPP_VERSION,
         // Internals
         BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
@@ -277,5 +274,85 @@ cat - <<@EOF >> $file
 }));
 @EOF
 done
+
+# Build the .d.ts files
+# The files are mostly predefined except for the platform-specific exports.
+# Typescript's return type inferencing when the return value is wrapped in a
+# Promise requires the partial specialization Promise<T>.
+
+function browsertypes {
+cat - <<@EOF
+    export function toCanvas(canvas: string | HTMLCanvasElement, opts: RenderOptions): HTMLCanvasElement;
+
+@EOF
+# toCanvas => canvas
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(canvas: string | HTMLCanvasElement, opts: RenderOptions): HTMLCanvasElement;/' -e 's/-/_/g' | sort
+}
+
+function nodejstypes {
+cat - <<@EOF
+    export type ToBufferCallback = (err: string | Error, png: Buffer) => void;
+    export function toBuffer(opts: RenderOptions, callback: ToBufferCallback): void;
+    export function toBuffer(opts: RenderOptions): Promise<Buffer>;
+    export function request(req: Request, res: Response, opts?: RenderOptions): void;
+
+@EOF
+# toBuffer => Promise<Buffer>
+# toBuffer callback
+(
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions): Promise<Buffer>;/' -e 's/-/_/g'
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, callback: ToBufferCallback): void;/' -e 's/-/_/g'
+) | sort
+}
+
+function reactnvtypes {
+cat - <<@EOF
+    export type ToDataURLCallback = (err: string | Error, png: { width: number; height: number; uri: string }) => void;
+    export type DataURL = { width: number; height: number; uri: string };
+    export function toDataURL(opts: RenderOptions, callback: ToDataURLCallback) : void;
+    export function toDataURL(opts: RenderOptions): Promise<DataURL>;
+
+@EOF
+# toDataURL => Promise<DataURL>
+# toDataURL callback
+(
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions): Promise<DataURL>;/' -e 's/-/_/g'
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, callback: ToDataURLCallback): void;/' -e 's/-/_/g'
+) | sort
+}
+
+function drawingtypes {
+cat - <<@EOF
+@EOF
+# toDrawing => Promise<Buffer>
+# toDrawing => Promise<DataURL>
+(
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;/' -e 's/-/_/g'
+# toDrawing => any
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, drawing: DrawingContext<T>): T;/' -e 's/-/_/g'
+) | sort
+}
+
+
+browsertypes | sed -E '/\/\/ platform-specific exports/r /dev/stdin' src/bwip-js.d.ts > dist/bwip-js.d.ts
+nodejstypes | sed -E '/\/\/ platform-specific exports/r /dev/stdin' src/bwip-js.d.ts > dist/bwip-js-node.d.ts
+reactnvtypes | sed -E '/\/\/ platform-specific exports/r /dev/stdin' src/bwip-js.d.ts > dist/bwip-js-rn.d.ts
+
+## Fix up the node d.ts file to include the node types
+(
+cat - <<@EOF
+/// <reference types="node" />
+
+import { IncomingMessage as Request, ServerResponse as Response } from 'http';
+
+@EOF
+) | sed -i -E '/\/\/ platform-specific includes/r /dev/stdin' dist/bwip-js-node.d.ts
 
 exit 0

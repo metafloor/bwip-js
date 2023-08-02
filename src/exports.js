@@ -1,4 +1,5 @@
 // exports.js
+var BWIPJS_VERSION = '__BWIPJS_VERS__';
 
 //@@BEGIN-NODE-JS-EXPORTS@@
 var url = require('url');
