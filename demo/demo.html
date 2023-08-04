@@ -214,6 +214,10 @@ function render() {
 		document.getElementById('stats').textContent = elt.sym + ' rendered in ' + (ts1-ts0) + ' msecs.';
 		document.getElementById('saveas').style.visibility = 'visible';
 		saveCanvas.basename = elt.sym + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-');
+        if (window.devicePixelRatio && window.devicePixelRatio != 1) {
+            document.getElementById('output').innerHTML = '<br>WARNING: browser devicePixelRatio = ' +
+                            window.devicePixelRatio + ': canvas will appear blurry...';
+        }
 	}
 	function showSVG(svg, ts0, ts1) {
         svgdiv.innerHTML   = svg;
