@@ -9,7 +9,7 @@ All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).
 
-| Version 4 has been released.  The primary enhancement is built-in support for generating barcodes in SVG.  You can read about the changes here: https://github.com/metafloor/bwip-js/discussions/299
+> Version 4 has been released.  The primary enhancement is built-in support for generating barcodes in SVG.  You can read about the changes here: https://github.com/metafloor/bwip-js/discussions/299
 
 ## Status 
 
@@ -351,7 +351,7 @@ try {
 }
 ```
 
-When named encoders are imported, the `bcid` value in the options object is ignored.
+When named encoders are called, the `bcid` value in the options object is ignored.
 
 <a name="svg-usage"></a>
 ## SVG (All Platforms) 
@@ -367,7 +367,7 @@ let svg = bwipjs.toSVG({
         height:      12,              // Bar height, in millimeters
         includetext: true,            // Show human-readable text
         textxalign:  'center',        // Always good to set this
-		textcolor:   'ff0000',		  // Red text
+        textcolor:   'ff0000',        // Red text
     });
 ```
 
@@ -483,13 +483,13 @@ const BarCode = (options) => {
     try {
         img = await bwipjs.toDataURL(options);
     } catch (e) {
-		// `e` may be a string or Error object
+        // `e` may be a string or Error object
     }
     return (
         <Image
-		   style={{ height:img.height, width:img.width }}
-		   source={{ uri:img.uri }}
-		/>
+            style={{ height:img.height, width:img.width }}
+            source={{ uri:img.uri }}
+        />
     );
 };
 ```
@@ -508,7 +508,7 @@ try {
 }
 ```
 
-When named encoders are imported, the `bcid` value in the options object is ignored.
+When named encoders are called, the `bcid` value in the options object is ignored.
 
 <a name="electron-example"></a>
 ## Electron Example
