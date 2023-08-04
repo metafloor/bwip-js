@@ -1,23 +1,31 @@
 {
   "name": "bwip-js",
-  "version": "3.4.5",
+  "version": "4.0.0",
   "description": "JavaScript barcode generator supporting over 100 types and standards.",
   "exports": {
       "browser": {
-          "import":  "./dist/bwip-js.mjs",
+          "types": "./dist/bwip-js.d.ts",
+          "import": "./dist/bwip-js.mjs",
           "require": "./dist/bwip-js.js",
-          "script":  "./dist/bwip-js-min.js"
+          "script": "./dist/bwip-js-min.js"
       },
       "electron": {
           "node": {
+              "types": "./dist/bwip-js-node.d.ts",
               "import": "./dist/bwip-js-node.mjs",
               "require": "./dist/bwip-js-node.js"
           },
+          "types": "./dist/bwip-js.d.ts",
           "import": "./dist/bwip-js.mjs",
           "default": "./dist/bwip-js.js"
       },
+      "react-native": {
+          "types": "./dist/bwip-js-rn.d.ts",
+          "default": "./dist/bwip-js-rn.mjs"
+      },
       "node": {
-          "import":  "./dist/bwip-js-node.mjs",
+          "types": "./dist/bwip-js-node.d.ts",
+          "import": "./dist/bwip-js-node.mjs",
           "require": "./dist/bwip-js-node.js"
       }
   },
@@ -41,6 +49,8 @@
     "javascript",
     "node",
     "react",
+    "react-native",
+    "typescript",
     "browser",
     "itf",
     "gs1",

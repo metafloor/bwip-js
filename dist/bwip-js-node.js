@@ -32,7 +32,7 @@
 
 
 // exports.js
-const BWIPJS_VERSION = '__BWIPJS_VERS__';
+const BWIPJS_VERSION = '4.0.0 (2023-08-04)';
 
 var url = require('url');
 var PNG_ZLIB = require('zlib');

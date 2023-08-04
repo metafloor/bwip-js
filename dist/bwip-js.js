@@ -41,7 +41,7 @@
 }(typeof self !== 'undefined' ? self : this, function () {
 
 // exports.js
-const BWIPJS_VERSION = '__BWIPJS_VERS__';
+const BWIPJS_VERSION = '4.0.0 (2023-08-04)';
 
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
