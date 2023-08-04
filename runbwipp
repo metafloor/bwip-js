@@ -1,5 +1,5 @@
 ## This code was automatically generated from:
-## Barcode Writer in Pure PostScript - Version 2023-02-16
+## Barcode Writer in Pure PostScript - Version 2023-04-03
 run 0 "ean5" "90200" "includetext guardwhitespace"
 run 0 "ean2" "05" "includetext guardwhitespace"
 run 0 "ean13" "9520123456788" "includetext guardwhitespace"

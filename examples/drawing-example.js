@@ -20,6 +20,21 @@ function DrawingExample(opts, canvas) {
     let compound = null;
 
     return {
+        // setopts() is called after the options are fixed-up/normalized,
+        // but before calling into BWIPP.
+        //
+        // This method allows omitting the options object in the constructor call,
+        // which simplifies the pattern:
+        //
+        //      bwipjs.render({ bcid:'code128', ... }, myDrawing());
+        //
+        // In the above, it is awkward to pass the options object to the drawing
+        // constructor.
+        //
+        // The method is optional.  Implemented in v4.0.
+        setopts(options) {
+            opts = options;
+        },
         // Adjust scale.  The return value is a two-element array with the 
         // scale-x and scale-y values adjusted as desired.
         //

@@ -1,9 +1,9 @@
 // Mocks up the necessary browser environment to run the browser modules
 
 import './atob.mjs';
-import browser, { gs1_128 as browser_128 } from './dist/bwip-js.mjs';
-import nodejs,  { gs1_128 as nodejs_128 }  from './dist/bwip-js-node.mjs';
-import reactnv, { gs1_128 as reactnv_128 } from './dist/bwip-js-rn.mjs';
+import browser, { gs1_128 as browser_128, loadFont as browser_lf } from './dist/bwip-js.mjs';
+import nodejs,  { gs1_128 as nodejs_128, loadFont as nodejs_lf }  from './dist/bwip-js-node.mjs';
+import reactnv, { gs1_128 as reactnv_128, loadFont as reactnv_lf } from './dist/bwip-js-rn.mjs';
 
 // Just enough canvas element for our built-in drawing.
 function HTMLCanvasElement() {

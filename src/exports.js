@@ -1,5 +1,6 @@
+
 // exports.js
-var BWIPJS_VERSION = '__BWIPJS_VERS__';
+const BWIPJS_VERSION = '__BWIPJS_VERS__';
 
 //@@BEGIN-NODE-JS-EXPORTS@@
 var url = require('url');
@@ -54,33 +55,44 @@ function Request(req, res, extra) {
 //
 // If `callback` is not provided, a Promise is returned.
 function ToBuffer(opts, callback) {
-	try {
-		return _Render(bwipp_lookup(opts.bcid), opts, DrawingZlibPng(opts, callback));
-	} catch (e) {
-		if (callback) {
-			callback(e);
-		} else {
-			return Promise.reject(e);
-		}
-	}
+    return _ToAny(bwipp_lookup(opts.bcid), opts, callback);
 }
-// Entry point for the symbol-specific exports
-function _ToBuffer(encoder, opts, callback) {
-	try {
-		return _Render(encoder, opts, DrawingZlibPng(opts, callback));
-	} catch (e) {
-		if (callback) {
-			callback(e);
-		} else {
-			return Promise.reject(e);
-		}
-	}
+
+// Entry point for the symbol-specific exports.
+//
+// Polymorphic internal interface
+// _ToAny(encoder, opts) : Promise<Buffer>
+// _ToAny(endoder, opts, drawing) : any !throws!
+// _ToAny(encoder, opts, callback) : void
+//
+// If `drawing` is not provided or `callback` is, the built-in DrawingZlibPng will be used.
+function _ToAny(encoder, opts, drawing) {
+    var callback;
+    if (typeof drawing == 'function') {
+        callback = drawing;
+        drawing = null
+    }
+    if (drawing) {
+        return _Render(encoder, opts, drawing);
+    } else if (callback) {
+        try {
+            _Render(encoder, opts, DrawingZlibPng(opts, callback));
+        } catch (e) {
+            callback(e);
+        }
+    } else {
+        return new Promise(function (resolve, reject) {
+                _Render(encoder, opts, DrawingZlibPng(opts, function (err, buf) {
+                                err ?  reject(err) : resolve(buf);
+                            }));
+            });
+    }
 }
 //@@BEGIN-BROWSER-EXPORTS@@
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
 //
-// Uses the built-in canvas drawing.  Identical rendering as toBuffer().
+// Uses the built-in canvas drawing.
 //
 // `canvas` can be an HTMLCanvasElement or an ID string or unique selector string.
 // `options` are a bwip-js/BWIPP options object.
@@ -88,40 +100,48 @@ function _ToBuffer(encoder, opts, callback) {
 // This function is synchronous and throws on error.
 //
 // Returns the HTMLCanvasElement.
-function ToCanvas(opts, canvas) {
-    // This code has to be duplicated with _ToCanvas() to keep the bwipp_lookup() out
-    // of the latter.
-	if (typeof canvas == 'string') {
-		canvas = document.getElementById(canvas) || document.querySelector(canvas);
-	} else if (typeof opts == 'string') {
-		opts = document.getElementById(opts) || document.querySelector(opts);
+function ToCanvas(cvs, opts) {
+	if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
+        let tmp = cvs;
+        cvs = opts;
+        opts = tmp;
 	}
-	if (opts instanceof HTMLCanvasElement) {
-		var tmp = opts;
-		opts = canvas;
-		canvas = tmp;
-	} else if (!(canvas instanceof HTMLCanvasElement)) {
-		throw 'bwipjs: Not a canvas';
-	}
-    _Render(bwipp_lookup(opts.bcid), opts, DrawingCanvas(opts, canvas));
-    return canvas;
+    return _ToAny(bwipp_lookup(opts.bcid), opts, cvs); 
 }
 // Entry point for the symbol-specific exports
-function _ToCanvas(encoder, opts, canvas) {
-	if (typeof canvas == 'string') {
-		canvas = document.getElementById(canvas) || document.querySelector(canvas);
-	} else if (typeof opts == 'string') {
-		opts = document.getElementById(opts) || document.querySelector(opts);
-	}
-	if (opts instanceof HTMLCanvasElement) {
-		var tmp = opts;
-		opts = canvas;
-		canvas = tmp;
-	} else if (!(canvas instanceof HTMLCanvasElement)) {
-		throw 'bwipjs: Not a canvas';
-	}
-    _Render(encoder, opts, DrawingCanvas(opts, canvas));
-    return canvas;
+//
+// Polymorphic internal interface
+// _ToAny(encoder, string, opts) : HTMLCanvasElement
+// _ToAny(encoder, HTMLCanvasElement, opts) : HTMLCanvasElement
+// _ToAny(encoder, opts, string) : HTMLCanvasElement
+// _ToAny(encoder, opts, HTMLCanvasElement) : HTMLCanvasElement
+// _ToAny(encoder, opts, drawing) : any
+//
+// 'string` can be either an `id` or query selector returning a single canvas element.
+function _ToAny(encoder, opts, drawing) {
+    if (typeof opts == 'string') {
+		var canvas = document.getElementById(opts) || document.querySelector(opts);
+        if (!(canvas instanceof HTMLCanvasElement)) {
+            throw new Error('bwipjs: `' + opts + '`: not a canvas');
+        }
+        opts = drawing;
+        drawing = DrawingCanvas(opts, canvas);
+    } else if (opts instanceof HTMLCanvasElement) {
+        var canvas = opts;
+        opts = drawing;
+        drawing = DrawingCanvas(opts, canvas);
+    } else if (typeof drawing == 'string') {
+		var canvas = document.getElementById(drawing) || document.querySelector(drawing);
+        if (!(canvas instanceof HTMLCanvasElement)) {
+            throw new Error('bwipjs: `' + drawing + '`: not a canvas');
+        }
+        drawing = DrawingCanvas(opts, canvas);
+    } else if (drawing instanceof HTMLCanvasElement) {
+        drawing = DrawingCanvas(opts, drawing);
+	} else if (!drawing || typeof drawing != 'object' || !drawing.init) {
+        throw new Error('bwipjs: not a canvas or drawing object');
+	} 
+    return _Render(encoder, opts, drawing);
 }
 //@@BEGIN-REACT-NV-EXPORTS@@
 import PNG_ZLIB from 'react-zlib-js';
@@ -145,14 +165,26 @@ import Buffer from 'react-zlib-js/buffer.js';
 //
 // If `callback` is not provided, a Promise is returned.
 function ToDataURL(opts, callback) {
-    return _ToDataURL(bwipp_lookup(opts.bcid), opts, callback);
+    return _ToAny(bwipp_lookup(opts.bcid), opts, callback);
 }
 
-function _ToDataURL(encoder, opts, callback) {
-    if (callback) {
+// Polymorphic internal interface
+// _ToAny(encoder, opts) : Promise<ReactNVImage>
+// _ToAny(encoder, opts, callback) : void
+// _ToAny(endoder, opts, drawing) : any !throws!
+//
+// If `drawing` is not provided, the built-in DrawingZlibPng will be used.
+function _ToAny(encoder, opts, drawing) {
+    var callback;
+    if (typeof drawing == 'function') {
+        callback = drawing;
+        drawing = null
+    }
+    if (drawing) {
+        return _Render(encoder, opts, drawing);
+    } else if (callback) {
         try {
-            _Render(encoder, opts, 
-                        DrawingZlibPng(opts, function (err, buf) {
+            _Render(encoder, opts, DrawingZlibPng(opts, (err, buf) => {
                                 if (err) {
                                     callback(err);
                                 } else {
@@ -168,8 +200,7 @@ function _ToDataURL(encoder, opts, callback) {
         }
     } else {
         return new Promise(function (resolve, reject) {
-                _Render(encoder, opts,
-                        DrawingZlibPng(opts, function (err, buf) {
+                _Render(encoder, opts, DrawingZlibPng(opts, (err, buf) => {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -183,7 +214,57 @@ function _ToDataURL(encoder, opts, callback) {
             });
     }
 }
+// Specialized DataURL version of DrawingZlibPng()
+function DrawingDataURL(opts, callback) {
+    if (callback) {
+        return DrawingZlibPng(opts, (err, buf) => {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null, {
+                                width:buf.readUInt32BE(16),
+                                height:buf.readUInt32BE(20),
+                                uri:'data:image/png;base64,' + buf.toString('base64')
+                            });
+                        }
+                    });
+    } else {
+        return new Promise((resolve, reject) => {
+                            DrawingZlibPng(opts, (err, buf) => {
+                                if (err) {
+                                    reject(err);
+                                } else {
+                                    resolve({
+                                        width:buf.readUInt32BE(16),
+                                        height:buf.readUInt32BE(20),
+                                        uri:'data:image/png;base64,' + buf.toString('base64')
+                                    });
+                                }
+                            })
+                        });
+    }
+}
 //@@ENDOF-EXPORTS@@
+
+// bwipjs.toSVG(options)
+//
+// Uses the built-in svg drawing interface.
+//
+// `options` are a bwip-js/BWIPP options object.
+//
+// This function is synchronous and throws on error.
+//
+// Returns a string containing a fully qualified SVG definition,
+// including the natural width and height of the image, in pixels:
+//
+//  <svg version="1.1" width="242" height="200" xmlns="http://www.w3.org/2000/svg">
+//   ...
+//  </svg>
+//
+// Available on all platforms.
+function ToSVG(opts) {
+    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG(opts));
+}
 
 function FixupOptions(opts) {
 	var scale	= opts.scale || 2;
@@ -263,23 +344,26 @@ var BWIPJS_OPTIONS = {
 // This function is synchronous and throws on error.
 //
 // Browser and nodejs usage.
-function Render(params, drawing) {
-    return _Render(bwipp_lookup(params.bcid), params, drawing);
+function Render(options, drawing) {
+    return _Render(bwipp_lookup(options.bcid), options, drawing);
 }
 
 // Called by the public exports
-function _Render(encoder, params, drawing) {
-	var text = params.text;
+function _Render(encoder, options, drawing) {
+	var text = options.text;
 	if (!text) {
 		throw new ReferenceError('bwip-js: bar code text not specified.');
 	}
 
+    // setopts() is optional on the drawing object.
+    FixupOptions(options);
+    drawing.setopts && drawing.setopts(options);
+
 	// Set the bwip-js defaults
-    FixupOptions(params);
-	var scale	= params.scale || 2;
-	var scaleX	= +params.scaleX || scale;
-	var scaleY	= +params.scaleY || scaleX;
-	var rotate	= params.rotate || 'N';
+	var scale	= options.scale || 2;
+	var scaleX	= +options.scaleX || scale;
+	var scaleY	= +options.scaleY || scaleX;
+	var rotate	= options.rotate || 'N';
 
 	// Create a barcode writer object.  This is the interface between
 	// the low-level BWIPP code, the bwip-js graphics context, and the
@@ -287,33 +371,36 @@ function _Render(encoder, params, drawing) {
 	var bw = new BWIPJS(drawing);
 
 	// Set the BWIPP options
-	var opts = {};
-	for (var id in params) {
+	var bwippopts = {};
+	for (var id in options) {
 		if (!BWIPJS_OPTIONS[id]) {
-			opts[id] = params[id];
+			bwippopts[id] = options[id];
 		}
 	}
 
 	// Fix a disconnect in the BWIPP rendering logic
-	if (opts.alttext) {
-		opts.includetext = true;
+	if (bwippopts.alttext) {
+		bwippopts.includetext = true;
 	}
 	// We use mm rather than inches for height - except pharmacode2 height
 	// which is already in mm.
-	if (+opts.height && encoder != bwipp_pharmacode2) {
-		opts.height = opts.height / 25.4 || 0.5;
+	if (+bwippopts.height && encoder != bwipp_pharmacode2) {
+		bwippopts.height = bwippopts.height / 25.4 || 0.5;
 	}
 	// Likewise, width
-	if (+opts.width) {
-		opts.width = opts.width / 25.4 || 0;
+	if (+bwippopts.width) {
+		bwippopts.width = bwippopts.width / 25.4 || 0;
 	}
 
 	// Scale the image
 	bw.scale(scaleX, scaleY);
 
 	// Call into the BWIPP cross-compiled code and render the image.
-    bwipp_encode(bw, encoder, text, opts);
-	return bw.render();		// Return whatever drawing.end() returns
+    bwipp_encode(bw, encoder, text, bwippopts);
+
+    // Returns whatever drawing.end() returns, or `false` if nothing rendered.
+	return bw.render();
+                            
 }
 
 // bwipjs.raw(options)
