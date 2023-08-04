@@ -34,7 +34,9 @@ bwip-js is a translation to native JavaScript of the amazing code provided in <a
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).</p>
-<p>| Version 4 has been released.  The primary enhancement is built-in support for generating barcodes in SVG.  You can read about the changes here: https://github.com/metafloor/bwip-js/discussions/299</p>
+<blockquote>
+  <p>Version 4 has been released.  The primary enhancement is built-in support for generating barcodes in SVG.  You can read about the changes here: https://github.com/metafloor/bwip-js/discussions/299</p>
+</blockquote>
 <h2 id="status">Status</h2>
 <ul>
 <li>Current bwip-js version is 4.0.0 (2023-08-04)</li>
@@ -304,7 +306,7 @@ try {
     // `e` may be a string or Error object
 }
 </code></pre>
-<p>When named encoders are imported, the <code>bcid</code> value in the options object is ignored.</p>
+<p>When named encoders are called, the <code>bcid</code> value in the options object is ignored.</p>
 <p><a name="svg-usage"></a></p>
 <h2 id="svgallplatforms">SVG (All Platforms)</h2>
 <p>The easiest way to generate an SVG barcode image is with the <code>toSVG()</code> method.  It takes
@@ -415,8 +417,8 @@ const BarCode = (options) =&gt; {
     }
     return (
         &lt;Image
-           style={{ height:img.height, width:img.width }}
-           source={{ uri:img.uri }}
+            style={{ height:img.height, width:img.width }}
+            source={{ uri:img.uri }}
         /&gt;
     );
 };
@@ -431,7 +433,7 @@ try {
     // `e` may be a string or Error object
 }
 </code></pre>
-<p>When named encoders are imported, the <code>bcid</code> value in the options object is ignored.</p>
+<p>When named encoders are called, the <code>bcid</code> value in the options object is ignored.</p>
 <p><a name="electron-example"></a></p>
 <h2 id="electronexample">Electron Example</h2>
 <p>There have been some changes to the Electron bundler, and it may pull in either the
