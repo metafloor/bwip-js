@@ -24,6 +24,14 @@ function DrawingBuiltin(opts) {
     var gs_xyclip;              // clip region map (similar to xymap)
 
 	return {
+        // setopts() is called after the options are fixed-up/normalized,
+        // but before calling into BWIPP.
+        // This method allows omitting the options in the constructor call.
+        // The method is optional.
+        setopts(options) {
+            opts = options;
+        },
+
 		// Ensure compliant bar codes by always using integer scaling factors.
 		scale : function(sx, sy) {
             // swissqrcode requires clipping and drawing that are not scaled to the

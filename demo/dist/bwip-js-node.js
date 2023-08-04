@@ -30,7 +30,9 @@
 //
 "use strict";
 
+
 // exports.js
+const BWIPJS_VERSION = '4.0.0 (2023-08-04)';
 
 var url = require('url');
 var PNG_ZLIB = require('zlib');
@@ -84,27 +86,58 @@ function Request(req, res, extra) {
 //
 // If `callback` is not provided, a Promise is returned.
 function ToBuffer(opts, callback) {
-	try {
-		return _Render(bwipp_lookup(opts.bcid), opts, DrawingZlibPng(opts, callback));
-	} catch (e) {
-		if (callback) {
-			callback(e);
-		} else {
-			return Promise.reject(e);
-		}
-	}
+    return _ToAny(bwipp_lookup(opts.bcid), opts, callback);
 }
-// Entry point for the symbol-specific exports
-function _ToBuffer(encoder, opts, callback) {
-	try {
-		return _Render(encoder, opts, DrawingZlibPng(opts, callback));
-	} catch (e) {
-		if (callback) {
-			callback(e);
-		} else {
-			return Promise.reject(e);
-		}
-	}
+
+// Entry point for the symbol-specific exports.
+//
+// Polymorphic internal interface
+// _ToAny(encoder, opts) : Promise<Buffer>
+// _ToAny(endoder, opts, drawing) : any !throws!
+// _ToAny(encoder, opts, callback) : void
+//
+// If `drawing` is not provided or `callback` is, the built-in DrawingZlibPng will be used.
+function _ToAny(encoder, opts, drawing) {
+    var callback;
+    if (typeof drawing == 'function') {
+        callback = drawing;
+        drawing = null
+    }
+    if (drawing) {
+        return _Render(encoder, opts, drawing);
+    } else if (callback) {
+        try {
+            _Render(encoder, opts, DrawingZlibPng(opts, callback));
+        } catch (e) {
+            callback(e);
+        }
+    } else {
+        return new Promise(function (resolve, reject) {
+                _Render(encoder, opts, DrawingZlibPng(opts, function (err, buf) {
+                                err ?  reject(err) : resolve(buf);
+                            }));
+            });
+    }
+}
+
+// bwipjs.toSVG(options)
+//
+// Uses the built-in svg drawing interface.
+//
+// `options` are a bwip-js/BWIPP options object.
+//
+// This function is synchronous and throws on error.
+//
+// Returns a string containing a fully qualified SVG definition,
+// including the natural width and height of the image, in pixels:
+//
+//  <svg version="1.1" width="242" height="200" xmlns="http://www.w3.org/2000/svg">
+//   ...
+//  </svg>
+//
+// Available on all platforms.
+function ToSVG(opts) {
+    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG(opts));
 }
 
 function FixupOptions(opts) {
@@ -185,23 +218,26 @@ var BWIPJS_OPTIONS = {
 // This function is synchronous and throws on error.
 //
 // Browser and nodejs usage.
-function Render(params, drawing) {
-    return _Render(bwipp_lookup(params.bcid), params, drawing);
+function Render(options, drawing) {
+    return _Render(bwipp_lookup(options.bcid), options, drawing);
 }
 
 // Called by the public exports
-function _Render(encoder, params, drawing) {
-	var text = params.text;
+function _Render(encoder, options, drawing) {
+	var text = options.text;
 	if (!text) {
 		throw new ReferenceError('bwip-js: bar code text not specified.');
 	}
 
+    // setopts() is optional on the drawing object.
+    FixupOptions(options);
+    drawing.setopts && drawing.setopts(options);
+
 	// Set the bwip-js defaults
-    FixupOptions(params);
-	var scale	= params.scale || 2;
-	var scaleX	= +params.scaleX || scale;
-	var scaleY	= +params.scaleY || scaleX;
-	var rotate	= params.rotate || 'N';
+	var scale	= options.scale || 2;
+	var scaleX	= +options.scaleX || scale;
+	var scaleY	= +options.scaleY || scaleX;
+	var rotate	= options.rotate || 'N';
 
 	// Create a barcode writer object.  This is the interface between
 	// the low-level BWIPP code, the bwip-js graphics context, and the
@@ -209,33 +245,36 @@ function _Render(encoder, params, drawing) {
 	var bw = new BWIPJS(drawing);
 
 	// Set the BWIPP options
-	var opts = {};
-	for (var id in params) {
+	var bwippopts = {};
+	for (var id in options) {
 		if (!BWIPJS_OPTIONS[id]) {
-			opts[id] = params[id];
+			bwippopts[id] = options[id];
 		}
 	}
 
 	// Fix a disconnect in the BWIPP rendering logic
-	if (opts.alttext) {
-		opts.includetext = true;
+	if (bwippopts.alttext) {
+		bwippopts.includetext = true;
 	}
 	// We use mm rather than inches for height - except pharmacode2 height
 	// which is already in mm.
-	if (+opts.height && encoder != bwipp_pharmacode2) {
-		opts.height = opts.height / 25.4 || 0.5;
+	if (+bwippopts.height && encoder != bwipp_pharmacode2) {
+		bwippopts.height = bwippopts.height / 25.4 || 0.5;
 	}
 	// Likewise, width
-	if (+opts.width) {
-		opts.width = opts.width / 25.4 || 0;
+	if (+bwippopts.width) {
+		bwippopts.width = bwippopts.width / 25.4 || 0;
 	}
 
 	// Scale the image
 	bw.scale(scaleX, scaleY);
 
 	// Call into the BWIPP cross-compiled code and render the image.
-    bwipp_encode(bw, encoder, text, opts);
-	return bw.render();		// Return whatever drawing.end() returns
+    bwipp_encode(bw, encoder, text, bwippopts);
+
+    // Returns whatever drawing.end() returns, or `false` if nothing rendered.
+	return bw.render();
+                            
 }
 
 // bwipjs.raw(options)
@@ -40615,9 +40654,7 @@ BWIPJS.prototype.bbox = function(x0, y0, x1, y1) {
 BWIPJS.prototype.render = function() {
 	if (this.minx === Infinity) {
         // Most likely, `dontdraw` was set in the options
-        return new Promise(function (resolve, reject) {
-            resolve(null);
-        });
+        return false;
 	}
 	// Draw the image
 	this.drawing.init(this.maxx - this.minx + 1, this.maxy - this.miny + 1,
@@ -40656,6 +40693,14 @@ function DrawingBuiltin(opts) {
     var gs_xyclip;              // clip region map (similar to xymap)
 
 	return {
+        // setopts() is called after the options are fixed-up/normalized,
+        // but before calling into BWIPP.
+        // This method allows omitting the options in the constructor call.
+        // The method is optional.
+        setopts(options) {
+            opts = options;
+        },
+
 		// Ensure compliant bar codes by always using integer scaling factors.
 		scale : function(sx, sy) {
             // swissqrcode requires clipping and drawing that are not scaled to the
@@ -41154,7 +41199,7 @@ var PNG_CRC = (function() {
 })();
 
 // This has been moved to the nodejs-only section of exports.js due to 
-// react-native polyfils.
+// react-native polyfills.
 //var PNG_ZLIB = require('zlib');
 
 // opts is the same options object passed into the bwipjs methods.
@@ -41165,6 +41210,14 @@ function DrawingZlibPng(opts, callback) {
 	var drawing = DrawingBuiltin(opts);
 	drawing.image = image;
 	drawing.end = end;
+
+    // Reflect setopts() into the super
+    var _setopts = drawing.setopts;
+    drawing.setopts = function (options) {
+        opts = options;
+        _setopts && _setopts.call(drawing, options);
+    };
+
 	return drawing;
 
 	// Called by DrawingBuiltin.init() to get the RGBA image data for rendering.
@@ -41323,6 +41376,293 @@ function DrawingZlibPng(opts, callback) {
 			}
 		}
 	}
+}
+// drawing-svg.js
+//
+// Converts the drawing primitives into the equivalent SVG.  Linear barcodes
+// are rendered as a series of stroked paths.  2D barcodes are rendered as a 
+// series of filled paths.
+//
+// Rotation is handled during drawing.  The resulting SVG will contain the 
+// already-rotated barcode without an SVG transform.
+//
+// If the requested barcode image contains text, the glyph paths are 
+// extracted from the font file (via the builtin FontLib and stb_truetype.js)
+// and added as filled SVG paths.
+//
+function DrawingSVG(opts) {
+    // Unrolled x,y rotate/translate matrix
+    var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
+    var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
+
+    var svg = '';
+    var path;
+    var clipid = '';
+	var clips = [];
+    var lines = {};
+
+    // Magic number to approximate an ellipse/circle using 4 cubic beziers.
+    var ELLIPSE_MAGIC = 0.55228475 - 0.00045;
+
+    // Global graphics state
+    var gs_width, gs_height;    // image size, in pixels
+    var gs_dx, gs_dy;           // x,y translate (padding)
+
+    return {
+        // setopts() is called after the options are fixed-up/normalized,
+        // but before calling into BWIPP.
+        // This allows omitting the options in the constructor call.
+        // It is also your last chance to amend the options before usage.
+        setopts(options) {
+            opts = options;
+        },
+
+        // measure() and scale() are the only drawing primitives that are called before init().
+
+        // Make no adjustments
+        scale(sx, sy) {
+        },
+        // Measure text.
+        // `font` is the font name typically OCR-A or OCR-B.
+        // `fwidth` and `fheight` are the requested font cell size.  They will
+        // usually be the same, except when the scaling is not symetric.
+        measure(str, font, fwidth, fheight) {
+            fwidth = fwidth|0;
+            fheight = fheight|0;
+
+            var fontid = FontLib.lookup(font);
+            var width = 0;
+            var ascent = 0;
+            var descent = 0;
+            for (var i = 0; i < str.length; i++) {
+                var ch = str.charCodeAt(i);
+                var glyph = FontLib.getpaths(fontid, ch, fwidth, fheight);
+                if (!glyph) {
+                    continue;
+                }
+                ascent  = Math.max(ascent, glyph.ascent);
+                descent = Math.max(descent, -glyph.descent);
+                width  += glyph.advance;
+            }
+            return { width, ascent, descent };
+        },
+
+        // `width` and `height` represent the maximum bounding box the graphics will
+        // occupy.  The dimensions are for an unrotated rendering.  Adjust as necessary.
+        init(width, height) {
+            // Add in the effects of padding.  These are always set before the
+            // drawing constructor is called.
+            var padl = opts.paddingleft;
+            var padr = opts.paddingright;
+            var padt = opts.paddingtop;
+            var padb = opts.paddingbottom;
+            var rot  = opts.rotate || 'N';
+
+            width  += padl + padr;
+            height += padt + padb;
+
+            // Transform indexes are: x, y, w, h
+            switch (rot) {
+            // tx = w-y, ty = x
+            case 'R': tx1 = -1; tx2 = 1; ty0 = 1; break;
+            // tx = w-x, ty = h-y
+            case 'I': tx0 = -1; tx2 = 1; ty1 = -1; ty3 = 1; break;
+            // tx = y, ty = h-x
+            case 'L': tx1 = 1; ty0 = -1; ty3 = 1; break;
+            // tx = x, ty = y
+            default:  tx0 = ty1 = 1; break;
+            }
+
+            // Setup the graphics state
+            var swap = rot == 'L' || rot == 'R';
+            gs_width  = swap ? height : width;
+            gs_height = swap ? width : height;
+            gs_dx = padl;
+            gs_dy = padt;
+        },
+        // Unconnected stroked lines are used to draw the bars in linear barcodes.
+        // No line cap should be applied.  These lines are always orthogonal.
+        line(x0, y0, x1, y1, lw, rgb) {
+            // Try to get non-blurry lines...
+            x0 = x0|0;
+            y0 = y0|0;
+            x1 = x1|0;
+            y1 = y1|0;
+            lw = Math.round(lw);
+
+            // Try to keep the lines "crisp" by using with the SVG line drawing spec to
+            // our advantage.
+            if (lw & 1) {
+                if (x0 == x1) {
+                    x0 += 0.5;
+                    x1 += 0.5;
+                }
+                if (y0 == y1) {
+                    y0 += 0.5;
+                    y1 += 0.5;
+                }
+            }
+
+            // Group together all lines of the same width and emit as single paths.
+            // Dramatically reduces resulting text size.
+            var key = '' + lw + '#' + rgb;
+            if (!lines[key]) {
+                lines[key] = '<path stroke="#' + rgb + '" stroke-width="' + lw + '" d="';
+            }
+            lines[key] += 'M' + transform(x0, y0) + 'L' + transform(x1, y1);
+        },
+        // Polygons are used to draw the connected regions in a 2d barcode.
+        // These will always be unstroked, filled, non-intersecting,
+        // orthogonal shapes.
+        // You will see a series of polygon() calls, followed by a fill().
+        polygon(pts) {
+            if (!path) {
+                path = '<path d="';
+            }
+            path += 'M' + transform(pts[0][0], pts[0][1]);
+            for (var i = 1, n = pts.length; i < n; i++) {
+                var p = pts[i];
+                path += 'L' + transform(p[0], p[1]);
+            }
+            path += 'Z';
+        },
+        // An unstroked, filled hexagon used by maxicode.  You can choose to fill
+        // each individually, or wait for the final fill().
+        //
+        // The hexagon is drawn from the top, counter-clockwise.
+        hexagon(pts, rgb) {
+            this.polygon(pts); // A hexagon is just a polygon...
+        },
+        // An unstroked, filled ellipse.  Used by dotcode and maxicode at present.
+        // maxicode issues pairs of ellipse calls (one cw, one ccw) followed by a fill()
+        // to create the bullseye rings.  dotcode issues all of its ellipses then a
+        // fill().
+        ellipse(x, y, rx, ry, ccw) {
+            if (!path) {
+                path = '<path d="';
+            }
+            var dx = rx * ELLIPSE_MAGIC;
+            var dy = ry * ELLIPSE_MAGIC;
+
+            // Since there are never overlapping regions, we don't worry about cw/ccw.
+            path += 'M' + transform(x - rx, y) +
+                    'C' + transform(x - rx, y - dy) + ' ' +
+                          transform(x - dx, y - ry) + ' ' +
+                          transform(x,      y - ry) +
+                    'C' + transform(x + dx, y - ry) + ' ' +
+                          transform(x + rx, y - dy) + ' ' +
+                          transform(x + rx, y) + 
+                    'C' + transform(x + rx, y + dy) + ' ' +
+                          transform(x + dx, y + ry) + ' ' +
+                          transform(x,      y + ry) +  
+                    'C' + transform(x - dx, y + ry) + ' ' +
+                          transform(x - rx, y + dy) + ' ' +
+                          transform(x - rx, y) + 
+                    'Z';
+        },
+        // PostScript's default fill rule is non-zero but there are never intersecting
+        // regions so use even-odd as it is easier to work with.
+        fill(rgb) {
+            if (path) {
+                svg += path + '" fill="#' + rgb + '" fill-rule="evenodd"' +
+					   (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
+					   ' />\n';
+                path = null;
+            }
+        },
+        // Currently only used by swissqrcode.  The `polys` area is an array of
+        // arrays of points.  Each array of points is identical to the `pts`
+        // parameter passed to polygon().  The clipping rule, like the fill rule,
+        // defaults to non-zero winding.
+        clip : function(polys) {
+			var path = '<clipPath id="clip' + clips.length + '"><path d="';
+            for (let j = 0; j < polys.length; j++) {
+                let pts = polys[j];
+				path += 'M' + transform(pts[0][0], pts[0][1]);
+				for (var i = 1, n = pts.length; i < n; i++) {
+					var p = pts[i];
+					path += 'L' + transform(p[0], p[1]);
+				}
+				path += 'Z';
+            }
+		    path += '" clip-rule="nonzero" /></clipPath>';
+			clipid = "clip" + clips.length;
+			clips.push(path);
+        },
+        unclip : function() {
+			clipid = '';
+		},
+        // Draw text with optional inter-character spacing.  `y` is the baseline.
+        // font is an object with properties { name, width, height, dx }
+        // width and height are the font cell size.
+        // dx is extra space requested between characters (usually zero).
+        text(x, y, str, rgb, font) {
+            var fontid  = FontLib.lookup(font.name);
+            var fwidth  = font.width|0;
+            var fheight = font.height|0;
+            var dx      = font.dx|0;
+            var path = '';
+            for (var k = 0; k < str.length; k++) {
+                var ch = str.charCodeAt(k);
+                var glyph = FontLib.getpaths(fontid, ch, fwidth, fheight);
+                if (!glyph) {
+                    continue;
+                }
+                if (glyph.length) {
+                    // A glyph is composed of sequence of curve and line segments.
+                    // M is move-to
+                    // L is line-to
+                    // Q is quadratic bezier curve-to
+                    // C is cubic bezier curve-to
+                    for (var i = 0, l = glyph.length; i < l; i++) {
+                        let seg = glyph[i];
+                        if (seg.type == 'M' || seg.type == 'L') {
+                            path += seg.type + transform(seg.x + x, y - seg.y);
+                        } else if (seg.type == 'Q') {
+                            path += seg.type + transform(seg.cx + x, y - seg.cy) + ' ' +
+                                               transform(seg.x + x,  y - seg.y);
+                        } else if (seg.type == 'C') {
+                            path += seg.type + transform(seg.cx1 + x, y - seg.cy1) + ' ' +
+                                               transform(seg.cx2 + x, y - seg.cy2) + ' ' +
+                                               transform(seg.x + x,   y - seg.y);
+                        }
+                    }
+                    // Close the shape
+                    path += 'Z';
+                }
+                x += glyph.advance + dx;
+            }
+            if (path) {
+                svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
+            }
+        },
+        // Called after all drawing is complete.  The return value from this method
+        // is the return value from `bwipjs.render()`.
+        end() {
+            var linesvg = '';
+            for (var key in lines) {
+                linesvg += lines[key] + '" />\n';
+            }
+            var bg = opts.backgroundcolor;
+            return '<svg version="1.1" width="' + gs_width + '" height="' + gs_height +
+                        '" xmlns="http://www.w3.org/2000/svg">\n' +
+						(clips.length ? '<defs>' + clips.join('') + '</defs>' : '') +
+                        (/^[0-9A-Fa-f]{6}$/.test(''+bg)
+                            ? '<rect width="100%" height="100%" fill="#' + bg + '" />\n'
+                            : '') +
+                        linesvg + svg + '</svg>\n';
+        },
+    };
+
+    // translate/rotate and return as an SVG coordinate pair
+    function transform(x, y) {
+        x += gs_dx;
+        y += gs_dy;
+        var tx = tx0 * x + tx1 * y + tx2 * (gs_width-1) + tx3 * (gs_height-1);
+        var ty = ty0 * x + ty1 * y + ty2 * (gs_width-1) + ty3 * (gs_height-1);
+        return '' + ((tx|0) == tx ? tx : tx.toFixed(2)) + ' ' +
+                    ((ty|0) == ty ? ty : ty.toFixed(2));
+    }
 }
 // fontlib.js
 var FontLib = (function() {
@@ -43422,11 +43762,8 @@ FontLib.loadFont("OCR-A", 100, 100, "AAEAAAAPAIAAAwBwRkZUTXxHoksAADPIAAAAHEdERUY
 FontLib.loadFont("OCR-B", 96, 100, "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");
 module.exports = {
     // The public interface
-    request:Request, toBuffer:ToBuffer, render:Render, raw:ToRaw,
-    fixupOptions:FixupOptions, loadFont:LoadFont,
-    BWIPJS_VERSION:'3.4.5 (2023-08-01)',
-    BWIPP_VERSION:BWIPP_VERSION,
-    // Internals
-    BWIPJS:BWIPJS, STBTT:STBTT, FontLib:FontLib,
-    DrawingBuiltin:DrawingBuiltin, DrawingZlibPng:DrawingZlibPng,
+    request:Request, toBuffer:ToBuffer, toSVG:ToSVG, render:Render, raw:ToRaw,
+    drawingZlibPng:DrawingZlibPng, drawingSVG:DrawingSVG,
+    fixupOptions:FixupOptions, loadFont:LoadFont, FontLib:FontLib,
+    BWIPJS_VERSION:BWIPJS_VERSION, BWIPP_VERSION:BWIPP_VERSION,
 };

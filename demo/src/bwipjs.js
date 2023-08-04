@@ -136,19 +136,33 @@ BWIPJS.prototype.jsstring = function(s) {
 	}
 	return ''+s;
 };
-// Special function to replace setanycolor in BWIPP
-// Takes a string of hex digits either 6 chars in length (rrggbb) or
-// 8 chars (ccmmyykk).
+// Special function to replace setanycolor in BWIPP.
+// Converts a string of hex digits either rgb, rrggbb or ccmmyykk.
+// Or CSS-style #rgb and #rrggbb.
 BWIPJS.prototype.setcolor = function(s) {
 	if (s instanceof Uint8Array) {
 		s = this.jsstring(s);
 	}
-	if (s.length == 6) {
+    if (!s) {
+        return;
+    }
+    if (!/^(?:#?[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|[0-9a-fA-F]{8})$/.test(s)) {
+        throw new Error('bwip-js: invalid color: ' + s); 
+    }
+    if (s[0] == '#') {
+        s = s.substr(1);
+    }
+    if (s.length == 3) {
+		var r = parseInt(s[0], 16);
+		var g = parseInt(s[1], 16);
+		var b = parseInt(s[2], 16);
+		this.g_rgb = [ r<<4|r, g<<4|g, b<<4|b ];
+    } else if (s.length == 6) {
 		var r = parseInt(s.substr(0,2), 16);
 		var g = parseInt(s.substr(2,2), 16);
 		var b = parseInt(s.substr(4,2), 16);
 		this.g_rgb = [ r, g, b ];
-	} else if (s.length == 8) {
+	} else {
 		var c = parseInt(s.substr(0,2), 16) / 255;
 		var m = parseInt(s.substr(2,2), 16) / 255;
 		var y = parseInt(s.substr(4,2), 16) / 255;
@@ -157,7 +171,7 @@ BWIPJS.prototype.setcolor = function(s) {
 		var g = round((1-m) * (1-k) * 255);
 		var b = round((1-y) * (1-k) * 255);
 		this.g_rgb = [ r, g, b ];
-	}
+    }
 };
 // Used only by swissqrcode
 BWIPJS.prototype.setrgbcolor = function(r,g,b) {
@@ -685,9 +699,7 @@ BWIPJS.prototype.bbox = function(x0, y0, x1, y1) {
 BWIPJS.prototype.render = function() {
 	if (this.minx === Infinity) {
         // Most likely, `dontdraw` was set in the options
-        return new Promise(function (resolve, reject) {
-            resolve(null);
-        });
+        return false;
 	}
 	// Draw the image
 	this.drawing.init(this.maxx - this.minx + 1, this.maxy - this.miny + 1,

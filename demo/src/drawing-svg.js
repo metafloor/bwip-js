@@ -1,6 +1,4 @@
-// bwip-js/examples/drawing-svg.js
-//
-// This is an advanced demonstation of using the drawing interface.
+// drawing-svg.js
 //
 // Converts the drawing primitives into the equivalent SVG.  Linear barcodes
 // are rendered as a series of stroked paths.  2D barcodes are rendered as a 
@@ -13,19 +11,7 @@
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
-// This code can run in the browser and in nodejs.
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define([], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory();
-    } else {
-        root.DrawingSVG = factory();
-    }
-}(typeof self !== 'undefined' ? self : this, function () {
-"use strict";
-
-function DrawingSVG(opts, FontLib) {
+function DrawingSVG(opts) {
     // Unrolled x,y rotate/translate matrix
     var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
     var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
@@ -44,12 +30,20 @@ function DrawingSVG(opts, FontLib) {
     var gs_dx, gs_dy;           // x,y translate (padding)
 
     return {
+        // setopts() is called after the options are fixed-up/normalized,
+        // but before calling into BWIPP.
+        // This allows omitting the options in the constructor call.
+        // It is also your last chance to amend the options before usage.
+        setopts(options) {
+            opts = options;
+        },
+
+        // measure() and scale() are the only drawing primitives that are called before init().
+
         // Make no adjustments
         scale(sx, sy) {
         },
-        // Measure text.  This and scale() are the only drawing primitives that
-        // are called before init().
-        //
+        // Measure text.
         // `font` is the font name typically OCR-A or OCR-B.
         // `fwidth` and `fheight` are the requested font cell size.  They will
         // usually be the same, except when the scaling is not symetric.
@@ -74,8 +68,8 @@ function DrawingSVG(opts, FontLib) {
             return { width, ascent, descent };
         },
 
-        // width and height represent the maximum bounding box the graphics will occupy.
-        // The dimensions are for an unrotated rendering.  Adjust as necessary.
+        // `width` and `height` represent the maximum bounding box the graphics will
+        // occupy.  The dimensions are for an unrotated rendering.  Adjust as necessary.
         init(width, height) {
             // Add in the effects of padding.  These are always set before the
             // drawing constructor is called.
@@ -291,6 +285,3 @@ function DrawingSVG(opts, FontLib) {
                     ((ty|0) == ty ? ty : ty.toFixed(2));
     }
 }
-
-return DrawingSVG;
-}));
