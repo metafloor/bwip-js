@@ -20,7 +20,7 @@ var PNG_CRC = (function() {
 })();
 
 // This has been moved to the nodejs-only section of exports.js due to 
-// react-native polyfils.
+// react-native polyfills.
 //var PNG_ZLIB = require('zlib');
 
 // opts is the same options object passed into the bwipjs methods.
@@ -31,6 +31,14 @@ function DrawingZlibPng(opts, callback) {
 	var drawing = DrawingBuiltin(opts);
 	drawing.image = image;
 	drawing.end = end;
+
+    // Reflect setopts() into the super
+    var _setopts = drawing.setopts;
+    drawing.setopts = function (options) {
+        opts = options;
+        _setopts && _setopts.call(drawing, options);
+    };
+
 	return drawing;
 
 	// Called by DrawingBuiltin.init() to get the RGBA image data for rendering.

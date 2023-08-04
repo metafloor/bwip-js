@@ -3,18 +3,21 @@
 
 var fs = require('fs');
 var bwipjs = require('..');
-var symdesc = require('./symdesc');
+var symdesc = require('../lib/symdesc');
 
 function usage(exit) {
 	console.log(
-		"Usage: bwip-js symbol-name text [options...] png-file\n" +
-		"       bwip-js --bcid=symbol-name --text=text [options...] png-file\n" +
+		"Usage: bwip-js symbol-name text [options...] file.{png,svg}\n" +
+		"       bwip-js --bcid=symbol-name --text=text [options...] file.{png,svg}\n" +
 		"\n" +
-		"Example:\n" +
+		"Examples:\n" +
 		"       bwip-js code128 012345678 includetext textcolor=ff0000 my-code128.png\n" +
+        "       bwip-js qrcode 'https://bwip-js.metafloor.com' qrcode.svg\n" +
 		"\n" +
-		"Try 'bwip-js --help' for more information.\n" +
-		"Try 'bwip-js --symbols' for a list of supported barcode symbols.\n");
+		"'bwip-js --help' for more information.\n" +
+		"'bwip-js --symbols' for a list of supported barcode symbols.\n" +
+		"'bwip-js --version' for version information.\n" +
+        "");
     if (exit) {
         process.exit(1);
     }
@@ -211,8 +214,11 @@ var optlist = [
 var optmap = optlist.reduce(function(map, elt) { map[elt.name] = elt; return map; }, {}); 
 var opts = {};
 var argv = process.argv;
-var pngfile;
+var outfile;
 
+if (argv.length == 2) {
+    usage(true);
+}
 if (argv.length > 2 && !/^(--|bcid=)/.test(argv[2])) {
     argv[2] = 'bcid=' + argv[2];
 }
@@ -220,9 +226,9 @@ if (argv.length > 3 && !/^(--|text=)/.test(argv[3])) {
     argv[3] = 'text=' + argv[3];
 }
 if (argv.length > 4 && !/^(--|\w+=)/.test(argv[argv.length-1])) {
-    pngfile = argv.pop();
-    if (!/\.png$/.test(pngfile)) {
-        console.log("bwip-js: not a png-file: " + pngfile);
+    outfile = argv.pop();
+    if (!/\.(png|svg)$/.test(outfile)) {
+        console.log(outfile + ": last argument must be a png or svg file name");
         usage(true);
     }
 }
@@ -255,9 +261,14 @@ for (var i = 2, l = argv.length; i < l; i++) {
 if (opts.help) {
 	help();
 } else if (opts.symbols) {
+    var arr = [];
 	for (var sym in symdesc) {
-		console.log('    ' + sym + ' : ' + symdesc[sym]);
+		arr.push(sym + ' : ' + symdesc[sym].desc);
 	}
+    arr.sort();
+    for (var i = 0; i < arr.length; i++) {
+        console.log('  ' + arr[i]);
+    }
 } else if (opts.version && !opts.bcid) {
 	console.log('bwip-js: ' + bwipjs.BWIPJS_VERSION + '\nBWIPP: ' + bwipjs.BWIPP_VERSION);
 } else {
@@ -267,20 +278,22 @@ if (opts.help) {
     } else if (!opts.text) {
         console.log('bwip-js: missing text');
         usage(true);
-    } else if (!pngfile) {
-        console.log('bwip-js: missing pngfile');
+    } else if (!outfile) {
+        console.log('bwip-js: missing outfile');
         usage(true);
-    } else {
+    } else if (outfile.slice(-3) == 'png') {
         bwipjs.toBuffer(opts, function (err, png) {
             if (err) {
                 console.error(''+err);
                 process.exit(1);
             }
             try {
-                fs.writeFileSync(pngfile, png);
+                fs.writeFileSync(outfile, png);
             } catch (e) {
                 console.log('bwip-js: ' + e);
             }
         });
+    } else {
+        fs.writeFileSync(outfile, bwipjs.toSVG(opts));
     }
 }

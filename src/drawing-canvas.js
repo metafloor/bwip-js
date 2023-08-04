@@ -15,6 +15,13 @@ function DrawingCanvas(opts, canvas) {
 	drawing.image = image;
 	drawing.end = end;
 
+    // Reflect setopts() into the super
+    var _setopts = drawing.setopts;
+    drawing.setopts = function (options) {
+        opts = options;
+        _setopts && _setopts.call(drawing, options);
+    };
+
 	return drawing;
 
 
@@ -41,5 +48,6 @@ function DrawingCanvas(opts, canvas) {
 
 	function end() {
 		ctx.putImageData(img, 0, 0);
+        return canvas;
 	}
 }
