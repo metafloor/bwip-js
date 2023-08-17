@@ -33,13 +33,14 @@ bwip-js is a translation to native JavaScript of the amazing code provided in <a
 <p>The software has encoding modules for over 100 different barcode types and standards.
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
-found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).</p>
+found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser)
+or as SVG (all platforms).</p>
 <blockquote>
   <p>Version 4 has been released.  The primary enhancement is built-in support for generating barcodes in SVG.  You can read about the changes here: https://github.com/metafloor/bwip-js/discussions/299</p>
 </blockquote>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 4.0.0 (2023-08-04)</li>
+<li>Current bwip-js version is 4.0.1 (2023-08-17)</li>
 <li>Current BWIPP version is 2023-04-03</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
@@ -48,7 +49,7 @@ found at the end of this document.  Barcode images are generated as png (node-js
 <ul>
 <li><a href="#browser-usage">Browser</a></li>
 <li><a href="#nodejs-request-handler">Node.js</a></li>
-<li><a href="#svg-usage">SVG (All Platforms)</a></li>
+<li><a href="#svg-all-platforms">SVG (All Platforms)</a></li>
 <li><a href="#react-usage">React App</a></li>
 <li><a href="#react-native">React Native</a></li>
 <li><a href="#electron-example">Electron</a></li>
@@ -80,7 +81,7 @@ found at the end of this document.  Barcode images are generated as png (node-js
 <h2 id="onlinebarcodegenerator">Online Barcode Generator</h2>
 <p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online barcode generator</a>
 demonstrates all of the features of bwip-js.  The app is also available 
-in the root bwip-js directory.  See <a href="#demo-apps">Demo Apps</a>.</p>
+in the root bwip-js directory.  See <a href="#demo-html-app">Demo HTML App</a>.</p>
 <h2 id="onlinebarcodeapi">Online Barcode API</h2>
 <p>A bwip-js barcode service is available online, ready to serve up barcode images
 on demand.</p>
@@ -307,7 +308,7 @@ try {
 }
 </code></pre>
 <p>When named encoders are called, the <code>bcid</code> value in the options object is ignored.</p>
-<p><a name="svg-usage"></a></p>
+<p><a name="svg-all-platforms"></a></p>
 <h2 id="svgallplatforms">SVG (All Platforms)</h2>
 <p>The easiest way to generate an SVG barcode image is with the <code>toSVG()</code> method.  It takes
 the same options object as <code>toCanvas()</code> (browser) or <code>toBuffer()</code> (node-js).  The method call is
@@ -387,7 +388,7 @@ export default App;
 <p>See the Browser Usage section for details on the <code>toCanvas()</code> method. </p>
 <p>See the ES6 Browser Module Usage section for details on importing encoders directly.</p>
 <p><a name="react-native"></a></p>
-<h2 id="reactnativeusage">React Native Usage</h2>
+<h2 id="reactnative">React Native</h2>
 <blockquote>
   <p>Note: The react-native module requires an external dependency to polyfill
   missing nodejs built-ins <code>zlib</code> and <code>Buffer</code>.</p>
@@ -453,8 +454,8 @@ section above and draw to a canvas instead.</p>
     Node.js &lt;script&gt;document.write(process.versions.node)&lt;/script&gt;,
     Chromium &lt;script&gt;document.write(process.versions.chrome)&lt;/script&gt;,
     Electron &lt;script&gt;document.write(process.versions.electron)&lt;/script&gt;,
-    bwip-js &lt;script&gt;document.write(bwipjs.VERSION)&lt;/script&gt;,
-    and BWIPP &lt;script&gt;document.write(bwipjs.BWIPP.VERSION)&lt;/script&gt;.
+    bwip-js &lt;script&gt;document.write(bwipjs.BWIPJS_VERSION)&lt;/script&gt;,
+    and BWIPP &lt;script&gt;document.write(bwipjs.BWIPP_VERSION)&lt;/script&gt;.
     &lt;br&gt;&lt;br&gt;&lt;img id="myimg"&gt;
     &lt;pre id="output"&gt;&lt;/pre&gt;
   &lt;/body&gt;
@@ -499,11 +500,13 @@ takes one of three formats:</p>
 </code></pre>
 <p>The above demonstrates how to maniplulate the font metrics so the characters appear
 tall and narrow.</p>
+<p><a name="demo-html-app"></a></p>
 <h2 id="demohtmlapp">Demo HTML App</h2>
 <p><code>demo.html</code> located in the root bwip-js directory is a full featured demonstation
 of bwip-js barcode rendering.  It uses bwip-js' built-in graphics to draw to a canvas.
 The images produced will match pixel-for-pixel with the images produced by the same
 nodejs usage.</p>
+<p><a name="examples"></a></p>
 <h2 id="examples">Examples</h2>
 <p>There are example html and node apps provided with the project including
 how to write your own drawing interface, generating SVG barcode images, 
