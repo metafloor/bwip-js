@@ -174,7 +174,6 @@ function FixupOptions(opts) {
 var BWIPJS_OPTIONS = {
 	bcid:1,
 	text:1,
-    binarytext:1,
 	scale:1,
 	scaleX:1,
 	scaleY:1,
@@ -41184,6 +41183,9 @@ function DrawingCanvas(opts, canvas) {
 
 	// Called by DrawingBuiltin.init() to get the ARGB bitmap for rendering.
 	function image(width, height) {
+        width = width|0;
+        height = height|0;
+
 		canvas.width  = width;
 		canvas.height = height;
 

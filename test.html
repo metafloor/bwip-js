@@ -8,9 +8,11 @@
 <script type="text/javascript" src="lib/symdesc.js"></script>
 <script type="text/javascript" src="lib/canvas-toblob.js"></script>
 <script type="text/javascript" src="lib/filesaver.js"></script>
+<script type="text/javascript" src="lib/inconsolata.js"></script>
 <script type="text/javascript">
 window.addEventListener('load', function() {
-	var lastSymbol, lastBarText, lastAltText, lastOptions, lastRotate, lastScaleX, lastScaleY;
+	var lastSymbol, lastBarText, lastAltText, lastOptions, lastRotate, lastScaleX, lastScaleY,
+        lastRenderAs = 'render-canvas';
 	try {
 		lastSymbol	= localStorage.getItem('bwipjsLastSymbol');
 		lastBarText	= localStorage.getItem('bwipjsLastBarText');
@@ -19,6 +21,7 @@ window.addEventListener('load', function() {
 		lastRotate	= localStorage.getItem('bwipjsLastRotate');
 		lastScaleX  = +localStorage.getItem('bwipjsLastScaleX');
 		lastScaleY  = +localStorage.getItem('bwipjsLastScaleY');
+		lastRenderAs = localStorage.getItem('bwipjsLastRenderAs');
 	} catch (e) {
 	}
 
@@ -47,11 +50,10 @@ window.addEventListener('load', function() {
 			}
 			document.getElementById('symaltx').value = '';
 			document.getElementById('saveas').style.visibility = 'hidden';
-			document.getElementById('proof').style.display = 'none';
 			document.getElementById('stats').textContent = '';
-			var canvas = document.getElementById('canvas');
-			canvas.width = canvas.height = 1;
-			canvas.style.visibility = 'hidden';
+			document.getElementById('canvas').style.display = 'none';
+			document.getElementById('svgdiv').style.display = 'none';
+			document.getElementById('output').textContent = '';
 		});
 
 	if (lastSymbol) {
@@ -68,6 +70,9 @@ window.addEventListener('load', function() {
 		document.getElementById('symaltx').value = lastAltText;
 		document.getElementById('symopts').value = lastOptions;
 	}
+    if (lastRenderAs) {
+        document.getElementById(lastRenderAs).checked = true;
+    }
 	if (lastScaleX && lastScaleY) {
 		document.getElementById('scaleX').value = lastScaleX;
 		document.getElementById('scaleY').value = lastScaleY;
@@ -94,6 +99,9 @@ window.addEventListener('load', function() {
 
 	document.getElementById('versions').textContent =
 				'bwip-js ' + bwipjs.BWIPJS_VERSION + ' / BWIPP ' + bwipjs.BWIPP_VERSION;
+
+    // A reasonable match to OCR-B metrics.
+    bwipjs.loadFont("Inconsolata", 95, 105, Inconsolata);
 });
 
 function render() {
@@ -104,6 +112,7 @@ function render() {
 	var rotate = document.querySelector('input[name="rotate"]:checked').value;
 	var scaleX = +document.getElementById('scaleX').value || 2;
 	var scaleY = +document.getElementById('scaleY').value || 2;
+    var renderAs = document.querySelector('input[name="render-as"]:checked').id;
 
 	try {
 		localStorage.setItem('bwipjsLastSymbol',  elt.sym);
@@ -113,19 +122,23 @@ function render() {
 		localStorage.setItem('bwipjsLastScaleX', scaleX);
 		localStorage.setItem('bwipjsLastScaleY', scaleY);
 		localStorage.setItem('bwipjsLastRotate', rotate);
+		localStorage.setItem('bwipjsLastRenderAs', renderAs);
 	} catch (e) {
 	}
 
 	// Clear the page
 	document.getElementById('output').value = '';
 	document.getElementById('stats').value = '';
-	document.getElementById('proof').style.display = 'none';
 	document.getElementById('saveas').style.visibility = 'hidden';
 	document.getElementById('output').textContent = '';
 
 	var canvas = document.getElementById('canvas');
-	canvas.height = canvas.width = 1;
-	canvas.style.visibility = 'hidden';
+	canvas.height = 1;
+	canvas.width  = 1;
+	canvas.style.display = 'none';
+
+    var svgdiv = document.getElementById('svgdiv');
+    svgdiv.style.display = 'none';
 
 	// Convert the options to an object.
 	let opts = {};
@@ -152,41 +165,71 @@ function render() {
 		opts.alttext = alttext;
 	}
 
-	// Draw the bar code to the canvas
-	try {
-		let ts0 = new Date;
-		bwipjs.toCanvas(canvas, opts);
-		show(ts0, new Date);
-	} catch (e) {
-		// Watch for BWIPP generated raiseerror's.
-		var msg = (''+e).trim();
-		if (msg.indexOf("bwipp.") >= 0) {
-			document.getElementById('output').textContent = msg;
-		} else if (e.stack) {
-			// GC includes the message in the stack.  FF does not.
-			document.getElementById('output').textContent = 
-					(e.stack.indexOf(msg) == -1 ? msg + '\n' : '') + e.stack;
-		} else {
-			document.getElementById('output').textContent = msg;
-		}
-		return;
-	}
+    if (renderAs == 'render-canvas') {
+        // Draw the bar code to the canvas
+        try {
+            let ts0 = new Date;
+            bwipjs.toCanvas(canvas, opts);
+            showCVS(ts0, new Date);
+        } catch (e) {
+            // Watch for BWIPP generated raiseerror's.
+            var msg = (''+e).trim();
+            if (msg.indexOf("bwipp.") >= 0) {
+                document.getElementById('output').textContent = msg;
+            } else if (e.stack) {
+                // GC includes the message in the stack.  FF does not.
+                document.getElementById('output').textContent = 
+                        (e.stack.indexOf(msg) == -1 ? msg + '\n' : '') + e.stack;
+            } else {
+                document.getElementById('output').textContent = msg;
+            }
+            return;
+        }
+    } else {
+        // Draw the bar code as SVG
+        try {
+            let ts0 = new Date;
+            let svg = bwipjs.toSVG(opts);
+            showSVG(svg, ts0, new Date);
+        } catch (e) {
+            // Watch for BWIPP generated raiseerror's.
+            var msg = (''+e).trim();
+            if (msg.indexOf("bwipp.") >= 0) {
+                document.getElementById('output').textContent = msg;
+            } else if (e.stack) {
+                // GC includes the message in the stack.  FF does not.
+                // GC includes the message in the stack.  FF does not.
+                document.getElementById('output').textContent = 
+                        (e.stack.indexOf(msg) == -1 ? msg + '\n' : '') + e.stack;
+            } else {
+                document.getElementById('output').textContent = msg;
+            }
+            return;
+        }
+    }
 
-	function show(ts0, ts1) {
-		canvas.style.visibility = 'visible';
+	function showCVS(ts0, ts1) {
+        canvas.style.display = '';
 		setURL();
-		document.getElementById('stats').textContent = 'Rendered in ' + (ts1-ts0) + ' msecs.';
+		document.getElementById('stats').textContent = elt.sym + ' rendered in ' + (ts1-ts0) + ' msecs.';
 		document.getElementById('saveas').style.visibility = 'visible';
 		saveCanvas.basename = elt.sym + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-');
-
-		// Show proofs?
-		if (location.search.indexOf('proofs=1') != -1) { 
-			var img = document.getElementById('proof');
-			if (img) {
-				img.src = 'proofs/' + elt.sym + '.png';
-				img.style.display = '';
-			}
-		}
+        if (window.devicePixelRatio && window.devicePixelRatio != 1) {
+            canvas.style.zoom = 1 / window.devicePixelRatio;
+        } else {
+            canvas.style.zoom = 1;
+        }
+	}
+	function showSVG(svg, ts0, ts1) {
+        if (window.devicePixelRatio && window.devicePixelRatio != 1) {
+            svgdiv.style.zoom = 1 / window.devicePixelRatio;
+        } else {
+            svgdiv.style.zoom = 1;
+        }
+        svgdiv.innerHTML = svg;
+        svgdiv.style.display = '';
+        document.getElementById('output').textContent = svg;
+		document.getElementById('stats').textContent = elt.sym + ' rendered in ' + (ts1-ts0) + ' msecs.';
 	}
 }
 function saveCanvas(type, ext) {
@@ -226,10 +269,11 @@ function setURL() {
 <td style="vertical-align:top">
 	<table border=0 cellpading=0 cellspacing=0>
 	<tr><th>Barcode Type:<td><select id="symbol"></select>
-	<tr><th>Bar Text:<td><input id="symtext" type="text">
-	<tr><th>Alt Text:<td><input id="symaltx" type="text">
-	<tr><th>Options:<td><input id="symopts" type="text">
+	<tr><th>Bar Text:<td><input id="symtext" type="text" spellcheck="false">
+	<tr><th>Alt Text:<td><input id="symaltx" type="text" spellcheck="false">
+	<tr><th>Options:<td><input id="symopts" type="text" spellcheck="false">
 	<tr><td><td>
+		<div id="stats"></div>
 		<div id="saveas">
 		<a class="saveas" href="javascript:saveCanvas('image/png','.png')">Save As PNG</a>
 		&nbsp;&nbsp;
@@ -238,10 +282,12 @@ function setURL() {
 		<a class="saveas" id="apiurl" href="">Goto URL</a>
 		&nbsp;&nbsp;
 		</div>
-		<div id="stats"></div>
 	</table>
 <td style="padding-left:10mm;vertical-align:top">
 	<table border=0 cellpading=0 cellspacing=5>
+    <tr><th>Render As:<td>
+        <label for="render-canvas"><input type="radio" name="render-as" id="render-canvas" checked>Canvas</label>
+        <label for="render-svg"><input type="radio" name="render-as" id="render-svg">SVG</label>
 	<tr><th>Scale X,Y:<td>
 		<input type="number" min=1 max=9 step=1 id="scaleX" value=2>
 		<input type="number" min=1 max=9 step=1 id="scaleY" value=2>
@@ -260,8 +306,8 @@ function setURL() {
 </table>
 </div>
 <div id="content">
-<canvas id="canvas" width=1 height=1 style="padding:1px;border:1px solid #fff;visibility:hidden"></canvas><br>
-<img id="proof" style="padding:1px;border:1px solid #f00">
+<canvas id="canvas" width=1 height=1 style="display:none"></canvas>
+<div id="svgdiv" style="display:none"></div>
 <div id="output" style="white-space:pre"></div>
 </div>
 </body>

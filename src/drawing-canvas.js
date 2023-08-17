@@ -27,6 +27,9 @@ function DrawingCanvas(opts, canvas) {
 
 	// Called by DrawingBuiltin.init() to get the ARGB bitmap for rendering.
 	function image(width, height) {
+        width = width|0;
+        height = height|0;
+
 		canvas.width  = width;
 		canvas.height = height;
 

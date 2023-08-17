@@ -96,6 +96,7 @@ export namespace BwipJs {
         text: string;
     }
     export interface DrawingContext<T> {
+        setopts?(options: RenderOptions): void;
         scale(sx: number, sy: number): [number, number] | null;
         measure(
             str: string,

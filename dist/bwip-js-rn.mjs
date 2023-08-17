@@ -212,7 +212,6 @@ function FixupOptions(opts) {
 var BWIPJS_OPTIONS = {
 	bcid:1,
 	text:1,
-    binarytext:1,
 	scale:1,
 	scaleX:1,
 	scaleY:1,

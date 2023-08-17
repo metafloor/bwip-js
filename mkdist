@@ -193,7 +193,6 @@ done
 ## exports for the cjs nodejs version
 cat - <<@EOF >> dist/bwip-js-node.js
 module.exports = {
-    // The public interface
     request:Request, toBuffer:ToBuffer, toSVG:ToSVG, render:Render, raw:ToRaw,
     drawingZlibPng:DrawingZlibPng, drawingSVG:DrawingSVG,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib:FontLib,
