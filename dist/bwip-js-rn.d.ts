@@ -1,4 +1,4 @@
-// Type definitions for bwip-js  4.0.0 (2023-08-04)
+// Type definitions for bwip-js  4.0.1 (2023-08-17)
 //
 // THIS DEFINITION FILE IS MACHINE GENERATED - DO NOT EDIT
 //
@@ -92,6 +92,7 @@ export namespace BwipJs {
         text: string;
     }
     export interface DrawingContext<T> {
+        setopts?(options: RenderOptions): void;
         scale(sx: number, sy: number): [number, number] | null;
         measure(
             str: string,
