@@ -40,7 +40,7 @@ or as SVG (all platforms).</p>
 </blockquote>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 4.1.0 (2023-08-29)</li>
+<li>Current bwip-js version is 4.1.1 (2023-08-29)</li>
 <li>Current BWIPP version is 2023-04-03</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
@@ -513,6 +513,119 @@ how to write your own drawing interface, generating SVG barcode images,
 and adding scalable barcodes to a <a href="https://pdfkit.org/">pdfkit</a> document.</p>
 <p>See the examples <a href="https://github.com/metafloor/bwip-js/tree/master/examples">README</a> 
 for more details.</p>
+<h2 id="supportedbarcodetypes">Supported Barcode Types</h2>
+<ul>
+<li>auspost &#x2022; AusPost 4 State Customer Code</li>
+<li>azteccode &#x2022; Aztec Code</li>
+<li>azteccodecompact &#x2022; Compact Aztec Code</li>
+<li>aztecrune &#x2022; Aztec Runes</li>
+<li>bc412 &#x2022; BC412</li>
+<li>channelcode &#x2022; Channel Code</li>
+<li>codablockf &#x2022; Codablock F</li>
+<li>code11 &#x2022; Code 11</li>
+<li>code128 &#x2022; Code 128</li>
+<li>code16k &#x2022; Code 16K</li>
+<li>code2of5 &#x2022; Code 25</li>
+<li>code32 &#x2022; Italian Pharmacode</li>
+<li>code39 &#x2022; Code 39</li>
+<li>code39ext &#x2022; Code 39 Extended</li>
+<li>code49 &#x2022; Code 49</li>
+<li>code93 &#x2022; Code 93</li>
+<li>code93ext &#x2022; Code 93 Extended</li>
+<li>codeone &#x2022; Code One</li>
+<li>coop2of5 &#x2022; COOP 2 of 5</li>
+<li>daft &#x2022; Custom 4 state symbology</li>
+<li>databarexpanded &#x2022; GS1 DataBar Expanded</li>
+<li>databarexpandedcomposite &#x2022; GS1 DataBar Expanded Composite</li>
+<li>databarexpandedstacked &#x2022; GS1 DataBar Expanded Stacked</li>
+<li>databarexpandedstackedcomposite &#x2022; GS1 DataBar Expanded Stacked Composite</li>
+<li>databarlimited &#x2022; GS1 DataBar Limited</li>
+<li>databarlimitedcomposite &#x2022; GS1 DataBar Limited Composite</li>
+<li>databaromni &#x2022; GS1 DataBar Omnidirectional</li>
+<li>databaromnicomposite &#x2022; GS1 DataBar Omnidirectional Composite</li>
+<li>databarstacked &#x2022; GS1 DataBar Stacked</li>
+<li>databarstackedcomposite &#x2022; GS1 DataBar Stacked Composite</li>
+<li>databarstackedomni &#x2022; GS1 DataBar Stacked Omnidirectional</li>
+<li>databarstackedomnicomposite &#x2022; GS1 DataBar Stacked Omnidirectional Composite</li>
+<li>databartruncated &#x2022; GS1 DataBar Truncated</li>
+<li>databartruncatedcomposite &#x2022; GS1 DataBar Truncated Composite</li>
+<li>datalogic2of5 &#x2022; Datalogic 2 of 5</li>
+<li>datamatrix &#x2022; Data Matrix</li>
+<li>datamatrixrectangular &#x2022; Data Matrix Rectangular</li>
+<li>datamatrixrectangularextension &#x2022; Data Matrix Rectangular Extension</li>
+<li>dotcode &#x2022; DotCode</li>
+<li>ean13 &#x2022; EAN-13</li>
+<li>ean13composite &#x2022; EAN-13 Composite</li>
+<li>ean14 &#x2022; GS1-14</li>
+<li>ean2 &#x2022; EAN-2 (2 digit addon)</li>
+<li>ean5 &#x2022; EAN-5 (5 digit addon)</li>
+<li>ean8 &#x2022; EAN-8</li>
+<li>ean8composite &#x2022; EAN-8 Composite</li>
+<li>flattermarken &#x2022; Flattermarken</li>
+<li>gs1-128 &#x2022; GS1-128</li>
+<li>gs1-128composite &#x2022; GS1-128 Composite</li>
+<li>gs1-cc &#x2022; GS1 Composite 2D Component</li>
+<li>gs1datamatrix &#x2022; GS1 Data Matrix</li>
+<li>gs1datamatrixrectangular &#x2022; GS1 Data Matrix Rectangular</li>
+<li>gs1dldatamatrix &#x2022; GS1 Digital Link Data Matrix</li>
+<li>gs1dlqrcode &#x2022; GS1 Digital Link QR Code</li>
+<li>gs1dotcode &#x2022; GS1 DotCode</li>
+<li>gs1northamericancoupon &#x2022; GS1 North American Coupon</li>
+<li>gs1qrcode &#x2022; GS1 QR Code</li>
+<li>hanxin &#x2022; Han Xin Code</li>
+<li>hibcazteccode &#x2022; HIBC Aztec Code</li>
+<li>hibccodablockf &#x2022; HIBC Codablock F</li>
+<li>hibccode128 &#x2022; HIBC Code 128</li>
+<li>hibccode39 &#x2022; HIBC Code 39</li>
+<li>hibcdatamatrix &#x2022; HIBC Data Matrix</li>
+<li>hibcdatamatrixrectangular &#x2022; HIBC Data Matrix Rectangular</li>
+<li>hibcmicropdf417 &#x2022; HIBC MicroPDF417</li>
+<li>hibcpdf417 &#x2022; HIBC PDF417</li>
+<li>hibcqrcode &#x2022; HIBC QR Code</li>
+<li>iata2of5 &#x2022; IATA 2 of 5</li>
+<li>identcode &#x2022; Deutsche Post Identcode</li>
+<li>industrial2of5 &#x2022; Industrial 2 of 5</li>
+<li>interleaved2of5 &#x2022; Interleaved 2 of 5 (ITF)</li>
+<li>isbn &#x2022; ISBN</li>
+<li>ismn &#x2022; ISMN</li>
+<li>issn &#x2022; ISSN</li>
+<li>itf14 &#x2022; ITF-14</li>
+<li>japanpost &#x2022; Japan Post 4 State Customer Code</li>
+<li>kix &#x2022; Royal Dutch TPG Post KIX</li>
+<li>leitcode &#x2022; Deutsche Post Leitcode</li>
+<li>mailmark &#x2022; Royal Mail Mailmark</li>
+<li>mands &#x2022; Marks &amp; Spencer</li>
+<li>matrix2of5 &#x2022; Matrix 2 of 5</li>
+<li>maxicode &#x2022; MaxiCode</li>
+<li>micropdf417 &#x2022; MicroPDF417</li>
+<li>microqrcode &#x2022; Micro QR Code</li>
+<li>msi &#x2022; MSI Modified Plessey</li>
+<li>onecode &#x2022; USPS Intelligent Mail</li>
+<li>pdf417 &#x2022; PDF417</li>
+<li>pdf417compact &#x2022; Compact PDF417</li>
+<li>pharmacode &#x2022; Pharmaceutical Binary Code</li>
+<li>pharmacode2 &#x2022; Two-track Pharmacode</li>
+<li>planet &#x2022; USPS PLANET</li>
+<li>plessey &#x2022; Plessey UK</li>
+<li>posicode &#x2022; PosiCode</li>
+<li>postnet &#x2022; USPS POSTNET</li>
+<li>pzn &#x2022; Pharmazentralnummer (PZN)</li>
+<li>qrcode &#x2022; QR Code</li>
+<li>rationalizedCodabar &#x2022; Codabar</li>
+<li>raw &#x2022; Custom 1D symbology</li>
+<li>rectangularmicroqrcode &#x2022; Rectangular Micro QR Code</li>
+<li>royalmail &#x2022; Royal Mail 4 State Customer Code</li>
+<li>sscc18 &#x2022; SSCC-18</li>
+<li>swissqrcode &#x2022; Swiss QR Code</li>
+<li>symbol &#x2022; Miscellaneous symbols</li>
+<li>telepen &#x2022; Telepen</li>
+<li>telepennumeric &#x2022; Telepen Numeric</li>
+<li>ultracode &#x2022; Ultracode</li>
+<li>upca &#x2022; UPC-A</li>
+<li>upcacomposite &#x2022; UPC-A Composite</li>
+<li>upce &#x2022; UPC-E</li>
+<li>upcecomposite &#x2022; UPC-E Composite</li>
+</ul>
 	</div>
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
