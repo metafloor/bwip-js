@@ -7,13 +7,14 @@ bwip-js is a translation to native JavaScript of the amazing code provided in [B
 The software has encoding modules for over 100 different barcode types and standards.
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
-found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser).
+found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser)
+or as SVG (all platforms).
 
 > Version 4 has been released.  The primary enhancement is built-in support for generating barcodes in SVG.  You can read about the changes here: https://github.com/metafloor/bwip-js/discussions/299
 
 ## Status 
 
-* Current bwip-js version is 4.0.0 (2023-08-04)
+* Current bwip-js version is 4.0.1 (2023-08-17)
 * Current BWIPP version is 2023-04-03
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -22,7 +23,7 @@ found at the end of this document.  Barcode images are generated as png (node-js
 
 * [Browser](#browser-usage)
 * [Node.js](#nodejs-request-handler)
-* [SVG (All Platforms)](#svg-usage)
+* [SVG (All Platforms)](#svg-all-platforms)
 * [React App](#react-usage)
 * [React Native](#react-native)
 * [Electron](#electron-example)
@@ -61,7 +62,7 @@ Or the latest code from github:
 
 An [online barcode generator](http://metafloor.github.io/bwip-js/demo/demo.html)
 demonstrates all of the features of bwip-js.  The app is also available 
-in the root bwip-js directory.  See [Demo Apps](#demo-apps).
+in the root bwip-js directory.  See [Demo HTML App](#demo-html-app).
 
 ## Online Barcode API
 
@@ -353,7 +354,7 @@ try {
 
 When named encoders are called, the `bcid` value in the options object is ignored.
 
-<a name="svg-usage"></a>
+<a name="svg-all-platforms"></a>
 ## SVG (All Platforms) 
 
 The easiest way to generate an SVG barcode image is with the `toSVG()` method.  It takes
@@ -452,7 +453,7 @@ See the Browser Usage section for details on the `toCanvas()` method.
 See the ES6 Browser Module Usage section for details on importing encoders directly.
 
 <a name="react-native"></a>
-## React Native Usage
+## React Native
 
 > Note: The react-native module requires an external dependency to polyfill
 > missing nodejs built-ins `zlib` and `Buffer`.
@@ -534,8 +535,8 @@ This is an example `index.html` file for a basic, single window app:
     Node.js <script>document.write(process.versions.node)</script>,
     Chromium <script>document.write(process.versions.chrome)</script>,
     Electron <script>document.write(process.versions.electron)</script>,
-    bwip-js <script>document.write(bwipjs.VERSION)</script>,
-    and BWIPP <script>document.write(bwipjs.BWIPP.VERSION)</script>.
+    bwip-js <script>document.write(bwipjs.BWIPJS_VERSION)</script>,
+    and BWIPP <script>document.write(bwipjs.BWIPP_VERSION)</script>.
     <br><br><img id="myimg">
     <pre id="output"></pre>
   </body>
@@ -592,6 +593,7 @@ The above demonstrates how to maniplulate the font metrics so the characters app
 tall and narrow.
 
 
+<a name="demo-html-app"></a>
 ## Demo HTML App
 
 `demo.html` located in the root bwip-js directory is a full featured demonstation
@@ -600,6 +602,7 @@ The images produced will match pixel-for-pixel with the images produced by the s
 nodejs usage.
 
 
+<a name="examples"></a>
 ## Examples
 
 There are example html and node apps provided with the project including
