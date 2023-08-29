@@ -14,7 +14,7 @@ or as SVG (all platforms).
 
 ## Status 
 
-* Current bwip-js version is 4.0.1 (2023-08-17)
+* Current bwip-js version is 4.1.0 (2023-08-29)
 * Current BWIPP version is 2023-04-03
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
@@ -108,13 +108,13 @@ The bwip-js options are:
 - `paddingleft` : Sets the width of the padding area, in points, on the left side of the barcode image. Rotates and scales with the image.
 - `paddingright` : Sets the width of the padding area, in points, on the right side of the barcode image. Rotates and scales with the image.
 - `paddingbottom` : Sets the height of the padding area, in points, on the bottom of the barcode image. Rotates and scales with the image.
-- `backgroundcolor` : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Takes either a hex RRGGBB or hex CCMMYYKK string value or CSS-style #RGB or #RRGGBB string value.
+- `backgroundcolor` : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Expects either a hex RGB, RRGGBB or CCMMYYKK string value or CSS-style #RGB or #RRGGBB string value.
 
 For the BWIPP specific options, you will need to consult the
 [BWIPP documentation](https://github.com/bwipp/postscriptbarcode/wiki)
 to determine what options are available for each barcode type.
 
-The BWIPP color options (e.g. `barcolor`, `textcolor`, `bordercolor`) can be specified using either the BWIPP RRGGBB and CCMMYYKK formats or the CSS-style #RGB and #RRGGBB formats.
+All of the BWIPP color options (e.g. `barcolor`, `textcolor`, `bordercolor`) can be specified using either RGB, RRGGBB or CCMMYYKK formats or the CSS-style #RGB and #RRGGBB formats.
 
 Note that bwip-js normalizes the BWIPP `width` and `height` options to always be in millimeters.
 The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm
@@ -358,8 +358,9 @@ When named encoders are called, the `bcid` value in the options object is ignore
 ## SVG (All Platforms) 
 
 The easiest way to generate an SVG barcode image is with the `toSVG()` method.  It takes
-the same options object as `toCanvas()` (browser) or `toBuffer()` (node-js).  The method call is
-synchronous:
+the same options object as the other rendering methods.
+
+The method is synchronous.
 
 ```javascript
 let svg = bwipjs.toSVG({
@@ -373,19 +374,20 @@ let svg = bwipjs.toSVG({
 ```
 
 The return value from `toSVG()` is a string containing a fully qualified SVG definition,
-including the natural width and height of the image, in pixels:
+including a `viewBox` attribute that defines the natural width and height of the image, in pixels.
 
 ```
-<svg version="1.1" width="242" height="200" xmlns="http://www.w3.org/2000/svg">
+<svg version="1.1" viewBox="0 0 242 200" xmlns="http://www.w3.org/2000/svg">
    ...
 </svg>
 ```
 
-To display in an HTML page, the following code should provide a good start:
+The `viewBox` will always have origin `0 0`.
+
+To display in an HTML page, the following should provide a good start:
 
 ```javascript
-let width = /width="([^"]+)"/.exec(svg)[1];
-let height = /height="([^"]+)"/.exec(svg)[1];
+let [ , width, height ] = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
 let span = document.createElement('span');
 span.style.display = 'inline-block';
 span.style.width = width + 'px';
@@ -395,7 +397,7 @@ document.body.addChild(span);
 ```
 
 The `toSVG()` method links to all BWIPP encoders, so it cannot be used with
-tree-shaking.  To reduce bundled size, you must import only the barcode types
+tree-shaking.  To reduce bundled size, you can import only the barcode types
 you need, along with the built-in SVG drawing interface.
 
 ```javascript
