@@ -221,6 +221,9 @@ function render() {
         }
 	}
 	function showSVG(svg, ts0, ts1) {
+        let [ , width, height ] = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
+        svgdiv.style.width = width + 'px';
+        svgdiv.style.height = height + 'px';
         if (window.devicePixelRatio) {
             svgdiv.style.zoom = 1 / window.devicePixelRatio;
         } else {

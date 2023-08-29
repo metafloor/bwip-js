@@ -41467,14 +41467,15 @@ function DrawingSVG(opts) {
             }
         },
         // Called after all drawing is complete.  The return value from this method
-        // is the return value from `bwipjs.render()`.
+        // will be the return value from `bwipjs.render()`.
         end() {
             var linesvg = '';
             for (var key in lines) {
                 linesvg += lines[key] + '" />\n';
             }
             var bg = opts.backgroundcolor;
-            return '<svg version="1.1" width="' + gs_width + '" height="' + gs_height +
+            //return '<svg version="1.1" width="' + gs_width + '" height="' + gs_height +
+            return '<svg version="1.1" viewBox="0 0 ' + gs_width + ' ' + gs_height +
                         '" xmlns="http://www.w3.org/2000/svg">\n' +
 						(clips.length ? '<defs>' + clips.join('') + '</defs>' : '') +
                         (/^[0-9A-Fa-f]{6}$/.test(''+bg)
