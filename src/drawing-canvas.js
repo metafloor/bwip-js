@@ -1,21 +1,22 @@
 // drawing-canvas.js
 //
-
-// opts is the same options object passed into the bwipjs methods.
-function DrawingCanvas(opts, canvas) {
-	if (typeof window == null) {
-		throw new Error('DrawingCanvas: not a browser');
-	}
+// `maybe` maybe the canvas, pre v4.0.
+function DrawingCanvas(canvas, maybe) {
+    // Pre setops() backward compatibility
+    if (maybe && maybe instanceof HTMLCanvasElement) {
+        canvas = maybe;
+    }
 
 	var img;
 	var ctx = canvas.getContext('2d', { willReadFrequently:true });
-	var drawing = DrawingBuiltin(opts);
+	var drawing = DrawingBuiltin();
 
 	// Provide our specializations for the builtin drawing
 	drawing.image = image;
 	drawing.end = end;
 
     // Reflect setopts() into the super
+    var opts;
     var _setopts = drawing.setopts;
     drawing.setopts = function (options) {
         opts = options;
