@@ -1,21 +1,20 @@
 // drawing-builtin.js
 //
 // The aliased (except the fonts) graphics used by drawing-canvas.js and
-// drawing-png.js
+// drawing-zlibpng.js
 //
 // All x,y and lengths are integer values.
 //
 // For the methods that take a color `rgb` parameter, the value is always a
 // string with format RRGGBB.
-//
-// opts is the same options object passed into the bwipjs methods.
-function DrawingBuiltin(opts) {
+function DrawingBuiltin() {
 	var floor = Math.floor;
 
 	// Unrolled x,y rotate/translate matrix
 	var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
 	var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
+    var opts;                   // see setopts()
 	var gs_image, gs_rowbyte;	// rowbyte will be 1 for png's, 0 for canvas
 	var gs_width, gs_height;	// image size, in pixels
 	var gs_dx, gs_dy;			// x,y translate (padding)

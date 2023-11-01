@@ -1,32 +1,52 @@
 {
   "name": "bwip-js",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "JavaScript barcode generator supporting over 100 types and standards.",
   "exports": {
-      "browser": {
-          "types": "./dist/bwip-js.d.ts",
-          "import": "./dist/bwip-js.mjs",
-          "require": "./dist/bwip-js.js",
-          "script": "./dist/bwip-js-min.js"
-      },
-      "electron": {
+      ".": {
+          "browser": {
+              "types": "./dist/bwip-js.d.ts",
+              "import": "./dist/bwip-js.mjs",
+              "require": "./dist/bwip-js.js",
+              "script": "./dist/bwip-js-min.js"
+          },
+          "electron": {
+              "node": {
+                  "types": "./dist/bwip-js-node.d.ts",
+                  "import": "./dist/bwip-js-node.mjs",
+                  "require": "./dist/bwip-js-node.js"
+              },
+              "types": "./dist/bwip-js.d.ts",
+              "import": "./dist/bwip-js.mjs",
+              "default": "./dist/bwip-js.js"
+          },
+          "react-native": {
+              "types": "./dist/bwip-js-rn.d.ts",
+              "default": "./dist/bwip-js-rn.mjs"
+          },
           "node": {
               "types": "./dist/bwip-js-node.d.ts",
               "import": "./dist/bwip-js-node.mjs",
               "require": "./dist/bwip-js-node.js"
-          },
+          }
+      },
+      "./browser": {
           "types": "./dist/bwip-js.d.ts",
           "import": "./dist/bwip-js.mjs",
-          "default": "./dist/bwip-js.js"
+          "require": "./dist/bwip-js.js"
       },
-      "react-native": {
-          "types": "./dist/bwip-js-rn.d.ts",
-          "default": "./dist/bwip-js-rn.mjs"
-      },
-      "node": {
+      "./node": {
           "types": "./dist/bwip-js-node.d.ts",
           "import": "./dist/bwip-js-node.mjs",
           "require": "./dist/bwip-js-node.js"
+      },
+      "./react-native":{
+          "types": "./dist/bwip-js-rn.d.ts",
+          "default": "./dist/bwip-js-rn.mjs"
+      },
+      "./generic": {
+          "types": "./dist/bwip-js-gen.d.ts",
+          "import": "./dist/bwip-js-gen.mjs"
       }
   },
   "main": "./dist/bwip-js-node.js",

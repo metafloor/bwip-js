@@ -13,7 +13,7 @@
 
 // platform-specific includes
 
-export namespace BwipJs {
+declare namespace BwipJs {
     export interface BwippOptions {
         includecheck?: boolean | undefined;
         includecheckintext?: boolean | undefined;
@@ -180,6 +180,8 @@ export namespace BwipJs {
         export function loadFont(name: string, mult: number, data: string | Uint8Array): void;
         export function loadFont(name: string, multy: number, multx: number, data: string | Uint8Array): void;
     }
+    export function toSVG(opts: RenderOptions): string;
+    export function drawingSVG(): DrawingContext<string>;
     
     // platform-specific exports
 }

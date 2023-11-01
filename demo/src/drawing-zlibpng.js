@@ -23,16 +23,21 @@ var PNG_CRC = (function() {
 // react-native polyfills.
 //var PNG_ZLIB = require('zlib');
 
-// opts is the same options object passed into the bwipjs methods.
-function DrawingZlibPng(opts, callback) {
+// `maybe` maybe the callback, pre v4.0.
+function DrawingZlibPng(callback, maybe) {
+    // Pre setops() backward compatibility.
+    if (maybe && typeof maybe == 'function') {
+        callback = maybe;
+    }
 	var image_buffer, image_width, image_height;
 
 	// Provide our specializations for the builtin drawing
-	var drawing = DrawingBuiltin(opts);
+	var drawing = DrawingBuiltin();
 	drawing.image = image;
 	drawing.end = end;
 
     // Reflect setopts() into the super
+    var opts;
     var _setopts = drawing.setopts;
     drawing.setopts = function (options) {
         opts = options;

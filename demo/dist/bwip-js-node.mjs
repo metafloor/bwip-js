@@ -33,7 +33,7 @@
 import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_jabcode,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
 
 // exports.js
-const BWIPJS_VERSION = '4.1.1 (2023-08-29)';
+const BWIPJS_VERSION = '4.1.2 (2023-11-01)';
 
 import url from 'url';
 import PNG_ZLIB from 'zlib';
@@ -108,14 +108,14 @@ function _ToAny(encoder, opts, drawing) {
         return _Render(encoder, opts, drawing);
     } else if (callback) {
         try {
-            _Render(encoder, opts, DrawingZlibPng(opts, callback));
+            _Render(encoder, opts, DrawingZlibPng(callback));
         } catch (e) {
             callback(e);
         }
     } else {
         return new Promise(function (resolve, reject) {
-                _Render(encoder, opts, DrawingZlibPng(opts, function (err, buf) {
-                                err ?  reject(err) : resolve(buf);
+                _Render(encoder, opts, DrawingZlibPng(function (err, buf) {
+                                err ? reject(err) : resolve(buf);
                             }));
             });
     }
@@ -138,7 +138,7 @@ function _ToAny(encoder, opts, drawing) {
 //
 // Available on all platforms.
 function ToSVG(opts) {
-    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG(opts));
+    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG());
 }
 
 function FixupOptions(opts) {
@@ -274,7 +274,6 @@ function _Render(encoder, options, drawing) {
 
     // Returns whatever drawing.end() returns, or `false` if nothing rendered.
 	return bw.render();
-                            
 }
 
 // bwipjs.raw(options)
@@ -293,7 +292,11 @@ function ToRaw(bcid, text, options) {
 	}
 
 	// The drawing interface is just needed for the pre-init() calls.
-	var bw = new BWIPJS(DrawingBuiltin({}));
+    // Don't need to fixup the options - drawing specific.
+    var drawing = DrawingBuiltin();
+    drawing.setopts(options);
+
+	var bw = new BWIPJS(drawing);
 	var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
 
 	// bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
@@ -1042,21 +1045,20 @@ return BWIPJS;
 // drawing-builtin.js
 //
 // The aliased (except the fonts) graphics used by drawing-canvas.js and
-// drawing-png.js
+// drawing-zlibpng.js
 //
 // All x,y and lengths are integer values.
 //
 // For the methods that take a color `rgb` parameter, the value is always a
 // string with format RRGGBB.
-//
-// opts is the same options object passed into the bwipjs methods.
-function DrawingBuiltin(opts) {
+function DrawingBuiltin() {
 	var floor = Math.floor;
 
 	// Unrolled x,y rotate/translate matrix
 	var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
 	var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
+    var opts;                   // see setopts()
 	var gs_image, gs_rowbyte;	// rowbyte will be 1 for png's, 0 for canvas
 	var gs_width, gs_height;	// image size, in pixels
 	var gs_dx, gs_dy;			// x,y translate (padding)
@@ -1574,16 +1576,21 @@ var PNG_CRC = (function() {
 // react-native polyfills.
 //import PNG_ZLIB from 'zlib';
 
-// opts is the same options object passed into the bwipjs methods.
-function DrawingZlibPng(opts, callback) {
+// `maybe` maybe the callback, pre v4.0.
+function DrawingZlibPng(callback, maybe) {
+    // Pre setops() backward compatibility.
+    if (maybe && typeof maybe == 'function') {
+        callback = maybe;
+    }
 	var image_buffer, image_width, image_height;
 
 	// Provide our specializations for the builtin drawing
-	var drawing = DrawingBuiltin(opts);
+	var drawing = DrawingBuiltin();
 	drawing.image = image;
 	drawing.end = end;
 
     // Reflect setopts() into the super
+    var opts;
     var _setopts = drawing.setopts;
     drawing.setopts = function (options) {
         opts = options;
@@ -1762,11 +1769,12 @@ function DrawingZlibPng(opts, callback) {
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
-function DrawingSVG(opts) {
+function DrawingSVG() {
     // Unrolled x,y rotate/translate matrix
     var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
     var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
+    var opts;
     var svg = '';
     var path;
     var clipid = '';

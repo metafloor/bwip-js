@@ -11,11 +11,12 @@
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
-function DrawingSVG(opts) {
+function DrawingSVG() {
     // Unrolled x,y rotate/translate matrix
     var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
     var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
+    var opts;
     var svg = '';
     var path;
     var clipid = '';
