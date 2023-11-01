@@ -14,6 +14,7 @@ if (process.argv.length < 5) {
 var options = {
 	bcid:process.argv[2],
 	text:process.argv[3],
+    //backgroundcolor:'fff',
 }
 var outfile = process.argv[process.argv.length-1];
 

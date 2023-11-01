@@ -79,19 +79,19 @@ function _ToAny(encoder, opts, drawing) {
             throw new Error('bwipjs: `' + opts + '`: not a canvas');
         }
         opts = drawing;
-        drawing = DrawingCanvas(opts, canvas);
+        drawing = DrawingCanvas(canvas);
     } else if (opts instanceof HTMLCanvasElement) {
         var canvas = opts;
         opts = drawing;
-        drawing = DrawingCanvas(opts, canvas);
+        drawing = DrawingCanvas(canvas);
     } else if (typeof drawing == 'string') {
 		var canvas = document.getElementById(drawing) || document.querySelector(drawing);
         if (!(canvas instanceof HTMLCanvasElement)) {
             throw new Error('bwipjs: `' + drawing + '`: not a canvas');
         }
-        drawing = DrawingCanvas(opts, canvas);
+        drawing = DrawingCanvas(canvas);
     } else if (drawing instanceof HTMLCanvasElement) {
-        drawing = DrawingCanvas(opts, drawing);
+        drawing = DrawingCanvas(drawing);
 	} else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
 	} 
@@ -115,7 +115,7 @@ function _ToAny(encoder, opts, drawing) {
 //
 // Available on all platforms.
 function ToSVG(opts) {
-    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG(opts));
+    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG());
 }
 
 function FixupOptions(opts) {
@@ -251,7 +251,6 @@ function _Render(encoder, options, drawing) {
 
     // Returns whatever drawing.end() returns, or `false` if nothing rendered.
 	return bw.render();
-                            
 }
 
 // bwipjs.raw(options)
@@ -270,7 +269,11 @@ function ToRaw(bcid, text, options) {
 	}
 
 	// The drawing interface is just needed for the pre-init() calls.
-	var bw = new BWIPJS(DrawingBuiltin({}));
+    // Don't need to fixup the options - drawing specific.
+    var drawing = DrawingBuiltin();
+    drawing.setopts(options);
+
+	var bw = new BWIPJS(drawing);
 	var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
 
 	// bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
@@ -40647,21 +40650,20 @@ return BWIPJS;
 // drawing-builtin.js
 //
 // The aliased (except the fonts) graphics used by drawing-canvas.js and
-// drawing-png.js
+// drawing-zlibpng.js
 //
 // All x,y and lengths are integer values.
 //
 // For the methods that take a color `rgb` parameter, the value is always a
 // string with format RRGGBB.
-//
-// opts is the same options object passed into the bwipjs methods.
-function DrawingBuiltin(opts) {
+function DrawingBuiltin() {
 	var floor = Math.floor;
 
 	// Unrolled x,y rotate/translate matrix
 	var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
 	var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
+    var opts;                   // see setopts()
 	var gs_image, gs_rowbyte;	// rowbyte will be 1 for png's, 0 for canvas
 	var gs_width, gs_height;	// image size, in pixels
 	var gs_dx, gs_dy;			// x,y translate (padding)
@@ -41156,22 +41158,23 @@ function DrawingBuiltin(opts) {
 }
 // drawing-canvas.js
 //
-
-// opts is the same options object passed into the bwipjs methods.
-function DrawingCanvas(opts, canvas) {
-	if (typeof window == null) {
-		throw new Error('DrawingCanvas: not a browser');
-	}
+// `maybe` maybe the canvas, pre v4.0.
+function DrawingCanvas(canvas, maybe) {
+    // Pre setops() backward compatibility
+    if (maybe && maybe instanceof HTMLCanvasElement) {
+        canvas = maybe;
+    }
 
 	var img;
 	var ctx = canvas.getContext('2d', { willReadFrequently:true });
-	var drawing = DrawingBuiltin(opts);
+	var drawing = DrawingBuiltin();
 
 	// Provide our specializations for the builtin drawing
 	drawing.image = image;
 	drawing.end = end;
 
     // Reflect setopts() into the super
+    var opts;
     var _setopts = drawing.setopts;
     drawing.setopts = function (options) {
         opts = options;
@@ -41220,11 +41223,12 @@ function DrawingCanvas(opts, canvas) {
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
-function DrawingSVG(opts) {
+function DrawingSVG() {
     // Unrolled x,y rotate/translate matrix
     var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
     var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
+    var opts;
     var svg = '';
     var path;
     var clipid = '';

@@ -108,14 +108,14 @@ function _ToAny(encoder, opts, drawing) {
         return _Render(encoder, opts, drawing);
     } else if (callback) {
         try {
-            _Render(encoder, opts, DrawingZlibPng(opts, callback));
+            _Render(encoder, opts, DrawingZlibPng(callback));
         } catch (e) {
             callback(e);
         }
     } else {
         return new Promise(function (resolve, reject) {
-                _Render(encoder, opts, DrawingZlibPng(opts, function (err, buf) {
-                                err ?  reject(err) : resolve(buf);
+                _Render(encoder, opts, DrawingZlibPng(function (err, buf) {
+                                err ? reject(err) : resolve(buf);
                             }));
             });
     }
@@ -138,7 +138,7 @@ function _ToAny(encoder, opts, drawing) {
 //
 // Available on all platforms.
 function ToSVG(opts) {
-    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG(opts));
+    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG());
 }
 
 function FixupOptions(opts) {
@@ -274,7 +274,6 @@ function _Render(encoder, options, drawing) {
 
     // Returns whatever drawing.end() returns, or `false` if nothing rendered.
 	return bw.render();
-                            
 }
 
 // bwipjs.raw(options)
@@ -293,7 +292,11 @@ function ToRaw(bcid, text, options) {
 	}
 
 	// The drawing interface is just needed for the pre-init() calls.
-	var bw = new BWIPJS(DrawingBuiltin({}));
+    // Don't need to fixup the options - drawing specific.
+    var drawing = DrawingBuiltin();
+    drawing.setopts(options);
+
+	var bw = new BWIPJS(drawing);
 	var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
 
 	// bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
@@ -1042,21 +1045,20 @@ return BWIPJS;
 // drawing-builtin.js
 //
 // The aliased (except the fonts) graphics used by drawing-canvas.js and
-// drawing-png.js
+// drawing-zlibpng.js
 //
 // All x,y and lengths are integer values.
 //
 // For the methods that take a color `rgb` parameter, the value is always a
 // string with format RRGGBB.
-//
-// opts is the same options object passed into the bwipjs methods.
-function DrawingBuiltin(opts) {
+function DrawingBuiltin() {
 	var floor = Math.floor;
 
 	// Unrolled x,y rotate/translate matrix
 	var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
 	var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
+    var opts;                   // see setopts()
 	var gs_image, gs_rowbyte;	// rowbyte will be 1 for png's, 0 for canvas
 	var gs_width, gs_height;	// image size, in pixels
 	var gs_dx, gs_dy;			// x,y translate (padding)
@@ -1574,16 +1576,21 @@ var PNG_CRC = (function() {
 // react-native polyfills.
 //import PNG_ZLIB from 'zlib';
 
-// opts is the same options object passed into the bwipjs methods.
-function DrawingZlibPng(opts, callback) {
+// `maybe` maybe the callback, pre v4.0.
+function DrawingZlibPng(callback, maybe) {
+    // Pre setops() backward compatibility.
+    if (maybe && typeof maybe == 'function') {
+        callback = maybe;
+    }
 	var image_buffer, image_width, image_height;
 
 	// Provide our specializations for the builtin drawing
-	var drawing = DrawingBuiltin(opts);
+	var drawing = DrawingBuiltin();
 	drawing.image = image;
 	drawing.end = end;
 
     // Reflect setopts() into the super
+    var opts;
     var _setopts = drawing.setopts;
     drawing.setopts = function (options) {
         opts = options;
@@ -1762,11 +1769,12 @@ function DrawingZlibPng(opts, callback) {
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
-function DrawingSVG(opts) {
+function DrawingSVG() {
     // Unrolled x,y rotate/translate matrix
     var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
     var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
+    var opts;
     var svg = '';
     var path;
     var clipid = '';

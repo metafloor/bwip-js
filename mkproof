@@ -8,7 +8,7 @@ sym="$1"
 text="$2"
 opts="$3"
 
-echo "($text)"
+##echo "($text)"
 ## First, use ghostscript to give us the bounding box
 BBOX=$(
 cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=bbox - 2>&1 | grep '%%HiResBoundingBox'
@@ -18,7 +18,7 @@ cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=bbox - 2>&1 |
 )
 
 ## Rerun to generate the image (rendered to US Letter page size).
-cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=1 -dTextAlphaBits=4 -sOutputFile=c:/tmp/mkproof.png -
+cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=1 -dTextAlphaBits=4 -sOutputFile=/tmp/mkproof.png -
 50 50 moveto 2 2 scale
 ($text) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec showpage
 @EOF
@@ -35,15 +35,17 @@ B=$(printf "%.0f" $B)
 R=$(printf "%.0f" $R)
 T=$(printf "%.0f" $T)
 
-## The original image is 612x792 pixels (8.5x11 at 72dpi).
+## Get the image's height
+IH=$(identify-im6 -format '%h' /tmp/mkproof.png)
+
 ## The barcode's origin is lower left corner.
 let X=L
-let Y=792-T
+let Y=IH-T
 let W=R-L
 let H=T-B
-magick convert -crop "${W}x${H}+${X}+${Y}" c:/tmp/mkproof.png proofs/$sym.png
+convert -crop "${W}x${H}+${X}+${Y}" /tmp/mkproof.png -define png:color-type=6 -transparent white +repage -strip proofs/$sym.png
 
-rm -f /c/tmp/mkproof.png
+rm -f /tmp/mkproof.png
 
 exit 0
 

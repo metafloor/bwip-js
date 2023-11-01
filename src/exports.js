@@ -76,14 +76,14 @@ function _ToAny(encoder, opts, drawing) {
         return _Render(encoder, opts, drawing);
     } else if (callback) {
         try {
-            _Render(encoder, opts, DrawingZlibPng(opts, callback));
+            _Render(encoder, opts, DrawingZlibPng(callback));
         } catch (e) {
             callback(e);
         }
     } else {
         return new Promise(function (resolve, reject) {
-                _Render(encoder, opts, DrawingZlibPng(opts, function (err, buf) {
-                                err ?  reject(err) : resolve(buf);
+                _Render(encoder, opts, DrawingZlibPng(function (err, buf) {
+                                err ? reject(err) : resolve(buf);
                             }));
             });
     }
@@ -125,19 +125,19 @@ function _ToAny(encoder, opts, drawing) {
             throw new Error('bwipjs: `' + opts + '`: not a canvas');
         }
         opts = drawing;
-        drawing = DrawingCanvas(opts, canvas);
+        drawing = DrawingCanvas(canvas);
     } else if (opts instanceof HTMLCanvasElement) {
         var canvas = opts;
         opts = drawing;
-        drawing = DrawingCanvas(opts, canvas);
+        drawing = DrawingCanvas(canvas);
     } else if (typeof drawing == 'string') {
 		var canvas = document.getElementById(drawing) || document.querySelector(drawing);
         if (!(canvas instanceof HTMLCanvasElement)) {
             throw new Error('bwipjs: `' + drawing + '`: not a canvas');
         }
-        drawing = DrawingCanvas(opts, canvas);
+        drawing = DrawingCanvas(canvas);
     } else if (drawing instanceof HTMLCanvasElement) {
-        drawing = DrawingCanvas(opts, drawing);
+        drawing = DrawingCanvas(drawing);
 	} else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
 	} 
@@ -184,7 +184,7 @@ function _ToAny(encoder, opts, drawing) {
         return _Render(encoder, opts, drawing);
     } else if (callback) {
         try {
-            _Render(encoder, opts, DrawingZlibPng(opts, (err, buf) => {
+            _Render(encoder, opts, DrawingZlibPng((err, buf) => {
                                 if (err) {
                                     callback(err);
                                 } else {
@@ -200,7 +200,7 @@ function _ToAny(encoder, opts, drawing) {
         }
     } else {
         return new Promise(function (resolve, reject) {
-                _Render(encoder, opts, DrawingZlibPng(opts, (err, buf) => {
+                _Render(encoder, opts, DrawingZlibPng((err, buf) => {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -217,7 +217,7 @@ function _ToAny(encoder, opts, drawing) {
 // Specialized DataURL version of DrawingZlibPng()
 function DrawingDataURL(opts, callback) {
     if (callback) {
-        return DrawingZlibPng(opts, (err, buf) => {
+        return DrawingZlibPng((err, buf) => {
                         if (err) {
                             callback(err);
                         } else {
@@ -230,7 +230,7 @@ function DrawingDataURL(opts, callback) {
                     });
     } else {
         return new Promise((resolve, reject) => {
-                            DrawingZlibPng(opts, (err, buf) => {
+                            DrawingZlibPng((err, buf) => {
                                 if (err) {
                                     reject(err);
                                 } else {
@@ -263,7 +263,7 @@ function DrawingDataURL(opts, callback) {
 //
 // Available on all platforms.
 function ToSVG(opts) {
-    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG(opts));
+    return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG());
 }
 
 function FixupOptions(opts) {
@@ -399,7 +399,6 @@ function _Render(encoder, options, drawing) {
 
     // Returns whatever drawing.end() returns, or `false` if nothing rendered.
 	return bw.render();
-                            
 }
 
 // bwipjs.raw(options)
@@ -418,7 +417,11 @@ function ToRaw(bcid, text, options) {
 	}
 
 	// The drawing interface is just needed for the pre-init() calls.
-	var bw = new BWIPJS(DrawingBuiltin({}));
+    // Don't need to fixup the options - drawing specific.
+    var drawing = DrawingBuiltin();
+    drawing.setopts(options);
+
+	var bw = new BWIPJS(drawing);
 	var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
 
 	// bwip-js uses Maps to emulate PostScript dictionary objects; but Maps

@@ -63,6 +63,7 @@ cp dist/bwip-js.js dist/bwipp.mjs
 cp dist/bwip-js.js dist/bwip-js.mjs
 cp dist/bwip-js.js dist/bwip-js-node.mjs
 cp dist/bwip-js.js dist/bwip-js-rn.mjs
+cp dist/bwip-js.js dist/bwip-js-gen.mjs
 
 ## This returns the list of bwipp exports
 bwipp_exports() {
@@ -78,6 +79,7 @@ echo "export { $(bwipp_exports) };" >> dist/bwipp.mjs
 ## Bring in the bwipp.mjs imports for the ESMs
 echo "import { $(bwipp_exports) } from './bwipp.mjs';" >> dist/bwip-js.mjs
 echo "import { $(bwipp_exports) } from './bwipp.mjs';" >> dist/bwip-js-node.mjs
+echo "import { $(bwipp_exports) } from './bwipp.mjs';" >> dist/bwip-js-gen.mjs
 echo "import { $(bwipp_exports) } from './bwipp.mjs';" >> dist/bwip-js-rn.mjs
 
 ## Add a UMD around the minified and non-minified legacy browser versions
@@ -114,11 +116,12 @@ exports NODE-JS >> dist/bwip-js-node.mjs
 exports BROWSER >> dist/bwip-js.js
 exports BROWSER >> dist/bwip-js.mjs
 exports REACT-NV >> dist/bwip-js-rn.mjs
+exports GENERIC >> dist/bwip-js-gen.mjs
 
-## nodejs and react-native plain-source - no drawing-canvas.js
+## nodejs common-js
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.js 
 
-## no bwipp in the ESMs
+## nodejs and react-native ESMs
 cat src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.mjs 
 cat src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-rn.mjs 
 
@@ -126,11 +129,14 @@ cat src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.
 sed -i -E -e 's/var (\w+)\s*=\s*require\((\x27\w+\x27)\)/import \1 from \2/' dist/bwip-js-node.mjs
 sed -i -E -e 's/require\((\x27\w+\x27)\)/import \1/' dist/bwip-js-node.mjs
 
-## browser plain-source - no drawing-zlibpng.js
+## browser UMD
 cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
 
-## no bwipp in the ESM
+## browser ESM
 cat src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.mjs 
+
+## generic ESM
+cat src/bwipjs.js src/drawing-builtin.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-gen.mjs 
 
 ##
 ## Shorten the postscript operator names rather than use random variable
@@ -190,6 +196,66 @@ FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')"
 @EOF
 done
 
+## generic postamble.
+## We cannot assume atob() or Buffer is available (and testing for their existence will
+## break tree-shaking).
+cat - <<@EOF >> dist/bwip-js-gen.mjs
+function toUint8Array(data) {
+    if (typeof data == "string") {
+        if (/[^A-Za-z0-9+\/=\s]/.test(data)) {
+            // binary string
+            var len = data.length,
+                bytes = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                bytes[i] = data.charCodeAt(i);
+            }
+            return bytes;
+        } else {
+            // base64
+            data = data.replace(/\s+/g, '');
+            var len = data.length;
+            if (len & 3) {
+                throw 'data is invalid base64 length';
+            }
+            var u8len = (len >> 2) * 3;
+            if (data[len-2] === '=') {
+                u8len -= 2;
+            } else if (data[len-1] === '=') {
+                u8len -= 1;
+            }
+            var binx = 0;
+            var bytes = new Uint8Array(u8len);
+            var b64map = toUint8Array.b64map;
+            for (var i = 0; i < len; i += 4) {
+                var a = b64map[data[i]], b = b64map[data[i+1]],
+                    c = b64map[data[i+2]], d = b64map[data[i+3]];
+                bytes[binx++] = (a << 2) | (b >> 4);
+                bytes[binx++] = (b << 4) | (c >> 2);
+                bytes[binx++] = (c << 6) | d;
+            }
+            return bytes;
+        }
+    } else if (data instanceof Uint8Array) {
+        return data;
+    } else if (data instanceof ArrayBuffer) {
+        return new Uint8Array(data);
+    }
+    throw new ReferenceError("data must be a binary or base64 encoded string or Uint8Array");
+}
+toUint8Array.b64map = (function() { 
+    var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    var map = {};
+    for (var i = 0; i < 64; i++) {
+        map[b64[i]] = i;
+    }
+    map[64] = 0;    // '=' padding char
+    return map;
+})();
+
+FontLib.loadFont("OCR-A", 100, 100, "$(base64 fonts/OCRA7.ttf | tr -d '\r\n\t ')");
+FontLib.loadFont("OCR-B", 96, 100, "$(base64 fonts/OCRB7.ttf | tr -d '\r\n\t ')");
+@EOF
+
 ## exports for the cjs nodejs version
 cat - <<@EOF >> dist/bwip-js-node.js
 module.exports = {
@@ -200,7 +266,7 @@ module.exports = {
 };
 @EOF
 
-# exports for the esm node version
+# exports for the ESM node version
 grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _ToAny(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js-node.mjs
@@ -217,7 +283,7 @@ export default {
 };
 @EOF
 
-# exports for the esm browser version
+# exports for the ESM browser version
 grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _ToAny(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js.mjs
@@ -251,6 +317,21 @@ export default {
 };
 @EOF
 
+# exports for the generic ESM version
+grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _Render(bwipp_\1,opts,dwg); };/' \
+        -e 's/-/_/g' >> dist/bwip-js-gen.mjs
+
+cat - <<@EOF >> dist/bwip-js-gen.mjs
+export { ToSVG as toSVG, Render as render, LoadFont as loadFont, DrawingSVG as drawingSVG,
+         BWIPJS_VERSION, BWIPP_VERSION,
+};
+export default {
+    toSVG:ToSVG, render:Render, raw:ToRaw, drawingSVG:DrawingSVG,
+    fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
+};
+@EOF
+
 # exports for the UMD browser versions
 for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
 cat - <<@EOF >> $file
@@ -275,9 +356,9 @@ cat - <<@EOF
 # drawing => any
 (
 grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
-    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;/' -e 's/-/_/g'
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;/' -e 's/-/_/g'
 grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
-    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, drawing: DrawingContext<T>): T;/' -e 's/-/_/g'
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;/' -e 's/-/_/g'
 ) | sort
 echo
 }
@@ -286,6 +367,7 @@ echo
 function browsertypes {
 cat - <<@EOF
     export function toCanvas(canvas: string | HTMLCanvasElement, opts: RenderOptions): HTMLCanvasElement;
+    export function drawingCanvas(canvas: string | HTMLCanvasElement): DrawingContext<HTMLCanvasElement>;
 
 @EOF
 # toCanvas => canvas
@@ -302,6 +384,8 @@ cat - <<@EOF
     export function toBuffer(opts: RenderOptions, callback: ToBufferCallback): void;
     export function toBuffer(opts: RenderOptions): Promise<Buffer>;
     export function request(req: Request, res: Response, opts?: RenderOptions): void;
+    export function drawingZlibPng(): DrawingContext<Promise<Buffer>>;
+    export function drawingZlibPng(callback: ToBufferCallback): DrawingContext<void>;
 
 @EOF
 # toBuffer => Promise<Buffer>
@@ -320,8 +404,10 @@ function reactnvtypes {
 cat - <<@EOF
     export type ToDataURLCallback = (err: string | Error, png: { width: number; height: number; uri: string }) => void;
     export type DataURL = { width: number; height: number; uri: string };
-    export function toDataURL(opts: RenderOptions, callback: ToDataURLCallback) : void;
+    export function toDataURL(opts: RenderOptions, callback: ToDataURLCallback): void;
     export function toDataURL(opts: RenderOptions): Promise<DataURL>;
+    export function drawingDataURL(callback: ToDataURLCallback): DrawingContext<void>;
+    export function drawingDataURL(): DrawingContext<Promise<DataURL>>;
 
 @EOF
 # toDataURL => Promise<DataURL>
@@ -339,12 +425,7 @@ echo
 browsertypes | sed -E '/\/\/ platform-specific exports/r /dev/stdin' src/bwip-js.d.ts > dist/bwip-js.d.ts
 nodejstypes | sed -E '/\/\/ platform-specific exports/r /dev/stdin' src/bwip-js.d.ts > dist/bwip-js-node.d.ts
 reactnvtypes | sed -E '/\/\/ platform-specific exports/r /dev/stdin' src/bwip-js.d.ts > dist/bwip-js-rn.d.ts
-##(
-##browsertypes
-##nodejstypes
-##reactnvtypes
-##) | sed -E '/\/\/ platform-specific exports/r /dev/stdin' src/bwip-js.d.ts > dist/bwip-js-all.d.ts
-
+drawingtypes | sed -E '/\/\/ platform-specific exports/r /dev/stdin' src/bwip-js.d.ts > dist/bwip-js-gen.d.ts
 
 ## Fix up the node d.ts file to include the node types
 function fixupnodetypes {
@@ -359,7 +440,6 @@ import { IncomingMessage as Request, ServerResponse as Response } from 'http';
 }
 
 fixupnodetypes dist/bwip-js-node.d.ts
-##fixupnodetypes dist/bwip-js-all.d.ts
 
 ##
 ## Refresh the various barcode id to description maps

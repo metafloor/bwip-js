@@ -79,7 +79,7 @@ checkcvs(besm.gs1_128(canvas, { text:'(01)95012345678903', includetext:true }));
 console.log('browser-esm toCanvas(cvs,opts) named export ok');
 checkcvs(besm.gs1_128({ text:'(01)95012345678903', includetext:true }, canvas));
 console.log('browser-esm toCanvas(opts,cvs) named export ok');
-checksvg(besm.gs1_128({ text:'(01)95012345678903', includetext:true }, besm.DrawingSVG()));
+checksvg(besm.gs1_128({ text:'(01)95012345678903', includetext:true }, besm.drawingSVG()));
 console.log('browser-esm toSVG named export ok');
 }
 
@@ -90,7 +90,7 @@ ncjs.toBuffer({ bcid:'code128', text:'01234566789', includetext:true })
         checkbuf(png);
         console.log('nodejs-cjs toBuffer ok');
     });
-checksvg(ncjs.toSVG({ bcid:'code128', text:'01234566789', includetext:true }, ncjs.DrawingSVG()))
+checksvg(ncjs.toSVG({ bcid:'code128', text:'01234566789', includetext:true }, ncjs.drawingSVG()))
 console.log('nodejs-cjs toSVG ok');
 }
 
@@ -108,7 +108,7 @@ nesm.gs1_128({ text:'(01)95012345678903', includetext:true })
     });
 checksvg(nesm.default.toSVG({ bcid:'code128', text:'01234566789', includetext:true }));
 console.log('nodejs-esm toSVG ok');
-checksvg(nesm.gs1_128({ text:'(01)95012345678903', includetext:true }, nesm.DrawingSVG()));
+checksvg(nesm.gs1_128({ text:'(01)95012345678903', includetext:true }, nesm.drawingSVG()));
 console.log('nodejs-esm toSVG named export ok');
 }
 
@@ -126,7 +126,15 @@ rnesm.gs1_128({ text:'(01)95012345678903', includetext:true })
     });
 checksvg(rnesm.default.toSVG({ bcid:'code128', text:'01234566789', includetext:true }));
 console.log('react-native-esm toSVG ok');
-checksvg(rnesm.gs1_128({ text:'(01)95012345678903', includetext:true }, rnesm.DrawingSVG()));
+checksvg(rnesm.gs1_128({ text:'(01)95012345678903', includetext:true }, rnesm.drawingSVG()));
 console.log('react-native-esm toSVG named export ok');
+}
+
+{
+let gesm = _import('./dist/bwip-js-gen.mjs');
+checksvg(gesm.default.toSVG({ bcid:'code128', text:'01234566789', includetext:true }));
+console.log('generic-esm toSVG ok');
+checksvg(gesm.gs1_128({ text:'(01)95012345678903', includetext:true }, gesm.drawingSVG()));
+console.log('generic-esm toSVG named export ok');
 }
 
