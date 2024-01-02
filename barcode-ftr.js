@@ -37,9 +37,6 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
 		text = unescape(encodeURIComponent(text));
 	}
 		
-	// Don't draw? (See file runtest)
-	$0.bwipjs_dontdraw = opts.dontdraw || dontdraw || false;
-
 	// Convert opts to a Map
 	var map = new Map;
 	for (var id in opts) {
@@ -48,10 +45,11 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
 		}
 	}
 
-	// Invoke the encoder
+	// Set up the initial postscript state and invoke the encoder
 	$$ = bwipjs;
 	$k = [ text, map ];
 	$j = 2;
+	$_ = { bwipjs_dontdraw : opts.dontdraw || dontdraw || false };
 	encoder();
 
 	// Return what is left on the stack.  This branch should only be taken

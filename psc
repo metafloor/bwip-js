@@ -36,23 +36,6 @@
 ##		end
 ##		/setpacking where {pop setpacking} if
 ##
-## * Every encoder has the following bit of code to convert an options
-##   string to an options object:
-##
-##		% Parse the input options, either a string or a dict
-##		options type /stringtype eq {
-##			1 dict begin
-##			options {
-##				token false eq {exit} if dup length string cvs (=) search
-##				true eq {cvlit exch pop exch def} {cvlit true def} ifelse
-##			} loop
-##			currentdict end /options exch def
-##		} if
-##
-##   Remove that code and require an options object to be passed in.
-##   No loss in functionality as the bwipp.js interface automatically
-##   converts an options string to an options object.
-##
 ## * Fixup renlinear and renmatrix.  Replace renmaximatrix.
 ##
 ## * Replace the isbn/ismn/issn Courier with OCR-A
@@ -113,8 +96,6 @@ cat barcode.tmp custom/*.ps | sed \
 	-e '/^\s*{.*} stopped {/,/^\s*} ifelse\s*$/s/^/%psc &/'\
 	-e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
     -e 's,/ctx null def,%psc &,'\
-    -e 's,/\S\S* //loadctx exec,%psc &,'\
-    -e 's,//unloadctx exec,%psc &,'\
     -e 's,//processoptions,currentdict //processoptions,'\
 	-e 's/{\s*13 3 div /{ 4.3333334 /g'\
 	-e 's/{\s*10 3 div /{ 3.3333334 /g'\
@@ -123,6 +104,8 @@ cat barcode.tmp custom/*.ps | sed \
 	-e 's/{\s*2 3 div /{ 0.6666667 /g'\
 	> barcode.psc
 
+    ## -e 's,/\S\S* //loadctx exec,%psc &,'\
+    ## -e 's,//unloadctx exec,%psc &,'\
 ##
 ## Update pscdbg.html
 ##

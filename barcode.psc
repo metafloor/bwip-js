@@ -199,7 +199,7 @@
 
     20 dict begin
 
-    %psc /parseinput //loadctx exec
+    /parseinput //loadctx exec
 
     /fncvals exch def
     /barcode exch def
@@ -353,7 +353,7 @@
         0 1 j 1 sub { 1 index exch dup msg exch get put } for
     } ifelse
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -382,7 +382,7 @@ bind def
 
     20 dict begin
 
-    %psc /gs1process //loadctx exec
+    /gs1process //loadctx exec
 
 {
     % Extracted from the GS1 Syntax Dictionary
@@ -3302,7 +3302,7 @@ bind def
 
     ais vals fncs
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -3996,7 +3996,7 @@ bind def
         /textyoffset height 72 mul 1 add def
     } if
 
-    %psc /ean5 //loadctx exec
+    /ean5 //loadctx exec
 
     % Validate input
     barcode length 5 ne {
@@ -4089,7 +4089,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -4139,7 +4139,7 @@ bind def
         /textyoffset height 72 mul 1 add def
     } if
 
-    %psc /ean2 //loadctx exec
+    /ean2 //loadctx exec
 
     % Validate input
     barcode length 2 ne {
@@ -4218,7 +4218,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -4271,7 +4271,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /ean13 //loadctx exec
+    /ean13 //loadctx exec
 
     % Split off the addon
     barcode ( ) search {
@@ -4435,7 +4435,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -4488,7 +4488,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /ean8 //loadctx exec
+    /ean8 //loadctx exec
 
     % Split off the addon
     barcode ( ) search {
@@ -4633,7 +4633,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -4686,7 +4686,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /upca //loadctx exec
+    /upca //loadctx exec
 
     % Split off the addon
     barcode ( ) search {
@@ -4883,7 +4883,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -4936,7 +4936,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /upce //loadctx exec
+    /upce //loadctx exec
 
     % Split off the addon
     barcode ( ) search {
@@ -5172,7 +5172,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -5959,7 +5959,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /code128 //loadctx exec
+    /code128 //loadctx exec
 
     % Special function characters
 {
@@ -6344,7 +6344,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -6715,7 +6715,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /code39 //loadctx exec
+    /code39 //loadctx exec
 
 {
     % Create an array containing the character mappings
@@ -6815,7 +6815,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -6859,7 +6859,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /code39ext //loadctx exec
+    /code39ext //loadctx exec
 
     % Parse ordinals of the form ^NNN to ASCII
     /fncvals <<
@@ -6926,7 +6926,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -7173,7 +7173,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /code93 //loadctx exec
+    /code93 //loadctx exec
 
 {
     /encs
@@ -7270,7 +7270,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -7314,7 +7314,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /code93ext //loadctx exec
+    /code93ext //loadctx exec
 
     % Parse ordinals of the form ^NNN to ASCII
     /fncvals <<
@@ -7389,7 +7389,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -7436,7 +7436,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /interleaved2of5 //loadctx exec
+    /interleaved2of5 //loadctx exec
 
     % Validate the input
     barcode {
@@ -7548,7 +7548,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -7900,7 +7900,7 @@ bind def
 
     format (truncated) eq {/height 13.0 72 div def} if
 
-    %psc /databaromni //loadctx exec
+    /databaromni //loadctx exec
 
     % Calculate checksum and add to end of barcode
     /checksum 0 def
@@ -8276,7 +8276,7 @@ bind def
 
     } ifelse
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -8552,7 +8552,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /databarlimited //loadctx exec
+    /databarlimited //loadctx exec
 
     % Validate the input
     barcode 0 4 getinterval (\(01\)) ne {
@@ -8801,7 +8801,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -8851,7 +8851,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /databarexpanded //loadctx exec
+    /databarexpanded //loadctx exec
 
     barxmult 34 lt {
         /bwipp.databarStackedOmniBarXmult (GS1 DataBar Expanded Stacked must have a barxmult of at least 34) //raiseerror exec
@@ -9670,7 +9670,7 @@ bind def
 
     } ifelse
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -10059,7 +10059,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /code2of5 //loadctx exec
+    /code2of5 //loadctx exec
 
     % Validate input
     barcode {
@@ -10172,7 +10172,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -10460,7 +10460,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /code11 //loadctx exec
+    /code11 //loadctx exec
 
     % Create an array containing the character mappings
 {
@@ -10578,7 +10578,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -10633,7 +10633,7 @@ bind def
         /includestartstop true def
     } if
 
-    %psc /bc412 //loadctx exec
+    /bc412 //loadctx exec
 
     % Create a string of the available characters
 {
@@ -10778,7 +10778,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -10827,7 +10827,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /rationalizedCodabar //loadctx exec
+    /rationalizedCodabar //loadctx exec
 
 {
     % Create an array containing the character mappings
@@ -10942,7 +10942,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -10983,7 +10983,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /onecode //loadctx exec
+    /onecode //loadctx exec
 
     /barlen barcode length def
 
@@ -11301,7 +11301,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -11348,7 +11348,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /postnet //loadctx exec
+    /postnet //loadctx exec
 
     /barlen barcode length validatecheck {1 sub} if def
 
@@ -11449,7 +11449,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -11496,7 +11496,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /planet //loadctx exec
+    /planet //loadctx exec
 
     /barlen barcode length validatecheck {1 sub} if def
 
@@ -11598,7 +11598,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -11645,7 +11645,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /royalmail //loadctx exec
+    /royalmail //loadctx exec
 
 {
     % Create a string of the available characters
@@ -11751,7 +11751,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -11801,7 +11801,7 @@ bind def
         /bwipp.auspostBadCustinfoEncoding (Customer information encoding must be either character or numeric) //raiseerror exec
     } if
 
-    %psc /auspost //loadctx exec
+    /auspost //loadctx exec
 
     % Create an array containing the character mappings
 {
@@ -11994,7 +11994,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -12039,7 +12039,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /kix //loadctx exec
+    /kix //loadctx exec
 
 {
     % Create an array containing the character mappings
@@ -12113,7 +12113,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -12159,7 +12159,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /japanpost //loadctx exec
+    /japanpost //loadctx exec
 
     % Validate the input
     barcode {
@@ -12297,7 +12297,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -12356,7 +12356,7 @@ bind def
 
     checktype (unset) eq { /checktype (mod10) def } if
 
-    %psc /msi //loadctx exec
+    /msi //loadctx exec
 
     % Validate the input
     barcode {
@@ -12477,7 +12477,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -12525,7 +12525,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /plessey //loadctx exec
+    /plessey //loadctx exec
 
     % Create a string of the available characters
 {
@@ -12631,7 +12631,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -12679,7 +12679,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /telepen //loadctx exec
+    /telepen //loadctx exec
 
     % Parse ordinals of the form ^NNN to ASCII
     /fncvals <<
@@ -12816,7 +12816,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -12917,7 +12917,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /posicode //loadctx exec
+    /posicode //loadctx exec
 
 {
     % Special function characters
@@ -13256,7 +13256,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -13319,7 +13319,7 @@ bind def
         /bwipp.codablockfBadSepHeight (Codablock F must have sepheight of at least 1) //raiseerror exec
     } if
 
-    %psc /codablockf //loadctx exec
+    /codablockf //loadctx exec
 
     /c columns 4 ge columns 62 le and {columns} {8} ifelse def
     /rows rows 2 ge rows 44 le and {rows} {-1} ifelse def
@@ -13803,7 +13803,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -13875,7 +13875,7 @@ bind def
         } if
     } if
 
-    %psc /code16k //loadctx exec
+    /code16k //loadctx exec
 
     sam -1 ne {/rows 16 def} if
 
@@ -14555,7 +14555,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -14631,7 +14631,7 @@ bind def
         } if
     } if
 
-    %psc /code49 //loadctx exec
+    /code49 //loadctx exec
 
 {
     /s1 -1 def /s2 -2 def /fn1 -3 def /fn2 -4 def /fn3 -5 def /ns -6 def
@@ -15663,7 +15663,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -15707,7 +15707,7 @@ bind def
 %psc     currentdict //processoptions exec /options exch def
 %psc     /barcode exch def
 %psc 
-%psc     %psc /channelcode //loadctx exec
+%psc     /channelcode //loadctx exec
 %psc 
 %psc     % Validate the input
 %psc     barcode length 2 lt barcode length 7 gt or {
@@ -15925,7 +15925,7 @@ bind def
 %psc 
 %psc     dontdraw not //renlinear if
 %psc 
-%psc     %psc //unloadctx exec
+%psc     //unloadctx exec
 %psc 
 %psc     end
 %psc 
@@ -15970,7 +15970,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /flattermarken //loadctx exec
+    /flattermarken //loadctx exec
 
     % Validate the input
     barcode {
@@ -16019,7 +16019,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -16313,7 +16313,7 @@ bind def
         /bwipp.pdf417badRowMult (The row multiplier must be greater than zero) //raiseerror exec
     } if
 
-    %psc /pdf417 //loadctx exec
+    /pdf417 //loadctx exec
 
 {
     % Modes and text submodes
@@ -17210,7 +17210,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -17341,7 +17341,7 @@ bind def
         } ifelse
     } if
 
-    %psc /micropdf417 //loadctx exec
+    /micropdf417 //loadctx exec
 
 {
     % Modes and text submodes
@@ -18321,7 +18321,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -18409,7 +18409,7 @@ bind def
         /bwipp.datamatrixInvalidFormat (The format must be either square or rectangle) //raiseerror exec
     } if
 
-    %psc /datamatrix //loadctx exec
+    /datamatrix //loadctx exec
 
     % Basic metrics for the each symbol
     %    rows  cols  regh  regv  rscw  rsbl  dmre
@@ -19285,7 +19285,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -19514,7 +19514,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /qrcode //loadctx exec
+    /qrcode //loadctx exec
 
     barcode () eq {
         /bwipp.qrcodeEmptyData (The data must not be empty) //raiseerror exec
@@ -20874,7 +20874,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -21164,7 +21164,7 @@ bind def
         } if
     } if
 
-    %psc /maxicode //loadctx exec
+    /maxicode //loadctx exec
 
     % Parse the input
     /fncvals <<
@@ -21775,7 +21775,7 @@ bind def
 
     dontdraw not //renmaximatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -21824,7 +21824,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /azteccode //loadctx exec
+    /azteccode //loadctx exec
 
     barcode () eq {
         /bwipp.aztecEmptyData (The data must not be empty) //raiseerror exec
@@ -22612,7 +22612,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -22757,7 +22757,7 @@ bind def
         /bwipp.codeoneBadVersion (version must be A to H, T-16, T-32, T-48, S-10, S-20 or S-30) //raiseerror exec
     } if
 
-    %psc /codeone //loadctx exec
+    /codeone //loadctx exec
 
     /stype version 0 1 getinterval (S) eq def
 
@@ -23634,7 +23634,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -23711,7 +23711,7 @@ bind def
         } if
     } if
 
-    %psc /hanxin //loadctx exec
+    /hanxin //loadctx exec
 
     % Parse the input
     /fncvals <<
@@ -24524,7 +24524,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -24605,7 +24605,7 @@ bind def
         } if
     } if
 
-    %psc /dotcode //loadctx exec
+    /dotcode //loadctx exec
 
     % Convert input into bytes accounting for FNC characters
 {
@@ -25620,7 +25620,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -25681,7 +25681,7 @@ bind def
         /bwipp.ultracodeInvalidErrorCorrectionLevel (Valid error correction levels are EC1 to EC5, and EC0 for legacy revision 1) //raiseerror exec
     } if
 
-    %psc /ultracode //loadctx exec
+    /ultracode //loadctx exec
 
     raw {
 
@@ -25983,7 +25983,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -27162,7 +27162,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /gs1-cc //loadctx exec
+    /gs1-cc //loadctx exec
 
     ccversion (a) ne ccversion (b) ne and ccversion (c) ne and {
         /bwipp.gs1ccBadCCversion (ccversion must be a, b or c) //raiseerror exec
@@ -27775,7 +27775,7 @@ bind def
     args
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30212,7 +30212,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibccode39 //loadctx exec
+    /hibccode39 //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30266,7 +30266,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30312,7 +30312,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibccode128 //loadctx exec
+    /hibccode128 //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30365,7 +30365,7 @@ bind def
 
     dontdraw not //renlinear if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30407,7 +30407,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibcdatamatrix //loadctx exec
+    /hibcdatamatrix //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30452,7 +30452,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30494,7 +30494,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibcdatamatrixrectangular //loadctx exec
+    /hibcdatamatrixrectangular //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30540,7 +30540,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30583,7 +30583,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibcpdf417 //loadctx exec
+    /hibcpdf417 //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30629,7 +30629,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30672,7 +30672,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibcmicropdf417 //loadctx exec
+    /hibcmicropdf417 //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30718,7 +30718,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30760,7 +30760,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibcqrcode //loadctx exec
+    /hibcqrcode //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30805,7 +30805,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30847,7 +30847,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibccodablockf //loadctx exec
+    /hibccodablockf //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30892,7 +30892,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 
@@ -30934,7 +30934,7 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    %psc /hibcazteccode //loadctx exec
+    /hibcazteccode //loadctx exec
 
     % Create a string of the available characters
 {
@@ -30979,7 +30979,7 @@ bind def
 
     dontdraw not //renmatrix if
 
-    %psc //unloadctx exec
+    //unloadctx exec
 
     end
 

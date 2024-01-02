@@ -338,8 +338,8 @@ function PSC(str, flags) {
 	//		blah X blah;
 	//
 	// And dictionary expressions are emitted as:
-	//		var X = $1.value;
-	//		var Y = $1.index;
+	//		var X = $_.value;
+	//		var Y = $_.index;
 	//		var Z = $get($X, $Y);
 	//
 	// We look or the 'var X' declaration followed by a single usage of X,
@@ -354,9 +354,9 @@ function PSC(str, flags) {
 	// Likewise, with dictionary expressions, we must watch for re-assignment
 	// of the expression between the var declaration and usage.  Here is some
 	// sample code from the qrcode encoder:
-	//		var _X = $1.thispairs;
-	//		$1.thispairs = $1.lastpairs;
-	//		$1.lastpairs = _X;
+	//		var _X = $_.thispairs;
+	//		$_.thispairs = $_.lastpairs;
+	//		$_.lastpairs = _X;
 	//
 	// The code swaps the values of thispairs and lastpairs and will be
 	// rendered invalid if we eliminate the var declaration and
@@ -364,8 +364,8 @@ function PSC(str, flags) {
 	//
 	// But it is ok for the assignment to occur on the same line as the
 	// variable reference.  This pattern occurs all over:
-	//		var _X = $1.textfont;
-	//		$1.textfont = "" + _X;
+	//		var _X = $_.textfont;
+	//		$_.textfont = "" + _X;
 	//
 	// That is safe to substitute as it is self-referencing.
 
@@ -385,8 +385,8 @@ function PSC(str, flags) {
 		// We only substitute var-decls that are terms (no operator precedence
 		// issues). E.g.:
 		//		var _X = $k[--$j];
-		//		var _X = $0.textmap[blah];
-		//		var _X = $1.func(blah,blah).Ident;
+		//		var _X = $_.textmap[blah];
+		//		var _X = $_.func(blah,blah).Ident;
 		var redecl = /^var (_[\w$_]+)=([\w_$.]+(\(.*\))?(\[.+\])?(\.[\w_$]+)*);(\/\/.*)?$/;
 
 		for (var i = 0; i < lines.length; i++) {
@@ -714,10 +714,9 @@ function PSC(str, flags) {
 
 					if (defsym) {
 						if (/^['"]\w+['"]$/.test(defsym)) {
-							emit('$' + dlvl + '.' +
-								defsym.substr(1, defsym.length-2) + '=$a();');
+							emit('$_.' + defsym.substr(1, defsym.length-2) + '=$a();');
 						} else {
-							emit('$' + dlvl + '[' + defsym + ']=$a();');
+							emit('$_[' + defsym + ']=$a();');
 						}
 						lex.next();	// consume the def
 						dict[defsym.substr(1,defsym.length-2)] = TYPE_ARRAY;
@@ -865,10 +864,9 @@ function PSC(str, flags) {
 					// Push state to stack before calling
 					ctxflush();
 					if (/^[A-Za-z_]\w*$/.test(tkn)) {
-						emit('$' + dlvl + '.' + tkn + '();');
+						emit('$_.' + tkn + '();');
 					} else {
-						emit('$' + dlvl + '["' + tkn.replace(/[\\"]/g,'\\$&') +
-							 '"]();');
+						emit('$_["' + tkn.replace(/[\\"]/g,'\\$&') + '"]();');
 					}
 				// We cannot directly use a dictionary reference as a
 				// trace expression.  Intermediate variables must be used to
@@ -890,14 +888,13 @@ function PSC(str, flags) {
 				// this issue.  Optimize using peephole techniques instead.
 				} else if (/^[$A-Za-z_]\w*$/.test(tkn)) {
 					var tid = tvar();
-					emit('var ' + tid + '=$' + dlvl + '.' + tkn + ';');
+					emit('var ' + tid + '=$_.' + tkn + ';');
 					st[sp++] = { type:dict[tkn] || TYPE_UNKNOWN,
 								 expr:tid, seq:++seq
 							};
 				} else {
 					var tid = tvar();
-					emit('var ' + tid + '=$' + dlvl + '["' +
-								 	  tkn.replace(/[\\"]/g,'\\$&') + '"];');
+					emit('var ' + tid + '=$_["' + tkn.replace(/[\\"]/g,'\\$&') + '"];');
 					st[sp++] = { type:dict[tkn] || TYPE_UNKNOWN,
 								 expr:tid, seq:++seq
 							};
@@ -948,41 +945,38 @@ function PSC(str, flags) {
         }
         var lnbr = lex.lnbr;
         emit('if (!@FUNCTION@.__' + lnbr + '__) ' + LC);
-        emit('(function() ' + LC);
-        emit('var $ctx = Object.create($1);');
+        emit('$_ = Object.create($_);');
         ctxprep(exec);
         var lines = ctxexec(exec);
 		for (var i = 0; i < lines.length; i++) {
-			block.push({ code:lines[i].code.replace(/\$1\./g, '$ctx.')
-                                           .replace(/\$1\[/g, '$ctx['),
-                         lnbr:lines[i].lnbr, seq:++seq });
+			block.push({ code:lines[i].code, lnbr:lines[i].lnbr, seq:++seq });
 		}
         var t = tvar();
-        emit('for (var id in $ctx) $ctx.hasOwnProperty(id) && (@FUNCTION@.$ctx[id] = $ctx[id]);');
+        emit('for (var id in $_) $_.hasOwnProperty(id) && (@FUNCTION@.$ctx[id] = $_[id]);');
         emit('@FUNCTION@.__' + lnbr + '__ = 1;');
-        emit(RC + ')();');
+        emit('$_ = Object.getPrototypeOf($_);');
         emit(RC);
     };
 
 	// Push the current dictionary.  We use this operator to create the
-	// function-scoped $1 dictionary.
+	// function-scoped $_ dictionary.
 	$.begin = function() {
 		need(1);
-		if (++dlvl != 1) throw '--oops--dlevel-gt-one';
-        emit('var $1 = Object.create(@FUNCTION@.$ctx || (@FUNCTION@.$ctx = {}));');
+        emit('$_ = Object.create($_);');
 		sp--;
+        dlvl++;
 	}
 
 	// Pop the current dictionary
 	$.end = function() {
-		// Not necessary - its always at the end of a function definition
-		//emit('$' + (dlvl--) + '=null;');
+        ctxflush();
+        emit('$_ = Object.getPrototypeOf($_);');
 		dlvl--;
 	}
 
     // Push the current dictionary
     $.currentdict = function() {
-		st[sp++] = { type:TYPE_DICT, expr:'$' + dlvl, seq:++seq };
+		st[sp++] = { type:TYPE_DICT, expr:'$_', seq:++seq };
     };
 
 	// Create an dictionary on the stack.  Used both for the dictionary
@@ -1008,14 +1002,14 @@ function PSC(str, flags) {
 
 	// $error is defined in bwipp-hdr.js.
 	$.handleerror = function() {
-		emit('throw new Error($z($0.$error.get("errorname"))+": "+$z($0.$error.get("errorinfo")));');
+		emit('throw new Error($z($_.$error.get("errorname"))+": "+$z($_.$error.get("errorinfo")));');
 	}
 	$.quit = function() {
 		// no-op : handlerror throws
 	}
 	// Newest versions of barcode.ps are using stop rather than handleerror.
 	$.stop = function() {
-		emit('throw new Error($z($0.$error.get("errorname"))+": "+$z($0.$error.get("errorinfo")));');
+		emit('throw new Error($z($_.$error.get("errorname"))+": "+$z($_.$error.get("errorinfo")));');
 	}
 
 	// OBSOLETE:  setanycolor in the renderers has been replaced by custom
@@ -1028,8 +1022,21 @@ function PSC(str, flags) {
 		var type = exec.type;
 		var expr = exec.expr;
 		if (type == TYPE_IENAME) {
-			ctxflush();
-			emit(expr + '();');
+            if (expr == 'bwipp_loadctx') {
+                // The function takes a single stack value, which we don't need
+                sp--;
+                emit('bwipp_loadctx(@FUNCTION@)');
+            } else if (expr == 'bwipp_unloadctx') {
+                // unloadctx always occurs immediately before end, so we can cheat
+                // and save some code by not needing to manipulate the prototype chain.
+                // This dereference sets $_ to the context object
+                // $.end then repeats this code and restores it to the original $_.
+                ctxflush();
+                emit('$_ = Object.getPrototypeOf($_);');
+            } else {
+                ctxflush();
+                emit(expr + '();');
+            }
 		} else if (type & TYPE_STRTYP) {
 			throw new Error('eval of string-type not supported');
 			//var tid = tvar();
@@ -1398,18 +1405,18 @@ function PSC(str, flags) {
             if (dlvl == 0) {
                 var jsid = 'bwipp_' + id.substr(1, id.length-2).replace(/-/g, '_');
                 emit('function ' + jsid +
-                    st[sp-1].expr.replace(/^\s*function/, '')
+                    st[sp-1].expr.replace(/^\s*function\s*\(\)/, '()')
                                  .replace(/@FUNCTION@/g, jsid));
             } else if (/^['"][A-Za-z]\w*['"]$/.test(id)) {
-				emit('$' + dlvl + '.' + id.substr(1, id.length-2) + '=' + st[sp-1].expr + ';');
+				emit('$_.' + id.substr(1, id.length-2) + '=' + st[sp-1].expr + ';');
 			} else {
-				emit('$' + dlvl + '[' + id  + ']=' + st[sp-1].expr + ';');
+				emit('$_[' + id  + ']=' + st[sp-1].expr + ';');
 			}
-			dict[id.substr(1, id.length-2).replace(/\\(.)/g, '$1')] = t1;
+			dict[id.substr(1, id.length-2).replace(/\\(.)/g, '$_')] = t1;
         } else if (dlvl == 0) {
-            throw 'invalid $0[' + id + '] constructed reference';
+            throw 'invalid $_[' + id + '] constructed reference';
 		} else {
-			emit('$' + dlvl + '[' + id + ']=' + st[sp-1].expr + ';');
+			emit('$_[' + id + ']=' + st[sp-1].expr + ';');
 		}
 		sp-=2;
 	}
@@ -1427,7 +1434,7 @@ function PSC(str, flags) {
 	$.load = function() {
 		need(1);
 		var tid = tvar();
-		emit('var ' + tid + '=$1[' + st[sp-1].expr + '];');
+		emit('var ' + tid + '=$_[' + st[sp-1].expr + '];');
 		st[sp-1] = { type:TYPE_UNKNOWN, expr:tid, seq:++seq };
 	}
 
@@ -1647,8 +1654,8 @@ function PSC(str, flags) {
 			if (ttype === ftype && (ttype & (TYPE_INTTYP|TYPE_NUMTYP|TYPE_STRTYP))) {
 				var tid = tvar();
 				emit('var ' + tid + '=' + parens(expr) +
-							'?$1.' + texec.tokens[0].token +
-							':$1.' + fexec.tokens[0].token + ';');
+							'?$_.' + texec.tokens[0].token +
+							':$_.' + fexec.tokens[0].token + ';');
 				st[sp++] = { type:ttype/*==ftype*/, expr:tid, seq:++seq };
 				return;
 			}

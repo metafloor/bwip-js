@@ -1,0 +1,59 @@
+#!/usr/bin/node
+
+const syms = require('./lib/symdesc.js');
+const bwipjs = require('./dist/bwip-js-node.js');
+
+var a = [];
+for (let sym in syms) {
+    a.push(sym);
+}
+
+const SYMITERS = 50;
+let   symiters = 0;
+let   runiters = 5;
+
+function render(index) {
+    let id = a[index];
+    let options = {
+            bcid:id,
+            text:syms[id].text,
+        }; 
+    let opts = syms[id].opts.split(' ');
+    for (let i = 0; i < opts.length; i++) {
+        let s = opts[i];
+        let eq = s.indexOf('=');
+        if (eq == -1) {
+            options[s] = true;
+        } else {
+            options[s.substr(0, eq)] = s.substr(eq+1);
+        }
+    }
+
+    try {
+        bwipjs.toBuffer(options, (err, png) => {
+                if (err) {
+                    console.log(id, ': ' + err);
+                    process.exit(1);
+                } else {
+                    console.log(id, ': ' + index + ' of ' + runiters);
+                }
+                if (++symiters < SYMITERS) {
+                    render(index);
+                } else if (++index < a.length) {
+                    symiters = 0;
+                    render(index);
+                } else if (--runiters > 0) {
+                    symiters = 0;
+                    render(0);
+                } else {
+                    console.log('done');
+                }
+            });
+    } catch (e) {
+        console.log(id, ': ' + e);
+    }
+}
+
+render(0);
+
+

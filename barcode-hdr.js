@@ -6,9 +6,7 @@
 var $$ = null;
 var $j = 0;		// stack pointer
 var $k = [];	// operand stack
-
-// Global state defined at runtime
-var $0 = {};
+var $_ = {};    // base of the dictionary stack
 
 // Array ctor
 //	$a()	: Build a new array up to the Infinity-marker on the stack.
@@ -524,13 +522,6 @@ var $f = (function (fa) {
 })(new Float32Array(1));
 
 // This is a replacement for the BWIPP raiseerror function.
-// function bwipp_raiseerror(){
-//    $put($0.$error,'errorinfo',$k[--$j]);//#115
-//    $put($0.$error,'errorname',$k[--$j]);//#116
-//    $put($0.$error,'command',null);//#117
-//    $put($0.$error,'newerror',true);//#118
-//    throw new Error($z($0.$error.get("errorname"))+": "+$z($0.$error.get("errorinfo")));//#119
-//}
 function bwipp_raiseerror() {
     var info = $k[--$j];
     var name = $k[--$j];
@@ -604,4 +595,16 @@ function bwipp_processoptions() {
         // Set the option into the dictionary
         dict[id] = val;
     }
+}
+
+// Replacement for loadctx which contains complex postscript operations
+// that we don't implement correctly.
+// f is a reference to the enclosing function.
+function bwipp_loadctx(f) {
+    if (!f.$ctx) {
+        f.$ctx = {};
+    }
+    var next = Object.getPrototypeOf($_);
+    Object.setPrototypeOf(f.$ctx, next);
+    Object.setPrototypeOf($_, f.$ctx);
 }

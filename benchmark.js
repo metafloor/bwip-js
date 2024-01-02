@@ -12,18 +12,37 @@ if (!global.gc) {
 // Keep output to a minimum
 var verbose = process.argv.indexOf('--verbose') > 0;
 
-var bwipjs = require('.');
+var version = process.argv.reduce((acc, val) => {
+        let m = /^--use-v(\d+\.\d+)/.exec(val);
+    console.log(val, m);
+        if (m) {
+            return m[1];
+        }
+        return acc;
+    }, null);
+
+console.log('version', version);
+var bwipjs = version ? require('bwipjs-' + version) : require('.');
 
 // Use a seedable PRNG so we generate the same random strings for each
 // run.
 var PRNG = require('./bench-rng');
 var prng = new PRNG();
 
-// return a numeric string x bytes long
+// return a numeric string x chars long
 function numeric(x) {
 	var s = '';
 	for (var i = 0; i < x; i++) {
 		s += String.fromCharCode(~~(prng.uniform() * 10) + 48);
+	}
+	return s;
+}
+
+// return an uppercase string x chars long
+function alpha(x) {
+	var s = '';
+	for (var i = 0; i < x; i++) {
+		s += String.fromCharCode(~~(prng.uniform() * 26) + 65);
 	}
 	return s;
 }
@@ -98,7 +117,7 @@ function extended(x) {
 
 // Generate the barcode text and options for one benchmark round
 // For barcode types that can have human readable text, we set the internal
-// _t flag so we can optionally enable/disable freetype benchmarking.
+// _t flag so we can optionally enable/disable text benchmarking.
 function genround() {
 	var a = [];
 
@@ -138,7 +157,7 @@ function genround() {
 	a.push({ bcid:'planet',		text:numeric(11),	_t:1 });
 	a.push({ bcid:'postnet',	text:numeric(9),	_t:1 });
 	a.push({ bcid:'royalmail',	text:alnum(10),		_t:1 });
-	a.push({ bcid:'japanpost',	text:alnum(13),		_t:1 });
+	a.push({ bcid:'japanpost',	text:numeric(10) + '-' + alpha(3),		_t:1 });
 
 	a.push({ bcid:'azteccode',	text:numeric(80),	format:"full" });
 	a.push({ bcid:'azteccode',	text:alnum(64),		format:"full" });
@@ -182,23 +201,23 @@ function genround() {
 			 		'|(99)' + mixed(20) });
 	a.push({ bcid:'databarlimited', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databarlimitedcomposite',
-			 text:'(01)' + gtin(13) + '|(99)' + mixed(20) });
+			 text:'(01)' + gtin(14) + '|(99)' + mixed(20) });
 	a.push({ bcid:'databaromni', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databaromnicomposite',
-			 text:'(01)' + gtin(13) + '|(99)' + mixed(20) });
+			 text:'(01)' + gtin(14) + '|(99)' + mixed(20) });
 	a.push({ bcid:'databarstacked', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databarstackedcomposite',
-			 text:'(01)' + gtin(13) + '|(99)' + mixed(20) });
+			 text:'(01)' + gtin(14) + '|(99)' + mixed(20) });
 	a.push({ bcid:'databarstackedomni', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databarstackedomnicomposite',
-			 text:'(01)' + gtin(13) + '|(99)' + mixed(20) });
+			 text:'(01)' + gtin(14) + '|(99)' + mixed(20) });
 	a.push({ bcid:'databartruncated', text:'(01)' + gtin(13)  });
 	a.push({ bcid:'databartruncatedcomposite',
 			 text:'(01)' + gtin(14) + '|(99)' + mixed(20) });
 	a.push({ bcid:'gs1-128composite',
 			 text:'(00)' + gtin(18) + '|(99)' + mixed(20) });
 
-	a.push({ bcid:'maxicode', text:numeric(24) + mixed(64) });
+	a.push({ bcid:'maxicode', text:numeric(24) + mixed(36) });
 
 	a.push({ bcid:'ultracode',	text:numeric(80),	eclevel:"EC2"	});
 	a.push({ bcid:'ultracode',	text:alnum(64),		eclevel:"EC2"	});
@@ -211,59 +230,77 @@ function genround() {
 	a.push({ bcid:'dotcode',	text:mixed(20)		});
 	a.push({ bcid:'dotcode',	text:ascii(20)		});
 
-
 	return a;
 }
 
-function runround(times) {
+/*async*/function runround(times) {
 	times.msecs = times.msecs || 0;
 	times.count = times.count || 0;
 
 	var round = genround();
-	for (var i = 0; i < round.length; i++) {
-		if (verbose) {
-			console.log(round[i]);
-		}
-		var id = round[i].bcid;
-		var t0 = process.hrtime();
-		bwipjs.raw(round[i]);
-		var t1 = process.hrtime(t0);
-		if (!times[id]) {
-			times[id] = { id:id, count:0, msecs:0 };
-		}
-		var rec = times[id];
-		rec.count++;
-		rec.msecs += t1[0] * 1000 + t1[1] / 1000000;
-		times.msecs += t1[0] * 1000 + t1[1] / 1000000;
-		times.count++;
-        global.gc();
-	}
+    return new Promise((resolve, reject) => {
+        run(0);
 
-	// Because we never return to the event loop, we must manually GC.
-	//global.gc();
+        function run(i) {
+            if (verbose) {
+                console.log(round[i]);
+            }
+            var id = round[i].bcid;
+            var t0 = process.hrtime();
+            bwipjs.toBuffer(round[i], (err, png) => {
+                var t1 = process.hrtime(t0);
+                if (err) {
+                    if (!/bwipp.unknownEncoder/.test(err)) {
+                        reject(err);
+                    }
+                } else {
+                    if (!times[id]) {
+                        times[id] = { id:id, count:0, msecs:0 };
+                    }
+                    var rec = times[id];
+                    rec.count++;
+                    rec.msecs += t1[0] * 1000 + t1[1] / 1000000;
+                    times.msecs += t1[0] * 1000 + t1[1] / 1000000;
+                    times.count++;
+                }
+                global.gc();
+                if (++i == round.length) {
+                    resolve(true);
+                } else{
+                    run(i);
+                }
+            });
+        }
+    });
 }
 
-// Warm up the js engine
-console.log('Warming up....');
-for (var i = 0; i < 10; i++) {
-	var t0 = Date.now();
-	runround({});
-	var t1 = Date.now();
-	console.log('warmup round ' + i + ' in ' + (t1-t0) + ' msecs');
-}
+(async () => {
+    try {
+        // Warm up the js engine
+        console.log('Warming up....');
+        for (var i = 0; i < 10; i++) {
+            var t0 = Date.now();
+            await runround({});
+            var t1 = Date.now();
+            console.log('warmup round ' + i + ' in ' + (t1-t0) + ' msecs');
+        }
 
-// Now the actual benchmark
-var times = {};
-for (var i = 0; i < 25; i++) {
-	var t0 = Date.now();
-	runround(times);
-	var t1 = Date.now();
-	console.log('round ' + i + ' in ' + (t1-t0) + ' msecs');
-}
+        // Now the actual benchmark
+        var times = {};
+        for (var i = 0; i < 25; i++) {
+            var t0 = Date.now();
+            await runround(times);
+            var t1 = Date.now();
+            console.log('round ' + i + ' in ' + (t1-t0) + ' msecs');
+        }
+    } catch (e) {
+        console.log(e);
+        process.exit(1);
+    }
 
-// Display the results
-console.log('Total accrued time: ' + (times.msecs/1000).toFixed(3) +
-			' seconds');
+        // Display the results
+        console.log('Total accrued time: ' + (times.msecs/1000).toFixed(3) +
+                    ' seconds');
 
-fs.writeFileSync('bench-stats.json', JSON.stringify(times, null, ' '), 'binary');
-
+        fs.writeFileSync('bench-stats.json', JSON.stringify(times, null, ' '), 'binary');
+})();
