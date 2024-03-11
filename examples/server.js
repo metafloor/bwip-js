@@ -1,7 +1,7 @@
 // file : bwip-js/server.js
 //
 // Simple node HTTP server that renders bar code images using bwip-js.
-// 
+//
 // Usage:  node server [address:port] ...
 //
 // To specify all interfaces, use * as the address

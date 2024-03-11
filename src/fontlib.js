@@ -82,7 +82,7 @@ var FontLib = (function() {
         }
 
         // In the cache?
-        var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height; 
+        var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height;
         var glyph = glyphcache[cachekey];
         if (glyph) {
             // Unthread from the MRU
@@ -95,7 +95,7 @@ var FontLib = (function() {
             glyph.next = sntl.next;
             glyph.prev = sntl;
             sntl.next = glyph;
-            
+
             return glyph;
         }
 
@@ -104,7 +104,7 @@ var FontLib = (function() {
                                                    height * font.bwipjs_multy / 100) ||
                     STBTT.GetGlyph(font, 0, width * font.bwipjs_multx / 100,
                                                    height * font.bwipjs_multy / 100);
-        
+
         glyph.bytes = glyph.pixels;
         glyph.cachekey = cachekey;
         glyph.offset = 0;

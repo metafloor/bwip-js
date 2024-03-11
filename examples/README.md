@@ -6,12 +6,12 @@ on a fairly modern CPU.  Best to offload to secondary processes or threads, othe
 nodejs event loop will be blocked.
 
   - `server.js` is the most basic server example.  A single-threaded, single-process
-    server.  
+    server.
 
   - `cluster.js` creates a bwip-js specific process per CPU, plus a master to
     automatically relaunch killed processes.
 
-  - `threaded.js` is a single-process, multi-threaded server.  Requires node.js 10.5 
+  - `threaded.js` is a single-process, multi-threaded server.  Requires node.js 10.5
     or higher.
 
 
@@ -41,7 +41,7 @@ nodejs event loop will be blocked.
     You can launch `example.html` from your browser using the `file://` scheme.
 
   - `examples/pdfkit.js` and `examples/drawing-pdfkit.js` show how to add
-    scalable barcodes (PDF graphics) to a [pdfkit](https://pdfkit.org/) document.  
+    scalable barcodes (PDF graphics) to a [pdfkit](https://pdfkit.org/) document.
 
     `drawing-pdfkit.js` is browser compatible if you prefer to use pdfkit
     client side.

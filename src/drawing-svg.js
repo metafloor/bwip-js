@@ -1,13 +1,13 @@
 // drawing-svg.js
 //
 // Converts the drawing primitives into the equivalent SVG.  Linear barcodes
-// are rendered as a series of stroked paths.  2D barcodes are rendered as a 
+// are rendered as a series of stroked paths.  2D barcodes are rendered as a
 // series of filled paths.
 //
-// Rotation is handled during drawing.  The resulting SVG will contain the 
+// Rotation is handled during drawing.  The resulting SVG will contain the
 // already-rotated barcode without an SVG transform.
 //
-// If the requested barcode image contains text, the glyph paths are 
+// If the requested barcode image contains text, the glyph paths are
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
@@ -173,13 +173,13 @@ function DrawingSVG() {
                           transform(x,      y - ry) +
                     'C' + transform(x + dx, y - ry) + ' ' +
                           transform(x + rx, y - dy) + ' ' +
-                          transform(x + rx, y) + 
+                          transform(x + rx, y) +
                     'C' + transform(x + rx, y + dy) + ' ' +
                           transform(x + dx, y + ry) + ' ' +
-                          transform(x,      y + ry) +  
+                          transform(x,      y + ry) +
                     'C' + transform(x - dx, y + ry) + ' ' +
                           transform(x - rx, y + dy) + ' ' +
-                          transform(x - rx, y) + 
+                          transform(x - rx, y) +
                     'Z';
         },
         // PostScript's default fill rule is non-zero but there are never intersecting

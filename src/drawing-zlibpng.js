@@ -19,7 +19,7 @@ var PNG_CRC = (function() {
 	return precalc;
 })();
 
-// This has been moved to the nodejs-only section of exports.js due to 
+// This has been moved to the nodejs-only section of exports.js due to
 // react-native polyfills.
 //var PNG_ZLIB = require('zlib');
 
@@ -54,7 +54,7 @@ function DrawingZlibPng(callback, maybe) {
 		image_width = width;
 		image_height = height;
 
-		// Set background 
+		// Set background
 		if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
 			var rgb = opts.backgroundcolor;
 			fillRGB(parseInt(rgb.substr(0,2), 16),

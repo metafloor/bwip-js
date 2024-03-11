@@ -93,7 +93,7 @@ BWIPJS.prototype.restore = function() {
 //	coordinates corresponding to the current point according to the current
 //	value of the CTM. Thus, if a current point is set and then the CTM is
 //	changed, the coordinates returned by currentpoint will be different
-//	from those that were originally specified for the point. 
+//	from those that were originally specified for the point.
 BWIPJS.prototype.currpos = function() {
 	return { x:(this.g_posx-this.g_tdx)/this.g_tsx,
 			 y:(this.g_posy-this.g_tdy)/this.g_tsy
@@ -147,7 +147,7 @@ BWIPJS.prototype.setcolor = function(s) {
         return;
     }
     if (!/^(?:#?[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|[0-9a-fA-F]{8})$/.test(s)) {
-        throw new Error('bwip-js: invalid color: ' + s); 
+        throw new Error('bwip-js: invalid color: ' + s);
     }
     if (s[0] == '#') {
         s = s.substr(1);
@@ -591,9 +591,9 @@ BWIPJS.prototype.maxicode = function(pix) {
 			y *= tsy * 3;
 			y += tsy * 2 - h/2;
 			y = y|0;
-			
+
 			// Build bottom up so the drawing is top-down.
-			var pts = [ [ x-0.5, y-- ] ]; 
+			var pts = [ [ x-0.5, y-- ] ];
 			y -= qh-1;
 			pts.push([x-1-w2, y--]);
 			y -= vh;

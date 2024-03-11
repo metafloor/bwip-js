@@ -12,7 +12,7 @@ or as SVG (all platforms).
 
 > Version 4 has been released.  The primary enhancement is built-in support for generating barcodes in SVG.  You can read about the changes here: https://github.com/metafloor/bwip-js/discussions/299
 
-## Status 
+## Status
 
 * Current bwip-js version is 4.2.0 (2024-01-02)
 * Current BWIPP version is 2023-04-03
@@ -61,7 +61,7 @@ Or the latest code from github:
 ## Online Barcode Generator
 
 An [online barcode generator](http://metafloor.github.io/bwip-js/demo/demo.html)
-demonstrates all of the features of bwip-js.  The app is also available 
+demonstrates all of the features of bwip-js.  The app is also available
 in the root bwip-js directory.  See [Demo HTML App](#demo-html-app).
 
 ## Online Barcode API
@@ -136,10 +136,10 @@ bwip-js is designed for web usage, with a target display resolution of 72dpi.  (
 internals are calculated in points and bwip-js just maps 1pt to 1px.)  At that low
 resolution, it is not possible to add or subtract pixels without causing the symbol to go
 out of spec.  Imagine a fairly common module width of 2px.  If you add or subtract a pixel,
-you have changed the size by 50%.  Typical barcode specs require module sizes to be within 
+you have changed the size by 50%.  Typical barcode specs require module sizes to be within
 5-10 pecent of nominal.
 
-For this reason, bwip-js uses a constant module size so the resulting image is as 
+For this reason, bwip-js uses a constant module size so the resulting image is as
 large as possible, without exceeding the requested `width` or `height`.
 The design causes the rendered barcodes to grow in "quantums".  An image will be
 X-pixels wide with a module with of 2px, and Y-pixels wide with a module width of 3px,
@@ -193,7 +193,7 @@ The `bwipjs.toCanvas()` method takes two parameters:
   canvas element.  The rendering will automatically resize the canvas to match the
   barcode image.
 * A bwip-js/BWIPP options object.
- 
+
 On return from `toCanvas()`, the barcode image will have been fully rendered to the canvas.
 
 If you would prefer to display the barcode using an `<img>` tag or with CSS `background-image`,
@@ -355,7 +355,7 @@ try {
 When named encoders are called, the `bcid` value in the options object is ignored.
 
 <a name="svg-all-platforms"></a>
-## SVG (All Platforms) 
+## SVG (All Platforms)
 
 The easiest way to generate an SVG barcode image is with the `toSVG()` method.  It takes
 the same options object as the other rendering methods.
@@ -450,7 +450,7 @@ class App extends Component {
 export default App;
 ```
 
-See the Browser Usage section for details on the `toCanvas()` method. 
+See the Browser Usage section for details on the `toCanvas()` method.
 
 See the ES6 Browser Module Usage section for details on importing encoders directly.
 
@@ -467,7 +467,7 @@ See the ES6 Browser Module Usage section for details on importing encoders direc
 npm install react-zlib-js --save
 ```
 
-The react-native module provides a specialized version of the `toBuffer()` method, 
+The react-native module provides a specialized version of the `toBuffer()` method,
 called `toDataURL()`.  The return value is an object with the following properties:
 
 - `height` : The height of the image, in pixels.
@@ -608,10 +608,10 @@ nodejs usage.
 ## Examples
 
 There are example html and node apps provided with the project including
-how to write your own drawing interface, generating SVG barcode images, 
+how to write your own drawing interface, generating SVG barcode images,
 and adding scalable barcodes to a [pdfkit](https://pdfkit.org/) document.
 
-See the examples [README](https://github.com/metafloor/bwip-js/tree/master/examples) 
+See the examples [README](https://github.com/metafloor/bwip-js/tree/master/examples)
 for more details.
 
 

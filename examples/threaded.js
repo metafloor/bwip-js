@@ -1,9 +1,9 @@
 // bwip-js/examples/threaded.js
 //
 // Threaded node.js HTTP server that renders bar code images using bwip-js.
-// 
+//
 // Node 10.5+ only.
-// 
+//
 // Node 10.5 Usage:
 //   node --experimental-worker threaded [address:port] ...
 //
