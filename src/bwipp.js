@@ -181,7 +181,7 @@ function $cvrs(s, n, r) {
 // This is only used by BWIPP to convert <XX> string literals.
 function $cvx(s) {
     s = $z(s)
-    var m = /^\s*<((?:[0-9a-fA-F]{2})+)>\s*$/.exec(s);
+    var m = /^\s*<((?:[0-9A-Fa-f]{2})+)>\s*$/.exec(s);
     if (!m) {
         throw new Error('cvx: not a <HH> hex string literal');
     }

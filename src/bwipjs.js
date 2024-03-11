@@ -146,7 +146,7 @@ BWIPJS.prototype.setcolor = function(s) {
     if (!s) {
         return;
     }
-    if (!/^(?:#?[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|[0-9a-fA-F]{8})$/.test(s)) {
+    if (!/^(?:#?[0-9A-Fa-f]{3}(?:[0-9A-Fa-f]{3})?|[0-9A-Fa-f]{8})$/.test(s)) {
         throw new Error('bwip-js: invalid color: ' + s); 
     }
     if (s[0] == '#') {

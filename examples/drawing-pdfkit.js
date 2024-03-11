@@ -105,7 +105,7 @@ function DrawingPDFKit(doc, opts, FontLib) {
             doc.save();
             doc.lineCap('butt');
 
-            if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
+            if (/^[0-9A-Fa-f]{6}$/.test(''+opts.backgroundcolor)) {
                 gs_dx = gs_dy = 0;
                 moveTo(0, 0);
                 lineTo(width, 0);
