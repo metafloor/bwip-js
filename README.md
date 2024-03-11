@@ -393,7 +393,7 @@ span.style.display = 'inline-block';
 span.style.width = width + 'px';
 span.style.height = height + 'px';
 span.innerHTML = svg;
-document.body.addChild(span);
+document.body.appendChild(span);
 ```
 
 The `toSVG()` method links to all BWIPP encoders, so it cannot be used with
