@@ -269,7 +269,7 @@ function DrawingSVG() {
 
             return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + gs_width + ' ' + gs_height + '">\n' +
 						(clips.length ? '<defs>' + clips.join('') + '</defs>' : '') +
-                        (/^[0-9A-Fa-f]{6}$/.test(''+bg)
+                        (/^[a-f\d]{6}$/i.test(''+bg)
                             ? '<rect width="100%" height="100%" fill="#' + bg + '" />\n'
                             : '') +
                         linesvg + svg + '</svg>\n';

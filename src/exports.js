@@ -281,7 +281,7 @@ function FixupOptions(opts) {
 	// the drawing interface is consistent.  Likewise, if in CSS-style #rgb or #rrggbb.
     if (opts.backgroundcolor) {
         var bgc = ''+opts.backgroundcolor;
-        if (/^[0-9a-fA-F]{8}$/.test(bgc)) {
+        if (/^[a-f\d]{8}$/i.test(bgc)) {
             var c = parseInt(bgc.substr(0,2), 16) / 255;
             var m = parseInt(bgc.substr(2,2), 16) / 255;
             var y = parseInt(bgc.substr(4,2), 16) / 255;
@@ -296,9 +296,9 @@ function FixupOptions(opts) {
             if (bgc[0] == '#') {
                 bgc = bgc.substr(1);
             }
-            if (/^[0-9a-fA-F]{6}$/.test(bgc)) {
+            if (/^[a-f\d]{6}$/i.test(bgc)) {
                 opts.backgroundcolor = bgc;
-            } else if (/^[0-9a-fA-F]{3}$/.test(bgc)) {
+            } else if (/^[a-f\d]{3}$/i.test(bgc)) {
                 opts.backgroundcolor = bgc[0] + bgc[0] + bgc[1] + bgc[1] + bgc[2] + bgc[2];
             } else {
                 throw new Error('bwip-js: invalid backgroundcolor: ' + opts.backgroundcolor);

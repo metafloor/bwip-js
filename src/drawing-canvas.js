@@ -33,7 +33,7 @@ function DrawingCanvas(canvas, maybe) {
 
 		// Set background 
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
+		if (/^[a-f\d]{6}$/i.test(''+opts.backgroundcolor)) {
 			ctx.fillStyle = '#' + opts.backgroundcolor;
 			ctx.fillRect(0, 0, width, height);
 		} else {

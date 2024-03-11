@@ -55,7 +55,7 @@ function DrawingZlibPng(callback, maybe) {
 		image_height = height;
 
 		// Set background 
-		if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
+		if (/^[a-f\d]{6}$/i.test(''+opts.backgroundcolor)) {
 			var rgb = opts.backgroundcolor;
 			fillRGB(parseInt(rgb.substr(0,2), 16),
 					parseInt(rgb.substr(2,2), 16),
