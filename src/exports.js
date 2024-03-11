@@ -257,7 +257,7 @@ function DrawingDataURL(opts, callback) {
 // Returns a string containing a fully qualified SVG definition,
 // including the natural width and height of the image, in pixels:
 //
-//  <svg version="1.1" width="242" height="200" xmlns="http://www.w3.org/2000/svg">
+//  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 242 200">
 //   ...
 //  </svg>
 //

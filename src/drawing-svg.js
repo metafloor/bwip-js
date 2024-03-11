@@ -266,9 +266,8 @@ function DrawingSVG() {
                 linesvg += lines[key] + '" />\n';
             }
             var bg = opts.backgroundcolor;
-            //return '<svg version="1.1" width="' + gs_width + '" height="' + gs_height +
-            return '<svg version="1.1" viewBox="0 0 ' + gs_width + ' ' + gs_height +
-                        '" xmlns="http://www.w3.org/2000/svg">\n' +
+
+            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + gs_width + ' ' + gs_height + '">\n' +
 						(clips.length ? '<defs>' + clips.join('') + '</defs>' : '') +
                         (/^[0-9A-Fa-f]{6}$/.test(''+bg)
                             ? '<rect width="100%" height="100%" fill="#' + bg + '" />\n'

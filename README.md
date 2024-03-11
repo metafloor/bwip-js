@@ -377,7 +377,7 @@ The return value from `toSVG()` is a string containing a fully qualified SVG def
 including a `viewBox` attribute that defines the natural width and height of the image, in pixels.
 
 ```
-<svg version="1.1" viewBox="0 0 242 200" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 242 200">
    ...
 </svg>
 ```
