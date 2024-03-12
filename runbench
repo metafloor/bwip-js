@@ -1,0 +1,15 @@
+#!/bin/bash
+
+for dir in $(cd ../node_modules; ls -d bwipjs-*) ; do
+    vers=${dir:7}
+    echo "running version $vers ..."
+    node benchmark.js --use-v$vers 
+    mv bench-stats.json bench-stats/$vers.json
+done
+
+echo "running current version ..."
+node benchmark.js
+mv bench-stats.json bench-stats/current.json
+
+node bench-md.js
+echo "benchmark.md to view results"

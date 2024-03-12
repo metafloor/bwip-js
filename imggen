@@ -7,26 +7,26 @@ const fs = require('fs');
 const bwipjs = require('.');
 
 if (process.argv.length < 5) {
-	console.log('Usage: imggen type text [options] outfile');
-	process.exit(1);
+    console.log('Usage: imggen type text [options] outfile');
+    process.exit(1);
 }
 
 var options = {
-	bcid:process.argv[2],
-	text:process.argv[3],
+    bcid:process.argv[2],
+    text:process.argv[3],
     //backgroundcolor:'fff',
 }
 var outfile = process.argv[process.argv.length-1];
 
 for (let i = 4, l = process.argv.length-1; i < l; i++) {
-	var arg = process.argv[i];
-	var match = /^(\w+)(=.+)?$/.exec(arg);
-	if (!match) {
-		console.log('Invalid option: ' + arg);
-		process.exit(1);
-	}
+    var arg = process.argv[i];
+    var match = /^(\w+)(=.+)?$/.exec(arg);
+    if (!match) {
+        console.log('Invalid option: ' + arg);
+        process.exit(1);
+    }
 
-	if (match[2]) {
+    if (match[2]) {
         if (match[1] == 'loadfont') {
             // vals is one of: "font-name,y-mult,x-mult,path-to-font-file"
             //                 "font-name,size-mult,path-to-font-file"
@@ -50,16 +50,16 @@ for (let i = 4, l = process.argv.length-1; i < l; i++) {
         } else {
             options[match[1]] = match[2].substr(1);
         }
-	} else {
-		options[match[1]] = true;
-	}
+    } else {
+        options[match[1]] = true;
+    }
 }
 
 bwipjs.toBuffer(options, function (err, png) {
-	if (err) {
-		console.error('Error: ' + err);
-		process.exit(1);
-	}
+    if (err) {
+        console.error('Error: ' + (err.stack || err));
+        process.exit(1);
+    }
 
-	fs.writeFileSync(outfile, png);
+    fs.writeFileSync(outfile, png);
 });

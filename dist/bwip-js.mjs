@@ -1,12 +1,12 @@
 // This file is part of the bwip-js project available at:
 //
-// 	  http://metafloor.github.io/bwip-js
+//    http://metafloor.github.io/bwip-js
 //
 // Copyright (c) 2011-2024 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2023-04-03
-// Copyright (c) 2004-2023 Terry Burton
+// Barcode Writer in Pure PostScript - Version 2024-01-03
+// Copyright (c) 2004-2024 Terry Burton
 //
 // The MIT License
 //
@@ -47,11 +47,11 @@ const BWIPJS_VERSION = '__BWIPJS_VERS__';
 //
 // Returns the HTMLCanvasElement.
 function ToCanvas(cvs, opts) {
-	if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
+    if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
         let tmp = cvs;
         cvs = opts;
         opts = tmp;
-	}
+    }
     return _ToAny(bwipp_lookup(opts.bcid), opts, cvs); 
 }
 // Entry point for the symbol-specific exports
@@ -66,7 +66,7 @@ function ToCanvas(cvs, opts) {
 // 'string` can be either an `id` or query selector returning a single canvas element.
 function _ToAny(encoder, opts, drawing) {
     if (typeof opts == 'string') {
-		var canvas = document.getElementById(opts) || document.querySelector(opts);
+        var canvas = document.getElementById(opts) || document.querySelector(opts);
         if (!(canvas instanceof HTMLCanvasElement)) {
             throw new Error('bwipjs: `' + opts + '`: not a canvas');
         }
@@ -77,16 +77,16 @@ function _ToAny(encoder, opts, drawing) {
         opts = drawing;
         drawing = DrawingCanvas(canvas);
     } else if (typeof drawing == 'string') {
-		var canvas = document.getElementById(drawing) || document.querySelector(drawing);
+        var canvas = document.getElementById(drawing) || document.querySelector(drawing);
         if (!(canvas instanceof HTMLCanvasElement)) {
             throw new Error('bwipjs: `' + drawing + '`: not a canvas');
         }
         drawing = DrawingCanvas(canvas);
     } else if (drawing instanceof HTMLCanvasElement) {
         drawing = DrawingCanvas(drawing);
-	} else if (!drawing || typeof drawing != 'object' || !drawing.init) {
+    } else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
-	} 
+    } 
     return _Render(encoder, opts, drawing);
 }
 
@@ -101,7 +101,7 @@ function _ToAny(encoder, opts, drawing) {
 // Returns a string containing a fully qualified SVG definition,
 // including the natural width and height of the image, in pixels:
 //
-//  <svg version="1.1" width="242" height="200" xmlns="http://www.w3.org/2000/svg">
+//  <svg viewBox="0 0 242 200" xmlns="http://www.w3.org/2000/svg">
 //   ...
 //  </svg>
 //
@@ -111,18 +111,18 @@ function ToSVG(opts) {
 }
 
 function FixupOptions(opts) {
-	var scale	= opts.scale || 2;
-	var scaleX	= +opts.scaleX || scale;
-	var scaleY	= +opts.scaleY || scaleX;
+    var scale   = opts.scale || 2;
+    var scaleX  = +opts.scaleX || scale;
+    var scaleY  = +opts.scaleY || scaleX;
 
-	// Fix up padding.
-	opts.paddingleft = padding(opts.paddingleft, opts.paddingwidth, opts.padding, scaleX);
-	opts.paddingright = padding(opts.paddingright, opts.paddingwidth, opts.padding, scaleX);
-	opts.paddingtop = padding(opts.paddingtop, opts.paddingheight, opts.padding, scaleY);
-	opts.paddingbottom = padding(opts.paddingbottom, opts.paddingheight, opts.padding, scaleY);
+    // Fix up padding.
+    opts.paddingleft = padding(opts.paddingleft, opts.paddingwidth, opts.padding, scaleX);
+    opts.paddingright = padding(opts.paddingright, opts.paddingwidth, opts.padding, scaleX);
+    opts.paddingtop = padding(opts.paddingtop, opts.paddingheight, opts.padding, scaleY);
+    opts.paddingbottom = padding(opts.paddingbottom, opts.paddingheight, opts.padding, scaleY);
 
-	// We override BWIPP's background color functionality.  If in CMYK, convert to RRGGBB so
-	// the drawing interface is consistent.  Likewise, if in CSS-style #rgb or #rrggbb.
+    // We override BWIPP's background color functionality.  If in CMYK, convert to RRGGBB so
+    // the drawing interface is consistent.  Likewise, if in CSS-style #rgb or #rrggbb.
     if (opts.backgroundcolor) {
         var bgc = ''+opts.backgroundcolor;
         if (/^[0-9a-fA-F]{8}$/.test(bgc)) {
@@ -150,34 +150,34 @@ function FixupOptions(opts) {
         }
     }
 
-	return opts;
+    return opts;
 
-	function padding(a, b, c, s) {
-		if (a != null) {
-			return a*s;
-		}
-		if (b != null) {
-			return b*s;
-		}
-		return c*s || 0;
-	}
+    function padding(a, b, c, s) {
+        if (a != null) {
+            return a*s;
+        }
+        if (b != null) {
+            return b*s;
+        }
+        return c*s || 0;
+    }
 }
 
 var BWIPJS_OPTIONS = {
-	bcid:1,
-	text:1,
-	scale:1,
-	scaleX:1,
-	scaleY:1,
-	rotate:1,
-	padding:1,
-	paddingwidth:1,
-	paddingheight:1,
-	paddingtop:1,
-	paddingleft:1,
-	paddingright:1,
-	paddingbottom:1,
-	backgroundcolor:1,
+    bcid:1,
+    text:1,
+    scale:1,
+    scaleX:1,
+    scaleY:1,
+    rotate:1,
+    padding:1,
+    paddingwidth:1,
+    paddingheight:1,
+    paddingtop:1,
+    paddingleft:1,
+    paddingright:1,
+    paddingbottom:1,
+    backgroundcolor:1,
 };
 
 // bwipjs.render(options, drawing)
@@ -193,56 +193,56 @@ function Render(options, drawing) {
 
 // Called by the public exports
 function _Render(encoder, options, drawing) {
-	var text = options.text;
-	if (!text) {
-		throw new ReferenceError('bwip-js: bar code text not specified.');
-	}
+    var text = options.text;
+    if (!text) {
+        throw new ReferenceError('bwip-js: bar code text not specified.');
+    }
 
     // setopts() is optional on the drawing object.
     FixupOptions(options);
     drawing.setopts && drawing.setopts(options);
 
-	// Set the bwip-js defaults
-	var scale	= options.scale || 2;
-	var scaleX	= +options.scaleX || scale;
-	var scaleY	= +options.scaleY || scaleX;
-	var rotate	= options.rotate || 'N';
+    // Set the bwip-js defaults
+    var scale   = options.scale || 2;
+    var scaleX  = +options.scaleX || scale;
+    var scaleY  = +options.scaleY || scaleX;
+    var rotate  = options.rotate || 'N';
 
-	// Create a barcode writer object.  This is the interface between
-	// the low-level BWIPP code, the bwip-js graphics context, and the
-	// drawing interface.
-	var bw = new BWIPJS(drawing);
+    // Create a barcode writer object.  This is the interface between
+    // the low-level BWIPP code, the bwip-js graphics context, and the
+    // drawing interface.
+    var bw = new BWIPJS(drawing);
 
-	// Set the BWIPP options
-	var bwippopts = {};
-	for (var id in options) {
-		if (!BWIPJS_OPTIONS[id]) {
-			bwippopts[id] = options[id];
-		}
-	}
+    // Set the BWIPP options
+    var bwippopts = {};
+    for (var id in options) {
+        if (!BWIPJS_OPTIONS[id]) {
+            bwippopts[id] = options[id];
+        }
+    }
 
-	// Fix a disconnect in the BWIPP rendering logic
-	if (bwippopts.alttext) {
-		bwippopts.includetext = true;
-	}
-	// We use mm rather than inches for height - except pharmacode2 height
-	// which is already in mm.
-	if (+bwippopts.height && encoder != bwipp_pharmacode2) {
-		bwippopts.height = bwippopts.height / 25.4 || 0.5;
-	}
-	// Likewise, width
-	if (+bwippopts.width) {
-		bwippopts.width = bwippopts.width / 25.4 || 0;
-	}
+    // Fix a disconnect in the BWIPP rendering logic
+    if (bwippopts.alttext) {
+        bwippopts.includetext = true;
+    }
+    // We use mm rather than inches for height - except pharmacode2 height
+    // which is already in mm.
+    if (+bwippopts.height && encoder != bwipp_pharmacode2) {
+        bwippopts.height = bwippopts.height / 25.4 || 0.5;
+    }
+    // Likewise, width
+    if (+bwippopts.width) {
+        bwippopts.width = bwippopts.width / 25.4 || 0;
+    }
 
-	// Scale the image
-	bw.scale(scaleX, scaleY);
+    // Scale the image
+    bw.scale(scaleX, scaleY);
 
-	// Call into the BWIPP cross-compiled code and render the image.
+    // Call into the BWIPP cross-compiled code and render the image.
     bwipp_encode(bw, encoder, text, bwippopts);
 
     // Returns whatever drawing.end() returns, or `false` if nothing rendered.
-	return bw.render();
+    return bw.render();
 }
 
 // bwipjs.raw(options)
@@ -254,48 +254,48 @@ function _Render(encoder, options, drawing) {
 //
 // Browser and nodejs usage.
 function ToRaw(bcid, text, options) {
-	if (arguments.length == 1) {
-		options = bcid;
-		bcid = options.bcid;
-		text = options.text;
-	}
+    if (arguments.length == 1) {
+        options = bcid;
+        bcid = options.bcid;
+        text = options.text;
+    }
 
-	// The drawing interface is just needed for the pre-init() calls.
+    // The drawing interface is just needed for the pre-init() calls.
     // Don't need to fixup the options - drawing specific.
     var drawing = DrawingBuiltin();
     drawing.setopts(options);
 
-	var bw = new BWIPJS(drawing);
-	var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
+    var bw = new BWIPJS(drawing);
+    var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
 
-	// bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
-	// are not a typical/expected return value.  Convert to plain-old-objects.
-	var ids = { pixs:1, pixx:1, pixy:1, sbs:1, bbs:1, bhs:1, width:1, height:1 };
-	for (var i = 0; i < stack.length; i++) {
-		var elt = stack[i];
-		if (elt instanceof Map) {
-			var obj = {};
-			// Could they make Maps any harder to iterate over???
-			for (var keys = elt.keys(), size = elt.size, k = 0; k < size; k++) {
-				var id = keys.next().value;
-				if (ids[id]) {
-					var val = elt.get(id);
-					if (val instanceof Array) {
-						// The postscript arrays have extra named properties
-						// to emulate array views.  Return cleaned up arrays.
-						obj[id] = val.b.slice(val.o, val.o + val.length);
-					} else {
-						obj[id] = val;
-					}
-				}
-			}
-			stack[i] = obj;
-		} else {
-			// This should never exec...
-			stack.splice(i--, 1);
-		}
-	}
-	return stack;
+    // bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
+    // are not a typical/expected return value.  Convert to plain-old-objects.
+    var ids = { pixs:1, pixx:1, pixy:1, sbs:1, bbs:1, bhs:1, width:1, height:1 };
+    for (var i = 0; i < stack.length; i++) {
+        var elt = stack[i];
+        if (elt instanceof Map) {
+            var obj = {};
+            // Could they make Maps any harder to iterate over???
+            for (var keys = elt.keys(), size = elt.size, k = 0; k < size; k++) {
+                var id = keys.next().value;
+                if (ids[id]) {
+                    var val = elt.get(id);
+                    if (val instanceof Array) {
+                        // The postscript arrays have extra named properties
+                        // to emulate array views.  Return cleaned up arrays.
+                        obj[id] = val.b.slice(val.o, val.o + val.length);
+                    } else {
+                        obj[id] = val;
+                    }
+                }
+            }
+            stack[i] = obj;
+        } else {
+            // This should never exec...
+            stack.splice(i--, 1);
+        }
+    }
+    return stack;
 }
 // file : bwipjs.js
 //
@@ -307,141 +307,141 @@ var BWIPJS = (function() {
 var floor = Math.floor;
 var round = Math.round;
 var ceil  = Math.ceil;
-var min	  = Math.min;
-var max	  = Math.max;
+var min   = Math.min;
+var max   = Math.max;
 
 function BWIPJS(drawing) {
-	if (this.constructor !== BWIPJS) {
-		return new BWIPJS(drawing);
-	}
-	this.gstk	 = [];		// Graphics save/restore stack
-	this.cmds	 = [];		// Graphics primitives to replay when rendering
-	this.drawing = drawing;	// Drawing interface
+    if (this.constructor !== BWIPJS) {
+        return new BWIPJS(drawing);
+    }
+    this.gstk    = [];      // Graphics save/restore stack
+    this.cmds    = [];      // Graphics primitives to replay when rendering
+    this.drawing = drawing; // Drawing interface
 
-	this.reset();
+    this.reset();
 
-	// Drawing surface bounding box
-	this.minx = this.miny = Infinity;
-	this.maxx = this.maxy = -Infinity;
+    // Drawing surface bounding box
+    this.minx = this.miny = Infinity;
+    this.maxx = this.maxy = -Infinity;
 };
 
 // All graphics state that must be saved/restored is given a prefix of g_
 BWIPJS.prototype.reset = function() {
-	// Current Transform Matrix - since we don't do rotation, we can fake
-	// the matrix math
-	this.g_tdx	= 0;		// CTM x-offset
-	this.g_tdy	= 0;		// CTM y-offset
-	this.g_tsx	= 1;		// CTM x-scale factor
-	this.g_tsy	= 1;		// CTM y-scale factor
+    // Current Transform Matrix - since we don't do rotation, we can fake
+    // the matrix math
+    this.g_tdx  = 0;        // CTM x-offset
+    this.g_tdy  = 0;        // CTM y-offset
+    this.g_tsx  = 1;        // CTM x-scale factor
+    this.g_tsy  = 1;        // CTM y-scale factor
 
-	this.g_posx	= 0;		// current x position
-	this.g_posy	= 0;		// current y position
-	this.g_penw	= 1;		// current line/pen width
-	this.g_path	= [];		// current path
-	this.g_font	= null;		// current font object
-	this.g_rgb  = [0,0,0];	// current color (black)
+    this.g_posx = 0;        // current x position
+    this.g_posy = 0;        // current y position
+    this.g_penw = 1;        // current line/pen width
+    this.g_path = [];       // current path
+    this.g_font = null;     // current font object
+    this.g_rgb  = [0,0,0];  // current color (black)
     this.g_clip = false;    // clip region active
 };
 BWIPJS.prototype.save = function() {
-	// clone all g_ properties
-	var ctx = {};
-	for (var id in this) {
-		if (id.indexOf('g_') == 0) {
-			ctx[id] = clone(this[id]);
-		}
-	}
-	this.gstk.push(ctx);
+    // clone all g_ properties
+    var ctx = {};
+    for (var id in this) {
+        if (id.indexOf('g_') == 0) {
+            ctx[id] = clone(this[id]);
+        }
+    }
+    this.gstk.push(ctx);
 
-	// Perform a deep clone of the graphics state properties
-	function clone(v) {
-		if (v instanceof Array) {
-			var t = [];
-			for (var i = 0; i < v.length; i++)
-				t[i] = clone(v[i]);
-			return t;
-		}
-		if (v instanceof Object) {
-			var t = {};
-			for (var id in v)
-				t[id] = clone(v[id]);
-			return t;
-		}
-		return v;
-	}
+    // Perform a deep clone of the graphics state properties
+    function clone(v) {
+        if (v instanceof Array) {
+            var t = [];
+            for (var i = 0; i < v.length; i++)
+                t[i] = clone(v[i]);
+            return t;
+        }
+        if (v instanceof Object) {
+            var t = {};
+            for (var id in v)
+                t[id] = clone(v[id]);
+            return t;
+        }
+        return v;
+    }
 };
 BWIPJS.prototype.restore = function() {
-	if (!this.gstk.length) {
-		throw new Error('grestore: stack underflow');
-	}
-	var ctx  = this.gstk.pop();
+    if (!this.gstk.length) {
+        throw new Error('grestore: stack underflow');
+    }
+    var ctx  = this.gstk.pop();
     var self = this;
     if (this.g_clip && !ctx.g_clip) {
         this.cmds.push(function() {
                 self.drawing.unclip();
             });
     }
-	for (var id in ctx) {
-		this[id] = ctx[id];
-	}
+    for (var id in ctx) {
+        this[id] = ctx[id];
+    }
 };
 // Per the postscript spec:
-//	As discussed in Section 4.4.1, Current Path, points entered into a path
-//	are immediately converted to device coordinates by the current
-//	transformation matrix (CTM); subsequent modifications to the CTM do not
-//	affect existing points.  `currentpoint` computes the user space
-//	coordinates corresponding to the current point according to the current
-//	value of the CTM. Thus, if a current point is set and then the CTM is
-//	changed, the coordinates returned by currentpoint will be different
-//	from those that were originally specified for the point. 
+//  As discussed in Section 4.4.1, Current Path, points entered into a path
+//  are immediately converted to device coordinates by the current
+//  transformation matrix (CTM); subsequent modifications to the CTM do not
+//  affect existing points.  `currentpoint` computes the user space
+//  coordinates corresponding to the current point according to the current
+//  value of the CTM. Thus, if a current point is set and then the CTM is
+//  changed, the coordinates returned by currentpoint will be different
+//  from those that were originally specified for the point. 
 BWIPJS.prototype.currpos = function() {
-	return { x:(this.g_posx-this.g_tdx)/this.g_tsx,
-			 y:(this.g_posy-this.g_tdy)/this.g_tsy
-		};
+    return { x:(this.g_posx-this.g_tdx)/this.g_tsx,
+             y:(this.g_posy-this.g_tdy)/this.g_tsy
+        };
 };
 BWIPJS.prototype.currfont = function() {
-	return this.g_font;
+    return this.g_font;
 };
 BWIPJS.prototype.translate = function(x, y) {
-	this.g_tdx = this.g_tsx * x;
-	this.g_tdy = this.g_tsy * y;
+    this.g_tdx = this.g_tsx * x;
+    this.g_tdy = this.g_tsy * y;
 };
 BWIPJS.prototype.scale = function(x, y) {
-	this.g_tsx *= x;
-	this.g_tsy *= y;
-	var sxy = this.drawing.scale(this.g_tsx, this.g_tsy);
-	if (sxy && sxy[0] && sxy[1]) {
-		this.g_tsx = sxy[0];
-		this.g_tsy = sxy[1];
-	}
+    this.g_tsx *= x;
+    this.g_tsy *= y;
+    var sxy = this.drawing.scale(this.g_tsx, this.g_tsy);
+    if (sxy && sxy[0] && sxy[1]) {
+        this.g_tsx = sxy[0];
+        this.g_tsy = sxy[1];
+    }
 };
 BWIPJS.prototype.setlinewidth = function(w) {
-	this.g_penw = w;
+    this.g_penw = w;
 };
 BWIPJS.prototype.selectfont = function(f, z) {
-	this.g_font = { FontName:this.jsstring(f), FontSize:+z };
+    this.g_font = { FontName:this.jsstring(f), FontSize:+z };
 };
 BWIPJS.prototype.getfont = function() {
-	return this.g_font.FontName;
+    return this.g_font.FontName;
 };
 // Special function for converting a Uint8Array string to string.
 BWIPJS.prototype.jsstring = function(s) {
-	if (s instanceof Uint8Array) {
-		// Postscript (like C) treats nul-char as end of string.
-		//for (var i = 0, l = s.length; i < l && s[i]; i++);
-		//if (i < l) {
-		//	return String.fromCharCode.apply(null,s.subarray(0, i));
-		//}
-		return String.fromCharCode.apply(null,s)
-	}
-	return ''+s;
+    if (s instanceof Uint8Array) {
+        // Postscript (like C) treats nul-char as end of string.
+        //for (var i = 0, l = s.length; i < l && s[i]; i++);
+        //if (i < l) {
+        //  return String.fromCharCode.apply(null,s.subarray(0, i));
+        //}
+        return String.fromCharCode.apply(null,s)
+    }
+    return ''+s;
 };
 // Special function to replace setanycolor in BWIPP.
 // Converts a string of hex digits either rgb, rrggbb or ccmmyykk.
 // Or CSS-style #rgb and #rrggbb.
 BWIPJS.prototype.setcolor = function(s) {
-	if (s instanceof Uint8Array) {
-		s = this.jsstring(s);
-	}
+    if (s instanceof Uint8Array) {
+        s = this.jsstring(s);
+    }
     if (!s) {
         return;
     }
@@ -452,24 +452,24 @@ BWIPJS.prototype.setcolor = function(s) {
         s = s.substr(1);
     }
     if (s.length == 3) {
-		var r = parseInt(s[0], 16);
-		var g = parseInt(s[1], 16);
-		var b = parseInt(s[2], 16);
-		this.g_rgb = [ r<<4|r, g<<4|g, b<<4|b ];
+        var r = parseInt(s[0], 16);
+        var g = parseInt(s[1], 16);
+        var b = parseInt(s[2], 16);
+        this.g_rgb = [ r<<4|r, g<<4|g, b<<4|b ];
     } else if (s.length == 6) {
-		var r = parseInt(s.substr(0,2), 16);
-		var g = parseInt(s.substr(2,2), 16);
-		var b = parseInt(s.substr(4,2), 16);
-		this.g_rgb = [ r, g, b ];
-	} else {
-		var c = parseInt(s.substr(0,2), 16) / 255;
-		var m = parseInt(s.substr(2,2), 16) / 255;
-		var y = parseInt(s.substr(4,2), 16) / 255;
-		var k = parseInt(s.substr(6,2), 16) / 255;
-		var r = round((1-c) * (1-k) * 255);
-		var g = round((1-m) * (1-k) * 255);
-		var b = round((1-y) * (1-k) * 255);
-		this.g_rgb = [ r, g, b ];
+        var r = parseInt(s.substr(0,2), 16);
+        var g = parseInt(s.substr(2,2), 16);
+        var b = parseInt(s.substr(4,2), 16);
+        this.g_rgb = [ r, g, b ];
+    } else {
+        var c = parseInt(s.substr(0,2), 16) / 255;
+        var m = parseInt(s.substr(2,2), 16) / 255;
+        var y = parseInt(s.substr(4,2), 16) / 255;
+        var k = parseInt(s.substr(6,2), 16) / 255;
+        var r = round((1-c) * (1-k) * 255);
+        var g = round((1-m) * (1-k) * 255);
+        var b = round((1-y) * (1-k) * 255);
+        this.g_rgb = [ r, g, b ];
     }
 };
 // Used only by swissqrcode
@@ -478,452 +478,452 @@ BWIPJS.prototype.setrgbcolor = function(r,g,b) {
 };
 // Returns the current rgb values as a 'RRGGBB'
 BWIPJS.prototype.getRGB = function() {
-	var r = this.g_rgb[0].toString(16);
-	var g = this.g_rgb[1].toString(16);
-	var b = this.g_rgb[2].toString(16);
-	return '00'.substr(r.length) + r + '00'.substr(g.length) + g + '00'.substr(b.length) + b;
+    var r = this.g_rgb[0].toString(16);
+    var g = this.g_rgb[1].toString(16);
+    var b = this.g_rgb[2].toString(16);
+    return '00'.substr(r.length) + r + '00'.substr(g.length) + g + '00'.substr(b.length) + b;
 };
 BWIPJS.prototype.newpath = function() {
-	this.g_path = [];
+    this.g_path = [];
 };
 BWIPJS.prototype.closepath = function() {
-	var path = this.g_path;
-	var plen = path.length;
-	if (!plen) return;
+    var path = this.g_path;
+    var plen = path.length;
+    if (!plen) return;
 
-	var f = plen-1;
-	for ( ; f >= 0 && path[f].op == 'l'; f--);
-	f++;
-	if (f < plen-1) {
-		var poly = [];
-		var xmin = Infinity;
-		var ymin = Infinity;
-		var xmax = -Infinity;
-		var ymax = -Infinity;
-		for (var i = f; i < plen; i++) {
-			var a = path[i];
-			poly.push([ a.x0, a.y0 ]);
-			if (xmin > a.x0) xmin = a.x0;
-			if (xmax < a.x0) xmax = a.x0;
-			if (ymin > a.y0) ymin = a.y0;
-			if (ymax < a.y0) ymax = a.y0;
-		}
-		var a = path[plen-1];
-		var b = path[f];
-		if (a.x1 != b.x0 || a.y1 != b.y0) {
-			poly.push([ a.x1, a.y1 ]);
-			if (xmin > a.x1) xmin = a.x1;
-			if (xmax < a.x1) xmax = a.x1;
-			if (ymin > a.y1) ymin = a.y1;
-			if (ymax < a.y1) ymax = a.y1;
-		}
-		path.splice(f, plen-f,
-					{ op:'p', x0:xmin, y0:ymin, x1:xmax, y1:ymax, poly:poly });
-	} else {
-		path.push({ op:'c' });
-	}
+    var f = plen-1;
+    for ( ; f >= 0 && path[f].op == 'l'; f--);
+    f++;
+    if (f < plen-1) {
+        var poly = [];
+        var xmin = Infinity;
+        var ymin = Infinity;
+        var xmax = -Infinity;
+        var ymax = -Infinity;
+        for (var i = f; i < plen; i++) {
+            var a = path[i];
+            poly.push([ a.x0, a.y0 ]);
+            if (xmin > a.x0) xmin = a.x0;
+            if (xmax < a.x0) xmax = a.x0;
+            if (ymin > a.y0) ymin = a.y0;
+            if (ymax < a.y0) ymax = a.y0;
+        }
+        var a = path[plen-1];
+        var b = path[f];
+        if (a.x1 != b.x0 || a.y1 != b.y0) {
+            poly.push([ a.x1, a.y1 ]);
+            if (xmin > a.x1) xmin = a.x1;
+            if (xmax < a.x1) xmax = a.x1;
+            if (ymin > a.y1) ymin = a.y1;
+            if (ymax < a.y1) ymax = a.y1;
+        }
+        path.splice(f, plen-f,
+                    { op:'p', x0:xmin, y0:ymin, x1:xmax, y1:ymax, poly:poly });
+    } else {
+        path.push({ op:'c' });
+    }
 };
 BWIPJS.prototype.moveto = function(x,y) {
-	this.g_posx = this.g_tdx + this.g_tsx * x;
-	this.g_posy = this.g_tdy + this.g_tsy * y;
+    this.g_posx = this.g_tdx + this.g_tsx * x;
+    this.g_posy = this.g_tdy + this.g_tsy * y;
 };
 BWIPJS.prototype.rmoveto = function(x,y) {
-	this.g_posx += this.g_tsx * x;
-	this.g_posy += this.g_tsy * y;
+    this.g_posx += this.g_tsx * x;
+    this.g_posy += this.g_tsy * y;
 };
 BWIPJS.prototype.lineto = function(x,y) {
-	var x0 = round(this.g_posx);
-	var y0 = round(this.g_posy);
-	this.g_posx = this.g_tdx + this.g_tsx * x;
-	this.g_posy = this.g_tdy + this.g_tsy * y;
-	var x1 = round(this.g_posx);
-	var y1 = round(this.g_posy);
+    var x0 = round(this.g_posx);
+    var y0 = round(this.g_posy);
+    this.g_posx = this.g_tdx + this.g_tsx * x;
+    this.g_posy = this.g_tdy + this.g_tsy * y;
+    var x1 = round(this.g_posx);
+    var y1 = round(this.g_posy);
 
-	this.g_path.push({ op:'l', x0:x0, y0:y0, x1:x1, y1:y1 });
+    this.g_path.push({ op:'l', x0:x0, y0:y0, x1:x1, y1:y1 });
 };
 BWIPJS.prototype.rlineto = function(x,y) {
-	var x0 = round(this.g_posx);
-	var y0 = round(this.g_posy);
-	this.g_posx += this.g_tsx * x;
-	this.g_posy += this.g_tsy * y;
-	var x1 = round(this.g_posx);
-	var y1 = round(this.g_posy);
+    var x0 = round(this.g_posx);
+    var y0 = round(this.g_posy);
+    this.g_posx += this.g_tsx * x;
+    this.g_posy += this.g_tsy * y;
+    var x1 = round(this.g_posx);
+    var y1 = round(this.g_posy);
 
-	this.g_path.push({ op:'l', x0:x0, y0:y0, x1:x1, y1:y1 });
+    this.g_path.push({ op:'l', x0:x0, y0:y0, x1:x1, y1:y1 });
 };
 // implements both arc and arcn
 BWIPJS.prototype.arc = function(x,y,r,sa,ea,ccw) {
-	if (sa == ea) {
-		return;
-	}
-	// For now, we only implement full circles...
-	if (sa != 0 && sa != 360 || ea != 0 && ea != 360) {
-		throw new Error('arc: not a full circle (' + sa + ',' + ea + ')');
-	}
+    if (sa == ea) {
+        return;
+    }
+    // For now, we only implement full circles...
+    if (sa != 0 && sa != 360 || ea != 0 && ea != 360) {
+        throw new Error('arc: not a full circle (' + sa + ',' + ea + ')');
+    }
 
-	x = this.g_tdx + this.g_tsx * x;
-	y = this.g_tdy + this.g_tsy * y;
+    x = this.g_tdx + this.g_tsx * x;
+    y = this.g_tdy + this.g_tsy * y;
 
-	// e == ellipse
-	var rx = r * this.g_tsx;
-	var ry = r * this.g_tsy;
-	this.g_path.push({ op:'e', x0:x-rx, y0:y-ry, x1:x+rx, y1:y+ry,
-								x:x, y:y, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw });
+    // e == ellipse
+    var rx = r * this.g_tsx;
+    var ry = r * this.g_tsy;
+    this.g_path.push({ op:'e', x0:x-rx, y0:y-ry, x1:x+rx, y1:y+ry,
+                                x:x, y:y, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw });
 };
 BWIPJS.prototype.stringwidth = function(str) {
-	var tsx  = this.g_tsx;
-	var tsy  = this.g_tsy;
-	var size = +this.g_font.FontSize || 10;
+    var tsx  = this.g_tsx;
+    var tsy  = this.g_tsy;
+    var size = +this.g_font.FontSize || 10;
 
-	// The string can be either a uint8-string or regular string
-	str = this.toUCS2(this.jsstring(str));
+    // The string can be either a uint8-string or regular string
+    str = this.toUCS2(this.jsstring(str));
 
-	var bbox = this.drawing.measure(str, this.g_font.FontName, size*tsx, size*tsy);
+    var bbox = this.drawing.measure(str, this.g_font.FontName, size*tsx, size*tsy);
 
-	return { w:bbox.width/tsx, h:(bbox.ascent+bbox.descent)/tsy,
-			 a:bbox.ascent/tsy, d:bbox.descent/tsy };
+    return { w:bbox.width/tsx, h:(bbox.ascent+bbox.descent)/tsy,
+             a:bbox.ascent/tsy, d:bbox.descent/tsy };
 };
 BWIPJS.prototype.charpath = function(str, b) {
-	var sw = this.stringwidth(str);
+    var sw = this.stringwidth(str);
 
-	// Emulate the char-path by placing a rectangle around it
-	this.rlineto(0, sw.a);
-	this.rlineto(sw.w, 0);
-	this.rlineto(0, -sw.h);
+    // Emulate the char-path by placing a rectangle around it
+    this.rlineto(0, sw.a);
+    this.rlineto(sw.w, 0);
+    this.rlineto(0, -sw.h);
 };
 BWIPJS.prototype.pathbbox = function() {
-	if (!this.g_path.length)	throw new Error('pathbbox: --nocurrentpoint--');
-	var path = this.g_path;
-	var llx = Infinity;
-	var lly = Infinity;
-	var urx = -Infinity;
-	var ury = -Infinity;
-	for (var i = 0; i < path.length; i++) {
-		var a = path[i];
-		if (a.op == 'c') {
-			continue;
-		}
-		if (a.x0 < a.x1) {
-			if (llx > a.x0) llx = a.x0;
-			if (urx < a.x1) urx = a.x1;
-		} else {
-			if (llx > a.x1) llx = a.x1;
-			if (urx < a.x0) urx = a.x0;
-		}
-		if (a.y0 < a.y1) {
-			if (lly > a.y0) lly = a.y0;
-			if (ury < a.y1) ury = a.y1;
-		} else {
-			if (lly > a.y1) lly = a.y1;
-			if (ury < a.y0) ury = a.y0;
-		}
-	}
+    if (!this.g_path.length)    throw new Error('pathbbox: --nocurrentpoint--');
+    var path = this.g_path;
+    var llx = Infinity;
+    var lly = Infinity;
+    var urx = -Infinity;
+    var ury = -Infinity;
+    for (var i = 0; i < path.length; i++) {
+        var a = path[i];
+        if (a.op == 'c') {
+            continue;
+        }
+        if (a.x0 < a.x1) {
+            if (llx > a.x0) llx = a.x0;
+            if (urx < a.x1) urx = a.x1;
+        } else {
+            if (llx > a.x1) llx = a.x1;
+            if (urx < a.x0) urx = a.x0;
+        }
+        if (a.y0 < a.y1) {
+            if (lly > a.y0) lly = a.y0;
+            if (ury < a.y1) ury = a.y1;
+        } else {
+            if (lly > a.y1) lly = a.y1;
+            if (ury < a.y0) ury = a.y0;
+        }
+    }
 
-	// Convert to user-space coordinates
-	var rv = {	llx:(llx-this.g_tdx)/this.g_tsx,
-				lly:(lly-this.g_tdy)/this.g_tsy,
-				urx:(urx-this.g_tdx)/this.g_tsx,
-				ury:(ury-this.g_tdy)/this.g_tsy };
-	return rv;
+    // Convert to user-space coordinates
+    var rv = {  llx:(llx-this.g_tdx)/this.g_tsx,
+                lly:(lly-this.g_tdy)/this.g_tsy,
+                urx:(urx-this.g_tdx)/this.g_tsx,
+                ury:(ury-this.g_tdy)/this.g_tsy };
+    return rv;
 };
 // Tranforms the pts array to standard (not y-inverted), unscalled values.
 BWIPJS.prototype.transform = function(pts) {
-	var minx = this.minx;
-	var maxy = this.maxy;
+    var minx = this.minx;
+    var maxy = this.maxy;
 
-	for (var i = 0; i < pts.length; i++) {
-		var pt = pts[i];
-		pt[0] = pt[0] - minx;
-		pt[1] = maxy - pt[1];
-	}
+    for (var i = 0; i < pts.length; i++) {
+        var pt = pts[i];
+        pt[0] = pt[0] - minx;
+        pt[1] = maxy - pt[1];
+    }
 };
 BWIPJS.prototype.stroke = function() {
-	var tsx  = this.g_tsx;
-	var tsy  = this.g_tsy;
-	var path = this.g_path;
-	var rgb  = this.getRGB();
-	this.g_path = [];
+    var tsx  = this.g_tsx;
+    var tsy  = this.g_tsy;
+    var path = this.g_path;
+    var rgb  = this.getRGB();
+    this.g_path = [];
 
-	// This is a "super majority" round i.e. if over .66 round up.
-	var penw = floor(this.g_penw * tsx + 0.66);
-	var penh = floor(this.g_penw * tsy + 0.66);
+    // This is a "super majority" round i.e. if over .66 round up.
+    var penw = floor(this.g_penw * tsx + 0.66);
+    var penh = floor(this.g_penw * tsy + 0.66);
 
-	// Calculate the bounding boxes
-	var nlines = 0, npolys = 0;
-	for (var i = 0; i < path.length; i++) {
-		var a = path[i];
-		if (a.op == 'l') {
-			// We only stroke vertical and horizontal lines.  Complex shapes are
-			// always filled.
-			if (a.x0 != a.x1 && a.y0 != a.y1) {
-				throw new Error('stroke: --not-orthogonal--');
-			}
-			var x0 = a.x0;
-			var y0 = a.y0;
-			var x1 = a.x1;
-			var y1 = a.y1;
+    // Calculate the bounding boxes
+    var nlines = 0, npolys = 0;
+    for (var i = 0; i < path.length; i++) {
+        var a = path[i];
+        if (a.op == 'l') {
+            // We only stroke vertical and horizontal lines.  Complex shapes are
+            // always filled.
+            if (a.x0 != a.x1 && a.y0 != a.y1) {
+                throw new Error('stroke: --not-orthogonal--');
+            }
+            var x0 = a.x0;
+            var y0 = a.y0;
+            var x1 = a.x1;
+            var y1 = a.y1;
 
-			// Half widths (may be factional)
-			var penw2 = penw/2;
-			var penh2 = penh/2;
+            // Half widths (may be factional)
+            var penw2 = penw/2;
+            var penh2 = penh/2;
 
-			if (x0 > x1) { var t = x0; x0 = x1; x1 = t; }
-			if (y0 > y1) { var t = y0; y0 = y1; y1 = t; }
-			if (x0 == x1) {
-				this.bbox(x0-penw2, y0, x0+penw-penw2-1, y1); 	// vertical line
-			} else {
-				this.bbox(x0, y0-penh+penh2+1, x1, y1+penh2);	// horizontal line
-			}
-			nlines++;
-		} else if (a.op == 'p') {
-			// Closed (rectangular) poly (border around the barcode)
-			var minx = Infinity;
-			var miny = Infinity;
-			var maxx = -Infinity;
-			var maxy = -Infinity;
-			var pts  = a.poly;
-			if (pts.length != 4) {
-				throw new Error('stroke: --not-a-rect--');
-			}
-			for (var i = 0, j = pts.length-1; i < pts.length; j = i++) {
-				var xj = pts[j][0];
-				var yj = pts[j][1];
-				var xi = pts[i][0];
-				var yi = pts[i][1];
+            if (x0 > x1) { var t = x0; x0 = x1; x1 = t; }
+            if (y0 > y1) { var t = y0; y0 = y1; y1 = t; }
+            if (x0 == x1) {
+                this.bbox(x0-penw2, y0, x0+penw-penw2-1, y1);   // vertical line
+            } else {
+                this.bbox(x0, y0-penh+penh2+1, x1, y1+penh2);   // horizontal line
+            }
+            nlines++;
+        } else if (a.op == 'p') {
+            // Closed (rectangular) poly (border around the barcode)
+            var minx = Infinity;
+            var miny = Infinity;
+            var maxx = -Infinity;
+            var maxy = -Infinity;
+            var pts  = a.poly;
+            if (pts.length != 4) {
+                throw new Error('stroke: --not-a-rect--');
+            }
+            for (var i = 0, j = pts.length-1; i < pts.length; j = i++) {
+                var xj = pts[j][0];
+                var yj = pts[j][1];
+                var xi = pts[i][0];
+                var yi = pts[i][1];
 
-				if (xi != xj && yi != yj) {
-					throw new Error('stroke: --not-orthogonal--');
-				}
+                if (xi != xj && yi != yj) {
+                    throw new Error('stroke: --not-orthogonal--');
+                }
 
-				if (xi < minx) minx = xi;
-				if (xi > maxx) maxx = xi;
-				if (yi < miny) miny = yi;
-				if (yi > maxy) maxy = yi;
-			}
+                if (xi < minx) minx = xi;
+                if (xi > maxx) maxx = xi;
+                if (yi < miny) miny = yi;
+                if (yi > maxy) maxy = yi;
+            }
 
-			// Half widths (integer)
-			var penw2 = ceil(penw/2);
-			var penh2 = ceil(penh/2);
+            // Half widths (integer)
+            var penw2 = ceil(penw/2);
+            var penh2 = ceil(penh/2);
 
-			// We render these as two polygons plus a fill.
-			// When border width is odd, allocate the bigger half to the outside.
-			this.bbox(minx-penw2, miny-penh2, maxx+penw2, maxy+penh2);
-			npolys++;
-		} else {
-			throw new Error('stroke: --not-a-line--');
-		}
-	}
+            // We render these as two polygons plus a fill.
+            // When border width is odd, allocate the bigger half to the outside.
+            this.bbox(minx-penw2, miny-penh2, maxx+penw2, maxy+penh2);
+            npolys++;
+        } else {
+            throw new Error('stroke: --not-a-line--');
+        }
+    }
 
-	// Draw the lines
-	var self = this;
-	this.cmds.push(function() {
-		// Half widths (big half and remaining half)
-		var bigw2 = ceil(penw/2);
-		var bigh2 = ceil(penh/2);
-		var remw2 = penw - bigw2;
-		var remh2 = penh - bigh2;
+    // Draw the lines
+    var self = this;
+    this.cmds.push(function() {
+        // Half widths (big half and remaining half)
+        var bigw2 = ceil(penw/2);
+        var bigh2 = ceil(penh/2);
+        var remw2 = penw - bigw2;
+        var remh2 = penh - bigh2;
 
-		for (var i = 0; i < path.length; i++) {
-			var a = path[i]
-			if (a.op == 'l') {
-				var pts = [ [ a.x0, a.y0 ], [ a.x1, a.y1 ] ];
-				self.transform(pts);
-				self.drawing.line(pts[0][0], pts[0][1], pts[1][0], pts[1][1],
-							a.x0 == a.x1 ? penw : penh, rgb);
-				self.fill(rgb);
-			} else {
-				var pts = a.poly;
-				self.transform(pts);
-				var x0 = min(pts[0][0], pts[2][0]);
-				var x1 = max(pts[0][0], pts[2][0]);
-				var y0 = min(pts[0][1], pts[2][1]);
-				var y1 = max(pts[0][1], pts[2][1]);
+        for (var i = 0; i < path.length; i++) {
+            var a = path[i]
+            if (a.op == 'l') {
+                var pts = [ [ a.x0, a.y0 ], [ a.x1, a.y1 ] ];
+                self.transform(pts);
+                self.drawing.line(pts[0][0], pts[0][1], pts[1][0], pts[1][1],
+                            a.x0 == a.x1 ? penw : penh, rgb);
+                self.fill(rgb);
+            } else {
+                var pts = a.poly;
+                self.transform(pts);
+                var x0 = min(pts[0][0], pts[2][0]);
+                var x1 = max(pts[0][0], pts[2][0]);
+                var y0 = min(pts[0][1], pts[2][1]);
+                var y1 = max(pts[0][1], pts[2][1]);
 
-				// Top and left edges are "inside" the polygon.
-				// Bottom and right edges are outside.
-				self.drawing.polygon([
-						[ x0-bigw2, y0-bigh2 ],
-						[ x0-bigw2, y1+bigh2+1 ],
-						[ x1+bigw2+1, y1+bigh2+1 ],
-						[ x1+bigw2+1, y0-bigh2 ]
-					]);
-				self.drawing.polygon([
-						[ x0+remw2, y0+remh2 ],
-						[ x0+remw2, y1-remh2+1 ],
-						[ x1-remw2+1, y1-remh2+1 ],
-						[ x1-remw2+1, y0+remh2 ],
-					]);
-				self.drawing.fill(rgb);
-			}
-		}
-	});
+                // Top and left edges are "inside" the polygon.
+                // Bottom and right edges are outside.
+                self.drawing.polygon([
+                        [ x0-bigw2, y0-bigh2 ],
+                        [ x0-bigw2, y1+bigh2+1 ],
+                        [ x1+bigw2+1, y1+bigh2+1 ],
+                        [ x1+bigw2+1, y0-bigh2 ]
+                    ]);
+                self.drawing.polygon([
+                        [ x0+remw2, y0+remh2 ],
+                        [ x0+remw2, y1-remh2+1 ],
+                        [ x1-remw2+1, y1-remh2+1 ],
+                        [ x1-remw2+1, y0+remh2 ],
+                    ]);
+                self.drawing.fill(rgb);
+            }
+        }
+    });
 };
 BWIPJS.prototype.fill = function() {
-	var path = this.g_path;
-	var rgb  = this.getRGB();
-	this.g_path = [];
+    var path = this.g_path;
+    var rgb  = this.getRGB();
+    this.g_path = [];
 
-	// Calculate the bounding boxes
-	for (var p = 0; p < path.length; p++) {
-		var a = path[p];
-		if (a.op == 'p') {  // polygon
-			var minx = Infinity;
-			var miny = Infinity;
-			var maxx = -Infinity;
-			var maxy = -Infinity;
-			var pts  = a.poly;
-			for (var i = 0; i < pts.length; i++) {
-				var xi = pts[i][0];
-				var yi = pts[i][1];
+    // Calculate the bounding boxes
+    for (var p = 0; p < path.length; p++) {
+        var a = path[p];
+        if (a.op == 'p') {  // polygon
+            var minx = Infinity;
+            var miny = Infinity;
+            var maxx = -Infinity;
+            var maxy = -Infinity;
+            var pts  = a.poly;
+            for (var i = 0; i < pts.length; i++) {
+                var xi = pts[i][0];
+                var yi = pts[i][1];
 
-				if (xi < minx) minx = xi;
-				if (xi > maxx) maxx = xi;
-				if (yi < miny) miny = yi;
-				if (yi > maxy) maxy = yi;
-			}
-			// With polygons, the right and bottom edges are "outside" and do not
-			// contribute to the bounding box.  But we are in postscript inverted-y
-			// mode.
-			this.bbox(minx, miny+1, maxx-1, maxy);
-		} else if (a.op == 'e') {	// ellipse
-			this.bbox(a.x - a.rx, a.y - a.ry, a.x + a.rx, a.y + a.ry);
-		} else {
-			throw new Error('fill: --not-a-polygon--');
-		}
-	}
+                if (xi < minx) minx = xi;
+                if (xi > maxx) maxx = xi;
+                if (yi < miny) miny = yi;
+                if (yi > maxy) maxy = yi;
+            }
+            // With polygons, the right and bottom edges are "outside" and do not
+            // contribute to the bounding box.  But we are in postscript inverted-y
+            // mode.
+            this.bbox(minx, miny+1, maxx-1, maxy);
+        } else if (a.op == 'e') {   // ellipse
+            this.bbox(a.x - a.rx, a.y - a.ry, a.x + a.rx, a.y + a.ry);
+        } else {
+            throw new Error('fill: --not-a-polygon--');
+        }
+    }
 
-	// Render the poly
-	var self = this;
-	this.cmds.push(function() {
-		for (var i = 0; i < path.length; i++) {
-			var a = path[i];
-			if (a.op == 'p') {
-				var pts = a.poly
-				self.transform(pts);
-				self.drawing.polygon(pts);
-			} else if (a.op == 'e') {
-				var pts = [ [ a.x, a.y ] ];
-				self.transform(pts);
-				self.drawing.ellipse(pts[0][0], pts[0][1], a.rx, a.ry, a.ccw);
-			}
-		}
-		self.drawing.fill(rgb);
-	});
+    // Render the poly
+    var self = this;
+    this.cmds.push(function() {
+        for (var i = 0; i < path.length; i++) {
+            var a = path[i];
+            if (a.op == 'p') {
+                var pts = a.poly
+                self.transform(pts);
+                self.drawing.polygon(pts);
+            } else if (a.op == 'e') {
+                var pts = [ [ a.x, a.y ] ];
+                self.transform(pts);
+                self.drawing.ellipse(pts[0][0], pts[0][1], a.rx, a.ry, a.ccw);
+            }
+        }
+        self.drawing.fill(rgb);
+    });
 };
 BWIPJS.prototype.clip = function() {
-	var path = this.g_path;
-	this.g_path = [];
+    var path = this.g_path;
+    this.g_path = [];
     this.g_clip = true;
 
-	var self = this;
-	this.cmds.push(function() {
+    var self = this;
+    this.cmds.push(function() {
         var polys = [];
-		for (var i = 0; i < path.length; i++) {
-			var a = path[i];
-			if (a.op == 'p') {
-				var pts = a.poly
-				self.transform(pts);
+        for (var i = 0; i < path.length; i++) {
+            var a = path[i];
+            if (a.op == 'p') {
+                var pts = a.poly
+                self.transform(pts);
                 polys.push(pts);
-			} else {
+            } else {
                 throw new Error('clip: only polygon regions supported');
-			}
-		}
-		self.drawing.clip(polys);
-	});
+            }
+        }
+        self.drawing.clip(polys);
+    });
 };
 
 // The pix array is in standard (not y-inverted postscript) orientation.
 BWIPJS.prototype.maxicode = function(pix) {
-	var tsx = this.g_tsx;
-	var tsy = this.g_tsy;
-	var rgb = this.getRGB();
+    var tsx = this.g_tsx;
+    var tsy = this.g_tsy;
+    var rgb = this.getRGB();
 
-	// Module width.  Module height is an integer multiple of tsy.
-	var twidth = 1.04 * tsx * 100;
-	var mwidth = (twidth / 30)|0;
-	if (twidth - (mwidth*30-1) > 9) {
-		mwidth++;
-	}
+    // Module width.  Module height is an integer multiple of tsy.
+    var twidth = 1.04 * tsx * 100;
+    var mwidth = (twidth / 30)|0;
+    if (twidth - (mwidth*30-1) > 9) {
+        mwidth++;
+    }
 
-	// Dimensions needed for plotting the hexagons.  These must be integer values.
-	var w, h, wgap, hgap;
-	// if (opts.??? ) {
-	//	// Create a one or two pixel gap
-	//	wgap = (mwidth & 1) ? 1 : 2;
-	//	hgap = 1;
-	//	w = mwidth - gap;
-	//	h = 4 * tsy;
-	// } else {
-		// Create a 1/8mm gap
-		wgap = (tsx/2)|0;
-		hgap = (tsy/2)|0;
-		w = mwidth - wgap;
-		if (w & 1) {
-			w--;
-		}
-		h = ((4*tsy)|0) - hgap;
-	//}
+    // Dimensions needed for plotting the hexagons.  These must be integer values.
+    var w, h, wgap, hgap;
+    // if (opts.??? ) {
+    //  // Create a one or two pixel gap
+    //  wgap = (mwidth & 1) ? 1 : 2;
+    //  hgap = 1;
+    //  w = mwidth - gap;
+    //  h = 4 * tsy;
+    // } else {
+        // Create a 1/8mm gap
+        wgap = (tsx/2)|0;
+        hgap = (tsy/2)|0;
+        w = mwidth - wgap;
+        if (w & 1) {
+            w--;
+        }
+        h = ((4*tsy)|0) - hgap;
+    //}
 
-	// These must be integer values
-	var w2 = w / 2 - 1;			// half width
-	var qh = ((w2+1) / 2)|0;	// quarter height
-	var vh = h - 2 - 2 * qh;	// side height
+    // These must be integer values
+    var w2 = w / 2 - 1;         // half width
+    var qh = ((w2+1) / 2)|0;    // quarter height
+    var vh = h - 2 - 2 * qh;    // side height
 
-	// Bounding box
-	this.bbox(0, 0, mwidth*30 - wgap, tsy * 3 * 32 + tsy * 4 - hgap);
+    // Bounding box
+    this.bbox(0, 0, mwidth*30 - wgap, tsy * 3 * 32 + tsy * 4 - hgap);
 
-	// Render the elements
-	var self = this;
-	this.cmds.push(function() {
-		// Draw the hexagons
-		for (var i = 0; i < pix.length; i++) {
-			var c = pix[i];
-			var x = c % 30;
-			var y = (c / 30)|0;
+    // Render the elements
+    var self = this;
+    this.cmds.push(function() {
+        // Draw the hexagons
+        for (var i = 0; i < pix.length; i++) {
+            var c = pix[i];
+            var x = c % 30;
+            var y = (c / 30)|0;
 
-			// Adjust x,y to the top of hexagon
-			x *= mwidth;
-			x += (y & 1) ? mwidth : mwidth/2;
-			x = x|0;
+            // Adjust x,y to the top of hexagon
+            x *= mwidth;
+            x += (y & 1) ? mwidth : mwidth/2;
+            x = x|0;
 
-			y = 33 - y;	// invert for postscript notation
-			y *= tsy * 3;
-			y += tsy * 2 - h/2;
-			y = y|0;
-			
-			// Build bottom up so the drawing is top-down.
-			var pts = [ [ x-0.5, y-- ] ]; 
-			y -= qh-1;
-			pts.push([x-1-w2, y--]);
-			y -= vh;
-			pts.push([x-1-w2, y--]);
-			y -= qh-1;
-			pts.push([x-0.5, y++]);
-			y += qh-1;
-			pts.push([x+w2, y++]);
-			y += vh;
-			pts.push([x+w2, y++]);
+            y = 33 - y; // invert for postscript notation
+            y *= tsy * 3;
+            y += tsy * 2 - h/2;
+            y = y|0;
+            
+            // Build bottom up so the drawing is top-down.
+            var pts = [ [ x-0.5, y-- ] ]; 
+            y -= qh-1;
+            pts.push([x-1-w2, y--]);
+            y -= vh;
+            pts.push([x-1-w2, y--]);
+            y -= qh-1;
+            pts.push([x-0.5, y++]);
+            y += qh-1;
+            pts.push([x+w2, y++]);
+            y += vh;
+            pts.push([x+w2, y++]);
 
-			self.transform(pts);
-			self.drawing.hexagon(pts, rgb);
-		}
-		self.drawing.fill(rgb);
+            self.transform(pts);
+            self.drawing.hexagon(pts, rgb);
+        }
+        self.drawing.fill(rgb);
 
 
-		// Draw the rings
-		var x = (14 * mwidth + mwidth/2 + 0.01)|0;
-		var y = ((12 * 4 + 3) * tsy - qh/2 + 0.01)|0;
-		self.drawing.ellipse(x, y, (0.5774*3.5*tsx+0.01)|0, (0.5774*3.5*tsy+0.01)|0, true);
-		self.drawing.ellipse(x, y, (1.3359*3.5*tsx+0.01)|0, (1.3359*3.5*tsy+0.01)|0, false);
-		self.drawing.fill(rgb);
-		self.drawing.ellipse(x, y, (2.1058*3.5*tsx+0.01)|0, (2.1058*3.5*tsy+0.01)|0, true);
-		self.drawing.ellipse(x, y, (2.8644*3.5*tsx+0.01)|0, (2.8644*3.5*tsy+0.01)|0, false);
-		self.drawing.fill(rgb);
-		self.drawing.ellipse(x, y, (3.6229*3.5*tsx+0.01)|0, (3.6229*3.5*tsy+0.01)|0, true);
-		self.drawing.ellipse(x, y, (4.3814*3.5*tsx+0.01)|0, (4.3814*3.5*tsy+0.01)|0, false);
-		self.drawing.fill(rgb);
+        // Draw the rings
+        var x = (14 * mwidth + mwidth/2 + 0.01)|0;
+        var y = ((12 * 4 + 3) * tsy - qh/2 + 0.01)|0;
+        self.drawing.ellipse(x, y, (0.5774*3.5*tsx+0.01)|0, (0.5774*3.5*tsy+0.01)|0, true);
+        self.drawing.ellipse(x, y, (1.3359*3.5*tsx+0.01)|0, (1.3359*3.5*tsy+0.01)|0, false);
+        self.drawing.fill(rgb);
+        self.drawing.ellipse(x, y, (2.1058*3.5*tsx+0.01)|0, (2.1058*3.5*tsy+0.01)|0, true);
+        self.drawing.ellipse(x, y, (2.8644*3.5*tsx+0.01)|0, (2.8644*3.5*tsy+0.01)|0, false);
+        self.drawing.fill(rgb);
+        self.drawing.ellipse(x, y, (3.6229*3.5*tsx+0.01)|0, (3.6229*3.5*tsy+0.01)|0, true);
+        self.drawing.ellipse(x, y, (4.3814*3.5*tsx+0.01)|0, (4.3814*3.5*tsy+0.01)|0, false);
+        self.drawing.fill(rgb);
 
-	});
+    });
 };
 // UTF-8 to UCS-2 (no surrogates)
 BWIPJS.prototype.toUCS2 = function(str) {
@@ -943,74 +943,74 @@ BWIPJS.prototype.toUCS2 = function(str) {
 };
 // dx,dy are inter-character gaps
 BWIPJS.prototype.show = function(str, dx, dy) {
-	if (!str.length) {
-		return;
-	}
+    if (!str.length) {
+        return;
+    }
 
-	// Capture current graphics state
-	var tsx	 = this.g_tsx;
-	var tsy  = this.g_tsy;
-	var name = this.g_font.FontName || 'OCR-B';
-	var size = (this.g_font.FontSize || 10);
-	var szx  = size * tsx;
-	var szy  = size * tsy;
-	var posx = this.g_posx;
-	var posy = this.g_posy;
-	var rgb  = this.getRGB();
+    // Capture current graphics state
+    var tsx  = this.g_tsx;
+    var tsy  = this.g_tsy;
+    var name = this.g_font.FontName || 'OCR-B';
+    var size = (this.g_font.FontSize || 10);
+    var szx  = size * tsx;
+    var szy  = size * tsy;
+    var posx = this.g_posx;
+    var posy = this.g_posy;
+    var rgb  = this.getRGB();
 
-	// The string can be either a uint8-string or regular string.
-	str = this.toUCS2(this.jsstring(str));
+    // The string can be either a uint8-string or regular string.
+    str = this.toUCS2(this.jsstring(str));
 
-	// Convert dx,dy to device space
-	dx = tsx * dx || 0;
-	dy = tsy * dy || 0;
+    // Convert dx,dy to device space
+    dx = tsx * dx || 0;
+    dy = tsy * dy || 0;
 
-	// Bounding box.
-	var base = posy + dy;
-	var bbox = this.drawing.measure(str, name, szx, szy);
-	var width = bbox.width + (str.length-1) * dx;
-	this.bbox(posx, base-bbox.descent+1, posx+width-1, base+bbox.ascent);
-	this.g_posx += width;
+    // Bounding box.
+    var base = posy + dy;
+    var bbox = this.drawing.measure(str, name, szx, szy);
+    var width = bbox.width + (str.length-1) * dx;
+    this.bbox(posx, base-bbox.descent+1, posx+width-1, base+bbox.ascent);
+    this.g_posx += width;
 
-	var self = this;
-	self.cmds.push(function() {
-		// self.transform()
-		var x = posx - self.minx;
-		var y = self.maxy - posy;
-		self.drawing.text(x, y, str, rgb, { name:name, width:szx, height:szy, dx:dx });
-	});
+    var self = this;
+    self.cmds.push(function() {
+        // self.transform()
+        var x = posx - self.minx;
+        var y = self.maxy - posy;
+        self.drawing.text(x, y, str, rgb, { name:name, width:szx, height:szy, dx:dx });
+    });
 };
 // drawing surface bounding box
 BWIPJS.prototype.bbox = function(x0, y0, x1, y1) {
-	if (x0 > x1) { var t = x0; x0 = x1; x1 = t; }
-	if (y0 > y1) { var t = y0; y0 = y1; y1 = t; }
+    if (x0 > x1) { var t = x0; x0 = x1; x1 = t; }
+    if (y0 > y1) { var t = y0; y0 = y1; y1 = t; }
 
-	x0 = floor(x0);
-	y0 = floor(y0);
-	x1 = ceil(x1);
-	y1 = ceil(y1);
+    x0 = floor(x0);
+    y0 = floor(y0);
+    x1 = ceil(x1);
+    y1 = ceil(y1);
 
-	if (this.minx > x0) this.minx = x0;
-    if (this.maxx < x1)	this.maxx = x1;
-    if (this.miny > y0)	this.miny = y0;
-	if (this.maxy < y1)	this.maxy = y1;
+    if (this.minx > x0) this.minx = x0;
+    if (this.maxx < x1) this.maxx = x1;
+    if (this.miny > y0) this.miny = y0;
+    if (this.maxy < y1) this.maxy = y1;
 };
 BWIPJS.prototype.render = function() {
-	if (this.minx === Infinity) {
+    if (this.minx === Infinity) {
         // Most likely, `dontdraw` was set in the options
         return false;
-	}
-	// Draw the image
-	this.drawing.init(this.maxx - this.minx + 1, this.maxy - this.miny + 1,
-					  this.g_tsx, this.g_tsy);
-	for (var i = 0, l = this.cmds.length; i < l; i++) {
-		this.cmds[i]();
-	}
-	return this.drawing.end();
+    }
+    // Draw the image
+    this.drawing.init(this.maxx - this.minx + 1, this.maxy - this.miny + 1,
+                      this.g_tsx, this.g_tsy);
+    for (var i = 0, l = this.cmds.length; i < l; i++) {
+        this.cmds[i]();
+    }
+    return this.drawing.end();
 };
 
 return BWIPJS;
-})();	// BWIPJS closure
+})();   // BWIPJS closure
 // drawing-builtin.js
 //
 // The aliased (except the fonts) graphics used by drawing-canvas.js and
@@ -1021,21 +1021,21 @@ return BWIPJS;
 // For the methods that take a color `rgb` parameter, the value is always a
 // string with format RRGGBB.
 function DrawingBuiltin() {
-	var floor = Math.floor;
+    var floor = Math.floor;
 
-	// Unrolled x,y rotate/translate matrix
-	var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
-	var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
+    // Unrolled x,y rotate/translate matrix
+    var tx0 = 0, tx1 = 0, tx2 = 0, tx3 = 0;
+    var ty0 = 0, ty1 = 0, ty2 = 0, ty3 = 0;
 
     var opts;                   // see setopts()
-	var gs_image, gs_rowbyte;	// rowbyte will be 1 for png's, 0 for canvas
-	var gs_width, gs_height;	// image size, in pixels
-	var gs_dx, gs_dy;			// x,y translate (padding)
-	var gs_r, gs_g, gs_b;		// rgb
-	var gs_xymap;				// edge map
+    var gs_image, gs_rowbyte;   // rowbyte will be 1 for png's, 0 for canvas
+    var gs_width, gs_height;    // image size, in pixels
+    var gs_dx, gs_dy;           // x,y translate (padding)
+    var gs_r, gs_g, gs_b;       // rgb
+    var gs_xymap;               // edge map
     var gs_xyclip;              // clip region map (similar to xymap)
 
-	return {
+    return {
         // setopts() is called after the options are fixed-up/normalized,
         // but before calling into BWIPP.
         // This method allows omitting the options in the constructor call.
@@ -1044,243 +1044,243 @@ function DrawingBuiltin() {
             opts = options;
         },
 
-		// Ensure compliant bar codes by always using integer scaling factors.
-		scale : function(sx, sy) {
+        // Ensure compliant bar codes by always using integer scaling factors.
+        scale : function(sx, sy) {
             // swissqrcode requires clipping and drawing that are not scaled to the
             // the barcode module size.
             if (opts.bcid == 'swissqrcode') {
                 return [ sx, sy ];
             } else {
-			    return [ (sx|0)||1, (sy|0)||1 ];
+                return [ (sx|0)||1, (sy|0)||1 ];
             }
-		},
+        },
 
-		// Measure text.  This and scale() are the only drawing primitives that
-		// are called before init().
-		//
-		// `font` is the font name typically OCR-A or OCR-B.
-		// `fwidth` and `fheight` are the requested font cell size.  They will
-		// usually be the same, except when the scaling is not symetric.
-		measure : function(str, font, fwidth, fheight) {
-			fwidth = fwidth|0;
-			fheight = fheight|0;
+        // Measure text.  This and scale() are the only drawing primitives that
+        // are called before init().
+        //
+        // `font` is the font name typically OCR-A or OCR-B.
+        // `fwidth` and `fheight` are the requested font cell size.  They will
+        // usually be the same, except when the scaling is not symetric.
+        measure : function(str, font, fwidth, fheight) {
+            fwidth = fwidth|0;
+            fheight = fheight|0;
 
-			var fontid = FontLib.lookup(font);
-			var width = 0;
-			var ascent = 0;
-			var descent = 0;
-			for (var i = 0, l = str.length; i < l; i++) {
-				var ch = str.charCodeAt(i);
-				var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
+            var fontid = FontLib.lookup(font);
+            var width = 0;
+            var ascent = 0;
+            var descent = 0;
+            for (var i = 0, l = str.length; i < l; i++) {
+                var ch = str.charCodeAt(i);
+                var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
 
-				ascent  = Math.max(ascent, glyph.top);
-				descent = Math.max(descent, glyph.height - glyph.top);
+                ascent  = Math.max(ascent, glyph.top);
+                descent = Math.max(descent, glyph.height - glyph.top);
 
-				if (i == l-1) {
-					width += glyph.left + glyph.width;
-				} else {
-					width += glyph.advance;
-				}
-			}
-			return { width:width, ascent:ascent, descent:descent };
-		},
+                if (i == l-1) {
+                    width += glyph.left + glyph.width;
+                } else {
+                    width += glyph.advance;
+                }
+            }
+            return { width:width, ascent:ascent, descent:descent };
+        },
 
-		// width and height represent the maximum bounding box the graphics will occupy.
-		// The dimensions are for an unrotated rendering.  Adjust as necessary.
-		init : function(width, height) {
-			// Add in the effects of padding.  These are always set before the
-			// drawing constructor is called.
-			var padl = opts.paddingleft;
-			var padr = opts.paddingright;
-			var padt = opts.paddingtop;
-			var padb = opts.paddingbottom;
-			var rot  = opts.rotate || 'N';
+        // width and height represent the maximum bounding box the graphics will occupy.
+        // The dimensions are for an unrotated rendering.  Adjust as necessary.
+        init : function(width, height) {
+            // Add in the effects of padding.  These are always set before the
+            // drawing constructor is called.
+            var padl = opts.paddingleft;
+            var padr = opts.paddingright;
+            var padt = opts.paddingtop;
+            var padb = opts.paddingbottom;
+            var rot  = opts.rotate || 'N';
 
-			width  += padl + padr;
-			height += padt + padb;
+            width  += padl + padr;
+            height += padt + padb;
 
-			if (+opts.sizelimit && +opts.sizelimit < width * height) {
-				throw new Error('Image size over limit');
-			}
+            if (+opts.sizelimit && +opts.sizelimit < width * height) {
+                throw new Error('Image size over limit');
+            }
 
-			// Transform indexes are: x, y, w, h
-			switch (rot) {
-			// tx = w-y, ty = x
-			case 'R': tx1 = -1; tx2 = 1; ty0 = 1; break;
-			// tx = w-x, ty = h-y
-			case 'I': tx0 = -1; tx2 = 1; ty1 = -1; ty3 = 1; break;
-			// tx = y, ty = h-x
-			case 'L': tx1 = 1; ty0 = -1; ty3 = 1; break;
-			// tx = x, ty = y
-			default:  tx0 = ty1 = 1; break;
-			}
+            // Transform indexes are: x, y, w, h
+            switch (rot) {
+            // tx = w-y, ty = x
+            case 'R': tx1 = -1; tx2 = 1; ty0 = 1; break;
+            // tx = w-x, ty = h-y
+            case 'I': tx0 = -1; tx2 = 1; ty1 = -1; ty3 = 1; break;
+            // tx = y, ty = h-x
+            case 'L': tx1 = 1; ty0 = -1; ty3 = 1; break;
+            // tx = x, ty = y
+            default:  tx0 = ty1 = 1; break;
+            }
 
-			// Setup the graphics state
-			var swap = rot == 'L' || rot == 'R';
-			gs_width  = swap ? height : width;
-			gs_height = swap ? width : height;
-			gs_dx = padl;
-			gs_dy = padt;
-			gs_xymap = [];
-			gs_xymap.min = Infinity;
+            // Setup the graphics state
+            var swap = rot == 'L' || rot == 'R';
+            gs_width  = swap ? height : width;
+            gs_height = swap ? width : height;
+            gs_dx = padl;
+            gs_dy = padt;
+            gs_xymap = [];
+            gs_xymap.min = Infinity;
             gs_xyclip = null;
-			gs_r = gs_g = gs_b = 0;
+            gs_r = gs_g = gs_b = 0;
 
-			// Get the rgba image from the constructor
-			var res = this.image(gs_width, gs_height);
-			gs_image   = res.buffer;
-			gs_rowbyte = res.ispng ? 1 : 0;
-		},
-		// Unconnected stroked lines are used to draw the bars in linear barcodes;
-		// and the border around a linear barcode (e.g. ITF-14)
-		// No line cap should be applied.  These lines are always orthogonal.
-		line : function(x0, y0, x1, y1, lw, rgb) {
-			x0 = x0|0;
-			y0 = y0|0;
-			x1 = x1|0;
-			y1 = y1|0;
+            // Get the rgba image from the constructor
+            var res = this.image(gs_width, gs_height);
+            gs_image   = res.buffer;
+            gs_rowbyte = res.ispng ? 1 : 0;
+        },
+        // Unconnected stroked lines are used to draw the bars in linear barcodes;
+        // and the border around a linear barcode (e.g. ITF-14)
+        // No line cap should be applied.  These lines are always orthogonal.
+        line : function(x0, y0, x1, y1, lw, rgb) {
+            x0 = x0|0;
+            y0 = y0|0;
+            x1 = x1|0;
+            y1 = y1|0;
 
-			// Most linear barcodes, the line width will be integral.  The exceptions
-			// are variable width barcodes (e.g. code39) and the postal 4-state codes.
-			lw = Math.round(lw) || 1;
+            // Most linear barcodes, the line width will be integral.  The exceptions
+            // are variable width barcodes (e.g. code39) and the postal 4-state codes.
+            lw = Math.round(lw) || 1;
 
-			if (y1 < y0) { var t = y0; y0 = y1; y1 = t; }
-			if (x1 < x0) { var t = x0; x0 = x1; x1 = t; }
+            if (y1 < y0) { var t = y0; y0 = y1; y1 = t; }
+            if (x1 < x0) { var t = x0; x0 = x1; x1 = t; }
 
-			gs_r = parseInt(rgb.substr(0,2), 16);
-			gs_g = parseInt(rgb.substr(2,2), 16);
-			gs_b = parseInt(rgb.substr(4,2), 16);
+            gs_r = parseInt(rgb.substr(0,2), 16);
+            gs_g = parseInt(rgb.substr(2,2), 16);
+            gs_b = parseInt(rgb.substr(4,2), 16);
 
-			// Horizontal or vertical line?
-			var w2 = (lw/2)|0;
-			if (x0 == x1) {
-				// Vertical line
-				x0 = x0 - lw + w2;  // big half
-				x1 = x1 + w2 - 1;   // small half
-			} else {
-				// Horizontal line (inverted halves)
-				y0 = y0 - w2;
-				y1 = y1 + lw - w2 - 1;
-			}
-			for (var y = y0; y <= y1; y++) {
-				for (var x = x0; x <= x1; x++) {
-					set(x, y, 255);
-				}
-			}
-		},
+            // Horizontal or vertical line?
+            var w2 = (lw/2)|0;
+            if (x0 == x1) {
+                // Vertical line
+                x0 = x0 - lw + w2;  // big half
+                x1 = x1 + w2 - 1;   // small half
+            } else {
+                // Horizontal line (inverted halves)
+                y0 = y0 - w2;
+                y1 = y1 + lw - w2 - 1;
+            }
+            for (var y = y0; y <= y1; y++) {
+                for (var x = x0; x <= x1; x++) {
+                    set(x, y, 255);
+                }
+            }
+        },
 
-		// Polygons are used to draw the connected regions in a 2d barcode.
-		// These will always be unstroked, filled, orthogonal shapes.
+        // Polygons are used to draw the connected regions in a 2d barcode.
+        // These will always be unstroked, filled, orthogonal shapes.
         // 
-		// You will see a series of polygon() calls, followed by a fill().
-		polygon : function(pts) {
-			var npts = pts.length;
-			for (var j = npts-1, i = 0; i < npts; j = i++) {
-				if (pts[j][0] == pts[i][0]) {
-					// Vertical lines do not get their end points. End points
-					// are added by the horizontal line logic.
-					var xj = pts[j][0]|0;	// i or j, doesn't matter
-					var yj = pts[j][1]|0;
-					var yi = pts[i][1]|0;
-					if (yj > yi) {
-						for (var y = yi+1; y < yj; y++) {
-							addPoint(xj, y);
-						}
-					} else {
-						for (var y = yj+1; y < yi; y++) {
-							addPoint(xj, y);
-						}
-					}
-				} else {
-					var xj = pts[j][0]|0;
-					var xi = pts[i][0]|0;
-					var yj = pts[j][1]|0;	// i or j, doesn't matter
+        // You will see a series of polygon() calls, followed by a fill().
+        polygon : function(pts) {
+            var npts = pts.length;
+            for (var j = npts-1, i = 0; i < npts; j = i++) {
+                if (pts[j][0] == pts[i][0]) {
+                    // Vertical lines do not get their end points. End points
+                    // are added by the horizontal line logic.
+                    var xj = pts[j][0]|0;   // i or j, doesn't matter
+                    var yj = pts[j][1]|0;
+                    var yi = pts[i][1]|0;
+                    if (yj > yi) {
+                        for (var y = yi+1; y < yj; y++) {
+                            addPoint(xj, y);
+                        }
+                    } else {
+                        for (var y = yj+1; y < yi; y++) {
+                            addPoint(xj, y);
+                        }
+                    }
+                } else {
+                    var xj = pts[j][0]|0;
+                    var xi = pts[i][0]|0;
+                    var yj = pts[j][1]|0;   // i or j, doesn't matter
 
-					// Horizontal lines are tricky.  As a rule, top lines get filled,
-					// bottom lines do not (similar to how left edges get filled and
-					// right edges do not).
-					//
-					// Where it gets complex is deciding whether the line actually
-					// adds edges.  There are cases where a horizontal line does
-					// not add anything to the scanline plotting.  And it doesn't
-					// actually matter whether the line is a top or bottom edge,
-					// the logic is the same.
-					//
-					// A left edge is added if the edge to its left is below.
-					// A right edge is added if the edge to its right is below.
-					if (xj < xi) {
-						var yl = pts[j == 0 ? npts-1 : j-1][1];	// left edge
-						var yr = pts[i == npts-1 ? 0 : i+1][1];	// right edge
-						if (yl > yj) {
-							addPoint(xj, yj);
-						}
-						if (yr > yj) {
-							addPoint(xi, yj);
-						}
-					} else {
-						var yl = pts[i == npts-1 ? 0 : i+1][1];	// left edge
-						var yr = pts[j == 0 ? npts-1 : j-1][1];	// right edge
-						if (yl > yj) {
-							addPoint(xi, yj);
-						}
-						if (yr > yj) {
-							addPoint(xj, yj);
-						}
-					}
-				}
-			}
-		},
-		// An unstroked, filled hexagon used by maxicode.  You can choose to fill
-		// each individually, or wait for the final fill().
-		//
-		// The hexagon is drawn from the top, counter-clockwise.
-		//
-		// The X-coordinate for the top and bottom points on the hexagon is always
-		// .5 pixels.  We draw our hexagons with a 2 pixel flat top.
-		//
-		// All other points of the polygon/hexagon are guaranteed to be integer values.
-		hexagon : function(pts, rgb) {
-			var x = pts[0][0]|0;
-			var y = pts[0][1]|0;
-			var qh = (pts[1][1] - pts[0][1])|0;		// height of triangle (quarter height)
-			var vh = (pts[2][1] - pts[1][1] - 1)|0;	// height of vertical side
-			var xl = (pts[2][0])|0;					// left side
-			var xr = (pts[4][0])|0;					// right side
+                    // Horizontal lines are tricky.  As a rule, top lines get filled,
+                    // bottom lines do not (similar to how left edges get filled and
+                    // right edges do not).
+                    //
+                    // Where it gets complex is deciding whether the line actually
+                    // adds edges.  There are cases where a horizontal line does
+                    // not add anything to the scanline plotting.  And it doesn't
+                    // actually matter whether the line is a top or bottom edge,
+                    // the logic is the same.
+                    //
+                    // A left edge is added if the edge to its left is below.
+                    // A right edge is added if the edge to its right is below.
+                    if (xj < xi) {
+                        var yl = pts[j == 0 ? npts-1 : j-1][1]; // left edge
+                        var yr = pts[i == npts-1 ? 0 : i+1][1]; // right edge
+                        if (yl > yj) {
+                            addPoint(xj, yj);
+                        }
+                        if (yr > yj) {
+                            addPoint(xi, yj);
+                        }
+                    } else {
+                        var yl = pts[i == npts-1 ? 0 : i+1][1]; // left edge
+                        var yr = pts[j == 0 ? npts-1 : j-1][1]; // right edge
+                        if (yl > yj) {
+                            addPoint(xi, yj);
+                        }
+                        if (yr > yj) {
+                            addPoint(xj, yj);
+                        }
+                    }
+                }
+            }
+        },
+        // An unstroked, filled hexagon used by maxicode.  You can choose to fill
+        // each individually, or wait for the final fill().
+        //
+        // The hexagon is drawn from the top, counter-clockwise.
+        //
+        // The X-coordinate for the top and bottom points on the hexagon is always
+        // .5 pixels.  We draw our hexagons with a 2 pixel flat top.
+        //
+        // All other points of the polygon/hexagon are guaranteed to be integer values.
+        hexagon : function(pts, rgb) {
+            var x = pts[0][0]|0;
+            var y = pts[0][1]|0;
+            var qh = (pts[1][1] - pts[0][1])|0;     // height of triangle (quarter height)
+            var vh = (pts[2][1] - pts[1][1] - 1)|0; // height of vertical side
+            var xl = (pts[2][0])|0;                 // left side
+            var xr = (pts[4][0])|0;                 // right side
 
-			gs_r = parseInt(rgb.substr(0,2), 16);
-			gs_g = parseInt(rgb.substr(2,2), 16);
-			gs_b = parseInt(rgb.substr(4,2), 16);
+            gs_r = parseInt(rgb.substr(0,2), 16);
+            gs_g = parseInt(rgb.substr(2,2), 16);
+            gs_b = parseInt(rgb.substr(4,2), 16);
 
-			fillSegment(x, x+1, y++);
-			for (var k = 1; k < qh; k++) {
-				fillSegment(x-2*k, x+1+2*k, y++);
-			}
-			for (var k = 0; k <= vh; k++) {
-				fillSegment(xl, xr, y++);
-			}
-			for (var k = qh-1; k >= 1; k--) {
-				fillSegment(x-2*k, x+1+2*k, y++);
-			}
-			fillSegment(x, x+1, y);
-		},
-		// An unstroked, filled ellipse.  Used by dotcode and maxicode at present.
-		// maxicode issues pairs of ellipse calls (one cw, one ccw) followed by a fill()
-		// to create the bullseye rings.  dotcode issues all of its ellipses then a
-		// fill().
-		ellipse : function(x, y, rx, ry, ccw) {
-			drawEllipse((x-rx)|0, (y-ry)|0, (x+rx)|0, (y+ry)|0, ccw);
-		},
-		// PostScript's default fill rule is non-zero but since there are never
+            fillSegment(x, x+1, y++);
+            for (var k = 1; k < qh; k++) {
+                fillSegment(x-2*k, x+1+2*k, y++);
+            }
+            for (var k = 0; k <= vh; k++) {
+                fillSegment(xl, xr, y++);
+            }
+            for (var k = qh-1; k >= 1; k--) {
+                fillSegment(x-2*k, x+1+2*k, y++);
+            }
+            fillSegment(x, x+1, y);
+        },
+        // An unstroked, filled ellipse.  Used by dotcode and maxicode at present.
+        // maxicode issues pairs of ellipse calls (one cw, one ccw) followed by a fill()
+        // to create the bullseye rings.  dotcode issues all of its ellipses then a
+        // fill().
+        ellipse : function(x, y, rx, ry, ccw) {
+            drawEllipse((x-rx)|0, (y-ry)|0, (x+rx)|0, (y+ry)|0, ccw);
+        },
+        // PostScript's default fill rule is non-zero but since there are never
         // intersecting regions, we use the easier to implement even-odd.
-		fill : function(rgb) {
-			gs_r = parseInt(rgb.substr(0,2), 16);
-			gs_g = parseInt(rgb.substr(2,2), 16);
-			gs_b = parseInt(rgb.substr(4,2), 16);
+        fill : function(rgb) {
+            gs_r = parseInt(rgb.substr(0,2), 16);
+            gs_g = parseInt(rgb.substr(2,2), 16);
+            gs_b = parseInt(rgb.substr(4,2), 16);
 
-			evenodd();
-			gs_xymap = [];
-			gs_xymap.min = Infinity;
-		},
+            evenodd();
+            gs_xymap = [];
+            gs_xymap.min = Infinity;
+        },
         // Currently only used by swissqrcode.  The `polys` area is an array of
         // arrays of points.  Each array of points is identical to the `pts`
         // parameter passed to polygon().  The postscript default clipping rule,
@@ -1305,196 +1305,196 @@ function DrawingBuiltin() {
         unclip : function() {
             gs_xyclip = null;
         },
-		// Draw text with optional inter-character spacing.  `y` is the baseline.
-		// font is an object with properties { name, width, height, dx }
-		// width and height are the font cell size.
-		// dx is extra space requested between characters (usually zero).
-		text : function(x, y, str, rgb, font) {
-			x = x|0;
-			y = y|0;
+        // Draw text with optional inter-character spacing.  `y` is the baseline.
+        // font is an object with properties { name, width, height, dx }
+        // width and height are the font cell size.
+        // dx is extra space requested between characters (usually zero).
+        text : function(x, y, str, rgb, font) {
+            x = x|0;
+            y = y|0;
 
-			gs_r = parseInt(rgb.substr(0,2), 16);
-			gs_g = parseInt(rgb.substr(2,2), 16);
-			gs_b = parseInt(rgb.substr(4,2), 16);
+            gs_r = parseInt(rgb.substr(0,2), 16);
+            gs_g = parseInt(rgb.substr(2,2), 16);
+            gs_b = parseInt(rgb.substr(4,2), 16);
 
-			var fontid  = FontLib.lookup(font.name);
-			var fwidth  = font.width|0;
-			var fheight = font.height|0;
-			var dx      = font.dx|0;
-			for (var k = 0; k < str.length; k++) {
-				var ch = str.charCodeAt(k);
-				var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
+            var fontid  = FontLib.lookup(font.name);
+            var fwidth  = font.width|0;
+            var fheight = font.height|0;
+            var dx      = font.dx|0;
+            for (var k = 0; k < str.length; k++) {
+                var ch = str.charCodeAt(k);
+                var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
 
-				var gt = y - glyph.top;
-				var gl = glyph.left;
-				var gw = glyph.width;
-				var gh = glyph.height;
-				var gb = glyph.bytes;
-				var go = glyph.offset;		// offset into bytes
+                var gt = y - glyph.top;
+                var gl = glyph.left;
+                var gw = glyph.width;
+                var gh = glyph.height;
+                var gb = glyph.bytes;
+                var go = glyph.offset;      // offset into bytes
 
-				for (var i = 0; i < gw; i++) {
-					for (var j = 0; j < gh; j++) {
-						var a = gb[go + j * gw + i];
-						if (a) {
-							set(x+gl+i, gt+j, a);
-						}
-					}
-				}
-				x += glyph.advance + dx;
-			}
-		},
-		// Called after all drawing is complete.
-		end : function() {
-		},
-	};
+                for (var i = 0; i < gw; i++) {
+                    for (var j = 0; j < gh; j++) {
+                        var a = gb[go + j * gw + i];
+                        if (a) {
+                            set(x+gl+i, gt+j, a);
+                        }
+                    }
+                }
+                x += glyph.advance + dx;
+            }
+        },
+        // Called after all drawing is complete.
+        end : function() {
+        },
+    };
 
-	// This code is specialized to deal with two types of RGBA buffers:
-	// - canvas style, which is true RGBA
-	// - PNG style, which has a one-byte "filter code" prefixing each row.
-	function set(x, y, a) {
+    // This code is specialized to deal with two types of RGBA buffers:
+    // - canvas style, which is true RGBA
+    // - PNG style, which has a one-byte "filter code" prefixing each row.
+    function set(x, y, a) {
         if (gs_xyclip && clipped(x, y)) {
             return;
         }
-		// translate/rotate
-		x += gs_dx;
-		y += gs_dy;
-		var tx = tx0 * x + tx1 * y + tx2 * (gs_width-1) + tx3 * (gs_height-1);
-		var ty = ty0 * x + ty1 * y + ty2 * (gs_width-1) + ty3 * (gs_height-1);
+        // translate/rotate
+        x += gs_dx;
+        y += gs_dy;
+        var tx = tx0 * x + tx1 * y + tx2 * (gs_width-1) + tx3 * (gs_height-1);
+        var ty = ty0 * x + ty1 * y + ty2 * (gs_width-1) + ty3 * (gs_height-1);
 
-		// https://en.wikipedia.org/wiki/Alpha_compositing
-		var offs = (ty * gs_width + tx) * 4 + (ty+1) * gs_rowbyte;
-		var dsta = gs_image[offs+3] / 255;
-		var srca = a / 255;
-		var inva = (1 - srca) * dsta;
-		var outa = srca + inva;
+        // https://en.wikipedia.org/wiki/Alpha_compositing
+        var offs = (ty * gs_width + tx) * 4 + (ty+1) * gs_rowbyte;
+        var dsta = gs_image[offs+3] / 255;
+        var srca = a / 255;
+        var inva = (1 - srca) * dsta;
+        var outa = srca + inva;
 
-		gs_image[offs+0] = ((gs_r * srca + gs_image[offs+0] * inva) / outa)|0;
-		gs_image[offs+1] = ((gs_g * srca + gs_image[offs+1] * inva) / outa)|0;
-		gs_image[offs+2] = ((gs_b * srca + gs_image[offs+2] * inva) / outa)|0;
-		gs_image[offs+3] = (255 * outa)|0;
-	}
+        gs_image[offs+0] = ((gs_r * srca + gs_image[offs+0] * inva) / outa)|0;
+        gs_image[offs+1] = ((gs_g * srca + gs_image[offs+1] * inva) / outa)|0;
+        gs_image[offs+2] = ((gs_b * srca + gs_image[offs+2] * inva) / outa)|0;
+        gs_image[offs+3] = (255 * outa)|0;
+    }
 
-	// Add a point on an edge to the scanline map.
-	function addPoint(x, y) {
-		if (gs_xymap.min > y) gs_xymap.min = y;
-		if (!gs_xymap[y]) {
-			gs_xymap[y] = [ x ];
-		} else {
-			gs_xymap[y].push(x);
-		}
-	}
+    // Add a point on an edge to the scanline map.
+    function addPoint(x, y) {
+        if (gs_xymap.min > y) gs_xymap.min = y;
+        if (!gs_xymap[y]) {
+            gs_xymap[y] = [ x ];
+        } else {
+            gs_xymap[y].push(x);
+        }
+    }
 
-	function fillSegment(x0, x1, y) {
-		while (x0 <= x1) {
-			set(x0++, y, 255);
-		}
-	}
+    function fillSegment(x0, x1, y) {
+        while (x0 <= x1) {
+            set(x0++, y, 255);
+        }
+    }
 
-	// even-odd fill
-	//
-	// This implementation is optimized for BWIPP's simple usage.
-	// It is not a general purpose scanline fill.  It relies heavily on
-	// polygon() creating the correct intersections.
-	function evenodd() {
-		var ymin = gs_xymap.min;
-		var ymax = gs_xymap.length-1;
+    // even-odd fill
+    //
+    // This implementation is optimized for BWIPP's simple usage.
+    // It is not a general purpose scanline fill.  It relies heavily on
+    // polygon() creating the correct intersections.
+    function evenodd() {
+        var ymin = gs_xymap.min;
+        var ymax = gs_xymap.length-1;
 
-		for (var y = ymin; y <= ymax; y++) {
-			var pts = gs_xymap[y];
-			if (!pts) {
-				continue
-			}
-			pts.sort(function(a, b) { return a - b; });
+        for (var y = ymin; y <= ymax; y++) {
+            var pts = gs_xymap[y];
+            if (!pts) {
+                continue
+            }
+            pts.sort(function(a, b) { return a - b; });
 
-			var wn = false;
-			var xl = 0;
-			for (var n = 0, npts = pts.length; n < npts; n++) {
-				var x = pts[n];
-				if (wn) {
-					fillSegment(xl, x-1, y);
-				} else {
-					xl = x;
-				}
-				wn = !wn;
-			}
-		}
-	}
+            var wn = false;
+            var xl = 0;
+            for (var n = 0, npts = pts.length; n < npts; n++) {
+                var x = pts[n];
+                if (wn) {
+                    fillSegment(xl, x-1, y);
+                } else {
+                    xl = x;
+                }
+                wn = !wn;
+            }
+        }
+    }
 
-	function drawEllipse(x0, y0, x1, y1, dir) {
-		x0 = x0|0;
-		y0 = y0|0;
-		x1 = x1|0;
-		y1 = y1|0;
+    function drawEllipse(x0, y0, x1, y1, dir) {
+        x0 = x0|0;
+        y0 = y0|0;
+        x1 = x1|0;
+        y1 = y1|0;
 
-		var a = Math.abs(x1-x0);
-		var b = Math.abs(y1-y0);
-		var b1 = b & 1;
-		var dx = 4*(1-a)*b*b;
-		var dy = 4*(b1+1)*a*a;
-		var err = dx + dy + b1*a*a;
-		var e2;
+        var a = Math.abs(x1-x0);
+        var b = Math.abs(y1-y0);
+        var b1 = b & 1;
+        var dx = 4*(1-a)*b*b;
+        var dy = 4*(b1+1)*a*a;
+        var err = dx + dy + b1*a*a;
+        var e2;
 
-		// Left and right edges
-		var left = [], right = [];
-		left.min = right.min = Infinity;
+        // Left and right edges
+        var left = [], right = [];
+        left.min = right.min = Infinity;
 
-		if (x0 > x1) { x0 = x1; x1 += a; }
-		if (y0 > y1) y0 = y1;
-		y0 += ((b+1)/2)|0;
-		y1 = y0 - b1;
-		a *= 8*a; b1 = 8*b*b;
+        if (x0 > x1) { x0 = x1; x1 += a; }
+        if (y0 > y1) y0 = y1;
+        y0 += ((b+1)/2)|0;
+        y1 = y0 - b1;
+        a *= 8*a; b1 = 8*b*b;
 
-		do {
-			maxedge(right, x1, y0);	// 1st quadrant
-			minedge(left, x0, y0);	// 2nd quadrant
-			minedge(left, x0, y1);	// 3rd quadrant
-			maxedge(right, x1, y1);	// 4th quadrant
-			e2 = 2*err;
-			if (e2 >= dx) { x0++; x1--; dx += b1; err += dx; }
-			if (e2 <= dy) { y0++; y1--; dy += a;  err += dy; }
-		} while (x0 <= x1);
+        do {
+            maxedge(right, x1, y0); // 1st quadrant
+            minedge(left, x0, y0);  // 2nd quadrant
+            minedge(left, x0, y1);  // 3rd quadrant
+            maxedge(right, x1, y1); // 4th quadrant
+            e2 = 2*err;
+            if (e2 >= dx) { x0++; x1--; dx += b1; err += dx; }
+            if (e2 <= dy) { y0++; y1--; dy += a;  err += dy; }
+        } while (x0 <= x1);
 
-		while (y0-y1 < b) {	// too early stop of flat ellipse
-			maxedge(right, x1+1, y0);
-			minedge(left, x0-1, y0++);
-			minedge(left, x0-1, y1);
-			maxedge(right, x1+1, y1--);
-		}
+        while (y0-y1 < b) { // too early stop of flat ellipse
+            maxedge(right, x1+1, y0);
+            minedge(left, x0-1, y0++);
+            minedge(left, x0-1, y1);
+            maxedge(right, x1+1, y1--);
+        }
 
-		for (var y = left.min, max = left.length-1; y <= max; y++) {
-			addPoint(left[y], y);
-		}
-		// The points we calculated are "inside".  The fill algorithm excludes 
-		// right edges, so +1 on each x.
-		for (var y = right.min, max = right.length-1; y <= max; y++) {
-			addPoint(right[y]+1, y);
-		}
+        for (var y = left.min, max = left.length-1; y <= max; y++) {
+            addPoint(left[y], y);
+        }
+        // The points we calculated are "inside".  The fill algorithm excludes 
+        // right edges, so +1 on each x.
+        for (var y = right.min, max = right.length-1; y <= max; y++) {
+            addPoint(right[y]+1, y);
+        }
 
-		function minedge(e, x, y) {
-			if (e.min > y) e.min = y;
-			var ey = e[y];
-			if (ey == null || ey > x) {
-				e[y] = x;
-			}
-		}
+        function minedge(e, x, y) {
+            if (e.min > y) e.min = y;
+            var ey = e[y];
+            if (ey == null || ey > x) {
+                e[y] = x;
+            }
+        }
 
-		function maxedge(e, x, y) {
-			if (e.min > y) e.min = y;
-			var ey = e[y];
-			if (ey == null || ey < x) {
-				e[y] = x;
-			}
-		}
-	}
+        function maxedge(e, x, y) {
+            if (e.min > y) e.min = y;
+            var ey = e[y];
+            if (ey == null || ey < x) {
+                e[y] = x;
+            }
+        }
+    }
 
     // Returns true if outside the clipping region.
-	function clipped(x, y) {
+    function clipped(x, y) {
         var pts = gs_xyclip[y];
         if (!pts) {
             return true;
         }
         if (!pts.sorted) {
-			pts.sort(function(a, b) { return a - b; });
+            pts.sort(function(a, b) { return a - b; });
             pts.sorted = true;
         }
 
@@ -1507,18 +1507,18 @@ function DrawingBuiltin() {
                 return wn;
             }
             wn = !wn;
-		}
+        }
         return true;
-	}
+    }
 
-	// Returns 1 if clockwise, -1 if ccw.
-	function polydir(pts) {
-		var xp = 0;
-		for (var i = 0, l = pts.length, j = l-1; i < l; j = i++) {
-			xp += pts[j][0] * pts[i][1] - pts[i][0] * pts[j][1];
-		}
-		return xp > 0 ? 1 : -1;
-	}
+    // Returns 1 if clockwise, -1 if ccw.
+    function polydir(pts) {
+        var xp = 0;
+        for (var i = 0, l = pts.length, j = l-1; i < l; j = i++) {
+            xp += pts[j][0] * pts[i][1] - pts[i][0] * pts[j][1];
+        }
+        return xp > 0 ? 1 : -1;
+    }
 }
 // drawing-canvas.js
 //
@@ -1529,13 +1529,13 @@ function DrawingCanvas(canvas, maybe) {
         canvas = maybe;
     }
 
-	var img;
-	var ctx = canvas.getContext('2d', { willReadFrequently:true });
-	var drawing = DrawingBuiltin();
+    var img;
+    var ctx = canvas.getContext('2d', { willReadFrequently:true });
+    var drawing = DrawingBuiltin();
 
-	// Provide our specializations for the builtin drawing
-	drawing.image = image;
-	drawing.end = end;
+    // Provide our specializations for the builtin drawing
+    drawing.image = image;
+    drawing.end = end;
 
     // Reflect setopts() into the super
     var opts;
@@ -1545,34 +1545,34 @@ function DrawingCanvas(canvas, maybe) {
         _setopts && _setopts.call(drawing, options);
     };
 
-	return drawing;
+    return drawing;
 
 
-	// Called by DrawingBuiltin.init() to get the ARGB bitmap for rendering.
-	function image(width, height) {
-		canvas.width  = width;
-		canvas.height = height;
+    // Called by DrawingBuiltin.init() to get the ARGB bitmap for rendering.
+    function image(width, height) {
+        canvas.width  = width;
+        canvas.height = height;
 
-		// Set background 
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
-			ctx.fillStyle = '#' + opts.backgroundcolor;
-			ctx.fillRect(0, 0, width, height);
-		} else {
-			ctx.clearRect(0, 0, width, height);
-		}
+        // Set background 
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
+            ctx.fillStyle = '#' + opts.backgroundcolor;
+            ctx.fillRect(0, 0, width, height);
+        } else {
+            ctx.clearRect(0, 0, width, height);
+        }
 
-		// Prepare the bitmap 
-		img = ctx.getImageData(0, 0, width, height);
+        // Prepare the bitmap 
+        img = ctx.getImageData(0, 0, width, height);
 
-		// The return value is designed for both canvas pure-RGBA and PNG RGBA
-		return { buffer:img.data, ispng:false };
-	}
+        // The return value is designed for both canvas pure-RGBA and PNG RGBA
+        return { buffer:img.data, ispng:false };
+    }
 
-	function end() {
-		ctx.putImageData(img, 0, 0);
+    function end() {
+        ctx.putImageData(img, 0, 0);
         return canvas;
-	}
+    }
 }
 // drawing-svg.js
 //
@@ -1596,7 +1596,7 @@ function DrawingSVG() {
     var svg = '';
     var path;
     var clipid = '';
-	var clips = [];
+    var clips = [];
     var lines = {};
 
     // Magic number to approximate an ellipse/circle using 4 cubic beziers.
@@ -1763,8 +1763,8 @@ function DrawingSVG() {
         fill(rgb) {
             if (path) {
                 svg += path + '" fill="#' + rgb + '" fill-rule="evenodd"' +
-					   (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
-					   ' />\n';
+                       (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
+                       ' />\n';
                 path = null;
             }
         },
@@ -1773,23 +1773,23 @@ function DrawingSVG() {
         // parameter passed to polygon().  The clipping rule, like the fill rule,
         // defaults to non-zero winding.
         clip : function(polys) {
-			var path = '<clipPath id="clip' + clips.length + '"><path d="';
+            var path = '<clipPath id="clip' + clips.length + '"><path d="';
             for (let j = 0; j < polys.length; j++) {
                 let pts = polys[j];
-				path += 'M' + transform(pts[0][0], pts[0][1]);
-				for (var i = 1, n = pts.length; i < n; i++) {
-					var p = pts[i];
-					path += 'L' + transform(p[0], p[1]);
-				}
-				path += 'Z';
+                path += 'M' + transform(pts[0][0], pts[0][1]);
+                for (var i = 1, n = pts.length; i < n; i++) {
+                    var p = pts[i];
+                    path += 'L' + transform(p[0], p[1]);
+                }
+                path += 'Z';
             }
-		    path += '" clip-rule="nonzero" /></clipPath>';
-			clipid = "clip" + clips.length;
-			clips.push(path);
+            path += '" clip-rule="nonzero" /></clipPath>';
+            clipid = "clip" + clips.length;
+            clips.push(path);
         },
         unclip : function() {
-			clipid = '';
-		},
+            clipid = '';
+        },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
         // font is an object with properties { name, width, height, dx }
         // width and height are the font cell size.
@@ -1842,10 +1842,8 @@ function DrawingSVG() {
                 linesvg += lines[key] + '" />\n';
             }
             var bg = opts.backgroundcolor;
-            //return '<svg version="1.1" width="' + gs_width + '" height="' + gs_height +
-            return '<svg version="1.1" viewBox="0 0 ' + gs_width + ' ' + gs_height +
-                        '" xmlns="http://www.w3.org/2000/svg">\n' +
-						(clips.length ? '<defs>' + clips.join('') + '</defs>' : '') +
+            return '<svg viewBox="0 0 ' + gs_width + ' ' + gs_height + '" xmlns="http://www.w3.org/2000/svg">\n' +
+                        (clips.length ? '<defs>' + clips.join('') + '</defs>' : '') +
                         (/^[0-9A-Fa-f]{6}$/.test(''+bg)
                             ? '<rect width="100%" height="100%" fill="#' + bg + '" />\n'
                             : '') +
@@ -2045,7 +2043,7 @@ function LoadFont() {
 //
 // This file is part of the bwip-js project available at:
 //
-// 		http://metafloor.github.io/bwip-js
+//      http://metafloor.github.io/bwip-js
 //
 // Copyright (c) 2019 Mark Warren : MIT LICENSE
 
@@ -2074,26 +2072,26 @@ function LoadFont() {
 
 var STBTT = (function () {
 
-var	STBTT_vmove	 = 1,
-	STBTT_vline	 = 2,
-	STBTT_vcurve = 3,
-	STBTT_vcubic = 4,
+var STBTT_vmove  = 1,
+    STBTT_vline  = 2,
+    STBTT_vcurve = 3,
+    STBTT_vcubic = 4,
 
-	STBTT_PLATFORM_ID_UNICODE	= 0,
-	STBTT_PLATFORM_ID_MAC		= 1,
-	STBTT_PLATFORM_ID_ISO		= 2,
-	STBTT_PLATFORM_ID_MICROSOFT = 3,
+    STBTT_PLATFORM_ID_UNICODE   = 0,
+    STBTT_PLATFORM_ID_MAC       = 1,
+    STBTT_PLATFORM_ID_ISO       = 2,
+    STBTT_PLATFORM_ID_MICROSOFT = 3,
 
-	STBTT_UNICODE_EID_UNICODE_1_0		= 0,
-	STBTT_UNICODE_EID_UNICODE_1_1		= 1,
-	STBTT_UNICODE_EID_ISO_10646			= 2,
-	STBTT_UNICODE_EID_UNICODE_2_0_BMP	= 3,
-	STBTT_UNICODE_EID_UNICODE_2_0_FULL	= 4,
+    STBTT_UNICODE_EID_UNICODE_1_0       = 0,
+    STBTT_UNICODE_EID_UNICODE_1_1       = 1,
+    STBTT_UNICODE_EID_ISO_10646         = 2,
+    STBTT_UNICODE_EID_UNICODE_2_0_BMP   = 3,
+    STBTT_UNICODE_EID_UNICODE_2_0_FULL  = 4,
 
-	STBTT_MS_EID_SYMBOL			= 0,
-	STBTT_MS_EID_UNICODE_BMP	= 1,
-	STBTT_MS_EID_SHIFTJIS		= 2,
-	STBTT_MS_EID_UNICODE_FULL	= 10;
+    STBTT_MS_EID_SYMBOL         = 0,
+    STBTT_MS_EID_UNICODE_BMP    = 1,
+    STBTT_MS_EID_SHIFTJIS       = 2,
+    STBTT_MS_EID_UNICODE_FULL   = 10;
 
 var floor = Math.floor;
 var ceil  = Math.ceil;
@@ -2102,11 +2100,11 @@ var abs   = Math.abs;
 
 // Allocate an array of objects - replaces malloc(sizeof struct * n)
 function oalloc(n) {
-	var o = [];
-	for (var i = 0; i < n; i++) {
-		o.push({});
-	}
-	return o;
+    var o = [];
+    for (var i = 0; i < n; i++) {
+        o.push({});
+    }
+    return o;
 }
 
 //static unsigned char stbtt__buf_get8(stbtt__buf * b)
@@ -2142,7 +2140,7 @@ function stbtt__buf_get(b, n) {
 // for a NULL buffer.  The for real usage, the code is inlined.
 //static stbtt__buf stbtt__new_buf(const void *p, int size)
 function stbtt__null_buf() {
-	return { length:0 };
+    return { length:0 };
 }
 
 //static stbtt__buf stbtt__buf_range(const stbtt__buf * b, int o, int s)
@@ -2150,9 +2148,9 @@ function stbtt__buf_range(b, o, s) {
     if (o < 0 || s < 0 || o > b.length || s > b.length - o) {
         return stbtt__null_buf();
     }
-	var r = b.subarray(o, o + s);
-	r.cursor = 0;
-	return r;
+    var r = b.subarray(o, o + s);
+    r.cursor = 0;
+    return r;
 }
 
 //static stbtt__buf stbtt__cff_get_index(stbtt__buf * b)
@@ -2233,7 +2231,7 @@ function stbtt__dict_get_int(b, key, out) {
     if (operands.cursor < operands.length) {
         out = stbtt__cff_int(operands);
     }
-	return out;
+    return out;
 }
 
 //static int stbtt__cff_index_count(stbtt__buf * b)
@@ -2256,7 +2254,7 @@ function stbtt__cff_index_get(b, i) {
 
 // Convert sign-extend a 16-bit integer to JS number
 function INT16(n) {
-	return n & 0x8000 ? (0xffff0000|n)>>0 : n;
+    return n & 0x8000 ? (0xffff0000|n)>>0 : n;
 }
 
 //static unsigned short ttUSHORT(unsigned char *p)
@@ -2267,7 +2265,7 @@ function ttUSHORT(b, o) {
 //static short ttSHORT(unsigned char *p)
 function ttSHORT(b, o) {
     var n = b[o] * 256 + b[o+1];
-	return n & 0x8000 ? (0xffff0000|n)>>0 : n;
+    return n & 0x8000 ? (0xffff0000|n)>>0 : n;
 }
 
 //static unsigned int ttULONG(unsigned char *p)
@@ -2312,13 +2310,13 @@ function stbtt_InitFont_internal(info, data, fontstart) {
     info.fontstart = fontstart;
     info.cff = stbtt__null_buf();
 
-    cmap = stbtt__find_table(data, fontstart, [ 99, 109, 97, 112 ]);		//"cmap"
-    info.loca = stbtt__find_table(data, fontstart, [ 108, 111, 99, 97 ]);	//"loca"
-    info.head = stbtt__find_table(data, fontstart, [ 104, 101, 97, 100 ]);	//"head"
-    info.glyf = stbtt__find_table(data, fontstart, [ 103, 108, 121, 102 ]);	//"glyf"
-    info.hhea = stbtt__find_table(data, fontstart, [ 104, 104, 101, 97 ]);	//"hhea"
-    info.hmtx = stbtt__find_table(data, fontstart, [ 104, 109, 116, 120 ]);	//"hmtx"
-    info.kern = stbtt__find_table(data, fontstart, [ 107, 101, 114, 110 ]);	//"kern"
+    cmap = stbtt__find_table(data, fontstart, [ 99, 109, 97, 112 ]);        //"cmap"
+    info.loca = stbtt__find_table(data, fontstart, [ 108, 111, 99, 97 ]);   //"loca"
+    info.head = stbtt__find_table(data, fontstart, [ 104, 101, 97, 100 ]);  //"head"
+    info.glyf = stbtt__find_table(data, fontstart, [ 103, 108, 121, 102 ]); //"glyf"
+    info.hhea = stbtt__find_table(data, fontstart, [ 104, 104, 101, 97 ]);  //"hhea"
+    info.hmtx = stbtt__find_table(data, fontstart, [ 104, 109, 116, 120 ]); //"hmtx"
+    info.kern = stbtt__find_table(data, fontstart, [ 107, 101, 114, 110 ]); //"kern"
 
     if (!cmap || !info.head || !info.hhea || !info.hmtx) {
         return 0;
@@ -2329,9 +2327,9 @@ function stbtt_InitFont_internal(info, data, fontstart) {
         }
     } else {
         var b, topdict, topdictidx, cff,
-			cstype = 2, charstrings = 0, fdarrayoff = 0, fdselectoff = 0;
+            cstype = 2, charstrings = 0, fdarrayoff = 0, fdselectoff = 0;
 
-        cff = stbtt__find_table(data, fontstart, [ 67, 70, 70, 32 ]);	//"CFF "
+        cff = stbtt__find_table(data, fontstart, [ 67, 70, 70, 32 ]);   //"CFF "
         if (!cff) {
             return 0;
         }
@@ -2340,7 +2338,7 @@ function stbtt_InitFont_internal(info, data, fontstart) {
         info.fdselect = stbtt__null_buf();
 
         info.cff = data.subarray(cff); //stbtt__new_buf(data + cff, 512 * 1024 * 1024);
-		info.cff.cursor = 0;
+        info.cff.cursor = 0;
         b = info.cff;
 
         stbtt__buf_skip(b, 2);
@@ -2378,7 +2376,7 @@ function stbtt_InitFont_internal(info, data, fontstart) {
         info.charstrings = stbtt__cff_get_index(b);
     }
 
-    t = stbtt__find_table(data, fontstart, [ 109, 97, 120, 112 ]);	//"maxp"
+    t = stbtt__find_table(data, fontstart, [ 109, 97, 120, 112 ]);  //"maxp"
     if (t) {
         info.numGlyphs = ttUSHORT(data, t + 4);
     }
@@ -2422,14 +2420,14 @@ function stbtt_FindGlyphIndex(info, unicode_codepoint) {
         var bytes = ttUSHORT(data, index_map + 2);
         if (unicode_codepoint < bytes - 6) {
             return data[index_map + 6 + unicode_codepoint];
-		}
+        }
         return 0;
     } else if (format == 6) {
         var first = ttUSHORT(data, index_map + 6),
             count = ttUSHORT(data, index_map + 8);
         if (unicode_codepoint >= first && unicode_codepoint < first + count) {
             return ttUSHORT(data, index_map + 10 + (unicode_codepoint - first) * 2);
-		}
+        }
         return 0;
     } else if (format == 2) {
         return 0;
@@ -2438,7 +2436,7 @@ function stbtt_FindGlyphIndex(info, unicode_codepoint) {
             searchRange = ttUSHORT(data, index_map + 8) >> 1,
             entrySelector = ttUSHORT(data, index_map + 10),
             rangeShift = ttUSHORT(data, index_map + 12) >> 1,
-			endCount = index_map + 14,
+            endCount = index_map + 14,
             search = endCount;
 
         if (unicode_codepoint > 0xffff) {
@@ -2460,22 +2458,22 @@ function stbtt_FindGlyphIndex(info, unicode_codepoint) {
         }
         search += 2;
 
-		var offset, start, item = (search - endCount) >>> 1;
+        var offset, start, item = (search - endCount) >>> 1;
 
-		start = ttUSHORT(data, index_map + 14 + segcount * 2 + 2 + 2 * item);
-		if (unicode_codepoint < start) {
-			return 0;
-		}
+        start = ttUSHORT(data, index_map + 14 + segcount * 2 + 2 + 2 * item);
+        if (unicode_codepoint < start) {
+            return 0;
+        }
 
-		offset = ttUSHORT(data, index_map + 14 + segcount * 6 + 2 + 2 * item);
-		if (offset == 0) {
-			return unicode_codepoint + ttSHORT(data, index_map + 14 + segcount * 4 + 2 + 2 * item);
-		}
-		return ttUSHORT(data, offset + (unicode_codepoint - start) * 2 +
-								index_map + 14 + segcount * 6 + 2 +	2 * item);
+        offset = ttUSHORT(data, index_map + 14 + segcount * 6 + 2 + 2 * item);
+        if (offset == 0) {
+            return unicode_codepoint + ttSHORT(data, index_map + 14 + segcount * 4 + 2 + 2 * item);
+        }
+        return ttUSHORT(data, offset + (unicode_codepoint - start) * 2 +
+                                index_map + 14 + segcount * 6 + 2 + 2 * item);
     } else if (format == 12 || format == 13) {
         var ngroups = ttULONG(data, index_map + 12),
-			low = 0, high = ngroups;
+            low = 0, high = ngroups;
          while (low < high) {
             var mid = low + ((high - low) >> 1);
             var start_char = ttULONG(data, index_map + 16 + mid * 12);
@@ -2488,7 +2486,7 @@ function stbtt_FindGlyphIndex(info, unicode_codepoint) {
                 var start_glyph = ttULONG(data, index_map + 16 + mid * 12 + 8);
                 if (format == 12) {
                     return start_glyph + unicode_codepoint - start_char;
-				} else {
+                } else {
                     return start_glyph;
                 }
             }
@@ -2537,10 +2535,10 @@ function stbtt_GetGlyphBox(info, glyph_index, out) {
         if (g < 0) {
             return 0;
         }
-	    out.x0 = ttSHORT(info.data, g + 2);
-		out.y0 = ttSHORT(info.data, g + 4);
-		out.x1 = ttSHORT(info.data, g + 6);
-		out.y1 = ttSHORT(info.data, g + 8);
+        out.x0 = ttSHORT(info.data, g + 2);
+        out.y0 = ttSHORT(info.data, g + 4);
+        out.x1 = ttSHORT(info.data, g + 6);
+        out.y1 = ttSHORT(info.data, g + 8);
     }
     return 1;
 }
@@ -2552,14 +2550,14 @@ function stbtt__close_shape(vertices, num_vertices, was_off, start_off, sx, sy, 
         if (was_off) {
             stbtt_setvertex(vertices[num_vertices++], STBTT_vcurve,
                             (cx + scx) >> 1, (cy + scy) >> 1, cx, cy);
-		}
+        }
         stbtt_setvertex(vertices[num_vertices++], STBTT_vcurve, sx, sy, scx, scy);
     } else {
         if (was_off) {
             stbtt_setvertex(vertices[num_vertices++], STBTT_vcurve, sx, sy, cx, cy);
-		} else {
+        } else {
             stbtt_setvertex(vertices[num_vertices++], STBTT_vline, sx, sy, 0, 0);
-		}
+        }
     }
     return num_vertices;
 }
@@ -2567,22 +2565,22 @@ function stbtt__close_shape(vertices, num_vertices, was_off, start_off, sx, sy, 
 //static int stbtt__GetGlyphShapeTT(const stbtt_fontinfo * info, int glyph_index, stbtt_vertex ** pvertices)
 function stbtt__GetGlyphShapeTT(info, glyph_index) {
     var data = info.data,
-		g = stbtt__GetGlyfOffset(info, glyph_index);
+        g = stbtt__GetGlyfOffset(info, glyph_index);
 
-	if (g < 0) {
+    if (g < 0) {
         return null;
     }
 
-	var vertices = [];
+    var vertices = [];
     var numberOfContours = ttSHORT(data, g);
     if (numberOfContours > 0) {
         var flags = 0, flagcount,
-			i, j = 0, m, n, next_move, was_off = 0, off, start_off = 0,
-			x, y, cx, cy, sx, sy, scx, scy;
+            i, j = 0, m, n, next_move, was_off = 0, off, start_off = 0,
+            x, y, cx, cy, sx, sy, scx, scy;
         var endPtsOfContours = g + 10;
         var ins = ttUSHORT(data, g + 10 + numberOfContours * 2);
         var points = data.subarray(g + 10 + numberOfContours * 2 + 2 + ins);
-		var ptsoff = 0;
+        var ptsoff = 0;
 
         n = 1 + ttUSHORT(data, endPtsOfContours + numberOfContours * 2 - 2);
         m = n + 2 * numberOfContours;
@@ -2644,8 +2642,8 @@ function stbtt__GetGlyphShapeTT(info, glyph_index) {
             if (next_move == i) {
                 if (i != 0) {
                     num_vertices = stbtt__close_shape(vertices, num_vertices, was_off, start_off,
-											sx, sy, scx, scy, cx, cy);
-				}
+                                            sx, sy, scx, scy, cx, cy);
+                }
                 start_off = !(flags & 1);
                 if (start_off) {
                     scx = x;
@@ -2671,7 +2669,7 @@ function stbtt__GetGlyphShapeTT(info, glyph_index) {
                     if (was_off) {
                         stbtt_setvertex(vertices[num_vertices++], STBTT_vcurve,
                                         (cx + x) >> 1, (cy + y) >> 1, cx, cy);
-					}
+                    }
                     cx = x;
                     cy = y;
                     was_off = 1;
@@ -2680,13 +2678,13 @@ function stbtt__GetGlyphShapeTT(info, glyph_index) {
                         stbtt_setvertex(vertices[num_vertices++], STBTT_vcurve, x, y, cx, cy);
                     } else {
                         stbtt_setvertex(vertices[num_vertices++], STBTT_vline, x, y, 0, 0);
-					}
+                    }
                     was_off = 0;
                 }
             }
         }
         vertices.length = stbtt__close_shape(vertices, num_vertices, was_off, start_off,
-												sx, sy, scx, scy, cx, cy);
+                                                sx, sy, scx, scy, cx, cy);
     } else if (numberOfContours == -1) {
         var more = 1;
         var comp = g + 10;
@@ -2738,8 +2736,8 @@ function stbtt__GetGlyphShapeTT(info, glyph_index) {
             if (comp_verts.length > 0) {
                 for (var i = 0, l = comp_verts.length; i < l; ++i) {
                     var v = comp_verts[i], x, y;
-					x = v.x;
-					y = v.y;
+                    x = v.x;
+                    y = v.y;
                     v.x = floor(m * (mtx[0] * x + mtx[2] * y + mtx[4]));
                     v.y = floor(n * (mtx[1] * x + mtx[3] * y + mtx[5]));
                     x = v.cx;
@@ -2748,16 +2746,16 @@ function stbtt__GetGlyphShapeTT(info, glyph_index) {
                     v.cy = floor(n * (mtx[1] * x + mtx[3] * y + mtx[5]));
                 }
 
-				vertices = vertices.concat(comp_verts);
+                vertices = vertices.concat(comp_verts);
             }
             more = flags & (1 << 5);
         }
     }
-	//console.log('vertices(' + vertices.length + ')');
-	//for (var i = 0; i < vertices.length; i++) {
-	//	var pt = vertices[i];
-	//	console.log(`${i}: ${pt.x},${pt.y} / ${pt.cx},${pt.cy} / ${pt.type}`);
-	//}
+    //console.log('vertices(' + vertices.length + ')');
+    //for (var i = 0; i < vertices.length; i++) {
+    //  var pt = vertices[i];
+    //  console.log(`${i}: ${pt.x},${pt.y} / ${pt.cx},${pt.cy} / ${pt.type}`);
+    //}
 
     return vertices;
 }
@@ -2781,23 +2779,23 @@ function stbtt__track_vertex(c, x, y) {
 
 //static void stbtt__csctx_v(stbtt__csctx * c, unsigned char type, int x, int y, int cx, int cy, int cx1, int cy1)
 function stbtt__csctx_v(c, type, x, y, cx, cy, cx1, cy1) {
-	stbtt__track_vertex(c, x, y);
-	if (type == STBTT_vcubic) {
-		stbtt__track_vertex(c, cx, cy);
-		stbtt__track_vertex(c, cx1, cy1);
-	}
-	var v = {};
-	stbtt_setvertex(v, type, x, y, cx, cy);
-	v.cx1 = cx1;
-	v.cy1 = cy1;
-	c.vertices.push(v);
+    stbtt__track_vertex(c, x, y);
+    if (type == STBTT_vcubic) {
+        stbtt__track_vertex(c, cx, cy);
+        stbtt__track_vertex(c, cx1, cy1);
+    }
+    var v = {};
+    stbtt_setvertex(v, type, x, y, cx, cy);
+    v.cx1 = cx1;
+    v.cy1 = cy1;
+    c.vertices.push(v);
  }
 
 //static void stbtt__csctx_close_shape(stbtt__csctx * ctx)
 function stbtt__csctx_close_shape(ctx) {
     if (ctx.first_x != ctx.x || ctx.first_y != ctx.y) {
         stbtt__csctx_v(ctx, STBTT_vline, ctx.first_x, ctx.first_y, 0, 0, 0, 0);
-	}
+    }
 }
 
 //static void stbtt__csctx_rmove_to(stbtt__csctx * ctx, float dx, float dy)
@@ -2816,12 +2814,12 @@ function stbtt__csctx_rline_to(ctx, dx, dy) {
 }
 
 //static void stbtt__csctx_rccurve_to(stbtt__csctx * ctx, float dx1, float dy1, float dx2,
-//									float dy2, float dx3, float dy3)
+//                                  float dy2, float dx3, float dy3)
 function stbtt__csctx_rccurve_to(ctx, dx1, dy1, dx2, dy2, dx3, dy3) {
     var cx1 = ctx.x + dx1,
-		cy1 = ctx.y + dy1,
-		cx2 = cx1 + dx2,
-		cy2 = cy1 + dy2;
+        cy1 = ctx.y + dy1,
+        cx2 = cx1 + dx2,
+        cy2 = cy1 + dy2;
     ctx.x = cx2 + dx3;
     ctx.y = cy2 + dy3;
     stbtt__csctx_v(ctx, STBTT_vcubic, ctx.x, ctx.y, cx1, cy1, cx2, cy2);
@@ -2873,11 +2871,11 @@ function stbtt__cid_get_glyph_subrs(info, glyph_index) {
 }
 
 //static int stbtt__run_charstring(const stbtt_fontinfo * info, int glyph_index,
-//								   stbtt__csctx * c)
+//                                 stbtt__csctx * c)
 function stbtt__run_charstring(info, glyph_index, c) {
     var in_header = 1, maskbits = 0, subr_stack_height = 0, sp = 0, v, i, b0,
-		has_subrs = 0, clear_stack,
-		s = [], subr_stack = [], subrs = info.subrs, b, f;
+        has_subrs = 0, clear_stack,
+        s = [], subr_stack = [], subrs = info.subrs, b, f;
 
     b = stbtt__cff_index_get(info.charstrings, glyph_index);
     while (b.cursor < b.length) {
@@ -2936,7 +2934,7 @@ function stbtt__run_charstring(info, glyph_index, c) {
             if (sp < 1) {
                 return 0;
             }
-			for (;;) {
+            for (;;) {
                 if (i >= sp) {
                     break;
                 }
@@ -2947,8 +2945,8 @@ function stbtt__run_charstring(info, glyph_index, c) {
                 }
                 stbtt__csctx_rline_to(c, s[i], 0);
                 i++;
-			}
-			break;
+            }
+            break;
         case 0x06:
             if (sp < 1) {
                 return 0;
@@ -2971,7 +2969,7 @@ function stbtt__run_charstring(info, glyph_index, c) {
             if (sp < 4) {
                 return 0;
             }
-			for (;;) {
+            for (;;) {
                 if (i + 3 >= sp) {
                     break;
                 }
@@ -2986,8 +2984,8 @@ function stbtt__run_charstring(info, glyph_index, c) {
                                         s[i + 2], s[i + 3],
                                         (sp - i == 5) ? s[i + 4] : 0.0);
                 i += 4;
-			}
-			break;
+            }
+            break;
         case 0x1E:
             if (sp < 4) {
                 return 0;
@@ -3018,7 +3016,7 @@ function stbtt__run_charstring(info, glyph_index, c) {
                 stbtt__csctx_rccurve_to(c, s[i], s[i + 1],
                                         s[i + 2], s[i + 3],
                                         s[i + 4], s[i + 5]);
-			}
+            }
             break;
 
         case 0x18:
@@ -3029,7 +3027,7 @@ function stbtt__run_charstring(info, glyph_index, c) {
                 stbtt__csctx_rccurve_to(c, s[i], s[i + 1],
                                         s[i + 2], s[i + 3],
                                         s[i + 4], s[i + 5]);
-			}
+            }
             if (i + 1 >= sp) {
                 return 0;
             }
@@ -3071,7 +3069,7 @@ function stbtt__run_charstring(info, glyph_index, c) {
                                             s[i + 1],
                                             s[i + 2], 0.0,
                                             s[i + 3]);
-				}
+                }
                 f = 0.0;
             }
             break;
@@ -3080,7 +3078,7 @@ function stbtt__run_charstring(info, glyph_index, c) {
             if (!has_subrs) {
                 if (info.fdselect.length) {
                     subrs = stbtt__cid_get_glyph_subrs(info, glyph_index);
-				}
+                }
                 has_subrs = 1;
             }
 
@@ -3115,7 +3113,7 @@ function stbtt__run_charstring(info, glyph_index, c) {
 
         case 0x0C:
             var dx1, dx2, dx3, dx4, dx5, dx6, dy1, dy2, dy3, dy4, dy5, dy6,
-				dx, dy, b1 = stbtt__buf_get8(b);
+                dx, dy, b1 = stbtt__buf_get8(b);
             switch (b1) {
             case 0x22:
                 if (sp < 7) {
@@ -3199,7 +3197,7 @@ function stbtt__run_charstring(info, glyph_index, c) {
             default:
                 return 0;
             }
-        	break;
+            break;
 
         default:
             if (b0 != 255 && b0 != 28 && (b0 < 32 || b0 > 254)) {
@@ -3228,18 +3226,18 @@ function stbtt__run_charstring(info, glyph_index, c) {
 }
 
 function stbtt__csctx_init() {
-	return { started:0, first_x:0, first_y:0, x:0, y:0,
-			min_x:0, max_x:0, min_y:0, max_y:0,
-			vertices:[]
-		};
+    return { started:0, first_x:0, first_y:0, x:0, y:0,
+            min_x:0, max_x:0, min_y:0, max_y:0,
+            vertices:[]
+        };
 }
 
 //static int stbtt__GetGlyphShapeT2(const stbtt_fontinfo * info, int glyph_index,
-//									stbtt_vertex ** pvertices)
+//                                  stbtt_vertex ** pvertices)
 function stbtt__GetGlyphShapeT2(info, glyph_index) {
     var output_ctx = stbtt__csctx_init();
     if (stbtt__run_charstring(info, glyph_index, output_ctx)) {
-		return output_ctx.vertices;
+        return output_ctx.vertices;
     }
     return null;
 }
@@ -3249,15 +3247,15 @@ function stbtt__GetGlyphShapeT2(info, glyph_index) {
 function stbtt__GetGlyphInfoT2(info, glyph_index, out) {
     var c = stbtt__csctx_init();
     var r = stbtt__run_charstring(info, glyph_index, c);
-	out.x0 = r ? c.min_x : 0;
-	out.y0 = r ? c.min_y : 0;
-	out.x1 = r ? c.max_x : 0;
-	out.y1 = r ? c.max_y : 0;
+    out.x0 = r ? c.min_x : 0;
+    out.y0 = r ? c.min_y : 0;
+    out.x1 = r ? c.max_x : 0;
+    out.y1 = r ? c.max_y : 0;
     return r && c.vertices ? c.vertices.length : 0;
 }
 
 //extern int stbtt_GetGlyphShape(const stbtt_fontinfo * info, int glyph_index,
-//								 stbtt_vertex ** pvertices)
+//                               stbtt_vertex ** pvertices)
 function stbtt_GetGlyphShape(info, glyph_index) {
     if (!info.cff.length) {
         return stbtt__GetGlyphShapeTT(info, glyph_index);
@@ -3271,16 +3269,16 @@ function stbtt_GetGlyphShape(info, glyph_index) {
 function stbtt_GetGlyphHMetrics(info, glyph_index) {
     var numOfLongHorMetrics = ttUSHORT(info.data, info.hhea + 34);
     if (glyph_index < numOfLongHorMetrics) {
-		return {
-				advanceWidth:   ttSHORT(info.data, info.hmtx + 4 * glyph_index),
-				leftSideBearing:ttSHORT(info.data, info.hmtx + 4 * glyph_index + 2)
-			};
+        return {
+                advanceWidth:   ttSHORT(info.data, info.hmtx + 4 * glyph_index),
+                leftSideBearing:ttSHORT(info.data, info.hmtx + 4 * glyph_index + 2)
+            };
     } else {
-		return {
-				advanceWidth:   ttSHORT(info.data, info.hmtx + 4 * (numOfLongHorMetrics - 1)),
-				leftSideBearing:ttSHORT(info.data, info.hmtx + 4 * numOfLongHorMetrics +
-											2 * (glyph_index - numOfLongHorMetrics))
-			};
+        return {
+                advanceWidth:   ttSHORT(info.data, info.hmtx + 4 * (numOfLongHorMetrics - 1)),
+                leftSideBearing:ttSHORT(info.data, info.hmtx + 4 * numOfLongHorMetrics +
+                                            2 * (glyph_index - numOfLongHorMetrics))
+            };
     }
 }
 
@@ -3292,27 +3290,27 @@ function stbtt_GetCodepointHMetrics(info, codepoint) {
 
 //extern void stbtt_GetFontVMetrics(const stbtt_fontinfo * info, int *ascent, int *descent, int *lineGap)
 function stbtt_GetFontVMetrics(info) {
-	return {
-        ascent:	ttSHORT(info.data, info.hhea + 4),
+    return {
+        ascent: ttSHORT(info.data, info.hhea + 4),
         descent:ttSHORT(info.data, info.hhea + 6),
         linegap:ttSHORT(info.data, info.hhea + 8),
-	};
+    };
 }
 
 //extern void stbtt_GetGlyphBitmapBoxSubpixel(const stbtt_fontinfo * font, int glyph,
 //                              float scale_x, float scale_y, float shift_x, float shift_y,
-//								int *ix0, int *iy0, int *ix1, int *iy1)
+//                              int *ix0, int *iy0, int *ix1, int *iy1)
 function stbtt_GetGlyphBitmapBoxSubpixel(font, glyph, scale_x, scale_y, shift_x, shift_y) {
     var tmp = {};
     if (!stbtt_GetGlyphBox(font, glyph, tmp)) {
-		return { x0:0, y0:0, x1:0, y1:0 };
+        return { x0:0, y0:0, x1:0, y1:0 };
     }
-	return {
-			x0:floor(tmp.x0 * scale_x + shift_x),
-			y0:floor(-tmp.y1 * scale_y + shift_y),
-			x1:ceil(tmp.x1 * scale_x + shift_x),
-			y1:ceil(-tmp.y0 * scale_y + shift_y),
-		};
+    return {
+            x0:floor(tmp.x0 * scale_x + shift_x),
+            y0:floor(-tmp.y1 * scale_y + shift_y),
+            x1:ceil(tmp.x1 * scale_x + shift_x),
+            y1:ceil(-tmp.y0 * scale_y + shift_y),
+        };
 }
 
 //extern void stbtt_GetCodepointBitmapBoxSubpixel(const stbtt_fontinfo * font,
@@ -3320,11 +3318,11 @@ function stbtt_GetGlyphBitmapBoxSubpixel(font, glyph, scale_x, scale_y, shift_x,
 //                                    float shift_y, int *ix0, int *iy0, int *ix1, int *iy1)
 function stbtt_GetCodepointBitmapBoxSubpixel(font, codepoint, scale_x, scale_y, shift_x, shift_y) {
     return stbtt_GetGlyphBitmapBoxSubpixel(font, stbtt_FindGlyphIndex(font, codepoint),
-											scale_x, scale_y, shift_x, shift_y);
+                                            scale_x, scale_y, shift_x, shift_y);
 }
 
-//extern void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo * font, int codepoint,	float scale_x, float scale_y,
-//										int *ix0, int *iy0, int *ix1, int *iy1)
+//extern void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo * font, int codepoint,   float scale_x, float scale_y,
+//                                      int *ix0, int *iy0, int *ix1, int *iy1)
 function stbtt_GetCodepointBitmapBox(font, codepoint, scale_x, scale_y) {
     return stbtt_GetCodepointBitmapBoxSubpixel(font, codepoint, scale_x, scale_y, 0, 0);
 }
@@ -3332,21 +3330,21 @@ function stbtt_GetCodepointBitmapBox(font, codepoint, scale_x, scale_y) {
 //static stbtt__active_edge *stbtt__new_active(stbtt__hheap * hh, stbtt__edge * e, int off_x, float start_point, void *userdata)
 function stbtt__new_active(e, off_x, start_point) {
     var dxdy = (e.x1 - e.x0) / (e.y1 - e.y0);
-	return {
-		fdx:dxdy,
-		fdy:dxdy != 0.0 ? (1.0 / dxdy) : 0.0,
-		fx:(e.x0 + dxdy * (start_point - e.y0)) - (off_x|0),
-		direction:e.invert ? 1.0 : -1.0,
-		sy:e.y0,
-		ey:e.y1,
-		next:0,
+    return {
+        fdx:dxdy,
+        fdy:dxdy != 0.0 ? (1.0 / dxdy) : 0.0,
+        fx:(e.x0 + dxdy * (start_point - e.y0)) - (off_x|0),
+        direction:e.invert ? 1.0 : -1.0,
+        sy:e.y0,
+        ey:e.y1,
+        next:0,
     };
 }
 
 //static void stbtt__handle_clipped_edge(float *scanline, int x, stbtt__active_edge * e,
 //                           float x0, float y0, float x1, float y1)
 function stbtt__handle_clipped_edge(scanline, x, e, x0, y0, x1, y1) {
-	x = x|0;
+    x = x|0;
     if (y0 == y1) {
         return;
     }
@@ -3393,11 +3391,11 @@ function stbtt__fill_active_edges_new(scanline, scanline_fill, len, e, y_top) {
             }
         } else {
             var x0 = e.fx,
-				dx = e.fdx,
-				xb = x0 + dx,
-				x_top, x_bottom,
-				sy0, sy1,
-				dy = e.fdy;
+                dx = e.fdx,
+                xb = x0 + dx,
+                x_top, x_bottom,
+                sy0, sy1,
+                dy = e.fdy;
 
             if (e.sy > y_top) {
                 x_top = x0 + dx * (e.sy - y_top);
@@ -3417,7 +3415,7 @@ function stbtt__fill_active_edges_new(scanline, scanline_fill, len, e, y_top) {
             if (x_top >= 0 && x_bottom >= 0 && x_top < len && x_bottom < len) {
                 if ((x_top|0) == (x_bottom|0)) {
                     var height = sy1 - sy0,
-						x = x_top|0;
+                        x = x_top|0;
                     scanline[x] += e.direction * (1 - ((x_top - x) + (x_bottom - x)) / 2) * height;
                     scanline_fill[x+1] += e.direction * height;
                 } else {
@@ -3448,18 +3446,18 @@ function stbtt__fill_active_edges_new(scanline, scanline_fill, len, e, y_top) {
                     y_crossing += dy * (x2 - (x1 + 1));
 
                     scanline[x2] += area + sign * (1 - ((x2 - x2) + (x_bottom - x2)) / 2) *
-												(sy1 - y_crossing);
+                                                (sy1 - y_crossing);
                     scanline_fill[x2+1] += sign * (sy1 - sy0);
                 }
             } else {
                 for (var x = 0; x < len; ++x) {
                     var y0 = y_top,
-						x1 = x,
-						x2 = x + 1,
-						x3 = xb,
-						y3 = y_bottom,
-						y1 = (x - x0) / dx + y_top,
-						y2 = (x + 1 - x0) / dx + y_top;
+                        x1 = x,
+                        x2 = x + 1,
+                        x3 = xb,
+                        y3 = y_bottom,
+                        y1 = (x - x0) / dx + y_top,
+                        y2 = (x + 1 - x0) / dx + y_top;
 
                     if (x0 < x1 && x3 > x2) {
                         stbtt__handle_clipped_edge(scanline, x, e, x0, y0, x1, y1);
@@ -3494,55 +3492,55 @@ function stbtt__fill_active_edges_new(scanline, scanline_fill, len, e, y_top) {
 //static void stbtt__rasterize_sorted_edges(stbtt__bitmap * result, stbtt__edge * e, int n,
 //                              int vsubsample, int off_x, int off_y, void *userdata)
 function stbtt__rasterize_sorted_edges(result, edges, nedges, vsubsample, off_x, off_y) {
-	vsubsample |= 0, off_x |= 0, off_y |= 0;
+    vsubsample |= 0, off_x |= 0, off_y |= 0;
     var active = null, z;
     var y = off_y, j = 0, i;
     var scanline = new Float32Array(result.w * 2 + 1);
     var scanline2 = scanline.subarray(result.w);
-	var eoff = 0;
+    var eoff = 0;
 
     edges[nedges].y0 = off_y + result.h + 1;
     while (j < result.h) {
         var scan_y_top = y + 0.0,
-			scan_y_bottom = y + 1.0,
-			step = active;
+            scan_y_bottom = y + 1.0,
+            step = active;
 
-		// F'ing IE
-		if (scanline.fill) { scanline.fill(0); }
-		else { for (var $i = 0, $l = scanline.length; $i < $l; $i++) scanline[$i] = 0; }
+        // F'ing IE
+        if (scanline.fill) { scanline.fill(0); }
+        else { for (var $i = 0, $l = scanline.length; $i < $l; $i++) scanline[$i] = 0; }
 
         while (step) {
             z = step;
-			step = z.next;
+            step = z.next;
             if (z.ey <= scan_y_top) {
                 z.direction = 0;
             } else {
-			}
+            }
         }
 
         while (edges[eoff].y0 <= scan_y_bottom) {
             if (edges[eoff].y0 != edges[eoff].y1) {
                 z = stbtt__new_active(edges[eoff], off_x, scan_y_top);
-				z.next = active;
-				active = z;
+                z.next = active;
+                active = z;
             }
             ++eoff;
         }
 
         if (active) {
-			// C implementation passed scanline2+1.  See function for details.
+            // C implementation passed scanline2+1.  See function for details.
             stbtt__fill_active_edges_new(scanline, scanline2, result.w, active, scan_y_top);
-		}
-		for (var i = 0, sum = 0; i < result.w; ++i) {
-			var k, m;
-			sum += scanline2[i];
-			k = scanline[i] + sum;
-			k = abs(k) * 255 + 0.5;
-			m = k>>>0;
-			if (m > 255) {
-				m = 255;
-			}
-			result.pixels[j * result.stride + i] = m;
+        }
+        for (var i = 0, sum = 0; i < result.w; ++i) {
+            var k, m;
+            sum += scanline2[i];
+            k = scanline[i] + sum;
+            k = abs(k) * 255 + 0.5;
+            m = k>>>0;
+            if (m > 255) {
+                m = 255;
+            }
+            result.pixels[j * result.stride + i] = m;
         }
 
         step = active;
@@ -3575,9 +3573,9 @@ function stbtt__sort_edges_ins_sort(p, n) {
 function stbtt__sort_edges_quicksort(p, o, n) {
     while (n > 12) {
         var t, c, i, j, z,
-			m = n >> 1,
-			c01 = p[o].y0 < p[o+m].y0,
-			c12 = p[o+m].y0 < p[o+n-1].y0;
+            m = n >> 1,
+            c01 = p[o].y0 < p[o+m].y0,
+            c12 = p[o+m].y0 < p[o+n-1].y0;
 
         if (c01 != c12) {
             c = p[o].y0 < p[o+n-11].y0;
@@ -3632,8 +3630,8 @@ function stbtt__sort_edges(p, n) {
 //                 void *userdata)
 function stbtt__rasterize(result, pts, wcount, scale_x, scale_y, shift_x, shift_y, off_x, off_y, invert) {
     var y_scale_inv = invert ? -scale_y : scale_y,
-		e, n, i, j, k, m,
-		vsubsample = 1;
+        e, n, i, j, k, m,
+        vsubsample = 1;
 
     n = 0;
     for (i = 0; i < wcount.length; ++i) {
@@ -3675,9 +3673,9 @@ function stbtt__rasterize(result, pts, wcount, scale_x, scale_y, shift_x, shift_
 //                       float objspace_flatness_squared, int n)
 function stbtt__tesselate_curve(points, x0, y0, x1, y1, x2, y2, objspace_flatness_squared, n) {
     var mx = (x0 + 2 * x1 + x2) / 4,
-		my = (y0 + 2 * y1 + y2) / 4,
-		dx = (x0 + x2) / 2 - mx,
-		dy = (y0 + y2) / 2 - my;
+        my = (y0 + 2 * y1 + y2) / 4,
+        dx = (x0 + x2) / 2 - mx,
+        dy = (y0 + y2) / 2 - my;
     if (n > 16) {
         return 1;
     }
@@ -3687,7 +3685,7 @@ function stbtt__tesselate_curve(points, x0, y0, x1, y1, x2, y2, objspace_flatnes
         stbtt__tesselate_curve(points, mx, my, (x1 + x2) / 2.0, (y1 + y2) / 2.0, x2, y2,
                                objspace_flatness_squared, n + 1);
     } else {
-		points.push({ x:x2, y:y2 });
+        points.push({ x:x2, y:y2 });
     }
     return 1;
 }
@@ -3697,42 +3695,42 @@ function stbtt__tesselate_curve(points, x0, y0, x1, y1, x2, y2, objspace_flatnes
 //                       float x3, float y3, float objspace_flatness_squared, int n)
 function stbtt__tesselate_cubic(points, x0, y0, x1, y1, x2, y2, x3, y3, objspace_flatness_squared, n) {
     var dx0 = x1 - x0,
-		dy0 = y1 - y0,
-		dx1 = x2 - x1,
-		dy1 = y2 - y1,
-		dx2 = x3 - x2,
-		dy2 = y3 - y2,
-		dx = x3 - x0,
-		dy = y3 - y0,
-		longlen = sqrt(dx0 * dx0 + dy0 * dy0) +
-				  sqrt(dx1 * dx1 + dy1 * dy1) +
+        dy0 = y1 - y0,
+        dx1 = x2 - x1,
+        dy1 = y2 - y1,
+        dx2 = x3 - x2,
+        dy2 = y3 - y2,
+        dx = x3 - x0,
+        dy = y3 - y0,
+        longlen = sqrt(dx0 * dx0 + dy0 * dy0) +
+                  sqrt(dx1 * dx1 + dy1 * dy1) +
                   sqrt(dx2 * dx2 + dy2 * dy2),
-		shortlen = sqrt(dx * dx + dy * dy),
-		flatness_squared = longlen * longlen - shortlen * shortlen;
+        shortlen = sqrt(dx * dx + dy * dy),
+        flatness_squared = longlen * longlen - shortlen * shortlen;
     if (n > 16) {
         return;
     }
 
     if (flatness_squared > objspace_flatness_squared) {
         var x01 = (x0 + x1) / 2,
-			y01 = (y0 + y1) / 2,
-			x12 = (x1 + x2) / 2,
-			y12 = (y1 + y2) / 2,
-			x23 = (x2 + x3) / 2,
-			y23 = (y2 + y3) / 2,
-			xa = (x01 + x12) / 2,
-			ya = (y01 + y12) / 2,
-			xb = (x12 + x23) / 2,
-			yb = (y12 + y23) / 2,
-			mx = (xa + xb) / 2,
-			my = (ya + yb) / 2;
+            y01 = (y0 + y1) / 2,
+            x12 = (x1 + x2) / 2,
+            y12 = (y1 + y2) / 2,
+            x23 = (x2 + x3) / 2,
+            y23 = (y2 + y3) / 2,
+            xa = (x01 + x12) / 2,
+            ya = (y01 + y12) / 2,
+            xb = (x12 + x23) / 2,
+            yb = (y12 + y23) / 2,
+            mx = (xa + xb) / 2,
+            my = (ya + yb) / 2;
 
         stbtt__tesselate_cubic(points, x0, y0, x01, y01, xa, ya, mx, my,
-								objspace_flatness_squared, n + 1);
+                                objspace_flatness_squared, n + 1);
         stbtt__tesselate_cubic(points, mx, my, xb, yb, x23, y23, x3, y3,
-								objspace_flatness_squared, n + 1);
+                                objspace_flatness_squared, n + 1);
     } else {
-		points.push({ x:x3, y:y3 });
+        points.push({ x:x3, y:y3 });
     }
 }
 
@@ -3740,48 +3738,48 @@ function stbtt__tesselate_cubic(points, x0, y0, x1, y1, x2, y2, x3, y3, objspace
 //        float objspace_flatness, int **contour_lengths, int *num_contours, void *userdata)
 function stbtt_FlattenCurves(vertices, objspace_flatness, contour_lengths) {
     var points = [],
-		objspace_flatness_squared = objspace_flatness * objspace_flatness,
-		n = -1, start = 0,
-		x = 0, y = 0;
-	for (var i = 0, nverts = vertices.length; i < nverts; ++i) {
-		switch (vertices[i].type) {
-		case STBTT_vmove:
-			if (n >= 0) {
-				contour_lengths[n] = points.length - start;
-			}
-			++n;
-			start = points.length;
-			x = vertices[i].x, y = vertices[i].y;
-			points.push({ x:x, y:y });
-			break;
-		case STBTT_vline:
-			x = vertices[i].x, y = vertices[i].y;
-			points.push({ x:x, y:y });
-			break;
-		case STBTT_vcurve:
-			stbtt__tesselate_curve(points, x, y, vertices[i].cx, vertices[i].cy,
-								   vertices[i].x, vertices[i].y, objspace_flatness_squared, 0);
-			x = vertices[i].x, y = vertices[i].y;
-			break;
-		case STBTT_vcubic:
-			stbtt__tesselate_cubic(points, x, y, vertices[i].cx, vertices[i].cy,
-								   vertices[i].cx1, vertices[i].cy1, vertices[i].x, vertices[i].y,
-								   objspace_flatness_squared, 0);
-			x = vertices[i].x, y = vertices[i].y;
-			break;
-		}
-	}
-	contour_lengths[n] = points.length - start;
+        objspace_flatness_squared = objspace_flatness * objspace_flatness,
+        n = -1, start = 0,
+        x = 0, y = 0;
+    for (var i = 0, nverts = vertices.length; i < nverts; ++i) {
+        switch (vertices[i].type) {
+        case STBTT_vmove:
+            if (n >= 0) {
+                contour_lengths[n] = points.length - start;
+            }
+            ++n;
+            start = points.length;
+            x = vertices[i].x, y = vertices[i].y;
+            points.push({ x:x, y:y });
+            break;
+        case STBTT_vline:
+            x = vertices[i].x, y = vertices[i].y;
+            points.push({ x:x, y:y });
+            break;
+        case STBTT_vcurve:
+            stbtt__tesselate_curve(points, x, y, vertices[i].cx, vertices[i].cy,
+                                   vertices[i].x, vertices[i].y, objspace_flatness_squared, 0);
+            x = vertices[i].x, y = vertices[i].y;
+            break;
+        case STBTT_vcubic:
+            stbtt__tesselate_cubic(points, x, y, vertices[i].cx, vertices[i].cy,
+                                   vertices[i].cx1, vertices[i].cy1, vertices[i].x, vertices[i].y,
+                                   objspace_flatness_squared, 0);
+            x = vertices[i].x, y = vertices[i].y;
+            break;
+        }
+    }
+    contour_lengths[n] = points.length - start;
 
-	//console.log("--cl(" + (n+1) + '):');
-	//for (var i = 0; i <= n; i++) {
-	//	console.log(" %d", contour_lengths[i]);
-	//}
-	//console.log("\n--pts(" + points.length + '):');
-	//for (var i = 0; i < points.length; i++) {
-	//	var pt = points[i];
-	//	console.log(i + ': ' + pt.x  + ',' + pt.y);
-	//}
+    //console.log("--cl(" + (n+1) + '):');
+    //for (var i = 0; i <= n; i++) {
+    //  console.log(" %d", contour_lengths[i]);
+    //}
+    //console.log("\n--pts(" + points.length + '):');
+    //for (var i = 0; i < points.length; i++) {
+    //  var pt = points[i];
+    //  console.log(i + ': ' + pt.x  + ',' + pt.y);
+    //}
 
     return points;
 }
@@ -3791,14 +3789,14 @@ function stbtt_FlattenCurves(vertices, objspace_flatness, contour_lengths) {
 //                float scale_y, float shift_x, float shift_y, int x_off,
 //                int y_off, int invert, void *userdata)
 function stbtt_Rasterize(result, flatness_in_pixels, vertices, scale_x, scale_y, shift_x, shift_y,
-						 x_off, y_off, invert) {
-	x_off |= 0, y_off |= 0;
+                         x_off, y_off, invert) {
+    x_off |= 0, y_off |= 0;
     var scale = scale_x > scale_y ? scale_y : scale_x,
-		wcount = [],
-		windings = stbtt_FlattenCurves(vertices, flatness_in_pixels / scale, wcount);
+        wcount = [],
+        windings = stbtt_FlattenCurves(vertices, flatness_in_pixels / scale, wcount);
     if (windings) {
         stbtt__rasterize(result, windings, wcount, scale_x, scale_y,
-						 shift_x, shift_y, x_off, y_off, invert);
+                         shift_x, shift_y, x_off, y_off, invert);
     }
 }
 
@@ -3807,7 +3805,7 @@ function stbtt_Rasterize(result, flatness_in_pixels, vertices, scale_x, scale_y,
 //                              int out_stride, float scale_x, float scale_y,
 //                              float shift_x, float shift_y, int glyph)
 function stbtt_MakeGlyphBitmapSubpixel(info, buffer, out_w, out_h, out_stride,
-									scale_x, scale_y, shift_x, shift_y, glyph) {
+                                    scale_x, scale_y, shift_x, shift_y, glyph) {
     var vertices = stbtt_GetGlyphShape(info, glyph);
     var gbm = {};
     var rect = stbtt_GetGlyphBitmapBoxSubpixel(info, glyph, scale_x, scale_y, shift_x, shift_y);
@@ -3818,7 +3816,7 @@ function stbtt_MakeGlyphBitmapSubpixel(info, buffer, out_w, out_h, out_stride,
 
     if (gbm.w && gbm.h) {
         stbtt_Rasterize(gbm, 0.35, vertices, scale_x, scale_y, shift_x, shift_y, rect.x0, rect.y0, 1);
-	}
+    }
 }
 
 //extern void stbtt_MakeCodepointBitmapSubpixel(const stbtt_fontinfo * info,
@@ -3827,7 +3825,7 @@ function stbtt_MakeGlyphBitmapSubpixel(info, buffer, out_w, out_h, out_stride,
 //                                  float scale_y, float shift_x,
 //                                  float shift_y, int codepoint)
 function stbtt_MakeCodepointBitmapSubpixel(info, buffer, out_w, out_h, out_stride,
-									scale_x, scale_y, shift_x, shift_y, codepoint) {
+                                    scale_x, scale_y, shift_x, shift_y, codepoint) {
     stbtt_MakeGlyphBitmapSubpixel(info, buffer, out_w, out_h, out_stride,
                                   scale_x, scale_y, shift_x, shift_y,
                                   stbtt_FindGlyphIndex(info, codepoint));
@@ -3840,107 +3838,107 @@ function stbtt_InitFont(font, data, offset) {
 
 
 function InitFont(data) {
-	var font = {};
+    var font = {};
     if (!stbtt_InitFont_internal(font, data, 0)) {
-		return null;
-	}
+        return null;
+    }
 
-	var vm = stbtt_GetFontVMetrics(font);
+    var vm = stbtt_GetFontVMetrics(font);
 
-	font.ascent = vm.ascent;
-	font.descent = vm.descent;
-	font.linegap = vm.linegap;
+    font.ascent = vm.ascent;
+    font.descent = vm.descent;
+    font.linegap = vm.linegap;
 
-	return font;
+    return font;
 }
 
 function GetGlyph(font, codepoint, size_x, size_y) {
-	size_y = size_y || size_x;
-	var scale_x = size_x / font.ascent;
-	var scale_y = size_y / font.ascent;
+    size_y = size_y || size_x;
+    var scale_x = size_x / font.ascent;
+    var scale_y = size_y / font.ascent;
 
-	var glyph = stbtt_FindGlyphIndex(font, codepoint);
-	if (!glyph && codepoint) {
-		return null;
-	}
+    var glyph = stbtt_FindGlyphIndex(font, codepoint);
+    if (!glyph && codepoint) {
+        return null;
+    }
 
     var vertices = stbtt_GetGlyphShape(font, glyph);
-	var rect = stbtt_GetGlyphBitmapBoxSubpixel(font, glyph, scale_x, scale_y, 0, 0);
-	var width = rect.x1 - rect.x0;
-	var height = rect.y1 - rect.y0;
-	var pixels = null;
+    var rect = stbtt_GetGlyphBitmapBoxSubpixel(font, glyph, scale_x, scale_y, 0, 0);
+    var width = rect.x1 - rect.x0;
+    var height = rect.y1 - rect.y0;
+    var pixels = null;
 
-	if (width && height) {
-		var gbm = {
-			pixels : (pixels = new Uint8Array(width * height)),
-			w : width,
-			h : height,
-			stride : width,
-		}
-		stbtt_Rasterize(gbm, 0.35, vertices, scale_x, scale_y, 0, 0, rect.x0, rect.y0, 1);
-	}
+    if (width && height) {
+        var gbm = {
+            pixels : (pixels = new Uint8Array(width * height)),
+            w : width,
+            h : height,
+            stride : width,
+        }
+        stbtt_Rasterize(gbm, 0.35, vertices, scale_x, scale_y, 0, 0, rect.x0, rect.y0, 1);
+    }
 
-	var hmetrics = stbtt_GetGlyphHMetrics(font, glyph);
-	return {
-		glyph:glyph, pixels:pixels, width:width, height:height, top:-rect.y0, left:rect.x0,
-		advance:floor(hmetrics.advanceWidth * scale_x),
-	}
+    var hmetrics = stbtt_GetGlyphHMetrics(font, glyph);
+    return {
+        glyph:glyph, pixels:pixels, width:width, height:height, top:-rect.y0, left:rect.x0,
+        advance:floor(hmetrics.advanceWidth * scale_x),
+    }
 }
 function GetPaths(font, codepoint, size_x, size_y) {
-	size_y = size_y || size_x;
-	var scale_x = size_x / font.ascent;
-	var scale_y = size_y / font.ascent;
+    size_y = size_y || size_x;
+    var scale_x = size_x / font.ascent;
+    var scale_y = size_y / font.ascent;
 
-	var glyph = stbtt_FindGlyphIndex(font, codepoint);
-	if (!glyph && codepoint) {
-		return null;
-	}
+    var glyph = stbtt_FindGlyphIndex(font, codepoint);
+    if (!glyph && codepoint) {
+        return null;
+    }
     var vertices = stbtt_GetGlyphShape(font, glyph);
-	var hmetrics = stbtt_GetGlyphHMetrics(font, glyph);
+    var hmetrics = stbtt_GetGlyphHMetrics(font, glyph);
 
-	// The hmetrics just give us advance.  We need ascent and descent as well.
-	var ascent = 0;
-	var descent = 0;
+    // The hmetrics just give us advance.  We need ascent and descent as well.
+    var ascent = 0;
+    var descent = 0;
 
-	// Convert to SVG notation
-	var paths = [];
-	if (vertices) {
-		for (var i = 0, l = vertices.length; i < l; i++) {
-			var v = vertices[i];
-			var path;
-			if (v.type == STBTT_vmove) {
-				path = { type:'M', x:v.x * scale_x, y:v.y * scale_y };
-			} else if (v.type == STBTT_vline) {
-				path = { type:'L', x:v.x * scale_x, y:v.y * scale_y };
-			} else if (v.type == STBTT_vcurve) {
-				path = { type:'Q', x:v.x * scale_x, y:v.y * scale_y,
-								  cx:v.cx * scale_x, cy:v.cy * scale_y };
-			} else if (v.type == STBTT_vcubic) {
-				path = { type:'C', x:v.x * scale_x, y:v.y * scale_y,
-								 cx1:v.cx * scale_x, cy1:v.cy * scale_y,
-								 cx2:v.cx1 * scale_x, cy2:v.cy1 * scale_y };
-			} else {
-				continue;
-			}
-			if (path.y > ascent)  ascent  = path.y;
-			if (path.y < descent) descent = path.y;
-			paths.push(path);
-		}
-	}
+    // Convert to SVG notation
+    var paths = [];
+    if (vertices) {
+        for (var i = 0, l = vertices.length; i < l; i++) {
+            var v = vertices[i];
+            var path;
+            if (v.type == STBTT_vmove) {
+                path = { type:'M', x:v.x * scale_x, y:v.y * scale_y };
+            } else if (v.type == STBTT_vline) {
+                path = { type:'L', x:v.x * scale_x, y:v.y * scale_y };
+            } else if (v.type == STBTT_vcurve) {
+                path = { type:'Q', x:v.x * scale_x, y:v.y * scale_y,
+                                  cx:v.cx * scale_x, cy:v.cy * scale_y };
+            } else if (v.type == STBTT_vcubic) {
+                path = { type:'C', x:v.x * scale_x, y:v.y * scale_y,
+                                 cx1:v.cx * scale_x, cy1:v.cy * scale_y,
+                                 cx2:v.cx1 * scale_x, cy2:v.cy1 * scale_y };
+            } else {
+                continue;
+            }
+            if (path.y > ascent)  ascent  = path.y;
+            if (path.y < descent) descent = path.y;
+            paths.push(path);
+        }
+    }
 
-	// Add the glyph metrics to the returned array.
-	paths.advance = hmetrics.advanceWidth * scale_x;
-	paths.ascent  = ascent;
-	paths.descent = descent;
-	return paths;
+    // Add the glyph metrics to the returned array.
+    paths.advance = hmetrics.advanceWidth * scale_x;
+    paths.ascent  = ascent;
+    paths.descent = descent;
+    return paths;
 }
 
 
 // exports
 return {
-	InitFont:	InitFont,
-	GetGlyph:	GetGlyph,
-	GetPaths:	GetPaths,
+    InitFont:   InitFont,
+    GetGlyph:   GetGlyph,
+    GetPaths:   GetPaths,
 }
 
 })();

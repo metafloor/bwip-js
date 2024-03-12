@@ -11,8 +11,8 @@
 ## a custom tests/barcode.ps that has the renderer code blocks commented out,
 ## leaving the rendering information on the stack for us to inspect.
 if [ ! -r tests/barcode.ps ] ; then
-	echo "runtest: tests/barcode.ps does not exist."
-	exit 1
+    echo "runtest: tests/barcode.ps does not exist."
+    exit 1
 fi
 
 sym="$1"
@@ -36,12 +36,12 @@ cat tests/barcode.ps - > tests/runtest.ps <<@EOF
 0 0 moveto
 ($pstext) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec
 count { 
-	% Order of printing must match the nodejs code.
-	dup { exch (pixs) eq { == } { pop } ifelse } forall
-	dup { exch (sbs) eq { == } { pop } ifelse } forall
-	dup { exch (bbs) eq { == } { pop } ifelse } forall
-	dup { exch (bhs) eq { == } { pop } ifelse } forall
-	pop
+    % Order of printing must match the nodejs code.
+    dup { exch (pixs) eq { == } { pop } ifelse } forall
+    dup { exch (sbs) eq { == } { pop } ifelse } forall
+    dup { exch (bbs) eq { == } { pop } ifelse } forall
+    dup { exch (bhs) eq { == } { pop } ifelse } forall
+    pop
 } repeat
 @EOF
 
@@ -55,28 +55,28 @@ cat - <<@EOF > tests/nsed.js
 const fs = require('fs');
 
 function filt(line) {
-	process.stdout.write(
-		line.replace(/\d+(\.\d+)?/g, function(s) {
-			return (+s).toFixed(3).replace(/(\.000|00|0)$/, '');
-		})
-		.replace(/null/g, ''), 'binary');
+    process.stdout.write(
+        line.replace(/\d+(\.\d+)?/g, function(s) {
+            return (+s).toFixed(3).replace(/(\.000|00|0)$/, '');
+        })
+        .replace(/null/g, ''), 'binary');
 }
 
 let ptl = '';
 process.stdin.resume();
 process.stdin.setEncoding('binary');
 process.stdin.on('data', (data) => {
-	ptl += data.toString('binary');
-	let eol = ptl.indexOf('\n');
-	while (eol >= 0) {
-		filt(ptl.substr(0, eol+1));
-		ptl = ptl.substr(eol+1);
-		eol = ptl.indexOf('\n');
-	}
+    ptl += data.toString('binary');
+    let eol = ptl.indexOf('\n');
+    while (eol >= 0) {
+        filt(ptl.substr(0, eol+1));
+        ptl = ptl.substr(eol+1);
+        eol = ptl.indexOf('\n');
+    }
 });
 process.stdin.on('end', () => {
-	ptl && filt(ptl);
-	process.exit(0);
+    ptl && filt(ptl);
+    process.exit(0);
 });
 @EOF
 
@@ -89,36 +89,36 @@ node <<@EOF
 var bwipjs = require('.');
 
 try {
-	var stack = bwipjs.raw("$sym", "$jstext", "$opts");
+    var stack = bwipjs.raw("$sym", "$jstext", "$opts");
 } catch (e) {
-	// Example bwipp.raiseerror from ghostscript:
-	// 		Error: /bwipp.qrcodeNoValidSymbol in
-	//		Additional information: (No valid symbol available)
-	//		Current allocation mode is local
-	// raiseerror in bwipjs formats as:
-	//		Error: bwipp.qrcodeNoValidSymbol: No valid symbol available
-	// Make our output look like ghostscript's.
-	var msg = '' + e;
-	if (msg.indexOf('Error: bwipp.') >= 0) {
-		// Watch out for shell replacement of $-prefixed subst-markers!!!
-		console.log(msg.replace(/Error: bwipp\.([^:#]+)(?:#\d+)?:\s*(.*)$/,
-						'Error: /bwipp.\$1 in\n' +
-						'Additional information: (\$2)\n' +
-						'Current allocation mode is local'));
-	} else if (e.stack) {
-		console.log(e.stack);
-	} else {
-		console.log(e);
-	}
-	process.exit();
+    // Example bwipp.raiseerror from ghostscript:
+    //      Error: /bwipp.qrcodeNoValidSymbol in
+    //      Additional information: (No valid symbol available)
+    //      Current allocation mode is local
+    // raiseerror in bwipjs formats as:
+    //      Error: bwipp.qrcodeNoValidSymbol: No valid symbol available
+    // Make our output look like ghostscript's.
+    var msg = '' + e;
+    if (msg.indexOf('Error: bwipp.') >= 0) {
+        // Watch out for shell replacement of $-prefixed subst-markers!!!
+        console.log(msg.replace(/Error: bwipp\.([^:#]+)(?:#\d+)?:\s*(.*)$/,
+                        'Error: /bwipp.\$1 in\n' +
+                        'Additional information: (\$2)\n' +
+                        'Current allocation mode is local'));
+    } else if (e.stack) {
+        console.log(e.stack);
+    } else {
+        console.log(e);
+    }
+    process.exit();
 }
 // Order of printing must match the ghostscript code.
 for (var i = stack.length-1; i >= 0; i--) {
-	var o = stack[i];
-	if (o.pixs) { console.log('[' + o.pixs.join(' ') + ']'); }
-	if (o.sbs) { console.log('[' + o.sbs.join(' ') + ']'); }
-	if (o.bbs) { console.log('[' + o.bbs.join(' ') + ']'); }
-	if (o.bhs) { console.log('[' + o.bhs.join(' ') + ']'); }
+    var o = stack[i];
+    if (o.pixs) { console.log('[' + o.pixs.join(' ') + ']'); }
+    if (o.sbs) { console.log('[' + o.sbs.join(' ') + ']'); }
+    if (o.bbs) { console.log('[' + o.bbs.join(' ') + ']'); }
+    if (o.bhs) { console.log('[' + o.bhs.join(' ') + ']'); }
 }
 @EOF
 ) | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' > $JSOUT
@@ -127,14 +127,14 @@ for (var i = stack.length-1; i >= 0; i--) {
 ## diff ignoring whitespace (-b) differences. 
 diff -qb $GSOUT $JSOUT
 if [ $? != 0 ] ; then
-	echo "!!!!"
-	echo "!!!! ERROR ON $sym ($text) ($opts)"
-	echo "!!!! BWIPP OUTPUT ($GSOUT):"
-	cat $GSOUT
-	echo "!!!! BWIP-JS OUTPUT ($JSOUT):"
-	cat $JSOUT
-	echo "!!!!"
-	exit 1
+    echo "!!!!"
+    echo "!!!! ERROR ON $sym ($text) ($opts)"
+    echo "!!!! BWIPP OUTPUT ($GSOUT):"
+    cat $GSOUT
+    echo "!!!! BWIP-JS OUTPUT ($JSOUT):"
+    cat $JSOUT
+    echo "!!!!"
+    exit 1
 fi
 
 exit 0

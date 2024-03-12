@@ -9,32 +9,32 @@ var bwipp_js = fs.readFileSync('src/bwipp.js', 'binary');
 
 // Minify map of full names to their $<letter> equivalents
 var mins = {
-	//a					// array constructor
-	arrcpy:'A',			// array copy operator
+    //a                 // array constructor
+    arrcpy:'A',         // array copy operator
     astore:'as',
     anchorsearch:'ax',
-	cvs:'c',			// cvs operator
-	//d					// dict constructor
-	//f,				// single-precision emulation
-	forall:'F',			// forall operator
-	get:'g',			// get operator
-	geti:'G',			// getinterval operator
+    cvs:'c',            // cvs operator
+    //d                 // dict constructor
+    //f,                // single-precision emulation
+    forall:'F',         // forall operator
+    get:'g',            // get operator
+    geti:'G',           // getinterval operator
     cvi:'i',            // cvi operator
-	// j				// stack pointer
-	// k				// operand stack
-	cleartomark:'l',	// cleartomark operator
-	counttomark:'m',	// counttomark operator
-	put:'p',			// put operator
-	puti:'P',			// putinterval operator
-	aload:'q',			// aload operator
-	// r			    // roll operator
-	cvrs:'R',			// cvrs operator
-	s:'s',				// string constructor
-	type:'t',			// type operator
+    // j                // stack pointer
+    // k                // operand stack
+    cleartomark:'l',    // cleartomark operator
+    counttomark:'m',    // counttomark operator
+    put:'p',            // put operator
+    puti:'P',           // putinterval operator
+    aload:'q',          // aload operator
+    // r                // roll operator
+    cvrs:'R',           // cvrs operator
+    s:'s',              // string constructor
+    type:'t',           // type operator
     cvx:'x',            // cvx operator
-	search:'X',			// search operator
-	//z					// toString operator (internal use only)
-	strcpy:'Z',			// cvrs and copy operators helper (internal use only)
+    search:'X',         // search operator
+    //z                 // toString operator (internal use only)
+    strcpy:'Z',         // cvrs and copy operators helper (internal use only)
 };
 
 // Minify.  We do not take the usual minify route where variable names
@@ -44,7 +44,7 @@ var mins = {
 
 // Map the long function names (postscript operators) to their abbreviations.
 var renamed = bwipp_js.replace(/\$(\w+)\(/g, function ($0, id) {
-							return '$' + (mins[id]||id) + '(';
-						});
+                            return '$' + (mins[id]||id) + '(';
+                        });
 
 fs.writeFileSync('bwipp-min.js', renamed, 'binary');

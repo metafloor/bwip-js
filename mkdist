@@ -6,8 +6,8 @@
 ##
 COPYR=$(grep '% Copyright (c)' barcode.ps | sed -e 's,%,//,')
 if [ "x$COPYR" = x ] ; then
-	echo "Unable to find the copyright notice in barcode.ps" 1>&2
-	exit 1
+    echo "Unable to find the copyright notice in barcode.ps" 1>&2
+    exit 1
 fi
 
 ##
@@ -15,8 +15,8 @@ fi
 ##
 FILEV=$(grep '% Barcode Writer in Pure PostScript - Version' barcode.ps | sed -e 's,%,//,')
 if [ "x$FILEV" = x ] ; then
-	echo "Unable to find the version string in barcode.ps" 1>&2
-	exit 1
+    echo "Unable to find the version string in barcode.ps" 1>&2
+    exit 1
 fi
 
 ## What year is it?
@@ -25,7 +25,7 @@ YEAR="2011-$(date +%Y)"
 cat <<@EOF > dist/bwip-js.js
 // This file is part of the bwip-js project available at:
 //
-// 	  http://metafloor.github.io/bwip-js
+//    http://metafloor.github.io/bwip-js
 //
 // Copyright (c) $YEAR Mark Warren
 //
@@ -92,7 +92,7 @@ cat - <<@EOF >> $file
         module.exports = factory();
     } else {
         root.bwipjs = factory();
-	}
+    }
 }(typeof self !== 'undefined' ? self : this, function () {
 @EOF
 done

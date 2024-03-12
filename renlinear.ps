@@ -1,15 +1,15 @@
 % --BEGIN RENDERER renlinear--
-% --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2015021800 76908 76502
-%%BeginData:        237 ASCII Lines
-%% /setpacking where {pop currentpacking true setpacking} if
-%% 1 dict
-%% dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-%% begin
+% --REQUIRES preamble raiseerror processoptions--
+%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2023122500 83313 82223
+%%BeginData:        245 ASCII Lines
+/setpacking where {pop currentpacking true setpacking} if
+10 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+begin
 /renlinear {
-    20 dict begin          % Confine variables to local scope
 
-    %%/args exch def   % We are given some arguments
+    20 dict begin          % Confine variables to local scope
 
     % Default options
     /sbs [] def
@@ -29,7 +29,7 @@
     /alttext () def
     /bordercolor (unset) def
     /backgroundcolor (unset) def
-    /inkspread 0.0 def      % Was 0.15
+    /inkspread 0.15 def
     /width 0.0 def
     /barratio 1.0 def
     /spaceratio 1.0 def
@@ -37,15 +37,15 @@
     /showbearer false def
     /borderleft 10.0 def
     /borderright 10.0 def
-    /bordertop 1.0 def      % Was 0.0
-    /borderbottom 1.0 def   % Was 0.0
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
     /borderwidth 0.5 def
     /guardwhitespace false def
     /guardleftpos 0.0 def
     /guardleftypos 0.0 def
     /guardrightpos 0.0 def
     /guardrightypos 0.0 def
-    /guardwidth 7.0 def     % Was 5.0
+    /guardwidth 5.0 def
     /guardheight 7.0 def
 
     {def} forall
@@ -54,7 +54,7 @@
     textsize 0 le {
         /bwipp.renlinearBadTextsize (The font size must be greater than zero) //raiseerror exec
     } if
-    
+
     % Create bar elements and put them into the bars array
     /bars sbs length 1 add 2 idiv array def
     /pixx 0 def /pixy 0 def
@@ -87,18 +87,36 @@
         width 72 mul pixx div 1 scale
     } if
 
+    % Set RGB or CMYK color depending on length of given hex string
+    /setanycolor {
+        /anycolor exch def
+        anycolor length dup 6 ne exch 8 ne and {
+            /bwipp.renlinearBadColorLength (Colors must be 6 or 8 characters) //raiseerror exec
+        } if
+        anycolor {
+            dup     dup 48 ge exch  59 le and  % 0-9
+            1 index dup 65 ge exch  70 le and  % A-F
+            2 index dup 97 ge exch 102 le and  % a-f
+            or or exch pop not {
+                /bwipp.renlinearBadColorCharacter (Colors must be in hexadecimal notation) //raiseerror exec
+            } if
+        } forall
+        anycolor length 6 eq { (<      >) } { (<        >) } ifelse dup length string copy
+        dup 1 anycolor putinterval cvx exec {255 div} forall
+        anycolor length 6 eq { setrgbcolor } { setcmykcolor } ifelse
+    } def
+
     % Display the border and background
-    % background is handled by the bwip-js drawing interface.
-    %backgroundcolor (unset) ne {
-    %    gsave
-    %    newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-    %    backgroundcolor setanycolor fill
-    %    grestore
-    %} if
     /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
     /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
     /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
     /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+    backgroundcolor (unset) ne {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        backgroundcolor setanycolor fill
+        grestore
+    } if
     showbearer {  % Overrides showborder
         gsave
         newpath
@@ -109,46 +127,47 @@
         grestore
     } {
     showborder {
-        % This is the original showborder code from the old renlinear.
-        % It better spaces the border around the symbol.
-        %newpath
-        %borderleft neg borderbottom neg moveto
-        %pixx borderleft add borderright add 0 rlineto
-        %0 pixy borderbottom add bordertop add rlineto
-        %pixx borderleft add borderright add neg 0 rlineto
-        %0 pixy borderbottom add bordertop add neg rlineto
-        %closepath
-
         gsave
         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
         bordercolor (unset) ne { bordercolor setanycolor } if
-        borderwidth setlinewidth stroke
+        borderwidth inkspread 2 mul sub setlinewidth stroke
         grestore
     } if } ifelse
-   
+
     % Display the bars for elements in the bars array
     gsave
-    0 setlinecap
     barcolor (unset) ne { barcolor setanycolor } if
+    newpath
     bars {
         dup -1 ne {
-            aload pop newpath setlinewidth moveto 0 exch rlineto stroke
+            aload pop  % h x y w
+            2 index 1 index 2 div sub 2 index moveto
+            0 4 index rlineto
+            dup 0 rlineto
+            0 4 index neg rlineto
+            closepath
+            pop pop pop pop
         } {
             pop
         } ifelse
     } forall
+    fill
     grestore
-    
+
     % Display the text for elements in the text array
     textcolor (unset) ne { textcolor setanycolor } if
     includetext {
         textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
             /s 0 def /fn () def
             txt {
-                {} forall
+                aload pop
                 2 copy s ne exch fn ne or {
-                    2 copy /s exch def /fn exch def            
-					selectfont
+                    dup 0 le {
+                        pop pop pop pop pop
+                        /bwipp.renlinearFontTooSmall (The font size is too small) //raiseerror exec
+                    } if
+                    2 copy /s exch def /fn exch def
+                    selectfont
                 } {
                     pop pop
                 } ifelse
@@ -172,13 +191,13 @@
                 newpath 0 0 moveto (0) false charpath pathbbox
                 4 1 roll pop pop pop
                 grestore
-                %%currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-                %%currentfont /StrokeWidth known and {
-                %%  currentfont /StrokeWidth get 2 div 0 exch
-                %%  currentfont /FontMatrix get dtransform
-                %%  dup mul exch dup mul add sqrt
-                %%  add
-                %%} if
+                currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+                currentfont /StrokeWidth known and {
+                    currentfont /StrokeWidth get 2 div 0 exch
+                    currentfont /FontMatrix get dtransform
+                    dup mul exch dup mul add sqrt
+                    add
+                } if
             } ifelse
             /textascent exch def
             /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
@@ -197,29 +216,37 @@
             textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
             textxpos textypos moveto textgaps 0 tstr ashow
         } ifelse
-    } if    
+    } if
 
     % Display the guard elements
     guardwhitespace {
-		(OCR-B) guardheight 2 mul selectfont
+        0.75 setlinewidth
         guardleftpos 0 ne {
-            guardleftpos neg 2 sub guardleftypos guardheight 2 div sub 1.25 sub moveto
-			(<) show
+            newpath
+            guardleftpos neg guardwidth add guardleftypos guardheight 2 div add moveto
+            guardwidth neg guardheight -2 div rlineto
+            guardwidth guardheight -2 div rlineto
+            stroke
         } if
         guardrightpos 0 ne {
-            guardrightpos pixx add guardwidth sub 1 add guardrightypos guardheight 2 div sub 1.25 sub moveto
-			(>) show
+            newpath
+            guardrightpos pixx add guardwidth sub guardrightypos guardheight 2 div add moveto
+            guardwidth guardheight -2 div rlineto
+            guardwidth neg guardheight -2 div rlineto
+            stroke
         } if
     } if
-    
+
     grestore
-    
+
     end
 
-} bind def
-%% /renlinear dup load /uk.co.terryburton.bwipp defineresource pop
-%% end
-%% /setpacking where {pop setpacking} if
+}
+[/barcode] {null def} forall
+bind def
+/renlinear dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RENDERER renlinear--

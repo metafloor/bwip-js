@@ -2,94 +2,94 @@
 <html><head><title>bwipjs Code Coverage</title>
 <style type="text/css">
 html, body {
-	padding:	0;
-	margin:		0;
-	overflow:	hidden;
+    padding:    0;
+    margin:     0;
+    overflow:   hidden;
 }
 div {
-	box-sizing:		border-box;
-	font-family: 	"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
+    box-sizing:     border-box;
+    font-family:    "Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
 }
 #header {
-	background-color:#040404;
-	color:			#fff;
-	font-weight:	bold;
-	font-size:		125%;
-	padding:		10px;
-	text-align:		center;
+    background-color:#040404;
+    color:          #fff;
+    font-weight:    bold;
+    font-size:      125%;
+    padding:        10px;
+    text-align:     center;
 }
 #links {
-	overflow:		visible;
-	padding:		10px;
-	padding-right:	24px;
+    overflow:       visible;
+    padding:        10px;
+    padding-right:  24px;
 }
 .codeblock {
-	display:		none;
+    display:        none;
 }
 .codeblock.show {
-	display:		block;
-	min-width:		100vw;	/* hack */
-	white-space:	pre;
-	font-family:	monospace;
+    display:        block;
+    min-width:      100vw;  /* hack */
+    white-space:    pre;
+    font-family:    monospace;
 }
 .codeblock b {
-	font-size:		115%;
-	font-weight:	bold;
-	color:			#6492ed;
+    font-size:      115%;
+    font-weight:    bold;
+    color:          #6492ed;
 }
 a, a:visited, a:active {
-	color:			#6492ed;
+    color:          #6492ed;
 }
 a.show {
-	font-weight:	bold;
-	color:			black;
-	text-decoration:none;
+    font-weight:    bold;
+    color:          black;
+    text-decoration:none;
 }
 .taken { color: #000; }
 .missed { color: red; }
 </style>
 <script type="text/javascript">
 function showcode(ev, ident) {
-	// Undo the active codeblock and link
-	var a = document.querySelectorAll('a.codelink.show');
-	if (a && a.length) {
-		for (var i = 0; i < a.length; i++) {
-			a[i].className = 'codelink';
-		}
-	}
-	var a = document.querySelectorAll('div.codeblock.show');
-	if (a && a.length) {
-		for (var i = 0; i < a.length; i++) {
-			a[i].className = 'codeblock';
-		}
-	}
-	// Activate the selected 
-	ident = ident || ev.target.href.replace(/^.*#/, '');
-	console.log(ev.target);
-	document.querySelectorAll('div.codeblock.' + ident)[0].className += ' show';
-	document.querySelectorAll('a.codelink.' + ident)[0].className += ' show'; 
+    // Undo the active codeblock and link
+    var a = document.querySelectorAll('a.codelink.show');
+    if (a && a.length) {
+        for (var i = 0; i < a.length; i++) {
+            a[i].className = 'codelink';
+        }
+    }
+    var a = document.querySelectorAll('div.codeblock.show');
+    if (a && a.length) {
+        for (var i = 0; i < a.length; i++) {
+            a[i].className = 'codeblock';
+        }
+    }
+    // Activate the selected 
+    ident = ident || ev.target.href.replace(/^.*#/, '');
+    console.log(ev.target);
+    document.querySelectorAll('div.codeblock.' + ident)[0].className += ' show';
+    document.querySelectorAll('a.codelink.' + ident)[0].className += ' show'; 
 
-	if (history.replaceState) {
-		history.replaceState(null, null, '#' + ident);
-	} else {
-		location.hash = '#' + ident;
-	}
-	var panel = document.getElementById('codepanel');
-	panel.scrollTop = 0;
-	panel.scrollLeft = 0;
+    if (history.replaceState) {
+        history.replaceState(null, null, '#' + ident);
+    } else {
+        location.hash = '#' + ident;
+    }
+    var panel = document.getElementById('codepanel');
+    panel.scrollTop = 0;
+    panel.scrollLeft = 0;
 
-	ev.stopPropagation();
-	ev.preventDefault();
+    ev.stopPropagation();
+    ev.preventDefault();
 }
 window.addEventListener('load', function(ev) {
-		var a = document.querySelectorAll('a.codelink');
-		for (var i = 0; i < a.length; i++) {
-			a[i].addEventListener('click', showcode, false);
-		}
-		if (window.location.hash) {
-			showcode(ev, window.location.hash.substr(1));
-		}
-	}, false);
+        var a = document.querySelectorAll('a.codelink');
+        for (var i = 0; i < a.length; i++) {
+            a[i].addEventListener('click', showcode, false);
+        }
+        if (window.location.hash) {
+            showcode(ev, window.location.hash.substr(1));
+        }
+    }, false);
 </script>
 </head><body>
 <div style="display:flex;flex-direction:row;height:100vh;width:100vw">

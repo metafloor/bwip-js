@@ -139,7 +139,7 @@ declare namespace BwipJs {
     ):
         | Array<{ bbs: number[]; bhs: number[]; sbs: number[] }>
         | Array<{ pixs: number[]; pixx: number; pixy: number; height: number; width: number }>;
-		
+        
     export const BWIPP_VERSION: string;
     export const BWIPJS_VERSION: string;
 

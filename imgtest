@@ -1,14 +1,14 @@
 #!/bin/bash
 ## file: imgtest
 ##
-## usage: imgtest [--refresh] symbol text opts
+## usage: imgtest [--regen] symbol text opts
 ##
 ## Compare a generated image against a proof image.
 ##
 REGEN=NO
-if [ "x$1" == x--refresh ] ; then
-	REGEN=YES
-	shift
+if [ "x$1" == x--regen ] ; then
+    REGEN=YES
+    shift
 fi
 
 sym="$1"
@@ -24,16 +24,16 @@ echo "$filename"
 status=$?
 
 if [ ! -f proofs/$filename -o $REGEN == YES ] ; then
-	cp -f tests/$filename proofs/$filename
+    cp -f tests/$filename proofs/$filename
 fi
 
 msg=$(./imgcmp proofs/$filename tests/$filename)
 
 (
 if [ ! -z "$msg" ] ; then
-	echo "<div class=\"main error\">"
+    echo "<div class=\"main error\">"
 else 
-	echo "<div class=\"main\">"
+    echo "<div class=\"main\">"
 fi
 echo "<h1>$filename</h1>"
 
@@ -57,13 +57,13 @@ console.log('postscript: ' + bwipp.readUInt32BE(16) + ' x ' + bwipp.readUInt32BE
 console.log('</div>');
 @EOF
 if [ ! -z "$msg" ] ; then
-	echo "<br><span>$msg</span>"
+    echo "<br><span>$msg</span>"
 fi
 echo "</div>"
 ) >> imgtests.html
 
 if [ ! -z "$msg" ] ; then
-	echo "$msg"
-	exit 1
+    echo "$msg"
+    exit 1
 fi
 exit 0

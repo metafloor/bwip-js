@@ -1,9 +1,9 @@
 %!PS
 
-% Barcode Writer in Pure PostScript - Version 2023-04-03
+% Barcode Writer in Pure PostScript - Version 2024-01-03
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2023 Terry Burton
+% Copyright (c) 2004-2024 Terry Burton
 %
 % Permission is hereby granted, free of charge, to any
 % person obtaining a copy of this software and associated
@@ -32,7 +32,7 @@
 % --BEGIN TEMPLATE--
 
 % --BEGIN RESOURCE preamble--
-%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2023040300 29733 32838
+%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2024010300 29733 32838
 %%BeginData:          6 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -46,7 +46,7 @@
 
 % --BEGIN RESOURCE loadctx--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp loadctx 0.0 2023040300 41297 40927
+%%BeginResource: uk.co.terryburton.bwipp loadctx 0.0 2024010300 41297 40927
 %%BeginData:         30 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -84,7 +84,7 @@
 
 % --BEGIN RESOURCE unloadctx--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp unloadctx 0.0 2023040300 38938 38741
+%%BeginResource: uk.co.terryburton.bwipp unloadctx 0.0 2024010300 38938 38741
 %%BeginData:         14 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 1 dict
@@ -106,7 +106,7 @@
 
 % --BEGIN RESOURCE raiseerror--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2023040300 39029 38860
+%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2024010300 39029 38860
 %%BeginData:         15 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -129,7 +129,7 @@
 
 % --BEGIN RESOURCE processoptions--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2023040300 48428 48479
+%%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2024010300 48428 48479
 %%BeginData:         50 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -187,7 +187,7 @@
 
 % --BEGIN RESOURCE parseinput--
 % --REQUIRES preamble loadctx unloadctx raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2023040300 73457 69318
+%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2024010300 73457 69318
 %%BeginData:        174 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -369,8 +369,8 @@ bind def
 
 % --BEGIN RESOURCE gs1process--
 % --REQUIRES preamble loadctx unloadctx parseinput raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2023040300 548201 598155
-%%BeginData:       2941 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2024010300 600758 650584
+%%BeginData:       2992 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -411,7 +411,7 @@ bind def
             /parts [
                 << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintkey ] >>
             ]
-            /req    [ [ (37) ] ]
+            /req    [ [ [ (37) ] ] ]
         >>
         (02) exch dup
         pop
@@ -420,7 +420,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (10) exch dup
         pop
@@ -429,7 +429,7 @@ bind def
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmd0 ] >>
             ]
-            /req    [ [ (01) (02) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (11) exch dup
         pop
@@ -438,7 +438,7 @@ bind def
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmd0 ] >>
             ]
-            /req    [ [ (8020) ] ]
+            /req    [ [ [ (8020) ] ] ]
         >>
         (12) exch dup
         pop
@@ -447,7 +447,7 @@ bind def
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmd0 ] >>
             ]
-            /req    [ [ (01) (02) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (13) exch dup
         (15) exch dup
@@ -458,7 +458,7 @@ bind def
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmd0 ] >>
             ]
-            /req    [ [ (01) (02) (255) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (255) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (17) exch dup
         pop
@@ -467,7 +467,7 @@ bind def
             /parts [
                 << /cset /N  /min  2  /max  2  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (20) exch dup
         pop
@@ -477,7 +477,7 @@ bind def
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
             /ex     [ (235) ]
-            /req    [ [ (01) (8006) ] ]
+            /req    [ [ [ (01) ] [ (8006) ] ] ]
         >>
         (21) exch dup
         pop
@@ -486,7 +486,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) ] ]
+            /req    [ [ [ (01) ] ] ]
         >>
         (22) exch dup
         pop
@@ -495,7 +495,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 28  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) ] ]
+            /req    [ [ [ (01) ] ] ]
         >>
         (235) exch dup
         pop
@@ -504,7 +504,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 30  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (240) exch dup
         (241) exch dup
@@ -514,7 +514,7 @@ bind def
             /parts [
                 << /cset /N  /min  1  /max  6  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (242) exch dup
         pop
@@ -523,7 +523,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) ] ]
+            /req    [ [ [ (01) ] ] ]
         >>
         (243) exch dup
         pop
@@ -532,7 +532,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 30  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (8006) ] [ (21) ] ]
+            /req    [ [ [ (01) ] [ (8006) ] ] [ [ (21) ] ] ]
         >>
         (250) exch dup
         pop
@@ -541,7 +541,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 30  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (8006) ] ]
+            /req    [ [ [ (01) ] [ (8006) ] ] ]
         >>
         (251) exch dup
         pop
@@ -560,7 +560,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (414) ] ]
+            /req    [ [ [ (414) ] ] ]
         >>
         (254) exch dup
         pop
@@ -580,7 +580,7 @@ bind def
             /parts [
                 << /cset /N  /min  1  /max  8  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (30) exch dup
         pop
@@ -590,7 +590,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (310n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3100) exch dup
         (3101) exch dup
@@ -605,7 +605,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (311n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3110) exch dup
         (3111) exch dup
@@ -620,7 +620,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (312n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3120) exch dup
         (3121) exch dup
@@ -635,7 +635,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (313n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3130) exch dup
         (3131) exch dup
@@ -650,7 +650,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (314n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3140) exch dup
         (3141) exch dup
@@ -665,7 +665,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (315n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3150) exch dup
         (3151) exch dup
@@ -680,7 +680,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (316n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3160) exch dup
         (3161) exch dup
@@ -695,7 +695,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (320n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3200) exch dup
         (3201) exch dup
@@ -710,7 +710,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (321n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3210) exch dup
         (3211) exch dup
@@ -725,7 +725,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (322n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3220) exch dup
         (3221) exch dup
@@ -740,7 +740,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (323n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3230) exch dup
         (3231) exch dup
@@ -755,7 +755,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (324n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3240) exch dup
         (3241) exch dup
@@ -770,7 +770,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (325n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3250) exch dup
         (3251) exch dup
@@ -785,7 +785,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (326n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3260) exch dup
         (3261) exch dup
@@ -800,7 +800,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (327n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3270) exch dup
         (3271) exch dup
@@ -815,7 +815,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (328n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3280) exch dup
         (3281) exch dup
@@ -830,7 +830,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (329n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3290) exch dup
         (3291) exch dup
@@ -845,7 +845,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (330n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3300) exch dup
         (3301) exch dup
@@ -860,7 +860,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (331n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3310) exch dup
         (3311) exch dup
@@ -875,7 +875,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (332n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3320) exch dup
         (3321) exch dup
@@ -890,7 +890,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (333n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3330) exch dup
         (3331) exch dup
@@ -905,7 +905,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (334n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3340) exch dup
         (3341) exch dup
@@ -920,7 +920,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (335n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3350) exch dup
         (3351) exch dup
@@ -935,7 +935,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (336n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3360) exch dup
         (3361) exch dup
@@ -950,7 +950,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (337n) ]
-            /req    [ [ (01) ] ]
+            /req    [ [ [ (01) ] ] ]
         >>
         (3370) exch dup
         (3371) exch dup
@@ -965,7 +965,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (340n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3400) exch dup
         (3401) exch dup
@@ -980,7 +980,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (341n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3410) exch dup
         (3411) exch dup
@@ -995,7 +995,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (342n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3420) exch dup
         (3421) exch dup
@@ -1010,7 +1010,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (343n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3430) exch dup
         (3431) exch dup
@@ -1025,7 +1025,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (344n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3440) exch dup
         (3441) exch dup
@@ -1040,7 +1040,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (345n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3450) exch dup
         (3451) exch dup
@@ -1055,7 +1055,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (346n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3460) exch dup
         (3461) exch dup
@@ -1070,7 +1070,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (347n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3470) exch dup
         (3471) exch dup
@@ -1085,7 +1085,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (348n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3480) exch dup
         (3481) exch dup
@@ -1100,7 +1100,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (349n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3490) exch dup
         (3491) exch dup
@@ -1115,7 +1115,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (350n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3500) exch dup
         (3501) exch dup
@@ -1130,7 +1130,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (351n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3510) exch dup
         (3511) exch dup
@@ -1145,7 +1145,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (352n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3520) exch dup
         (3521) exch dup
@@ -1160,7 +1160,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (353n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3530) exch dup
         (3531) exch dup
@@ -1175,7 +1175,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (354n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3540) exch dup
         (3541) exch dup
@@ -1190,7 +1190,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (355n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3550) exch dup
         (3551) exch dup
@@ -1205,7 +1205,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (356n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3560) exch dup
         (3561) exch dup
@@ -1220,7 +1220,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (357n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3570) exch dup
         (3571) exch dup
@@ -1235,7 +1235,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (360n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3600) exch dup
         (3601) exch dup
@@ -1250,7 +1250,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (361n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3610) exch dup
         (3611) exch dup
@@ -1265,7 +1265,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (362n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3620) exch dup
         (3621) exch dup
@@ -1280,7 +1280,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (363n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3630) exch dup
         (3631) exch dup
@@ -1295,7 +1295,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (364n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3640) exch dup
         (3641) exch dup
@@ -1310,7 +1310,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (365n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3650) exch dup
         (3651) exch dup
@@ -1325,7 +1325,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (366n) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (3660) exch dup
         (3661) exch dup
@@ -1340,7 +1340,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (367n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3670) exch dup
         (3671) exch dup
@@ -1355,7 +1355,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (368n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3680) exch dup
         (3681) exch dup
@@ -1370,7 +1370,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (369n) ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (3690) exch dup
         (3691) exch dup
@@ -1384,7 +1384,7 @@ bind def
             /parts [
                 << /cset /N  /min  1  /max  8  /opt false  /linters [] >>
             ]
-            /req    [ [ (00) ] [ (02) (8026) ] ]
+            /req    [ [ [ (00) ] ] [ [ (02) ] [ (8026) ] ] ]
         >>
         (37) exch dup
         pop
@@ -1394,7 +1394,7 @@ bind def
                 << /cset /N  /min  1  /max 15  /opt false  /linters [] >>
             ]
             /ex     [ (390n) (391n) (394n) (8111) ]
-            /req    [ [ (255) (8020) ] ]
+            /req    [ [ [ (255) ] [ (8020) ] ] ]
         >>
         (3900) exch dup
         (3901) exch dup
@@ -1414,7 +1414,7 @@ bind def
                 << /cset /N  /min  1  /max 15  /opt false  /linters [] >>
             ]
             /ex     [ (391n) ]
-            /req    [ [ (8020) ] ]
+            /req    [ [ [ (8020) ] ] ]
         >>
         (3910) exch dup
         (3911) exch dup
@@ -1433,7 +1433,7 @@ bind def
                 << /cset /N  /min  1  /max 15  /opt false  /linters [] >>
             ]
             /ex     [ (392n) (393n) ]
-            /req    [ [ (01) ] [ (30) (31nn) (32nn) (35nn) (36nn) ] ]
+            /req    [ [ [ (01) ] ] [ [ (30) ] [ (31nn) ] [ (32nn) ] [ (35nn) ] [ (36nn) ] ] ]
         >>
         (3920) exch dup
         (3921) exch dup
@@ -1453,7 +1453,7 @@ bind def
                 << /cset /N  /min  1  /max 15  /opt false  /linters [] >>
             ]
             /ex     [ (393n) ]
-            /req    [ [ (30) (31nn) (32nn) (35nn) (36nn) ] ]
+            /req    [ [ [ (30) ] [ (31nn) ] [ (32nn) ] [ (35nn) ] [ (36nn) ] ] ]
         >>
         (3930) exch dup
         (3931) exch dup
@@ -1472,7 +1472,7 @@ bind def
                 << /cset /N  /min  4  /max  4  /opt false  /linters [] >>
             ]
             /ex     [ (394n) (8111) ]
-            /req    [ [ (255) ] ]
+            /req    [ [ [ (255) ] ] ]
         >>
         (3940) exch dup
         (3941) exch dup
@@ -1485,7 +1485,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
             /ex     [ (392n) (393n) (395n) (8005) ]
-            /req    [ [ (30) (31nn) (32nn) (35nn) (36nn) ] ]
+            /req    [ [ [ (30) ] [ (31nn) ] [ (32nn) ] [ (35nn) ] [ (36nn) ] ] ]
         >>
         (3950) exch dup
         (3951) exch dup
@@ -1525,7 +1525,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 30  /opt false  /linters [] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (403) exch dup
         pop
@@ -1554,7 +1554,7 @@ bind def
             /parts [
                 << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
             ]
-            /req    [ [ (8020) ] ]
+            /req    [ [ [ (8020) ] ] ]
             /dlpkey [ [ (8020) ] ]
         >>
         (415) exch dup
@@ -1601,7 +1601,7 @@ bind def
                 << /cset /N  /min  3  /max  3  /opt false  /linters [ /lintiso3166 ] >>
             ]
             /ex     [ (426) ]
-            /req    [ [ (01) (02) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (422) exch dup
         pop
@@ -1611,7 +1611,7 @@ bind def
                 << /cset /N  /min  1  /max 15  /opt false  /linters [ /lintiso3166list ] >>
             ]
             /ex     [ (426) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (423) exch dup
         pop
@@ -1621,7 +1621,7 @@ bind def
                 << /cset /N  /min  3  /max  3  /opt false  /linters [ /lintiso3166 ] >>
             ]
             /ex     [ (426) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (424) exch dup
         pop
@@ -1631,7 +1631,7 @@ bind def
                 << /cset /N  /min  1  /max 15  /opt false  /linters [ /lintiso3166list ] >>
             ]
             /ex     [ (426) ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (425) exch dup
         pop
@@ -1640,7 +1640,7 @@ bind def
             /parts [
                 << /cset /N  /min  3  /max  3  /opt false  /linters [ /lintiso3166 ] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (426) exch dup
         pop
@@ -1649,7 +1649,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max  3  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] [ (422) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] [ [ (422) ] ] ]
         >>
         (427) exch dup
         pop
@@ -1658,7 +1658,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 35  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4300) exch dup
         (4301) exch dup
@@ -1668,7 +1668,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 70  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4302) exch dup
         pop
@@ -1677,7 +1677,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 70  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (4302) ] ]
+            /req    [ [ [ (4302) ] ] ]
         >>
         (4303) exch dup
         pop
@@ -1686,7 +1686,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 70  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4304) exch dup
         (4305) exch dup
@@ -1697,7 +1697,7 @@ bind def
             /parts [
                 << /cset /X  /min  2  /max  2  /opt false  /linters [ /lintiso3166alpha2 ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4307) exch dup
         pop
@@ -1706,16 +1706,17 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 30  /opt false  /linters [] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4308) exch dup
         pop
 
         <<
             /parts [
-                << /cset /N  /min 20  /max 20  /opt false  /linters [ /lintlatlong ] >>
+                << /cset /N  /min 10  /max 10  /opt false  /linters [ /lintlatitude ] >>
+                << /cset /N  /min 10  /max 10  /opt false  /linters [ /lintlongitude ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4309) exch dup
         pop
@@ -1724,7 +1725,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 35  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4310) exch dup
         (4311) exch dup
@@ -1734,7 +1735,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 70  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4312) exch dup
         pop
@@ -1743,7 +1744,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 70  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (4312) ] ]
+            /req    [ [ [ (4312) ] ] ]
         >>
         (4313) exch dup
         pop
@@ -1752,7 +1753,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 70  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4314) exch dup
         (4315) exch dup
@@ -1763,7 +1764,7 @@ bind def
             /parts [
                 << /cset /X  /min  2  /max  2  /opt false  /linters [ /lintiso3166alpha2 ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4317) exch dup
         pop
@@ -1772,7 +1773,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4318) exch dup
         pop
@@ -1781,7 +1782,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 30  /opt false  /linters [] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4319) exch dup
         pop
@@ -1790,7 +1791,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 35  /opt false  /linters [ /lintpcenc ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4320) exch dup
         pop
@@ -1799,7 +1800,7 @@ bind def
             /parts [
                 << /cset /N  /min  1  /max  1  /opt false  /linters [ /lintyesno ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4321) exch dup
         (4322) exch dup
@@ -1811,7 +1812,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmd0 ] >>
                 << /cset /N  /min  4  /max  4  /opt false  /linters [ /linthhmm ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4324) exch dup
         (4325) exch dup
@@ -1821,7 +1822,7 @@ bind def
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmdd ] >>
             ]
-            /req    [ [ (00) ] ]
+            /req    [ [ [ (00) ] ] ]
         >>
         (4326) exch dup
         pop
@@ -1830,7 +1831,7 @@ bind def
             /parts [
                 << /cset /N  /min 13  /max 13  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) (8006) (8026) ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (7001) exch dup
         pop
@@ -1839,7 +1840,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 30  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7002) exch dup
         pop
@@ -1849,7 +1850,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmdd ] >>
                 << /cset /N  /min  4  /max  4  /opt false  /linters [ /linthhmm ] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7003) exch dup
         pop
@@ -1858,7 +1859,7 @@ bind def
             /parts [
                 << /cset /N  /min  1  /max  4  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) ] [ (10) ] ]
+            /req    [ [ [ (01) ] ] [ [ (10) ] ] ]
         >>
         (7004) exch dup
         pop
@@ -1867,7 +1868,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 12  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7005) exch dup
         pop
@@ -1876,7 +1877,7 @@ bind def
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmdd ] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7006) exch dup
         pop
@@ -1886,7 +1887,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmdd ] >>
                 << /cset /N  /min  6  /max  6  /opt true   /linters [ /lintyymmdd ] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7007) exch dup
         pop
@@ -1895,7 +1896,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max  3  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7008) exch dup
         pop
@@ -1904,7 +1905,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 10  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7009) exch dup
         pop
@@ -1913,7 +1914,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max  2  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7010) exch dup
         pop
@@ -1923,7 +1924,7 @@ bind def
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmdd ] >>
                 << /cset /N  /min  4  /max  4  /opt true   /linters [ /linthhmm ] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7011) exch dup
         pop
@@ -1932,7 +1933,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (8006) ] [ (416) ] ]
+            /req    [ [ [ (01) ] [ (8006) ] ] [ [ (416) ] ] ]
         >>
         (7020) exch dup
         pop
@@ -1941,7 +1942,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (8006) ] ]
+            /req    [ [ [ (01) ] [ (8006) ] ] ]
         >>
         (7021) exch dup
         pop
@@ -1950,7 +1951,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (7021) ] ]
+            /req    [ [ [ (7021) ] ] ]
         >>
         (7022) exch dup
         pop
@@ -1968,7 +1969,7 @@ bind def
                 << /cset /N  /min  3  /max  3  /opt false  /linters [ /lintiso3166999 ] >>
                 << /cset /X  /min  1  /max 27  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (7030) exch dup
         (7031) exch dup
@@ -1997,7 +1998,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) ] ]
+            /req    [ [ [ (01) ] ] ]
         >>
         (710) exch dup
         (711) exch dup
@@ -2012,7 +2013,7 @@ bind def
                 << /cset /X  /min  2  /max  2  /opt false  /linters [] >>
                 << /cset /X  /min  1  /max 28  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (8004) ] ]
+            /req    [ [ [ (01) ] [ (8004) ] ] ]
         >>
         (7230) exch dup
         (7231) exch dup
@@ -2030,7 +2031,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (8006) ] ]
+            /req    [ [ [ (01) ] [ (8006) ] ] ]
         >>
         (7240) exch dup
         pop
@@ -2039,7 +2040,7 @@ bind def
             /parts [
                 << /cset /N  /min  2  /max  2  /opt false  /linters [ /lintmediatype ] >>
             ]
-            /req    [ [ (8017) (8018) ] ]
+            /req    [ [ [ (8017) ] [ (8018) ] ] ]
         >>
         (7241) exch dup
         pop
@@ -2048,7 +2049,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 25  /opt false  /linters [] >>
             ]
-            /req    [ [ (8017) (8018) ] ]
+            /req    [ [ [ (8017) ] [ (8018) ] ] ]
         >>
         (7242) exch dup
         pop
@@ -2061,7 +2062,7 @@ bind def
                 << /cset /N  /min  1  /max  1  /opt false  /linters [ /lintwinding ] >>
                 << /cset /N  /min  1  /max  1  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) ] ]
+            /req    [ [ [ (01) ] ] ]
         >>
         (8001) exch dup
         pop
@@ -2098,7 +2099,7 @@ bind def
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (8005) exch dup
         pop
@@ -2118,7 +2119,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 34  /opt false  /linters [ /lintiban ] >>
             ]
-            /req    [ [ (415) ] ]
+            /req    [ [ [ (415) ] ] ]
         >>
         (8007) exch dup
         pop
@@ -2128,7 +2129,7 @@ bind def
                 << /cset /N  /min  8  /max  8  /opt false  /linters [ /lintyymmddhh ] >>
                 << /cset /N  /min  1  /max  4  /opt true   /linters [ /lintmmoptss ] >>
             ]
-            /req    [ [ (01) (02) ] ]
+            /req    [ [ [ (01) ] [ (02) ] ] ]
         >>
         (8008) exch dup
         pop
@@ -2137,7 +2138,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 50  /opt false  /linters [] >>
             ]
-            /req    [ [ (00) (01) ] ]
+            /req    [ [ [ (00) ] [ (01) ] ] ]
         >>
         (8009) exch dup
         pop
@@ -2155,7 +2156,7 @@ bind def
             /parts [
                 << /cset /N  /min  1  /max 12  /opt false  /linters [ /lintnozeroprefix ] >>
             ]
-            /req    [ [ (8010) ] ]
+            /req    [ [ [ (8010) ] ] ]
         >>
         (8011) exch dup
         pop
@@ -2164,7 +2165,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 20  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) (8006) ] ]
+            /req    [ [ [ (01) ] [ (8006) ] ] ]
         >>
         (8012) exch dup
         pop
@@ -2202,7 +2203,7 @@ bind def
             /parts [
                 << /cset /N  /min  1  /max 10  /opt false  /linters [] >>
             ]
-            /req    [ [ (8017) (8018) ] ]
+            /req    [ [ [ (8017) ] [ (8018) ] ] ]
         >>
         (8019) exch dup
         pop
@@ -2211,7 +2212,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 25  /opt false  /linters [] >>
             ]
-            /req    [ [ (415) ] ]
+            /req    [ [ [ (415) ] ] ]
         >>
         (8020) exch dup
         pop
@@ -2222,9 +2223,18 @@ bind def
                 << /cset /N  /min  4  /max  4  /opt false  /linters [ /lintpieceoftotal ] >>
             ]
             /ex     [ (02) (8006) ]
-            /req    [ [ (37) ] ]
+            /req    [ [ [ (37) ] ] ]
         >>
         (8026) exch dup
+        pop
+
+        <<
+            /parts [
+                << /cset /Z  /min  1  /max 90  /opt false  /linters [] >>
+            ]
+            /req    [ [ [ (00) ] [ (01) ] [ (253) ] [ (255) ] [ (8003) ] [ (8004) ] [ (8006) ] [ (8010) ] [ (8017) ] [ (8018) ] ] ]
+        >>
+        (8030) exch dup
         pop
 
         <<
@@ -2239,7 +2249,7 @@ bind def
             /parts [
                 << /cset /N  /min  4  /max  4  /opt false  /linters [] >>
             ]
-            /req    [ [ (255) ] ]
+            /req    [ [ [ (255) ] ] ]
         >>
         (8111) exch dup
         pop
@@ -2256,7 +2266,7 @@ bind def
             /parts [
                 << /cset /X  /min  1  /max 70  /opt false  /linters [] >>
             ]
-            /req    [ [ (01) ] ]
+            /req    [ [ [ (01) ] ] ]
         >>
         (8200) exch dup
         pop
@@ -2372,12 +2382,13 @@ bind def
         pipos exch get dup pp length exch sub pp 3 1 roll getinterval /pp exch def
 
         /uriunescape {
+            /qq exch def  % Is query parameter
             /in exch def
             /out in length string def
             0 0 {
                 1 index in length ge {exit} if
                 in 2 index get
-                dup 43 eq {  % "+" -> " "
+                dup 43 eq qq and {  % "+" -> " " in query params
                     pop out 1 index 32 put
                     1 add exch 1 add exch
                 } {
@@ -2399,6 +2410,24 @@ bind def
             out
         } def
 
+        /isvaliddlpkeyseq {
+            /in exch def
+            false
+            gs1syntax in 0 get get /dlpkey get {
+                /seq exch def
+                /i 1 def  /j 0 def
+                {
+                    i in length ge {exit} if
+                    j seq length ge {exit} if
+                    in i get seq j get eq {
+                        /i i 1 add def
+                    } if
+                    /j j 1 add def
+                } loop
+                i in length eq {pop true exit} if
+            } forall
+        } def
+
         /ais 99 array def
         /vals 99 array def
         0
@@ -2409,30 +2438,17 @@ bind def
                 ais exch 4 index exch put
                 pop
                 (/) search {exch pop} {() exch} ifelse
-                vals exch 3 index exch uriunescape put
+                vals exch 3 index exch false uriunescape put
             } {
                 pop exit
             } ifelse
             exch 1 add exch
         } loop
+        dup /plen exch def
 
         % Validate the key-qualifiers in the path info sequence
         dup 1 gt {
-            false
-            gs1syntax ais 0 get get /dlpkey get {
-                /seq exch def
-                /i 1 def  /j 0 def
-                {
-                    i ais length ge {exit} if
-                    j seq length ge {exit} if
-                    ais i get seq j get eq {
-                        /i i 1 add def
-                    } if
-                    /j j 1 add def
-                } loop
-                i 2 index eq {pop true exit} if
-            } forall
-            not {
+            ais 0 plen getinterval isvaliddlpkeyseq not {
                 pop /bwipp.GS1dlBadPathInfo (The AIs in the path are not a valid key-qualifier sequence for the key) //raiseerror exec
             } if
         } if
@@ -2445,7 +2461,7 @@ bind def
                 true 1 index {dup 48 ge exch 57 le and and} forall {
                     ais exch 5 index exch put
                     pop
-                    vals exch 3 index exch uriunescape put
+                    vals exch 3 index exch true uriunescape put
                     exch 1 add exch
                 } {  % Ignore non-numeric parameters
                     pop pop pop
@@ -2454,6 +2470,24 @@ bind def
                 pop
             } ifelse
         } loop
+
+        % Check for valid path info attributes in query params
+        ais plen 2 index plen sub getinterval {
+            plen -1 1 {  % Trial the query param at each non-initial path info position
+                1 index [
+                    ais 0 plen getinterval aload pop
+                    counttomark 3 add -2 roll exch 1 roll
+                ] isvaliddlpkeyseq {
+                    exch pop
+                    dup length dup 50 add string
+                    dup 0 (AI \() putinterval
+                    dup 4 4 index putinterval
+                    dup 2 index 4 add (\) from query params should be in the path info) putinterval
+                    exch pop exch pop /bwipp.GS1dlAttributeMustBeQualifier exch //raiseerror exec
+                } if
+            } for
+            pop
+        } forall
 
         /ais ais 0 3 index getinterval def
         /vals vals 0 3 index getinterval def
@@ -2499,32 +2533,47 @@ bind def
 
 
     % Linter routines for validating AI components
+{
+    /cset82 <<
+        0 (!"%&'\(\)*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz)
+        { exch dup 1 add } forall pop
+    >> def
+
+    /cset39 <<
+        0 (#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ)
+        { exch dup 1 add } forall pop
+    >> def
+
+    /cset32 <<
+        0 (23456789ABCDEFGHJKLMNPQRSTUVWXYZ)
+        { exch dup 1 add } forall pop
+    >> def
+
+    /cset64 <<
+        0 (ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_)
+        { exch dup 1 add } forall pop
+    >> def
+} ctxdef
 
     /lintnumeric {
-        true exch {
-            dup 48 lt exch 57 gt or { pop false exit } if
-        } forall
+        true exch { dup 48 lt exch 57 gt or { pop false exit } if } forall
         not { pop /bwipp.GS1notNumeric (Not numeric) false exit } if
     } def
 
     /lintcset82 {
-        true exch {
-            1 string dup 0 4 -1 roll put
-            (!"%&'()*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz)
-            exch search not { pop pop false exit } if
-            pop pop pop
-        } forall
+        true exch { cset82 exch known not { pop false exit } if } forall
         not { pop /bwipp.GS1badCSET82character (Invalid CSET 82 character) false exit } if
     } def
 
     /lintcset39 {
-        true exch {
-            1 string dup 0 4 -1 roll put
-            (#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ)
-            exch search not { pop pop false exit } if
-            pop pop pop
-        } forall
+        true exch { cset39 exch known not { pop false exit } if } forall
         not { pop /bwipp.GS1badCSET39character  (Invalid CSET 39 character) false exit } if
+    } def
+
+    /lintcset64 {
+        % TODO Validate base64 padding rules
+        true exch { dup cset64 exch known not exch 61 ne and { pop false exit } if } forall
+        not { pop /bwipp.GS1badCSET64character  (Invalid CSET 64 character) false exit } if
     } def
 
     /lintkey {
@@ -2548,18 +2597,6 @@ bind def
         0 counttomark 1 sub {add} repeat exch pop
         10 mod 0 ne { pop /bwipp.GS1badChecksum (Bad checksum) false exit } if
     } def
-
-{
-    /cset82 <<
-        0 (!"%&'\(\)*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz)
-        { exch dup 1 add } forall pop
-    >> def
-
-    /cset32 <<
-        0 (23456789ABCDEFGHJKLMNPQRSTUVWXYZ)
-        { exch dup 1 add } forall pop
-    >> def
-} ctxdef
 
     /lintcsumalpha {
         dup length 2 lt { pop pop /bwipp.GS1alphaTooShort (Alphanumeric string is too short to check) false exit} if
@@ -3143,13 +3180,23 @@ bind def
         pop
     } def
 
-    /lintlatlong {
-        dup length 20 ne {
-            pop /bwipp.GS1badGeoLength (Invalid length for a geo-location) false exit
+    /lintlatitude {
+        dup length 10 ne {
+            pop /bwipp.GS1badLatitudeLength (Invalid length for a latitude) false exit
         } if
-        dup  0 10 getinterval cvi 1800000000 gt { pop /bwipp.GS1badLatitude (Invalid value for latitude) false exit } if
-        dup 10 10 getinterval cvi 3600000000 gt { pop /bwipp.GS1badLongitude (Invalid value for longitude) false exit } if
-        pop
+        cvi
+        (1800000000) cvi  % Workaround issue with packager
+        gt { pop /bwipp.GS1badLatitude (Invalid value for latitude) false exit } if
+    } def
+
+    /lintlongitude {
+        dup length 10 ne {
+            pop /bwipp.GS1badLongitudeLength (Invalid length for a longitude) false exit
+        } if
+        % Workaround issue with packager
+        cvi
+        (3600000000) cvi  % Workaround issue with packager
+        gt { pop /bwipp.GS1badLongitude (Invalid value for longitude) false exit } if
     } def
 
 {
@@ -3193,7 +3240,8 @@ bind def
                         eval length props /min get lt {
                             pop /bwipp.GS1valueTooShort (Too short) false exit
                         } if
-                        << /N /lintnumeric  /X /lintcset82  /Y /lintcset39 >> props /cset get get eval exch load exec
+                        << /N /lintnumeric  /X /lintcset82  /Y /lintcset39  /Z /lintcset64 >>
+                        props /cset get get eval exch load exec
                         props /linters get { eval exch load exec } forall
                     } ifelse
                 } forall
@@ -3280,9 +3328,12 @@ bind def
             } ifelse
             lintreqs {
                 gs1syntax ai get /req 2 copy known {
-                    get {  % For each req attribute group
-                        false exch {  % Any req AI in the group is fine
-                            ai aiexists {pop true} if
+                    get {                % For each req attribute instance
+                        false exch {     % And each AI sequence alternative
+                            true exch {  % Check whether all AIs in the sequence are present
+                                ai aiexists not {pop false} if
+                            } forall
+                            { pop true exit } if  % Wholly matching any of the alternatives is sufficient
                         } forall
                         not {
                             ai length 47 add string
@@ -3318,8 +3369,8 @@ bind def
 
 % --BEGIN RENDERER renlinear--
 % --REQUIRES preamble raiseerror processoptions--
-%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2023040300 78674 77746
-%%BeginData:        232 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2024010300 83313 82223
+%%BeginData:        245 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -3352,17 +3403,18 @@ bind def
 %psc     /barratio 1.0 def
 %psc     /spaceratio 1.0 def
 %psc     /showborder false def
+%psc     /showbearer false def
 %psc     /borderleft 10.0 def
 %psc     /borderright 10.0 def
-%psc     /bordertop 1.0 def
-%psc     /borderbottom 1.0 def
+%psc     /bordertop 0.0 def
+%psc     /borderbottom 0.0 def
 %psc     /borderwidth 0.5 def
 %psc     /guardwhitespace false def
 %psc     /guardleftpos 0.0 def
 %psc     /guardleftypos 0.0 def
 %psc     /guardrightpos 0.0 def
 %psc     /guardrightypos 0.0 def
-%psc     /guardwidth 6.0 def
+%psc     /guardwidth 5.0 def
 %psc     /guardheight 7.0 def
 %psc 
 %psc     {def} forall
@@ -3424,20 +3476,32 @@ bind def
 %psc     } def
 %psc 
 %psc     % Display the border and background
-%psc     newpath
-%psc     borderleft neg borderbottom neg moveto
-%psc     pixx borderleft add borderright add 0 rlineto
-%psc     0 pixy borderbottom add bordertop add rlineto
-%psc     pixx borderleft add borderright add neg 0 rlineto
-%psc     0 pixy borderbottom add bordertop add neg rlineto
-%psc     closepath
-%psc     backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if
-%psc     showborder {
+%psc     /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+%psc     /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+%psc     /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+%psc     /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+%psc     backgroundcolor (unset) ne {
 %psc         gsave
-%psc         bordercolor (unset) ne { bordercolor setanycolor } if
-%psc         borderwidth setlinewidth stroke
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         backgroundcolor setanycolor fill
 %psc         grestore
 %psc     } if
+%psc     showbearer {  % Overrides showborder
+%psc         gsave
+%psc         newpath
+%psc         bl aload pop moveto br aload pop lineto
+%psc         tl aload pop moveto tr aload pop lineto
+%psc         bordercolor (unset) ne { bordercolor setanycolor } if
+%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
+%psc         grestore
+%psc     } {
+%psc     showborder {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         bordercolor (unset) ne { bordercolor setanycolor } if
+%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
+%psc         grestore
+%psc     } if } ifelse
 %psc 
 %psc     % Display the bars for elements in the bars array
 %psc     gsave
@@ -3558,8 +3622,8 @@ bind def
 
 % --BEGIN RENDERER renmatrix--
 % --REQUIRES preamble raiseerror processoptions--
-%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2023040300 94426 93506
-%%BeginData:        303 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2024010300 100126 98828
+%%BeginData:        331 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -3573,13 +3637,14 @@ bwipjs_dontdraw { return } if
     % Default options
     /width 1.0 def
     /height 1.0 def
+    /bordercolor (unset) def
     /barcolor (unset) def
     /backgroundcolor (unset) def
     /colormap (unset) def
     /dotty false def
-    /inkspread 0 def
-    /inkspreadh 0.0 def
-    /inkspreadv 0.0 def
+    /inkspread null def    % real sentinal
+    /inkspreadh null def   % real sentinal
+    /inkspreadv null def   % real sentinal
     /includetext false def
     /txt [] def
     /textcolor (unset) def
@@ -3591,12 +3656,19 @@ bwipjs_dontdraw { return } if
     /textyoffset 0.0 def
     /textgaps 0.0 def
     /alttext () def
+    /showborder false def
+    /borderleft 0.0 def
+    /borderright 0.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.25 def
 
     {def} forall
     opt currentdict /opt undef currentdict //processoptions exec pop
 
-    inkspread 0 ne {/inkspreadh inkspread def} if
-    inkspread 0 ne {/inkspreadv inkspread def} if
+    inkspread null eq {/inkspread 0 def} if
+    inkspreadh null eq {/inkspreadh inkspread def} if
+    inkspreadv null eq {/inkspreadv inkspread def} if
 
     textsize 0 le {
         /bwipp.renmatrixBadTextsize (The font size must be greater than zero) //raiseerror exec
@@ -3769,15 +3841,35 @@ bwipjs_dontdraw { return } if
 
     gsave
 
-    % Draw the image
+    currentpoint translate
+
     /inkspread  inkspread  2 div def
     /inkspreadh inkspreadh 2 div def
     /inkspreadv inkspreadv 2 div def
-    currentpoint translate
-    width pixx div 72 mul height pixy div 72 mul scale
-    0 0 moveto pixx 0 lineto pixx pixy lineto 0 pixy lineto closepath
-%psc     backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if
 
+    % Force symbol to given width
+    width pixx div 72 mul height pixy div 72 mul scale
+
+    % Display the border and background
+    /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+    /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+    /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+    /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+    backgroundcolor (unset) ne {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        backgroundcolor setanycolor fill
+        grestore
+    } if
+    showborder {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } if
+
+    % Display the matrix
     colormap (unset) eq {
         /colormap << 1 barcolor >> def
     } if
@@ -3870,8 +3962,8 @@ bind def
 
 % --BEGIN RENDERER renmaximatrix--
 % --REQUIRES preamble raiseerror processoptions--
-%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2023040300 54958 54651
-%%BeginData:         84 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2024010300 62291 61901
+%%BeginData:        110 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -3882,8 +3974,16 @@ bind def
 %psc     20 dict begin
 %psc 
 %psc     % Default options
+%psc     /bordercolor (unset) def
 %psc     /barcolor (unset) def
 %psc     /backgroundcolor (unset) def
+%psc     /inkspread 0 def
+%psc     /showborder false def
+%psc     /borderleft 0.0 def
+%psc     /borderright 0.0 def
+%psc     /bordertop 0.0 def
+%psc     /borderbottom 0.0 def
+%psc     /borderwidth 0.25 def
 %psc 
 %psc     {def} forall
 %psc     opt currentdict /opt undef currentdict //processoptions exec pop
@@ -3913,9 +4013,27 @@ bind def
 %psc 
 %psc     2.4945 dup scale  % from 1pt to 0.88mm
 %psc 
-%psc     0 0 moveto 30 0 lineto 30 29 lineto 0 29 lineto closepath
-%psc     backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if
+%psc     /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
+%psc     /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
+%psc     /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
+%psc     /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def
+%psc     backgroundcolor (unset) ne {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         backgroundcolor setanycolor fill
+%psc         grestore
+%psc     } if
+%psc     showborder {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         bordercolor (unset) ne { bordercolor setanycolor } if
+%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
+%psc         grestore
+%psc     } if
+%psc 
 %psc     barcolor (unset) ne { barcolor setanycolor } if
+%psc 
+%psc     /g 0.06 inkspread add def
 %psc 
 %psc     0.5 0.5774 translate
 %psc 
@@ -3927,24 +4045,24 @@ bind def
 %psc         y 2 mod 0 eq {x} {x 0.5 add} ifelse
 %psc         32 y sub 0.8661 mul
 %psc         moveto
-%psc         0     0.5774 rmoveto
-%psc         -0.5 -0.2887 rlineto
-%psc         0    -0.5774 rlineto
-%psc         0.5  -0.2887 rlineto
-%psc         0.5   0.2887 rlineto
-%psc         0     0.5774 rlineto
-%psc         -0.5  0.2887 rlineto
+%psc         0              0.5774 g       sub rmoveto
+%psc        -0.5 g add     -0.2887 g 2 div add rlineto
+%psc         0             -0.5774 g       add rlineto
+%psc         0.5 g sub     -0.2887 g 2 div add rlineto
+%psc         0.5 g sub      0.2887 g 2 div sub rlineto
+%psc         0              0.5774 g       sub rlineto
+%psc        -0.5 g add      0.2887 g 2 div sub rlineto
 %psc         closepath
 %psc     } forall
 %psc     fill
 %psc 
 %psc     % Plot the locator symbol
-%psc     newpath 14 13.8576 0.5774 0 360 arc closepath
-%psc     14 13.8576 1.3359 360 0 arcn closepath fill
-%psc     newpath 14 13.8576 2.1058 0 360 arc closepath
-%psc     14 13.8576 2.8644 360 0 arcn closepath fill
-%psc     newpath 14 13.8576 3.6229 0 360 arc closepath
-%psc     14 13.8576 4.3814 360 0 arcn closepath fill
+%psc     newpath 14 13.8576 0.5774 inkspread add 0 360 arc closepath
+%psc             14 13.8576 1.3359 inkspread sub 360 0 arcn closepath fill
+%psc     newpath 14 13.8576 2.1058 inkspread add 0 360 arc closepath
+%psc             14 13.8576 2.8644 inkspread sub 360 0 arcn closepath fill
+%psc     newpath 14 13.8576 3.6229 inkspread add 0 360 arc closepath
+%psc             14 13.8576 4.3814 inkspread sub 360 0 arcn closepath fill
 %psc 
 %psc     grestore
 %psc 
@@ -3966,8 +4084,8 @@ bind def
 % --EXAM: 90200
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2023040300 67564 67372
-%%BeginData:        131 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2024010300 67628 67436
+%%BeginData:        133 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -4069,7 +4187,7 @@ bind def
             /enc revenc def
         } if
         sbs i 6 mul 3 add enc putinterval   % Put encoded digit into sbs
-        txt i [barcode i 1 getinterval i 1 sub 9 mul 13 add textxoffset add textyoffset textfont textsize] put
+        txt i [barcode i 1 getinterval i 1 sub 9 mul 10 add textxoffset add textyoffset textfont textsize] put
     } for
 
     % Return the arguments
@@ -4082,8 +4200,10 @@ bind def
         /txt txt
     } if
     /opt options
-    /guardrightpos 10.0
+    /guardrightpos 5.0
     /guardrightypos textyoffset 4 add
+    /borderleft 12.0
+    /borderright 5.0
     /bordertop 10.0
     >>
 
@@ -4109,8 +4229,8 @@ bind def
 % --EXAM: 05
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2023040300 66211 66050
-%%BeginData:        117 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2024010300 66275 66010
+%%BeginData:        119 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -4198,7 +4318,7 @@ bind def
             /enc revenc def
         } if
         sbs i 6 mul 3 add enc putinterval   % Put encoded digit into sbs
-        txt i [barcode i 1 getinterval i 1 sub 9 mul 13 add textxoffset add textyoffset textfont textsize] put
+        txt i [barcode i 1 getinterval i 1 sub 9 mul 10 add textxoffset add textyoffset textfont textsize] put
     } for
 
     % Return the arguments
@@ -4211,8 +4331,10 @@ bind def
         /txt txt
     } if
     /opt options
-    /guardrightpos 10.0
+    /guardrightpos 5.0
     /guardrightypos textyoffset 4 add
+    /borderleft 12.0
+    /borderright 5.0
     /bordertop 10.0
     >>
 
@@ -4238,8 +4360,8 @@ bind def
 % --EXAM: 9520123456788
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2023040300 85312 81687
-%%BeginData:        205 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2024010300 85896 82167
+%%BeginData:        208 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -4259,7 +4381,7 @@ bind def
     /includetext false def
     /textfont (OCR-B) def
     /textsize 12.0 def
-    /textxoffset -10.0 def
+    /textxoffset -11.0 def
     /textyoffset -4.0 def
     /height 1.0 def
     /addongap 12.0 def
@@ -4366,7 +4488,7 @@ bind def
             /enc revenc def
         } if
         sbs i 1 sub 4 mul 3 add enc putinterval   % Put encoded digit into sbs
-        txt i [barcode i 1 getinterval i 1 sub 7 mul 14 add textxoffset add textyoffset textfont textsize] put
+        txt i [barcode i 1 getinterval i 1 sub 7 mul 15 add textxoffset add textyoffset textfont textsize] put
     } for
 
     % Put the middle character
@@ -4382,7 +4504,7 @@ bind def
         pop pop                        % Discard seek and post
         /enc encs indx get def         % Get the indxth encoding
         sbs i 1 sub 4 mul 8 add enc putinterval  % Put encoded digit into sbs
-        txt i [barcode i 1 getinterval i 1 sub 7 mul 18 add textxoffset add textyoffset textfont textsize] put
+        txt i [barcode i 1 getinterval i 1 sub 7 mul 19 add textxoffset add textyoffset textfont textsize] put
     } for
 
     % Put the end character
@@ -4428,8 +4550,11 @@ bind def
     /bbs bbs
     /txt txt
     /opt options
-    /guardrightpos 10.0
+    /guardrightpos addon () eq {7.0} {5.0} ifelse
     /guardrightypos guardrightypos
+    /borderleft 11.0
+    /borderright addon () eq {7.0} {5.0} ifelse
+    /bordertop 0.0
     /borderbottom 5.0
     >>
 
@@ -4455,8 +4580,8 @@ bind def
 % --EXAM: 95200002
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2023040300 82598 78874
-%%BeginData:        186 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2024010300 83246 79418
+%%BeginData:        189 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -4625,9 +4750,12 @@ bind def
     /bbs bbs
     /txt txt
     /opt options
-    /guardleftpos 10.0
-    /guardrightpos 10.0
+    /guardleftpos 7.0
+    /guardrightpos addon () eq {7.0} {5.0} ifelse
     /guardrightypos guardrightypos
+    /borderleft 7.0
+    /borderright addon () eq {7.0} {5.0} ifelse
+    /bordertop 0.0
     /borderbottom 5.0
     >>
 
@@ -4653,8 +4781,8 @@ bind def
 % --EXAM: 012345000058
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2023040300 90185 86374
-%%BeginData:        238 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2024010300 90873 87086
+%%BeginData:        241 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -4674,7 +4802,7 @@ bind def
     /includetext false def
     /textfont (OCR-B) def
     /textsize 12.0 def
-    /textxoffset -7.0 def
+    /textxoffset -9.0 def
     /textyoffset -4.0 def
     /height 1.0 def
     /addongap 12.0 def
@@ -4809,7 +4937,7 @@ bind def
         i 0 eq {      % First digit is before the guard bars
             txt 0 [barcode 0 1 getinterval textxoffset textyoffset textfont textsize 2 sub] put
         } {
-            txt i [barcode i 1 getinterval i 7 mul 11 add textxoffset add textyoffset textfont textsize] put
+            txt i [barcode i 1 getinterval i 7 mul 13 add textxoffset add textyoffset textfont textsize] put
         } ifelse
     } for
 
@@ -4827,9 +4955,9 @@ bind def
         /enc encs indx get def             % Get the indxth encoding
         sbs i 4 mul 8 add enc putinterval  % Put encoded digit into sbs
         i 11 eq {       % Last digit is after guard bars
-            txt 11 [barcode 11 1 getinterval textxoffset 104 add textyoffset textfont textsize 2 sub] put
+            txt 11 [barcode 11 1 getinterval textxoffset 107 add textyoffset textfont textsize 2 sub] put
         } {
-            txt i [barcode i 1 getinterval i 7 mul textxoffset add 15 add textyoffset textfont textsize] put
+            txt i [barcode i 1 getinterval i 7 mul textxoffset add 17 add textyoffset textfont textsize] put
         } ifelse
     } for
 
@@ -4876,8 +5004,11 @@ bind def
     /bbs bbs
     /txt txt
     /opt options
-    /guardrightpos 10.0
+    /guardrightpos addon () eq {9.0} {5.0} ifelse
     /guardrightypos guardrightypos
+    /borderleft 9.0
+    /borderright addon () eq {9.0} {5.0} ifelse
+    /bordertop 0.0
     /borderbottom 5.0
     >>
 
@@ -4903,8 +5034,8 @@ bind def
 % --EXAM: 01234558
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2023040300 94814 90966
-%%BeginData:        277 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2024010300 95502 91734
+%%BeginData:        280 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -4924,7 +5055,7 @@ bind def
     /includetext false def               % Enable/disable text
     /textfont (OCR-B) def
     /textsize 12.0 def
-    /textxoffset -7.0 def
+    /textxoffset -9.0 def
     /textyoffset -4.0 def
     /height 1.0 def
     /addongap 12.0 def
@@ -5117,10 +5248,10 @@ bind def
             /enc revenc def
         } if
         sbs i 1 sub 4 mul 3 add enc putinterval   % Put encoded digit into sbs
-        txt i [barcode i 1 getinterval i 1 sub 7 mul 11 add textxoffset add textyoffset textfont textsize] put
+        txt i [barcode i 1 getinterval i 1 sub 7 mul 13 add textxoffset add textyoffset textfont textsize] put
     } for
 
-    txt 7 [barcode 7 1 getinterval 6 7 mul 18 add textxoffset add textyoffset textfont textsize 2 sub] put
+    txt 7 [barcode 7 1 getinterval 6 7 mul 21 add textxoffset add textyoffset textfont textsize 2 sub] put
 
     % Put the end character
     sbs 27 encs 11 get putinterval
@@ -5165,8 +5296,11 @@ bind def
     /bbs bbs
     /txt txt
     /opt options
-    /guardrightpos 10.0
+    /guardrightpos addon () eq {9.0} {5.0} ifelse
     /guardrightypos guardrightypos
+    /borderleft 9.0
+    /borderright addon () eq {9.0} {5.0} ifelse
+    /bordertop 0.0
     /borderbottom 5.0
     >>
 
@@ -5192,7 +5326,7 @@ bind def
 % --EXAM: 978-1-56581-231-4 90000
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2023040300 94582 93829
+%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2024010300 94606 93597
 %%BeginData:        238 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -5442,7 +5576,7 @@ bind def
 % --EXAM: 979-0-2605-3211-3
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2023040300 91154 90390
+%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2024010300 91050 90286
 %%BeginData:        217 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -5671,7 +5805,7 @@ bind def
 % --EXAM: 0311-175X 00 17
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2023040300 82498 81962
+%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2024010300 82522 81834
 %%BeginData:        160 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -5843,7 +5977,7 @@ bind def
 % --EXAM: 0642118
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp mands 0.0 2023040300 72503 72302
+%%BeginResource: uk.co.terryburton.bwipp mands 0.0 2024010300 72503 72406
 %%BeginData:         73 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -5928,7 +6062,7 @@ bind def
 % --EXAM: Count01234567!
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2023040300 126393 129397
+%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2024010300 126393 129397
 %%BeginData:        424 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -6364,7 +6498,7 @@ bind def
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2023040300 80703 80334
+%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2024010300 80703 80334
 %%BeginData:        102 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -6478,7 +6612,7 @@ bind def
 % --EXAM: (01) 0 952 8765 43210 8
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2023040300 72646 72462
+%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2024010300 72646 72462
 %%BeginData:         92 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -6511,11 +6645,11 @@ bind def
     /hasspace text length barcode length ne def
 
     % Validate the input
-    barcode 0 4 getinterval (\(01\)) ne {
-        /bwipp.ean14badAI (GS1-14 must begin with (01) application identifier) //raiseerror exec
-    } if
     barcode length 17 ne barcode length 18 ne and {
         /bwipp.ean14badLength (GS1-14 must be 13 or 14 digits) //raiseerror exec
+    } if
+    barcode 0 4 getinterval (\(01\)) ne {
+        /bwipp.ean14badAI (GS1-14 must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
@@ -6582,7 +6716,7 @@ bind def
 % --EXAM: (00) 0 9528765 432101234 6
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2023040300 72658 72469
+%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2024010300 72658 72469
 %%BeginData:         92 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -6615,11 +6749,11 @@ bind def
     /hasspace text length barcode length ne def
 
     % Validate the input
-    barcode 0 4 getinterval (\(00\)) ne {
-        /bwipp.sscc18badAI (SSCC-18 must begin with (00) application identifier) //raiseerror exec
-    } if
     barcode length 21 ne barcode length 22 ne and {
         /bwipp.sscc18badLength (SSCC-18 must be 17 or 18 digits) //raiseerror exec
+    } if
+    barcode 0 4 getinterval (\(00\)) ne {
+        /bwipp.sscc18badAI (SSCC-18 must begin with (00) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
@@ -6686,8 +6820,8 @@ bind def
 % --EXAM: THIS IS CODE 39
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2023040300 72538 72323
-%%BeginData:        137 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2024010300 73033 72709
+%%BeginData:        141 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -6714,6 +6848,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.code39emptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /code39 //loadctx exec
 
@@ -6835,7 +6973,7 @@ bind def
 % --EXAM: Code39 Ext!
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2023040300 72264 72100
+%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2024010300 72240 72124
 %%BeginData:         99 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -6946,7 +7084,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2023040300 67745 67498
+%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2024010300 67769 67498
 %%BeginData:         87 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -7045,7 +7183,7 @@ bind def
 % --EXAM: 123456
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2023040300 67592 67270
+%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2024010300 67616 67270
 %%BeginData:         87 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -7144,7 +7282,7 @@ bind def
 % --EXAM: THIS IS CODE 93
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2023040300 69335 72377
+%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2024010300 69335 72377
 %%BeginData:        134 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -7290,7 +7428,7 @@ bind def
 % --EXAM: Code93 Ext!
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2023040300 73092 72924
+%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2024010300 73092 72924
 %%BeginData:        107 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -7409,7 +7547,7 @@ bind def
 % --EXAM: 2401234567
 % --EXOP: height=0.5 includecheck includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2023040300 71069 70746
+%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2024010300 71069 70746
 %%BeginData:        147 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -7568,8 +7706,8 @@ bind def
 % --EXAM: 0 952 1234 54321 3
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2023040300 69679 69535
-%%BeginData:         93 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2024010300 70300 70052
+%%BeginData:         97 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -7588,12 +7726,14 @@ bind def
     /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset 3.0 def
+    /textyoffset 3.5 def
     /height 0.5 def
     /showborder true def
     /borderwidth 4.0 def
-    /borderleft 15.0 def
-    /borderright 15.0 def
+    /borderleft 10.0 def
+    /borderright 10.0 def
+    /bordertop -0.55 def     % Ensure border/bearer touches bars with default inkspread
+    /borderbottom -0.55 def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
@@ -7644,6 +7784,8 @@ bind def
     options (borderwidth) borderwidth put
     options (borderleft) borderleft put
     options (borderright) borderright put
+    options (bordertop) bordertop put
+    options (borderbottom) borderbottom put
     options (height) height put
     options (textyoffset) textyoffset put
     /args barcode options //interleaved2of5 exec def
@@ -7673,7 +7815,7 @@ bind def
 % --EXAM: 563102430313
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2023040300 66534 66390
+%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2024010300 66534 66390
 %%BeginData:         78 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -7763,7 +7905,7 @@ bind def
 % --EXAM: 21348075016401
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2023040300 66526 66386
+%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2024010300 66526 66386
 %%BeginData:         78 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -7853,8 +7995,8 @@ bind def
 % --EXAM: (01)09521234543213
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2023040300 116999 116127
-%%BeginData:        431 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2024010300 117143 116039
+%%BeginData:        437 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 20 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -7878,11 +8020,11 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
-    barcode 0 4 getinterval (\(01\)) ne {
-        /bwipp.databaromniBadAI (GS1 DataBar Omnidirectional must begin with (01) application identifier) //raiseerror exec
-    } if
     barcode length 17 ne barcode length 18 ne and {
         /bwipp.databaromniBadLength (GS1 DataBar Omnidirectional must be 13 or 14 digits) //raiseerror exec
+    } if
+    barcode 0 4 getinterval (\(01\)) ne {
+        /bwipp.databaromniBadAI (GS1 DataBar Omnidirectional must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
@@ -8167,6 +8309,8 @@ bind def
         /bbs [sbs length 1 add 2 idiv {0} repeat]
         /txt txt
         /textxalign (center)
+        /borderleft 0.0
+        /borderright 0.0
         /opt options
         >>
 
@@ -8269,6 +8413,10 @@ bind def
         /pixy pixy
         /height pixy 72 div
         /width 50 72 div
+        /borderleft 0.0
+        /borderright 0.0
+        /bordertop 0.0
+        /borderbottom 0.0
         /opt options
         >>
 
@@ -8296,7 +8444,7 @@ bind def
 % --EXAM: (01)09521234543213
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2023040300 68014 67805
+%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2024010300 67838 67653
 %%BeginData:         66 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -8316,11 +8464,11 @@ bind def
     /barcode exch def
 
     % Validate the input
-    barcode 0 4 getinterval (\(01\)) ne {
-        /bwipp.databarstackedBadAI (GS1 DataBar Stacked must begin with (01) application identifier) //raiseerror exec
-    } if
     barcode length 17 ne barcode length 18 ne and {
         /bwipp.databarstackedBadLength (GS1 DataBar Stacked must be 13 or 14 digits) //raiseerror exec
+    } if
+    barcode 0 4 getinterval (\(01\)) ne {
+        /bwipp.databarstackedBadAI (GS1 DataBar Stacked must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
@@ -8374,7 +8522,7 @@ bind def
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2023040300 68114 67885
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2024010300 67986 67781
 %%BeginData:         66 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -8452,7 +8600,7 @@ bind def
 % --EXAM: (01)09521234543213
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2023040300 68040 67821
+%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2024010300 67864 67669
 %%BeginData:         66 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -8472,11 +8620,11 @@ bind def
     /barcode exch def
 
     % Validate the input
-    barcode 0 4 getinterval (\(01\)) ne {
-        /bwipp.databartruncatedBadAI (GS1 DataBar Truncated must begin with (01) application identifier) //raiseerror exec
-    } if
     barcode length 17 ne barcode length 18 ne and {
         /bwipp.databartruncatedBadLength (GS1 DataBar Truncated must be 13 or 14 digits) //raiseerror exec
+    } if
+    barcode 0 4 getinterval (\(01\)) ne {
+        /bwipp.databartruncatedBadAI (GS1 DataBar Truncated must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
@@ -8530,8 +8678,8 @@ bind def
 % --EXAM: (01)09521234543213
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2023040300 91368 90515
-%%BeginData:        279 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2024010300 91408 90555
+%%BeginData:        281 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 20 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -8555,11 +8703,11 @@ bind def
     /databarlimited //loadctx exec
 
     % Validate the input
-    barcode 0 4 getinterval (\(01\)) ne {
-        /bwipp.databarlimitedBadAI (GS1 DataBar Limited must begin with (01) application identifier) //raiseerror exec
-    } if
     barcode length 17 ne barcode length 18 ne and {
         /bwipp.databarlimitedBadLength (GS1 DataBar Limited must be 13 or 14 digits) //raiseerror exec
+    } if
+    barcode 0 4 getinterval (\(01\)) ne {
+        /bwipp.databarlimitedBadAI (GS1 DataBar Limited must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 get dup 48 lt exch 49 gt or {
         /bwipp.databarlimitedBadStartDigit (GS1 DataBar Limited must begin with 0 or 1) //raiseerror exec
@@ -8796,6 +8944,8 @@ bind def
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     /txt txt
     /textxalign (center)
+    /borderleft 0.0
+    /borderright 0.0
     /opt options
     >>
 
@@ -8821,8 +8971,8 @@ bind def
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2023040300 247755 246080
-%%BeginData:        857 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2024010300 248343 246629
+%%BeginData:        864 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -9152,6 +9302,9 @@ bind def
 
     /encode {
         dup /raw ne {exch get} {pop} ifelse
+        dup length j add 252 ge {
+            pop /bwipp.gs1databarexpandedTooLong (Maximum length exceeded) //raiseerror exec
+        } if
         [ exch {48 sub} forall ]
         dup length exch
         gpfenc exch j exch putinterval
@@ -9555,13 +9708,15 @@ bind def
             1 1
         ] def
 
-        options (parse) undef
-
         <<
         /ren //renlinear
         /sbs sbs
         /bhs [sbs length 1 add 2 idiv {height} repeat]
         /bbs [sbs length 1 add 2 idiv {0} repeat]
+        /borderleft 0.0
+        /borderright 0.0
+        /bordertop 0.0
+        /borderbottom 0.0
         /opt options
         >>
 
@@ -9654,8 +9809,6 @@ bind def
             } for
         ] def
 
-        options (parse) undef
-
         <<
         /ren //renmatrix
         /pixs pixs
@@ -9663,6 +9816,10 @@ bind def
         /pixy pixs length pixx idiv
         /height pixs length pixx idiv 72 div
         /width pixx 72 div
+        /borderleft 0.0
+        /borderright 0.0
+        /bordertop 0.0
+        /borderbottom 0.0
         /opt options
         >>
 
@@ -9690,7 +9847,7 @@ bind def
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP: segments=4
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2023040300 72851 72809
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2024010300 72851 72833
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -9738,8 +9895,8 @@ bind def
 % --EXAM: (8110)106141416543213500110000310123196000
 % --EXOP: includetext segments=8
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2023040300 83944 86991
-%%BeginData:         90 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2024010300 83739 86866
+%%BeginData:         89 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -9793,7 +9950,6 @@ bind def
     coupontext gcp length 1 add cod putinterval
 
     % Get the result of encoding with databarexpandedstacked
-    options (parse) undef
     options (dontdraw) true put
 
     /args barcode options //databarexpandedstacked exec def
@@ -9840,7 +9996,7 @@ bind def
 % --EXAM: 117480
 % --EXOP: showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2023040300 55259 54920
+%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2024010300 55259 54920
 %%BeginData:         79 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -9931,7 +10087,7 @@ bind def
 % --EXAM: 117480
 % --EXOP: includetext showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2023040300 56506 56322
+%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2024010300 56506 56298
 %%BeginData:         87 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -10030,8 +10186,8 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2023040300 73141 72691
-%%BeginData:        150 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2024010300 73534 73053
+%%BeginData:        154 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -10058,6 +10214,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.code2of5emptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /code2of5 //loadctx exec
 
@@ -10192,7 +10352,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2023040300 60262 60228
+%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2024010300 60390 60228
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -10240,7 +10400,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2023040300 60232 60204
+%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2024010300 60360 60204
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -10288,7 +10448,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2023040300 60242 60212
+%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2024010300 60370 60212
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -10336,7 +10496,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2023040300 60232 60204
+%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2024010300 60360 60204
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -10384,7 +10544,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2023040300 60257 60224
+%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2024010300 60385 60224
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -10432,8 +10592,8 @@ bind def
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2023040300 74451 74132
-%%BeginData:        154 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2024010300 74842 74390
+%%BeginData:        158 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -10459,6 +10619,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.code11emptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /code11 //loadctx exec
 
@@ -10598,8 +10762,8 @@ bind def
 % --EXAM: BC412SEMI
 % --EXOP: semi includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2023040300 75511 75113
-%%BeginData:        188 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2024010300 76005 75371
+%%BeginData:        192 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -10627,6 +10791,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.bc412emptyData (The data must not be empty) //raiseerror exec
+    } if
 
     semi {
         % Implies includecheck and includecheckintext also
@@ -10798,8 +10966,8 @@ bind def
 % --EXAM: A0123456789B
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2023040300 75236 74688
-%%BeginData:        152 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2024010300 76015 75425
+%%BeginData:        156 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -10826,6 +10994,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode length 2 lt barcode length 3 lt validatecheck and or {
+        /bwipp.rationalizedCodabarBadLength (Codabar must be at least 2 characters in length excluding any check digit) //raiseerror exec
+    } if
 
     /rationalizedCodabar //loadctx exec
 
@@ -10962,7 +11134,7 @@ bind def
 % --EXAM: 0123456709498765432101234567891
 % --EXOP: barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2023040300 110210 109889
+%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2024010300 110314 109785
 %%BeginData:        347 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -11321,7 +11493,7 @@ bind def
 % --EXAM: 01234
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2023040300 70838 70525
+%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2024010300 70838 70525
 %%BeginData:        136 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -11469,7 +11641,7 @@ bind def
 % --EXAM: 01234567890
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2023040300 70698 70389
+%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2024010300 70698 70389
 %%BeginData:        137 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -11618,8 +11790,8 @@ bind def
 % --EXAM: LE28HS9Z
 % --EXOP: includetext barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2023040300 71565 71211
-%%BeginData:        141 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2024010300 71959 71677
+%%BeginData:        145 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -11644,6 +11816,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.royalmailEmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /royalmail //loadctx exec
 
@@ -11771,8 +11947,8 @@ bind def
 % --EXAM: 5956439111ABA 9
 % --EXOP: includetext custinfoenc=character
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2023040300 86928 86530
-%%BeginData:        231 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2024010300 87272 86741
+%%BeginData:        235 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -11827,6 +12003,10 @@ bind def
 } ctxdef
 
     /barlen barcode length def
+    barlen 10 lt {
+        /bwipp.auspostTooShort (The data length must be at least 10) //raiseerror exec
+    } if
+
     /txt barlen 2 sub array def
 
     fcclen barlen 2 ge { barcode 0 2 getinterval } { () } ifelse
@@ -12014,8 +12194,8 @@ bind def
 % --EXAM: 1231FZ13XHS
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2023040300 66587 66590
-%%BeginData:        107 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2024010300 67079 66848
+%%BeginData:        111 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -12038,6 +12218,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.kixEmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /kix //loadctx exec
 
@@ -12133,8 +12317,8 @@ bind def
 % --EXAM: 6540123789-A-K-Z
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2023040300 73820 73580
-%%BeginData:        172 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2024010300 74254 73854
+%%BeginData:        176 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -12159,6 +12343,10 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
+    barcode () eq {
+        /bwipp.japanpostEmptyData (The data must not be empty) //raiseerror exec
+    } if
+
     /japanpost //loadctx exec
 
     % Validate the input
@@ -12166,7 +12354,7 @@ bind def
         dup dup 48 ge exch 57 le and exch  % 0-9
         dup dup 65 ge exch 90 le and exch  % A-Z
         45 eq or or not {                  % "-"
-            /bwipp.japanPostBadCharacter (Japan Post must contain only digits, capital letters and the dash symbol) /raiseerror exec
+            /bwipp.japanpostBadCharacter (Japan Post must contain only digits, capital letters and the dash symbol) //raiseerror exec
         } if
     } forall
 
@@ -12317,7 +12505,7 @@ bind def
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2023040300 79911 79428
+%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2024010300 79911 79532
 %%BeginData:        168 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -12497,8 +12685,8 @@ bind def
 % --EXAM: 01234ABCD
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2023040300 73191 72919
-%%BeginData:        142 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2024010300 73583 73305
+%%BeginData:        146 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -12524,6 +12712,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.plesseyEmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /plessey //loadctx exec
 
@@ -12651,7 +12843,7 @@ bind def
 % --EXAM: ABCDEF
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2023040300 74651 77695
+%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2024010300 74651 77695
 %%BeginData:        173 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -12836,7 +13028,7 @@ bind def
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2023040300 63095 63061
+%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2024010300 63095 63061
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -12884,8 +13076,8 @@ bind def
 % --EXAM: ABC123
 % --EXOP: version=b inkspread=-0.5 parsefnc includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2023040300 112895 115876
-%%BeginData:        380 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2024010300 116031 118710
+%%BeginData:        395 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -12962,6 +13154,10 @@ bind def
     ] def
 } ctxdef
 
+    version (a) ne version (b) ne and version (limiteda) ne and version (limitedb) ne and {
+        /bwipp.posicodeInvalidVersion (The version must be either a, b, limiteda or limitedb) //raiseerror exec
+    } if
+
     /charmaps version (a) eq version (b) eq or {charmapsnormal} {chapmapslimited} ifelse def
 
     % Invert charmaps to give character to value maps for each state
@@ -12980,6 +13176,15 @@ bind def
     /set0 charvals 0 get def
     /set1 charvals 1 get def
     /set2 charvals 2 get def
+
+    % Validate the input if limited
+    version (limiteda) eq version (limitedb) eq or {
+        0 1 barcode length 1 sub {
+            barcode exch 1 getinterval 0 get set0 exch known not {
+                /bwipp.posicodeBadCharacter (Posicode limited must contain only digits, capital letters, and the symbols - and .) //raiseerror exec
+            } if
+        } for
+    } if
 
     raw {/encoding (raw) def} if
 
@@ -13251,6 +13456,8 @@ bind def
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     /txt [ [text textxoffset textyoffset textfont textsize] ]
     /textxalign (center)
+    /borderleft  << /a 0.0  /b 0.0  /limiteda 12.0  /limitedb 13.0 >> version get
+    /borderright << /a 0.0  /b 0.0  /limiteda 12.0  /limitedb 13.0 >> version get
     /opt options
     >>
 
@@ -13276,7 +13483,7 @@ bind def
 % --EXAM: CODABLOCK F 34567890123456789010040digit
 % --EXOP: columns=8
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2023040300 140106 142642
+%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2024010300 140106 142562
 %%BeginData:        535 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -13823,7 +14030,7 @@ bind def
 % --EXAM: Abcd-1234567890-wxyZ
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2023040300 163595 165795
+%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2024010300 163595 165899
 %%BeginData:        740 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -14575,7 +14782,7 @@ bind def
 % --EXAM: MULTIPLE ROWS IN CODE 49
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2023040300 265309 274664
+%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2024010300 265413 278096
 %%BeginData:       1096 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -15683,8 +15890,8 @@ bind def
 % --EXAM: 3493
 % --EXOP: height=0.5 includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2023040300 133256 132239
-%%BeginData:        250 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2024010300 133320 132535
+%%BeginData:        252 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -15920,6 +16127,8 @@ bind def
 %psc     /bbs [sbs length 1 add 2 idiv {0} repeat]
 %psc     /txt txt
 %psc     /textxalign (center)
+%psc     /borderleft 1.0
+%psc     /borderright 2.0
 %psc     /opt options
 %psc     >>
 %psc 
@@ -15945,7 +16154,7 @@ bind def
 % --EXAM: 11099
 % --EXOP: inkspread=-0.25 showborder borderleft=0 borderright=0
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2023040300 62583 62388
+%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2024010300 62583 62412
 %%BeginData:         82 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -16039,7 +16248,7 @@ bind def
 % --EXAM: 331132131313411122131311333213114131131221323
 % --EXOP: height=0.5
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2023040300 50104 50015
+%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2024010300 50104 50015
 %%BeginData:         43 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -16094,8 +16303,8 @@ bind def
 % --EXAM: FATDAFTDAD
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2023040300 53326 53210
-%%BeginData:         67 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2024010300 53715 53468
+%%BeginData:         71 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -16112,6 +16321,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.daftEmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     barcode {
         dup 68 ne exch dup 65 ne exch dup 70 ne exch 84 ne and and and {
@@ -16173,7 +16386,7 @@ bind def
 % --EXAM: fima
 % --EXOP: backgroundcolor=DD000011
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2023040300 54198 53937
+%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2024010300 54198 53937
 %%BeginData:         70 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -16255,8 +16468,8 @@ bind def
 % --EXAM: This is PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2023040300 210234 212010
-%%BeginData:        963 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2024010300 211198 212970
+%%BeginData:        972 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -16276,7 +16489,7 @@ bind def
     /eclevel -1 def
     /columns 0 def
     /rows 0 def
-    /rowmult 3.0 def
+    /rowmult 3 def
     /ccc false def
     /raw false def
     /parse false def
@@ -16866,9 +17079,11 @@ bind def
     cws n [ k {0} repeat 0 ] putinterval
 
     % Calculate the log and anti-log tables
+{
     /rsalog [ 1 928 {dup 3 mul 929 mod} repeat ] def
     /rslog 929 array def
     1 1 928 {dup rsalog exch get exch rslog 3 1 roll put} for
+} ctxdef
 
     % Function to calculate the product in the field
     /rsprod {
@@ -17165,7 +17380,7 @@ bind def
     } {
         /rwid 17 c mul 17 add 17 add 17 add 18 add def
     } ifelse
-    /pixs rwid r mul array def
+    /pixs rwid r mul rowmult mul array def
 
     0 1 r 1 sub {
         /i exch def
@@ -17183,18 +17398,21 @@ bind def
             /rcw i 3 idiv 30 mul eclevel 3 mul add r 1 sub 3 mod add def
         } if
 
-        pixs rwid i mul [
+        [
             1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 0 0
-            lcw i 3 mod cwtobits {} forall
-            cws c i mul c getinterval { i 3 mod cwtobits {} forall } forall
+            lcw i 3 mod cwtobits aload pop
+            cws c i mul c getinterval { i 3 mod cwtobits aload pop } forall
             compact {
                 1
             } {
-                rcw i 3 mod cwtobits {} forall
+                rcw i 3 mod cwtobits aload pop
                 1 1 1 1 1 1 1 0 1 0 0 0 1 0 1 0 0 1
             } ifelse
-        ] putinterval
-
+        ]
+        0 1 rowmult 1 sub {
+            i rowmult mul add rwid mul pixs exch 2 index putinterval
+        } for
+        pop
     } for
 
     % Return the arguments
@@ -17202,9 +17420,13 @@ bind def
     /ren //renmatrix
     /pixs pixs
     /pixx rwid
-    /pixy r
-    /height r 72 div rowmult mul
+    /pixy r rowmult mul
+    /height r rowmult mul 72 div
     /width rwid 72 div
+    /borderleft 2.0
+    /borderright 2.0
+    /bordertop 2.0
+    /borderbottom 2.0
     /opt options
     >>
 
@@ -17230,7 +17452,7 @@ bind def
 % --EXAM: This is compact PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2023040300 63089 63056
+%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2024010300 63089 63056
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -17278,8 +17500,8 @@ bind def
 % --EXAM: MicroPDF417
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2023040300 221475 226590
-%%BeginData:       1051 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2024010300 230277 238718
+%%BeginData:       1107 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -17298,7 +17520,7 @@ bind def
     /version (unset) def
     /columns 0 def
     /rows 0 def
-    /rowmult 2.0 def
+    /rowmult 2 def
     /cca false def
     /ccb false def
     /raw false def
@@ -17353,6 +17575,9 @@ bind def
 
     % Special function characters for text mode
     /al -6 def  /ll -7 def  /ml -8 def  /pl -9 def  /as -10 def  /ps -11 def
+
+    % Special function characters for 05/06 macros
+    /m05 -12 def  /m06 -13 def
 
     % Character maps for each state
     /charmaps [
@@ -17501,10 +17726,31 @@ bind def
         /fncvals <<
             /parse parse
             /parsefnc parsefnc
-            /eci true
+%            (MAC5) m05    Encoded automatically
+%            (MAC6) m06    Encoded automatically
             % Predates FNC non-data codewords, but supports ECI
+            /eci true
         >> def
         /msg barcode fncvals //parseinput exec def
+        /msglen msg length def
+
+        % Macro 05/06 compression of [)>{RS}05/06{GS}...{RS}{EOT} structured data
+        msglen 9 ge {
+            msg 0 7 getinterval aload pop
+            29 eq exch pop exch 48 eq and exch  % [)>{RS}0*{GS}...
+            30 eq and exch 62 eq and exch 41 eq and exch 91 eq and {
+                msg msglen 2 sub 2 getinterval aload pop
+                4 eq exch 30 eq and {           %              ...{RS}{EOT}
+                    msg 5 get 53 eq {           %      ...5...
+                        /msg [ m05 msg 7 msg length 9 sub getinterval aload pop ] def
+                    } {
+                        msg 5 get 54 eq {       %      ...6...
+                            /msg [ m06 msg 7 msg length 9 sub getinterval aload pop ] def
+                        } if
+                    } ifelse
+                } if
+            } if
+        } if
         /msglen msg length def
 
         % Determine runlengths of digits
@@ -17531,6 +17777,14 @@ bind def
 
         /seq [] def /seqlen 0 def /state B def /p 0 def {  % loop
             p msglen eq {exit} if
+            p 0 eq msg p get dup m05 eq exch m06 eq or and {
+                /seq [
+                    seq aload pop
+                    msg p get m05 eq { m05 } { m06 } ifelse
+                ] def
+                /p p 1 add def
+                /seqlen seqlen 1 add def
+            } {
             iseci p get {
                 /eci msg p get def
                 /seq [
@@ -17582,11 +17836,11 @@ bind def
                 /state B def
                 /p p b add def
                 /seqlen seqlen 1 add b add def
-            } ifelse } ifelse } ifelse } ifelse
+            } ifelse } ifelse } ifelse } ifelse } ifelse
         } loop
 
         /latchcws <<
-            tl 900  bl 901  bl6 924  nl 902  bs 913
+            tl 900  bl 901  bl6 924  nl 902  bs 913  m05 916  m06 917
         >> def
 
         % Submode encoding functions
@@ -17836,7 +18090,7 @@ bind def
                 } {  % Encode data according to mode
                     chars encfuncs state get load exec addtocws
                 } ifelse
-            } {  % Encode the latch to new state or byte shift
+            } {  % Encode the latch to new state, byte shift or macro
                 [ latchcws chars get ] addtocws
                 chars tl eq {/state T def /submode A def} if
                 chars nl eq {/state N def} if
@@ -17844,6 +18098,22 @@ bind def
                 chars bs eq {
                     /i i 1 add def
                     seq i get encb addtocws
+                } if
+                chars m05 eq {
+                    i 1 add seq length lt {
+                        seq i 1 add get nl eq {  % Latch to numeric mode is implied
+                            /i i 1 add def
+                        } if
+                    } if
+                    /state N def
+                } if
+                chars m06 eq {
+                    i 1 add seq length lt {
+                        seq i 1 add get tl eq {  % Latch to mixed text submode is implied
+                            /i i 1 add def
+                        } if
+                    } if
+                    /state T def /submode M def
                 } if
             } ifelse
             /i i 1 add def
@@ -18268,12 +18538,12 @@ bind def
     % Populate bitmap for the image
     /rwid [38 55 82 99] c 1 sub get def
     c 3 eq cca and {/rwid 72 def} if
-    /pixs rwid r mul array def
+    /pixs rwid r mul rowmult mul array def
 
     0 1 r 1 sub {
         /i exch def
         /clst i rapl add 1 sub 3 mod def
-        pixs rwid i mul [
+        [
             c 1 eq {
                 i rapl add 1 sub 52 mod 0 raptobits aload pop
                 cws i get clst cwtobits aload pop
@@ -18305,7 +18575,11 @@ bind def
                 i rapr add 1 sub 52 mod 0 raptobits aload pop
             } if
             1
-        ] putinterval
+        ]
+        0 1 rowmult 1 sub {
+            i rowmult mul add rwid mul pixs exch 2 index putinterval
+        } for
+        pop
     } for
 
     % Return the arguments
@@ -18313,9 +18587,13 @@ bind def
     /ren //renmatrix
     /pixs pixs
     /pixx rwid
-    /pixy r
-    /height r 72 div rowmult mul
+    /pixy r rowmult mul
+    /height r rowmult mul 72 div
     /width rwid 72 div
+    /borderleft 1.0
+    /borderright 1.0
+    /bordertop 1.0
+    /borderbottom 1.0
     /opt options
     >>
 
@@ -18341,8 +18619,8 @@ bind def
 % --EXAM: This is Data Matrix!
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2023040300 216516 238823
-%%BeginData:        952 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2024010300 216644 238847
+%%BeginData:        956 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -19280,6 +19558,10 @@ bind def
     /pixy rows
     /height rows 2 mul 72 div
     /width cols 2 mul 72 div
+    /borderleft 1.0
+    /borderright 1.0
+    /bordertop 1.0
+    /borderbottom 1.0
     /opt options
     >>
 
@@ -19305,7 +19587,7 @@ bind def
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2023040300 63145 63232
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2024010300 63145 63104
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -19353,7 +19635,7 @@ bind def
 % --EXAM: 1234
 % --EXOP: version=8x96
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2023040300 63554 63528
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2024010300 63554 63504
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 20 dict
@@ -19401,7 +19683,7 @@ bind def
 % --EXAM: JGB 012100123412345678AB19XY1A 0             www.xyz.com
 % --EXOP: type=29
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2023040300 67768 67632
+%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2024010300 67768 67632
 %%BeginData:         74 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -19487,8 +19769,8 @@ bind def
 % --EXAM: http://goo.gl/0bis
 % --EXOP: eclevel=M
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2023040300 333225 380603
-%%BeginData:       1395 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2024010300 340361 387555
+%%BeginData:       1399 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -20869,6 +21151,10 @@ bind def
     /pixy rows
     /height rows 2 mul 72 div
     /width cols 2 mul 72 div
+    /borderleft format (full) eq {4.0} {2.0} ifelse
+    /borderright format (full) eq {4.0} {2.0} ifelse
+    /bordertop format (full) eq {4.0} {2.0} ifelse
+    /borderbottom format (full) eq {4.0} {2.0} ifelse
     /opt options
     >>
 
@@ -20894,7 +21180,7 @@ bind def
 % --EXAM:
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2023040300 72413 72208
+%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2024010300 72309 72208
 %%BeginData:        117 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -21023,7 +21309,7 @@ bind def
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2023040300 67105 63516
+%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2024010300 63569 66972
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -21071,7 +21357,7 @@ bind def
 % --EXAM: 1234
 % --EXOP: version=R17x139
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2023040300 67148 63548
+%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2024010300 63612 67004
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -21119,8 +21405,8 @@ bind def
 % --EXAM: [)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004
 % --EXOP: mode=2 parse
 % --RNDR: renmaximatrix
-%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2023040300 145232 147419
-%%BeginData:        664 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2024010300 145168 147563
+%%BeginData:        670 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -21628,9 +21914,11 @@ bind def
     } if
 
     % Calculate the log and anti-log tables
+{
     /rsalog [ 1 63 { dup 2 mul dup 64 ge {67 xor} if } repeat ] def
     /rslog 64 array def
     1 1 63 {dup rsalog exch get exch rslog 3 1 roll put} for
+} ctxdef
 
     % Function to calculate the product in the field
     /rsprod {
@@ -21770,6 +22058,10 @@ bind def
     <<
     /ren //renmaximatrix
     /pixs pixs
+    /borderleft 1.0
+    /borderright 1.0
+    /bordertop 1.0
+    /borderbottom 1.0
     /opt options
     >>
 
@@ -21795,7 +22087,7 @@ bind def
 % --EXAM: This is Aztec Code
 % --EXOP: format=full
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2023040300 195169 206938
+%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2024010300 195169 206938
 %%BeginData:        825 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -21961,7 +22253,7 @@ bind def
         (: )   p5
     >> def
 
-    /e 10000 def  % "Empty"
+    /e 1000000 def  % "Empty"
 
     /latlen [  % Bit length of latch between states
     % To:  U  L  M  P  D  B      From
@@ -22327,7 +22619,7 @@ bind def
     } forall
 
     okay not {
-        /bwipp.qrcodeNoValidSymbol (Maximum length exceeded) //raiseerror exec
+        /bwipp.azteccodeNoValidSymbol (Maximum length exceeded) //raiseerror exec
     } if
 
     /layers mlyr def
@@ -22632,7 +22924,7 @@ bind def
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2023040300 63121 63085
+%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2024010300 63121 63085
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -22680,7 +22972,7 @@ bind def
 % --EXAM: 1
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2023040300 63090 63061
+%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2024010300 63090 63061
 %%BeginData:         36 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -22728,8 +23020,8 @@ bind def
 % --EXAM: Code One
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2023040300 205196 220560
-%%BeginData:        914 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2024010300 205866 224569
+%%BeginData:        921 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -22760,6 +23052,7 @@ bind def
     /codeone //loadctx exec
 
     /stype version 0 1 getinterval (S) eq def
+    /ttype version 0 1 getinterval (T) eq def
 
 {
     /stypevals [
@@ -23629,6 +23922,12 @@ bind def
     /pixy rows
     /height rows 72 div 2 mul
     /width cols 72 div 2 mul
+    stype ttype or {
+        /borderleft 1.0
+        /borderright 1.0
+        /bordertop 0.0
+        /borderbottom 1.0
+    } if
     /opt options
     >>
 
@@ -23654,8 +23953,8 @@ bind def
 % --EXAM: This is Han Xin
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2023040300 313117 359763
-%%BeginData:        878 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2024010300 313245 359891
+%%BeginData:        882 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -24519,6 +24818,10 @@ bind def
     /pixy size
     /height size 2 mul 72 div
     /width size 2 mul 72 div
+    /borderleft 3.0
+    /borderright 3.0
+    /bordertop 3.0
+    /borderbottom 3.0
     /opt options
     >>
 
@@ -24544,8 +24847,8 @@ bind def
 % --EXAM: This is DotCode
 % --EXOP: inkspread=0.16
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2023040300 242369 271515
-%%BeginData:       1084 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2024010300 242601 271643
+%%BeginData:       1090 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -25471,7 +25774,9 @@ bind def
     } def
 
     % Reed Solomon antilog table
+{
     /rsalog [ 1 112 { dup 3 mul 113 mod } repeat ] def
+} ctxdef
     /step nw 112 idiv 1 add def
     /offset {step mul start add} def
 
@@ -25615,6 +25920,10 @@ bind def
     /pixy rows
     /height rows 2 mul 72 div
     /width columns 2 mul 72 div
+    /borderleft 3.0
+    /borderright 3.0
+    /bordertop 3.0
+    /borderbottom 3.0
     /opt options
     >>
 
@@ -25640,8 +25949,8 @@ bind def
 % --EXAM: Awesome colours!
 % --EXOP: eclevel=EC2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2023040300 97738 100542
-%%BeginData:        351 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2024010300 97986 100686
+%%BeginData:        357 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -25787,9 +26096,11 @@ bind def
     ] def
 
     % Calculate the log and anti-log tables
+{
     /rsalog [ 1 282 {dup 3 mul 283 mod} repeat ] def
     /rslog 283 array def
     1 1 282 {dup rsalog exch get exch rslog 3 1 roll put} for
+} ctxdef
 
     % Function to calculate the product in the field
     /rsprod {
@@ -25978,6 +26289,10 @@ bind def
     /height rows 72 div 2 mul
     /width columns 72 div 2 mul
     /colormap colormap
+    /borderleft 1.0
+    /borderright 1.0
+    /bordertop 1.0
+    /borderbottom 1.0
     /opt options
     >>
 
@@ -26003,8 +26318,8 @@ bind def
 % --EXAM: This is JAB Code
 % --EXOP: eclevel=6
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2023040300 244390 276182
-%%BeginData:       1117 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2024010300 244622 276310
+%%BeginData:       1121 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -27109,6 +27424,10 @@ bind def
     /colormap palette
     /height rows 2 mul 72 div
     /width  cols 2 mul 72 div
+    /borderleft 0.0
+    /borderright 0.0
+    /bordertop 0.0
+    /borderbottom 0.0
     /opt options
     >>
 
@@ -27132,8 +27451,8 @@ bind def
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP: ccversion=b cccolumns=4
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2023040300 208878 207927
-%%BeginData:        651 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2024010300 226028 208827
+%%BeginData:        654 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -27201,9 +27520,12 @@ bind def
             linwidth 0 lt {
                 /bwipp.gs1ccMissingLinWidth (linwidth must be set for a GS1-128 with a CC-C composite component) //raiseerror exec
             } if
-            linwidth 52 sub 17 idiv
+            linwidth 68 lt {
+                /bwipp.gs1ccMinimumLinWidth (Minimum linwidth for a GS1-128 with a CC-C composite component is 68) //raiseerror exec
+            } if
+            linwidth 68 eq { 1 } { linwidth 52 sub 17 idiv } ifelse  % Ensure cccolumns != 0 if minimum linwidth
         } {
-            lintypecccolumns lintype get
+            lintype () ne { lintypecccolumns lintype get } {2} ifelse
         } ifelse
         /cccolumns exch def
     } if
@@ -27795,7 +28117,7 @@ bind def
 % --EXAM: 9520123456788|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2023040300 108787 108586
+%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2024010300 108907 108706
 %%BeginData:        149 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -27833,7 +28155,7 @@ bind def
     } ifelse
 
     options (lintype) (ean13) put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -27882,7 +28204,7 @@ bind def
 
         /linpad [ ccpixx 97 sub {0} repeat ] def
 
-        /diff linwidth linpad length add 2 add ccpixx sub def  % An add-on can make linear wider than composite
+        /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
         diff 0 gt {  % Left align composite
             /ccrpad [ diff {0} repeat ] def
             /pixx ccpixx diff add def
@@ -27894,7 +28216,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {
                 /i exch def
-                2 { ccpixs i ccpixx getinterval aload pop ccrpad aload pop } repeat
+                ccpixs i ccpixx getinterval aload pop ccrpad aload pop
             } for
             2 { linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop } repeat
             2 { linpad aload pop 1 0  93 {0} repeat  0 1 ccrpad aload pop } repeat
@@ -27916,7 +28238,7 @@ bind def
                         sbs i get cvi {0} repeat
                     } ifelse
                 } for
-                0
+                diff 0 lt {0} if  % Allow for middle separator overhang on RHS if no add-on
             } for
         ] def
 
@@ -27956,7 +28278,7 @@ bind def
 % --EXAM: 95200002|(21)A12345678
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2023040300 105696 112384
+%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2024010300 105816 112504
 %%BeginData:        152 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -27995,7 +28317,7 @@ bind def
 
     % Get the result of encoding with ean8 and gs1-cc
     options (lintype) (ean8) put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -28046,7 +28368,7 @@ bind def
 
         /linpad [ ccpixx 69 sub {0} repeat ] def
 
-        /diff linwidth linpad length add 2 add ccpixx sub def  % An add-on can make linear wider than composite
+        /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
         diff 0 gt {  % Left align composite
             /ccrpad [ diff {0} repeat ] def
             /pixx ccpixx diff add def
@@ -28058,7 +28380,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {
                 /i exch def
-                2 { ccpixs i ccpixx getinterval aload pop ccrpad aload pop } repeat
+                ccpixs i ccpixx getinterval aload pop ccrpad aload pop
             } for
             2 { linpad aload pop 0 1  65 {0} repeat  1 0 ccrpad aload pop } repeat
             2 { linpad aload pop 1 0  65 {0} repeat  0 1 ccrpad aload pop } repeat
@@ -28080,7 +28402,7 @@ bind def
                         sbs i get cvi {0} repeat
                     } ifelse
                 } for
-                0
+                diff 0 lt {0} if  % Allow for middle separator overhang on RHS if no add-on
             } for
         ] def
 
@@ -28120,7 +28442,7 @@ bind def
 % --EXAM: 012345000058|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2023040300 108781 108581
+%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2024010300 108925 108701
 %%BeginData:        149 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -28158,7 +28480,7 @@ bind def
     } ifelse
 
     options (lintype) (ean13) put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -28207,7 +28529,7 @@ bind def
 
         /linpad [ ccpixx 97 sub {0} repeat ] def
 
-        /diff linwidth linpad length add 2 add ccpixx sub def  % An add-on can make linear wider than composite
+        /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
         diff 0 gt {  % Left align composite
             /ccrpad [ diff {0} repeat ] def
             /pixx ccpixx diff add def
@@ -28219,7 +28541,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {
                 /i exch def
-                2 { ccpixs i ccpixx getinterval aload pop ccrpad aload pop } repeat
+                ccpixs i ccpixx getinterval aload pop ccrpad aload pop
             } for
             2 { linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop } repeat
             2 { linpad aload pop 1 0  93 {0} repeat  0 1 ccrpad aload pop } repeat
@@ -28241,7 +28563,7 @@ bind def
                         sbs i get cvi {0} repeat
                     } ifelse
                 } for
-                0
+                diff 0 lt {0} if  % Allow for middle separator overhang on RHS if no add-on
             } for
         ] def
 
@@ -28281,7 +28603,7 @@ bind def
 % --EXAM: 01234558|(15)021231
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2023040300 105348 112012
+%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2024010300 105468 112132
 %%BeginData:        149 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -28319,7 +28641,7 @@ bind def
     } ifelse
 
     options (lintype) (upce) put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -28368,7 +28690,7 @@ bind def
 
         /linpad [ ccpixx 53 sub {0} repeat ] def
 
-        /diff linwidth linpad length add 2 add ccpixx sub def  % An add-on can make linear wider than composite
+        /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
         diff 0 gt {  % Left align composite
             /ccrpad [ diff {0} repeat ] def
             /pixx ccpixx diff add def
@@ -28380,7 +28702,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {
                 /i exch def
-                2 { ccpixs i ccpixx getinterval aload pop ccrpad aload pop } repeat
+                ccpixs i ccpixx getinterval aload pop ccrpad aload pop
             } for
             2 { linpad aload pop 0 1  49 {0} repeat  1 0 ccrpad aload pop } repeat
             2 { linpad aload pop 1 0  49 {0} repeat  0 1 ccrpad aload pop } repeat
@@ -28402,7 +28724,7 @@ bind def
                         sbs i get cvi {0} repeat
                     } ifelse
                 } for
-                0
+                diff 0 lt {0} if  % Allow for middle separator overhang on RHS if no add-on
             } for
         ] def
 
@@ -28442,7 +28764,7 @@ bind def
 % --EXAM: (01)09521234543213|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2023040300 104593 97503
+%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2024010300 104489 97399
 %%BeginData:        146 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -28483,7 +28805,7 @@ bind def
 
     options (lintype) (databaromni) put
     options (linkage) true put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -28558,7 +28880,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space
                 /i exch def
-                2 { ccpixs i ccpixx getinterval aload pop 0 } repeat
+                ccpixs i ccpixx getinterval aload pop 0
             } for
             0 0 0 0 sep aload pop linheight { 0 0 0 0 linpixs aload pop } repeat  % Left pad with 4 spaces
         ] def
@@ -28600,7 +28922,7 @@ bind def
 % --EXAM: (01)09521234543213|(17)010200
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2023040300 102877 105606
+%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2024010300 102773 105478
 %%BeginData:        141 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -28640,7 +28962,7 @@ bind def
 
     options (lintype) (databarstacked) put
     options (linkage) true put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -28707,7 +29029,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space
                 /i exch def
-                2 { 0 ccpixs i ccpixx getinterval aload pop } repeat
+                0 ccpixs i ccpixx getinterval aload pop
             } for
             sep aload pop 0 0 0 0 0 0
             0 linwidth linpixs length 1 sub {  % Right pad linear with 6 spaces
@@ -28753,7 +29075,7 @@ bind def
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2023040300 102905 105630
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2024010300 102801 105502
 %%BeginData:        141 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -28793,7 +29115,7 @@ bind def
 
     options (lintype) (databarstackedomni) put
     options (linkage) true put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -28860,7 +29182,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space
                 /i exch def
-                2 { 0 ccpixs i ccpixx getinterval aload pop } repeat
+                0 ccpixs i ccpixx getinterval aload pop
             } for
             sep aload pop 0 0 0 0 0 0
             0 linwidth linpixs length 1 sub {  % Right pad linear with 6 spaces
@@ -28906,7 +29228,7 @@ bind def
 % --EXAM: (01)09521234543213|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2023040300 108099 103820
+%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2024010300 104563 107276
 %%BeginData:        146 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -28947,7 +29269,7 @@ bind def
 
     options (lintype) (databartruncated) put
     options (linkage) true put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -29022,7 +29344,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space
                 /i exch def
-                2 { ccpixs i ccpixx getinterval aload pop 0 } repeat
+                ccpixs i ccpixx getinterval aload pop 0
             } for
             0 0 0 0 sep aload pop linheight { 0 0 0 0 linpixs aload pop } repeat  % Left pad with 4 spaces
         ] def
@@ -29064,7 +29386,7 @@ bind def
 % --EXAM: (01)09521234543213|(21)abcdefghijklmnopqrst
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2023040300 96082 102861
+%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2024010300 95882 102533
 %%BeginData:        137 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -29105,7 +29427,7 @@ bind def
 
     options (lintype) (databarlimited) put
     options (linkage) true put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -29161,7 +29483,7 @@ bind def
             /pixs [
                 0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space & right pad with 1 space + 5 right guard spaces
                     /i exch def
-                    2 { 0 ccpixs i ccpixx getinterval aload pop 0 0 0 0 0 0 } repeat
+                    0 ccpixs i ccpixx getinterval aload pop 0 0 0 0 0 0
                 } for
                 sep aload pop linheight { linpixs aload pop } repeat
             ] def
@@ -29170,7 +29492,7 @@ bind def
             /pixs [
                 0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space + 5 right guard spaces
                     /i exch def
-                    2 { ccpixs i ccpixx getinterval aload pop 0 0 0 0 0 0 } repeat
+                    ccpixs i ccpixx getinterval aload pop 0 0 0 0 0 0
                 } for
                 0 0 0 0 0 0 0 0 0 sep aload pop linheight { 0 0 0 0 0 0 0 0 0 linpixs aload pop } repeat  % Left pad with 9 spaces
             ] def
@@ -29213,7 +29535,7 @@ bind def
 % --EXAM: (01)09521234543213(3103)001234|(91)1A2B3C4D5E
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2023040300 104994 101295
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2024010300 104906 101207
 %%BeginData:        146 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -29254,7 +29576,7 @@ bind def
 
     options (lintype) (databarexpanded) put
     options (linkage) true put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -29329,7 +29651,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {
                 /i exch def
-                2 { 0 0 ccpixs i ccpixx getinterval aload pop ccrpad aload pop } repeat
+                0 0 ccpixs i ccpixx getinterval aload pop ccrpad aload pop
             } for
             sep aload pop linheight { linpixs aload pop } repeat
         ] def
@@ -29371,7 +29693,7 @@ bind def
 % --EXAM: (01)09521234543213(10)ABCDEF|(21)12345678
 % --EXOP: segments=4
 % --RNDR: renmatrix renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2023040300 103588 106246
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2024010300 103484 102606
 %%BeginData:        136 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -29411,7 +29733,7 @@ bind def
 
     options (lintype) (databarexpandedstacked) put
     options (linkage) true put
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -29478,7 +29800,7 @@ bind def
         /pixs [
             0 ccpixx ccpixs length 1 sub {  % Centre align composite
                 /i exch def
-                2 { cclpad aload pop ccpixs i ccpixx getinterval aload pop ccrpad aload pop } repeat
+                cclpad aload pop ccpixs i ccpixx getinterval aload pop ccrpad aload pop
             } for
             sep aload pop linpixs aload pop
         ] def
@@ -29519,8 +29841,8 @@ bind def
 % --EXAM: (00)095287654321012346|(02)09521234543213(37)24(10)1234567ABCDEFG
 % --EXOP: ccversion=c
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2023040300 108663 111299
-%%BeginData:        163 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2024010300 108422 111074
+%%BeginData:        162 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -29558,7 +29880,7 @@ bind def
 
     usematrix not { gsave } if
 
-    options (inkspread) (0) put
+    options (inkspreadv) 0.0 put
     options (dontdraw) true put
     options (dontlint) true put
 
@@ -29576,7 +29898,7 @@ bind def
     % Create 2D part and determine type
     options (lintype) (gs1-128) put
     options (linwidth) linwidth put
-    comp options //gs1-cc exec /compsym exch def
+    comp << options {} forall >> //gs1-cc exec /compsym exch def
     compsym (pixx) get 99 eq {(a)} {(c)} ifelse /linktype exch def
 
     % Plot linear part
@@ -29647,11 +29969,10 @@ bind def
         } ifelse
 
         /linheight linheight cvi def
-        /ccrepeat linktype (a) eq {2} {3} ifelse def
         /pixs [
             0 ccpixx ccpixs length 1 sub {
                 /i exch def
-                ccrepeat { cclpad aload pop ccpixs i ccpixx getinterval aload pop ccrpad aload pop } repeat
+                cclpad aload pop ccpixs i ccpixx getinterval aload pop ccrpad aload pop
             } for
             linlpad aload pop sep aload pop linrpad aload pop
             linheight { linlpad aload pop linpixs aload pop linrpad aload pop } repeat
@@ -29694,7 +30015,7 @@ bind def
 % --EXAM: (01)09521234543213(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2023040300 78328 77910
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2024010300 78328 77910
 %%BeginData:         81 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -29787,7 +30108,7 @@ bind def
 % --EXAM: (01)09521234543213(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2023040300 78547 78118
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2024010300 78547 78118
 %%BeginData:         82 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -29881,7 +30202,7 @@ bind def
 % --EXAM: https://id.gs1.org/01/09521234543213/22/ABC%2d123?99=XYZ%2f987
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2023040300 71212 67479
+%%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2024010300 71212 67479
 %%BeginData:         49 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -29942,7 +30263,7 @@ bind def
 % --EXAM: (01)09521234543213(8200)http://www.abc.net(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2023040300 78062 77650
+%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2024010300 78062 77650
 %%BeginData:         79 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -30033,7 +30354,7 @@ bind def
 % --EXAM: https://id.gs1.org/01/09521234543213/22/ABC%2d123?99=XYZ%2f987
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2023040300 71188 67459
+%%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2024010300 71188 67459
 %%BeginData:         49 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -30094,7 +30415,7 @@ bind def
 % --EXAM: (235)5vBZIF%!<B;?oa%(01)09521234543213(8008)19052001
 % --EXOP: rows=16
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2023040300 77949 77639
+%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2024010300 78053 77639
 %%BeginData:         80 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
@@ -30186,8 +30507,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2023040300 67213 67098
-%%BeginData:         88 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2024010300 67736 67460
+%%BeginData:         92 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30211,6 +30532,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.hibccode39emptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /hibccode39 //loadctx exec
 
@@ -30286,8 +30611,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2023040300 70111 69938
-%%BeginData:         87 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2024010300 70507 70300
+%%BeginData:         91 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30311,6 +30636,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.hibccode128emptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /hibccode128 //loadctx exec
 
@@ -30385,8 +30714,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2023040300 67882 67684
-%%BeginData:         75 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2024010300 68385 68150
+%%BeginData:         79 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30406,6 +30735,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.hibcdatamatrixEmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /hibcdatamatrix //loadctx exec
 
@@ -30472,8 +30805,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2023040300 68131 67900
-%%BeginData:         76 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2024010300 68645 68366
+%%BeginData:         80 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30493,6 +30826,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.hibcdatamatrixrectangularEmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /hibcdatamatrixrectangular //loadctx exec
 
@@ -30560,8 +30897,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2023040300 68017 67861
-%%BeginData:         77 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2024010300 68516 68455
+%%BeginData:         81 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30582,6 +30919,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.hibcpdf417EmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /hibcpdf417 //loadctx exec
 
@@ -30649,8 +30990,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2023040300 68067 67896
-%%BeginData:         77 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2024010300 68571 68362
+%%BeginData:         81 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30671,6 +31012,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.hibcmicropdf417EmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /hibcmicropdf417 //loadctx exec
 
@@ -30738,8 +31083,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2023040300 72598 72302
-%%BeginData:         75 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2024010300 72857 72632
+%%BeginData:         79 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30759,6 +31104,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.hibcqrcodeEmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /hibcqrcode //loadctx exec
 
@@ -30825,8 +31174,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2023040300 67862 67684
-%%BeginData:         75 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2024010300 68497 68150
+%%BeginData:         79 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30847,6 +31196,10 @@ bind def
     currentdict //processoptions exec /options exch def
     /barcode exch def
 
+    barcode () eq {
+        /bwipp.hibccodablockfEmptyData (The data must not be empty) //raiseerror exec
+    } if
+
     /hibccodablockf //loadctx exec
 
     % Create a string of the available characters
@@ -30859,7 +31212,7 @@ bind def
     % Validate the input
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            /bwipp.codablockfBadCharacter (HIBC Codablock F must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            /bwipp.hibccodablockfBadCharacter (HIBC Codablock F must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -30912,8 +31265,8 @@ bind def
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2023040300 67856 67677
-%%BeginData:         75 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2024010300 68358 68143
+%%BeginData:         79 ASCII Lines
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 10 dict
 %psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -30933,6 +31286,10 @@ bind def
 
     currentdict //processoptions exec /options exch def
     /barcode exch def
+
+    barcode () eq {
+        /bwipp.hibcazteccodeEmptyData (The data must not be empty) //raiseerror exec
+    } if
 
     /hibcazteccode //loadctx exec
 
@@ -31176,7 +31533,7 @@ bind def
 bwipjs_dontdraw { return } if
     20 dict begin          % Confine variables to local scope
 
-    /args exch def   % We are given some arguments
+    %%/args exch def   % We are given some arguments
 
     % Default options
     /sbs [] def
@@ -31189,84 +31546,60 @@ bwipjs_dontdraw { return } if
     /textxalign (unset) def
     /textyalign (unset) def
     /textfont (OCR-B) def
-    /textsize 10 def
-    /textxoffset 0 def
-    /textyoffset 0 def
-    /textgaps 0 def
+    /textsize 10.0 def
+    /textxoffset 0.0 def
+    /textyoffset 0.0 def
+    /textgaps 0.0 def
     /alttext () def
     /bordercolor (unset) def
     /backgroundcolor (unset) def
-    /inkspread 0 def			% MRW was 0.15
-    /width 0 def
-    /barratio 1 def
-    /spaceratio 1 def
+    /inkspread 0 def      % Was 0.15
+    /width 0.0 def
+    /barratio 1.0 def
+    /spaceratio 1.0 def
     /showborder false def
-    /borderleft 10 def
-    /borderright 10 def
-    /bordertop 1 def
-    /borderbottom 1 def
+    /showbearer false def
+    /borderleft 10.0 def
+    /borderright 10.0 def
+    /bordertop 1.0 def      % Was 0.0
+    /borderbottom 1.0 def   % Was 0.0
     /borderwidth 0.5 def
     /guardwhitespace false def
-    /guardleftpos 0 def
-    /guardleftypos 0 def
-    /guardrightpos 0 def
-    /guardrightypos 0 def
-    /guardwidth 7 def			% MRW was 6
-    /guardheight 7 def
-    
-    % Apply the renderer options and the user options
-    args {def} forall
-    opt {def} forall 
+    /guardleftpos 0.0 def
+    /guardleftypos 0.0 def
+    /guardrightpos 0.0 def
+    /guardrightypos 0.0 def
+    /guardwidth 7.0 def     % Was 5.0
+    /guardheight 7.0 def
 
-    /barcolor barcolor cvlit def
-    /textcolor textcolor cvlit def
-    /textxalign textxalign cvlit def
-    /textyalign textyalign cvlit def
-    /textfont textfont cvlit def
-    /textsize textsize cvr def
-    /textxoffset textxoffset cvr def
-    /textyoffset textyoffset cvr def
-    /textgaps textgaps cvr def
-    /alttext alttext cvlit def
-    /bordercolor bordercolor cvlit def
-    /backgroundcolor backgroundcolor cvlit def
-    /inkspread inkspread cvr def
-    /width width cvr def
-    /barratio barratio cvr def
-    /spaceratio spaceratio cvr def
-    /borderleft borderleft cvr def
-    /borderright borderright cvr def
-    /bordertop bordertop cvr def
-    /borderbottom borderbottom cvr def
-    /borderwidth borderwidth cvr def
-    /guardleftpos guardleftpos cvr def
-    /guardleftypos guardleftypos cvr def
-    /guardrightpos guardrightpos cvr def
-    /guardrightypos guardrightypos cvr def
-    /guardwidth guardwidth cvr def
-    /guardheight guardheight cvr def
+    {def} forall
+    opt currentdict /opt undef currentdict //processoptions exec pop
+
+    textsize 0 le {
+        /bwipp.renlinearBadTextsize (The font size must be greater than zero) //raiseerror exec
+    } if
     
     % Create bar elements and put them into the bars array
     /bars sbs length 1 add 2 idiv array def
-    /x 0.00 def /maxh 0 def
+    /pixx 0 def /pixy 0 def
     0 1 sbs length 1 add 2 idiv 2 mul 2 sub {
         /i exch def
         i 2 mod 0 eq {           % i is even
-            /d sbs i get barratio mul barratio sub 1 add def  % d=digit*r-r+1
+            /d sbs i get barratio mul barratio sub 1 add def  % d = digit*r-r+1
             sbs i get 0 ne {
                 /h bhs i 2 idiv get 72 mul def  % Height from bhs
-                /c d 2 div x add def            % Centre of the bar = x + d/2
+                /c d 2 div pixx add def         % Centre of the bar = pixx + d/2
                 /y bbs i 2 idiv get 72 mul def  % Baseline from bbs
                 /w d inkspread sub def          % bar width = digit - inkspread
                 bars i 2 idiv [h c y w] put     % Add the bar entry
-                h y add maxh gt {/maxh h y add def} if
+                h y add pixy gt {/pixy h y add def} if
             } {
                 bars i 2 idiv -1 put            % Dummy entry
             } ifelse
         } {
-            /d sbs i get spaceratio mul spaceratio sub 1 add def  % d=digit*r-r+1 
+            /d sbs i get spaceratio mul spaceratio sub 1 add def  % d = digit*r-r+1
         } ifelse
-        /x x d add def  % x+=d
+        /pixx pixx d add def  % pixx += d
     } for
 
     gsave
@@ -31275,25 +31608,47 @@ bwipjs_dontdraw { return } if
 
     % Force symbol to given width
     width 0 ne {
-        width 72 mul x div 1 scale
+        width 72 mul pixx div 1 scale
     } if
 
-    % Display the border
-	newpath
-	borderleft neg borderbottom neg moveto
-	x borderleft add borderright add 0 rlineto
-	0 maxh borderbottom add bordertop add rlineto
-	x borderleft add borderright add neg 0 rlineto
-	0 maxh borderbottom add bordertop add neg rlineto    
-	closepath
-
-	%backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if     
-    showborder {
+    % Display the border and background
+    % background is handled by the bwip-js drawing interface.
+    %backgroundcolor (unset) ne {
+    %    gsave
+    %    newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+    %    backgroundcolor setanycolor fill
+    %    grestore
+    %} if
+    /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+    /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+    /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+    /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+    showbearer {  % Overrides showborder
         gsave
+        newpath
+        bl aload pop moveto br aload pop lineto
+        tl aload pop moveto tr aload pop lineto
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } {
+    showborder {
+        % This is the original showborder code from the old renlinear.
+        % It better spaces the border around the symbol.
+        %newpath
+        %borderleft neg borderbottom neg moveto
+        %pixx borderleft add borderright add 0 rlineto
+        %0 pixy borderbottom add bordertop add rlineto
+        %pixx borderleft add borderright add neg 0 rlineto
+        %0 pixy borderbottom add bordertop add neg rlineto
+        %closepath
+
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
         bordercolor (unset) ne { bordercolor setanycolor } if
         borderwidth setlinewidth stroke
         grestore
-    } if    
+    } if } ifelse
    
     % Display the bars for elements in the bars array
     gsave
@@ -31352,18 +31707,18 @@ bwipjs_dontdraw { return } if
             /textascent exch def
             /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
 
-            /textxpos textxoffset x textwidth sub 2 div add def
+            /textxpos textxoffset pixx textwidth sub 2 div add def
             textxalign (left) eq { /textxpos textxoffset def } if
-            textxalign (right) eq { /textxpos x textxoffset sub textwidth sub def } if
+            textxalign (right) eq { /textxpos pixx textxoffset sub textwidth sub def } if
             textxalign (offleft) eq { /textxpos textwidth textxoffset add neg def } if
-            textxalign (offright) eq { /textxpos x textxoffset add def } if
-            textxalign (justify) eq textwidth x lt and {
+            textxalign (offright) eq { /textxpos pixx textxoffset add def } if
+            textxalign (justify) eq textwidth pixx lt and {
                 /textxpos 0 def
-                /textgaps x textwidth sub tstr length 1 sub div def
+                /textgaps pixx textwidth sub tstr length 1 sub div def
             } if
             /textypos textyoffset textascent add 1 add neg def
-            textyalign (above) eq { /textypos textyoffset maxh add 1 add def } if
-            textyalign (center) eq { /textypos textyoffset maxh textascent sub 2 div add def } if
+            textyalign (above) eq { /textypos textyoffset pixy add 1 add def } if
+            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
             textxpos textypos moveto textgaps 0 tstr ashow
         } ifelse
     } if    
@@ -31372,11 +31727,11 @@ bwipjs_dontdraw { return } if
     guardwhitespace {
 		(OCR-B) guardheight 2 mul selectfont
         guardleftpos 0 ne {
-            guardleftpos neg 1 sub guardleftypos guardheight 2 div sub 1.5 sub moveto
+            guardleftpos neg 2 sub guardleftypos guardheight 2 div sub 1.25 sub moveto
 			(<) show
         } if
         guardrightpos 0 ne {
-            guardrightpos x add guardwidth sub 1 add guardrightypos guardheight 2 div sub 1.5 sub moveto
+            guardrightpos pixx add guardwidth sub 1 add guardrightypos guardheight 2 div sub 1.25 sub moveto
 			(>) show
         } if
     } if

@@ -15,40 +15,40 @@ JSONFILE=coverage/json$$
 echo '{' > $JSONFILE
 
 sort coverage/functions | while read FUNCTION ; do
-	if [ ! -r coverage/$FUNCTION ] ; then
-		## Complain about missing functions only when no filter is applied
-		if [ $# = 0 ] ; then
-			echo "$FUNCTION: --no-data--" 1>&2
-		fi
-		continue
-	fi
+    if [ ! -r coverage/$FUNCTION ] ; then
+        ## Complain about missing functions only when no filter is applied
+        if [ $# = 0 ] ; then
+            echo "$FUNCTION: --no-data--" 1>&2
+        fi
+        continue
+    fi
 
-	##
-	## Don't bother with raiseerror or the renderers.  Their metrics will
-	## always be wrong.
-	##
-	if [ $FUNCTION = raiseerror -o ${FUNCTION:0:3} = ren ] ; then
-		## Keep the files svelte
-		rm -f coverage/$FUNCTION 2>/dev/null
-		continue;
-	fi
+    ##
+    ## Don't bother with raiseerror or the renderers.  Their metrics will
+    ## always be wrong.
+    ##
+    if [ $FUNCTION = raiseerror -o ${FUNCTION:0:3} = ren ] ; then
+        ## Keep the files svelte
+        rm -f coverage/$FUNCTION 2>/dev/null
+        continue;
+    fi
 
-	##
-	## The maximum value in each file is the number of branches total.
-	## The lines in the file are the branches taken, minus the line
-	## containing the branch count.
-	##
-	sort -u -n coverage/$FUNCTION > $TMPFILE
-	let TOTAL=$(tail -n1 $TMPFILE)
-	let COUNT=$(wc -l < $TMPFILE)-1
-	let PCT=($COUNT*1000/$TOTAL+5)/10
-	echo "| [$FUNCTION](https://rawgit.com/metafloor/bwip-js/develop/covermap.html#$FUNCTION) | $TOTAL | $COUNT | $PCT% |" >>$TBLFILE
+    ##
+    ## The maximum value in each file is the number of branches total.
+    ## The lines in the file are the branches taken, minus the line
+    ## containing the branch count.
+    ##
+    sort -u -n coverage/$FUNCTION > $TMPFILE
+    let TOTAL=$(tail -n1 $TMPFILE)
+    let COUNT=$(wc -l < $TMPFILE)-1
+    let PCT=($COUNT*1000/$TOTAL+5)/10
+    echo "| [$FUNCTION](https://rawgit.com/metafloor/bwip-js/develop/covermap.html#$FUNCTION) | $TOTAL | $COUNT | $PCT% |" >>$TBLFILE
 
-	## jsonify the data
-	echo "\"$FUNCTION\":[$(xargs < $TMPFILE | sed -e 's/ /,/g')]," >> $JSONFILE
+    ## jsonify the data
+    echo "\"$FUNCTION\":[$(xargs < $TMPFILE | sed -e 's/ /,/g')]," >> $JSONFILE
 
-	## Keep the smaller post-processed file
-	mv -f $TMPFILE coverage/$FUNCTION
+    ## Keep the smaller post-processed file
+    mv -f $TMPFILE coverage/$FUNCTION
 done
 
 echo '}' >> $JSONFILE
@@ -56,7 +56,7 @@ echo '}' >> $JSONFILE
 ##
 ## Begin wiki Code Coverage page
 ##
-T3='```'		## Tildes cause trouble in the heredoc
+T3='```'        ## Tildes cause trouble in the heredoc
 
 cat - > ../wiki/Code-Coverage.md <<@EOF
 This is the state of the test cases coverage as of $(date +%Y-%m-%d).
@@ -97,7 +97,7 @@ structures:
 $T3
 // With callback
 \$forall(<expression>, function() {
-	<lots of red code here>
+    <lots of red code here>
 });
 
 // Without callback

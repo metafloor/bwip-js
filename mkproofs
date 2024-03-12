@@ -13,18 +13,18 @@
 PAT=
 OPTS=
 if [ "x$1" != x ] ; then
-	PAT="$1"
-	shift
+    PAT="$1"
+    shift
 fi
 
 ## run level encoder text opts
 function run() {
-	if [[ $2 == *$PAT* ]] ; then
+    if [[ $2 == *$PAT* ]] ; then
         ## convert from mm to in
         TMP=$(echo "$4" | sed -e 's/height=12/height=0.5/')
         echo $2 "$3" "$TMP"
-		./mkproof $2 "$3" "$TMP"
-	fi
+        ./mkproof $2 "$3" "$TMP"
+    fi
 }
 
 ##

@@ -4,9 +4,9 @@
 ##
 ## Top-level image comparision test driver
 ##
-## Usage:  ./imgtests [--refresh] [pattern]
+## Usage:  ./imgtests [--regen] [pattern]
 ##
-## If --refresh, then the proof images will be regenerated.
+## If --regen, then the proof images will be regenerated.
 ##
 ## Pattern (fixed substring) will only run tests for the matching barcode
 ## type(s).
@@ -14,13 +14,13 @@
 
 PAT=
 OPTS=
-if [ "x$1" == x--refresh ] ; then
-	OPTS="$1"
-	shift
+if [ "x$1" == x--regen ] ; then
+    OPTS="$1"
+    shift
 fi
 if [ "x$1" != x ] ; then
-	PAT="$1"
-	shift
+    PAT="$1"
+    shift
 fi
 
 ##
@@ -36,13 +36,13 @@ let NFAILS=0
 
 ## run level encoder text opts
 function run() {
-	if [[ $2 == *$PAT* ]] ; then
-		./imgtest $OPTS $2 "$3" "$4"
-		if [ $? != 0 ] ; then
-			((NFAILS++))
-		fi
-		((NTESTS++))
-	fi
+    if [[ $2 == *$PAT* ]] ; then
+        ./imgtest $OPTS $2 "$3" "$4"
+        if [ $? != 0 ] ; then
+            ((NFAILS++))
+        fi
+        ((NTESTS++))
+    fi
 }
 
 ##
@@ -56,35 +56,43 @@ cat <<@EOF > imgtests.html
 <title>Image Tests</title>
 <style type="text/css">
 * {
-	font:      11pt sans-serif;
+    font:      11pt sans-serif;
 }
 h1 {
-	font:      bold 14pt sans-serif;
+    font:      bold 14pt sans-serif;
 }
 div.main {
-	padding-left:    1em;
-	padding-bottom:  5px;
+    padding-left:    1em;
+    padding-bottom:  5px;
 }
 div.main ~ div.main {
-	border-top: 2px solid #777;
+    border-top: 2px solid #777;
 }
 div.error {
-	background-color: rgba(255,0,0,.1);
+    background-color: rgba(255,0,0,.1);
 }
 div.main > div {
-	display:        inline-block;
-	white-space:    pre;
-	padding:		10px;
-	text-align:		center;
+    display:        inline-block;
+    white-space:    pre;
+    padding:        10px;
+    text-align:     center;
 }
 img {
-	padding: 1px;
-	border:  1px solid blue;
+    padding: 1px;
+    border:  1px solid blue;
 }
 span {
-	padding:   5px;
+    padding:   5px;
 }
 </style>
+<script type="text/javascript">
+window.addEventListener('load', () => {
+    if (window.devicePixelRatio) {
+        let sheet = document.styleSheets[0];
+        sheet.insertRule('img { zoom: ' + (1 / window.devicePixelRatio) + '; }');
+    }
+});
+</script>
 </head>
 <body>
 @EOF
@@ -111,5 +119,5 @@ echo "Number of tests: $NTESTS"
 echo "Number of failures: $NFAILS"
 echo "-----------------------"
 echo
-echo "imgtests.html to view files"
+echo "imgtests.html to view results"
 

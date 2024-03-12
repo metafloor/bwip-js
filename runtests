@@ -11,16 +11,16 @@
 ## Pattern (fixed substring) will only run tests for the matching barcode
 ## type(s).
 ##
-LVL=0
+LVL=1
 PAT=
 
 if [[ "x$1" =~ ^x[0-9]$ ]] ; then
-	LVL=$1
-	shift
+    LVL=$1
+    shift
 fi
 if [ "x$1" != x ] ; then
-	PAT="$1"
-	shift
+    PAT="$1"
+    shift
 fi
 
 ##
@@ -40,15 +40,15 @@ let NFAILS=0
 
 ## run lvl encoder text options
 function run() {
-	if (( $1 <= $LVL )) ; then
-		if [[ $2 == *$PAT* ]] ; then
-			./runtest $2 "$3" "$4"
-			if [ $? != 0 ] ; then
-				((NFAILS++))
-			fi
-			((NTESTS++))
-		fi
-	fi
+    if (( $1 <= $LVL )) ; then
+        if [[ $2 == *$PAT* ]] ; then
+            ./runtest $2 "$3" "$4"
+            if [ $? != 0 ] ; then
+                ((NFAILS++))
+            fi
+            ((NTESTS++))
+        fi
+    fi
 }
 
 ## The zero-level test cases pulled directly from barcode.ps
@@ -58,11 +58,11 @@ function run() {
 ## The non-zero test cases
 ##
 run 1 ean5 "90200" "textyoffset=52"
-run 1 ean5 "900" ""		## ERROR
-run 1 ean5 "ABCDE" ""	## ERROR
+run 1 ean5 "900" ""     ## ERROR
+run 1 ean5 "ABCDE" ""   ## ERROR
 run 1 ean2 "05" "textyoffset=52"
-run 1 ean2 "90200" ""	## ERROR
-run 1 ean2 "AB" ""		## ERROR
+run 1 ean2 "90200" ""   ## ERROR
+run 1 ean2 "AB" ""      ## ERROR
 run 1 ean13 "2112345678900 12345" "includetext addontextfont=OCR-B addontextsize=9 addontextxoffset=10 addontextyoffset=73"
 run 1 ean13 "21123456789" ""     ## ERROR length
 run 1 ean13 "21123A5678900" ""   ## ERROR bad character
@@ -86,7 +86,7 @@ run 1 upca "416000336108 01" ""
 run 1 upca "416000336108 01234" ""
 run 1 upca "416000336108 01234" "includetext addontextfont=OCR-B addontextsize=9 addontextxoffset=10 addontextyoffset=73"
 run 1 upca "4160003361079" ""    ## ERROR length
-run 1 upca "416000336107" ""	 ## ERROR bad check digit
+run 1 upca "416000336107" ""     ## ERROR bad check digit
 run 1 upca "416000A36108" ""     ## ERROR bad character
 run 1 upca "0123A565" ""         ## ERROR bad character
 run 1 upca "416000336108 000" "" ## ERROR bad addon length
@@ -109,23 +109,23 @@ run 1 upce "012345000065 012" "" ## ERROR bad addon length
 run 1 upce "3012345" "" ## ERROR bad number system
 run 1 isbn "978-1-56581-231-4" ""
 run 1 isbn "978-1-56581-231-4 52250" "includetext guardwhitespace isbntextxoffset=13 isbntextyoffset=75"
-run 1 isbn "978-1-56581-2314" ""	## ERROR bad length
-run 1 isbn "978-1-56581-231-4 333" ""	## ERROR bad addon length
-run 1 isbn "970-1-56581-231-4" ""	## ERROR bad prefix
-run 1 isbn "978-1-56581-231-5" ""	## ERROR bad check digit
-run 1 isbn "978-1-56581-231-5" ""	## ERROR bad check digit
-run 1 isbn "978-1-5658--231-4" ""	## ERROR adjacent dashes
-run 1 isbn "978-1-565-8-231-4" ""	## ERROR bad number of dashes/digits
-run 1 isbn "978-1-56581-23--4" ""	## ERROR character 14 must be a digit
-run 1 isbn "978-1-56581-2314-" ""	## ERROR penultimate must be a dash
-run 1 isbn "978-1-56581-231--" ""	## ERROR final must be a digit
-run 1 isbn "-17525766-0" ""	## ERROR first must be a digit
-run 1 isbn "817525766-0" ""	## ERROR bad number of dashes/digits
-run 1 isbn "817--5766-0" ""	## ERROR adjacent dashes
-run 1 isbn "817525-76---0" ""		## character 11 must be a digit 
-run 1 isbn "817525-76-770" ""		## penultimate must be a dash
-run 1 isbn "81-7525-766-7" ""		## bad check digit
-run 1 isbn "81-7525-766--" ""		## final must be a digit
+run 1 isbn "978-1-56581-2314" ""    ## ERROR bad length
+run 1 isbn "978-1-56581-231-4 333" ""   ## ERROR bad addon length
+run 1 isbn "970-1-56581-231-4" ""   ## ERROR bad prefix
+run 1 isbn "978-1-56581-231-5" ""   ## ERROR bad check digit
+run 1 isbn "978-1-56581-231-5" ""   ## ERROR bad check digit
+run 1 isbn "978-1-5658--231-4" ""   ## ERROR adjacent dashes
+run 1 isbn "978-1-565-8-231-4" ""   ## ERROR bad number of dashes/digits
+run 1 isbn "978-1-56581-23--4" ""   ## ERROR character 14 must be a digit
+run 1 isbn "978-1-56581-2314-" ""   ## ERROR penultimate must be a dash
+run 1 isbn "978-1-56581-231--" ""   ## ERROR final must be a digit
+run 1 isbn "-17525766-0" "" ## ERROR first must be a digit
+run 1 isbn "817525766-0" "" ## ERROR bad number of dashes/digits
+run 1 isbn "817--5766-0" "" ## ERROR adjacent dashes
+run 1 isbn "817525-76---0" ""       ## character 11 must be a digit 
+run 1 isbn "817525-76-770" ""       ## penultimate must be a dash
+run 1 isbn "81-7525-766-7" ""       ## bad check digit
+run 1 isbn "81-7525-766--" ""       ## final must be a digit
 run 1 ismn "979-0-2605-3211-3" "includetext guardwhitespace"
 run 1 ismn "979-0-2605-3211-3 12345" "includetext guardwhitespace"
 run 1 issn "0311-175X 00 17" "includetext guardwhitespace"
@@ -159,7 +159,7 @@ run 1 symbol "fima" ""
 run 1 symbol "fimb" ""
 run 1 symbol "fimc" ""
 run 1 symbol "fimd" "backgroundcolor=DD000011"
-run 1 symbol "fime" ""	## ERROR unknown symbol
+run 1 symbol "fime" ""  ## ERROR unknown symbol
 run 1 qrcode "QR CODE 1234" "version=1 eclevel=L"
 run 1 qrcode "QR CODE 1234" "version=2 eclevel=M"
 run 1 qrcode "QR CODE 1234" "version=3 eclevel=Q"
@@ -170,7 +170,7 @@ run 1 qrcode "QR CODE 7890" "format=micro"
 run 1 qrcode "QR CODE 7890" "format=full"
 run 1 qrcode "QR CODE 7890" "format=micro eclevel=L"
 run 1 qrcode "QR CODE 7890" "format=micro eclevel=M"
-run 1 qrcode "QR CODE 7890" "format=micro eclevel=Q"	## raiseerror
+run 1 qrcode "QR CODE 7890" "format=micro eclevel=Q"    ## raiseerror
 run 1 azteccode "This is ^065ztec Code" "parse"
 run 1 azteccode "This is Aztec Code" "eclevel=1"
 run 1 azteccode "This is Aztec Code" "eclevel=25"
@@ -182,10 +182,12 @@ run 1 azteccode "This is Aztec Code" "eclevel=99"
 run 1 azteccodecompact "1234" "format=compact"
 ## Only run these when exhaustive testing
 for RUNE in {2..255} ; do
-	run 9 aztecrune $RUNE ""
+    run 9 aztecrune $RUNE ""
 done
 
 run 1 gs1datamatrix "(01)02900001333399212v<t!6SWsA/KE^02991012A^0299296T7YI2b9zPMt8y9mU+m7wSUbpe6+7rMdHyo5MMd5h08V1skespIRxR1NUp3MjLP1qDnJikugL76w1Yktr+lHw==" ""
+run 1 gs1datamatrix "(01)02900059737460(21)BS7'B)e25P,C\"(91)EE07(92)frTu8qwL1HH2VyNmR+JA5NU7bTaNaThtkGBqFjrFUQk="
+run 1 gs1datamatrix "(91)ABC^04011^041XYZ" "parse"
 
 ##
 ## END OF TEST CASES

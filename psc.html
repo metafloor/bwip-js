@@ -3,72 +3,72 @@
 <script type="text/javascript" src="psc.js"></script>
 <style type="text/css">
 * {
-	font-family:		Arial, Helvetica, sans-serif;
-	font-size:			10pt;
-	box-sizing:			border-box;
+    font-family:        Arial, Helvetica, sans-serif;
+    font-size:          10pt;
+    box-sizing:         border-box;
 }
 body, html {
-	margin:				0px;
-	border:				0px;
-	padding:			0px;
-	background-color:	#ddd;
+    margin:             0px;
+    border:             0px;
+    padding:            0px;
+    background-color:   #ddd;
 }
 body {
-	overflow-y:			hidden;
-	overflow-x:			auto;
+    overflow-y:         hidden;
+    overflow-x:         auto;
 }
 #header {
-	position:			relative;
-	height:				32px;
-	padding:			1ex;
-	padding-left:		24px;
+    position:           relative;
+    height:             32px;
+    padding:            1ex;
+    padding-left:       24px;
 }
 .button {
-	display:			inline-block;
-	min-width:			20ex;
-	text-align:			center;
-	padding:			1ex 3ex;
-	background-color:	#0090ff;
-	border-radius:		4px;
-	color:              white;
-	font-family:        Verdana, Arial, san-serif;
-	font-weight:        bold;
-	cursor:             default;
+    display:            inline-block;
+    min-width:          20ex;
+    text-align:         center;
+    padding:            1ex 3ex;
+    background-color:   #0090ff;
+    border-radius:      4px;
+    color:              white;
+    font-family:        Verdana, Arial, san-serif;
+    font-weight:        bold;
+    cursor:             default;
 }
 #layout {
-	border:				10px solid transparent;
-	padding:			0px;
-	margin:				0px;
-	border-spacing:		0px;
+    border:             10px solid transparent;
+    padding:            0px;
+    margin:             0px;
+    border-spacing:     0px;
 }
 #layout td {
-	padding:			0px;
-	border:				0px;
-	vertical-align:		top;
+    padding:            0px;
+    border:             0px;
+    vertical-align:     top;
 }
 #layout #lefttd {
-	border-right:		10px solid #ddd;
+    border-right:       10px solid #ddd;
 }
 #layout #centertd {
-	border-right:		10px solid #ddd;
+    border-right:       10px solid #ddd;
 }
 #psnbrs, #jsnbrs {
-	border:				1px solid #aaa;
-	resize:				none;
-	height:				100%;
-	width:				50px;
-	font-size:			12pt;
-	white-space:		pre;
-	text-align:			right;
-	overflow:			hidden;
+    border:             1px solid #aaa;
+    resize:             none;
+    height:             100%;
+    width:              50px;
+    font-size:          12pt;
+    white-space:        pre;
+    text-align:         right;
+    overflow:           hidden;
 }
 #pstext, #jstext {
-	border:				1px solid #aaa;
-	resize:				none;
-	height:				100%;
-	width:				76ex;
-	font-size:			12pt;
-	white-space:		pre;
+    border:             1px solid #aaa;
+    resize:             none;
+    height:             100%;
+    width:              76ex;
+    font-size:          12pt;
+    white-space:        pre;
 }
 </style>
 <script type="text/javascript">
@@ -76,151 +76,151 @@ window.addEventListener('load', onload, false);
 window.addEventListener('resize', resize, false);
 
 function onload() {
-	resize();
+    resize();
 
-	// Bind the numbering textareas to their content
-	linkta('ps');
-	linkta('js');
+    // Bind the numbering textareas to their content
+    linkta('ps');
+    linkta('js');
 
-	try {
-		var state = JSON.parse(localStorage.getItem('pscstate') || '{}');
-	} catch (e) {
-		state = {};
-	}
-	var pstext = state.pstext;
-	if (pstext) {
-		document.getElementById('pstext').value = pstext;
-		numbers('ps');
-	}
-	if (+state.pspos) {
-		document.getElementById('pstext').scrollTop = +state.pspos;
-	}
-	if (state.flags) {
-		document.getElementById('flags').value = state.flags;
-	}
+    try {
+        var state = JSON.parse(localStorage.getItem('pscstate') || '{}');
+    } catch (e) {
+        state = {};
+    }
+    var pstext = state.pstext;
+    if (pstext) {
+        document.getElementById('pstext').value = pstext;
+        numbers('ps');
+    }
+    if (+state.pspos) {
+        document.getElementById('pstext').scrollTop = +state.pspos;
+    }
+    if (state.flags) {
+        document.getElementById('flags').value = state.flags;
+    }
 }
 function resize() {
-	var table	= document.getElementById('layout');
-	var left	= document.getElementById('lefttd');
-	var right	= document.getElementById('righttd');
-	var pstext	= document.getElementById('pstext');
-	var jstext	= document.getElementById('jstext');
-	var psnbrs	= document.getElementById('psnbrs');
-	var jsnbrs	= document.getElementById('jsnbrs');
+    var table   = document.getElementById('layout');
+    var left    = document.getElementById('lefttd');
+    var right   = document.getElementById('righttd');
+    var pstext  = document.getElementById('pstext');
+    var jstext  = document.getElementById('jstext');
+    var psnbrs  = document.getElementById('psnbrs');
+    var jsnbrs  = document.getElementById('jsnbrs');
 
-	var height	= window.innerHeight;
-	var width	= window.innerWidth;
-	var innerh	= height - (table.offsetHeight - left.offsetHeight);
-	var innerw  = width - (table.offsetWidth - table.rows[0].offsetWidth);
+    var height  = window.innerHeight;
+    var width   = window.innerWidth;
+    var innerh  = height - (table.offsetHeight - left.offsetHeight);
+    var innerw  = width - (table.offsetWidth - table.rows[0].offsetWidth);
 
-	pstext.style.height = innerh + 'px';
-	jstext.style.height = innerh + 'px';
-	psnbrs.style.height = innerh + 'px';
-	jsnbrs.style.height = innerh + 'px';
-	pstext.style.width  = ((width-150) / 2) + 'px';
-	jstext.style.width  = ((width-150) / 2) + 'px';
+    pstext.style.height = innerh + 'px';
+    jstext.style.height = innerh + 'px';
+    psnbrs.style.height = innerh + 'px';
+    jsnbrs.style.height = innerh + 'px';
+    pstext.style.width  = ((width-150) / 2) + 'px';
+    jstext.style.width  = ((width-150) / 2) + 'px';
 }
 
 function compile() {
-	var pselt = document.getElementById('pstext');
-	var jselt = document.getElementById('jstext');
-	var pstxt = pselt.value;
-	var pspos = pselt.scrollTop;
-	var flags = document.getElementById('flags').value
-									.replace(/(^\s+)|(\s+$)/, '')
-									.replace(/\s\s+/g, ' ');
+    var pselt = document.getElementById('pstext');
+    var jselt = document.getElementById('jstext');
+    var pstxt = pselt.value;
+    var pspos = pselt.scrollTop;
+    var flags = document.getElementById('flags').value
+                                    .replace(/(^\s+)|(\s+$)/, '')
+                                    .replace(/\s\s+/g, ' ');
 
-	localStorage.setItem('pscstate',
-				JSON.stringify({ pstext:pstxt, flags:flags, pspos:pspos  }))
-	var jstxt = jselt.value = PSC(pstxt, flags.split(' '));
-	numbers('js');
-	indent('js');
-	sync();
+    localStorage.setItem('pscstate',
+                JSON.stringify({ pstext:pstxt, flags:flags, pspos:pspos  }))
+    var jstxt = jselt.value = PSC(pstxt, flags.split(' '));
+    numbers('js');
+    indent('js');
+    sync();
 }
 function sync() {
-	var pselt = document.getElementById('pstext');
-	var jselt = document.getElementById('jstext');
-	var pstxt = pselt.value;
-	var jstxt = jselt.value;
+    var pselt = document.getElementById('pstext');
+    var jselt = document.getElementById('jstext');
+    var pstxt = pselt.value;
+    var jstxt = jselt.value;
 
-	// Get the top visible line number of the ps text.  Add X to display the 
-	// JS code more in the middle of the listing.
-	var nlines = pstxt.replace(/[^\n]+/g, '').length+1;
-	var lnbr = Math.ceil(nlines * pselt.scrollTop / pselt.scrollHeight) + 12;
+    // Get the top visible line number of the ps text.  Add X to display the 
+    // JS code more in the middle of the listing.
+    var nlines = pstxt.replace(/[^\n]+/g, '').length+1;
+    var lnbr = Math.ceil(nlines * pselt.scrollTop / pselt.scrollHeight) + 12;
 
-	// Find the first occurrence of that line number in the javascript.
-	// One issue is that not every PS line number appears in the JS.  
-	// Therefore, keep looking.
-	while (lnbr < nlines) {
-		// Line numbers are wrapped in /*###*/ comments
-		var a = (new RegExp("/\\*" + lnbr + "\\*/")).exec(jstxt);
-		if (a) {
-			console.log(lnbr, a);
-			jselt.scrollTop = jselt.scrollHeight *
-					  (jstxt.substr(0,a.index).replace(/[^\n]+/g,'').length+1) /
-					  (jstxt.replace(/[^\n]+/g,'').length+1)
-			break;
-		}
-		lnbr++;
-	}
+    // Find the first occurrence of that line number in the javascript.
+    // One issue is that not every PS line number appears in the JS.  
+    // Therefore, keep looking.
+    while (lnbr < nlines) {
+        // Line numbers are wrapped in /*###*/ comments
+        var a = (new RegExp("/\\*" + lnbr + "\\*/")).exec(jstxt);
+        if (a) {
+            console.log(lnbr, a);
+            jselt.scrollTop = jselt.scrollHeight *
+                      (jstxt.substr(0,a.index).replace(/[^\n]+/g,'').length+1) /
+                      (jstxt.replace(/[^\n]+/g,'').length+1)
+            break;
+        }
+        lnbr++;
+    }
 }
 function linkta(id) {
-	var text = document.getElementById(id + 'text');
-	var nbrs = document.getElementById(id + 'nbrs');
+    var text = document.getElementById(id + 'text');
+    var nbrs = document.getElementById(id + 'nbrs');
 
-	nbrs.disabled = true;
-	numbers(id);
+    nbrs.disabled = true;
+    numbers(id);
 
-	text.onscroll = function() {
-		if (text.scrollHeight != nbrs.scrollHeight) {
-			numbers(id);
-		}
-		nbrs.scrollTop = text.scrollTop;
-	}
+    text.onscroll = function() {
+        if (text.scrollHeight != nbrs.scrollHeight) {
+            numbers(id);
+        }
+        nbrs.scrollTop = text.scrollTop;
+    }
 }
 function numbers(id) {
-	var text = document.getElementById(id + 'text').value;
-	var nlines = Math.max(text.replace(/[^\n]+/g, '').length+1, 99);
+    var text = document.getElementById(id + 'text').value;
+    var nlines = Math.max(text.replace(/[^\n]+/g, '').length+1, 99);
 
-	var t = '';
-	for (var i = 1; i < nlines; i++) {
-		t += i + '\n';
-	}
-	document.getElementById(id + 'nbrs').textContent = t;
+    var t = '';
+    for (var i = 1; i < nlines; i++) {
+        t += i + '\n';
+    }
+    document.getElementById(id + 'nbrs').textContent = t;
 }
 function indent(id) {
-	var lines = document.getElementById(id + 'text').value.split(/\r?\n/);
+    var lines = document.getElementById(id + 'text').value.split(/\r?\n/);
 
-	var tabs = '';
-	for (var i = 0; i < lines.length; i++) {
-		var line = lines[i].replace(/"([^\\"]|\\.)*"/g, '')
-							.replace(/\/\/.*/, '')
-							.replace(/\/\*([^*]|\*[^\/])*\*\//, '')
-							;
-		if (/^\s*\}/.test(line)) {
-			tabs = tabs.substr(0, tabs.length-1);
-		}
-		lines[i] = tabs + lines[i];
-		if (/\{$/.test(line)) {
-			tabs = tabs + '\t';
-		}
-	}
+    var tabs = '';
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].replace(/"([^\\"]|\\.)*"/g, '')
+                            .replace(/\/\/.*/, '')
+                            .replace(/\/\*([^*]|\*[^\/])*\*\//, '')
+                            ;
+        if (/^\s*\}/.test(line)) {
+            tabs = tabs.substr(0, tabs.length-1);
+        }
+        lines[i] = tabs + lines[i];
+        if (/\{$/.test(line)) {
+            tabs = tabs + '\t';
+        }
+    }
 
-	document.getElementById(id + 'text').value = lines.join('\n');
+    document.getElementById(id + 'text').value = lines.join('\n');
 }
 </script>
 </head>
 <body>
 <table id="layout"><tbody>
 <tr><td style="white-space:nowrap;overflow:hidden">&nbsp;<b>PostScript</b>
-	&nbsp;<button onclick="compile()">Compile</button>&nbsp;
-	<b>Flags:&nbsp;</b><input type="text" size=50 id="flags">
-	<td>&nbsp;<b>JavaScript</b>
-	&nbsp;<button onclick="sync()">Goto</button>&nbsp;
+    &nbsp;<button onclick="compile()">Compile</button>&nbsp;
+    <b>Flags:&nbsp;</b><input type="text" size=50 id="flags">
+    <td>&nbsp;<b>JavaScript</b>
+    &nbsp;<button onclick="sync()">Goto</button>&nbsp;
 <tr><td id="lefttd"><textarea id="psnbrs" spellcheck="false"></textarea>
-					<textarea id="pstext" spellcheck="false"></textarea>
-	<td id="righttd"><textarea id="jsnbrs" spellcheck="false"></textarea>
-					<textarea id="jstext" spellcheck="false"></textarea>
+                    <textarea id="pstext" spellcheck="false"></textarea>
+    <td id="righttd"><textarea id="jsnbrs" spellcheck="false"></textarea>
+                    <textarea id="jstext" spellcheck="false"></textarea>
 </table>
 </body>
 </html>
