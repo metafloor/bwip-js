@@ -1,148 +1,148 @@
 /* bwip-js : lib/demo.css */
 body {
-	font-size:			11pt;
-	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
-	margin:				0px;
+    font-size:          11pt;
+    font-family:        "Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
+    margin:             0px;
 }
 #header {
-	position:			relative;
-	background-color:	#212121;
-	color:				#fff;
-	height:				48px;
-	padding-left:		21px;
-	padding-top:		0px;
-	padding-bottom:		20px;
-	margin-bottom:		17px;
+    position:           relative;
+    background-color:   #212121;
+    color:              #fff;
+    height:             48px;
+    padding-left:       21px;
+    padding-top:        0px;
+    padding-bottom:     20px;
+    margin-bottom:      17px;
 }
 #header #bwip-js {
-	font-size:			25px;
-	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
-	font-weight:		bold;
-	position:			absolute;
-	bottom:				21px;
+    font-size:          25px;
+    font-family:        "Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
+    font-weight:        bold;
+    position:           absolute;
+    bottom:             21px;
 }
 #header #versions {
-	font-size:			10px;
-	font-family: 		"Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
-	font-weight:		100;
-	color:				#a7a7a7;
-	position:			absolute;
-	bottom:				2px;
-	right:				12px;
+    font-size:          10px;
+    font-family:        "Lucida Grande",Calibri,Helvetica,Arial,sans-serif;
+    font-weight:        100;
+    color:              #a7a7a7;
+    position:           absolute;
+    bottom:             2px;
+    right:              12px;
 }
 input, select, label, button {
-	font-family:		Verdana, Arial, san-serif;
-	font-size:			10.5pt;
+    font-family:        Verdana, Arial, san-serif;
+    font-size:          10.5pt;
 }
 #symbol, #symtext, #symaltx, #symopts, #scaleX, #scaleY {
-	padding:			.5ex;
-	box-sizing:			border-box;
-	border:				1px solid #999;
-	border-radius:		4px;
+    padding:            .5ex;
+    box-sizing:         border-box;
+    border:             1px solid #999;
+    border-radius:      4px;
 }
 #symbol, #symtext, #symaltx, #symopts, #scaleX, #scaleY {
-	width:				63ex;
+    width:              63ex;
 }
 #scaleX, #scaleY {
-	width:				6ex;
+    width:              6ex;
 
 }
 #fonthdr {
-	position:			absolute;
-	bottom:				0px;
-	left:				556px;
-	width:				16ex;
-	padding-left:		2ex;
-	padding-top:		1ex;
-	padding-bottom:		1ex;
-	background-color:			#0090ff;
-	border-top-left-radius:		4px;
-	border-top-right-radius:	4px;
-	color:				white;
-	font-family:		Verdana, Arial, san-serif;
-	font-weight:		bold;
-	cursor:				default;
+    position:           absolute;
+    bottom:             0px;
+    left:               556px;
+    width:              16ex;
+    padding-left:       2ex;
+    padding-top:        1ex;
+    padding-bottom:     1ex;
+    background-color:           #0090ff;
+    border-top-left-radius:     4px;
+    border-top-right-radius:    4px;
+    color:              white;
+    font-family:        Verdana, Arial, san-serif;
+    font-weight:        bold;
+    cursor:             default;
 }
 #fonthdr:hover {
-	background-color:	#32aaff;
+    background-color:   #32aaff;
 }
 #fontdiv {
-	z-index:			999;
-	position:			absolute;
-	top:				68px;
-	left:				556px;
-	padding:			0px;
-	margin:				0px;
-	border:				0px;
+    z-index:            999;
+    position:           absolute;
+    top:                68px;
+    left:               556px;
+    padding:            0px;
+    margin:             0px;
+    border:             0px;
 }
 #fontdiv div.inner {
-	border:				1px solid #b9c3ff;
-	border-top:			0px;
-	border-bottom-left-radius:	3px;
-	border-bottom-right-radius:	3px;
-	padding:			16px;
-	color:				#000;
-	background-color:	#e3eeff;
-	font-family:		Verdana, Arial, san-serif;
-	x-box-shadow:			2px 2px 3px #ddd;
+    border:             1px solid #b9c3ff;
+    border-top:         0px;
+    border-bottom-left-radius:  3px;
+    border-bottom-right-radius: 3px;
+    padding:            16px;
+    color:              #000;
+    background-color:   #e3eeff;
+    font-family:        Verdana, Arial, san-serif;
+    x-box-shadow:           2px 2px 3px #ddd;
 }
 #dropzone {
-	width:				472px;
-	text-align:			center;
-	border:				1px dashed #999;
-	background-color:	#e7e7e7;
-	color:				#777;
-	overflow:			hidden;
+    width:              472px;
+    text-align:         center;
+    border:             1px dashed #999;
+    background-color:   #e7e7e7;
+    color:              #777;
+    overflow:           hidden;
 }
 #dropzone:hover {
-	border:				1px dashed #777;
-	color:				#555;
-	background-color:	#eeeeee;
+    border:             1px dashed #777;
+    color:              #555;
+    background-color:   #eeeeee;
 }
 #dropzone div.content {
-	padding:			32px 96px;
+    padding:            32px 96px;
 }
 #dropzone .fd-file {
-	opacity:			0;
-	font-size:			72px;
-	position:			absolute;
-	right:				0px;
-	top:				0px;
-	width:				1000px;
+    opacity:            0;
+    font-size:          72px;
+    position:           absolute;
+    right:              0px;
+    top:                0px;
+    width:              1000px;
 }
 #fontlist.visible {
-	margin-top:			20px;
-	border-top:			1px solid #bbb;
-	padding-top:		20px;
+    margin-top:         20px;
+    border-top:         1px solid #bbb;
+    padding-top:        20px;
 }
 #fontlist td, #fontlist th {
-	text-align:			left;
-	padding:			3px 1ex;
-	border-bottom:		1px solid #999;
+    text-align:         left;
+    padding:            3px 1ex;
+    border-bottom:      1px solid #999;
 }
 #fontlist td.delete span {
-	opacity:			.4;
+    opacity:            .4;
 }
 #fontlist td.delete:hover span {
-	opacity:			1;
+    opacity:            1;
 }
 #params {
-	margin-left:		12px;
+    margin-left:        12px;
 }
 #content {
-	margin-left:		20px;
+    margin-left:        20px;
 }
 #params th {
-	text-align:			right;
-	padding-right:		1.5ex;
+    text-align:         right;
+    padding-right:      1.5ex;
 }
 a.saveas {
-	color:				blue;
+    color:              blue;
 }
 a.saveas:visited {
-	color:				blue;
+    color:              blue;
 }
 button {
-	padding:			.5ex 1ex;
-	min-width:			18ex;
+    padding:            .5ex 1ex;
+    min-width:          18ex;
 }

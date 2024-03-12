@@ -7,13 +7,13 @@ function DrawingCanvas(canvas, maybe) {
         canvas = maybe;
     }
 
-	var img;
-	var ctx = canvas.getContext('2d', { willReadFrequently:true });
-	var drawing = DrawingBuiltin();
+    var img;
+    var ctx = canvas.getContext('2d', { willReadFrequently:true });
+    var drawing = DrawingBuiltin();
 
-	// Provide our specializations for the builtin drawing
-	drawing.image = image;
-	drawing.end = end;
+    // Provide our specializations for the builtin drawing
+    drawing.image = image;
+    drawing.end = end;
 
     // Reflect setopts() into the super
     var opts;
@@ -23,32 +23,32 @@ function DrawingCanvas(canvas, maybe) {
         _setopts && _setopts.call(drawing, options);
     };
 
-	return drawing;
+    return drawing;
 
 
-	// Called by DrawingBuiltin.init() to get the ARGB bitmap for rendering.
-	function image(width, height) {
-		canvas.width  = width;
-		canvas.height = height;
+    // Called by DrawingBuiltin.init() to get the ARGB bitmap for rendering.
+    function image(width, height) {
+        canvas.width  = width;
+        canvas.height = height;
 
-		// Set background 
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
-			ctx.fillStyle = '#' + opts.backgroundcolor;
-			ctx.fillRect(0, 0, width, height);
-		} else {
-			ctx.clearRect(0, 0, width, height);
-		}
+        // Set background 
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
+            ctx.fillStyle = '#' + opts.backgroundcolor;
+            ctx.fillRect(0, 0, width, height);
+        } else {
+            ctx.clearRect(0, 0, width, height);
+        }
 
-		// Prepare the bitmap 
-		img = ctx.getImageData(0, 0, width, height);
+        // Prepare the bitmap 
+        img = ctx.getImageData(0, 0, width, height);
 
-		// The return value is designed for both canvas pure-RGBA and PNG RGBA
-		return { buffer:img.data, ispng:false };
-	}
+        // The return value is designed for both canvas pure-RGBA and PNG RGBA
+        return { buffer:img.data, ispng:false };
+    }
 
-	function end() {
-		ctx.putImageData(img, 0, 0);
+    function end() {
+        ctx.putImageData(img, 0, 0);
         return canvas;
-	}
+    }
 }

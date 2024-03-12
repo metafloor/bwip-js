@@ -182,8 +182,8 @@ function DrawingPDFKit(doc, opts, FontLib) {
             doc.clip('non-zero');
         },
         unclip : function() {
-			doc.restore();
-		},
+            doc.restore();
+        },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
         // font is an object with properties { name, width, height, dx }
         // width and height are the font cell size.

@@ -1,10 +1,10 @@
 // file: bwip-js/lib/symdesc.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2023-04-03
+// Barcode Writer in Pure PostScript - Version 2024-01-03
 //
 // Copyright (c) 2011-2024 Mark Warren
-// Copyright (c) 2004-2023 Terry Burton
+// Copyright (c) 2004-2024 Terry Burton
 //
 // Licensed MIT.  See the LICENSE file in the bwip-js root directory
 // for the extended copyright notice.

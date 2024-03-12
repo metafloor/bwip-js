@@ -40,8 +40,8 @@ or as SVG (all platforms).</p>
 </blockquote>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 4.2.0 (2024-01-02)</li>
-<li>Current BWIPP version is 2023-04-03</li>
+<li>Current bwip-js version is 4.3.0 (2024-03-12)</li>
+<li>Current BWIPP version is 2024-01-03</li>
 <li>Node.js compatibility: 0.12+</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
 </ul>
@@ -324,7 +324,7 @@ the same options object as the other rendering methods.</p>
 </code></pre>
 <p>The return value from <code>toSVG()</code> is a string containing a fully qualified SVG definition,
 including a <code>viewBox</code> attribute that defines the natural width and height of the image, in pixels.</p>
-<pre><code>&lt;svg version="1.1" viewBox="0 0 242 200" xmlns="http://www.w3.org/2000/svg"&gt;
+<pre><code>&lt;svg viewBox="0 0 242 200" xmlns="http://www.w3.org/2000/svg"&gt;
    ...
 &lt;/svg&gt;
 </code></pre>
@@ -336,7 +336,7 @@ span.style.display = 'inline-block';
 span.style.width = width + 'px';
 span.style.height = height + 'px';
 span.innerHTML = svg;
-document.body.addChild(span);
+document.body.appendChild(span);
 </code></pre>
 <p>The <code>toSVG()</code> method links to all BWIPP encoders, so it cannot be used with
 tree-shaking.  To reduce bundled size, you can import only the barcode types
