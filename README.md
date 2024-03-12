@@ -14,8 +14,8 @@ or as SVG (all platforms).
 
 ## Status 
 
-* Current bwip-js version is 4.2.0 (2024-01-02)
-* Current BWIPP version is 2023-04-03
+* Current bwip-js version is 4.3.0 (2024-03-12)
+* Current BWIPP version is 2024-01-03
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
 
@@ -377,7 +377,7 @@ The return value from `toSVG()` is a string containing a fully qualified SVG def
 including a `viewBox` attribute that defines the natural width and height of the image, in pixels.
 
 ```
-<svg version="1.1" viewBox="0 0 242 200" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 242 200" xmlns="http://www.w3.org/2000/svg">
    ...
 </svg>
 ```
@@ -393,7 +393,7 @@ span.style.display = 'inline-block';
 span.style.width = width + 'px';
 span.style.height = height + 'px';
 span.innerHTML = svg;
-document.body.addChild(span);
+document.body.appendChild(span);
 ```
 
 The `toSVG()` method links to all BWIPP encoders, so it cannot be used with

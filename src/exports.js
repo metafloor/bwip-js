@@ -13,31 +13,31 @@ require('stream');  // fix for https://github.com/nodejs/node/issues/37021
 //
 // This function is asynchronous.
 function Request(req, res, extra) {
-	var opts = url.parse(req.url, true).query;
+    var opts = url.parse(req.url, true).query;
 
-	// Convert boolean empty parameters to true
-	for (var id in opts) {
-		if (opts[id] === '') {
-			opts[id] = true;
-		}
-	}
+    // Convert boolean empty parameters to true
+    for (var id in opts) {
+        if (opts[id] === '') {
+            opts[id] = true;
+        }
+    }
 
-	// Add in server options/overrides
-	if (extra) {
-		for (var id in extra) {
-			opts[id] = extra[id];
-		}
-	}
+    // Add in server options/overrides
+    if (extra) {
+        for (var id in extra) {
+            opts[id] = extra[id];
+        }
+    }
 
-	ToBuffer(opts, function(err, png) {
-		if (err) {
-			res.writeHead(400, { 'Content-Type':'text/plain' });
-			res.end('' + (err.stack || err), 'utf-8');
-		} else {
-			res.writeHead(200, { 'Content-Type':'image/png' });
-			res.end(png, 'binary');
-		}
-	});
+    ToBuffer(opts, function(err, png) {
+        if (err) {
+            res.writeHead(400, { 'Content-Type':'text/plain' });
+            res.end('' + (err.stack || err), 'utf-8');
+        } else {
+            res.writeHead(200, { 'Content-Type':'image/png' });
+            res.end(png, 'binary');
+        }
+    });
 }
 
 // bwipjs.toBuffer(options[, callback])
@@ -48,10 +48,10 @@ function Request(req, res, extra) {
 // `options` are a bwip-js/BWIPP options object.
 // `callback` is an optional callback handler with prototype:
 //
-// 		function callback(err, png)
+//      function callback(err, png)
 //
-// 		`err` is an Error object or string.  If `err` is set, `png` is null.
-// 		`png` is a node Buffer containing the PNG image.
+//      `err` is an Error object or string.  If `err` is set, `png` is null.
+//      `png` is a node Buffer containing the PNG image.
 //
 // If `callback` is not provided, a Promise is returned.
 function ToBuffer(opts, callback) {
@@ -101,11 +101,11 @@ function _ToAny(encoder, opts, drawing) {
 //
 // Returns the HTMLCanvasElement.
 function ToCanvas(cvs, opts) {
-	if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
+    if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
         let tmp = cvs;
         cvs = opts;
         opts = tmp;
-	}
+    }
     return _ToAny(bwipp_lookup(opts.bcid), opts, cvs); 
 }
 // Entry point for the symbol-specific exports
@@ -120,7 +120,7 @@ function ToCanvas(cvs, opts) {
 // 'string` can be either an `id` or query selector returning a single canvas element.
 function _ToAny(encoder, opts, drawing) {
     if (typeof opts == 'string') {
-		var canvas = document.getElementById(opts) || document.querySelector(opts);
+        var canvas = document.getElementById(opts) || document.querySelector(opts);
         if (!(canvas instanceof HTMLCanvasElement)) {
             throw new Error('bwipjs: `' + opts + '`: not a canvas');
         }
@@ -131,16 +131,16 @@ function _ToAny(encoder, opts, drawing) {
         opts = drawing;
         drawing = DrawingCanvas(canvas);
     } else if (typeof drawing == 'string') {
-		var canvas = document.getElementById(drawing) || document.querySelector(drawing);
+        var canvas = document.getElementById(drawing) || document.querySelector(drawing);
         if (!(canvas instanceof HTMLCanvasElement)) {
             throw new Error('bwipjs: `' + drawing + '`: not a canvas');
         }
         drawing = DrawingCanvas(canvas);
     } else if (drawing instanceof HTMLCanvasElement) {
         drawing = DrawingCanvas(drawing);
-	} else if (!drawing || typeof drawing != 'object' || !drawing.init) {
+    } else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
-	} 
+    } 
     return _Render(encoder, opts, drawing);
 }
 //@@BEGIN-REACT-NV-EXPORTS@@
@@ -155,10 +155,10 @@ import Buffer from 'react-zlib-js/buffer.js';
 // `options` are a bwip-js/BWIPP options object.
 // `callback` is an optional callback handler with prototype:
 //
-// 		function callback(err, png)
+//      function callback(err, png)
 //
-// 		`err` is an Error object or string.  If `err` is set, `png` is null.
-// 		`png` is an object with properties:
+//      `err` is an Error object or string.  If `err` is set, `png` is null.
+//      `png` is an object with properties:
 //          `width`  : The width of the image, in pixels.
 //          `height` : The height of the image, in pixels.
 //          `uri`    : A base64 encoded data URL.
@@ -257,7 +257,7 @@ function DrawingDataURL(opts, callback) {
 // Returns a string containing a fully qualified SVG definition,
 // including the natural width and height of the image, in pixels:
 //
-//  <svg version="1.1" width="242" height="200" xmlns="http://www.w3.org/2000/svg">
+//  <svg viewBox="0 0 242 200" xmlns="http://www.w3.org/2000/svg">
 //   ...
 //  </svg>
 //
@@ -267,18 +267,18 @@ function ToSVG(opts) {
 }
 
 function FixupOptions(opts) {
-	var scale	= opts.scale || 2;
-	var scaleX	= +opts.scaleX || scale;
-	var scaleY	= +opts.scaleY || scaleX;
+    var scale   = opts.scale || 2;
+    var scaleX  = +opts.scaleX || scale;
+    var scaleY  = +opts.scaleY || scaleX;
 
-	// Fix up padding.
-	opts.paddingleft = padding(opts.paddingleft, opts.paddingwidth, opts.padding, scaleX);
-	opts.paddingright = padding(opts.paddingright, opts.paddingwidth, opts.padding, scaleX);
-	opts.paddingtop = padding(opts.paddingtop, opts.paddingheight, opts.padding, scaleY);
-	opts.paddingbottom = padding(opts.paddingbottom, opts.paddingheight, opts.padding, scaleY);
+    // Fix up padding.
+    opts.paddingleft = padding(opts.paddingleft, opts.paddingwidth, opts.padding, scaleX);
+    opts.paddingright = padding(opts.paddingright, opts.paddingwidth, opts.padding, scaleX);
+    opts.paddingtop = padding(opts.paddingtop, opts.paddingheight, opts.padding, scaleY);
+    opts.paddingbottom = padding(opts.paddingbottom, opts.paddingheight, opts.padding, scaleY);
 
-	// We override BWIPP's background color functionality.  If in CMYK, convert to RRGGBB so
-	// the drawing interface is consistent.  Likewise, if in CSS-style #rgb or #rrggbb.
+    // We override BWIPP's background color functionality.  If in CMYK, convert to RRGGBB so
+    // the drawing interface is consistent.  Likewise, if in CSS-style #rgb or #rrggbb.
     if (opts.backgroundcolor) {
         var bgc = ''+opts.backgroundcolor;
         if (/^[0-9a-fA-F]{8}$/.test(bgc)) {
@@ -306,34 +306,34 @@ function FixupOptions(opts) {
         }
     }
 
-	return opts;
+    return opts;
 
-	function padding(a, b, c, s) {
-		if (a != null) {
-			return a*s;
-		}
-		if (b != null) {
-			return b*s;
-		}
-		return c*s || 0;
-	}
+    function padding(a, b, c, s) {
+        if (a != null) {
+            return a*s;
+        }
+        if (b != null) {
+            return b*s;
+        }
+        return c*s || 0;
+    }
 }
 
 var BWIPJS_OPTIONS = {
-	bcid:1,
-	text:1,
-	scale:1,
-	scaleX:1,
-	scaleY:1,
-	rotate:1,
-	padding:1,
-	paddingwidth:1,
-	paddingheight:1,
-	paddingtop:1,
-	paddingleft:1,
-	paddingright:1,
-	paddingbottom:1,
-	backgroundcolor:1,
+    bcid:1,
+    text:1,
+    scale:1,
+    scaleX:1,
+    scaleY:1,
+    rotate:1,
+    padding:1,
+    paddingwidth:1,
+    paddingheight:1,
+    paddingtop:1,
+    paddingleft:1,
+    paddingright:1,
+    paddingbottom:1,
+    backgroundcolor:1,
 };
 
 // bwipjs.render(options, drawing)
@@ -349,56 +349,56 @@ function Render(options, drawing) {
 
 // Called by the public exports
 function _Render(encoder, options, drawing) {
-	var text = options.text;
-	if (!text) {
-		throw new ReferenceError('bwip-js: bar code text not specified.');
-	}
+    var text = options.text;
+    if (!text) {
+        throw new ReferenceError('bwip-js: bar code text not specified.');
+    }
 
     // setopts() is optional on the drawing object.
     FixupOptions(options);
     drawing.setopts && drawing.setopts(options);
 
-	// Set the bwip-js defaults
-	var scale	= options.scale || 2;
-	var scaleX	= +options.scaleX || scale;
-	var scaleY	= +options.scaleY || scaleX;
-	var rotate	= options.rotate || 'N';
+    // Set the bwip-js defaults
+    var scale   = options.scale || 2;
+    var scaleX  = +options.scaleX || scale;
+    var scaleY  = +options.scaleY || scaleX;
+    var rotate  = options.rotate || 'N';
 
-	// Create a barcode writer object.  This is the interface between
-	// the low-level BWIPP code, the bwip-js graphics context, and the
-	// drawing interface.
-	var bw = new BWIPJS(drawing);
+    // Create a barcode writer object.  This is the interface between
+    // the low-level BWIPP code, the bwip-js graphics context, and the
+    // drawing interface.
+    var bw = new BWIPJS(drawing);
 
-	// Set the BWIPP options
-	var bwippopts = {};
-	for (var id in options) {
-		if (!BWIPJS_OPTIONS[id]) {
-			bwippopts[id] = options[id];
-		}
-	}
+    // Set the BWIPP options
+    var bwippopts = {};
+    for (var id in options) {
+        if (!BWIPJS_OPTIONS[id]) {
+            bwippopts[id] = options[id];
+        }
+    }
 
-	// Fix a disconnect in the BWIPP rendering logic
-	if (bwippopts.alttext) {
-		bwippopts.includetext = true;
-	}
-	// We use mm rather than inches for height - except pharmacode2 height
-	// which is already in mm.
-	if (+bwippopts.height && encoder != bwipp_pharmacode2) {
-		bwippopts.height = bwippopts.height / 25.4 || 0.5;
-	}
-	// Likewise, width
-	if (+bwippopts.width) {
-		bwippopts.width = bwippopts.width / 25.4 || 0;
-	}
+    // Fix a disconnect in the BWIPP rendering logic
+    if (bwippopts.alttext) {
+        bwippopts.includetext = true;
+    }
+    // We use mm rather than inches for height - except pharmacode2 height
+    // which is already in mm.
+    if (+bwippopts.height && encoder != bwipp_pharmacode2) {
+        bwippopts.height = bwippopts.height / 25.4 || 0.5;
+    }
+    // Likewise, width
+    if (+bwippopts.width) {
+        bwippopts.width = bwippopts.width / 25.4 || 0;
+    }
 
-	// Scale the image
-	bw.scale(scaleX, scaleY);
+    // Scale the image
+    bw.scale(scaleX, scaleY);
 
-	// Call into the BWIPP cross-compiled code and render the image.
+    // Call into the BWIPP cross-compiled code and render the image.
     bwipp_encode(bw, encoder, text, bwippopts);
 
     // Returns whatever drawing.end() returns, or `false` if nothing rendered.
-	return bw.render();
+    return bw.render();
 }
 
 // bwipjs.raw(options)
@@ -410,46 +410,46 @@ function _Render(encoder, options, drawing) {
 //
 // Browser and nodejs usage.
 function ToRaw(bcid, text, options) {
-	if (arguments.length == 1) {
-		options = bcid;
-		bcid = options.bcid;
-		text = options.text;
-	}
+    if (arguments.length == 1) {
+        options = bcid;
+        bcid = options.bcid;
+        text = options.text;
+    }
 
-	// The drawing interface is just needed for the pre-init() calls.
+    // The drawing interface is just needed for the pre-init() calls.
     // Don't need to fixup the options - drawing specific.
     var drawing = DrawingBuiltin();
     drawing.setopts(options);
 
-	var bw = new BWIPJS(drawing);
-	var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
+    var bw = new BWIPJS(drawing);
+    var stack = bwipp_encode(bw, bwipp_lookup(bcid), text, options, true);
 
-	// bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
-	// are not a typical/expected return value.  Convert to plain-old-objects.
-	var ids = { pixs:1, pixx:1, pixy:1, sbs:1, bbs:1, bhs:1, width:1, height:1 };
-	for (var i = 0; i < stack.length; i++) {
-		var elt = stack[i];
-		if (elt instanceof Map) {
-			var obj = {};
-			// Could they make Maps any harder to iterate over???
-			for (var keys = elt.keys(), size = elt.size, k = 0; k < size; k++) {
-				var id = keys.next().value;
-				if (ids[id]) {
-					var val = elt.get(id);
-					if (val instanceof Array) {
-						// The postscript arrays have extra named properties
-						// to emulate array views.  Return cleaned up arrays.
-						obj[id] = val.b.slice(val.o, val.o + val.length);
-					} else {
-						obj[id] = val;
-					}
-				}
-			}
-			stack[i] = obj;
-		} else {
-			// This should never exec...
-			stack.splice(i--, 1);
-		}
-	}
-	return stack;
+    // bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
+    // are not a typical/expected return value.  Convert to plain-old-objects.
+    var ids = { pixs:1, pixx:1, pixy:1, sbs:1, bbs:1, bhs:1, width:1, height:1 };
+    for (var i = 0; i < stack.length; i++) {
+        var elt = stack[i];
+        if (elt instanceof Map) {
+            var obj = {};
+            // Could they make Maps any harder to iterate over???
+            for (var keys = elt.keys(), size = elt.size, k = 0; k < size; k++) {
+                var id = keys.next().value;
+                if (ids[id]) {
+                    var val = elt.get(id);
+                    if (val instanceof Array) {
+                        // The postscript arrays have extra named properties
+                        // to emulate array views.  Return cleaned up arrays.
+                        obj[id] = val.b.slice(val.o, val.o + val.length);
+                    } else {
+                        obj[id] = val;
+                    }
+                }
+            }
+            stack[i] = obj;
+        } else {
+            // This should never exec...
+            stack.splice(i--, 1);
+        }
+    }
+    return stack;
 }

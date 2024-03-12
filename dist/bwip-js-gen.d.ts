@@ -1,4 +1,4 @@
-// Type definitions for bwip-js  4.2.0 (2024-01-02)
+// Type definitions for bwip-js  4.3.0 (2024-03-12)
 //
 // THIS DEFINITION FILE IS MACHINE GENERATED - DO NOT EDIT
 //
@@ -135,7 +135,7 @@ declare namespace BwipJs {
     ):
         | Array<{ bbs: number[]; bhs: number[]; sbs: number[] }>
         | Array<{ pixs: number[]; pixx: number; pixy: number; height: number; width: number }>;
-		
+        
     export const BWIPP_VERSION: string;
     export const BWIPJS_VERSION: string;
 
