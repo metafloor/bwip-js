@@ -36,7 +36,7 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
     } else if (/[\u0080-\uffff]/.test(text)) {
         text = unescape(encodeURIComponent(text));
     }
-        
+
     // Convert opts to a Map
     var map = new Map;
     for (var id in opts) {

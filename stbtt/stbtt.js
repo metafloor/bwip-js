@@ -59,4 +59,3 @@ png.render(function(err, png) {
 		fs.writeFileSync(argv[5], png);
 	}
 });
-

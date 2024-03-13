@@ -39,7 +39,7 @@ for (var id in latest.syms) {
 arr.sort(function(a,b) { return latest.syms[b].msecs / latest.syms[b].count -
                                 latest.syms[a].msecs / latest.syms[a].count });
 
-let md = 
+let md =
     //'Total Time: ' + (times.msecs/1000).toFixed(3) + ' seconds\n\n' +
     '### Times by Encoder\n\n' +
     '  * Slowest to fastest (latest version)\n' +
@@ -77,4 +77,3 @@ for (var j = 0; j < arr.length; j++) {
 md += '\n';
 
 fs.writeFileSync('benchmark.md', md, 'binary');
-

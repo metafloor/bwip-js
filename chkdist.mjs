@@ -47,4 +47,3 @@ reactnv_128({ text:'(01)95012345678903', includetext:true })
     .then((png) => {
         console.log('react-native-esm named export ok');
     });
-

@@ -143,13 +143,13 @@ function sync() {
     var pstxt = pselt.value;
     var jstxt = jselt.value;
 
-    // Get the top visible line number of the ps text.  Add X to display the 
+    // Get the top visible line number of the ps text.  Add X to display the
     // JS code more in the middle of the listing.
     var nlines = pstxt.replace(/[^\n]+/g, '').length+1;
     var lnbr = Math.ceil(nlines * pselt.scrollTop / pselt.scrollHeight) + 12;
 
     // Find the first occurrence of that line number in the javascript.
-    // One issue is that not every PS line number appears in the JS.  
+    // One issue is that not every PS line number appears in the JS.
     // Therefore, keep looking.
     while (lnbr < nlines) {
         // Line numbers are wrapped in /*###*/ comments

@@ -6,7 +6,7 @@ function $stack() {
         console.log(tostring($k[i]));
     }
     console.log(']]]');
-    
+
     function tostring(v) {
         // null can be mis-typed - get it out of the way
         if (v === null) {

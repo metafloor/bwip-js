@@ -3,7 +3,7 @@
 ##
 ## usage: runtest symbol text opts
 ##
-## Use BWIPP with ghostscript to compare bwipjs rendering.  Since we cannot 
+## Use BWIPP with ghostscript to compare bwipjs rendering.  Since we cannot
 ## ensure pixel for pixel rendering between the two (especially considering
 ## fonts), we compare the encoding arrays that are passed to the renderers.
 ##
@@ -35,7 +35,7 @@ JSOUT=tests/$tid.jsout
 cat tests/barcode.ps - > tests/runtest.ps <<@EOF
 0 0 moveto
 ($pstext) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec
-count { 
+count {
     % Order of printing must match the nodejs code.
     dup { exch (pixs) eq { == } { pop } ifelse } forall
     dup { exch (sbs) eq { == } { pop } ifelse } forall
@@ -124,7 +124,7 @@ for (var i = stack.length-1; i >= 0; i--) {
 ) | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' > $JSOUT
 ##) | node tests/nsed.js > $JSOUT
 
-## diff ignoring whitespace (-b) differences. 
+## diff ignoring whitespace (-b) differences.
 diff -qb $GSOUT $JSOUT
 if [ $? != 0 ] ; then
     echo "!!!!"
@@ -138,4 +138,3 @@ if [ $? != 0 ] ; then
 fi
 
 exit 0
-

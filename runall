@@ -17,7 +17,7 @@ function render(index) {
     let options = {
             bcid:id,
             text:syms[id].text,
-        }; 
+        };
     let opts = syms[id].opts.split(' ');
     for (let i = 0; i < opts.length; i++) {
         let s = opts[i];
@@ -55,5 +55,3 @@ function render(index) {
 }
 
 render(0);
-
-

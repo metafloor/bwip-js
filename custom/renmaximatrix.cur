@@ -41,15 +41,15 @@ begin
     2.4945 dup scale  % from 1pt to 0.88mm
 
     0 0 moveto 30 0 lineto 30 29 lineto 0 29 lineto closepath
-    backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if 
+    backgroundcolor (unset) ne { gsave backgroundcolor setanycolor fill grestore } if
     barcolor (unset) ne { barcolor setanycolor } if
 
     0.5 0.5774 translate
 
     newpath
     pixs {
-        dup 
-        /x exch 30 mod def 
+        dup
+        /x exch 30 mod def
         /y exch 30 idiv def
         y 2 mod 0 eq {x} {x 0.5 add} ifelse
         32 y sub 0.8661 mul

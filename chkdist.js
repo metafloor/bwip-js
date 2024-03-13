@@ -137,4 +137,3 @@ console.log('generic-esm toSVG ok');
 checksvg(gesm.gs1_128({ text:'(01)95012345678903', includetext:true }, gesm.drawingSVG()));
 console.log('generic-esm toSVG named export ok');
 }
-

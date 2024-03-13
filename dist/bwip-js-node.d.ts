@@ -139,7 +139,7 @@ declare namespace BwipJs {
     ):
         | Array<{ bbs: number[]; bhs: number[]; sbs: number[] }>
         | Array<{ pixs: number[]; pixx: number; pixy: number; height: number; width: number }>;
-        
+
     export const BWIPP_VERSION: string;
     export const BWIPJS_VERSION: string;
 
@@ -186,7 +186,7 @@ declare namespace BwipJs {
     }
     export function toSVG(opts: RenderOptions): string;
     export function drawingSVG(): DrawingContext<string>;
-    
+
     // platform-specific exports
     export type ToBufferCallback = (err: string | Error, png: Buffer) => void;
     export function toBuffer(opts: RenderOptions, callback: ToBufferCallback): void;

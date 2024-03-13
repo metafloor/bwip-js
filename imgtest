@@ -32,7 +32,7 @@ msg=$(./imgcmp proofs/$filename tests/$filename)
 (
 if [ ! -z "$msg" ] ; then
     echo "<div class=\"main error\">"
-else 
+else
     echo "<div class=\"main\">"
 fi
 echo "<h1>$filename</h1>"
@@ -45,15 +45,15 @@ const bwipp = fs.readFileSync('proofs/$sym.png');
 
 console.log('<div class="proof">');
 console.log('<img src="data:image/png;base64,' + proof.toString('base64') + '"><br>');
-console.log('proof: ' + proof.readUInt32BE(16) + ' x ' + proof.readUInt32BE(20)); 
+console.log('proof: ' + proof.readUInt32BE(16) + ' x ' + proof.readUInt32BE(20));
 console.log('</div>');
 console.log('<div class="image">');
 console.log('<img src="data:image/png;base64,' + image.toString('base64') + '"><br>');
-console.log('image: ' + image.readUInt32BE(16) + ' x ' + image.readUInt32BE(20)); 
+console.log('image: ' + image.readUInt32BE(16) + ' x ' + image.readUInt32BE(20));
 console.log('</div>');
 console.log('<div class="bwipp">');
 console.log('<img src="data:image/png;base64,' + bwipp.toString('base64') + '"><br>');
-console.log('postscript: ' + bwipp.readUInt32BE(16) + ' x ' + bwipp.readUInt32BE(20)); 
+console.log('postscript: ' + bwipp.readUInt32BE(16) + ' x ' + bwipp.readUInt32BE(20));
 console.log('</div>');
 @EOF
 if [ ! -z "$msg" ] ; then

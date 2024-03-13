@@ -31352,7 +31352,7 @@ end
 % --END TEMPLATE--
 0 0 moveto
 (\(91\)ABC^04011^041XYZ) (parse) /gs1datamatrix /uk.co.terryburton.bwipp findresource exec
-count { 
+count {
     % Order of printing must match the nodejs code.
     dup { exch (pixs) eq { == } { pop } ifelse } forall
     dup { exch (sbs) eq { == } { pop } ifelse } forall

@@ -178,7 +178,7 @@ function render() {
                 document.getElementById('output').textContent = msg;
             } else if (e.stack) {
                 // GC includes the message in the stack.  FF does not.
-                document.getElementById('output').textContent = 
+                document.getElementById('output').textContent =
                         (e.stack.indexOf(msg) == -1 ? msg + '\n' : '') + e.stack;
             } else {
                 document.getElementById('output').textContent = msg;
@@ -198,7 +198,7 @@ function render() {
                 document.getElementById('output').textContent = msg;
             } else if (e.stack) {
                 // GC includes the message in the stack.  FF does not.
-                document.getElementById('output').textContent = 
+                document.getElementById('output').textContent =
                         (e.stack.indexOf(msg) == -1 ? msg + '\n' : '') + e.stack;
             } else {
                 document.getElementById('output').textContent = msg;
@@ -246,7 +246,7 @@ function setURL() {
     var scaleX = +document.getElementById('scaleX').value || 2;
     var scaleY = +document.getElementById('scaleY').value || scaleX;
 
-    var url = 'http://bwipjs-api.metafloor.com/?bcid=' + elt.sym + 
+    var url = 'http://bwipjs-api.metafloor.com/?bcid=' + elt.sym +
                 '&text=' + encodeURIComponent(text) +
                 (alttext ? '&alttext=' + encodeURIComponent(alttext) : '') +
                 (options ? '&' + options.replace(/ +/g, '&') : '') +

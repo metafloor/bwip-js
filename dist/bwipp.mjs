@@ -365,7 +365,7 @@ function $anchorsearch(str, seek) {
         var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
         i = str[0] == cd ? 1 : ls;
     } else if (seek.length <= ls) {
-        // Slow path, 
+        // Slow path,
         if (!(seek instanceof Uint8Array)) {
             seek = $s(seek);
         }
@@ -397,7 +397,7 @@ function $search(str, seek) {
         var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
         for (var i = 0; i < ls && str[i] != cd; i++);
     } else {
-        // Slow path, 
+        // Slow path,
         if (!(seek instanceof Uint8Array)) {
             seek = $s(seek);
         }

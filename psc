@@ -6,7 +6,7 @@
 ##
 
 ##
-## Modify barcode.ps to work better with the cross-compiler and the 
+## Modify barcode.ps to work better with the cross-compiler and the
 ## emulation interface.
 ##
 ## * There is a bunch of boilerplate in barcode.ps that would add code

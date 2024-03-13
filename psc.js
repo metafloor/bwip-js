@@ -77,7 +77,7 @@ function PSLEX(str) {
             return stack[stack.length-1][0].token;
         }
     }
-            
+
     // The main lexer function.  Returns the next token; null if no more
     // tokens in the current stream.
     this.next = function() {
@@ -119,7 +119,7 @@ function PSLEX(str) {
         // () string
         if (tks[idx] == '(') {
             var s = '';
-            var l = 1;      
+            var l = 1;
             idx++;
             done: while (true) {
                 while (idx < tks.length) {
@@ -346,7 +346,7 @@ function PSC(str, flags) {
     // and when found, elminate the declaration, substituting the expression
     // directly.  This strategy reduces LOC by about a third.  Future
     // work can get even more aggressive.
-    // 
+    //
     // With the need() case, we must watch for references to the stack $k
     // or the stack pointer $j.  If one is seen between the var declaration
     // and usage, we abort the optimization.
@@ -374,10 +374,10 @@ function PSC(str, flags) {
         // There are hidden stack references:
         //      $a()
         //      $d()
-        // 
+        //
         // Note that $aload()/$astore()/$etc are safe as they
         // ctxflush() and we are guaranteed that no var-refs
-        // exist afterwards.  $a() and $d() are special because 
+        // exist afterwards.  $a() and $d() are special because
         // they do not do a post-ctxflush() and variable state can
         // trickle down past their calls.
         var restack = /(\$j)|(\$k)|(\$[ad]\(\))/;
@@ -431,7 +431,7 @@ function PSC(str, flags) {
                         break;
                     }
                 }
-                
+
                 // Decide whether to eliminate the var declaration.
                 if (where > 0) {
                     // If the var decl references the stack, there can be
@@ -458,7 +458,7 @@ function PSC(str, flags) {
             }
         }
     }
-    
+
     // Flushes all trace state to the postscript stack.  Trace stack is
     // empty afterwards.  The more ctxflush()s we do, the safer but less
     // optimized the emitted code.
@@ -528,7 +528,7 @@ function PSC(str, flags) {
         var tmp = block;
 
         st      = ctx.st;
-        sp      = ctx.sp; 
+        sp      = ctx.sp;
         depth   = ctx.depth;
         block   = ctx.block;
 
@@ -603,7 +603,7 @@ function PSC(str, flags) {
         var t1 = st[sp-1].type;
         var t2 = st[sp-2].type;
 
-        // Arithmetic 
+        // Arithmetic
         if ((t1&TYPE_NUMTYP) || (t2&TYPE_NUMTYP) || (t1&TYPE_BOOLEAN) ||
                 (t2&TYPE_BOOLEAN)) {
             st[sp-2].expr = parens(st[sp-2].expr) + ariop +
@@ -667,7 +667,7 @@ function PSC(str, flags) {
                 //          or
                 //      var <var>=<blah>
                 //
-                // Where var <var>=<blah> cannot pull from the stack (inside a 
+                // Where var <var>=<blah> cannot pull from the stack (inside a
                 // forall loop e.g.)
                 for (var i = 0; i < lines.length; i++) {
                     if (/^var [^=]+=.*\$k\[--\$j\]/.test(lines[i].code)) {
@@ -916,7 +916,7 @@ function PSC(str, flags) {
 
     //
     // The postscript operators.  To understand these, you need a copy of
-    // the language reference manual (google postscript red book). 
+    // the language reference manual (google postscript red book).
     //
 
     // PSC compile-time debugging.  Insert debug into the postscript text
@@ -1072,7 +1072,7 @@ function PSC(str, flags) {
     $.dup = function() {
         need(1);
         // Duplicate as-is literals and simple expressions (temp variables).
-        // More complex expressions are assigned a temp variable that 
+        // More complex expressions are assigned a temp variable that
         // replaces both source and dest expressions.
         if (st[sp-1].type & (TYPE_INTLIT|TYPE_NUMLIT|TYPE_STRLIT)) {
             //st[sp] = clone(st[sp-1]);
@@ -1097,7 +1097,7 @@ function PSC(str, flags) {
             while (num-- > 0) {
                 st[sp++] = clone(st[idx++]);
             }
-        } else if (arg.type & TYPE_STRVAL) { 
+        } else if (arg.type & TYPE_STRVAL) {
             need(2);
             var src = st[sp-2].expr;
             var dst = st[sp-1].expr;
@@ -1185,7 +1185,7 @@ function PSC(str, flags) {
         }
     }
 
-    // Convert to string 
+    // Convert to string
     $.cvlit = function() {
         need(1);
         if (/^[\w_$.\[\]]+$/.test(st[sp-1].expr)) {
@@ -1433,7 +1433,7 @@ function PSC(str, flags) {
 
     // load looks up key the same way the interpreter looks up executable
     // names that it encounters during execution. However, load always pushes
-    // the associated value on the operand stack; it never executes the value. 
+    // the associated value on the operand stack; it never executes the value.
     $.load = function() {
         need(1);
         var tid = tvar();
@@ -1538,7 +1538,7 @@ function PSC(str, flags) {
 
     // Convert $an(a,b), $or(a,b) and $xo(a,b) to their logical equivalents
     // The compiler emits these functions when types are unknown, but when
-    // seen in an if(), we know they are booleans. 
+    // seen in an if(), we know they are booleans.
     function unanorxo(expr) {
         return expr.replace(/\$(an|or|xo)\(([\w$]+),([\w$]+)\)/g,
                     function($0,$1,$2,$3) {
