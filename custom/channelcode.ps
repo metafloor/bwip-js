@@ -2,7 +2,7 @@
 % --REQUIRES preamble raiseerror renlinear--
 % --DESC: Channel Code
 % --EXAM: 3493
-% --EXOP: height=0.5 includetext 
+% --EXOP: height=0.5 includetext
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2017071000 68302 68105
 %%BeginData:        149 ASCII Lines
@@ -23,7 +23,7 @@
     /includetext false def
     /includecheck false def
     /height 1 def
-    
+
     % Parse the input options
     options type /stringtype eq {
         1 dict begin
@@ -66,13 +66,13 @@
             dup 3 index le {
                 b 2 index 4 index put
                 value target eq {
-                    /out [ 
+                    /out [
                         3 1 10 {dup s exch get exch b exch get} for
-                    ] 0 chan 2 mul getinterval def 
+                    ] 0 chan 2 mul getinterval def
                 } if
                 /value value 1 add def
             } if
-        } ifelse 
+        } ifelse
         pop pop pop pop
     } bind def
 
@@ -158,4 +158,3 @@
 %%EndData
 %%EndResource
 % --END ENCODER channelcode--
-

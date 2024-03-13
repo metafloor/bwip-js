@@ -48,4 +48,3 @@ convert -crop "${W}x${H}+${X}+${Y}" /tmp/mkproof.png -define png:color-type=6 -t
 rm -f /tmp/mkproof.png
 
 exit 0
-

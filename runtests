@@ -122,7 +122,7 @@ run 1 isbn "978-1-56581-231--" ""   ## ERROR final must be a digit
 run 1 isbn "-17525766-0" "" ## ERROR first must be a digit
 run 1 isbn "817525766-0" "" ## ERROR bad number of dashes/digits
 run 1 isbn "817--5766-0" "" ## ERROR adjacent dashes
-run 1 isbn "817525-76---0" ""       ## character 11 must be a digit 
+run 1 isbn "817525-76---0" ""       ## character 11 must be a digit
 run 1 isbn "817525-76-770" ""       ## penultimate must be a dash
 run 1 isbn "81-7525-766-7" ""       ## bad check digit
 run 1 isbn "81-7525-766--" ""       ## final must be a digit
@@ -192,9 +192,8 @@ run 1 gs1datamatrix "(91)ABC^04011^041XYZ" "parse"
 ##
 ## END OF TEST CASES
 ##
-echo 
+echo
 echo "-----------------------"
 echo "Number of tests: $NTESTS"
 echo "Number of failures: $NFAILS"
 echo "-----------------------"
-

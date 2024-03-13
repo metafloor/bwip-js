@@ -60,7 +60,7 @@ function loadfont(spec) {
 }
 
 var optlist = [
-    { name: 'help', type: 'boolean', 
+    { name: 'help', type: 'boolean',
       desc: 'Displays this help message.' },
     { name: 'version', type: 'boolean',
       desc: 'Displays the bwip-js and BWIPP version strings.' },
@@ -211,7 +211,7 @@ var optlist = [
     { name: 'guardrightypos', type: 'int',
       desc: 'Vertical position of the guard symbols on the right, in points.' },
 ];
-var optmap = optlist.reduce(function(map, elt) { map[elt.name] = elt; return map; }, {}); 
+var optmap = optlist.reduce(function(map, elt) { map[elt.name] = elt; return map; }, {});
 var opts = {};
 var argv = process.argv;
 var outfile;

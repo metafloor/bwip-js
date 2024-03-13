@@ -54,7 +54,7 @@
     textsize 0 le {
         /bwipp.renlinearBadTextsize (The font size must be greater than zero) //raiseerror exec
     } if
-    
+
     % Create bar elements and put them into the bars array
     /bars sbs length 1 add 2 idiv array def
     /pixx 0 def /pixy 0 def
@@ -125,7 +125,7 @@
         borderwidth setlinewidth stroke
         grestore
     } if } ifelse
-   
+
     % Display the bars for elements in the bars array
     gsave
     0 setlinecap
@@ -138,7 +138,7 @@
         } ifelse
     } forall
     grestore
-    
+
     % Display the text for elements in the text array
     textcolor (unset) ne { textcolor setanycolor } if
     includetext {
@@ -147,7 +147,7 @@
             txt {
                 {} forall
                 2 copy s ne exch fn ne or {
-                    2 copy /s exch def /fn exch def            
+                    2 copy /s exch def /fn exch def
 					selectfont
                 } {
                     pop pop
@@ -197,7 +197,7 @@
             textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
             textxpos textypos moveto textgaps 0 tstr ashow
         } ifelse
-    } if    
+    } if
 
     % Display the guard elements
     guardwhitespace {
@@ -211,9 +211,9 @@
 			(>) show
         } if
     } if
-    
+
     grestore
-    
+
     end
 
 } bind def

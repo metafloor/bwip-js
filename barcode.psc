@@ -136,7 +136,7 @@
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 %psc /processoptions {
-%psc 
+%psc
 %psc     % Convert string to dict
 %psc     dup type /stringtype eq {
 %psc         << exch
@@ -148,7 +148,7 @@
 %psc             } loop
 %psc         >>
 %psc     } if
-%psc 
+%psc
 %psc     % Apply options that exist in currentdict, converting values to existing types
 %psc     mark exch dup
 %psc     {
@@ -174,7 +174,7 @@
 %psc         } ifelse
 %psc     } forall
 %psc     exch pop
-%psc 
+%psc
 %psc }
 %psc [/barcode] {null def} forall
 %psc bind def
@@ -3377,9 +3377,9 @@ bind def
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 %psc /renlinear {
-%psc 
+%psc
 %psc     20 dict begin          % Confine variables to local scope
-%psc 
+%psc
 %psc     % Default options
 %psc     /sbs [] def
 %psc     /bhs [] def
@@ -3416,14 +3416,14 @@ bind def
 %psc     /guardrightypos 0.0 def
 %psc     /guardwidth 5.0 def
 %psc     /guardheight 7.0 def
-%psc 
+%psc
 %psc     {def} forall
 %psc     opt currentdict /opt undef currentdict //processoptions exec pop
-%psc 
+%psc
 %psc     textsize 0 le {
 %psc         /bwipp.renlinearBadTextsize (The font size must be greater than zero) //raiseerror exec
 %psc     } if
-%psc 
+%psc
 %psc     % Create bar elements and put them into the bars array
 %psc     /bars sbs length 1 add 2 idiv array def
 %psc     /pixx 0 def /pixy 0 def
@@ -3446,16 +3446,16 @@ bind def
 %psc         } ifelse
 %psc         /pixx pixx d add def  % pixx += d
 %psc     } for
-%psc 
+%psc
 %psc     gsave
-%psc 
+%psc
 %psc     currentpoint translate
-%psc 
+%psc
 %psc     % Force symbol to given width
 %psc     width 0 ne {
 %psc         width 72 mul pixx div 1 scale
 %psc     } if
-%psc 
+%psc
 %psc     % Set RGB or CMYK color depending on length of given hex string
 %psc     /setanycolor {
 %psc         /anycolor exch def
@@ -3474,7 +3474,7 @@ bind def
 %psc         dup 1 anycolor putinterval cvx exec {255 div} forall
 %psc         anycolor length 6 eq { setrgbcolor } { setcmykcolor } ifelse
 %psc     } def
-%psc 
+%psc
 %psc     % Display the border and background
 %psc     /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
 %psc     /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
@@ -3502,7 +3502,7 @@ bind def
 %psc         borderwidth inkspread 2 mul sub setlinewidth stroke
 %psc         grestore
 %psc     } if } ifelse
-%psc 
+%psc
 %psc     % Display the bars for elements in the bars array
 %psc     gsave
 %psc     barcolor (unset) ne { barcolor setanycolor } if
@@ -3522,7 +3522,7 @@ bind def
 %psc     } forall
 %psc     fill
 %psc     grestore
-%psc 
+%psc
 %psc     % Display the text for elements in the text array
 %psc     textcolor (unset) ne { textcolor setanycolor } if
 %psc     includetext {
@@ -3551,7 +3551,7 @@ bind def
 %psc             } {
 %psc                 /tstr alttext def
 %psc             } ifelse
-%psc 
+%psc
 %psc             % Find true ascent of font
 %psc             tstr length 0 eq {
 %psc                 0
@@ -3570,7 +3570,7 @@ bind def
 %psc             } ifelse
 %psc             /textascent exch def
 %psc             /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
-%psc 
+%psc
 %psc             /textxpos textxoffset pixx textwidth sub 2 div add def
 %psc             textxalign (left) eq { /textxpos textxoffset def } if
 %psc             textxalign (right) eq { /textxpos pixx textxoffset sub textwidth sub def } if
@@ -3586,7 +3586,7 @@ bind def
 %psc             textxpos textypos moveto textgaps 0 tstr ashow
 %psc         } ifelse
 %psc     } if
-%psc 
+%psc
 %psc     % Display the guard elements
 %psc     guardwhitespace {
 %psc         0.75 setlinewidth
@@ -3605,11 +3605,11 @@ bind def
 %psc             stroke
 %psc         } if
 %psc     } if
-%psc 
+%psc
 %psc     grestore
-%psc 
+%psc
 %psc     end
-%psc 
+%psc
 %psc }
 %psc [/barcode] {null def} forall
 %psc bind def
@@ -3970,9 +3970,9 @@ bind def
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 %psc /renmaximatrix {
-%psc 
+%psc
 %psc     20 dict begin
-%psc 
+%psc
 %psc     % Default options
 %psc     /bordercolor (unset) def
 %psc     /barcolor (unset) def
@@ -3984,10 +3984,10 @@ bind def
 %psc     /bordertop 0.0 def
 %psc     /borderbottom 0.0 def
 %psc     /borderwidth 0.25 def
-%psc 
+%psc
 %psc     {def} forall
 %psc     opt currentdict /opt undef currentdict //processoptions exec pop
-%psc 
+%psc
 %psc     % Set RGB or CMYK color depending on length of given hex string
 %psc     /setanycolor {
 %psc         /anycolor exch def
@@ -4006,13 +4006,13 @@ bind def
 %psc         dup 1 anycolor putinterval cvx exec {255 div} forall
 %psc         anycolor length 6 eq { setrgbcolor } { setcmykcolor } ifelse
 %psc     } def
-%psc 
+%psc
 %psc     gsave
-%psc 
+%psc
 %psc     currentpoint translate
-%psc 
+%psc
 %psc     2.4945 dup scale  % from 1pt to 0.88mm
-%psc 
+%psc
 %psc     /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
 %psc     /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
 %psc     /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
@@ -4030,13 +4030,13 @@ bind def
 %psc         borderwidth inkspread 2 mul sub setlinewidth stroke
 %psc         grestore
 %psc     } if
-%psc 
+%psc
 %psc     barcolor (unset) ne { barcolor setanycolor } if
-%psc 
+%psc
 %psc     /g 0.06 inkspread add def
-%psc 
+%psc
 %psc     0.5 0.5774 translate
-%psc 
+%psc
 %psc     newpath
 %psc     pixs {
 %psc         dup
@@ -4055,7 +4055,7 @@ bind def
 %psc         closepath
 %psc     } forall
 %psc     fill
-%psc 
+%psc
 %psc     % Plot the locator symbol
 %psc     newpath 14 13.8576 0.5774 inkspread add 0 360 arc closepath
 %psc             14 13.8576 1.3359 inkspread sub 360 0 arcn closepath fill
@@ -4063,11 +4063,11 @@ bind def
 %psc             14 13.8576 2.8644 inkspread sub 360 0 arcn closepath fill
 %psc     newpath 14 13.8576 3.6229 inkspread add 0 360 arc closepath
 %psc             14 13.8576 4.3814 inkspread sub 360 0 arcn closepath fill
-%psc 
+%psc
 %psc     grestore
-%psc 
+%psc
 %psc     end
-%psc 
+%psc
 %psc }
 %psc [/barcode] {null def} forall
 %psc bind def
@@ -15901,21 +15901,21 @@ bind def
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 %psc /channelcode {
-%psc 
+%psc
 %psc     20 dict begin                 % Confine variables to local scope
-%psc 
+%psc
 %psc     %psc /ctx null def
 %psc     /dontdraw false def
 %psc     /shortfinder false def
 %psc     /includetext false def
 %psc     /includecheck false def
 %psc     /height 1.0 def
-%psc 
+%psc
 %psc     currentdict //processoptions exec /options exch def
 %psc     /barcode exch def
-%psc 
+%psc
 %psc     /channelcode //loadctx exec
-%psc 
+%psc
 %psc     % Validate the input
 %psc     barcode length 2 lt barcode length 7 gt or {
 %psc         /bwipp.channelcodeBadLength (Channel Code must be 2 to 7 digits) //raiseerror exec
@@ -15928,7 +15928,7 @@ bind def
 %psc     barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {
 %psc         /bwipp.channelcodeTooBig (The Channel Code value is too big for the number of channels) //raiseerror exec
 %psc     } if
-%psc 
+%psc
 %psc     % Tail-call optimisation FTW!
 %psc     /loops1 { /s2max s1max 1 add s1 sub def  /b1 1 def
 %psc               s1 1 eq {nextb1} {loopb1} ifelse                             } def
@@ -15973,7 +15973,7 @@ bind def
 %psc     /nexts2 { /s2 s2 1 add def  s2 s2max le {loops2} {nextb1} ifelse } def
 %psc     /nextb1 { /b1 b1 1 add def  b1 b1max le {loopb1} {nexts1} ifelse } def
 %psc     /nexts1 { /s1 s1 1 add def  s1 s1max le {loops1} if              } def
-%psc 
+%psc
 %psc {
 %psc     /memo [  % Accelerate generation of bar patterns
 %psc         [  % CH3
@@ -16050,11 +16050,11 @@ bind def
 %psc         ]
 %psc     ] def
 %psc } ctxdef
-%psc 
+%psc
 %psc     /encode {
 %psc         /chan exch def
 %psc         /target exch def
-%psc 
+%psc
 %psc         % Lookup memoized starting value close to the target
 %psc         memo chan 3 sub get {
 %psc             /m exch def
@@ -16070,19 +16070,19 @@ bind def
 %psc         ms    aload pop [/s8 /s7 /s6 /s5 /s4 /s3 /s2 /s1] {exch def} forall
 %psc         mbmax aload pop [/b7max /b6max /b5max /b4max /b3max /b2max /b1max] {exch def} forall
 %psc         msmax aload pop [/s7max /s6max /s5max /s4max /s3max /s2max /s1max] {exch def} forall
-%psc 
+%psc
 %psc         1 {chkchr} repeat 8 chan sub 2 mul dup 16 exch sub getinterval
-%psc 
+%psc
 %psc     } def
-%psc 
+%psc
 %psc     /barlen barcode length def
-%psc 
+%psc
 %psc     % Determine finder
 %psc     /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
-%psc 
+%psc
 %psc     % Encode the main data
 %psc     /data barcode cvi barlen 1 add encode def
-%psc 
+%psc
 %psc     % Determine check data
 %psc {
 %psc     /mod23map [
@@ -16104,21 +16104,21 @@ bind def
 %psc         } for
 %psc         23 mod 3 encode /check exch def
 %psc     } if
-%psc 
+%psc
 %psc     % Construct the symbol
 %psc     /sbs [
 %psc         finder aload pop
 %psc         data aload pop
 %psc         check aload pop
 %psc     ] def
-%psc 
+%psc
 %psc     % Create the human readable text
 %psc     /txt barlen array def
 %psc     0 1 barlen 1 sub {
 %psc         /i exch def
 %psc         txt i [barcode i 1 getinterval 0 0 () 0] put
 %psc     } for
-%psc 
+%psc
 %psc     % Return the arguments
 %psc     <<
 %psc     /ren //renlinear
@@ -16131,13 +16131,13 @@ bind def
 %psc     /borderright 2.0
 %psc     /opt options
 %psc     >>
-%psc 
+%psc
 %psc     dontdraw not //renlinear if
-%psc 
+%psc
 %psc     //unloadctx exec
-%psc 
+%psc
 %psc     end
-%psc 
+%psc
 %psc }
 %psc [/barcode] {null def} forall
 %psc bind def
@@ -31355,7 +31355,7 @@ bind def
 % --REQUIRES preamble raiseerror renlinear--
 % --DESC: Channel Code
 % --EXAM: 3493
-% --EXOP: height=0.5 includetext 
+% --EXOP: height=0.5 includetext
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2017071000 68302 68105
 %%BeginData:        149 ASCII Lines
@@ -31376,7 +31376,7 @@ bind def
     /includetext false def
     /includecheck false def
     /height 1 def
-    
+
     % Parse the input options
 %psc     options type /stringtype eq {
 %psc         1 dict begin
@@ -31419,13 +31419,13 @@ bind def
             dup 3 index le {
                 b 2 index 4 index put
                 value target eq {
-                    /out [ 
+                    /out [
                         3 1 10 {dup s exch get exch b exch get} for
-                    ] 0 chan 2 mul getinterval def 
+                    ] 0 chan 2 mul getinterval def
                 } if
                 /value value 1 add def
             } if
-        } ifelse 
+        } ifelse
         pop pop pop pop
     } bind def
 
@@ -31578,7 +31578,7 @@ bwipjs_dontdraw { return } if
     textsize 0 le {
         /bwipp.renlinearBadTextsize (The font size must be greater than zero) //raiseerror exec
     } if
-    
+
     % Create bar elements and put them into the bars array
     /bars sbs length 1 add 2 idiv array def
     /pixx 0 def /pixy 0 def
@@ -31649,7 +31649,7 @@ bwipjs_dontdraw { return } if
         borderwidth setlinewidth stroke
         grestore
     } if } ifelse
-   
+
     % Display the bars for elements in the bars array
     gsave
     0 setlinecap
@@ -31662,7 +31662,7 @@ bwipjs_dontdraw { return } if
         } ifelse
     } forall
     grestore
-    
+
     % Display the text for elements in the text array
     textcolor (unset) ne { textcolor setanycolor } if
     includetext {
@@ -31671,7 +31671,7 @@ bwipjs_dontdraw { return } if
             txt {
                 {} forall
                 2 copy s ne exch fn ne or {
-                    2 copy /s exch def /fn exch def            
+                    2 copy /s exch def /fn exch def
 					selectfont
                 } {
                     pop pop
@@ -31721,7 +31721,7 @@ bwipjs_dontdraw { return } if
             textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
             textxpos textypos moveto textgaps 0 tstr ashow
         } ifelse
-    } if    
+    } if
 
     % Display the guard elements
     guardwhitespace {
@@ -31735,9 +31735,9 @@ bwipjs_dontdraw { return } if
 			(>) show
         } if
     } if
-    
+
     grestore
-    
+
     end
 
 } bind def
@@ -31776,7 +31776,7 @@ bwipjs_dontdraw { return } if
     gsave
 
     barcolor (unset) ne { barcolor setanycolor } if
-	pixs maxicode 
+	pixs maxicode
 
     grestore
 

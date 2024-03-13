@@ -1,7 +1,7 @@
 // file : bwip-js/server.js
 //
 // Simple node HTTP server that renders bar code images using bwip-js.
-// 
+//
 // Usage:  node server [address:port] ...
 //
 // To specify all interfaces, use * as the address
@@ -20,7 +20,7 @@ const bwipjs = require('.');
             let msecs = +val.split('=')[1] || 5000;
             let heapdump = require('heapdump');
             console.log(`Creating heapdump in ${msecs} msecs`);
-            setTimeout(function() { 
+            setTimeout(function() {
                     heapdump.writeSnapshot();
                     console.log('heapdump created');
                 }, msecs);
@@ -61,4 +61,3 @@ if (!binds) {
     server.listen(3030);
     console.log('listening on *:3030');
 }
-

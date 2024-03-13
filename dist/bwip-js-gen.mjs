@@ -338,7 +338,7 @@ BWIPJS.prototype.restore = function() {
 //  coordinates corresponding to the current point according to the current
 //  value of the CTM. Thus, if a current point is set and then the CTM is
 //  changed, the coordinates returned by currentpoint will be different
-//  from those that were originally specified for the point. 
+//  from those that were originally specified for the point.
 BWIPJS.prototype.currpos = function() {
     return { x:(this.g_posx-this.g_tdx)/this.g_tsx,
              y:(this.g_posy-this.g_tdy)/this.g_tsy
@@ -392,7 +392,7 @@ BWIPJS.prototype.setcolor = function(s) {
         return;
     }
     if (!/^(?:#?[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|[0-9a-fA-F]{8})$/.test(s)) {
-        throw new Error('bwip-js: invalid color: ' + s); 
+        throw new Error('bwip-js: invalid color: ' + s);
     }
     if (s[0] == '#') {
         s = s.substr(1);
@@ -836,9 +836,9 @@ BWIPJS.prototype.maxicode = function(pix) {
             y *= tsy * 3;
             y += tsy * 2 - h/2;
             y = y|0;
-            
+
             // Build bottom up so the drawing is top-down.
-            var pts = [ [ x-0.5, y-- ] ]; 
+            var pts = [ [ x-0.5, y-- ] ];
             y -= qh-1;
             pts.push([x-1-w2, y--]);
             y -= vh;
@@ -1117,7 +1117,7 @@ function DrawingBuiltin() {
 
         // Polygons are used to draw the connected regions in a 2d barcode.
         // These will always be unstroked, filled, orthogonal shapes.
-        // 
+        //
         // You will see a series of polygon() calls, followed by a fill().
         polygon : function(pts) {
             var npts = pts.length;
@@ -1410,7 +1410,7 @@ function DrawingBuiltin() {
         for (var y = left.min, max = left.length-1; y <= max; y++) {
             addPoint(left[y], y);
         }
-        // The points we calculated are "inside".  The fill algorithm excludes 
+        // The points we calculated are "inside".  The fill algorithm excludes
         // right edges, so +1 on each x.
         for (var y = right.min, max = right.length-1; y <= max; y++) {
             addPoint(right[y]+1, y);
@@ -1448,7 +1448,7 @@ function DrawingBuiltin() {
         for (var n = 0, npts = pts.length; n < npts; n++) {
             var xn = pts[n];
             if (xn > x) {
-                return !wn; 
+                return !wn;
             } else if (xn == x) {
                 return wn;
             }
@@ -1469,13 +1469,13 @@ function DrawingBuiltin() {
 // drawing-svg.js
 //
 // Converts the drawing primitives into the equivalent SVG.  Linear barcodes
-// are rendered as a series of stroked paths.  2D barcodes are rendered as a 
+// are rendered as a series of stroked paths.  2D barcodes are rendered as a
 // series of filled paths.
 //
-// Rotation is handled during drawing.  The resulting SVG will contain the 
+// Rotation is handled during drawing.  The resulting SVG will contain the
 // already-rotated barcode without an SVG transform.
 //
-// If the requested barcode image contains text, the glyph paths are 
+// If the requested barcode image contains text, the glyph paths are
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
@@ -1641,13 +1641,13 @@ function DrawingSVG() {
                           transform(x,      y - ry) +
                     'C' + transform(x + dx, y - ry) + ' ' +
                           transform(x + rx, y - dy) + ' ' +
-                          transform(x + rx, y) + 
+                          transform(x + rx, y) +
                     'C' + transform(x + rx, y + dy) + ' ' +
                           transform(x + dx, y + ry) + ' ' +
-                          transform(x,      y + ry) +  
+                          transform(x,      y + ry) +
                     'C' + transform(x - dx, y + ry) + ' ' +
                           transform(x - rx, y + dy) + ' ' +
-                          transform(x - rx, y) + 
+                          transform(x - rx, y) +
                     'Z';
         },
         // PostScript's default fill rule is non-zero but there are never intersecting
@@ -1837,7 +1837,7 @@ var FontLib = (function() {
         }
 
         // In the cache?
-        var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height; 
+        var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height;
         var glyph = glyphcache[cachekey];
         if (glyph) {
             // Unthread from the MRU
@@ -1850,7 +1850,7 @@ var FontLib = (function() {
             glyph.next = sntl.next;
             glyph.prev = sntl;
             sntl.next = glyph;
-            
+
             return glyph;
         }
 
@@ -1859,7 +1859,7 @@ var FontLib = (function() {
                                                    height * font.bwipjs_multy / 100) ||
                     STBTT.GetGlyph(font, 0, width * font.bwipjs_multx / 100,
                                                    height * font.bwipjs_multy / 100);
-        
+
         glyph.bytes = glyph.pixels;
         glyph.cachekey = cachekey;
         glyph.offset = 0;
@@ -3876,7 +3876,7 @@ function toUint8Array(data) {
     }
     throw new ReferenceError("data must be a binary or base64 encoded string or Uint8Array");
 }
-toUint8Array.b64map = (function() { 
+toUint8Array.b64map = (function() {
     var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
     var map = {};
     for (var i = 0; i < 64; i++) {

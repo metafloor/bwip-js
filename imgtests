@@ -113,11 +113,10 @@ cat <<@EOF >> imgtests.html
 ##
 ## END OF TEST CASES
 ##
-echo 
+echo
 echo "-----------------------"
 echo "Number of tests: $NTESTS"
 echo "Number of failures: $NFAILS"
 echo "-----------------------"
 echo
 echo "imgtests.html to view results"
-

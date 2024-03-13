@@ -25,7 +25,7 @@ function $a(a) {
         for (var i = 0, l = a.length; i < l; i++) {
             a[i] = null;
         }
-    } 
+    }
     a.b = a;    // base array
     a.o = 0;    // offset into base
     return a;
@@ -321,7 +321,7 @@ function $anchorsearch(str, seek) {
         var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
         i = str[0] == cd ? 1 : ls;
     } else if (seek.length <= ls) {
-        // Slow path, 
+        // Slow path,
         if (!(seek instanceof Uint8Array)) {
             seek = $s(seek);
         }
@@ -353,7 +353,7 @@ function $search(str, seek) {
         var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
         for (var i = 0; i < ls && str[i] != cd; i++) ;
     } else {
-        // Slow path, 
+        // Slow path,
         if (!(seek instanceof Uint8Array)) {
             seek = $s(seek);
         }
@@ -559,7 +559,7 @@ function bwipp_processoptions() {
         if (def == null || typ == 'number') {
             // This allows for numeric strings
             if (!isFinite(+val)) {
-                throw new Error('bwipp.invalidOptionType: ' + id + 
+                throw new Error('bwipp.invalidOptionType: ' + id +
                         ': not a realtype: ' + val);
             }
             if (typeof val == 'string') {
@@ -577,7 +577,7 @@ function bwipp_processoptions() {
                 } else if (val == 'false') {
                     val = false;
                 } else {
-                    throw new Error('bwipp.invalidOptionType: ' + id + 
+                    throw new Error('bwipp.invalidOptionType: ' + id +
                             ': not a booleantype: ' + val);
                 }
                 map ? opts.set(id, val) : (opts[id] = val);
@@ -588,7 +588,7 @@ function bwipp_processoptions() {
                 val = ''+val;
                 map ? opts.set(id, val) : (opts[id] = val);
             } else if (typeof val != 'string' && !(val instanceof Uint8Array)) {
-                throw new Error('bwipp.invalidOptionType: ' + id + 
+                throw new Error('bwipp.invalidOptionType: ' + id +
                         ': not a stringtype: ' + val);
             }
         }

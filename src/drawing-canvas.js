@@ -31,7 +31,7 @@ function DrawingCanvas(canvas, maybe) {
         canvas.width  = width;
         canvas.height = height;
 
-        // Set background 
+        // Set background
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
             ctx.fillStyle = '#' + opts.backgroundcolor;
@@ -40,7 +40,7 @@ function DrawingCanvas(canvas, maybe) {
             ctx.clearRect(0, 0, width, height);
         }
 
-        // Prepare the bitmap 
+        // Prepare the bitmap
         img = ctx.getImageData(0, 0, width, height);
 
         // The return value is designed for both canvas pure-RGBA and PNG RGBA

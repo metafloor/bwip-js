@@ -93,7 +93,7 @@ for (let i = 0; i < lines.length; i++) {
             if (verbose) {
                 before(i, 5);
             }
-            lines.splice(i, 5, 
+            lines.splice(i, 5,
                     lines[i+1],
                     lines[i+3].substr(0, lines[i+3].length - m3[2].length) + m0[1] + m0[2]);
             if (verbose) {
@@ -188,5 +188,3 @@ for (let i = 0; i < lines.length; i++) {
 }
 
 fs.writeFileSync('barcode.js', lines.join('\n'), 'utf-8');
-
-
