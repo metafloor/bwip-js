@@ -18,7 +18,7 @@ function DrawingSVG() {
 
     var opts;
     var svg = '';
-    var path;
+    var path = '';
     var clipid = '';
     var clips = [];
     var lines = {};
@@ -138,9 +138,6 @@ function DrawingSVG() {
         // orthogonal shapes.
         // You will see a series of polygon() calls, followed by a fill().
         polygon(pts) {
-            if (!path) {
-                path = '<path d="';
-            }
             path += 'M' + transform(pts[0][0], pts[0][1]);
             for (var i = 1, n = pts.length; i < n; i++) {
                 var p = pts[i];
@@ -160,9 +157,6 @@ function DrawingSVG() {
         // to create the bullseye rings.  dotcode issues all of its ellipses then a
         // fill().
         ellipse(x, y, rx, ry, ccw) {
-            if (!path) {
-                path = '<path d="';
-            }
             var dx = rx * ELLIPSE_MAGIC;
             var dy = ry * ELLIPSE_MAGIC;
 
@@ -186,10 +180,12 @@ function DrawingSVG() {
         // regions so use even-odd as it is easier to work with.
         fill(rgb) {
             if (path) {
-                svg += path + '" fill="#' + rgb + '" fill-rule="evenodd"' +
-                       (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
-                       ' />\n';
-                path = null;
+                // Ignore `fill` "black" if BG is "transparent"
+                svg += '<path d="' + path + '"' +
+                            (!opts.hasOwnProperty('backgroundcolor') && /^0{6}$/.test(''+rgb) ? '' : ' fill="#' + rgb + '"') +
+                            (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
+                            ' fill-rule="evenodd" />\n';
+                path = '';
             }
         },
         // Currently only used by swissqrcode.  The `polys` area is an array of
@@ -255,7 +251,10 @@ function DrawingSVG() {
                 x += glyph.advance + dx;
             }
             if (path) {
-                svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
+                // Ignore `fill` "black" if BG is "transparent"
+                svg += '<path d="' + path + '"' +
+                            (!opts.hasOwnProperty('backgroundcolor') && /^0{6}$/.test(''+rgb) ? '' : ' fill="#' + rgb + '"') +
+                            ' />\n';
             }
         },
         // Called after all drawing is complete.  The return value from this method
