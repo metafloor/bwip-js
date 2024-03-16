@@ -131,20 +131,23 @@ var optlist = [
             'non-data function characters can be specified by escaped combinations such\n' +
             'as ^FNC1, ^FNC4 and ^SFT.' },
     { name: 'height', type: 'float',
-      desc: 'Height of longest bar, in millimetermillimeters.' },
+      desc: 'Height of longest bar, in millimeters.' },
     { name: 'width', type: 'float',
-      desc: 'Stretch the symbol to precisely this width, in millimeters.' },
+      desc: 'Stretch the symbol to approximately this width, in millimeters.\n' +
+            'Not recommended unless scale is at least 5.' },
     { name: 'inkspread', type: 'float',
       desc: 'Amount by which to reduce the bar widths to compensate for inkspread,\n' +
-            'in points.' },
+            'in points. Not recommended unless scale is at least 5.' },
     { name: 'inkspreadh', type: 'float',
-      desc: 'For matrix barcodes, the amount by which the reduce the width of dark\n' +
-            'modules to compensate for inkspread, in points.\n\n' +
+      desc: 'For matrix barcodes, the amount by which to reduce the width of dark\n' +
+            'modules to compensate for inkspread, in points.\n' +
+            'Not recommended unless scale is at least 5.\n\n' +
             'Note: inkspreadh is most useful for stacked-linear type barcodes such as\n' +
             'PDF417 and Codablock F.' },
     { name: 'inkspreadv', type: 'float',
-      desc: 'For matrix barcodes, the amount by which the reduce the height of dark\n' +
-            'modules to compensate for inkspread, in points.' },
+      desc: 'For matrix barcodes, the amount by which to reduce the height of dark\n' +
+            'modules to compensate for inkspread, in points.\n' +
+            'Not recommended unless scale is at least 5.' },
     { name: 'dotty', type: 'boolean',
       desc: 'For matrix barcodes, render the modules as dots rather than squares.\n' +
             'The dot radius can be adjusted using the inkspread option.' },
@@ -179,15 +182,15 @@ var optlist = [
     { name: 'borderbottom', type: 'int',
       desc: 'Bottom margin gap of the border, in points.' },
     { name: 'barcolor', type: 'string',
-      desc: 'Color of the bars, either as a hex RRGGBB value or a hex CCMMYYKK value.' },
+      desc: 'Color of the bars, either as a hex RGB or RRGGBB value or a hex CCMMYYKK value.' },
     { name: 'backgroundcolor', type: 'string',
-      desc: 'Color of a the image background, either as a hex RRGGBB value or a\n' +
+      desc: 'Color of the image background, either as a hex RGB or RRGGBB value or a\n' +
             'hex CCMMYYKK value.  The default is a transparent background.' },
     { name: 'bordercolor', type: 'string',
-      desc: 'Color of the border, either as a hex RRGGBB value or a hex CCMMYYKK value.\n' +
+      desc: 'Color of the border, either as a hex RGB or RRGGBB value or a hex CCMMYYKK value.\n' +
             'You must specify --showborder for this setting to take effect.' },
     { name: 'textcolor', type: 'string',
-      desc: 'Color of the text, either as a hex RRGGBB value or a hex CCMMYYKK value.' },
+      desc: 'Color of the text, either as a hex RGB or RRGGBB value or a hex CCMMYYKK value.' },
     { name: 'addontextfont', type: 'string',
       desc: 'The font name to use for the add-on text in ISBN, ISMN, and ISSN barcodes.' },
     { name: 'addontextsize', type: 'int',
