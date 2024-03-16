@@ -161,7 +161,7 @@ function render() {
             document.getElementById('output').textContent = msg;
         } else if (e.stack) {
             // GC includes the message in the stack.  FF does not.
-            document.getElementById('output').textContent = 
+            document.getElementById('output').textContent =
                     (e.stack.indexOf(msg) == -1 ? msg + '\n' : '') + e.stack;
         } else {
             document.getElementById('output').textContent = msg;

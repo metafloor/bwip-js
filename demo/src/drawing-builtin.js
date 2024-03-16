@@ -158,7 +158,7 @@ function DrawingBuiltin() {
 
         // Polygons are used to draw the connected regions in a 2d barcode.
         // These will always be unstroked, filled, orthogonal shapes.
-        // 
+        //
         // You will see a series of polygon() calls, followed by a fill().
         polygon : function(pts) {
             var npts = pts.length;
@@ -451,7 +451,7 @@ function DrawingBuiltin() {
         for (var y = left.min, max = left.length-1; y <= max; y++) {
             addPoint(left[y], y);
         }
-        // The points we calculated are "inside".  The fill algorithm excludes 
+        // The points we calculated are "inside".  The fill algorithm excludes
         // right edges, so +1 on each x.
         for (var y = right.min, max = right.length-1; y <= max; y++) {
             addPoint(right[y]+1, y);
@@ -489,7 +489,7 @@ function DrawingBuiltin() {
         for (var n = 0, npts = pts.length; n < npts; n++) {
             var xn = pts[n];
             if (xn > x) {
-                return !wn; 
+                return !wn;
             } else if (xn == x) {
                 return wn;
             }

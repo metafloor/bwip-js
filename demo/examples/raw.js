@@ -2,7 +2,7 @@
 //
 // For a detailed explanation of this utility, see:
 //   https://github.com/metafloor/bwip-js/wiki/Notes-on-the-Raw-BWIPP-Data
-// 
+//
 const bwipjs = (function() {
     try {
         return require('bwip-js');   // for installed usage

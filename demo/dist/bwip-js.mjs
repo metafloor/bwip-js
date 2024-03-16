@@ -33,7 +33,7 @@
 import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_jabcode,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
 
 // exports.js
-const BWIPJS_VERSION = '4.3.0 (2024-03-12)';
+const BWIPJS_VERSION = '4.3.1 (2024-03-16)';
 
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
@@ -52,7 +52,7 @@ function ToCanvas(cvs, opts) {
         cvs = opts;
         opts = tmp;
     }
-    return _ToAny(bwipp_lookup(opts.bcid), opts, cvs); 
+    return _ToAny(bwipp_lookup(opts.bcid), opts, cvs);
 }
 // Entry point for the symbol-specific exports
 //
@@ -86,7 +86,7 @@ function _ToAny(encoder, opts, drawing) {
         drawing = DrawingCanvas(drawing);
     } else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
-    } 
+    }
     return _Render(encoder, opts, drawing);
 }
 
@@ -392,7 +392,7 @@ BWIPJS.prototype.restore = function() {
 //  coordinates corresponding to the current point according to the current
 //  value of the CTM. Thus, if a current point is set and then the CTM is
 //  changed, the coordinates returned by currentpoint will be different
-//  from those that were originally specified for the point. 
+//  from those that were originally specified for the point.
 BWIPJS.prototype.currpos = function() {
     return { x:(this.g_posx-this.g_tdx)/this.g_tsx,
              y:(this.g_posy-this.g_tdy)/this.g_tsy
@@ -446,7 +446,7 @@ BWIPJS.prototype.setcolor = function(s) {
         return;
     }
     if (!/^(?:#?[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|[0-9a-fA-F]{8})$/.test(s)) {
-        throw new Error('bwip-js: invalid color: ' + s); 
+        throw new Error('bwip-js: invalid color: ' + s);
     }
     if (s[0] == '#') {
         s = s.substr(1);
@@ -890,9 +890,9 @@ BWIPJS.prototype.maxicode = function(pix) {
             y *= tsy * 3;
             y += tsy * 2 - h/2;
             y = y|0;
-            
+
             // Build bottom up so the drawing is top-down.
-            var pts = [ [ x-0.5, y-- ] ]; 
+            var pts = [ [ x-0.5, y-- ] ];
             y -= qh-1;
             pts.push([x-1-w2, y--]);
             y -= vh;
@@ -1171,7 +1171,7 @@ function DrawingBuiltin() {
 
         // Polygons are used to draw the connected regions in a 2d barcode.
         // These will always be unstroked, filled, orthogonal shapes.
-        // 
+        //
         // You will see a series of polygon() calls, followed by a fill().
         polygon : function(pts) {
             var npts = pts.length;
@@ -1464,7 +1464,7 @@ function DrawingBuiltin() {
         for (var y = left.min, max = left.length-1; y <= max; y++) {
             addPoint(left[y], y);
         }
-        // The points we calculated are "inside".  The fill algorithm excludes 
+        // The points we calculated are "inside".  The fill algorithm excludes
         // right edges, so +1 on each x.
         for (var y = right.min, max = right.length-1; y <= max; y++) {
             addPoint(right[y]+1, y);
@@ -1502,7 +1502,7 @@ function DrawingBuiltin() {
         for (var n = 0, npts = pts.length; n < npts; n++) {
             var xn = pts[n];
             if (xn > x) {
-                return !wn; 
+                return !wn;
             } else if (xn == x) {
                 return wn;
             }
@@ -1553,7 +1553,7 @@ function DrawingCanvas(canvas, maybe) {
         canvas.width  = width;
         canvas.height = height;
 
-        // Set background 
+        // Set background
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
             ctx.fillStyle = '#' + opts.backgroundcolor;
@@ -1562,7 +1562,7 @@ function DrawingCanvas(canvas, maybe) {
             ctx.clearRect(0, 0, width, height);
         }
 
-        // Prepare the bitmap 
+        // Prepare the bitmap
         img = ctx.getImageData(0, 0, width, height);
 
         // The return value is designed for both canvas pure-RGBA and PNG RGBA
@@ -1632,15 +1632,19 @@ function DrawingSVG() {
             var width = 0;
             var ascent = 0;
             var descent = 0;
-            for (var i = 0; i < str.length; i++) {
+            for (var i = 0, l = str.length; i < l; i++) {
                 var ch = str.charCodeAt(i);
-                var glyph = FontLib.getpaths(fontid, ch, fwidth, fheight);
+                var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
                 if (!glyph) {
                     continue;
                 }
-                ascent  = Math.max(ascent, glyph.ascent);
-                descent = Math.max(descent, -glyph.descent);
-                width  += glyph.advance;
+                ascent  = Math.max(ascent, glyph.top);
+                descent = Math.max(descent, glyph.height - glyph.top);
+                if (i == l-1) {
+                    width += glyph.left + glyph.width;
+                } else {
+                    width += glyph.advance;
+                }
             }
             return { width, ascent, descent };
         },
@@ -1699,6 +1703,12 @@ function DrawingSVG() {
                     y0 += 0.5;
                     y1 += 0.5;
                 }
+            }
+            // The svg path does not include the start pixel, but the bwip-js drawing does.
+            if (x0 == x1) {
+                y0++;
+            } else if (y0 == y1) {
+                x0++;
             }
 
             // Group together all lines of the same width and emit as single paths.
@@ -1828,7 +1838,9 @@ function DrawingSVG() {
                     // Close the shape
                     path += 'Z';
                 }
-                x += glyph.advance + dx;
+                // getglyph() provides slightly different metrics than getpaths().  Keep
+                // it consistent with the built-in drawing.
+                x += FontLib.getglyph(fontid, ch, fwidth, fheight).advance + dx;
             }
             if (path) {
                 svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
@@ -1945,7 +1957,7 @@ var FontLib = (function() {
         }
 
         // In the cache?
-        var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height; 
+        var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height;
         var glyph = glyphcache[cachekey];
         if (glyph) {
             // Unthread from the MRU
@@ -1958,7 +1970,7 @@ var FontLib = (function() {
             glyph.next = sntl.next;
             glyph.prev = sntl;
             sntl.next = glyph;
-            
+
             return glyph;
         }
 
@@ -1967,7 +1979,7 @@ var FontLib = (function() {
                                                    height * font.bwipjs_multy / 100) ||
                     STBTT.GetGlyph(font, 0, width * font.bwipjs_multx / 100,
                                                    height * font.bwipjs_multy / 100);
-        
+
         glyph.bytes = glyph.pixels;
         glyph.cachekey = cachekey;
         glyph.offset = 0;
@@ -2036,7 +2048,6 @@ var FontLib = (function() {
 function LoadFont() {
     return FontLib.loadFont.apply(FontLib, Array.prototype.slice.call(arguments));
 }
-
 // bwip-js/stb_trutype.js
 //
 // JavaScript implementation of stb_truetype.h @ https://github.com/nothings/stb.

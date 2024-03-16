@@ -106,7 +106,7 @@ function ToCanvas(cvs, opts) {
         cvs = opts;
         opts = tmp;
     }
-    return _ToAny(bwipp_lookup(opts.bcid), opts, cvs); 
+    return _ToAny(bwipp_lookup(opts.bcid), opts, cvs);
 }
 // Entry point for the symbol-specific exports
 //
@@ -140,7 +140,7 @@ function _ToAny(encoder, opts, drawing) {
         drawing = DrawingCanvas(drawing);
     } else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
-    } 
+    }
     return _Render(encoder, opts, drawing);
 }
 //@@BEGIN-REACT-NV-EXPORTS@@
