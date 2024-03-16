@@ -1,13 +1,13 @@
 // bwip-js/examples/drawing-pdfkit.js
 //
 // Converts the drawing primitives into pdfkit graphics.  Linear barcodes
-// are rendered as a series of stroked paths.  2D barcodes are rendered as a 
+// are rendered as a series of stroked paths.  2D barcodes are rendered as a
 // series of filled paths.
 //
-// Rotation is handled during drawing.  The resulting graphic will contain the 
+// Rotation is handled during drawing.  The resulting graphic will contain the
 // already-rotated barcode without need for a transform.
 //
-// If the requested barcode image contains text, the glyph paths are 
+// If the requested barcode image contains text, the glyph paths are
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled paths.
 //

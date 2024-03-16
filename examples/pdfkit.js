@@ -66,4 +66,3 @@ function at(x, y, opts, scale) {
 
     doc.restore();
 }
-

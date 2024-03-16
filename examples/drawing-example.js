@@ -4,7 +4,7 @@
 // Using the HTML5 canvas API creates "fuzzy" barcodes which are anathema
 // to reliable scanning.
 //
-// For the methods that take a color `rgb` parameter, the value is always a 
+// For the methods that take a color `rgb` parameter, the value is always a
 // string with format RRGGBB.  Internally, BWIPP accepts both RGB and CMYK values
 // but bwip-js always converts CMYK to RGB before the drawing code sees it.
 
@@ -35,14 +35,14 @@ function DrawingExample(opts, canvas) {
         setopts(options) {
             opts = options;
         },
-        // Adjust scale.  The return value is a two-element array with the 
+        // Adjust scale.  The return value is a two-element array with the
         // scale-x and scale-y values adjusted as desired.
         //
         // For this example, we want fractions of pixels, so do nothing.
         // The builtin drawing returns [ floor(sx), floor(sy) ] to ensure all
         // bars and spaces are sized uniformly.
         //
-        // Composite symbols cause this method to be called multiple times; be 
+        // Composite symbols cause this method to be called multiple times; be
         // consistent if you adjust the values.
         scale(sx, sy) {
             return null;
@@ -68,7 +68,7 @@ function DrawingExample(opts, canvas) {
             let bbox = ctx.measureText(str);
 
             // The return is an object with properties { width, ascent, descent }.
-            // All values in pixels.  
+            // All values in pixels.
             let descent = /[Qgjpqy]/.test(str) ? 0.25 * height : 0;
             return { width:bbox.width * width / height, ascent:0.65 * height, descent:descent };
         },
