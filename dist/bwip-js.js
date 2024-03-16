@@ -39979,282 +39979,282 @@ function bwipp_channelcode() {
     $_ = Object.getPrototypeOf($_); //#31505
 } //bwipp_channelcode
 function bwipp_renlinear() {
-    if ($_.bwipjs_dontdraw) { //#31533
-        return; //#31533
-    } //#31533
-    $_ = Object.create($_); //#31534
-    $_.sbs = $a([]); //#31539
-    $_.bhs = $a([]); //#31540
-    $_.bbs = $a([]); //#31541
-    $_.txt = $a([]); //#31542
-    $_.barcolor = "unset"; //#31543
-    $_.includetext = false; //#31544
-    $_.textcolor = "unset"; //#31545
-    $_.textxalign = "unset"; //#31546
-    $_.textyalign = "unset"; //#31547
-    $_.textfont = "OCR-B"; //#31548
-    $_.textsize = 10; //#31549
-    $_.textxoffset = 0; //#31550
-    $_.textyoffset = 0; //#31551
-    $_.textgaps = 0; //#31552
-    $_.alttext = ""; //#31553
-    $_.bordercolor = "unset"; //#31554
-    $_.backgroundcolor = "unset"; //#31555
-    $_.inkspread = 0; //#31556
-    $_.width = 0; //#31557
-    $_.barratio = 1; //#31558
-    $_.spaceratio = 1; //#31559
-    $_.showborder = false; //#31560
-    $_.showbearer = false; //#31561
-    $_.borderleft = 10; //#31562
-    $_.borderright = 10; //#31563
-    $_.bordertop = 1; //#31564
-    $_.borderbottom = 1; //#31565
-    $_.borderwidth = 0.5; //#31566
-    $_.guardwhitespace = false; //#31567
-    $_.guardleftpos = 0; //#31568
-    $_.guardleftypos = 0; //#31569
-    $_.guardrightpos = 0; //#31570
-    $_.guardrightypos = 0; //#31571
-    $_.guardwidth = 7; //#31572
-    $_.guardheight = 7; //#31573
-    $forall($k[--$j], function() { //#31575
-        var _6 = $k[--$j]; //#31575
-        $_[$k[--$j]] = _6; //#31575
-    }); //#31575
-    $k[$j++] = $_.opt; //#31576
-    delete $_['opt']; //#31576
-    $k[$j++] = $_; //#31576
-    bwipp_processoptions(); //#31576
-    $j--; //#31576
-    if ($_.textsize <= 0) { //#31580
-        $k[$j++] = 'bwipp.renlinearBadTextsize#31579'; //#31579
-        $k[$j++] = "The font size must be greater than zero"; //#31579
-        bwipp_raiseerror(); //#31579
-    } //#31579
-    $_.bars = $a(~~(($_.sbs.length + 1) / 2)); //#31583
-    $_.pixx = 0; //#31584
-    $_.pixy = 0; //#31584
-    for (var _E = 0, _D = ((~~(($_.sbs.length + 1) / 2)) * 2) - 2; _E <= _D; _E += 1) { //#31603
-        $_.i = _E; //#31586
-        if (($_.i % 2) == 0) { //#31600
-            $_.d = $f(($f(($get($_.sbs, $_.i) * $_.barratio) - $_.barratio)) + 1); //#31588
-            if ($get($_.sbs, $_.i) != 0) { //#31597
-                $_.h = $get($_.bhs, ~~($_.i / 2)) * 72; //#31590
-                $_.c = $f(($_.d / 2) + $_.pixx); //#31591
-                $_.y = $get($_.bbs, ~~($_.i / 2)) * 72; //#31592
-                $_.w = $f($_.d - $_.inkspread); //#31593
-                $put($_.bars, ~~($_.i / 2), $a([$_.h, $_.c, $_.y, $_.w])); //#31594
-                if ($f($_.h + $_.y) > $_.pixy) { //#31595
-                    $_.pixy = $f($_.h + $_.y); //#31595
-                } //#31595
-            } else { //#31597
-                $put($_.bars, ~~($_.i / 2), -1); //#31597
-            } //#31597
-        } else { //#31600
-            $_.d = $f(($f(($get($_.sbs, $_.i) * $_.spaceratio) - $_.spaceratio)) + 1); //#31600
-        } //#31600
-        $_.pixx = $f($_.pixx + $_.d); //#31602
-    } //#31602
-    $$.save(); //#31605
-    var _t = $$.currpos(); //#31607
-    $$.translate(_t.x, _t.y); //#31607
-    if ($_.width != 0) { //#31612
-        $$.scale(($_.width * 72) / $_.pixx, 1); //#31611
-    } //#31611
-    $_.tl = $a([-($f($_.borderleft + ($_.borderwidth / 2))), $f($f($_.pixy + $_.bordertop) + ($_.borderwidth / 2))]); //#31622
-    $_.tr = $a([$f($f($_.pixx + $_.borderright) + ($_.borderwidth / 2)), $f($f($_.pixy + $_.bordertop) + ($_.borderwidth / 2))]); //#31623
-    $_.bl = $a([-($f($_.borderleft + ($_.borderwidth / 2))), -($f($_.borderbottom + ($_.borderwidth / 2)))]); //#31624
-    $_.br = $a([$f($f($_.pixx + $_.borderright) + ($_.borderwidth / 2)), -($f($_.borderbottom + ($_.borderwidth / 2)))]); //#31625
-    if ($_.showbearer) { //#31650
-        $$.save(); //#31627
-        $$.newpath(); //#31628
-        $aload($_.bl); //#31629
-        var _1N = $k[--$j]; //#31629
-        $$.moveto($k[--$j], _1N); //#31629
-        $aload($_.br); //#31629
-        var _1Q = $k[--$j]; //#31629
-        $$.lineto($k[--$j], _1Q); //#31629
-        $aload($_.tl); //#31630
-        var _1T = $k[--$j]; //#31630
-        $$.moveto($k[--$j], _1T); //#31630
-        $aload($_.tr); //#31630
-        var _1W = $k[--$j]; //#31630
-        $$.lineto($k[--$j], _1W); //#31630
-        if ($ne($_.bordercolor, "unset")) { //#31631
-            $$.setcolor($_.bordercolor); //#31631
-        } //#31631
-        $$.setlinewidth($f($_.borderwidth - ($_.inkspread * 2))); //#31632
-        $$.stroke(); //#31632
-        $$.restore(); //#31633
-    } else { //#31650
-        if ($_.showborder) { //#31651
-            $$.save(); //#31646
-            $$.newpath(); //#31647
-            $aload($_.bl); //#31647
-            var _1e = $k[--$j]; //#31647
-            $$.moveto($k[--$j], _1e); //#31647
-            var _1j = $a([$_.br, $_.tr, $_.tl]); //#31647
-            for (var _1k = 0, _1l = _1j.length; _1k < _1l; _1k++) { //#31647
-                $aload($get(_1j, _1k)); //#31647
-                var _1n = $k[--$j]; //#31647
-                $$.lineto($k[--$j], _1n); //#31647
+    if ($_.bwipjs_dontdraw) { //#31532
+        return; //#31532
+    } //#31532
+    $_ = Object.create($_); //#31533
+    $_.sbs = $a([]); //#31538
+    $_.bhs = $a([]); //#31539
+    $_.bbs = $a([]); //#31540
+    $_.txt = $a([]); //#31541
+    $_.barcolor = "unset"; //#31542
+    $_.includetext = false; //#31543
+    $_.textcolor = "unset"; //#31544
+    $_.textxalign = "unset"; //#31545
+    $_.textyalign = "unset"; //#31546
+    $_.textfont = "OCR-B"; //#31547
+    $_.textsize = 10; //#31548
+    $_.textxoffset = 0; //#31549
+    $_.textyoffset = 0; //#31550
+    $_.textgaps = 0; //#31551
+    $_.alttext = ""; //#31552
+    $_.bordercolor = "unset"; //#31553
+    $_.backgroundcolor = "unset"; //#31554
+    $_.inkspread = 0; //#31555
+    $_.width = 0; //#31556
+    $_.barratio = 1; //#31557
+    $_.spaceratio = 1; //#31558
+    $_.showborder = false; //#31559
+    $_.showbearer = false; //#31560
+    $_.borderleft = 10; //#31561
+    $_.borderright = 10; //#31562
+    $_.bordertop = 1; //#31563
+    $_.borderbottom = 1; //#31564
+    $_.borderwidth = 0.5; //#31565
+    $_.guardwhitespace = false; //#31566
+    $_.guardleftpos = 0; //#31567
+    $_.guardleftypos = 0; //#31568
+    $_.guardrightpos = 0; //#31569
+    $_.guardrightypos = 0; //#31570
+    $_.guardwidth = 7; //#31571
+    $_.guardheight = 7; //#31572
+    $forall($k[--$j], function() { //#31574
+        var _6 = $k[--$j]; //#31574
+        $_[$k[--$j]] = _6; //#31574
+    }); //#31574
+    $k[$j++] = $_.opt; //#31575
+    delete $_['opt']; //#31575
+    $k[$j++] = $_; //#31575
+    bwipp_processoptions(); //#31575
+    $j--; //#31575
+    if ($_.textsize <= 0) { //#31579
+        $k[$j++] = 'bwipp.renlinearBadTextsize#31578'; //#31578
+        $k[$j++] = "The font size must be greater than zero"; //#31578
+        bwipp_raiseerror(); //#31578
+    } //#31578
+    $_.bars = $a(~~(($_.sbs.length + 1) / 2)); //#31582
+    $_.pixx = 0; //#31583
+    $_.pixy = 0; //#31583
+    for (var _E = 0, _D = ((~~(($_.sbs.length + 1) / 2)) * 2) - 2; _E <= _D; _E += 1) { //#31602
+        $_.i = _E; //#31585
+        if (($_.i % 2) == 0) { //#31599
+            $_.d = $f(($f(($get($_.sbs, $_.i) * $_.barratio) - $_.barratio)) + 1); //#31587
+            if ($get($_.sbs, $_.i) != 0) { //#31596
+                $_.h = $get($_.bhs, ~~($_.i / 2)) * 72; //#31589
+                $_.c = $f(($_.d / 2) + $_.pixx); //#31590
+                $_.y = $get($_.bbs, ~~($_.i / 2)) * 72; //#31591
+                $_.w = $f($_.d - $_.inkspread); //#31592
+                $put($_.bars, ~~($_.i / 2), $a([$_.h, $_.c, $_.y, $_.w])); //#31593
+                if ($f($_.h + $_.y) > $_.pixy) { //#31594
+                    $_.pixy = $f($_.h + $_.y); //#31594
+                } //#31594
+            } else { //#31596
+                $put($_.bars, ~~($_.i / 2), -1); //#31596
+            } //#31596
+        } else { //#31599
+            $_.d = $f(($f(($get($_.sbs, $_.i) * $_.spaceratio) - $_.spaceratio)) + 1); //#31599
+        } //#31599
+        $_.pixx = $f($_.pixx + $_.d); //#31601
+    } //#31601
+    $$.save(); //#31604
+    var _t = $$.currpos(); //#31606
+    $$.translate(_t.x, _t.y); //#31606
+    if ($_.width != 0) { //#31611
+        $$.scale(($_.width * 72) / $_.pixx, 1); //#31610
+    } //#31610
+    $_.tl = $a([-($f($_.borderleft + ($_.borderwidth / 2))), $f($f($_.pixy + $_.bordertop) + ($_.borderwidth / 2))]); //#31621
+    $_.tr = $a([$f($f($_.pixx + $_.borderright) + ($_.borderwidth / 2)), $f($f($_.pixy + $_.bordertop) + ($_.borderwidth / 2))]); //#31622
+    $_.bl = $a([-($f($_.borderleft + ($_.borderwidth / 2))), -($f($_.borderbottom + ($_.borderwidth / 2)))]); //#31623
+    $_.br = $a([$f($f($_.pixx + $_.borderright) + ($_.borderwidth / 2)), -($f($_.borderbottom + ($_.borderwidth / 2)))]); //#31624
+    if ($_.showbearer) { //#31649
+        $$.save(); //#31626
+        $$.newpath(); //#31627
+        $aload($_.bl); //#31628
+        var _1N = $k[--$j]; //#31628
+        $$.moveto($k[--$j], _1N); //#31628
+        $aload($_.br); //#31628
+        var _1Q = $k[--$j]; //#31628
+        $$.lineto($k[--$j], _1Q); //#31628
+        $aload($_.tl); //#31629
+        var _1T = $k[--$j]; //#31629
+        $$.moveto($k[--$j], _1T); //#31629
+        $aload($_.tr); //#31629
+        var _1W = $k[--$j]; //#31629
+        $$.lineto($k[--$j], _1W); //#31629
+        if ($ne($_.bordercolor, "unset")) { //#31630
+            $$.setcolor($_.bordercolor); //#31630
+        } //#31630
+        $$.setlinewidth($f($_.borderwidth - ($_.inkspread * 2))); //#31631
+        $$.stroke(); //#31631
+        $$.restore(); //#31632
+    } else { //#31649
+        if ($_.showborder) { //#31650
+            $$.save(); //#31645
+            $$.newpath(); //#31646
+            $aload($_.bl); //#31646
+            var _1e = $k[--$j]; //#31646
+            $$.moveto($k[--$j], _1e); //#31646
+            var _1j = $a([$_.br, $_.tr, $_.tl]); //#31646
+            for (var _1k = 0, _1l = _1j.length; _1k < _1l; _1k++) { //#31646
+                $aload($get(_1j, _1k)); //#31646
+                var _1n = $k[--$j]; //#31646
+                $$.lineto($k[--$j], _1n); //#31646
+            } //#31646
+            $$.closepath(); //#31646
+            if ($ne($_.bordercolor, "unset")) { //#31647
+                $$.setcolor($_.bordercolor); //#31647
             } //#31647
-            $$.closepath(); //#31647
-            if ($ne($_.bordercolor, "unset")) { //#31648
-                $$.setcolor($_.bordercolor); //#31648
-            } //#31648
-            $$.setlinewidth($_.borderwidth); //#31649
-            $$.stroke(); //#31649
-            $$.restore(); //#31650
-        } //#31650
-    } //#31650
-    $$.save(); //#31654
-    if ($ne($_.barcolor, "unset")) { //#31656
-        $$.setcolor($_.barcolor); //#31656
-    } //#31656
-    var _1u = $_.bars; //#31657
-    for (var _1v = 0, _1w = _1u.length; _1v < _1w; _1v++) { //#31663
-        var _1x = $get(_1u, _1v); //#31663
-        $k[$j++] = _1x; //#31662
-        if (_1x != -1) { //#31661
-            $aload($k[--$j]); //#31659
-            $$.newpath(); //#31659
-            $$.setlinewidth($k[--$j]); //#31659
-            var _20 = $k[--$j]; //#31659
-            $$.moveto($k[--$j], _20); //#31659
-            $$.rlineto(0, $k[--$j]); //#31659
-            $$.stroke(); //#31659
-        } else { //#31661
-            $j--; //#31661
-        } //#31661
-    } //#31661
-    $$.restore(); //#31664
-    if ($ne($_.textcolor, "unset")) { //#31667
-        $$.setcolor($_.textcolor); //#31667
-    } //#31667
-    if ($_.includetext) { //#31724
-        if (($eq($_.textxalign, "unset") && $eq($_.textyalign, "unset")) && $eq($_.alttext, "")) { //#31722
-            $_.s = 0; //#31670
-            $_.fn = ""; //#31670
-            var _29 = $_.txt; //#31671
-            for (var _2A = 0, _2B = _29.length; _2A < _2B; _2A++) { //#31680
-                $forall($get(_29, _2A)); //#31672
-                var _2D = $k[--$j]; //#31673
-                var _2E = $k[--$j]; //#31673
-                $k[$j++] = _2E; //#31678
-                $k[$j++] = _2D; //#31678
-                if ((_2D != $_.s) || $ne(_2E, $_.fn)) { //#31677
-                    var _2H = $k[--$j]; //#31674
-                    var _2I = $k[--$j]; //#31674
-                    $_.s = _2H; //#31674
-                    $_.fn = _2I; //#31674
-                    $$.selectfont(_2I, _2H); //#31675
-                } else { //#31677
-                    $j -= 2; //#31677
-                } //#31677
-                var _2J = $k[--$j]; //#31679
-                $$.moveto($k[--$j], _2J); //#31679
-                $$.show($k[--$j], 0, 0); //#31679
-            } //#31679
-        } else { //#31722
-            $$.selectfont($_.textfont, $_.textsize); //#31682
-            if ($eq($_.alttext, "")) { //#31688
-                $k[$j++] = Infinity; //#31684
-                var _2P = $_.txt; //#31684
-                for (var _2Q = 0, _2R = _2P.length; _2Q < _2R; _2Q++) { //#31684
-                    $forall($get($get(_2P, _2Q), 0)); //#31684
-                } //#31684
-                $_.txt = $a(); //#31684
-                $_.tstr = $s($_.txt.length); //#31685
-                for (var _2Z = 0, _2Y = $_.txt.length - 1; _2Z <= _2Y; _2Z += 1) { //#31686
-                    $put($_.tstr, _2Z, $get($_.txt, _2Z)); //#31686
-                } //#31686
-            } else { //#31688
-                $_.tstr = $_.alttext; //#31688
-            } //#31688
-            if ($_.tstr.length == 0) { //#31698
-                $k[$j++] = 0; //#31693
-            } else { //#31698
-                $$.save(); //#31695
-                $$.newpath(); //#31696
-                $$.moveto(0, 0); //#31696
-                $$.charpath("0", false); //#31696
-                var _2f = $$.pathbbox(); //#31696
-                $$.restore(); //#31698
-                $k[$j++] = _2f.ury; //#31698
-            } //#31698
-            $_.textascent = $k[--$j]; //#31707
-            var _2i = $$.stringwidth($_.tstr); //#31708
-            $_.textwidth = $f(_2i.w + (($_.tstr.length - 1) * $_.textgaps)); //#31708
-            $_.textxpos = $f($_.textxoffset + ($f($_.pixx - $_.textwidth) / 2)); //#31710
-            if ($eq($_.textxalign, "left")) { //#31711
-                $_.textxpos = $_.textxoffset; //#31711
+            $$.setlinewidth($_.borderwidth); //#31648
+            $$.stroke(); //#31648
+            $$.restore(); //#31649
+        } //#31649
+    } //#31649
+    $$.save(); //#31653
+    if ($ne($_.barcolor, "unset")) { //#31655
+        $$.setcolor($_.barcolor); //#31655
+    } //#31655
+    var _1u = $_.bars; //#31656
+    for (var _1v = 0, _1w = _1u.length; _1v < _1w; _1v++) { //#31662
+        var _1x = $get(_1u, _1v); //#31662
+        $k[$j++] = _1x; //#31661
+        if (_1x != -1) { //#31660
+            $aload($k[--$j]); //#31658
+            $$.newpath(); //#31658
+            $$.setlinewidth($k[--$j]); //#31658
+            var _20 = $k[--$j]; //#31658
+            $$.moveto($k[--$j], _20); //#31658
+            $$.rlineto(0, $k[--$j]); //#31658
+            $$.stroke(); //#31658
+        } else { //#31660
+            $j--; //#31660
+        } //#31660
+    } //#31660
+    $$.restore(); //#31663
+    if ($ne($_.textcolor, "unset")) { //#31666
+        $$.setcolor($_.textcolor); //#31666
+    } //#31666
+    if ($_.includetext) { //#31723
+        if (($eq($_.textxalign, "unset") && $eq($_.textyalign, "unset")) && $eq($_.alttext, "")) { //#31721
+            $_.s = 0; //#31669
+            $_.fn = ""; //#31669
+            var _29 = $_.txt; //#31670
+            for (var _2A = 0, _2B = _29.length; _2A < _2B; _2A++) { //#31679
+                $forall($get(_29, _2A)); //#31671
+                var _2D = $k[--$j]; //#31672
+                var _2E = $k[--$j]; //#31672
+                $k[$j++] = _2E; //#31677
+                $k[$j++] = _2D; //#31677
+                if ((_2D != $_.s) || $ne(_2E, $_.fn)) { //#31676
+                    var _2H = $k[--$j]; //#31673
+                    var _2I = $k[--$j]; //#31673
+                    $_.s = _2H; //#31673
+                    $_.fn = _2I; //#31673
+                    $$.selectfont(_2I, _2H); //#31674
+                } else { //#31676
+                    $j -= 2; //#31676
+                } //#31676
+                var _2J = $k[--$j]; //#31678
+                $$.moveto($k[--$j], _2J); //#31678
+                $$.show($k[--$j], 0, 0); //#31678
+            } //#31678
+        } else { //#31721
+            $$.selectfont($_.textfont, $_.textsize); //#31681
+            if ($eq($_.alttext, "")) { //#31687
+                $k[$j++] = Infinity; //#31683
+                var _2P = $_.txt; //#31683
+                for (var _2Q = 0, _2R = _2P.length; _2Q < _2R; _2Q++) { //#31683
+                    $forall($get($get(_2P, _2Q), 0)); //#31683
+                } //#31683
+                $_.txt = $a(); //#31683
+                $_.tstr = $s($_.txt.length); //#31684
+                for (var _2Z = 0, _2Y = $_.txt.length - 1; _2Z <= _2Y; _2Z += 1) { //#31685
+                    $put($_.tstr, _2Z, $get($_.txt, _2Z)); //#31685
+                } //#31685
+            } else { //#31687
+                $_.tstr = $_.alttext; //#31687
+            } //#31687
+            if ($_.tstr.length == 0) { //#31697
+                $k[$j++] = 0; //#31692
+            } else { //#31697
+                $$.save(); //#31694
+                $$.newpath(); //#31695
+                $$.moveto(0, 0); //#31695
+                $$.charpath("0", false); //#31695
+                var _2f = $$.pathbbox(); //#31695
+                $$.restore(); //#31697
+                $k[$j++] = _2f.ury; //#31697
+            } //#31697
+            $_.textascent = $k[--$j]; //#31706
+            var _2i = $$.stringwidth($_.tstr); //#31707
+            $_.textwidth = $f(_2i.w + (($_.tstr.length - 1) * $_.textgaps)); //#31707
+            $_.textxpos = $f($_.textxoffset + ($f($_.pixx - $_.textwidth) / 2)); //#31709
+            if ($eq($_.textxalign, "left")) { //#31710
+                $_.textxpos = $_.textxoffset; //#31710
+            } //#31710
+            if ($eq($_.textxalign, "right")) { //#31711
+                $_.textxpos = $f($f($_.pixx - $_.textxoffset) - $_.textwidth); //#31711
             } //#31711
-            if ($eq($_.textxalign, "right")) { //#31712
-                $_.textxpos = $f($f($_.pixx - $_.textxoffset) - $_.textwidth); //#31712
+            if ($eq($_.textxalign, "offleft")) { //#31712
+                $_.textxpos = -$f($_.textwidth + $_.textxoffset); //#31712
             } //#31712
-            if ($eq($_.textxalign, "offleft")) { //#31713
-                $_.textxpos = -$f($_.textwidth + $_.textxoffset); //#31713
+            if ($eq($_.textxalign, "offright")) { //#31713
+                $_.textxpos = $f($_.pixx + $_.textxoffset); //#31713
             } //#31713
-            if ($eq($_.textxalign, "offright")) { //#31714
-                $_.textxpos = $f($_.pixx + $_.textxoffset); //#31714
-            } //#31714
-            if ($eq($_.textxalign, "justify") && ($_.textwidth < $_.pixx)) { //#31718
-                $_.textxpos = 0; //#31716
-                $_.textgaps = $f($_.pixx - $_.textwidth) / ($_.tstr.length - 1); //#31717
-            } //#31717
-            $_.textypos = -($f($f($_.textyoffset + $_.textascent) + 1)); //#31719
-            if ($eq($_.textyalign, "above")) { //#31720
-                $_.textypos = $f($f($_.textyoffset + $_.pixy) + 1); //#31720
+            if ($eq($_.textxalign, "justify") && ($_.textwidth < $_.pixx)) { //#31717
+                $_.textxpos = 0; //#31715
+                $_.textgaps = $f($_.pixx - $_.textwidth) / ($_.tstr.length - 1); //#31716
+            } //#31716
+            $_.textypos = -($f($f($_.textyoffset + $_.textascent) + 1)); //#31718
+            if ($eq($_.textyalign, "above")) { //#31719
+                $_.textypos = $f($f($_.textyoffset + $_.pixy) + 1); //#31719
+            } //#31719
+            if ($eq($_.textyalign, "center")) { //#31720
+                $_.textypos = $f($_.textyoffset + ($f($_.pixy - $_.textascent) / 2)); //#31720
             } //#31720
-            if ($eq($_.textyalign, "center")) { //#31721
-                $_.textypos = $f($_.textyoffset + ($f($_.pixy - $_.textascent) / 2)); //#31721
-            } //#31721
-            $$.moveto($_.textxpos, $_.textypos); //#31722
-            $$.show($_.tstr, $_.textgaps, 0); //#31722
-        } //#31722
-    } //#31722
-    if ($_.guardwhitespace) { //#31737
-        $$.selectfont("OCR-B", $_.guardheight * 2); //#31728
-        if ($_.guardleftpos != 0) { //#31732
-            $$.moveto((-$_.guardleftpos) - 2, $f(($f($_.guardleftypos - ($_.guardheight / 2))) - 1.25)); //#31730
-            $$.show("<", 0, 0); //#31731
-        } //#31731
-        if ($_.guardrightpos != 0) { //#31736
-            $$.moveto($f(($f($f($_.guardrightpos + $_.pixx) - $_.guardwidth)) + 1), $f(($f($_.guardrightypos - ($_.guardheight / 2))) - 1.25)); //#31734
-            $$.show(">", 0, 0); //#31735
-        } //#31735
-    } //#31735
-    $$.restore(); //#31739
-    $_ = Object.getPrototypeOf($_); //#31741
+            $$.moveto($_.textxpos, $_.textypos); //#31721
+            $$.show($_.tstr, $_.textgaps, 0); //#31721
+        } //#31721
+    } //#31721
+    if ($_.guardwhitespace) { //#31736
+        $$.selectfont("OCR-B", $_.guardheight * 2); //#31727
+        if ($_.guardleftpos != 0) { //#31731
+            $$.moveto((-$_.guardleftpos) - 2, $f(($f($_.guardleftypos - ($_.guardheight / 2))) - 1.25)); //#31729
+            $$.show("<", 0, 0); //#31730
+        } //#31730
+        if ($_.guardrightpos != 0) { //#31735
+            $$.moveto($f(($f($f($_.guardrightpos + $_.pixx) - $_.guardwidth)) + 1), $f(($f($_.guardrightypos - ($_.guardheight / 2))) - 1.25)); //#31733
+            $$.show(">", 0, 0); //#31734
+        } //#31734
+    } //#31734
+    $$.restore(); //#31738
+    $_ = Object.getPrototypeOf($_); //#31740
 } //bwipp_renlinear
 function bwipp_renmaximatrix() {
-    if ($_.bwipjs_dontdraw) { //#31759
-        return; //#31759
-    } //#31759
-    $_ = Object.create($_); //#31761
-    $_.args = $k[--$j]; //#31763
-    $_.barcolor = "unset"; //#31766
-    $_.backgroundcolor = "unset"; //#31767
-    $forall($_.args, function() { //#31770
-        var _3 = $k[--$j]; //#31770
-        $_[$k[--$j]] = _3; //#31770
-    }); //#31770
-    var _5 = $_.opt; //#31771
-    for (var _A = _5.size, _9 = _5.keys(), _8 = 0; _8 < _A; _8++) { //#31771
-        var _6 = _9.next().value; //#31771
-        $_[_6] = _5.get(_6); //#31771
-    } //#31771
-    $_.barcolor = "" + $_.barcolor; //#31773
-    $_.backgroundcolor = "" + $_.backgroundcolor; //#31774
-    $$.save(); //#31776
-    if ($ne($_.barcolor, "unset")) { //#31778
-        $$.setcolor($_.barcolor); //#31778
-    } //#31778
-    $$.maxicode($_.pixs); //#31779
-    $$.restore(); //#31781
-    $_ = Object.getPrototypeOf($_); //#31783
+    if ($_.bwipjs_dontdraw) { //#31758
+        return; //#31758
+    } //#31758
+    $_ = Object.create($_); //#31760
+    $_.args = $k[--$j]; //#31762
+    $_.barcolor = "unset"; //#31765
+    $_.backgroundcolor = "unset"; //#31766
+    $forall($_.args, function() { //#31769
+        var _3 = $k[--$j]; //#31769
+        $_[$k[--$j]] = _3; //#31769
+    }); //#31769
+    var _5 = $_.opt; //#31770
+    for (var _A = _5.size, _9 = _5.keys(), _8 = 0; _8 < _A; _8++) { //#31770
+        var _6 = _9.next().value; //#31770
+        $_[_6] = _5.get(_6); //#31770
+    } //#31770
+    $_.barcolor = "" + $_.barcolor; //#31772
+    $_.backgroundcolor = "" + $_.backgroundcolor; //#31773
+    $$.save(); //#31775
+    if ($ne($_.barcolor, "unset")) { //#31777
+        $$.setcolor($_.barcolor); //#31777
+    } //#31777
+    $$.maxicode($_.pixs); //#31778
+    $$.restore(); //#31780
+    $_ = Object.getPrototypeOf($_); //#31782
 } //bwipp_renmaximatrix
 // bwip-js/barcode-ftr.js
 //
@@ -41832,13 +41832,13 @@ function DrawingCanvas(canvas, maybe) {
 // drawing-svg.js
 //
 // Converts the drawing primitives into the equivalent SVG.  Linear barcodes
-// are rendered as a series of stroked paths.  2D barcodes are rendered as a
+// are rendered as a series of stroked paths.  2D barcodes are rendered as a 
 // series of filled paths.
 //
-// Rotation is handled during drawing.  The resulting SVG will contain the
+// Rotation is handled during drawing.  The resulting SVG will contain the 
 // already-rotated barcode without an SVG transform.
 //
-// If the requested barcode image contains text, the glyph paths are
+// If the requested barcode image contains text, the glyph paths are 
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
@@ -41887,15 +41887,19 @@ function DrawingSVG() {
             var width = 0;
             var ascent = 0;
             var descent = 0;
-            for (var i = 0; i < str.length; i++) {
+            for (var i = 0, l = str.length; i < l; i++) {
                 var ch = str.charCodeAt(i);
-                var glyph = FontLib.getpaths(fontid, ch, fwidth, fheight);
+                var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
                 if (!glyph) {
                     continue;
                 }
-                ascent  = Math.max(ascent, glyph.ascent);
-                descent = Math.max(descent, -glyph.descent);
-                width  += glyph.advance;
+                ascent  = Math.max(ascent, glyph.top);
+                descent = Math.max(descent, glyph.height - glyph.top);
+                if (i == l-1) {
+                    width += glyph.left + glyph.width;
+                } else {
+                    width += glyph.advance;
+                }
             }
             return { width, ascent, descent };
         },
@@ -41955,6 +41959,12 @@ function DrawingSVG() {
                     y1 += 0.5;
                 }
             }
+            // The svg path does not include the start pixel, but the bwip-js drawing does.
+            if (x0 == x1) {
+                y0++;
+            } else if (y0 == y1) {
+                x0++;
+            }
 
             // Group together all lines of the same width and emit as single paths.
             // Dramatically reduces resulting text size.
@@ -42004,13 +42014,13 @@ function DrawingSVG() {
                           transform(x,      y - ry) +
                     'C' + transform(x + dx, y - ry) + ' ' +
                           transform(x + rx, y - dy) + ' ' +
-                          transform(x + rx, y) +
+                          transform(x + rx, y) + 
                     'C' + transform(x + rx, y + dy) + ' ' +
                           transform(x + dx, y + ry) + ' ' +
-                          transform(x,      y + ry) +
+                          transform(x,      y + ry) +  
                     'C' + transform(x - dx, y + ry) + ' ' +
                           transform(x - rx, y + dy) + ' ' +
-                          transform(x - rx, y) +
+                          transform(x - rx, y) + 
                     'Z';
         },
         // PostScript's default fill rule is non-zero but there are never intersecting
@@ -42083,7 +42093,9 @@ function DrawingSVG() {
                     // Close the shape
                     path += 'Z';
                 }
-                x += glyph.advance + dx;
+                // getglyph() provides slightly different metrics than getpaths().  Keep
+                // it consistent with the built-in drawing.
+                x += FontLib.getglyph(fontid, ch, fwidth, fheight).advance + dx;
             }
             if (path) {
                 svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
@@ -42291,7 +42303,6 @@ var FontLib = (function() {
 function LoadFont() {
     return FontLib.loadFont.apply(FontLib, Array.prototype.slice.call(arguments));
 }
-
 // bwip-js/stb_trutype.js
 //
 // JavaScript implementation of stb_truetype.h @ https://github.com/nothings/stb.

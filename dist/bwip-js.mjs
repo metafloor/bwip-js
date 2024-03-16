@@ -1577,13 +1577,13 @@ function DrawingCanvas(canvas, maybe) {
 // drawing-svg.js
 //
 // Converts the drawing primitives into the equivalent SVG.  Linear barcodes
-// are rendered as a series of stroked paths.  2D barcodes are rendered as a
+// are rendered as a series of stroked paths.  2D barcodes are rendered as a 
 // series of filled paths.
 //
-// Rotation is handled during drawing.  The resulting SVG will contain the
+// Rotation is handled during drawing.  The resulting SVG will contain the 
 // already-rotated barcode without an SVG transform.
 //
-// If the requested barcode image contains text, the glyph paths are
+// If the requested barcode image contains text, the glyph paths are 
 // extracted from the font file (via the builtin FontLib and stb_truetype.js)
 // and added as filled SVG paths.
 //
@@ -1632,15 +1632,19 @@ function DrawingSVG() {
             var width = 0;
             var ascent = 0;
             var descent = 0;
-            for (var i = 0; i < str.length; i++) {
+            for (var i = 0, l = str.length; i < l; i++) {
                 var ch = str.charCodeAt(i);
-                var glyph = FontLib.getpaths(fontid, ch, fwidth, fheight);
+                var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
                 if (!glyph) {
                     continue;
                 }
-                ascent  = Math.max(ascent, glyph.ascent);
-                descent = Math.max(descent, -glyph.descent);
-                width  += glyph.advance;
+                ascent  = Math.max(ascent, glyph.top);
+                descent = Math.max(descent, glyph.height - glyph.top);
+                if (i == l-1) {
+                    width += glyph.left + glyph.width;
+                } else {
+                    width += glyph.advance;
+                }
             }
             return { width, ascent, descent };
         },
@@ -1700,6 +1704,12 @@ function DrawingSVG() {
                     y1 += 0.5;
                 }
             }
+            // The svg path does not include the start pixel, but the bwip-js drawing does.
+            if (x0 == x1) {
+                y0++;
+            } else if (y0 == y1) {
+                x0++;
+            }
 
             // Group together all lines of the same width and emit as single paths.
             // Dramatically reduces resulting text size.
@@ -1749,13 +1759,13 @@ function DrawingSVG() {
                           transform(x,      y - ry) +
                     'C' + transform(x + dx, y - ry) + ' ' +
                           transform(x + rx, y - dy) + ' ' +
-                          transform(x + rx, y) +
+                          transform(x + rx, y) + 
                     'C' + transform(x + rx, y + dy) + ' ' +
                           transform(x + dx, y + ry) + ' ' +
-                          transform(x,      y + ry) +
+                          transform(x,      y + ry) +  
                     'C' + transform(x - dx, y + ry) + ' ' +
                           transform(x - rx, y + dy) + ' ' +
-                          transform(x - rx, y) +
+                          transform(x - rx, y) + 
                     'Z';
         },
         // PostScript's default fill rule is non-zero but there are never intersecting
@@ -1828,7 +1838,9 @@ function DrawingSVG() {
                     // Close the shape
                     path += 'Z';
                 }
-                x += glyph.advance + dx;
+                // getglyph() provides slightly different metrics than getpaths().  Keep
+                // it consistent with the built-in drawing.
+                x += FontLib.getglyph(fontid, ch, fwidth, fheight).advance + dx;
             }
             if (path) {
                 svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
@@ -2036,7 +2048,6 @@ var FontLib = (function() {
 function LoadFont() {
     return FontLib.loadFont.apply(FontLib, Array.prototype.slice.call(arguments));
 }
-
 // bwip-js/stb_trutype.js
 //
 // JavaScript implementation of stb_truetype.h @ https://github.com/nothings/stb.

@@ -199,8 +199,8 @@ echo "" >> src/bwipp.js
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##
-##rm -f barcode.psc
+rm -f barcode.psc
 rm -f barcode.tmp
 rm -f barcode-lookup.js
-##rm -f barcode.js
+rm -f barcode.js
 rm -f bwipp.js

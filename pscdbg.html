@@ -31407,7 +31407,7 @@ div span:hover {
 <code>% --REQUIRES preamble raiseerror renlinear--</code>
 <code>% --DESC: Channel Code</code>
 <code>% --EXAM: 3493</code>
-<code>% --EXOP: height=0.5 includetext </code>
+<code>% --EXOP: height=0.5 includetext</code>
 <code>% --RNDR: renlinear</code>
 <code>%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2017071000 68302 68105</code>
 <code>%%BeginData:        149 ASCII Lines</code>
@@ -31428,7 +31428,7 @@ div span:hover {
 <code>    /includetext false def</code>
 <code>    /includecheck false def</code>
 <code>    /height 1 def</code>
-<code>    </code>
+<code></code>
 <code>    % Parse the input options</code>
 <code>%psc     options type /stringtype eq {</code>
 <code>%psc         1 dict begin</code>
@@ -31471,13 +31471,13 @@ div span:hover {
 <code>            dup 3 index le {</code>
 <code>                b 2 index 4 index put</code>
 <code>                value target eq {</code>
-<code>                    /out [ </code>
+<code>                    /out [</code>
 <code>                        3 1 10 {dup s exch get exch b exch get} for</code>
-<code>                    ] 0 chan 2 mul getinterval def </code>
+<code>                    ] 0 chan 2 mul getinterval def</code>
 <code>                } if</code>
 <code>                /value value 1 add def</code>
 <code>            } if</code>
-<code>        } ifelse </code>
+<code>        } ifelse</code>
 <code>        pop pop pop pop</code>
 <code>    } bind def</code>
 <code></code>
@@ -31563,7 +31563,6 @@ div span:hover {
 <code>%%EndData</code>
 <code>%%EndResource</code>
 <code>% --END ENCODER channelcode--</code>
-<code></code>
 <code>%%</code>
 <code>%% STUB OUT loadctx</code>
 <code>%%</code>
@@ -31630,7 +31629,7 @@ div span:hover {
 <code>    textsize 0 le {</code>
 <code>        /bwipp.renlinearBadTextsize (The font size must be greater than zero) //raiseerror exec</code>
 <code>    } if</code>
-<code>    </code>
+<code></code>
 <code>    % Create bar elements and put them into the bars array</code>
 <code>    /bars sbs length 1 add 2 idiv array def</code>
 <code>    /pixx 0 def /pixy 0 def</code>
@@ -31701,7 +31700,7 @@ div span:hover {
 <code>        borderwidth setlinewidth stroke</code>
 <code>        grestore</code>
 <code>    } if } ifelse</code>
-<code>   </code>
+<code></code>
 <code>    % Display the bars for elements in the bars array</code>
 <code>    gsave</code>
 <code>    0 setlinecap</code>
@@ -31714,7 +31713,7 @@ div span:hover {
 <code>        } ifelse</code>
 <code>    } forall</code>
 <code>    grestore</code>
-<code>    </code>
+<code></code>
 <code>    % Display the text for elements in the text array</code>
 <code>    textcolor (unset) ne { textcolor setanycolor } if</code>
 <code>    includetext {</code>
@@ -31723,7 +31722,7 @@ div span:hover {
 <code>            txt {</code>
 <code>                {} forall</code>
 <code>                2 copy s ne exch fn ne or {</code>
-<code>                    2 copy /s exch def /fn exch def            </code>
+<code>                    2 copy /s exch def /fn exch def</code>
 <code>					selectfont</code>
 <code>                } {</code>
 <code>                    pop pop</code>
@@ -31773,7 +31772,7 @@ div span:hover {
 <code>            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if</code>
 <code>            textxpos textypos moveto textgaps 0 tstr ashow</code>
 <code>        } ifelse</code>
-<code>    } if    </code>
+<code>    } if</code>
 <code></code>
 <code>    % Display the guard elements</code>
 <code>    guardwhitespace {</code>
@@ -31787,9 +31786,9 @@ div span:hover {
 <code>			(&gt;) show</code>
 <code>        } if</code>
 <code>    } if</code>
-<code>    </code>
+<code></code>
 <code>    grestore</code>
-<code>    </code>
+<code></code>
 <code>    end</code>
 <code></code>
 <code>} bind def</code>
@@ -31828,7 +31827,7 @@ div span:hover {
 <code>    gsave</code>
 <code></code>
 <code>    barcolor (unset) ne { barcolor setanycolor } if</code>
-<code>	pixs maxicode </code>
+<code>	pixs maxicode</code>
 <code></code>
 <code>    grestore</code>
 <code></code>
@@ -31841,7 +31840,6 @@ div span:hover {
 <code>%%EndData</code>
 <code>%%EndResource</code>
 <code>% --END RENDERER renmaximatrix--</code>
-<code></code>
 <code>%%</code>
 <code>%% STUB OUT unloadctx</code>
 <code>%%</code>
