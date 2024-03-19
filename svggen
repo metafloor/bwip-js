@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+// file: svggen
+
+'use strict';
+
+const fs = require('fs');
+const bwipjs = require('.');
+
+if (process.argv.length < 5) {
+    console.log('Usage: svggen type text [options] outfile');
+    process.exit(1);
+}
+
+var options = {
+    bcid:process.argv[2],
+    text:process.argv[3],
+    //backgroundcolor:'fff',
+}
+var outfile = process.argv[process.argv.length-1];
+
+for (let i = 4, l = process.argv.length-1; i < l; i++) {
+    var arg = process.argv[i];
+    var match = /^(\w+)(=.+)?$/.exec(arg);
+    if (!match) {
+        console.log('Invalid option: ' + arg);
+        process.exit(1);
+    }
+
+    if (match[2]) {
+        if (match[1] == 'loadfont') {
+            // vals is one of: "font-name,y-mult,x-mult,path-to-font-file"
+            //                 "font-name,size-mult,path-to-font-file"
+            //                 "font-name,path-to-font-file"
+            var vals = match[2].split(',');
+            try {
+                if (vals.length == 4) {
+                    bwipjs.loadFont(vals[0], +vals[1], +vals[2], fs.readFileSync(vals[3]));
+                } else if (vals.length == 3) {
+                    bwipjs.loadFont(vals[0], +vals[1], fs.readFileSync(vals[2]));
+                } else if (vals.length == 2) {
+                    bwipjs.loadFont(vals[0], fs.readFileSync(vals[1]));
+                } else {
+                    console.log("Invalid loadfont format.");
+                    process.exit(1);
+                }
+            } catch(e) {
+                console.log('imggen: ' + e);
+                process.exit(1);
+            }
+        } else {
+            options[match[1]] = match[2].substr(1);
+        }
+    } else {
+        options[match[1]] = true;
+    }
+}
+
+let svg = bwipjs.toSVG(options);
+fs.writeFileSync(outfile, svg);
+process.exit(0);
