@@ -67,7 +67,7 @@ cp dist/bwip-js.js dist/bwip-js-gen.mjs
 
 ## This returns the list of bwipp exports
 bwipp_exports() {
-    grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
         sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/bwipp_\1/' -e 's/-/_/g' | tr -s '[:space:]' ','
     echo "bwipp_lookup,bwipp_encode,BWIPP_VERSION"
 }
@@ -267,7 +267,7 @@ module.exports = {
 @EOF
 
 # exports for the ESM node version
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _ToAny(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js-node.mjs
 
@@ -284,7 +284,7 @@ export default {
 @EOF
 
 # exports for the ESM browser version
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _ToAny(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js.mjs
 
@@ -301,7 +301,7 @@ export default {
 @EOF
 
 # exports for the react-native ESM version
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _ToAny(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js-rn.mjs
 
@@ -318,7 +318,7 @@ export default {
 @EOF
 
 # exports for the generic ESM version
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _Render(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js-gen.mjs
 
@@ -355,9 +355,9 @@ cat - <<@EOF
 # drawing => Promise<any>
 # drawing => any
 (
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;/' -e 's/-/_/g'
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;/' -e 's/-/_/g'
 ) | sort
 echo
@@ -372,7 +372,7 @@ cat - <<@EOF
 @EOF
 # toCanvas => canvas
 (
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(canvas: string | HTMLCanvasElement, opts: RenderOptions): HTMLCanvasElement;/' -e 's/-/_/g'
 drawingtypes
 ) | sort
@@ -391,9 +391,9 @@ cat - <<@EOF
 # toBuffer => Promise<Buffer>
 # toBuffer callback
 (
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions): Promise<Buffer>;/' -e 's/-/_/g'
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, callback: ToBufferCallback): void;/' -e 's/-/_/g'
 drawingtypes
 ) | sort
@@ -413,9 +413,9 @@ cat - <<@EOF
 # toDataURL => Promise<DataURL>
 # toDataURL callback
 (
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions): Promise<DataURL>;/' -e 's/-/_/g'
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, callback: ToDataURLCallback): void;/' -e 's/-/_/g'
 drawingtypes
 ) | sort

@@ -77,7 +77,7 @@ div.main > div {
     padding:        10px;
     text-align:     center;
 }
-img {
+img, svg {
     padding: 1px;
     border:  1px solid blue;
 }
@@ -89,7 +89,7 @@ span {
 window.addEventListener('load', () => {
     if (window.devicePixelRatio) {
         let sheet = document.styleSheets[0];
-        sheet.insertRule('img { zoom: ' + (1 / window.devicePixelRatio) + '; }');
+        sheet.insertRule('img, svg { zoom: ' + (1 / window.devicePixelRatio) + '; }');
     }
 });
 </script>

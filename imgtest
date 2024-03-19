@@ -16,18 +16,19 @@ text="$2"
 opts="$3"
 
 ## Generate a safe file name
-filename=$(echo "$sym ${text:0:127} $opts" | sed -e 's/[^A-Za-z0-9_(.)=^!-]/@/g').png
+pngname=$(echo "$sym ${text:0:127} $opts" | sed -e 's/[^A-Za-z0-9_(.)=^!-]/@/g').png
+svgname=$(echo "$sym ${text:0:127} $opts" | sed -e 's/[^A-Za-z0-9_(.)=^!-]/@/g').svg
 
-echo "$filename"
+echo "$pngname"
 
-./imggen $sym "$text" $opts tests/$filename > /dev/null
-status=$?
+./imggen $sym "$text" $opts tests/$pngname > /dev/null
+./svggen $sym "$text" $opts tests/$svgname > /dev/null
 
-if [ ! -f proofs/$filename -o $REGEN == YES ] ; then
-    cp -f tests/$filename proofs/$filename
+if [ ! -f proofs/$pngname -o $REGEN == YES ] ; then
+    cp -f tests/$pngname proofs/$pngname
 fi
 
-msg=$(./imgcmp proofs/$filename tests/$filename)
+msg=$(./imgcmp proofs/$pngname tests/$pngname)
 
 (
 if [ ! -z "$msg" ] ; then
@@ -35,13 +36,17 @@ if [ ! -z "$msg" ] ; then
 else
     echo "<div class=\"main\">"
 fi
-echo "<h1>$filename</h1>"
+echo "<h1>$pngname</h1>"
 
 node <<-@EOF
 const fs = require('fs');
-const proof = fs.readFileSync('proofs/$filename');
-const image = fs.readFileSync('tests/$filename');
+const proof = fs.readFileSync('proofs/$pngname');
+const image = fs.readFileSync('tests/$pngname');
 const bwipp = fs.readFileSync('proofs/$sym.png');
+
+let svgtext = fs.readFileSync('tests/$svgname', 'utf8');
+let svgdims = /viewBox=['"]\d+ \d+ (\d+) (\d+)/.exec(svgtext);
+svgtext = svgtext.replace(/viewBox=/, 'width="' + svgdims[1] + 'px" height="' + svgdims[2] + 'px" viewBox=');
 
 console.log('<div class="proof">');
 console.log('<img src="data:image/png;base64,' + proof.toString('base64') + '"><br>');
@@ -49,7 +54,11 @@ console.log('proof: ' + proof.readUInt32BE(16) + ' x ' + proof.readUInt32BE(20))
 console.log('</div>');
 console.log('<div class="image">');
 console.log('<img src="data:image/png;base64,' + image.toString('base64') + '"><br>');
-console.log('image: ' + image.readUInt32BE(16) + ' x ' + image.readUInt32BE(20));
+console.log('current: ' + image.readUInt32BE(16) + ' x ' + image.readUInt32BE(20));
+console.log('</div>');
+console.log('<div class="svg">');
+console.log(svgtext); // + '<br>');
+console.log('svg: ' + svgdims[1] + ' x ' + svgdims[2]);
 console.log('</div>');
 console.log('<div class="bwipp">');
 console.log('<img src="data:image/png;base64,' + bwipp.toString('base64') + '"><br>');
