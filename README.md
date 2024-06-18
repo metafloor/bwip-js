@@ -9,5 +9,5 @@ All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  Barcode images are generated as png (node-js) or to a canvas (browser)
 or as SVG (all platforms).
 
-This is a platform-specific readme stub.  See the main project's readme at [Barcode Writer in Pure Javascript](https://github.com/metafloor/bwip-js).
+This is a platform-specific readme stub.  See the main project's readme at [Barcode Writer in Pure JavaScript](https://github.com/metafloor/bwip-js).
 
