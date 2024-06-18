@@ -1,0 +1,48 @@
+{
+  "name": "@bwip-js/browser",
+  "version": "4.4.0",
+  "description": "JavaScript barcode generator supporting over 100 types and standards.",
+  "exports": {
+      "types": "./dist/bwip-js.d.ts",
+      "import": "./dist/bwip-js.mjs"
+  },
+  "main": "./dist/bwip-js.mjs",
+  "browser": "./dist/bwip-js.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metafloor/bwip-js.git"
+  },
+  "keywords": [
+    "bar code",
+    "generator",
+    "barcode",
+    "javascript",
+    "node",
+    "react",
+    "react-native",
+    "typescript",
+    "browser",
+    "itf",
+    "gs1",
+    "upc",
+    "ean",
+    "pdf417",
+    "matrix",
+    "datamatrix",
+    "qrcode",
+    "databar",
+    "code128",
+    "code39",
+    "svg",
+    "pdfkit"
+  ],
+  "author": "Mark Warren <mwarren@metafloor.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/metafloor/bwip-js/issues"
+  },
+  "homepage": "https://github.com/metafloor/bwip-js"
+}
