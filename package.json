@@ -4,10 +4,13 @@
   "description": "JavaScript barcode generator supporting over 100 types and standards.",
   "exports": {
       "types": "./dist/bwip-js.d.ts",
+      "require": "./dist-bwip-js.js",
       "import": "./dist/bwip-js.mjs"
   },
   "main": "./dist/bwip-js.mjs",
-  "browser": "./dist/bwip-js.mjs",
+  "browser": "./dist/bwip-js.js",
+  "module": "./dist/bwip-js.mjs",
+  "types": "./dist/bwip-js.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
