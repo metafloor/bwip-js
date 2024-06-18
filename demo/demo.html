@@ -149,7 +149,13 @@ function render() {
         }
         var eq = aopts[i].indexOf('=');
         if (eq == -1) {
-            opts[aopts[i]] = true;
+            // !name => false
+            // name => true
+            if (aopts[i][0] == '!') {
+                opts[aopts[i].substr(1)] = false;
+            } else {
+                opts[aopts[i]] = true;
+            }
         } else {
             opts[aopts[i].substr(0, eq)] = aopts[i].substr(eq+1);
         }

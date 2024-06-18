@@ -129,7 +129,13 @@ function render() {
         }
         var eq = aopts[i].indexOf('=');
         if (eq == -1) {
-            opts[aopts[i]] = true;
+            if (aopts[i][0] == '!') {
+                // !parameter => false
+                opts[aopts[i].substr(1)] = false;
+            } else {
+                // parameter => true
+                opts[aopts[i]] = true;
+            }
         } else {
             opts[aopts[i].substr(0, eq)] = aopts[i].substr(eq+1);
         }

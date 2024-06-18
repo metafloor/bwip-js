@@ -191,6 +191,7 @@ var optlist = [
             'You must specify --showborder for this setting to take effect.' },
     { name: 'textcolor', type: 'string',
       desc: 'Color of the text, either as a hex RGB or RRGGBB value or a hex CCMMYYKK value.' },
+    /*
     { name: 'addontextfont', type: 'string',
       desc: 'The font name to use for the add-on text in ISBN, ISMN, and ISSN barcodes.' },
     { name: 'addontextsize', type: 'int',
@@ -199,6 +200,7 @@ var optlist = [
       desc: 'Overrides the default positioning for the add on text.' },
     { name: 'addontextyoffset', type: 'int',
       desc: 'Overrides the default positioning for the add on text.' },
+    */
     { name: 'guardwhitespace', type: 'boolean',
       desc: 'Display white space guards.' },
     { name: 'guardwidth', type: 'int',
