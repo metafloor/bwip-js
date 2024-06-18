@@ -1,0 +1,57 @@
+#!/bin/bash
+## gsimage
+##
+## usage: gsimage symbol text opts
+##
+## Use BWIPP with ghostscript to create an image.
+sym="$1"
+text="$2"
+opts="$3"
+
+## Use node to create the output file name
+outfile=$(node <<@EOF
+console.log(Buffer.from('$sym $text $opts'.trim().replace(/ /g, '-')).toString('binary').replace(/[\x00-\x1f\x7f-\xff]/g, (c) => '%'+('0'+c.charCodeAt(0).toString(16)).slice(-2)) + '.png');
+@EOF
+)
+
+##echo "($text)"
+## First, use ghostscript to give us the bounding box
+BBOX=$(
+cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=bbox - 2>&1 | grep '%%HiResBoundingBox'
+50 50 moveto 2 2 scale
+($text) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec showpage
+@EOF
+)
+
+## Rerun to generate the image (rendered to US Letter page size).
+cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=1 -dTextAlphaBits=4 -sOutputFile=/tmp/gsimage.png -
+50 50 moveto 2 2 scale
+($text) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec showpage
+@EOF
+
+## Extract the bbox coordinates
+L=$(echo "$BBOX" | sed -E -e 's/^.* (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)/\1/')
+B=$(echo "$BBOX" | sed -E -e 's/^.* (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)/\2/')
+R=$(echo "$BBOX" | sed -E -e 's/^.* (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)/\3/')
+T=$(echo "$BBOX" | sed -E -e 's/^.* (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)/\4/')
+
+## Round to integers
+L=$(printf "%.0f" $L)
+B=$(printf "%.0f" $B)
+R=$(printf "%.0f" $R)
+T=$(printf "%.0f" $T)
+
+## Get the image's height
+IH=$(identify-im6 -format '%h' /tmp/gsimage.png)
+
+## The barcode's origin is lower left corner.
+let X=L
+let Y=IH-T
+let W=R-L
+let H=T-B
+convert -crop "${W}x${H}+${X}+${Y}" /tmp/gsimage.png -define png:color-type=6 -transparent white +repage -strip "$outfile"
+
+rm -f /tmp/gsimage.png
+
+echo "image file: $outfile"
+exit 0

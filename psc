@@ -99,6 +99,7 @@ cat barcode.tmp custom/*.ps | sed \
     -e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
     -e 's,/ctx null def,%psc &,'\
     -e 's,//processoptions,currentdict //processoptions,'\
+    -e 's,/suppresskanjimode false def,/suppresskanjimode true def,'\
     -e 's/{\s*13 3 div /{ 4.3333334 /g'\
     -e 's/{\s*10 3 div /{ 3.3333334 /g'\
     -e 's/{\s*8 3 div /{ 2.6666667 /g'\

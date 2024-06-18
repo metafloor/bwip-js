@@ -5,7 +5,7 @@
 // Copyright (c) 2011-2024 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2024-01-03
+// Barcode Writer in Pure PostScript - Version 2024-06-18
 // Copyright (c) 2004-2024 Terry Burton
 //
 // The MIT License
@@ -198,14 +198,21 @@ function FixupOptions(opts) {
 
     return opts;
 
+    // a is the most specific padding value, e.g. paddingleft
+    // b is the next most specific value, e.g. paddingwidth
+    // c is the general padding value.
+    // s is the scale, either scalex or scaley
     function padding(a, b, c, s) {
         if (a != null) {
-            return a*s;
+            a = a >>> 0;
+            return a*s >>> 0;
         }
         if (b != null) {
-            return b*s;
+            b = b >>> 0;
+            return b*s >>> 0;
         }
-        return c*s || 0;
+        c = c >>> 0;
+        return (c*s >>> 0) || 0;
     }
 }
 
@@ -307,7 +314,7 @@ function ToRaw(bcid, text, options) {
     }
 
     // The drawing interface is just needed for the pre-init() calls.
-    // Don't need to fixup the options - drawing specific.
+    // Don't need to fixup the drawing specific options.
     var drawing = DrawingBuiltin();
     drawing.setopts(options);
 

@@ -110,10 +110,15 @@ const bwipjs = (function() {
 worker.parentPort.on('message', (requestUrl) => {
     let opts = url.parse(requestUrl, true).query;
 
-    // Convert boolean empty parameters to true
+    // Convert empty parameters to true.
+    // Convert empty !parameters to false.
     for (let id in opts) {
         if (opts[id] === '') {
-            opts[id] = true;
+            if (id[0] == '!') {
+                opts[id.substr(1)] = false;
+            } else {
+                opts[id] = true;
+            }
         }
     }
 

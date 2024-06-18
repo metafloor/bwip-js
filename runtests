@@ -171,6 +171,8 @@ run 1 qrcode "QR CODE 7890" "format=full"
 run 1 qrcode "QR CODE 7890" "format=micro eclevel=L"
 run 1 qrcode "QR CODE 7890" "format=micro eclevel=M"
 run 1 qrcode "QR CODE 7890" "format=micro eclevel=Q"    ## raiseerror
+run 1 qrcode "TRANS202404110011看16" "eclevel=L suppresskanjimode"
+run 1 qrcode "TRANS202404110011看16" "eclevel=L !suppresskanjimode"
 run 1 azteccode "This is ^065ztec Code" "parse"
 run 1 azteccode "This is Aztec Code" "eclevel=1"
 run 1 azteccode "This is Aztec Code" "eclevel=25"

@@ -52,7 +52,7 @@ div span:hover {
 <pre id="barcode.ps" class="code">
 <code>%!PS</code>
 <code></code>
-<code>% Barcode Writer in Pure PostScript - Version 2024-01-03</code>
+<code>% Barcode Writer in Pure PostScript - Version 2024-06-18</code>
 <code>% https://bwipp.terryburton.co.uk</code>
 <code>%</code>
 <code>% Copyright (c) 2004-2024 Terry Burton</code>
@@ -84,7 +84,7 @@ div span:hover {
 <code>% --BEGIN TEMPLATE--</code>
 <code></code>
 <code>% --BEGIN RESOURCE preamble--</code>
-<code>%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2024010300 29733 32838</code>
+<code>%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2024061800 29733 32838</code>
 <code>%%BeginData:          6 ASCII Lines</code>
 <code>%psc currentglobal</code>
 <code>%psc true setglobal</code>
@@ -98,7 +98,7 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RESOURCE loadctx--</code>
 <code>% --REQUIRES preamble--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp loadctx 0.0 2024010300 41297 40927</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp loadctx 0.0 2024061800 41297 40927</code>
 <code>%%BeginData:         30 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 1 dict</code>
@@ -136,7 +136,7 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RESOURCE unloadctx--</code>
 <code>% --REQUIRES preamble--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp unloadctx 0.0 2024010300 38938 38741</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp unloadctx 0.0 2024061800 38938 38741</code>
 <code>%%BeginData:         14 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 1 dict</code>
@@ -158,7 +158,7 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RESOURCE raiseerror--</code>
 <code>% --REQUIRES preamble--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2024010300 39029 38860</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2024061800 39029 38860</code>
 <code>%%BeginData:         15 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -181,7 +181,7 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RESOURCE processoptions--</code>
 <code>% --REQUIRES preamble raiseerror--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2024010300 48428 48479</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2024061800 48428 48479</code>
 <code>%%BeginData:         50 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -239,7 +239,7 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RESOURCE parseinput--</code>
 <code>% --REQUIRES preamble loadctx unloadctx raiseerror--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2024010300 73457 69318</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2024061800 73457 69318</code>
 <code>%%BeginData:        174 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -421,8 +421,8 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RESOURCE gs1process--</code>
 <code>% --REQUIRES preamble loadctx unloadctx parseinput raiseerror--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2024010300 600758 650584</code>
-<code>%%BeginData:       2992 ASCII Lines</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2024061800 648367 697628</code>
+<code>%%BeginData:       3236 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
 <code>%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put</code>
@@ -453,7 +453,7 @@ div span:hover {
 <code>            /parts [</code>
 <code>                &lt;&lt; /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintkey ] &gt;&gt;</code>
 <code>            ]</code>
-<code>            /ex     [ (02) (255) (37) ]</code>
+<code>            /ex     [ (255) (37) ]</code>
 <code>            /dlpkey [ [ (22) (10) (21) ] [ (235) ] ]</code>
 <code>        &gt;&gt;</code>
 <code>        (01) exch dup</code>
@@ -463,6 +463,7 @@ div span:hover {
 <code>            /parts [</code>
 <code>                &lt;&lt; /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintkey ] &gt;&gt;</code>
 <code>            ]</code>
+<code>            /ex     [ (01) (03) ]</code>
 <code>            /req    [ [ [ (37) ] ] ]</code>
 <code>        &gt;&gt;</code>
 <code>        (02) exch dup</code>
@@ -470,9 +471,19 @@ div span:hover {
 <code></code>
 <code>        &lt;&lt;</code>
 <code>            /parts [</code>
+<code>                &lt;&lt; /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintkey ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (01) (02) (37) ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (03) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
 <code>                &lt;&lt; /cset /X  /min  1  /max 20  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
-<code>            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]</code>
+<code>            /req    [ [ [ (01) ] [ (02) ] [ (03) ] [ (8006) ] [ (8026) ] ] ]</code>
 <code>        &gt;&gt;</code>
 <code>        (10) exch dup</code>
 <code>        pop</code>
@@ -529,7 +540,8 @@ div span:hover {
 <code>                &lt;&lt; /cset /X  /min  1  /max 20  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
 <code>            /ex     [ (235) ]</code>
-<code>            /req    [ [ [ (01) ] [ (8006) ] ] ]</code>
+<code>            /req    [ [ [ (01) ] [ (03) ] [ (8006) ] ] ]</code>
+<code>            /dlattr false</code>
 <code>        &gt;&gt;</code>
 <code>        (21) exch dup</code>
 <code>        pop</code>
@@ -539,6 +551,7 @@ div span:hover {
 <code>                &lt;&lt; /cset /X  /min  1  /max 20  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
 <code>            /req    [ [ [ (01) ] ] ]</code>
+<code>            /dlattr false</code>
 <code>        &gt;&gt;</code>
 <code>        (22) exch dup</code>
 <code>        pop</code>
@@ -548,6 +561,7 @@ div span:hover {
 <code>                &lt;&lt; /cset /X  /min  1  /max 28  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
 <code>            /req    [ [ [ (01) ] ] ]</code>
+<code>            /dlattr false</code>
 <code>        &gt;&gt;</code>
 <code>        (235) exch dup</code>
 <code>        pop</code>
@@ -566,7 +580,7 @@ div span:hover {
 <code>            /parts [</code>
 <code>                &lt;&lt; /cset /N  /min  1  /max  6  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
-<code>            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]</code>
+<code>            /req    [ [ [ (01) ] [ (02) ] [ (03) ] [ (8006) ] [ (8026) ] ] ]</code>
 <code>        &gt;&gt;</code>
 <code>        (242) exch dup</code>
 <code>        pop</code>
@@ -613,6 +627,7 @@ div span:hover {
 <code>                &lt;&lt; /cset /X  /min  1  /max 20  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
 <code>            /req    [ [ [ (414) ] ] ]</code>
+<code>            /dlattr false</code>
 <code>        &gt;&gt;</code>
 <code>        (254) exch dup</code>
 <code>        pop</code>
@@ -1881,6 +1896,50 @@ div span:hover {
 <code></code>
 <code>        &lt;&lt;</code>
 <code>            /parts [</code>
+<code>                &lt;&lt; /cset /N  /min  6  /max  6  /opt false  /linters [] &gt;&gt;</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max  1  /opt true   /linters [ /linthyphen ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (4331) ]</code>
+<code>            /req    [ [ [ (00) ] ] ]</code>
+<code>        &gt;&gt;</code>
+<code>        (4330) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /N  /min  6  /max  6  /opt false  /linters [] &gt;&gt;</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max  1  /opt true   /linters [ /linthyphen ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (4330) ]</code>
+<code>            /req    [ [ [ (00) ] ] ]</code>
+<code>        &gt;&gt;</code>
+<code>        (4331) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /N  /min  6  /max  6  /opt false  /linters [] &gt;&gt;</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max  1  /opt true   /linters [ /linthyphen ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (4333) ]</code>
+<code>            /req    [ [ [ (00) ] ] ]</code>
+<code>        &gt;&gt;</code>
+<code>        (4332) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /N  /min  6  /max  6  /opt false  /linters [] &gt;&gt;</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max  1  /opt true   /linters [ /linthyphen ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (4332) ]</code>
+<code>            /req    [ [ [ (00) ] ] ]</code>
+<code>        &gt;&gt;</code>
+<code>        (4333) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
 <code>                &lt;&lt; /cset /N  /min 13  /max 13  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
 <code>            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]</code>
@@ -2042,6 +2101,7 @@ div span:hover {
 <code>                &lt;&lt; /cset /X  /min  1  /max  1  /opt false  /linters [] &gt;&gt;</code>
 <code>                &lt;&lt; /cset /X  /min  1  /max  1  /opt false  /linters [ /lintimporteridx ] &gt;&gt;</code>
 <code>            ]</code>
+<code>            /dlattr false</code>
 <code>        &gt;&gt;</code>
 <code>        (7040) exch dup</code>
 <code>        pop</code>
@@ -2104,6 +2164,103 @@ div span:hover {
 <code>            /req    [ [ [ (8017) ] [ (8018) ] ] ]</code>
 <code>        &gt;&gt;</code>
 <code>        (7242) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /N  /min  8  /max  8  /opt false  /linters [ /lintyyyymmdd ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (7251) ]</code>
+<code>            /req    [ [ [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7250) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /N  /min  8  /max  8  /opt false  /linters [ /lintyyyymmdd ] &gt;&gt;</code>
+<code>                &lt;&lt; /cset /N  /min  4  /max  4  /opt false  /linters [ /linthhmm ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (7250) ]</code>
+<code>            /req    [ [ [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7251) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /N  /min  1  /max  1  /opt false  /linters [ /lintiso5218 ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /req    [ [ [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7252) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max 40  /opt false  /linters [ /lintpcenc ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (7256) (7259) ]</code>
+<code>            /req    [ [ [ (8017) ] [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7253) exch dup</code>
+<code>        (7254) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max 10  /opt false  /linters [] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (7256) (7259) ]</code>
+<code>            /req    [ [ [ (8017) ] [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7255) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max 90  /opt false  /linters [ /lintpcenc ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /req    [ [ [ (8017) ] [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7256) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max 70  /opt false  /linters [ /lintpcenc ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /req    [ [ [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7257) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /X  /min  3  /max  3  /opt false  /linters [ /lintposinseqslash ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /req    [ [ [ (8018) (7259) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7258) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max 40  /opt false  /linters [ /lintpcenc ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /ex     [ (7256) ]</code>
+<code>            /req    [ [ [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (7259) exch dup</code>
 <code>        pop</code>
 <code></code>
 <code>        &lt;&lt;</code>
@@ -2209,6 +2366,7 @@ div span:hover {
 <code>                &lt;&lt; /cset /N  /min  1  /max 12  /opt false  /linters [ /lintnozeroprefix ] &gt;&gt;</code>
 <code>            ]</code>
 <code>            /req    [ [ [ (8010) ] ] ]</code>
+<code>            /dlattr false</code>
 <code>        &gt;&gt;</code>
 <code>        (8011) exch dup</code>
 <code>        pop</code>
@@ -2229,6 +2387,16 @@ div span:hover {
 <code>            /dlpkey [ ]</code>
 <code>        &gt;&gt;</code>
 <code>        (8013) exch dup</code>
+<code>        pop</code>
+<code></code>
+<code>        &lt;&lt;</code>
+<code>            /parts [</code>
+<code>                &lt;&lt; /cset /X  /min  1  /max 25  /opt false  /linters [ /lintcsumalpha /lintkey /linthasnondigit ] &gt;&gt;</code>
+<code>            ]</code>
+<code>            /req    [ [ [ (01) ] ] ]</code>
+<code>            /dlattr false</code>
+<code>        &gt;&gt;</code>
+<code>        (8014) exch dup</code>
 <code>        pop</code>
 <code></code>
 <code>        &lt;&lt;</code>
@@ -2256,6 +2424,7 @@ div span:hover {
 <code>                &lt;&lt; /cset /N  /min  1  /max 10  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
 <code>            /req    [ [ [ (8017) ] [ (8018) ] ] ]</code>
+<code>            /dlattr false</code>
 <code>        &gt;&gt;</code>
 <code>        (8019) exch dup</code>
 <code>        pop</code>
@@ -2284,7 +2453,7 @@ div span:hover {
 <code>            /parts [</code>
 <code>                &lt;&lt; /cset /Z  /min  1  /max 90  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
-<code>            /req    [ [ [ (00) ] [ (01) ] [ (253) ] [ (255) ] [ (8003) ] [ (8004) ] [ (8006) ] [ (8010) ] [ (8017) ] [ (8018) ] ] ]</code>
+<code>            /req    [ [ [ (00) ] [ (01) (21) ] [ (253) ] [ (255) ] [ (8003) ] [ (8004) ] [ (8006) (21) ] [ (8010) (8011) ] [ (8017) ] [ (8018) ] ] ]</code>
 <code>        &gt;&gt;</code>
 <code>        (8030) exch dup</code>
 <code>        pop</code>
@@ -2319,6 +2488,7 @@ div span:hover {
 <code>                &lt;&lt; /cset /X  /min  1  /max 70  /opt false  /linters [] &gt;&gt;</code>
 <code>            ]</code>
 <code>            /req    [ [ [ (01) ] ] ]</code>
+<code>            /dlattr false</code>
 <code>        &gt;&gt;</code>
 <code>        (8200) exch dup</code>
 <code>        pop</code>
@@ -2378,9 +2548,11 @@ div span:hover {
 <code></code>
 <code>        % Validate and strip the scheme</code>
 <code>        (http://) anchorsearch not {</code>
+<code>        (HTTP://) anchorsearch not {</code>
 <code>        (https://) anchorsearch not {</code>
-<code>            pop /bwipp.GS1dlURIbadScheme (Scheme must be http:// or https://) //raiseerror exec</code>
-<code>        } if} if</code>
+<code>        (HTTPS://) anchorsearch not {</code>
+<code>            pop /bwipp.GS1dlURIbadScheme (Scheme must be http:// HTTP:// https:// or HTTPS://) //raiseerror exec</code>
+<code>        } if} if} if} if</code>
 <code>        pop</code>
 <code></code>
 <code>        % Strip the domain</code>
@@ -2446,11 +2618,15 @@ div span:hover {
 <code>                } {</code>
 <code>                dup 37 eq 3 index in length 2 sub lt and {  % "%nn" -&gt; ord</code>
 <code>                    pop</code>
-<code>                    (&lt;  &gt;) 4 string copy dup 1 in 5 index 1 add 2 getinterval putinterval cvx</code>
-<code>                    stopped {</code>
-<code>                        pop pop /bwipp.GS1dlBadHexCharacter (Invalid hex character) //raiseerror exec</code>
-<code>                    } if</code>
-<code>                    0 get out exch 2 index exch put</code>
+<code>                    in 2 index 1 add 2 getinterval 0 exch {</code>
+<code>                        dup dup 48 ge exch  57 le and {48 sub} {  % 0-9</code>
+<code>                        dup dup 65 ge exch  70 le and {55 sub} {  % A-F</code>
+<code>                        dup dup 97 ge exch 102 le and {87 sub} {  % a-f</code>
+<code>                            pop pop /bwipp.GS1dlBadHexCharacter (Invalid hex character) //raiseerror exec</code>
+<code>                        } ifelse } ifelse } ifelse</code>
+<code>                        exch 16 mul add</code>
+<code>                    } forall</code>
+<code>                    out exch 2 index exch put</code>
 <code>                    1 add exch 3 add exch</code>
 <code>                } {</code>
 <code>                    out exch 2 index exch put</code>
@@ -2523,6 +2699,23 @@ div span:hover {
 <code>            } ifelse</code>
 <code>        } loop</code>
 <code></code>
+<code>        % Check for invalid DL data attributes in the query params</code>
+<code>        ais plen 2 index plen sub getinterval {</code>
+<code>            gs1syntax 1 index known {</code>
+<code>                gs1syntax 1 index get /dlattr 2 copy known { get } { pop pop true } ifelse</code>
+<code>            } {</code>
+<code>                dontlint</code>
+<code>            } ifelse</code>
+<code>            not {</code>
+<code>                dup length dup 46 add string</code>
+<code>                dup 0 (AI \() putinterval</code>
+<code>                dup 4 4 index putinterval</code>
+<code>                dup 2 index 4 add (\) is not a valid GS1 DL URI data attribute) putinterval</code>
+<code>                exch pop exch pop /bwipp.GS1dlInvalidDataAttribute exch //raiseerror exec</code>
+<code>            } if</code>
+<code>            pop</code>
+<code>        } forall</code>
+<code></code>
 <code>        % Check for valid path info attributes in query params</code>
 <code>        ais plen 2 index plen sub getinterval {</code>
 <code>            plen -1 1 {  % Trial the query param at each non-initial path info position</code>
@@ -2561,7 +2754,7 @@ div span:hover {
 <code></code>
 <code>    } ifelse</code>
 <code></code>
-<code>    % AIs not requiring FNC1 separation</code>
+<code>    % Two-digit AI prefixes not requiring FNC1 separation</code>
 <code>{</code>
 <code>    /aifixed &lt;&lt; [</code>
 <code>        (00) (01) (02) (03) (04)</code>
@@ -2786,6 +2979,12 @@ div span:hover {
 <code>        iso4217 exch known not { pop /bwipp.GS1UnknownCurrency (Unknown currency code) false exit } if</code>
 <code>    } def</code>
 <code></code>
+<code>    /lintiso5218 {</code>
+<code>        dup (0) ne exch dup (1) ne exch dup (2) ne exch (9) ne and and and {</code>
+<code>            pop /bwipp.GS1biologicalSexCode (Invalid biological sex code) false exit</code>
+<code>        } if</code>
+<code>    } def</code>
+<code></code>
 <code>    /lintiban {</code>
 <code>        dup length 4 le { pop pop /bwipp.GS1tooShort (IBAN too short) false exit } if</code>
 <code>        dup true exch {</code>
@@ -2818,24 +3017,44 @@ div span:hover {
 <code>        } if</code>
 <code>    } def</code>
 <code></code>
-<code>    /lintyymmd0 {</code>
-<code>        dup 2 2 getinterval cvi dup 1 lt exch 12 gt or { pop /bwipp.GS1badMonth (Invalid month) false exit } if</code>
-<code>        dup 0 2 getinterval cvi dup  21  sub  % Update 20YY periodically for century calculation</code>
-<code>        dup 51 ge {pop 1900 add} { -50 le {2100 add} {2000 add} ifelse} ifelse  % YYYY</code>
-<code>        dup 400 mod 0 eq exch dup 4 mod 0 eq exch 100 mod 0 ne and or           % Leap year?</code>
+<code>    /linthasnondigit {</code>
+<code>        false exch { dup 48 lt exch 57 gt or {pop true exit} if } forall</code>
+<code>        not { /bwipp.GS1requiresNonDigit (A non-digit character is required) false exit } if</code>
+<code>    } def</code>
+<code></code>
+<code>    /linthyphen {</code>
+<code>        (-) ne { pop /bwipp.GS1hyphenRequired (A hyphen is required) false exit } if</code>
+<code>    } def</code>
+<code></code>
+<code>    /lintyyyymmd0 {</code>
+<code>        dup 4 2 getinterval cvi dup 1 lt exch 12 gt or { pop /bwipp.GS1badMonth (Invalid month) false exit } if</code>
+<code>        dup 0 4 getinterval cvi dup 400 mod 0 eq exch dup 4 mod 0 eq exch 100 mod 0 ne and or  % Leap year?</code>
 <code>        [ 31  3 -1 roll {29} {28} ifelse  31 30 31 30 31 31 30 31 30 31 ]</code>
-<code>        1 index 2 2 getinterval cvi 1 sub get</code>
-<code>        exch 4 2 getinterval cvi lt { pop /bwipp.GS1badDay (Invalid day of month) false exit } if</code>
+<code>        1 index 4 2 getinterval cvi 1 sub get</code>
+<code>        exch 6 2 getinterval cvi lt { pop /bwipp.GS1badDay (Invalid day of month) false exit } if</code>
+<code>    } def</code>
+<code></code>
+<code>    /lintyyyymmdd {</code>
+<code>        dup length 8 ne { pop /bwipp.GS1badDateLength (Invalid length for yyyymmdd date) false exit } if</code>
+<code>        dup 6 2 getinterval cvi 1 lt { pop /bwipp.GS1badDay (Invalid day of month) false exit } if</code>
+<code>        lintyyyymmd0</code>
+<code>    } def</code>
+<code></code>
+<code>    /lintyymmd0 {</code>
+<code>        dup 0 2 getinterval cvi dup  21  sub  % Update 20YY periodically for century calculation</code>
+<code>        dup 51 ge {pop (19)} { -50 le {(21)} {(20)} ifelse} ifelse exch pop  % Century prefix</code>
+<code>        8 string dup 0 4 -1 roll putinterval dup 2 4 -1 roll putinterval</code>
+<code>        lintyyyymmd0</code>
 <code>    } def</code>
 <code></code>
 <code>    /lintyymmdd {</code>
-<code>        dup length 6 ne { pop /bwipp.GS1badDateLength (Invalid length for date) false exit } if</code>
+<code>        dup length 6 ne { pop /bwipp.GS1badDateLength (Invalid length for yymmdd date) false exit } if</code>
 <code>        dup 4 2 getinterval cvi 1 lt { pop /bwipp.GS1badDay (Invalid day of month) false exit } if</code>
 <code>        lintyymmd0</code>
 <code>    } def</code>
 <code></code>
 <code>    /lintyymmddhh {</code>
-<code>        dup length 8 ne { pop /bwipp.GS1badYYMMDDHHLength (Invalid length for date with hour) false exit } if</code>
+<code>        dup length 8 ne { pop /bwipp.GS1badYYMMDDHHLength (Invalid length for yymmdd date with hour) false exit } if</code>
 <code>        dup 6 2 getinterval cvi 23 gt { pop pop /bwipp.GS1badHour (Invalid hour of day) false exit } if</code>
 <code>        0 6 getinterval lintyymmdd</code>
 <code>    } def</code>
@@ -2875,6 +3094,31 @@ div span:hover {
 <code>        exch dup length 2 idiv dup getinterval cvi</code>
 <code>        dup 0 eq { pop pop pop /bwipp.GS1badPieceTotal (Invalid total number) false exit } if</code>
 <code>        gt { pop /bwipp.GS1pieceExceedsTotal (Piece number exceeds total) false exit } if</code>
+<code>    } def</code>
+<code></code>
+<code>    /lintposinseqslash {</code>
+<code>        (/) search not {</code>
+<code>            pop /bwipp.invalidPosInSeqFormat (Invalid &lt;pos&gt;/&lt;end&gt; format) false exit</code>
+<code>        } if</code>
+<code>        exch pop</code>
+<code>        dup length 0 eq {</code>
+<code>            pop pop /bwipp.invalidPosInSeqFormat (Invalid &lt;pos&gt;/&lt;end&gt; format) false exit</code>
+<code>        } if</code>
+<code>        1 index length 0 eq {</code>
+<code>            pop pop /bwipp.invalidPosInSeqFormat (Invalid &lt;pos&gt;/&lt;end&gt; format) false exit</code>
+<code>        } if</code>
+<code>        dup true exch {</code>
+<code>            dup 48 lt exch 57 gt or { pop false exit } if</code>
+<code>        } forall</code>
+<code>        not { pop pop /bwipp.positionNotNumeric (Position is not numeric) false exit } if</code>
+<code>        1 index true exch {</code>
+<code>            dup 48 lt exch 57 gt or { pop false exit } if</code>
+<code>        } forall</code>
+<code>        not { pop pop /bwipp.endNotNumeric (End is not numeric) false exit } if</code>
+<code>        dup 0 get 48 eq {pop pop /bwipp.positionZeroPrefix (Position cannot have zero prefix) false exit} if</code>
+<code>        1 index 0 get 48 eq {pop pop /bwipp.endZeroPrefix (End cannot have zero prefix) false exit} if</code>
+<code>        cvi exch cvi exch</code>
+<code>        lt {/bwipp.positionExceedsEnd (Position exceeds end) false exit} if</code>
 <code>    } def</code>
 <code></code>
 <code>    /lintpcenc {</code>
@@ -3421,8 +3665,8 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RENDERER renlinear--</code>
 <code>% --REQUIRES preamble raiseerror processoptions--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2024010300 83313 82223</code>
-<code>%%BeginData:        245 ASCII Lines</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2024061800 87175 85857</code>
+<code>%%BeginData:        264 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
 <code>%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put</code>
@@ -3508,23 +3752,42 @@ div span:hover {
 <code>%psc         width 72 mul pixx div 1 scale</code>
 <code>%psc     } if</code>
 <code>%psc </code>
-<code>%psc     % Set RGB or CMYK color depending on length of given hex string</code>
+<code>%psc     % Set RGB or CMYK color, or some other color by name</code>
 <code>%psc     /setanycolor {</code>
 <code>%psc         /anycolor exch def</code>
-<code>%psc         anycolor length dup 6 ne exch 8 ne and {</code>
-<code>%psc             /bwipp.renlinearBadColorLength (Colors must be 6 or 8 characters) //raiseerror exec</code>
+<code>%psc         anycolor length 1 lt {</code>
+<code>%psc             /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec</code>
 <code>%psc         } if</code>
-<code>%psc         anycolor {</code>
-<code>%psc             dup     dup 48 ge exch  59 le and  % 0-9</code>
-<code>%psc             1 index dup 65 ge exch  70 le and  % A-F</code>
-<code>%psc             2 index dup 97 ge exch 102 le and  % a-f</code>
-<code>%psc             or or exch pop not {</code>
-<code>%psc                 /bwipp.renlinearBadColorCharacter (Colors must be in hexadecimal notation) //raiseerror exec</code>
+<code>%psc         anycolor 0 get 95 ne {  % RGB or CMYK</code>
+<code>%psc             anycolor length dup 6 ne exch 8 ne and {</code>
+<code>%psc                 /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec</code>
 <code>%psc             } if</code>
-<code>%psc         } forall</code>
-<code>%psc         anycolor length 6 eq { (&lt;      &gt;) } { (&lt;        &gt;) } ifelse dup length string copy</code>
-<code>%psc         dup 1 anycolor putinterval cvx exec {255 div} forall</code>
-<code>%psc         anycolor length 6 eq { setrgbcolor } { setcmykcolor } ifelse</code>
+<code>%psc             mark</code>
+<code>%psc             0 2 anycolor length 1 sub {</code>
+<code>%psc                 anycolor exch 2 getinterval 0 exch {</code>
+<code>%psc                     dup dup 48 ge exch  57 le and {48 sub} {  % 0-9</code>
+<code>%psc                     dup dup 65 ge exch  70 le and {55 sub} {  % A-F</code>
+<code>%psc                     dup dup 97 ge exch 102 le and {87 sub} {  % a-f</code>
+<code>%psc                         cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec</code>
+<code>%psc                     } ifelse } ifelse } ifelse</code>
+<code>%psc                     exch 16 mul add</code>
+<code>%psc                 } forall</code>
+<code>%psc                 255 div</code>
+<code>%psc             } for</code>
+<code>%psc             counttomark</code>
+<code>%psc             dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse</code>
+<code>%psc             exch 2 add -1 roll pop  % clear mark</code>
+<code>%psc         } {  % Named color beginning "_..."</code>
+<code>%psc             /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse</code>
+<code>%psc             /named_colors 2 copy known {get} {pop pop 0 dict} ifelse</code>
+<code>%psc             anycolor 2 copy known not {</code>
+<code>%psc                 pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec</code>
+<code>%psc             } if</code>
+<code>%psc             get mark exch aload pop counttomark 1 add -2 roll exch pop</code>
+<code>%psc         } ifelse</code>
+<code>%psc         { setcolorspace setcolor } stopped {</code>
+<code>%psc             /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec</code>
+<code>%psc         } if</code>
 <code>%psc     } def</code>
 <code>%psc </code>
 <code>%psc     % Display the border and background</code>
@@ -3674,8 +3937,8 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RENDERER renmatrix--</code>
 <code>% --REQUIRES preamble raiseerror processoptions--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2024010300 100126 98828</code>
-<code>%%BeginData:        331 ASCII Lines</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2024061800 103780 102358</code>
+<code>%%BeginData:        350 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
 <code>%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put</code>
@@ -3778,23 +4041,42 @@ div span:hover {
 <code></code>
 <code>    } def</code>
 <code></code>
-<code>    % Set RGB or CMYK color depending on length of given hex string</code>
+<code>    % Set RGB or CMYK color, or some other color by name</code>
 <code>%psc     /setanycolor {</code>
 <code>%psc         /anycolor exch def</code>
-<code>%psc         anycolor length dup 6 ne exch 8 ne and {</code>
-<code>%psc             /bwipp.renmatrixBadColorLength (Colors must be 6 or 8 characters) //raiseerror exec</code>
+<code>%psc         anycolor length 1 lt {</code>
+<code>%psc             /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec</code>
 <code>%psc         } if</code>
-<code>%psc         anycolor {</code>
-<code>%psc             dup     dup 48 ge exch  59 le and  % 0-9</code>
-<code>%psc             1 index dup 65 ge exch  70 le and  % A-F</code>
-<code>%psc             2 index dup 97 ge exch 102 le and  % a-f</code>
-<code>%psc             or or exch pop not {</code>
-<code>%psc                 /bwipp.renmatrixBadColorCharacter (Colors must be in hexadecimal notation) //raiseerror exec</code>
+<code>%psc         anycolor 0 get 95 ne {  % RGB or CMYK</code>
+<code>%psc             anycolor length dup 6 ne exch 8 ne and {</code>
+<code>%psc                 /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec</code>
 <code>%psc             } if</code>
-<code>%psc         } forall</code>
-<code>%psc         anycolor length 6 eq { (&lt;      &gt;) } { (&lt;        &gt;) } ifelse dup length string copy</code>
-<code>%psc         dup 1 anycolor putinterval cvx exec {255 div} forall</code>
-<code>%psc         anycolor length 6 eq { setrgbcolor } { setcmykcolor } ifelse</code>
+<code>%psc             mark</code>
+<code>%psc             0 2 anycolor length 1 sub {</code>
+<code>%psc                 anycolor exch 2 getinterval 0 exch {</code>
+<code>%psc                     dup dup 48 ge exch  57 le and {48 sub} {  % 0-9</code>
+<code>%psc                     dup dup 65 ge exch  70 le and {55 sub} {  % A-F</code>
+<code>%psc                     dup dup 97 ge exch 102 le and {87 sub} {  % a-f</code>
+<code>%psc                         cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec</code>
+<code>%psc                     } ifelse } ifelse } ifelse</code>
+<code>%psc                     exch 16 mul add</code>
+<code>%psc                 } forall</code>
+<code>%psc                 255 div</code>
+<code>%psc             } for</code>
+<code>%psc             counttomark</code>
+<code>%psc             dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse</code>
+<code>%psc             exch 2 add -1 roll pop  % clear mark</code>
+<code>%psc         } {  % Named color beginning "_..."</code>
+<code>%psc             /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse</code>
+<code>%psc             /named_colors 2 copy known {get} {pop pop 0 dict} ifelse</code>
+<code>%psc             anycolor 2 copy known not {</code>
+<code>%psc                 pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec</code>
+<code>%psc             } if</code>
+<code>%psc             get mark exch aload pop counttomark 1 add -2 roll exch pop</code>
+<code>%psc         } ifelse</code>
+<code>%psc         { setcolorspace setcolor } stopped {</code>
+<code>%psc             /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec</code>
+<code>%psc         } if</code>
 <code>%psc     } def</code>
 <code></code>
 <code>    % Plot a layer of single colour</code>
@@ -4014,8 +4296,8 @@ div span:hover {
 <code></code>
 <code>% --BEGIN RENDERER renmaximatrix--</code>
 <code>% --REQUIRES preamble raiseerror processoptions--</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2024010300 62291 61901</code>
-<code>%%BeginData:        110 ASCII Lines</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2024061800 66041 65559</code>
+<code>%%BeginData:        129 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
 <code>%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put</code>
@@ -4040,23 +4322,42 @@ div span:hover {
 <code>%psc     {def} forall</code>
 <code>%psc     opt currentdict /opt undef currentdict //processoptions exec pop</code>
 <code>%psc </code>
-<code>%psc     % Set RGB or CMYK color depending on length of given hex string</code>
+<code>%psc     % Set RGB or CMYK color, or some other color by name</code>
 <code>%psc     /setanycolor {</code>
 <code>%psc         /anycolor exch def</code>
-<code>%psc         anycolor length dup 6 ne exch 8 ne and {</code>
-<code>%psc             /bwipp.renmaximatrixBadColorLength (Colors must be 6 or 8 characters) //raiseerror exec</code>
+<code>%psc         anycolor length 1 lt {</code>
+<code>%psc             /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec</code>
 <code>%psc         } if</code>
-<code>%psc         anycolor {</code>
-<code>%psc             dup     dup 48 ge exch  59 le and  % 0-9</code>
-<code>%psc             1 index dup 65 ge exch  70 le and  % A-F</code>
-<code>%psc             2 index dup 97 ge exch 102 le and  % a-f</code>
-<code>%psc             or or exch pop not {</code>
-<code>%psc                 /bwipp.renmaximatrixBadColorCharacter (Colors must be in hexadecimal notation) //raiseerror exec</code>
+<code>%psc         anycolor 0 get 95 ne {  % RGB or CMYK</code>
+<code>%psc             anycolor length dup 6 ne exch 8 ne and {</code>
+<code>%psc                 /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec</code>
 <code>%psc             } if</code>
-<code>%psc         } forall</code>
-<code>%psc         anycolor length 6 eq { (&lt;      &gt;) } { (&lt;        &gt;) } ifelse dup length string copy</code>
-<code>%psc         dup 1 anycolor putinterval cvx exec {255 div} forall</code>
-<code>%psc         anycolor length 6 eq { setrgbcolor } { setcmykcolor } ifelse</code>
+<code>%psc             mark</code>
+<code>%psc             0 2 anycolor length 1 sub {</code>
+<code>%psc                 anycolor exch 2 getinterval 0 exch {</code>
+<code>%psc                     dup dup 48 ge exch  57 le and {48 sub} {  % 0-9</code>
+<code>%psc                     dup dup 65 ge exch  70 le and {55 sub} {  % A-F</code>
+<code>%psc                     dup dup 97 ge exch 102 le and {87 sub} {  % a-f</code>
+<code>%psc                         cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec</code>
+<code>%psc                     } ifelse } ifelse } ifelse</code>
+<code>%psc                     exch 16 mul add</code>
+<code>%psc                 } forall</code>
+<code>%psc                 255 div</code>
+<code>%psc             } for</code>
+<code>%psc             counttomark</code>
+<code>%psc             dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse</code>
+<code>%psc             exch 2 add -1 roll pop  % clear mark</code>
+<code>%psc         } {  % Named color beginning "_..."</code>
+<code>%psc             /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse</code>
+<code>%psc             /named_colors 2 copy known {get} {pop pop 0 dict} ifelse</code>
+<code>%psc             anycolor 2 copy known not {</code>
+<code>%psc                 pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec</code>
+<code>%psc             } if</code>
+<code>%psc             get mark exch aload pop counttomark 1 add -2 roll exch pop</code>
+<code>%psc         } ifelse</code>
+<code>%psc         { setcolorspace setcolor } stopped {</code>
+<code>%psc             /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec</code>
+<code>%psc         } if</code>
 <code>%psc     } def</code>
 <code>%psc </code>
 <code>%psc     gsave</code>
@@ -4136,7 +4437,7 @@ div span:hover {
 <code>% --EXAM: 90200</code>
 <code>% --EXOP: includetext guardwhitespace</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2024010300 67628 67436</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2024061800 67692 67372</code>
 <code>%%BeginData:        133 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -4244,7 +4545,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [16{height}repeat]</code>
 <code>    /bbs [16{0}repeat]</code>
@@ -4281,7 +4582,7 @@ div span:hover {
 <code>% --EXAM: 05</code>
 <code>% --EXOP: includetext guardwhitespace</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2024010300 66275 66010</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2024061800 66355 66066</code>
 <code>%%BeginData:        119 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -4375,7 +4676,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [12{height}repeat]</code>
 <code>    /bbs [12{0}repeat]</code>
@@ -4412,7 +4713,7 @@ div span:hover {
 <code>% --EXAM: 9520123456788</code>
 <code>% --EXOP: includetext guardwhitespace</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2024010300 85896 82167</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2024061800 85960 82207</code>
 <code>%%BeginData:        208 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -4596,7 +4897,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs sbs</code>
 <code>    /bhs bhs</code>
 <code>    /bbs bbs</code>
@@ -4632,7 +4933,7 @@ div span:hover {
 <code>% --EXAM: 95200002</code>
 <code>% --EXOP: includetext guardwhitespace</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2024010300 83246 79418</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2024061800 83206 79458</code>
 <code>%%BeginData:        189 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -4796,7 +5097,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs sbs</code>
 <code>    /bhs bhs</code>
 <code>    /bbs bbs</code>
@@ -4833,7 +5134,7 @@ div span:hover {
 <code>% --EXAM: 012345000058</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2024010300 90873 87086</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2024061800 90849 86934</code>
 <code>%%BeginData:        241 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -5050,7 +5351,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs sbs</code>
 <code>    /bhs bhs</code>
 <code>    /bbs bbs</code>
@@ -5086,7 +5387,7 @@ div span:hover {
 <code>% --EXAM: 01234558</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2024010300 95502 91734</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2024061800 95374 91814</code>
 <code>%%BeginData:        280 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -5342,7 +5643,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs sbs</code>
 <code>    /bhs bhs</code>
 <code>    /bbs bbs</code>
@@ -5378,7 +5679,7 @@ div span:hover {
 <code>% --EXAM: 978-1-56581-231-4 90000</code>
 <code>% --EXOP: includetext guardwhitespace</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2024010300 94606 93597</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2024061800 94582 93597</code>
 <code>%%BeginData:        238 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -5628,7 +5929,7 @@ div span:hover {
 <code>% --EXAM: 979-0-2605-3211-3</code>
 <code>% --EXOP: includetext guardwhitespace</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2024010300 91050 90286</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2024061800 90946 90286</code>
 <code>%%BeginData:        217 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -5857,7 +6158,7 @@ div span:hover {
 <code>% --EXAM: 0311-175X 00 17</code>
 <code>% --EXOP: includetext guardwhitespace</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2024010300 82522 81834</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2024061800 82498 81962</code>
 <code>%%BeginData:        160 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -6029,7 +6330,7 @@ div span:hover {
 <code>% --EXAM: 0642118</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp mands 0.0 2024010300 72503 72406</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp mands 0.0 2024061800 72607 72406</code>
 <code>%%BeginData:         73 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -6114,7 +6415,7 @@ div span:hover {
 <code>% --EXAM: Count01234567!</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2024010300 126393 129397</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2024061800 126433 129309</code>
 <code>%%BeginData:        424 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -6519,7 +6820,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -6550,7 +6851,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(3103)000123</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2024010300 80703 80334</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2024061800 80639 80270</code>
 <code>%%BeginData:        102 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -6664,7 +6965,7 @@ div span:hover {
 <code>% --EXAM: (01) 0 952 8765 43210 8</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2024010300 72646 72462</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2024061800 72518 72462</code>
 <code>%%BeginData:         92 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -6768,7 +7069,7 @@ div span:hover {
 <code>% --EXAM: (00) 0 9528765 432101234 6</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2024010300 72658 72469</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2024061800 72530 72469</code>
 <code>%%BeginData:         92 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -6872,7 +7173,7 @@ div span:hover {
 <code>% --EXAM: THIS IS CODE 39</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2024010300 73033 72709</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2024061800 72993 72621</code>
 <code>%%BeginData:        141 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -6993,7 +7294,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -7025,7 +7326,7 @@ div span:hover {
 <code>% --EXAM: Code39 Ext!</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2024010300 72240 72124</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2024061800 72344 72124</code>
 <code>%%BeginData:         99 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -7136,7 +7437,7 @@ div span:hover {
 <code>% --EXAM: 01234567</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2024010300 67769 67498</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2024061800 67745 67498</code>
 <code>%%BeginData:         87 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -7235,7 +7536,7 @@ div span:hover {
 <code>% --EXAM: 123456</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2024010300 67616 67270</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2024061800 67592 67270</code>
 <code>%%BeginData:         87 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -7334,7 +7635,7 @@ div span:hover {
 <code>% --EXAM: THIS IS CODE 93</code>
 <code>% --EXOP: includetext includecheck</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2024010300 69335 72377</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2024061800 69391 72329</code>
 <code>%%BeginData:        134 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -7448,7 +7749,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -7480,7 +7781,7 @@ div span:hover {
 <code>% --EXAM: Code93 Ext!</code>
 <code>% --EXOP: includetext includecheck</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2024010300 73092 72924</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2024061800 73092 73076</code>
 <code>%%BeginData:        107 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -7599,7 +7900,7 @@ div span:hover {
 <code>% --EXAM: 2401234567</code>
 <code>% --EXOP: height=0.5 includecheck includetext includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2024010300 71069 70746</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2024061800 71149 70698</code>
 <code>%%BeginData:        147 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -7724,7 +8025,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -7758,7 +8059,7 @@ div span:hover {
 <code>% --EXAM: 0 952 1234 54321 3</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2024010300 70300 70052</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2024061800 70196 70052</code>
 <code>%%BeginData:         97 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -7867,7 +8168,7 @@ div span:hover {
 <code>% --EXAM: 563102430313</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2024010300 66534 66390</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2024061800 66534 66390</code>
 <code>%%BeginData:         78 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -7957,7 +8258,7 @@ div span:hover {
 <code>% --EXAM: 21348075016401</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2024010300 66526 66386</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2024061800 66526 66386</code>
 <code>%%BeginData:         78 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -8047,7 +8348,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2024010300 117143 116039</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2024061800 117119 115935</code>
 <code>%%BeginData:        437 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 20 dict</code>
@@ -8355,7 +8656,7 @@ div span:hover {
 <code>        ] def</code>
 <code></code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renlinear</code>
+<code>        /ren /renlinear</code>
 <code>        /sbs sbs</code>
 <code>        /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>        /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -8459,7 +8760,7 @@ div span:hover {
 <code></code>
 <code>        % Return the arguments</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx 50</code>
 <code>        /pixy pixy</code>
@@ -8496,7 +8797,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2024010300 67838 67653</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2024061800 67862 67653</code>
 <code>%%BeginData:         66 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -8574,7 +8875,7 @@ div span:hover {
 <code>% --EXAM: (01)24012345678905</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2024010300 67986 67781</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2024061800 68114 67781</code>
 <code>%%BeginData:         66 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -8652,7 +8953,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2024010300 67864 67669</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2024061800 67888 67669</code>
 <code>%%BeginData:         66 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -8730,7 +9031,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2024010300 91408 90555</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2024061800 91432 90555</code>
 <code>%%BeginData:        281 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 20 dict</code>
@@ -8990,7 +9291,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs sbs</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -9023,7 +9324,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(3103)000123</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2024010300 248343 246629</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2024061800 248503 246477</code>
 <code>%%BeginData:        864 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -9761,7 +10062,7 @@ div span:hover {
 <code>        ] def</code>
 <code></code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renlinear</code>
+<code>        /ren /renlinear</code>
 <code>        /sbs sbs</code>
 <code>        /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>        /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -9862,7 +10163,7 @@ div span:hover {
 <code>        ] def</code>
 <code></code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixs length pixx idiv</code>
@@ -9899,7 +10200,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(3103)000123</code>
 <code>% --EXOP: segments=4</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2024010300 72851 72833</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2024061800 72851 72809</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -9947,7 +10248,7 @@ div span:hover {
 <code>% --EXAM: (8110)106141416543213500110000310123196000</code>
 <code>% --EXOP: includetext segments=8</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2024010300 83739 86866</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2024061800 83651 86802</code>
 <code>%%BeginData:         89 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10048,7 +10349,7 @@ div span:hover {
 <code>% --EXAM: 117480</code>
 <code>% --EXOP: showborder</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2024010300 55259 54920</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2024061800 55195 54856</code>
 <code>%%BeginData:         79 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10110,7 +10411,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs sbs</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -10139,7 +10440,7 @@ div span:hover {
 <code>% --EXAM: 117480</code>
 <code>% --EXOP: includetext showborder</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2024010300 56506 56298</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2024061800 56458 56274</code>
 <code>%%BeginData:         87 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10208,7 +10509,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bhs bhs</code>
 <code>    /bbs bbs</code>
 <code>    /sbs [encstr length 2 mul {spc} repeat]</code>
@@ -10238,7 +10539,7 @@ div span:hover {
 <code>% --EXAM: 01234567</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2024010300 73534 73053</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2024061800 73598 72989</code>
 <code>%%BeginData:        154 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10372,7 +10673,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -10404,7 +10705,7 @@ div span:hover {
 <code>% --EXAM: 01234567</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2024010300 60390 60228</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2024061800 60262 60228</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10452,7 +10753,7 @@ div span:hover {
 <code>% --EXAM: 01234567</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2024010300 60360 60204</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2024061800 60232 60204</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10500,7 +10801,7 @@ div span:hover {
 <code>% --EXAM: 01234567</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2024010300 60370 60212</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2024061800 60242 60212</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10548,7 +10849,7 @@ div span:hover {
 <code>% --EXAM: 01234567</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2024010300 60360 60204</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2024061800 60232 60204</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10596,7 +10897,7 @@ div span:hover {
 <code>% --EXAM: 01234567</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2024010300 60385 60224</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2024061800 60257 60224</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10644,7 +10945,7 @@ div span:hover {
 <code>% --EXAM: 0123456789</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2024010300 74842 74390</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2024061800 74906 74430</code>
 <code>%%BeginData:        158 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10782,7 +11083,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -10814,7 +11115,7 @@ div span:hover {
 <code>% --EXAM: BC412SEMI</code>
 <code>% --EXOP: semi includetext includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2024010300 76005 75371</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2024061800 75965 75411</code>
 <code>%%BeginData:        192 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -10986,7 +11287,7 @@ div span:hover {
 <code>    % Return the arguments</code>
 <code>    /sbs sbs 0 pos getinterval def</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -11018,7 +11319,7 @@ div span:hover {
 <code>% --EXAM: A0123456789B</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2024010300 76015 75425</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2024061800 76079 75465</code>
 <code>%%BeginData:        156 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -11154,7 +11455,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -11186,7 +11487,7 @@ div span:hover {
 <code>% --EXAM: 0123456709498765432101234567891</code>
 <code>% --EXOP: barcolor=FF0000</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2024010300 110314 109785</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2024061800 110290 109737</code>
 <code>%%BeginData:        347 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -11511,7 +11812,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bbs bbs</code>
 <code>    /bhs bhs</code>
 <code>    /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]</code>
@@ -11545,7 +11846,7 @@ div span:hover {
 <code>% --EXAM: 01234</code>
 <code>% --EXOP: includetext includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2024010300 70838 70525</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2024061800 70918 70581</code>
 <code>%%BeginData:        136 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -11661,7 +11962,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bhs bhs</code>
 <code>    /bbs [bhs length {0} repeat]</code>
 <code>    /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]</code>
@@ -11693,7 +11994,7 @@ div span:hover {
 <code>% --EXAM: 01234567890</code>
 <code>% --EXOP: includetext includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2024010300 70698 70389</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2024061800 70762 70453</code>
 <code>%%BeginData:        137 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -11810,7 +12111,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bhs bhs</code>
 <code>    /bbs [bhs length {0} repeat]</code>
 <code>    /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]</code>
@@ -11842,7 +12143,7 @@ div span:hover {
 <code>% --EXAM: LE28HS9Z</code>
 <code>% --EXOP: includetext barcolor=FF0000</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2024010300 71959 71677</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2024061800 72023 71509</code>
 <code>%%BeginData:        145 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -11967,7 +12268,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bbs bbs</code>
 <code>    /bhs bhs</code>
 <code>    /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]</code>
@@ -11999,7 +12300,7 @@ div span:hover {
 <code>% --EXAM: 5956439111ABA 9</code>
 <code>% --EXOP: includetext custinfoenc=character</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2024010300 87272 86741</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2024061800 87336 86781</code>
 <code>%%BeginData:        235 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -12214,7 +12515,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bbs bbs</code>
 <code>    /bhs bhs</code>
 <code>    /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]</code>
@@ -12246,7 +12547,7 @@ div span:hover {
 <code>% --EXAM: 1231FZ13XHS</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2024010300 67079 66848</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2024061800 67159 66904</code>
 <code>%%BeginData:        111 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -12337,7 +12638,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bbs bbs</code>
 <code>    /bhs bhs</code>
 <code>    /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]</code>
@@ -12369,7 +12670,7 @@ div span:hover {
 <code>% --EXAM: 6540123789-A-K-Z</code>
 <code>% --EXOP: includetext includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2024010300 74254 73854</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2024061800 74310 73910</code>
 <code>%%BeginData:        176 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -12525,7 +12826,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bbs bbs</code>
 <code>    /bhs bhs</code>
 <code>    /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]</code>
@@ -12557,7 +12858,7 @@ div span:hover {
 <code>% --EXAM: 0123456789</code>
 <code>% --EXOP: includetext includecheck includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2024010300 79911 79532</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2024061800 79975 79468</code>
 <code>%%BeginData:        168 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -12705,7 +13006,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -12737,7 +13038,7 @@ div span:hover {
 <code>% --EXAM: 01234ABCD</code>
 <code>% --EXOP: includetext includecheckintext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2024010300 73583 73305</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2024061800 73647 73217</code>
 <code>%%BeginData:        146 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -12863,7 +13164,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -12895,7 +13196,7 @@ div span:hover {
 <code>% --EXAM: ABCDEF</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2024010300 74651 77695</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2024061800 74587 77631</code>
 <code>%%BeginData:        173 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -13048,7 +13349,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -13080,7 +13381,7 @@ div span:hover {
 <code>% --EXAM: 01234567</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2024010300 63095 63061</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2024061800 63095 63061</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -13128,7 +13429,7 @@ div span:hover {
 <code>% --EXAM: ABC123</code>
 <code>% --EXOP: version=b inkspread=-0.5 parsefnc includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2024010300 116031 118710</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2024061800 115967 118646</code>
 <code>%%BeginData:        395 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -13502,7 +13803,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -13535,7 +13836,7 @@ div span:hover {
 <code>% --EXAM: CODABLOCK F 34567890123456789010040digit</code>
 <code>% --EXOP: columns=8</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2024010300 140106 142562</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2024061800 140002 142330</code>
 <code>%%BeginData:        535 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -14051,7 +14352,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx symwid</code>
 <code>    /pixy pixs length symwid idiv</code>
@@ -14082,7 +14383,7 @@ div span:hover {
 <code>% --EXAM: Abcd-1234567890-wxyZ</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2024010300 163595 165899</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2024061800 163491 166027</code>
 <code>%%BeginData:        740 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -14803,7 +15104,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx 81</code>
 <code>    /pixy pixs length 81 idiv</code>
@@ -14834,7 +15135,7 @@ div span:hover {
 <code>% --EXAM: MULTIPLE ROWS IN CODE 49</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2024010300 265413 278096</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2024061800 265309 278096</code>
 <code>%%BeginData:       1096 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -15911,7 +16212,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx 81</code>
 <code>    /pixy pixs length 81 idiv</code>
@@ -15942,7 +16243,7 @@ div span:hover {
 <code>% --EXAM: 3493</code>
 <code>% --EXOP: height=0.5 includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2024010300 133320 132535</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2024061800 133384 132367</code>
 <code>%%BeginData:        252 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -16173,7 +16474,7 @@ div span:hover {
 <code>%psc </code>
 <code>%psc     % Return the arguments</code>
 <code>%psc     &lt;&lt;</code>
-<code>%psc     /ren //renlinear</code>
+<code>%psc     /ren /renlinear</code>
 <code>%psc     /sbs sbs</code>
 <code>%psc     /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>%psc     /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -16206,7 +16507,7 @@ div span:hover {
 <code>% --EXAM: 11099</code>
 <code>% --EXOP: inkspread=-0.25 showborder borderleft=0 borderright=0</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2024010300 62583 62412</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2024061800 62663 62340</code>
 <code>%%BeginData:         82 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -16270,7 +16571,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [sbs {48 sub} forall]</code>
 <code>    /bhs [sbs length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [sbs length 1 add 2 idiv {0} repeat]</code>
@@ -16300,7 +16601,7 @@ div span:hover {
 <code>% --EXAM: 331132131313411122131311333213114131131221323</code>
 <code>% --EXOP: height=0.5</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2024010300 50104 50015</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2024061800 50040 49975</code>
 <code>%%BeginData:         43 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -16328,7 +16629,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /sbs [barcode {48 sub} forall]</code>
 <code>    /bhs [barcode length 1 add 2 idiv {height} repeat]</code>
 <code>    /bbs [barcode length 1 add 2 idiv {0} repeat]</code>
@@ -16355,7 +16656,7 @@ div span:hover {
 <code>% --EXAM: FATDAFTDAD</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2024010300 53715 53468</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2024061800 53651 53508</code>
 <code>%%BeginData:         71 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -16411,7 +16712,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
+<code>    /ren /renlinear</code>
 <code>    /bbs bbs</code>
 <code>    /bhs bhs</code>
 <code>    /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]</code>
@@ -16433,22 +16734,25 @@ div span:hover {
 <code>% --END ENCODER daft--</code>
 <code></code>
 <code>% --BEGIN ENCODER symbol--</code>
-<code>% --REQUIRES preamble raiseerror processoptions renlinear--</code>
+<code>% --REQUIRES preamble loadctx unloadctx raiseerror processoptions renlinear renmatrix--</code>
 <code>% --DESC: Miscellaneous symbols</code>
 <code>% --EXAM: fima</code>
 <code>% --EXOP: backgroundcolor=DD000011</code>
-<code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2024010300 54198 53937</code>
-<code>%%BeginData:         70 ASCII Lines</code>
+<code>% --RNDR: renlinear renmatrix</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2024061800 72877 72390</code>
+<code>%%BeginData:         87 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
+<code>%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put</code>
+<code>%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put</code>
 <code>%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put</code>
 <code>%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put</code>
 <code>%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put</code>
+<code>%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put</code>
 <code>%psc begin</code>
 <code>/symbol {</code>
 <code></code>
-<code>    20 dict begin            % Confine variables to local scope</code>
+<code>    20 dict begin</code>
 <code></code>
 <code>    %psc /ctx null def</code>
 <code>    /dontdraw false def</code>
@@ -16456,32 +16760,52 @@ div span:hover {
 <code>    currentdict //processoptions exec /options exch def</code>
 <code>    /barcode exch def</code>
 <code></code>
+<code>    /symbol //loadctx exec</code>
+<code></code>
+<code>{  % context</code>
+<code></code>
+<code>    /fimasbs [2.25 2.25 2.25 11.25 2.25 11.25 2.25 2.25 2.25] def</code>
+<code>    /fimabhs [fimasbs length 2 idiv 1 add {.625} repeat] def</code>
+<code>    /fimabbs [fimasbs length 2 idiv 1 add {0   } repeat] def</code>
+<code></code>
+<code>    /fimbsbs [2.25 6.75 2.25 2.25 2.25 6.25 2.25 2.25 2.25 6.75 2.25] def</code>
+<code>    /fimbbhs [fimbsbs length 2 idiv 1 add {.625} repeat] def</code>
+<code>    /fimbbbs [fimbsbs length 2 idiv 1 add {0   } repeat] def</code>
+<code></code>
+<code>    /fimcsbs [2.25 2.25 2.25 6.75 2.25 6.75 2.25 6.75 2.25 2.25 2.25] def</code>
+<code>    /fimcbhs [fimcsbs length 2 idiv 1 add {.625} repeat] def</code>
+<code>    /fimcbbs [fimcsbs length 2 idiv 1 add {0   } repeat] def</code>
+<code></code>
+<code>    /fimdsbs [2.25 2.25 2.25 2.25 2.25 6.75 2.25 6.75 2.25 2.25 2.25 2.25 2.25] def</code>
+<code>    /fimdbhs [fimdsbs length 2 idiv 1 add {.625} repeat] def</code>
+<code>    /fimdbbs [fimdsbs length 2 idiv 1 add {0   } repeat] def</code>
+<code></code>
+<code>    /fimesbs [2.25 6.75 2.25 15.75 2.25 6.75 2.25] def</code>
+<code>    /fimebhs [fimesbs length 2 idiv 1 add {.625} repeat] def</code>
+<code>    /fimebbs [fimesbs length 2 idiv 1 add {0   } repeat] def</code>
+<code></code>
+<code>    /zebrasbs [100 { 1 1 } repeat 1] def</code>
+<code>    /zebrabhs [zebrasbs length 2 idiv 1 add {1} repeat] def</code>
+<code>    /zebrabbs [zebrasbs length 2 idiv 1 add {0} repeat] def</code>
+<code></code>
+<code>    /checksize 199 def</code>
+<code>    /checkpixs [ checksize dup mul 2 idiv {1 0} repeat 1 ] def</code>
+<code></code>
+<code>    /renmap &lt;&lt;</code>
+<code>        /renlinear //renlinear</code>
+<code>        /renmatrix //renmatrix</code>
+<code>    &gt;&gt; def</code>
+<code></code>
+<code>} ctxdef</code>
+<code></code>
 <code>    /symbols &lt;&lt;</code>
-<code>        /fima {</code>
-<code>            /sbs [2.25 2.25 2.25 11.25 2.25 11.25 2.25 2.25 2.25] def</code>
-<code>            /bhs [.625 .625 .625 .625 .625] def</code>
-<code>            /bbs [0 0 0 0 0] def</code>
-<code>        } bind</code>
-<code>        /fimb {</code>
-<code>            /sbs [2.25 6.75 2.25 2.25 2.25 6.25 2.25 2.25 2.25 6.75 2.25] def</code>
-<code>            /bhs [.625 .625 .625 .625 .625 .625] def</code>
-<code>            /bbs [0 0 0 0 0 0] def</code>
-<code>        } bind</code>
-<code>        /fimc {</code>
-<code>            /sbs [2.25 2.25 2.25 6.75 2.25 6.75 2.25 6.75 2.25 2.25 2.25] def</code>
-<code>            /bhs [.625 .625 .625 .625 .625 .625] def</code>
-<code>            /bbs [0 0 0 0 0 0] def</code>
-<code>        } bind</code>
-<code>        /fimd {</code>
-<code>            /sbs [2.25 2.25 2.25 2.25 2.25 6.75 2.25 6.75 2.25 2.25 2.25 2.25 2.25] def</code>
-<code>            /bhs [.625 .625 .625 .625 .625 .625 .625] def</code>
-<code>            /bbs [0 0 0 0 0 0 0] def</code>
-<code>        } bind</code>
-<code>        /fime {</code>
-<code>            /sbs [2.25 6.75 2.25 15.75 2.25 6.75 2.25] def</code>
-<code>            /bhs [.625 .625 .625 .625 .625 .625 .625] def</code>
-<code>            /bbs [0 0 0 0 0 0 0] def</code>
-<code>        } bind</code>
+<code>        /fima  { &lt;&lt; /ren /renlinear  /sbs fimasbs   /bhs fimabhs   /bbs fimabbs &gt;&gt;  }</code>
+<code>        /fimb  { &lt;&lt; /ren /renlinear  /sbs fimbsbs   /bhs fimbbhs   /bbs fimbbbs &gt;&gt;  }</code>
+<code>        /fimc  { &lt;&lt; /ren /renlinear  /sbs fimcsbs   /bhs fimcbhs   /bbs fimcbbs &gt;&gt;  }</code>
+<code>        /fimd  { &lt;&lt; /ren /renlinear  /sbs fimdsbs   /bhs fimdbhs   /bbs fimdbbs &gt;&gt;  }</code>
+<code>        /fime  { &lt;&lt; /ren /renlinear  /sbs fimesbs   /bhs fimebhs   /bbs fimebbs &gt;&gt;  }</code>
+<code>        /zebra { &lt;&lt; /ren /renlinear  /sbs zebrasbs  /bhs zebrabhs  /bbs zebrabbs &gt;&gt; }</code>
+<code>        /check { &lt;&lt; /ren /renmatrix  /pixs checkpixs  /pixx checksize  /pixy checksize  /height checksize 72 div  /width checksize 72 div &gt;&gt; }</code>
 <code>    &gt;&gt; def</code>
 <code></code>
 <code>    % Valiate input</code>
@@ -16490,17 +16814,11 @@ div span:hover {
 <code>    } if</code>
 <code></code>
 <code>    symbols barcode get exec</code>
+<code>    dup /opt options put</code>
 <code></code>
-<code>    % Return the arguments</code>
-<code>    &lt;&lt;</code>
-<code>    /ren //renlinear</code>
-<code>    /sbs sbs</code>
-<code>    /bhs bhs</code>
-<code>    /bbs bbs</code>
-<code>    /opt options</code>
-<code>    &gt;&gt;</code>
+<code>    dontdraw not { dup /ren get renmap exch get exec } if</code>
 <code></code>
-<code>    dontdraw not //renlinear if</code>
+<code>    //unloadctx exec</code>
 <code></code>
 <code>    end</code>
 <code></code>
@@ -16520,7 +16838,7 @@ div span:hover {
 <code>% --EXAM: This is PDF417</code>
 <code>% --EXOP: columns=2</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2024010300 211198 212970</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2024061800 211006 212906</code>
 <code>%%BeginData:        972 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -17469,7 +17787,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx rwid</code>
 <code>    /pixy r rowmult mul</code>
@@ -17504,7 +17822,7 @@ div span:hover {
 <code>% --EXAM: This is compact PDF417</code>
 <code>% --EXOP: columns=2</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2024010300 63089 63056</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2024061800 63089 63184</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -17552,7 +17870,7 @@ div span:hover {
 <code>% --EXAM: MicroPDF417</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2024010300 230277 238718</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2024061800 229901 238550</code>
 <code>%%BeginData:       1107 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -18636,7 +18954,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx rwid</code>
 <code>    /pixy r rowmult mul</code>
@@ -18671,7 +18989,7 @@ div span:hover {
 <code>% --EXAM: This is Data Matrix!</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2024010300 216644 238847</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2024061800 213340 235647</code>
 <code>%%BeginData:        956 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -19499,38 +19817,38 @@ div span:hover {
 <code></code>
 <code>    % Placement patterns</code>
 <code>    /dmn [</code>
-<code>        { 2 copy 2 sub exch 2 sub exch } bind  { 2 copy 1 sub exch 2 sub exch } bind</code>
-<code>        { 2 copy 2 sub exch 1 sub exch } bind  { 2 copy 1 sub exch 1 sub exch } bind</code>
-<code>        { 2 copy exch 1 sub exch } bind        { 2 copy 2 sub } bind</code>
-<code>        { 2 copy 1 sub } bind                  { 2 copy } bind</code>
+<code>        { 2 copy 2 sub exch 2 sub exch }  { 2 copy 1 sub exch 2 sub exch }</code>
+<code>        { 2 copy 2 sub exch 1 sub exch }  { 2 copy 1 sub exch 1 sub exch }</code>
+<code>        { 2 copy exch 1 sub exch }        { 2 copy 2 sub }</code>
+<code>        { 2 copy 1 sub }                  { 2 copy }</code>
 <code>    ] def</code>
 <code></code>
 <code>    /dmc1 [</code>
-<code>        { mrows 1 sub 0 } bind  { mrows 1 sub 1 } bind</code>
-<code>        { mrows 1 sub 2 } bind  { 0 mcols 2 sub } bind</code>
-<code>        { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind</code>
-<code>        { 2 mcols 1 sub } bind  { 3 mcols 1 sub } bind</code>
+<code>        { mrows 1 sub 0 }  { mrows 1 sub 1 }</code>
+<code>        { mrows 1 sub 2 }  { 0 mcols 2 sub }</code>
+<code>        { 0 mcols 1 sub }  { 1 mcols 1 sub }</code>
+<code>        { 2 mcols 1 sub }  { 3 mcols 1 sub }</code>
 <code>    ] def</code>
 <code></code>
 <code>    /dmc2 [</code>
-<code>        { mrows 3 sub 0 } bind  { mrows 2 sub 0 } bind</code>
-<code>        { mrows 1 sub 0 } bind  { 0 mcols 4 sub } bind</code>
-<code>        { 0 mcols 3 sub } bind  { 0 mcols 2 sub } bind</code>
-<code>        { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind</code>
+<code>        { mrows 3 sub 0 }  { mrows 2 sub 0 }</code>
+<code>        { mrows 1 sub 0 }  { 0 mcols 4 sub }</code>
+<code>        { 0 mcols 3 sub }  { 0 mcols 2 sub }</code>
+<code>        { 0 mcols 1 sub }  { 1 mcols 1 sub }</code>
 <code>    ] def</code>
 <code></code>
 <code>    /dmc3 [</code>
-<code>        { mrows 3 sub 0 } bind  { mrows 2 sub 0 } bind</code>
-<code>        { mrows 1 sub 0 } bind  { 0 mcols 2 sub } bind</code>
-<code>        { 0 mcols 1 sub } bind  { 1 mcols 1 sub } bind</code>
-<code>        { 2 mcols 1 sub } bind  { 3 mcols 1 sub } bind</code>
+<code>        { mrows 3 sub 0 }  { mrows 2 sub 0 }</code>
+<code>        { mrows 1 sub 0 }  { 0 mcols 2 sub }</code>
+<code>        { 0 mcols 1 sub }  { 1 mcols 1 sub }</code>
+<code>        { 2 mcols 1 sub }  { 3 mcols 1 sub }</code>
 <code>    ] def</code>
 <code></code>
 <code>    /dmc4 [</code>
-<code>        { mrows 1 sub 0 } bind  { mrows 1 sub mcols 1 sub } bind</code>
-<code>        { 0 mcols 3 sub } bind  { 0 mcols 2 sub } bind</code>
-<code>        { 0 mcols 1 sub } bind  { 1 mcols 3 sub } bind</code>
-<code>        { 1 mcols 2 sub } bind  { 1 mcols 1 sub } bind</code>
+<code>        { mrows 1 sub 0 }  { mrows 1 sub mcols 1 sub }</code>
+<code>        { 0 mcols 3 sub }  { 0 mcols 2 sub }</code>
+<code>        { 0 mcols 1 sub }  { 1 mcols 3 sub }</code>
+<code>        { 1 mcols 2 sub }  { 1 mcols 1 sub }</code>
 <code>    ] def</code>
 <code></code>
 <code>    /mmat [ mrows mcols mul {-1} repeat ] def</code>
@@ -19604,7 +19922,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx cols</code>
 <code>    /pixy rows</code>
@@ -19639,7 +19957,7 @@ div span:hover {
 <code>% --EXAM: 1234</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2024010300 63145 63104</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2024061800 63145 63232</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -19687,7 +20005,7 @@ div span:hover {
 <code>% --EXAM: 1234</code>
 <code>% --EXOP: version=8x96</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2024010300 63554 63504</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2024061800 63554 63528</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 20 dict</code>
@@ -19735,7 +20053,7 @@ div span:hover {
 <code>% --EXAM: JGB 012100123412345678AB19XY1A 0             www.xyz.com</code>
 <code>% --EXOP: type=29</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2024010300 67768 67632</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2024061800 67768 67632</code>
 <code>%%BeginData:         74 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -19821,8 +20139,8 @@ div span:hover {
 <code>% --EXAM: http://goo.gl/0bis</code>
 <code>% --EXOP: eclevel=M</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2024010300 340361 387555</code>
-<code>%%BeginData:       1399 ASCII Lines</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2024061800 342318 389395</code>
+<code>%%BeginData:       1405 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
 <code>%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put</code>
@@ -19844,6 +20162,7 @@ div span:hover {
 <code>    /parse false def</code>
 <code>    /parsefnc false def</code>
 <code>    /mask -1 def</code>
+<code>    /suppresskanjimode true def</code>
 <code></code>
 <code>    currentdict //processoptions exec /options exch def</code>
 <code>    /barcode exch def</code>
@@ -20143,9 +20462,14 @@ div span:hover {
 <code>    msglen 1 sub -1 0 {</code>
 <code>        /i exch def</code>
 <code>        /barchar msg i get def</code>
-<code>        Kexcl barchar known {</code>
-<code>            /sjis i 1 add msglen lt { barchar 256 mul msg i 1 add get add } {0} ifelse def  % Zero if last char</code>
-<code>            sjis 16#8140 ge sjis 16#9FFC le and sjis 16#E040 ge sjis 16#EBBF le and or {</code>
+<code>        Kexcl barchar known suppresskanjimode not and {</code>
+<code>            i 1 add msglen lt { barchar 256 mul msg i 1 add get add } { 0 } ifelse</code>
+<code>            dup                                               % Double byte:</code>
+<code>            dup dup 16#8140 ge exch 16#9FFC le and exch       % 8140-9FFC or</code>
+<code>                dup 16#E040 ge exch 16#EBBF le and or exch    % E040-EBBF</code>
+<code>            16#FF and                                         % Low byte:</code>
+<code>            dup dup 16#40 ge exch 16#FC le and exch 16#7F ne  % 40-FC except !7F</code>
+<code>            and and {</code>
 <code>                nextKs i 0 put</code>
 <code>                numKs i numKs i 2 add get 1 add put</code>
 <code>            } {</code>
@@ -21197,7 +21521,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx cols</code>
 <code>    /pixy rows</code>
@@ -21232,7 +21556,7 @@ div span:hover {
 <code>% --EXAM:</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2024010300 72309 72208</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2024061800 72309 72208</code>
 <code>%%BeginData:        117 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -21361,7 +21685,7 @@ div span:hover {
 <code>% --EXAM: 1234</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2024010300 63569 66972</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2024061800 67001 63516</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -21409,7 +21733,7 @@ div span:hover {
 <code>% --EXAM: 1234</code>
 <code>% --EXOP: version=R17x139</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2024010300 63612 67004</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2024061800 67044 63548</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -21457,7 +21781,7 @@ div span:hover {
 <code>% --EXAM: [)&gt;^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004</code>
 <code>% --EXOP: mode=2 parse</code>
 <code>% --RNDR: renmaximatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2024010300 145168 147563</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2024061800 145144 147491</code>
 <code>%%BeginData:        670 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -22108,7 +22432,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmaximatrix</code>
+<code>    /ren /renmaximatrix</code>
 <code>    /pixs pixs</code>
 <code>    /borderleft 1.0</code>
 <code>    /borderright 1.0</code>
@@ -22139,7 +22463,7 @@ div span:hover {
 <code>% --EXAM: This is Aztec Code</code>
 <code>% --EXOP: format=full</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2024010300 195169 206938</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2024061800 195120 210322</code>
 <code>%%BeginData:        825 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -22671,7 +22995,7 @@ div span:hover {
 <code>    } forall</code>
 <code></code>
 <code>    okay not {</code>
-<code>        /bwipp.azteccodeNoValidSymbol (Maximum length exceeded) //raiseerror exec</code>
+<code>        /bwipp.aztecNoValidSymbol (Maximum length exceeded) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /layers mlyr def</code>
@@ -22945,7 +23269,7 @@ div span:hover {
 <code>    } for</code>
 <code></code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx size</code>
 <code>    /pixy size</code>
@@ -22976,7 +23300,7 @@ div span:hover {
 <code>% --EXAM: 1234</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2024010300 63121 63085</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2024061800 63121 63213</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -23024,7 +23348,7 @@ div span:hover {
 <code>% --EXAM: 1</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2024010300 63090 63061</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2024061800 63090 63189</code>
 <code>%%BeginData:         36 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -23072,7 +23396,7 @@ div span:hover {
 <code>% --EXAM: Code One</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2024010300 205866 224569</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2024061800 204954 223841</code>
 <code>%%BeginData:        921 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -23893,14 +24217,14 @@ div span:hover {
 <code></code>
 <code>    % Centre pattern</code>
 <code>    /artifact [</code>
-<code>        {cols {0} repeat} bind</code>
-<code>        {cols {1} repeat} bind</code>
-<code>        {0   cols 2 sub {1} repeat   0} bind</code>
-<code>        {0 1 cols 4 sub {0} repeat 1 0} bind</code>
-<code>        {cols 1 sub 2 idiv {-1} repeat 1 cols 1 sub 2 idiv {-1} repeat} bind</code>
-<code>        {cols 1 sub 2 idiv {-1} repeat 0 cols 1 sub 2 idiv {-1} repeat} bind</code>
-<code>        {1   cols 2 sub {0} repeat   1} bind</code>
-<code>        {1 0 cols 4 sub {1} repeat 0 1} bind</code>
+<code>        {cols {0} repeat}</code>
+<code>        {cols {1} repeat}</code>
+<code>        {0   cols 2 sub {1} repeat   0}</code>
+<code>        {0 1 cols 4 sub {0} repeat 1 0}</code>
+<code>        {cols 1 sub 2 idiv {-1} repeat 1 cols 1 sub 2 idiv {-1} repeat}</code>
+<code>        {cols 1 sub 2 idiv {-1} repeat 0 cols 1 sub 2 idiv {-1} repeat}</code>
+<code>        {1   cols 2 sub {0} repeat   1}</code>
+<code>        {1 0 cols 4 sub {1} repeat 0 1}</code>
 <code>    ] def</code>
 <code>{</code>
 <code>    /cpatmap &lt;&lt;</code>
@@ -23968,7 +24292,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx cols</code>
 <code>    /pixy rows</code>
@@ -24005,7 +24329,7 @@ div span:hover {
 <code>% --EXAM: This is Han Xin</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2024010300 313245 359891</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2024061800 312773 359523</code>
 <code>%%BeginData:        882 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -24701,11 +25025,11 @@ div span:hover {
 <code>    } forall</code>
 <code></code>
 <code>    /maskfuncs [</code>
-<code>        {pop pop 1} bind</code>
-<code>        {add 2 mod} bind</code>
-<code>        {1 index add 3 mod exch 3 mod add 2 mod} bind</code>
+<code>        {pop pop 1}</code>
+<code>        {add 2 mod}</code>
+<code>        {1 index add 3 mod exch 3 mod add 2 mod}</code>
 <code>        {2 copy mod 3 1 roll 2 copy exch mod 3 1 roll 3 mod exch 3 mod</code>
-<code>         add add add 2 mod} bind</code>
+<code>         add add add 2 mod}</code>
 <code>    ] def</code>
 <code>    mask -1 ne {  % User specifies a mask</code>
 <code>        /maskfuncs [maskfuncs mask 1 sub get] def</code>
@@ -24864,7 +25188,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx size</code>
 <code>    /pixy size</code>
@@ -24899,7 +25223,7 @@ div span:hover {
 <code>% --EXAM: This is DotCode</code>
 <code>% --EXOP: inkspread=0.16</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2024010300 242601 271643</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2024061800 242433 271811</code>
 <code>%%BeginData:       1090 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -25965,7 +26289,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /dotty true</code>
 <code>    /pixs pixs</code>
 <code>    /pixx columns</code>
@@ -26001,7 +26325,7 @@ div span:hover {
 <code>% --EXAM: Awesome colours!</code>
 <code>% --EXOP: eclevel=EC2</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2024010300 97986 100686</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2024061800 97834 100742</code>
 <code>%%BeginData:        357 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -26334,7 +26658,7 @@ div span:hover {
 <code></code>
 <code>    % Return the arguments</code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx columns</code>
 <code>    /pixy rows</code>
@@ -26370,7 +26694,7 @@ div span:hover {
 <code>% --EXAM: This is JAB Code</code>
 <code>% --EXOP: eclevel=6</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2024010300 244622 276310</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2024061800 243814 276022</code>
 <code>%%BeginData:       1121 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -27231,14 +27555,14 @@ div span:hover {
 <code></code>
 <code>    % Calculate the mask patterns applied to data modules</code>
 <code>    /maskfuncs [</code>
-<code>        {add colors mod} bind</code>
-<code>        {pop colors mod} bind</code>
-<code>        {exch pop colors mod} bind</code>
-<code>        {3 idiv exch 2 idiv add colors mod} bind</code>
-<code>        {2 idiv exch 3 idiv add colors mod} bind</code>
-<code>        {add dup 2 idiv exch 3 idiv add colors mod} bind</code>
-<code>        {2 copy exch dup mul mul 7 mod 3 1 roll exch dup mul add 2 mul 19 mod add colors mod} bind</code>
-<code>        {2 copy dup mul mul 5 mod 3 1 roll dup mul exch 2 mul add 13 mod add colors mod} bind</code>
+<code>        {add colors mod}</code>
+<code>        {pop colors mod}</code>
+<code>        {exch pop colors mod}</code>
+<code>        {3 idiv exch 2 idiv add colors mod}</code>
+<code>        {2 idiv exch 3 idiv add colors mod}</code>
+<code>        {add dup 2 idiv exch 3 idiv add colors mod}</code>
+<code>        {2 copy exch dup mul mul 7 mod 3 1 roll exch dup mul add 2 mul 19 mod add colors mod}</code>
+<code>        {2 copy dup mul mul 5 mod 3 1 roll dup mul exch 2 mul add 13 mod add colors mod}</code>
 <code>    ] def</code>
 <code>    mask -1 ne {  % User specifies a mask</code>
 <code>        /maskfuncs [maskfuncs mask get] def</code>
@@ -27469,7 +27793,7 @@ div span:hover {
 <code>    } repeat</code>
 <code></code>
 <code>    &lt;&lt;</code>
-<code>    /ren //renmatrix</code>
+<code>    /ren /renmatrix</code>
 <code>    /pixs pixs</code>
 <code>    /pixx cols</code>
 <code>    /pixy rows</code>
@@ -27503,7 +27827,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(3103)000123</code>
 <code>% --EXOP: ccversion=b cccolumns=4</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2024010300 226028 208827</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2024061800 222444 208779</code>
 <code>%%BeginData:        654 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -28169,7 +28493,7 @@ div span:hover {
 <code>% --EXAM: 9520123456788|(99)1234-abcd</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2024010300 108907 108706</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2024061800 105347 112010</code>
 <code>%%BeginData:        149 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -28226,7 +28550,7 @@ div span:hover {
 <code></code>
 <code>        % Plot the separator</code>
 <code>        -1 72 rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs [</code>
 <code>                0 1  93 {0} repeat  1 0</code>
 <code>                1 0  93 {0} repeat  0 1</code>
@@ -28296,7 +28620,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -28330,7 +28654,7 @@ div span:hover {
 <code>% --EXAM: 95200002|(21)A12345678</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2024010300 105816 112504</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2024061800 105688 108920</code>
 <code>%%BeginData:        152 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -28388,7 +28712,7 @@ div span:hover {
 <code></code>
 <code>        % Plot the separator</code>
 <code>        -1 72 rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs [</code>
 <code>                0 1  65 {0} repeat  1 0</code>
 <code>                1 0  65 {0} repeat  0 1</code>
@@ -28460,7 +28784,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -28494,7 +28818,7 @@ div span:hover {
 <code>% --EXAM: 012345000058|(99)1234-abcd</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2024010300 108925 108701</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2024061800 105341 112029</code>
 <code>%%BeginData:        149 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -28551,7 +28875,7 @@ div span:hover {
 <code></code>
 <code>        % Plot the separator</code>
 <code>        -1 72 rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs [</code>
 <code>                0 1  93 {0} repeat  1 0</code>
 <code>                1 0  93 {0} repeat  0 1</code>
@@ -28621,7 +28945,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -28655,7 +28979,7 @@ div span:hover {
 <code>% --EXAM: 01234558|(15)021231</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2024010300 105468 112132</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2024061800 108796 108572</code>
 <code>%%BeginData:        149 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -28712,7 +29036,7 @@ div span:hover {
 <code></code>
 <code>        % Plot the separator</code>
 <code>        -1 72 rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs [</code>
 <code>                0 1  49 {0} repeat  1 0</code>
 <code>                1 0  49 {0} repeat  0 1</code>
@@ -28782,7 +29106,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -28816,7 +29140,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213|(11)990102</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2024010300 104489 97399</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2024061800 100945 100719</code>
 <code>%%BeginData:        146 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -28904,7 +29228,7 @@ div span:hover {
 <code>    18 sepfinder 64 sepfinder</code>
 <code>    usematrix not {</code>
 <code>        0 linheight rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs sep</code>
 <code>            /pixx sep length</code>
 <code>            /pixy 1</code>
@@ -28940,7 +29264,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -28974,7 +29298,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213|(17)010200</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2024010300 102773 105478</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2024061800 102677 101950</code>
 <code>%%BeginData:        141 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -29058,7 +29382,7 @@ div span:hover {
 <code>    18 sepfinder</code>
 <code>    usematrix not {</code>
 <code>        0 linheight rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs sep</code>
 <code>            /pixx sep length</code>
 <code>            /pixy 1</code>
@@ -29093,7 +29417,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -29127,7 +29451,7 @@ div span:hover {
 <code>% --EXAM: (01)03612345678904|(11)990102</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2024010300 102801 105502</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2024061800 102705 101974</code>
 <code>%%BeginData:        141 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -29211,7 +29535,7 @@ div span:hover {
 <code>    18 sepfinder</code>
 <code>    usematrix not {</code>
 <code>        0 linheight rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs sep</code>
 <code>            /pixx sep length</code>
 <code>            /pixy 1</code>
@@ -29246,7 +29570,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -29280,7 +29604,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213|(11)990102</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2024010300 104563 107276</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2024061800 104451 107140</code>
 <code>%%BeginData:        146 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -29368,7 +29692,7 @@ div span:hover {
 <code>    18 sepfinder 64 sepfinder</code>
 <code>    usematrix not {</code>
 <code>        0 linheight rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs sep</code>
 <code>            /pixx sep length</code>
 <code>            /pixy 1</code>
@@ -29404,7 +29728,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -29438,7 +29762,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213|(21)abcdefghijklmnopqrst</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2024010300 95882 102533</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2024061800 95770 98989</code>
 <code>%%BeginData:        137 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -29504,7 +29828,7 @@ div span:hover {
 <code></code>
 <code>    usematrix not {</code>
 <code>        0 linheight rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs sep</code>
 <code>            /pixx sep length</code>
 <code>            /pixy 1</code>
@@ -29553,7 +29877,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -29587,7 +29911,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(3103)001234|(91)1A2B3C4D5E</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2024010300 104906 101207</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2024061800 101362 104527</code>
 <code>%%BeginData:        146 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -29674,7 +29998,7 @@ div span:hover {
 <code></code>
 <code>    usematrix not {</code>
 <code>        0 linheight rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs sep</code>
 <code>            /pixx sep length</code>
 <code>            /pixy 1</code>
@@ -29711,7 +30035,7 @@ div span:hover {
 <code>        /pixx linpixs length def</code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -29745,7 +30069,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(10)ABCDEF|(21)12345678</code>
 <code>% --EXOP: segments=4</code>
 <code>% --RNDR: renmatrix renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2024010300 103484 102606</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2024061800 106788 102478</code>
 <code>%%BeginData:        136 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -29827,7 +30151,7 @@ div span:hover {
 <code>    ] {sepfinder} forall</code>
 <code>    usematrix not {</code>
 <code>        0 linheight rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs sep</code>
 <code>            /pixx sep length</code>
 <code>            /pixy 1</code>
@@ -29859,7 +30183,7 @@ div span:hover {
 <code></code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -29893,7 +30217,7 @@ div span:hover {
 <code>% --EXAM: (00)095287654321012346|(02)09521234543213(37)24(10)1234567ABCDEFG</code>
 <code>% --EXOP: ccversion=c</code>
 <code>% --RNDR: renlinear renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2024010300 108422 111074</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2024061800 111862 110954</code>
 <code>%%BeginData:        162 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -29972,7 +30296,7 @@ div span:hover {
 <code>    counttomark 1 sub array astore /sep exch def pop pop</code>
 <code>    usematrix not {</code>
 <code>        0 linheight rmoveto &lt;&lt;</code>
-<code>            /ren //renmatrix</code>
+<code>            /ren /renmatrix</code>
 <code>            /pixs sep</code>
 <code>            /pixx sep length</code>
 <code>            /pixy 1</code>
@@ -30033,7 +30357,7 @@ div span:hover {
 <code>        /pixx cclpad length ccpixx add ccrpad length add def</code>
 <code>        /pixy pixs length pixx idiv def</code>
 <code>        &lt;&lt;</code>
-<code>        /ren //renmatrix</code>
+<code>        /ren /renmatrix</code>
 <code>        /pixs pixs</code>
 <code>        /pixx pixx</code>
 <code>        /pixy pixy</code>
@@ -30067,7 +30391,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(17)120508(10)ABCD1234(410)9501101020917</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2024010300 78328 77910</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2024061800 78160 77846</code>
 <code>%%BeginData:         81 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30160,7 +30484,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(17)120508(10)ABCD1234(410)9501101020917</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2024010300 78547 78118</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2024061800 78395 78070</code>
 <code>%%BeginData:         82 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30251,10 +30575,10 @@ div span:hover {
 <code>% --BEGIN ENCODER gs1dldatamatrix--</code>
 <code>% --REQUIRES preamble loadctx unloadctx raiseerror processoptions parseinput gs1process renmatrix datamatrix--</code>
 <code>% --DESC: GS1 Digital Link Data Matrix</code>
-<code>% --EXAM: https://id.gs1.org/01/09521234543213/22/ABC%2d123?99=XYZ%2f987</code>
+<code>% --EXAM: https://id.gs1.org/01/09521234543213/22/ABC%2D123?99=XYZ-987</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2024010300 71212 67479</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2024061800 67732 70863</code>
 <code>%%BeginData:         49 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30315,7 +30639,7 @@ div span:hover {
 <code>% --EXAM: (01)09521234543213(8200)http://www.abc.net(10)ABCD1234(410)9501101020917</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2024010300 78062 77650</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2024061800 78014 77602</code>
 <code>%%BeginData:         79 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30403,10 +30727,10 @@ div span:hover {
 <code>% --BEGIN ENCODER gs1dlqrcode--</code>
 <code>% --REQUIRES preamble loadctx unloadctx raiseerror processoptions parseinput gs1process renmatrix qrcode--</code>
 <code>% --DESC: GS1 Digital Link QR Code</code>
-<code>% --EXAM: https://id.gs1.org/01/09521234543213/22/ABC%2d123?99=XYZ%2f987</code>
+<code>% --EXAM: HTTPS://ID.GS1.ORG/01/09521234543213/22/ABC%2D123?99=XYZ-987</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2024010300 71188 67459</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2024061800 67708 70843</code>
 <code>%%BeginData:         49 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30467,7 +30791,7 @@ div span:hover {
 <code>% --EXAM: (235)5vBZIF%!&lt;B;?oa%(01)09521234543213(8008)19052001</code>
 <code>% --EXOP: rows=16</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2024010300 78053 77639</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2024061800 77989 77575</code>
 <code>%%BeginData:         80 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30559,7 +30883,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2024010300 67736 67460</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2024061800 67608 67460</code>
 <code>%%BeginData:         92 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30663,7 +30987,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP: includetext</code>
 <code>% --RNDR: renlinear</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2024010300 70507 70300</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2024061800 70379 70300</code>
 <code>%%BeginData:         91 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30766,7 +31090,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2024010300 68385 68150</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2024061800 68385 68150</code>
 <code>%%BeginData:         79 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30857,7 +31181,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2024010300 68645 68366</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2024061800 68645 68366</code>
 <code>%%BeginData:         80 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -30949,7 +31273,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2024010300 68516 68455</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2024061800 68516 68327</code>
 <code>%%BeginData:         81 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -31042,7 +31366,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2024010300 68571 68362</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2024061800 68571 68362</code>
 <code>%%BeginData:         81 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -31135,7 +31459,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2024010300 72857 72632</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2024061800 72857 72632</code>
 <code>%%BeginData:         79 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -31226,7 +31550,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2024010300 68497 68150</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2024061800 68369 68278</code>
 <code>%%BeginData:         79 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
@@ -31317,7 +31641,7 @@ div span:hover {
 <code>% --EXAM: A999BJC5D6E71</code>
 <code>% --EXOP:</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2024010300 68358 68143</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2024061800 68358 68143</code>
 <code>%%BeginData:         79 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>

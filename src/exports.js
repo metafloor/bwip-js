@@ -15,10 +15,15 @@ require('stream');  // fix for https://github.com/nodejs/node/issues/37021
 function Request(req, res, extra) {
     var opts = url.parse(req.url, true).query;
 
-    // Convert boolean empty parameters to true
+    // Convert empty !parameters to false.
+    // Convert empty parameters to true.
     for (var id in opts) {
         if (opts[id] === '') {
-            opts[id] = true;
+            if (id[0] == '!') {
+                opts[id.substr(1)] = false;
+            } else {
+                opts[id] = true;
+            }
         }
     }
 
@@ -308,14 +313,21 @@ function FixupOptions(opts) {
 
     return opts;
 
+    // a is the most specific padding value, e.g. paddingleft
+    // b is the next most specific value, e.g. paddingwidth
+    // c is the general padding value.
+    // s is the scale, either scalex or scaley
     function padding(a, b, c, s) {
         if (a != null) {
-            return a*s;
+            a = a >>> 0;
+            return a*s >>> 0;
         }
         if (b != null) {
-            return b*s;
+            b = b >>> 0;
+            return b*s >>> 0;
         }
-        return c*s || 0;
+        c = c >>> 0;
+        return (c*s >>> 0) || 0;
     }
 }
 
@@ -417,7 +429,7 @@ function ToRaw(bcid, text, options) {
     }
 
     // The drawing interface is just needed for the pre-init() calls.
-    // Don't need to fixup the options - drawing specific.
+    // Don't need to fixup the drawing specific options.
     var drawing = DrawingBuiltin();
     drawing.setopts(options);
 

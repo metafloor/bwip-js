@@ -18,7 +18,13 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
             }
             var eq = tmp[i].indexOf('=');
             if (eq == -1) {
-                opts[tmp[i]] = true;
+                if (tmp[i][0] == '!') {
+                    // boolean !name
+                    opts[tmp[i].substr(1)] = false;
+                } else {
+                    // boolean name
+                    opts[tmp[i]] = true;
+                }
             } else {
                 opts[tmp[i].substr(0, eq)] = tmp[i].substr(eq+1);
             }

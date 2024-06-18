@@ -34,7 +34,7 @@ JSOUT=tests/$tid.jsout
 ## First ghostscript and modified BWIPP
 cat tests/barcode.ps - > tests/runtest.ps <<@EOF
 0 0 moveto
-($pstext) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec
+($pstext) ($(echo "$opts" | sed -e 's/ !\w\w*//')) /$sym /uk.co.terryburton.bwipp findresource exec
 count {
     % Order of printing must match the nodejs code.
     dup { exch (pixs) eq { == } { pop } ifelse } forall
