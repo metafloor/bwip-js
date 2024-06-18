@@ -14,8 +14,8 @@ or as SVG (all platforms).
 
 ## Status 
 
-* Current bwip-js version is 4.3.2 (2024-03-19)
-* Current BWIPP version is 2024-01-03
+* Current bwip-js version is 4.4.0 (2024-06-18)
+* Current BWIPP version is 2024-06-18
 * Node.js compatibility: 0.12+
 * Browser compatibility: Edge, Firefox, Chrome
 
@@ -104,10 +104,10 @@ The bwip-js options are:
 - `padding` : Shorthand for setting `paddingtop`, `paddingleft`, `paddingright`, and `paddingbottom`.
 - `paddingwidth` : Shorthand for setting `paddingleft` and `paddingright`.
 - `paddingheight` : Shorthand for setting `paddingtop` and `paddingbottom`.
-- `paddingtop` : Sets the height of the padding area, in points, on the top of the barcode image. Rotates and scales with the image.
-- `paddingleft` : Sets the width of the padding area, in points, on the left side of the barcode image. Rotates and scales with the image.
-- `paddingright` : Sets the width of the padding area, in points, on the right side of the barcode image. Rotates and scales with the image.
-- `paddingbottom` : Sets the height of the padding area, in points, on the bottom of the barcode image. Rotates and scales with the image.
+- `paddingtop` : Sets the height of the padding area, in points, on the top of the barcode image. Must be an integer >= 0. Rotates and scales with the image.
+- `paddingleft` : Sets the width of the padding area, in points, on the left side of the barcode image. Must be an integer >= 0. Rotates and scales with the image.
+- `paddingright` : Sets the width of the padding area, in points, on the right side of the barcode image. Must be an integer >= 0. Rotates and scales with the image.
+- `paddingbottom` : Sets the height of the padding area, in points, on the bottom of the barcode image. Must be an integer >= 0. Rotates and scales with the image.
 - `backgroundcolor` : This is actually a BWIPP option but is better handled by the bwip-js drawing code.  Expects either a hex RGB, RRGGBB or CCMMYYKK string value or CSS-style #RGB or #RRGGBB string value.
 
 For the BWIPP specific options, you will need to consult the

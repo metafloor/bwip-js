@@ -5,7 +5,7 @@
 // Copyright (c) 2011-2024 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2024-01-03
+// Barcode Writer in Pure PostScript - Version 2024-06-18
 // Copyright (c) 2004-2024 Terry Burton
 //
 // The MIT License
@@ -33,7 +33,7 @@
 import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_jabcode,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
 
 // exports.js
-const BWIPJS_VERSION = '4.3.2 (2024-03-19)';
+const BWIPJS_VERSION = '4.4.0 (2024-06-18)';
 
 import url from 'url';
 import PNG_ZLIB from 'zlib';
@@ -47,10 +47,15 @@ import 'stream';  // fix for https://github.com/nodejs/node/issues/37021
 function Request(req, res, extra) {
     var opts = url.parse(req.url, true).query;
 
-    // Convert boolean empty parameters to true
+    // Convert empty !parameters to false.
+    // Convert empty parameters to true.
     for (var id in opts) {
         if (opts[id] === '') {
-            opts[id] = true;
+            if (id[0] == '!') {
+                opts[id.substr(1)] = false;
+            } else {
+                opts[id] = true;
+            }
         }
     }
 
@@ -183,14 +188,21 @@ function FixupOptions(opts) {
 
     return opts;
 
+    // a is the most specific padding value, e.g. paddingleft
+    // b is the next most specific value, e.g. paddingwidth
+    // c is the general padding value.
+    // s is the scale, either scalex or scaley
     function padding(a, b, c, s) {
         if (a != null) {
-            return a*s;
+            a = a >>> 0;
+            return a*s >>> 0;
         }
         if (b != null) {
-            return b*s;
+            b = b >>> 0;
+            return b*s >>> 0;
         }
-        return c*s || 0;
+        c = c >>> 0;
+        return (c*s >>> 0) || 0;
     }
 }
 
@@ -292,7 +304,7 @@ function ToRaw(bcid, text, options) {
     }
 
     // The drawing interface is just needed for the pre-init() calls.
-    // Don't need to fixup the options - drawing specific.
+    // Don't need to fixup the drawing specific options.
     var drawing = DrawingBuiltin();
     drawing.setopts(options);
 
