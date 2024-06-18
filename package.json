@@ -1,0 +1,51 @@
+{
+  "name": "@bwip-js/react-native",
+  "version": "4.4.0",
+  "description": "JavaScript barcode generator supporting over 100 types and standards.",
+  "type": "module",
+  "exports": {
+      "types": "./dist/bwip-js-rn.d.ts",
+      "import": "./dist/bwip-js-rn.mjs"
+  },
+  "main": "./dist/bwip-js-rn.js",
+  "module": "./dist/bwip-js-rn.mjs",
+  "react-native": "./dist/bwip-js-rn.mjs",
+  "types": "./dist/bwip-js-rn.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metafloor/bwip-js.git"
+  },
+  "keywords": [
+    "bar code",
+    "generator",
+    "barcode",
+    "javascript",
+    "node",
+    "react",
+    "react-native",
+    "typescript",
+    "browser",
+    "itf",
+    "gs1",
+    "upc",
+    "ean",
+    "pdf417",
+    "matrix",
+    "datamatrix",
+    "qrcode",
+    "databar",
+    "code128",
+    "code39",
+    "svg",
+    "pdfkit"
+  ],
+  "author": "Mark Warren <mwarren@metafloor.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/metafloor/bwip-js/issues"
+  },
+  "homepage": "https://github.com/metafloor/bwip-js"
+}
