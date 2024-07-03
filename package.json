@@ -4,8 +4,8 @@
   "description": "JavaScript barcode generator supporting over 100 types and standards.",
   "type": "module",
   "exports": {
-      "types": "./dist/bwip-js-gen.d.ts",
-      "import": "./dist/bwip-js-gen.mjs"
+    "types": "./dist/bwip-js-gen.d.ts",
+    "import": "./dist/bwip-js-gen.mjs"
   },
   "main": "./dist/bwip-js-gen.mjs",
   "module": "./dist/bwip-js-gen.mjs",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/metafloor/bwip-js.git"
+    "url": "git+https://github.com/metafloor/bwip-js.git"
   },
   "keywords": [
     "bar code",
