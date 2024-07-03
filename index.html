@@ -30,19 +30,19 @@
 
 <p><a href="http://metafloor.github.io/bwip-js"><img alt="bwip-js" align="right" src="http://metafloor.github.io/bwip-js/images/bwip-js.png"></a>
 bwip-js is a translation to native JavaScript of the amazing code provided in <a href="https://github.com/bwipp/postscriptbarcode">Barcode Writer in Pure PostScript</a>.  The translated code can run on any modern browser or JavaScript-based server framework.</p>
-<p>The software has encoding modules for over 100 different barcode types and standards.
+<p>The library has encoding modules for over 100 different barcode types and standards.
 All linear and two-dimensional barcodes in common use (and many uncommon
 ones) are available.  An exhaustive list of supported barcode types can be
-found at the end of this document.  Barcode images are generated as png (node-js) or to a canvas (browser)
-or as SVG (all platforms).</p>
+found at the end of this document.  Barcodes are generated as PNG images (node-js and react-native)
+or to a canvas (browser) or as SVG (all platforms).</p>
 <blockquote>
-  <p>Version 4 has been released.  The primary enhancement is built-in support for generating barcodes in SVG.  You can read about the changes here: https://github.com/metafloor/bwip-js/discussions/299</p>
+  <p>As of version 4.5, bwip-js has been partitioned into four platform-specific packages plus the cross-platform main package.  The sub-packages are currently experimental but are the solution to current build chains not properly supporting the <code>exports</code> map in <code>package.json</code>.  Please use them and report any issues you find.</p>
 </blockquote>
 <h2 id="status">Status</h2>
 <ul>
-<li>Current bwip-js version is 4.4.0 (2024-06-18)</li>
+<li>Current bwip-js version is 4.5.0 (2024-07-03)</li>
 <li>Current BWIPP version is 2024-06-18</li>
-<li>Node.js compatibility: 0.12+</li>
+<li>Node.js compatibility: 6.0</li>
 <li>Browser compatibility: Edge, Firefox, Chrome</li>
 </ul>
 <h2 id="supportedplatforms">Supported Platforms</h2>
@@ -71,13 +71,22 @@ or as SVG (all platforms).</p>
 <li><a href="https://github.com/metafloor/bwip-js/wiki/Notes-on-the-Raw-BWIPP-Data">Working with the Raw BWIPP Rendering Data</a></li>
 </ul>
 <h2 id="installation">Installation</h2>
-<p>You can download the latest npm module using:</p>
+<p>The bwip-js package has been partitioned into four platform-specific packages plus the main cross-platform package.  If you install the main package and cannot get its exports to work with your build stack, try installing a platform-specific package. The platform-specific packages are ES modules only, so you will need a modern build environment.  The exception is the node package, which also contains a <code>require()</code> compatible export.</p>
+<p>You can download the main package using:</p>
 <pre><code>npm install bwip-js
 </code></pre>
-<p>Or the latest code from github:</p>
+<p>Or one of the platform-specific packages using:</p>
+<pre><code>npm install @bwip-js/node
+npm install @bwip-js/browser
+npm install @bwip-js/react-native
+npm install @bwip-js/generic
+</code></pre>
+<p>The node, browser and react-native packages include both an image rending interface (<code>toCanvas()</code> on the browser, <code>toBuffer()</code> on node, <code>toDataURL()</code> on react-native), plus the SVG and custom drawing context interfaces.</p>
+<p>The generic package contains only exports that run on any platform, namely the SVG and custom drawing context interfaces.</p>
+<p>The latest code can be obtained from github:</p>
 <pre><code>https://github.com/metafloor/bwip-js
 </code></pre>
-<p>(The bwip-js master branch and the npm version are kept sync'd.)</p>
+<p>The bwip-js branches and the npm versions are automatically sync'd with each release. The main package is located under the master branch; the platform-specific packages are maintained under their like-named branches.</p>
 <h2 id="onlinebarcodegenerator">Online Barcode Generator</h2>
 <p>An <a href="http://metafloor.github.io/bwip-js/demo/demo.html">online barcode generator</a>
 demonstrates all of the features of bwip-js.  The app is also available 
@@ -123,7 +132,7 @@ be a lot more performant.)</p>
 <a href="https://github.com/bwipp/postscriptbarcode/wiki">BWIPP documentation</a>
 to determine what options are available for each barcode type.</p>
 <p>All of the BWIPP color options (e.g. <code>barcolor</code>, <code>textcolor</code>, <code>bordercolor</code>) can be specified using either RGB, RRGGBB or CCMMYYKK formats or the CSS-style #RGB and #RRGGBB formats.</p>
-<p>Note that bwip-js normalizes the BWIPP <code>width</code> and <code>height</code> options to always be in millimeters.
+<p>Note that bwip-js normalizes the BWIPP <code>width</code> and <code>height</code> options to be in millimeters.
 The resulting images are rendered at 72 dpi.  To convert to pixels, use a factor of 2.835 px/mm
 (72 dpi / 25.4 mm/in).  The bwip-js scale options multiply the <code>width</code>, <code>height</code>, and <code>padding</code>.</p>
 <blockquote>
@@ -156,8 +165,8 @@ by the number of modules the symbol requires.  The floor of that value is the
 module width (scale) of the rendered barcode.</p>
 <p><a name="browser-usage"></a></p>
 <h2 id="browserusage">Browser Usage</h2>
-<p>To use within a browser, add the following to the head of your page:</p>
-<pre><code>&lt;script type="text/javascript" src="file-or-url-path-to/bwip-js/dist/bwip-js-min.js"&gt;&lt;/script&gt;
+<p>To use in a browser without a bundler, add the following to the head of your page:</p>
+<pre><code>&lt;script type="text/javascript" src="url-path-to/bwip-js/dist/bwip-js-min.js"&gt;&lt;/script&gt;
 </code></pre>
 <p>While developing your project, you may want to use <code>dist/bwip-js.js</code> to get better stack
 traces.</p>
@@ -185,7 +194,7 @@ canvas element.  The rendering will automatically resize the canvas to match the
 barcode image.</li>
 <li>A bwip-js/BWIPP options object.</li>
 </ul>
-<p>On return from <code>toCanvas()</code>, the barcode image will have been fully rendered to the canvas.</p>
+<p>On return from <code>toCanvas()</code>, the barcode image will be fully rendered to the canvas.</p>
 <p>If you would prefer to display the barcode using an <code>&lt;img&gt;</code> tag or with CSS <code>background-image</code>,
 pass in a detached or hidden canvas, and use the canvas method
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL">HTMLCanvasElement.toDataURL</a>
@@ -201,7 +210,9 @@ try {
 <p><a name="browser-es6-module-usage"></a></p>
 <h2 id="browseres6moduleusage">Browser ES6 Module Usage</h2>
 <p>The ESM provides the same API as the standard browser module using:</p>
-<pre><code class="javascript language-javascript">import bwipjs from 'bwip-js';
+<pre><code class="javascript language-javascript">import bwipjs from 'bwip-js';           // If using the main package import
+  // or
+import bwipjs from '@bwip-js/browser';  // Platform-specific package import
 
 // ... identical bwipjs.toCanvas() interface as above ...
 </code></pre>
@@ -210,6 +221,8 @@ Each exported encoder functions identically to <code>bwipjs.toCanvas()</code>.</
 <p>The exported names are the same as the <code>bcid</code> names, with the caveat that dashes <code>-</code> are replaced with
 underscores <code>_</code>.  For example, to import the <code>gs1-128</code> encoder, you would use:</p>
 <pre><code class="javascript language-javascript">import { gs1_128 } from 'bwip-js';
+  // or
+import { gs1_128 } from '@bwipjs/browser';
 
 try {
     gs1_128('my-canvas', options);
@@ -293,13 +306,17 @@ bwipjs.toBuffer({
 <p><a name="nodejs-es6-module-usage"></a></p>
 <h2 id="nodejses6moduleusage">Node.js ES6 Module Usage</h2>
 <p>The ESM provides the same API as <code>require('bwip-js')</code> using:</p>
-<pre><code class="javascript language-javascript">import bwipjs from 'bwip-js';
+<pre><code class="javascript language-javascript">import bwipjs from 'bwip-js';           // If using the main package import
+  // or
+import bwipjs from '@bwip-js/node';     // Platform-specific package import
 
 // ... identical to the examples above ...
 </code></pre>
 <p>The ESM also facilitates bundler tree-shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to <code>bwipjs.toBuffer()</code>.</p>
 <p>The exported names are the same as the <code>bcid</code> names, with the caveat that dashes <code>-</code> are replaced with underscores <code>_</code>.  For example, to import the <code>gs1-128</code> encoder, you would use:</p>
 <pre><code class="javascript language-javascript">import { gs1_128 } from 'bwip-js';
+  // or
+import { gs1_128 } from '@bwip-js/node';
 
 try {
     let buf = await gs1_128(options);
@@ -342,6 +359,8 @@ document.body.appendChild(span);
 tree-shaking.  To reduce bundled size, you can import only the barcode types
 you need, along with the built-in SVG drawing interface.</p>
 <pre><code class="javascript language-javascript">import { qrcode, drawingSVG } from 'bwip-js';
+  // or &lt;platform&gt; one of : browser, node, react-native, generic
+import { qrcode, drawingSVG } from '@bwip-js/&lt;platform&gt;'; 
 
 // drawingSVG() returns a bwip-js drawing object.
 let svg = qrcode(options, drawingSVG());
@@ -353,7 +372,9 @@ It is based on the default <code>App.js</code> file generated by <code>create-re
 <pre><code class="javascript language-javascript">import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import bwipjs from 'bwip-js';
+import bwipjs from 'bwip-js';           // If using the main package import
+  // or
+import bwipjs from '@bwip-js/browser';  // Plaform-specific package import
 
 class App extends Component {
   componentDidMount() {
@@ -389,14 +410,7 @@ export default App;
 <p>See the ES6 Browser Module Usage section for details on importing encoders directly.</p>
 <p><a name="react-native"></a></p>
 <h2 id="reactnative">React Native</h2>
-<blockquote>
-  <p>Note: The react-native module requires an external dependency to polyfill
-  missing nodejs built-ins <code>zlib</code> and <code>Buffer</code>.</p>
-  <p>You <em>must</em> manually add it to your project.  The dependency will not
-  be included in bwip-js as it is only needed for react-native.  To install:</p>
-</blockquote>
-<pre><code>npm install react-zlib-js --save
-</code></pre>
+<p>React-native has considerable legacy build environments that are not compatible with the modern <code>exports</code> map in <code>package.json</code>.  For this reason, it is recommended to install the react-native package <code>@bwip-js/react-native</code>. </p>
 <p>The react-native module provides a specialized version of the <code>toBuffer()</code> method, 
 called <code>toDataURL()</code>.  The return value is an object with the following properties:</p>
 <ul>
@@ -406,8 +420,7 @@ called <code>toDataURL()</code>.  The return value is an object with the followi
 </ul>
 <p>The returned object is designed to be used with the <code>&lt;Image&gt;</code> component:</p>
 <pre><code class="javascript language-javascript">import React from 'react';
-import 'react-zlib-js'; // side effects only
-import bwipjs from 'bwip-js';
+import bwipjs from '@bwip-js/react-native';
 
 const BarCode = (options) =&gt; {
     let img = null;
@@ -426,7 +439,7 @@ const BarCode = (options) =&gt; {
 </code></pre>
 <p>The bwip-js exports also facilitate bundler tree-shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to <code>bwipjs.toDataURL()</code>.</p>
 <p>The exported names are the same as the <code>bcid</code> names, with the caveat that dashes <code>-</code> are replaced with underscores <code>_</code>.  For example, to import the <code>gs1-128</code> encoder, you would use:</p>
-<pre><code class="javascript language-javascript">import { gs1_128 } from 'bwip-js';
+<pre><code class="javascript language-javascript">import { gs1_128 } from '@bwip-js/react-native';
 
 try {
     let buf = await gs1_128(options);
@@ -437,13 +450,8 @@ try {
 <p>When named encoders are called, the <code>bcid</code> value in the options object is ignored.</p>
 <p><a name="electron-example"></a></p>
 <h2 id="electronexample">Electron Example</h2>
-<p>There have been some changes to the Electron bundler, and it may pull in either the
-nodejs or browser module, depending on your version of Electron.  The example below
-assumes the nodejs module.</p>
-<p>If you try this example and get the error <code>bwipjs.toBuffer is not a function</code>, the
-Electron bundler grabbed the browser module.  See the <a href="#browser-usage">Browser Usage</a>
-section above and draw to a canvas instead.</p>
-<p>This is an example <code>index.html</code> file for a basic, single window app:</p>
+<p>With electron, you have the choice to use either the node-specific or browser-specific package.  It is not recommended to use the main bwip-js package as developers have reported issues with how the bundler interacts with the package exports.</p>
+<p>This is an example <code>index.html</code> file for a basic, single window app, using the node-js package:</p>
 <pre><code class="html language-html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;head&gt;
@@ -461,7 +469,7 @@ section above and draw to a canvas instead.</p>
   &lt;/body&gt;
 
   &lt;script&gt;
-    var bwipjs = require('bwip-js');
+    var bwipjs = require('@bwip-js/node');
     bwipjs.toBuffer({ bcid:'qrcode', text:'0123456789' }, function (err, png) {
         if (err) {
           document.getElementById('output').textContent = err;
