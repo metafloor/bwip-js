@@ -1,14 +1,13 @@
 {
   "name": "@bwip-js/browser",
-  "version": "4.5.0",
+  "version": "4.5.1",
   "description": "JavaScript barcode generator supporting over 100 types and standards.",
   "exports": {
     "types": "./dist/bwip-js.d.ts",
-    "require": "./dist-bwip-js.js",
     "import": "./dist/bwip-js.mjs"
   },
   "main": "./dist/bwip-js.mjs",
-  "browser": "./dist/bwip-js.js",
+  "browser": "./dist/bwip-js.mjs",
   "module": "./dist/bwip-js.mjs",
   "types": "./dist/bwip-js.d.ts",
   "scripts": {
