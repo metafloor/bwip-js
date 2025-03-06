@@ -24,7 +24,7 @@ or to a canvas (browser) or as SVG (all platforms).
 * [Browser](#browser-usage)
 * [Node.js](#nodejs-request-handler)
 * [SVG (All Platforms)](#svg-all-platforms)
-* [React App](#react-usage)
+* [React](#react-usage)
 * [React Native](#react-native)
 * [Electron](#electron-example)
 * [Command Line](#command-line-interface)
@@ -32,7 +32,7 @@ or to a canvas (browser) or as SVG (all platforms).
 ## Links
 
 * [Home Page](http://metafloor.github.io/bwip-js/)
-* [github Repository](https://github.com/metafloor/bwip-js)
+* [GitHub Repository](https://github.com/metafloor/bwip-js)
 * [`bwipjs` Methods Reference](https://github.com/metafloor/bwip-js/wiki/Methods-Reference)
 * [Online Barcode Generator](http://metafloor.github.io/bwip-js/demo/demo.html)
 * [Online Barcode API](https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API)
@@ -191,13 +191,13 @@ The scripts adds a single `bwipjs` global object.  To draw a barcode to a canvas
 try {
     // The return value is the canvas element
     let canvas = bwipjs.toCanvas('mycanvas', {
-            bcid:        'code128',       // Barcode type
-            text:        '0123456789',    // Text to encode
-            scale:       3,               // 3x scaling factor
-            height:      10,              // Bar height, in millimeters
-            includetext: true,            // Show human-readable text
-            textxalign:  'center',        // Always good to set this
-        });
+        bcid:        'code128',       // Barcode type
+        text:        '0123456789',    // Text to encode
+        scale:       3,               // 3x scaling factor
+        height:      10,              // Bar height, in millimeters
+        includetext: true,            // Show human-readable text
+        textxalign:  'center',        // Always good to set this
+    });
 } catch (e) {
     // `e` may be a string or Error object
 }
@@ -205,8 +205,8 @@ try {
 
 The `bwipjs.toCanvas()` method takes two parameters:
 
-* The canvas on which to render the barcode.  This can by an `id` string or the actual
-  canvas element.  The rendering will automatically resize the canvas to match the
+* The canvas on which to render the barcode. This can by an `id` string or the actual
+  canvas element. The rendering will automatically resize the canvas to match the
   barcode image.
 * A bwip-js/BWIPP options object.
  
@@ -309,22 +309,22 @@ You can use bwip-js to generate PNG images directly.
 const bwipjs = require('bwip-js');
 
 bwipjs.toBuffer({
-        bcid:        'code128',       // Barcode type
-        text:        '0123456789',    // Text to encode
-        scale:       3,               // 3x scaling factor
-        height:      10,              // Bar height, in millimeters
-        includetext: true,            // Show human-readable text
-        textxalign:  'center',        // Always good to set this
-    }, function (err, png) {
-        if (err) {
-            // `err` may be a string or Error object
-        } else {
-            // `png` is a Buffer
-            // png.length           : PNG file length
-            // png.readUInt32BE(16) : PNG image width
-            // png.readUInt32BE(20) : PNG image height
-        }
-    });
+    bcid:        'code128',       // Barcode type
+    text:        '0123456789',    // Text to encode
+    scale:       3,               // 3x scaling factor
+    height:      10,              // Bar height, in millimeters
+    includetext: true,            // Show human-readable text
+    textxalign:  'center',        // Always good to set this
+}, function (err, png) {
+    if (err) {
+        // `err` may be a string or Error object
+    } else {
+        // `png` is a Buffer
+        // png.length           : PNG file length
+        // png.readUInt32BE(16) : PNG image width
+        // png.readUInt32BE(20) : PNG image height
+    }
+});
 ```
 
 If you would prefer to work with Promises, omit the callback function and
@@ -332,19 +332,19 @@ If you would prefer to work with Promises, omit the callback function and
 
 ```javascript
 bwipjs.toBuffer({
-        bcid:        'code128',       // Barcode type
-        text:        '0123456789',    // Text to encode
-        scale:       3,               // 3x scaling factor
-        height:      10,              // Bar height, in millimeters
-        includetext: true,            // Show human-readable text
-        textxalign:  'center',        // Always good to set this
-    })
-    .then(png => {
-        // `png` is a Buffer as in the example above
-    })
-    .catch(err => {
-        // `err` may be a string or Error object
-    });
+    bcid:        'code128',       // Barcode type
+    text:        '0123456789',    // Text to encode
+    scale:       3,               // 3x scaling factor
+    height:      10,              // Bar height, in millimeters
+    includetext: true,            // Show human-readable text
+    textxalign:  'center',        // Always good to set this
+})
+.then(png => {
+    // `png` is a Buffer as in the example above
+})
+.catch(err => {
+    // `err` may be a string or Error object
+});
 ```
 
 <a name="nodejs-es6-module-usage"></a>
@@ -388,13 +388,13 @@ The method is synchronous.
 
 ```javascript
 let svg = bwipjs.toSVG({
-        bcid:        'code128',       // Barcode type
-        text:        '0123456789',    // Text to encode
-        height:      12,              // Bar height, in millimeters
-        includetext: true,            // Show human-readable text
-        textxalign:  'center',        // Always good to set this
-        textcolor:   'ff0000',        // Red text
-    });
+    bcid:        'code128',       // Barcode type
+    text:        '0123456789',    // Text to encode
+    height:      12,              // Bar height, in millimeters
+    includetext: true,            // Show human-readable text
+    textxalign:  'center',        // Always good to set this
+    textcolor:   'ff0000',        // Red text
+});
 ```
 
 The return value from `toSVG()` is a string containing a fully qualified SVG definition,
@@ -437,45 +437,32 @@ let svg = qrcode(options, drawingSVG());
 ## React Usage
 
 The following is a minimal example of bwip-js in a React app.
-It is based on the default `App.js` file generated by `create-react-app`.
 
-```javascript
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+```tsx
 import bwipjs from 'bwip-js';           // If using the main package import
-  // or
-import bwipjs from '@bwip-js/browser';  // Plaform-specific package import
+// or
+import bwipjs from '@bwip-js/browser';  // Platform-specific package import
 
-class App extends Component {
-  componentDidMount() {
-    try {
-      // The return value is the canvas element
-      let canvas = bwipjs.toCanvas('mycanvas', {
-                bcid:        'code128',       // Barcode type
-                text:        '0123456789',    // Text to encode
-                scale:       3,               // 3x scaling factor
-                height:      10,              // Bar height, in millimeters
-                includetext: true,            // Show human-readable text
-                textxalign:  'center',        // Always good to set this
-            });
-    } catch (e) {
-        // `e` may be a string or Error object
-    }
-  }
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <canvas id="mycanvas"></canvas>
-      </div>
-    );
-  }
+export default function App() {
+  return (
+    <canvas
+      ref={(canvas) => {
+        if (!canvas) {
+          return;
+        }
+
+        bwipjs.toCanvas(canvas, {
+          bcid:        'code128',               // Barcode type
+          text:        '0123456789',            // Text to encode
+          scale:       window.devicePixelRatio, // Scaling factor for high-DPI devices
+          height:      10,                      // Bar height, in millimeters
+          includetext: true,                    // Show human-readable text
+          textxalign:  'center',                // Always good to set this
+        });
+      }}
+    />
+  );
 }
-export default App;
 ```
 
 See the Browser Usage section for details on the `toCanvas()` method. 
@@ -485,10 +472,10 @@ See the ES6 Browser Module Usage section for details on importing encoders direc
 <a name="react-native"></a>
 ## React Native
 
-React-native has considerable legacy build environments that are not compatible with the modern `exports` map in `package.json`.  For this reason, it is recommended to install the react-native package `@bwip-js/react-native`. 
+When using React Native, it is recommended to install the react-native package `@bwip-js/react-native`. 
 
 The react-native module provides a specialized version of the `toBuffer()` method, 
-called `toDataURL()`.  The return value is an object with the following properties:
+called `toDataURL()`. The return value is an object with the following properties:
 
 - `height` : The height of the image, in pixels.
 - `width` : The width of the image, in pixels.
@@ -496,24 +483,33 @@ called `toDataURL()`.  The return value is an object with the following properti
 
 The returned object is designed to be used with the `<Image>` component:
 
-```javascript
-import React from 'react';
-import bwipjs from '@bwip-js/react-native';
+```tsx
+import { useEffect, useState } from 'react';
+import { Image, PixelRatio } from 'react-native';
+import bwipjs, { type DataURL } from '@bwip-js/react-native';
 
-const BarCode = (options) => {
-    let img = null;
-    try {
-        img = await bwipjs.toDataURL(options);
-    } catch (e) {
-        // `e` may be a string or Error object
-    }
-    return (
-        <Image
-            style={{ height:img.height, width:img.width }}
-            source={{ uri:img.uri }}
-        />
-    );
-};
+export default function App() {
+  const [source, setSource] = useState<DataURL>();
+
+  useEffect(() => {
+    bwipjs.toDataURL({
+      bcid:        'code128',        // Barcode type
+      text:        '0123456789',     // Text to encode
+      scale:       PixelRatio.get(), // Scaling factor for high-DPI devices
+      height:      10,               // Bar height, in millimeters
+      includetext: true,             // Show human-readable text
+      textxalign:  'center',         // Always good to set this
+    }).then(setSource);
+  }, []);
+
+  if (!source) {
+    return null;
+  }
+
+  const { height, width, uri } = source;
+
+  return <Image source={{ uri }} width={width} height={height} />;
+}
 ```
 
 The bwip-js exports also facilitate bundler tree-shaking by providing the individual encoders as named exports.  Each exported encoder functions identically to `bwipjs.toDataURL()`.
