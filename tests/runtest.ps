@@ -22901,6 +22901,7 @@ begin
             } ifelse
 
         } loop
+        /msgbits msgbits 0 j getinterval def
 
     } if
 
@@ -31675,7 +31676,7 @@ end
 
 % --END TEMPLATE--
 0 0 moveto
-(HTTPS://ID.GS1.ORG/01/09521234543213/22/ABC%2D123?99=XYZ-987) () /gs1dlqrcode /uk.co.terryburton.bwipp findresource exec
+(\(91\)ABC^04011^041XYZ) (parse) /gs1datamatrix /uk.co.terryburton.bwipp findresource exec
 count {
     % Order of printing must match the nodejs code.
     dup { exch (pixs) eq { == } { pop } ifelse } forall

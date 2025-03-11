@@ -46,7 +46,7 @@ declare namespace BwipJs {
         borderleft?: number | undefined;
         borderright?: number | undefined;
         bordertop?: number | undefined;
-        boraderbottom?: number | undefined;
+        borderbottom?: number | undefined;
 
         barcolor?: string | undefined;
         backgroundcolor?: string | undefined;

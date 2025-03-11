@@ -2,7 +2,7 @@
 //
 //    http://metafloor.github.io/bwip-js
 //
-// Copyright (c) 2011-2024 Mark Warren
+// Copyright (c) 2011-2025 Mark Warren
 //
 // This file contains code automatically generated from:
 // Barcode Writer in Pure PostScript - Version 2024-06-18
