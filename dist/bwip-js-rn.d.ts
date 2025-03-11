@@ -1,4 +1,4 @@
-// Type definitions for bwip-js  4.5.1 (2024-08-12)
+// Type definitions for bwip-js  4.5.2 (2025-03-10)
 //
 // THIS DEFINITION FILE IS MACHINE GENERATED - DO NOT EDIT
 //
@@ -46,7 +46,7 @@ declare namespace BwipJs {
         borderleft?: number | undefined;
         borderright?: number | undefined;
         bordertop?: number | undefined;
-        boraderbottom?: number | undefined;
+        borderbottom?: number | undefined;
 
         barcolor?: string | undefined;
         backgroundcolor?: string | undefined;
