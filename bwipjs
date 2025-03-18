@@ -131,9 +131,9 @@ var optlist = [
             'non-data function characters can be specified by escaped combinations such\n' +
             'as ^FNC1, ^FNC4 and ^SFT.' },
     { name: 'height', type: 'float',
-      desc: 'Height of longest bar, in millimetermillimeters.' },
+      desc: 'Height of longest bar, in millimetermillimeters. Default is 25.4.' },
     { name: 'width', type: 'float',
-      desc: 'Stretch the symbol to precisely this width, in millimeters.' },
+      desc: 'Stretch the symbol to precisely this width, in millimeters. Default is 0.' },
     { name: 'inkspread', type: 'float',
       desc: 'Amount by which to reduce the bar widths to compensate for inkspread,\n' +
             'in points.' },
