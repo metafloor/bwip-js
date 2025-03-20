@@ -22410,8 +22410,8 @@ end
 % --EXAM: This is Aztec Code
 % --EXOP: format=full
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2024061800 195120 210322
-%%BeginData:        825 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2025031400 196240 214562
+%%BeginData:        830 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
 dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -22742,6 +22742,10 @@ begin
                                         } if
                                     } if
                                 } {  % Found lastchar, check latch
+                                    ch sb eq {  % In B/S, do nothing
+                                        /lastidx -1 def
+                                        exit
+                                    } if
                                     ch 0 lt ch ld ge and {  % If have latch
                                         i P eq {
                                             ch ld eq { /lastld true def } if  % Set flag if D/L for adjustment below
@@ -23020,7 +23024,7 @@ begin
 
         % Extend the input with the error correction values
         /nd rscws length def
-        /rscws [ rscws {} forall rsnc {0} repeat 0 ] def
+        /rscws [ rscws aload pop rsnc {0} repeat 0 ] def
         0 1 nd 1 sub {
             /k exch rscws exch get rscws nd get xor def
             0 1 rsnc 1 sub {
@@ -23084,7 +23088,7 @@ begin
         [ 4096 4201 ]  % 12-bit codewords
     ] def
 } ctxdef
-    /cws cws ncws cws length sub rsparams bpcw get {} forall rscodes def
+    /cws cws ncws cws length sub rsparams bpcw get aload pop rscodes def
     format (full) eq {
         /databits layers layers mul 16 mul layers 112 mul add string def
     } {
@@ -23193,7 +23197,7 @@ begin
       [ fw             fw 1 add       0 ] [ fw 1 add       fw 1 add neg   0 ]
       [ fw             fw 1 add neg   0 ] [ fw neg         fw 1 add neg   0 ]
       [ fw 1 add neg   fw 1 add neg   0 ] [ fw 1 add neg   fw neg         0 ]
-    ] {pixs exch {} forall 3 1 roll cmv exch put} forall
+    ] {pixs exch aload pop 3 1 roll cmv exch put} forall
 
     % Mode ring
 {
@@ -23212,8 +23216,8 @@ begin
 } ctxdef
     /modemap format (full) eq {modemapfull} {modemapcompact} ifelse def
     0 1 modemap length 1 sub {
-        /i exch def
-        pixs modemap i get {} forall cmv modebits i get 48 sub put
+        pixs modemap 2 index get aload pop cmv modebits 3 index get 48 sub put
+        pop
     } for
 
     <<

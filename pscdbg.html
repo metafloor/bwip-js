@@ -22463,8 +22463,8 @@ div span:hover {
 <code>% --EXAM: This is Aztec Code</code>
 <code>% --EXOP: format=full</code>
 <code>% --RNDR: renmatrix</code>
-<code>%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2024061800 195120 210322</code>
-<code>%%BeginData:        825 ASCII Lines</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2025031400 196240 214562</code>
+<code>%%BeginData:        830 ASCII Lines</code>
 <code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
 <code>%psc 10 dict</code>
 <code>%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put</code>
@@ -22795,6 +22795,10 @@ div span:hover {
 <code>                                        } if</code>
 <code>                                    } if</code>
 <code>                                } {  % Found lastchar, check latch</code>
+<code>                                    ch sb eq {  % In B/S, do nothing</code>
+<code>                                        /lastidx -1 def</code>
+<code>                                        exit</code>
+<code>                                    } if</code>
 <code>                                    ch 0 lt ch ld ge and {  % If have latch</code>
 <code>                                        i P eq {</code>
 <code>                                            ch ld eq { /lastld true def } if  % Set flag if D/L for adjustment below</code>
@@ -23073,7 +23077,7 @@ div span:hover {
 <code></code>
 <code>        % Extend the input with the error correction values</code>
 <code>        /nd rscws length def</code>
-<code>        /rscws [ rscws {} forall rsnc {0} repeat 0 ] def</code>
+<code>        /rscws [ rscws aload pop rsnc {0} repeat 0 ] def</code>
 <code>        0 1 nd 1 sub {</code>
 <code>            /k exch rscws exch get rscws nd get xor def</code>
 <code>            0 1 rsnc 1 sub {</code>
@@ -23137,7 +23141,7 @@ div span:hover {
 <code>        [ 4096 4201 ]  % 12-bit codewords</code>
 <code>    ] def</code>
 <code>} ctxdef</code>
-<code>    /cws cws ncws cws length sub rsparams bpcw get {} forall rscodes def</code>
+<code>    /cws cws ncws cws length sub rsparams bpcw get aload pop rscodes def</code>
 <code>    format (full) eq {</code>
 <code>        /databits layers layers mul 16 mul layers 112 mul add string def</code>
 <code>    } {</code>
@@ -23246,7 +23250,7 @@ div span:hover {
 <code>      [ fw             fw 1 add       0 ] [ fw 1 add       fw 1 add neg   0 ]</code>
 <code>      [ fw             fw 1 add neg   0 ] [ fw neg         fw 1 add neg   0 ]</code>
 <code>      [ fw 1 add neg   fw 1 add neg   0 ] [ fw 1 add neg   fw neg         0 ]</code>
-<code>    ] {pixs exch {} forall 3 1 roll cmv exch put} forall</code>
+<code>    ] {pixs exch aload pop 3 1 roll cmv exch put} forall</code>
 <code></code>
 <code>    % Mode ring</code>
 <code>{</code>
@@ -23265,8 +23269,8 @@ div span:hover {
 <code>} ctxdef</code>
 <code>    /modemap format (full) eq {modemapfull} {modemapcompact} ifelse def</code>
 <code>    0 1 modemap length 1 sub {</code>
-<code>        /i exch def</code>
-<code>        pixs modemap i get {} forall cmv modebits i get 48 sub put</code>
+<code>        pixs modemap 2 index get aload pop cmv modebits 3 index get 48 sub put</code>
+<code>        pop</code>
 <code>    } for</code>
 <code></code>
 <code>    &lt;&lt;</code>
