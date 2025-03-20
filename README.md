@@ -14,7 +14,7 @@ or to a canvas (browser) or as SVG (all platforms).
 
 ## Status 
 
-* Current bwip-js version is 4.5.2 (2025-03-10)
+* Current bwip-js version is 4.5.3 (2025-03-20)
 * Current BWIPP version is 2024-06-18
 * Node.js compatibility: 6.0
 * Browser compatibility: Edge, Firefox, Chrome
