@@ -1,0 +1,69 @@
+/runtest_royalmail {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% https://web.archive.org/web/20120120060743/http://www.royalmail.com/sites/default/files/docs/pdf/Know How 2006 PIP vs 1.6a Accepted Changes.pdf
+
+% vim: set ts=4 sw=4 et :
+
+%%/royalmail dup /uk.co.terryburton.bwipp findresource cvx def
+
+/dump_4state_tmpl {
+    /ret exch def
+    /bhs ret /bhs get def
+    /bbs ret /bbs get def
+    [
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            bbs i get 0.05 lt { bhs i get 0.14 gt {1} {0} ifelse } { bhs i get 0.09 gt {1} {0} ifelse } ifelse
+        } for
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            1
+        } for
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            bbs i get 0.05 lt { bhs i get 0.09 gt {1} {0} ifelse } {0} ifelse
+        } for
+    ]
+} def
+
+
+% Input validation
+
+{ () (dontdraw) royalmail
+} /bwipp.royalmailEmptyData isError
+
+{ (,) (dontdraw) royalmail
+} /bwipp.royalmailBadCharacter isError
+
+{ (1) (dontdraw validatecheck) royalmail
+} /bwipp.royalmailBadCheckDigit isError
+
+{ (SO316XY1AT) (dontdraw validatecheck) royalmail  % 'S' is the correct check digit
+} /bwipp.royalmailBadCheckDigit isError
+
+
+% Examples
+
+(LE28HS9Z) (dontdraw) royalmail dump_4state_tmpl
+[
+    1 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 1 0 0 0 1 0 1
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+    0 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 1
+] isEqual
+
+(SO316XY1AS) (dontdraw validatecheck) royalmail dump_4state_tmpl
+[
+    1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 1
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+    0 0 1 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1
+] isEqual
+end
+} bind def

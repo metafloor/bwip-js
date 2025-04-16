@@ -1,0 +1,55 @@
+/runtest_upce {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+%%/upce dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) upce /sbs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) upce /sbs get } e isError
+} def
+
+
+(03084009)       [1 1 1 1 1 4 1 3 2 1 1 1 2 1 3 2 3 1 1 3 2 1 1 1 1 2 3 1 1 1 1 1 1] eq_tmpl  % 8 digits
+(0308400)        [1 1 1 1 1 4 1 3 2 1 1 1 2 1 3 2 3 1 1 3 2 1 1 1 1 2 3 1 1 1 1 1 1] eq_tmpl  % Omit checksum
+(03084000)       /bwipp.upcEbadCheckDigit                                            er_tmpl  % Invalid checksum
+
+(03084009 12345) [1 1 1 1 1 4 1 3 2 1 1 1 2 1 3 2 3 1 1 3 2 1 1 1 1 2 3 1 1 1 1 1 1           % Add 5
+                  12.0
+                  1 1 2 1 2 2 2 1 1 2 1 2 2 1 1 1 1 4 1 1 1 1 1 3 2 1 1 1 2 3 1]     eq_tmpl
+
+(03084009 12)    [1 1 1 1 1 4 1 3 2 1 1 1 2 1 3 2 3 1 1 3 2 1 1 1 1 2 3 1 1 1 1 1 1           % Add 2
+                  12.0
+                  1 1 2 2 2 2 1 1 1 2 1 2 2]                                         eq_tmpl
+
+(03084009 123)   /bwipp.upcEbadAddOnLength                                           er_tmpl  % Add 3!
+
+(A3084009)       /bwipp.upcEbadCharacter                                             er_tmpl  % Bad character
+
+(030840)         /bwipp.upcEbadLength                                                er_tmpl  % Too short
+(030840091)      /bwipp.upcEbadLength                                                er_tmpl  % Too long
+
+(012100003454)   [1 1 1 1 2 2 2 2 1 2 2 1 1 4 1 2 3 1 1 1 2 3 1 2 2 2 1 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion
+(01210000345)    [1 1 1 1 2 2 2 2 1 2 2 1 1 4 1 2 3 1 1 1 2 3 1 2 2 2 1 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion, no checksum
+(012100003455)   /bwipp.upcEbadCheckDigit                                            er_tmpl  % UPC-A conversion, bad checksum
+(112100003451)   [1 1 1 2 2 2 1 2 1 2 2 1 1 4 1 1 1 3 2 1 3 2 1 1 2 2 2 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion, system 1
+(21210000345)    /bwipp.upcEbadNumberSystem                                          er_tmpl  % UPC-A conversion, system 2!
+(A1210000345)    /bwipp.upcEupcAbadCharacter                                         er_tmpl  % UPC-A conversion, bad character
+
+(098200007653)   [1 1 1 2 1 1 3 3 1 2 1 1 3 1 2 1 1 1 4 1 2 3 1 2 2 1 2 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion NNN{0-2}0000NNNN
+(098700000659)   [1 1 1 2 1 1 3 1 2 1 3 1 3 1 2 4 1 1 1 1 2 3 1 1 1 4 1 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion NNNN00000NNN
+(098760000057)   [1 1 1 2 1 1 3 1 2 1 3 2 1 3 1 1 1 1 4 1 3 2 1 1 1 3 2 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion NNNNN00000NN
+(098765000076)   [1 1 1 2 1 1 3 1 2 1 3 1 3 1 2 1 1 1 4 1 3 2 1 2 1 3 1 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion NNNNNN0000{5-9}N
+
+end
+} bind def

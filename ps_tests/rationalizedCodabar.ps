@@ -1,0 +1,58 @@
+/runtest_rationalizedCodabar {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% BS EN 798:1996
+
+% vim: set ts=4 sw=4 et :
+
+%%/rationalizedCodabar dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ (A) (dontdraw) rationalizedCodabar
+} /bwipp.rationalizedCodabarBadLength isError
+
+{ (AB) (dontdraw validatecheck) rationalizedCodabar
+} /bwipp.rationalizedCodabarBadLength isError
+
+{ (TB) (dontdraw) rationalizedCodabar
+} /bwipp.rationalizedCodabarBadStartStop isError
+
+{ (AN) (dontdraw altstartstop) rationalizedCodabar
+} /bwipp.rationalizedCodabarBadAltStartStop isError
+
+{ (AAB) (dontdraw) rationalizedCodabar
+} /bwipp.rationalizedCodabarBadCharacter isError
+
+{ (A37859.B) (dontdraw validatecheck) rationalizedCodabar  % Check digit should be "+"
+} /bwipp.rationalizedCodabarBadCheckDigit isError
+
+
+% Examples
+
+(A37859B) (dontdraw) rationalizedCodabar /sbs get  % Figure 1, same
+[
+    1 1 3 3 1 3 1 1 3 3 1 1 1 1 1 1 1 3 1 1 3 1 1 1 1 3 3 1 1 1 1 1 3 1 1 1 1 3 1 1 3 1 1 3 1 1 1 1 1 3 1 3 1 1 3 1
+] debugIsEqual
+
+(A37859+B) (dontdraw validatecheck) rationalizedCodabar /sbs get
+[
+    1 1 3 3 1 3 1 1 3 3 1 1 1 1 1 1 1 3 1 1 3 1 1 1 1 3 3 1 1 1 1 1 3 1 1 1 1 3 1 1 3 1 1 3 1 1 1 1 1 1 3 1 3 1 3 1 1 3 1 3 1 1 3 1
+] debugIsEqual
+
+(AB) (dontdraw) rationalizedCodabar /sbs get  % Empty body allowed
+[
+    1 1 3 3 1 3 1 1 1 3 1 3 1 1 3 1
+] debugIsEqual
+
+(TN) (dontdraw altstartstop) rationalizedCodabar /sbs get  % Same as above
+[
+    1 1 3 3 1 3 1 1 1 3 1 3 1 1 3 1
+] debugIsEqual
+end
+} bind def

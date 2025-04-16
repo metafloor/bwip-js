@@ -51,37 +51,7 @@ count {
 ## significant digits after the decimal place.  Normalize to three.
 ## pharmacode2 produces nulls in its arrays.  ghostscript prints null where as
 ## javascript prints nothing.  Remove nulls.
-cat - <<@EOF > tests/nsed.js
-const fs = require('fs');
-
-function filt(line) {
-    process.stdout.write(
-        line.replace(/\d+(\.\d+)?/g, function(s) {
-            return (+s).toFixed(3).replace(/(\.000|00|0)$/, '');
-        })
-        .replace(/null/g, ''), 'binary');
-}
-
-let ptl = '';
-process.stdin.resume();
-process.stdin.setEncoding('binary');
-process.stdin.on('data', (data) => {
-    ptl += data.toString('binary');
-    let eol = ptl.indexOf('\n');
-    while (eol >= 0) {
-        filt(ptl.substr(0, eol+1));
-        ptl = ptl.substr(eol+1);
-        eol = ptl.indexOf('\n');
-    }
-});
-process.stdin.on('end', () => {
-    ptl && filt(ptl);
-    process.exit(0);
-});
-@EOF
-
-gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' -e 's/null//g' > $GSOUT
-##gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | node tests/nsed.js > $GSOUT
+gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g'  -e 's/\(\.[1-9]*\)00*\([^0-9]\)/\1\2/g' -e 's/null//g' > $GSOUT
 
 ## Node/bwip-js
 (
@@ -121,8 +91,7 @@ for (var i = stack.length-1; i >= 0; i--) {
     if (o.bhs) { console.log('[' + o.bhs.join(' ') + ']'); }
 }
 @EOF
-) | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' > $JSOUT
-##) | node tests/nsed.js > $JSOUT
+) | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' -e 's/\(\.[1-9]*\)00*\([^0-9]\)/\1\2/g' > $JSOUT
 
 ## diff ignoring whitespace (-b) differences.
 diff -qb $GSOUT $JSOUT

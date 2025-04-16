@@ -1,0 +1,37 @@
+/runtest_sscc18 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% vim: set ts=4 sw=4 et :
+
+%%/sscc18 dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) sscc18 /sbs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) sscc18 /sbs get } e isError
+} def
+
+
+((00)095287654321012346)
+    [2 1 1 2 3 2 4 1 1 1 3 1 2 1 2 2 2 2 2 2 1 2 1 3 2 1 3 3 1 1 4 2 1 1 1 2 1 2 1 1 2 4 1 1 2 3 3 1 2 1 3 2 1 2 2 2 2 1 2 2 3 1 2 1 3 1 1 1 3 3 2 1 2 2 1 2 1 3 2 3 3 1 1 1 2]
+    eq_tmpl
+
+
+((00)095287654321012345)  /bwipp.sscc18badCheckDigit  er_tmpl
+()                        /bwipp.sscc18badLength      er_tmpl
+((00)0952876543210123456) /bwipp.sscc18badLength      er_tmpl
+((00)0952876543210123)    /bwipp.sscc18badLength      er_tmpl
+((00)0952876543210123A)   /bwipp.sscc18badCharacter   er_tmpl
+((01)095287654321012345)  /bwipp.sscc18badAI          er_tmpl
+end
+} bind def

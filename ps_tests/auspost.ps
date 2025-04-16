@@ -1,0 +1,91 @@
+/runtest_auspost {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% https://auspost.com.au/content/dam/auspost_corp/media/documents/customer-barcode-technical-specifications-aug2012.pdf
+% https://auspost.com.au/content/dam/auspost_corp/media/documents/a-guide-to-printing-the-4state-barcode-v31-mar2012.pdf
+
+% vim: set ts=4 sw=4 et :
+
+%%/auspost dup /uk.co.terryburton.bwipp findresource cvx def
+
+/dump_4state_tmpl {
+    /ret exch def
+    /bhs ret /bhs get def
+    /bbs ret /bbs get def
+    [
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            bbs i get 0.05 lt { bhs i get 0.14 gt {1} {0} ifelse } { bhs i get 0.09 gt {1} {0} ifelse } ifelse
+        } for
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            1
+        } for
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            bbs i get 0.05 lt { bhs i get 0.09 gt {1} {0} ifelse } {0} ifelse
+        } for
+    ]
+} def
+
+
+% Input validation
+
+{ () (dontdraw) auspost
+} /bwipp.auspostTooShort isError
+
+{ (1196184209) (dontdraw custinfoenc=alpha) auspost
+} /bwipp.auspostBadCustinfoEncoding isError
+
+{ (1) (dontdraw) auspost
+} /bwipp.auspostTooShort isError
+
+{ (1096184209) (dontdraw) auspost
+} /bwipp.auspostBadFCC isError
+
+{ (119618420A) (dontdraw) auspost
+} /bwipp.auspostIncompleteDPID isError
+
+{ (5912345678ABcd!) (dontdraw) auspost
+} /bwipp.auspostInvalidCustinfoCharacter isError
+
+{ (11123456789) (dontdraw) auspost
+} /bwipp.auspostTooLong isError
+
+{ (591234567890123A) (dontdraw) auspost
+} /bwipp.auspostTooLong isError
+
+{ (59123456789012345A) (dontdraw) auspost
+} /bwipp.auspostTooLong isError
+
+{ (62123456789012345678A) (dontdraw) auspost
+} /bwipp.auspostTooLong isError
+
+{ (621234567890123456789012A) (dontdraw) auspost
+} /bwipp.auspostTooLong isError
+
+
+% Examples
+
+(1196184209) (dontdraw) auspost dump_4state_tmpl  % Tech Specs Diagram 1, same
+[
+    1 0 0 0 1 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+    0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 1 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0
+] isEqual
+
+(5956439111ABA 9) (dontdraw) auspost dump_4state_tmpl  % Guide Figure 4, same
+[
+    1 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 1 0 1 0 1 0 1 0 0 0 0 0 1 0 1 0 0 
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 
+    0 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 1 0 1 0 1 0 0 0 1 0 1 0 1 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 
+] isEqual
+end
+} bind def

@@ -1,0 +1,125 @@
+/runtest_bc412 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% SEMI T1-95 (1996)
+
+% vim: set ts=4 sw=4 et :
+
+%%/bc412 dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl_semi {
+    /e exch def
+    /t exch def
+    { t (dontdraw semi) bc412 /sbs get } e isEqual
+} def
+/er_tmpl_semi {
+    /e exch def
+    /t exch def
+    { t (dontdraw semi) bc412 /sbs get } e isError
+} def
+
+/eq_tmpl_semi_validate {
+    /e exch def
+    /t exch def
+    { t (dontdraw semi validatecheck) bc412 /sbs get } e isEqual
+} def
+/er_tmpl_semi_validate {
+    /e exch def
+    /t exch def
+    { t (dontdraw semi validatecheck) bc412 /sbs get } e isError
+} def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw includestartstop includecheck) bc412 /sbs get } e isEqual
+} def
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw includestartstop includecheck) bc412 /sbs get } e isError
+} def
+
+/eq_tmpl_validate {
+    /e exch def
+    /t exch def
+    { t (dontdraw includestartstop validatecheck) bc412 /sbs get } e isEqual
+} def
+/er_tmpl_validate {
+    /e exch def
+    /t exch def
+    { t (dontdraw includestartstop validatecheck) bc412 /sbs get } e isError
+} def
+
+
+% SEMI T1-95 Figure 2
+(AQ45670)  % A           Q               Q               4               5               6               7               0               Stop
+    [1 2 1 1 1 3 1 2 1 2 1 3 1 1 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 1 1 5 1 1 1 1 1 2 1 1 1 4 1 1 1 2 1 2 1 3 1 1 1 2 1 3 1 2 1 1 1 1 1 1 1 5 1 1 1]
+    eq_tmpl_semi
+
+(AQQ45670)
+    [1 2 1 1 1 3 1 2 1 2 1 3 1 1 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 1 1 5 1 1 1 1 1 2 1 1 1 4 1 1 1 2 1 2 1 3 1 1 1 2 1 3 1 2 1 1 1 1 1 1 1 5 1 1 1]
+    eq_tmpl_semi_validate
+
+(A2Q45670)
+    /bwipp.bc412semiBadCheckDigit
+    er_tmpl_semi_validate
+
+(AQ45670)  % A           Q               4               5               6               7               0               L               Stop
+    [1 2 1 1 1 3 1 2 1 2 1 3 1 1 1 1 1 3 1 1 1 1 1 5 1 1 1 1 1 2 1 1 1 4 1 1 1 2 1 2 1 3 1 1 1 2 1 3 1 2 1 1 1 1 1 1 1 5 1 2 1 2 1 3 1 1 1 1 1]
+    eq_tmpl
+
+(AQ45670L)
+    [1 2 1 1 1 3 1 2 1 2 1 3 1 1 1 1 1 3 1 1 1 1 1 5 1 1 1 1 1 2 1 1 1 4 1 1 1 2 1 2 1 3 1 1 1 2 1 3 1 2 1 1 1 1 1 1 1 5 1 2 1 2 1 3 1 1 1 1 1]
+    eq_tmpl_validate
+
+(AQ45670V)
+    /bwipp.bc412badCheckDigit
+    er_tmpl_validate
+
+() /bwipp.bc412emptyData er_tmpl
+() /bwipp.bc412emptyData er_tmpl_validate
+() /bwipp.bc412emptyData er_tmpl_semi
+() /bwipp.bc412emptyData er_tmpl_semi_validate
+
+(1234567890ABCDEFGH)  % 18 max len
+    [1 2 1 1 1 1 1 2 1 4 1 2 1 1 1 4 1 1 1 1 1 1 1 3 1 3 1 1 1 1 1 4 1 2 1 1 1 1 1 5 1 1 1 1 1 2 1 1 1 4 1 1 1 2 1 2 1 3 1 1 1 2 1 3 1 2 1 1 1 2 1 4 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 5 1 1 1 3 1 2 1 2 1 1 1 3 1 3 1 1 1 1 1 4 1 1 1 2 1 1 1 4 1 2 1 1 1 1 1 5 1 1 1 1 1 2 1 1 1 1 1 4 1 2 1 1 1 2 1 3 1 2 1 1 1 3 1 2 1 1 1]
+    eq_tmpl_semi
+
+(1I234567890ABCDEFGH)  % 19 max len with check digit
+    [1 2 1 1 1 1 1 2 1 4 1 2 1 1 1 4 1 1 1 1 1 1 1 3 1 3 1 1 1 1 1 4 1 2 1 1 1 1 1 5 1 1 1 1 1 2 1 1 1 4 1 1 1 2 1 2 1 3 1 1 1 2 1 3 1 2 1 1 1 2 1 4 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 5 1 1 1 3 1 2 1 2 1 1 1 3 1 3 1 1 1 1 1 4 1 1 1 2 1 1 1 4 1 2 1 1 1 1 1 5 1 1 1 1 1 2 1 1 1 1 1 4 1 2 1 1 1 2 1 3 1 2 1 1 1 3 1 2 1 1 1]
+    eq_tmpl_semi_validate
+
+(1X234567890ABCDEFGH)  % Invalid check
+    /bwipp.bc412semiBadCheckDigit
+    er_tmpl_semi_validate
+
+(1234567890ABCDEFGHI)  % 19 len too long
+    /bwipp.bc412semiBadLength
+    er_tmpl_semi
+
+(1I234567890ABCDEFGHI)  % 20 len too long with check digit
+    /bwipp.bc412semivalidateBadLength
+    er_tmpl_semi_validate
+
+(123456)  % 6 len too short
+    /bwipp.bc412semiBadLength
+    er_tmpl_semi
+
+(1234567)  % 7 len too short with check digit
+    /bwipp.bc412semivalidateBadLength
+    er_tmpl_semi_validate
+
+(ABCDEFGHIJKLMNO)  % Letter O not allowed
+    /bwipp.bc412badCharacter
+    er_tmpl
+
+(ABCDEFGHIJKLMNO)
+    /bwipp.bc412badCharacter
+    er_tmpl_semi
+end
+} bind def

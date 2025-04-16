@@ -1,0 +1,249 @@
+/runtest_qrcode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 18004:2015
+
+% vim: set ts=4 sw=4 et :
+
+%%/qrcode dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /o exch def
+    /t exch def
+    { t o qrcode /pixs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /o exch def
+    /t exch def
+    { t o qrcode /pixs get } e isError
+} def
+
+
+{
+    (TESTING) (fixedeclevel debugcws) qrcode
+} [32 61 39 161 45 5 0 236 17 236 17 236 17 236 17 236] debugIsEqual
+
+{
+    (TESTING) (fixedeclevel debugecc) qrcode
+} [32 61 39 161 45 5 0 236 17 236 17 236 17 236 17 236 124 49 125 89 133 221 9 38 29 92] debugIsEqual
+
+{  % K4 (点茗点茗); 7.4.6 examples 点 0x935F (^147^095) and 茗 0xE4AA (^228^170); 4 Kanji max for version 1-H (Table 7)
+    (^147^095^228^170^147^095^228^170) (parse version=1 eclevel=H fixedeclevel debugcws) qrcode
+} [128 70 207 234 169 179 250 170 0] debugIsEqual
+
+{  % B1 K9 A2 (?やややややややややAB); や 0x82E2 (^130^226); note ^226^130 (0xE282) and ^226A (0xE241) also valid Shift JIS
+    (?^130^226^130^226^130^226^130^226^130^226^130^226^130^226^130^226^130^226AB) (parse version=2 eclevel=Q fixedeclevel debugcws) qrcode
+} [64 19 248 9 11 16 88 130 196 22 32 177 5 136 44 65 98 11 17 0 142 104] debugIsEqual
+
+{  % B19 K5 (?ややややwやややや ややややや); note ^266w (0xE277) and ^266<SP> (0xE240) also valid Shift JIS
+    (?^130^226^130^226^130^226^130^226w^130^226^130^226^130^226^130^226 ^130^226^130^226^130^226^130^226^130^226) (parse version=2 eclevel=L fixedeclevel debugcws) qrcode
+} [65 51 248 46 40 46 40 46 40 46 39 120 46 40 46 40 46 40 46 34 8 5 11 16 88 130 196 22 32 177 0 236 17 236] debugIsEqual
+
+{  % ECI regression fix (PR #179 calculate numBs from "not others" to avoid Kanji overlap [88510ab])
+    (^182^ECI000007^182) (parse parsefnc version=1 eclevel=H fixedeclevel debugcws) qrcode
+} [64 27 103 7 64 27 96 236 17] debugIsEqual
+
+{
+    % B1 K8 A1 (?点茗や点茗や点茗A), modeBKbeforeA v1to9 change 9 -> 8, previously B18 (longer msgbits length)
+    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170A) (parse version=2 eclevel=L fixedeclevel debugcws) qrcode
+} [64 19 248 8 108 254 170 130 196 217 253 85 5 137 179 250 170 32 9 64 7 { 236 17 } repeat ] debugIsEqual
+
+{
+    % B1 K11 A1 (?点茗や点茗や点茗や点茗A), modeBKbeforeA v27to40 change 12 -> 11, previously B24 (longer msgbits length)
+    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170A) (parse version=27 eclevel=L fixedeclevel debugcws) qrcode
+} [64 0 19 248 0 182 207 234 168 44 77 159 213 80 88 155 63 170 160 177 54 127 85 68 0 18 128 236 720 { 17 236 } repeat ] debugIsEqual
+
+{
+    % B1 K8 N1 (?点茗や点茗や点茗1), modeBKbeforeN v1to9 change 9 -> 8, previously B18 (longer msgbits length)
+    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^1701) (parse version=2 eclevel=L fixedeclevel debugcws) qrcode
+} [64 19 248 8 108 254 170 130 196 217 253 85 5 137 179 250 170 16 4 64 7 { 236 17 } repeat ] debugIsEqual
+
+{
+    % B1 K9 N1 (?点茗や点茗や点茗や1), modeBKbeforeN v10to26 change 10 -> 9, previously B20 (longer msgbits length)
+    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^2261) (parse version=10 eclevel=L fixedeclevel debugcws) qrcode
+} [64 0 19 248 2 91 63 170 160 177 54 127 85 65 98 108 254 170 130 196 32 2 32 236 125 { 17 236 } repeat ] debugIsEqual
+
+{
+    % A1 K9 N1 (?点茗や点茗や点茗や1), modeBKbeforeN v10to26 change 10 -> 9, previously B20 (longer msgbits length)
+    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^2261) (parse version=10 eclevel=L fixedeclevel debugcws) qrcode
+} [64 0 19 248 2 91 63 170 160 177 54 127 85 65 98 108 254 170 130 196 32 2 32 236 125 { 17 236 } repeat ] debugIsEqual
+
+{
+    % B9 (?点茗や点), modeBKbeforeE (mode0KbeforeE) v1to9 change 4 -> 5, previously B1 K4 (same msgbits length)
+    (?^147^095^228^170^130^226^147^095) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [64 147 249 53 254 74 168 46 41 53 240 236 17 236 17 236 17 236 17] debugIsEqual
+
+{
+    % B1 N4 (?1234), modeBNbeforeE v27to40 change 5 -> 4 previously B5 (same msgbits length)
+    (?1234) (parse version=27 eclevel=L fixedeclevel debugcws) qrcode
+} [64 0 19 241 0 16 123 64 730 { 236 17 } repeat ] debugIsEqual
+
+{
+    % A6 K1 (ABCDEF点), new initial mode A before K re-using modeBAbeforeE array, previously B8 (longer msgbits length)
+    (ABCDEF^147^095) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [32 49 205 69 42 22 0 91 62 0 236 17 236 17 236 17 236 17 236] debugIsEqual
+
+{
+    % B17, issue #237, previously unencodable A3 B14
+    (K9K^000^000^000^000^000^000^000^000^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [65 20 179 148 176 0 0 0 0 0 0 0 0 0 0 0 0 0 0] debugIsEqual
+{
+    % B17, inversion of above
+    (^000^000^000^000^000^000^000^000^000^000^000^000^000^000K9K) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [65 16 0 0 0 0 0 0 0 0 0 0 0 0 0 4 179 148 176] debugIsEqual
+
+{
+    % A10 B9
+    (K9K9K9K9K9^000^000^000^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [32 83 141 113 174 53 198 184 212 9 0 0 0 0 0 0 0 0 0] debugIsEqual
+{
+    % B9 A10, inversion of above
+    (^000^000^000^000^000^000^000^000^000K9K9K9K9K9) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [64 144 0 0 0 0 0 0 0 0 2 5 56 215 26 227 92 107 141] debugIsEqual
+
+{
+    % B9 A10, with AorN sequence containing N5
+    (^000^000^000^000^000^000^000^000^000K99999K9KK) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [64 144 0 0 0 0 0 0 0 0 2 5 56 211 60 103 156 107 152] debugIsEqual
+    % With AorN sequence containing N6 fails with unencodable B10 N6 A3 (due to nextNslt test)
+    (^000^000^000^000^000^000^000^000^000K999999KKK) (parse version=1 eclevel=L fixedeclevel dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
+
+{
+    % A14 B6
+    (K9K9K9K9K9K9K9^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [32 115 141 113 174 53 198 184 215 26 227 80 24 0 0 0 0 0 0] debugIsEqual
+    % Inversion of above fails with unencodable B8 A12 (terminal AorN sequence too long to produce B6 A14)
+    (^000^000^000^000^000^000K9K9K9K9K9K9K9) (parse version=1 eclevel=L fixedeclevel dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
+{
+    % One less fits with B7 A12, though longer msgbits length than B6 A13
+    (^000^000^000^000^000^000K9K9K9K9K9K9K) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
+} [64 112 0 0 0 0 0 4 178 6 26 147 82 106 77 73 169 53 32] debugIsEqual
+
+{
+    % N6 K1 with mode0NbeforeB NbeforeK -> N in mode -1, previously had 0-length B0 seq prefixed due to mode -1 -> B and then immediately -> N
+    (123456^138^197) (parse version=1 eclevel=H fixedeclevel debugcws) qrcode
+} [16 24 123 114 32 4 232 160 236] debugIsEqual
+
+
+% Figures
+
+(QR Code Symbol) (fixedeclevel dontdraw)  % Figure 1, same
+[
+    1 1 1 1 1 1 1 0 0 0 0 1 1 0 1 1 1 1 1 1 1
+    1 0 0 0 0 0 1 0 1 0 0 1 1 0 1 0 0 0 0 0 1
+    1 0 1 1 1 0 1 0 1 1 1 0 1 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 1 0 1 0 0 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 0 0 0 0 1 0 1 0 1 1 1 0 1
+    1 0 0 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 0 0 1
+    1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1
+    0 0 0 0 0 0 0 0 1 1 0 0 1 0 0 0 0 0 0 0 0
+    1 0 0 0 0 0 1 0 1 1 1 1 0 1 1 0 0 1 1 1 0
+    1 0 0 0 1 0 0 0 1 1 1 0 0 0 1 0 0 0 1 1 1
+    0 1 1 1 0 1 1 1 1 0 0 1 1 0 0 1 0 0 0 1 0
+    1 1 0 1 0 0 0 0 1 0 1 1 0 1 0 1 0 0 1 1 0
+    0 1 1 1 1 1 1 1 1 1 1 0 0 0 1 0 1 1 0 1 1
+    0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 1 0
+    1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 0 0 0 1 1 0
+    1 0 0 0 0 0 1 0 0 0 1 0 0 1 1 0 1 1 1 0 0
+    1 0 1 1 1 0 1 0 0 0 0 0 1 1 1 0 0 0 1 1 1
+    1 0 1 1 1 0 1 0 0 1 0 0 0 0 1 0 1 0 1 0 0
+    1 0 1 1 1 0 1 0 0 1 0 0 1 0 1 0 1 0 0 1 1
+    1 0 0 0 0 0 1 0 0 0 0 1 1 1 0 1 1 1 1 0 0
+    1 1 1 1 1 1 1 0 1 0 1 1 0 0 1 0 1 0 0 1 0
+] eq_tmpl
+
+(ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ) (fixedeclevel dontdraw)  % Figure 29 (top), same
+[
+    1 1 1 1 1 1 1 0 1 1 0 0 1 1 0 0 1 0 0 1 0 0 1 0 1 0 1 1 1 1 1 1 1
+    1 0 0 0 0 0 1 0 0 0 1 0 1 1 1 0 1 0 1 1 1 0 0 0 1 0 1 0 0 0 0 0 1
+    1 0 1 1 1 0 1 0 0 0 0 0 0 0 1 1 0 1 1 0 1 1 0 0 0 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 1 0 1 0 0 0 0 1 1 1 0 0 0 1 1 0 0 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 1 1 0 1 1 0 0 0 1 1 0 1 0 0 1 0 0 0 1 0 1 1 1 0 1
+    1 0 0 0 0 0 1 0 1 1 0 0 0 1 0 1 0 0 0 0 1 1 0 1 1 0 1 0 0 0 0 0 1
+    1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1
+    0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0 1 1 1 0 0 1 0 0 0 0 0 0 0 0
+    1 0 0 0 1 0 1 1 1 1 0 0 0 0 1 1 0 0 1 0 0 0 1 1 0 1 1 1 1 1 0 0 1
+    1 0 0 1 0 1 0 0 0 1 1 1 0 0 1 0 0 1 0 0 0 1 1 0 0 0 0 1 0 1 1 0 0
+    0 1 0 0 0 1 1 0 0 0 1 1 1 1 1 0 1 0 1 0 1 0 0 0 0 1 1 0 1 1 0 0 1
+    1 0 1 1 0 1 0 1 1 1 0 1 0 1 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0
+    0 0 1 1 1 1 1 1 0 0 1 1 0 1 0 1 1 0 0 1 0 0 1 1 1 0 1 0 0 1 1 0 0
+    0 1 1 0 0 1 0 0 0 1 0 1 0 0 1 0 0 0 1 1 1 1 0 0 1 1 0 1 0 1 0 0 1
+    1 0 1 0 0 1 1 1 1 0 0 1 1 1 1 1 0 1 0 0 1 1 1 1 0 0 0 1 1 0 1 1 1
+    1 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 1 1 1 0 0 1 0 1 1 1 1 1 0 0 0 0 0
+    1 1 0 0 1 0 1 1 1 1 0 1 1 1 0 0 0 0 0 1 1 1 1 0 1 1 1 1 1 1 1 0 0
+    0 1 0 0 0 0 0 1 0 1 1 1 1 0 0 0 1 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 1
+    1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 0 1 0 0 0 1 1 1 1
+    0 0 1 1 0 0 0 1 0 0 0 0 0 0 0 1 1 1 1 0 0 1 0 1 0 1 0 1 0 1 1 1 0
+    1 1 1 1 0 1 1 1 1 0 1 1 1 0 1 0 0 0 1 1 1 0 0 1 0 1 0 0 1 0 0 0 1
+    1 0 0 1 1 0 0 0 0 1 0 1 0 0 1 0 1 0 0 1 0 1 1 1 0 0 0 1 0 0 0 0 1
+    0 0 0 1 1 0 1 1 1 1 1 0 1 1 1 0 1 0 0 1 0 0 0 1 0 1 1 0 0 1 0 0 0
+    0 0 1 0 1 1 0 1 0 0 1 1 1 0 1 0 0 0 0 1 1 1 1 1 0 1 1 1 0 1 1 1 1
+    1 1 1 0 1 1 1 1 1 0 0 0 0 1 0 1 1 1 0 0 1 0 0 1 1 1 1 1 1 0 0 0 0
+    0 0 0 0 0 0 0 0 1 1 1 0 1 1 0 0 1 1 1 1 1 1 0 0 1 0 0 0 1 0 1 0 0
+    1 1 1 1 1 1 1 0 1 0 0 0 1 1 0 1 0 0 1 0 1 0 0 0 1 0 1 0 1 0 0 1 1
+    1 0 0 0 0 0 1 0 0 0 0 1 0 1 0 0 1 0 0 0 1 0 1 1 1 0 0 0 1 0 0 0 0
+    1 0 1 1 1 0 1 0 1 1 1 1 0 1 1 0 1 0 0 0 0 0 1 0 1 1 1 1 1 1 1 0 0
+    1 0 1 1 1 0 1 0 0 0 0 0 1 1 1 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 0 1
+    1 0 1 1 1 0 1 0 0 1 0 1 0 1 0 1 0 0 0 0 1 0 0 0 0 1 0 1 1 0 1 0 0
+    1 0 0 0 0 0 1 0 0 0 1 0 1 1 0 1 1 1 0 0 0 1 1 0 1 0 1 0 0 1 0 0 1
+    1 1 1 1 1 1 1 0 1 1 0 1 1 0 1 0 1 1 0 1 0 0 0 0 1 1 1 1 0 0 0 1 1
+] eq_tmpl
+
+(01234567) (dontdraw mask=3 fixedeclevel)  % Figure I.2, same with explicit mask 010 (automatic mask 000)
+[
+    1 1 1 1 1 1 1 0 0 1 0 1 1 0 1 1 1 1 1 1 1
+    1 0 0 0 0 0 1 0 0 1 1 1 1 0 1 0 0 0 0 0 1
+    1 0 1 1 1 0 1 0 1 0 0 0 0 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 1 0 1 1 1 0 1 0 1 1 1 0 1
+    1 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 1
+    1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1
+    0 0 0 0 0 0 0 0 1 0 0 1 1 0 0 0 0 0 0 0 0
+    1 0 1 1 1 1 1 0 0 1 0 0 1 0 1 1 1 1 1 0 0
+    0 0 0 1 0 1 0 1 1 0 1 0 1 0 0 1 0 1 1 0 0
+    0 0 1 0 0 0 1 1 0 1 0 1 0 1 0 0 1 1 1 1 1
+    0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 1 1 1 1 0 0
+    0 0 0 1 1 1 1 1 1 0 0 1 0 1 0 0 1 0 0 0 0
+    0 0 0 0 0 0 0 0 1 0 1 1 1 1 1 0 0 1 1 0 0
+    1 1 1 1 1 1 1 0 0 1 1 0 1 0 1 1 0 0 0 0 0
+    1 0 0 0 0 0 1 0 1 0 1 1 1 1 1 0 0 0 1 0 1
+    1 0 1 1 1 0 1 0 1 0 0 0 1 0 0 1 0 1 1 0 0
+    1 0 1 1 1 0 1 0 1 1 0 0 1 0 0 1 0 0 0 0 0
+    1 0 1 1 1 0 1 0 1 0 1 1 0 1 0 0 1 0 1 0 0
+    1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 0
+    1 1 1 1 1 1 1 0 1 1 1 1 0 1 0 0 1 0 1 0 0
+] eq_tmpl
+
+(^ECI000003price:^16320.00) (dontdraw parse parsefnc eclevel=M fixedeclevel)  % AIM ITS/04-023:2022 ECI 3 Example 2, same
+[
+    1 1 1 1 1 1 1 0 1 1 1 1 1 0 1 1 1 1 1 1 1
+    1 0 0 0 0 0 1 0 1 1 0 1 0 0 1 0 0 0 0 0 1
+    1 0 1 1 1 0 1 0 0 0 0 1 1 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 1 1 0 0 1 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 0 1 0 1 0 0 1 0 1 1 1 0 1
+    1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 1
+    1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1
+    0 0 0 0 0 0 0 0 1 1 0 1 0 0 0 0 0 0 0 0 0
+    1 0 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 1 0 1 1
+    0 0 0 0 1 0 0 0 1 1 0 0 1 0 1 1 1 1 1 0 0
+    1 0 1 0 1 1 1 1 0 1 1 1 0 0 0 0 1 0 1 1 0
+    1 0 1 0 0 0 0 1 0 1 0 1 1 1 0 1 0 0 0 1 0
+    0 1 0 1 0 0 1 0 1 0 1 0 1 1 1 1 0 0 1 0 0
+    0 0 0 0 0 0 0 0 1 1 0 1 0 0 1 1 0 0 0 0 1
+    1 1 1 1 1 1 1 0 1 0 1 0 0 0 1 1 1 1 1 0 0
+    1 0 0 0 0 0 1 0 1 1 0 1 0 0 0 1 1 0 1 1 1
+    1 0 1 1 1 0 1 0 0 0 0 1 0 0 0 1 0 1 1 0 1
+    1 0 1 1 1 0 1 0 1 0 0 0 1 1 0 1 0 1 0 1 0
+    1 0 1 1 1 0 1 0 1 0 1 1 0 1 1 1 0 0 0 0 0
+    1 0 0 0 0 0 1 0 0 1 0 1 1 0 1 0 1 1 1 1 0
+    1 1 1 1 1 1 1 0 1 1 0 0 0 1 0 1 1 1 0 0 0
+] eq_tmpl
+end
+} bind def

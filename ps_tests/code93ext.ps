@@ -1,0 +1,45 @@
+/runtest_code93ext {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% AIM USS Code 93 AIM-BC5-2000
+
+% vim: set ts=4 sw=4 et :
+
+%%/code93ext dup /uk.co.terryburton.bwipp findresource cvx def
+%%/code93 dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw parse includecheck) code93ext /sbs get } e isEqual
+} def
+
+/eq_nonext_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw includecheck) code93 /sbs get } e isEqual
+} def
+
+
+% Non-shifts $/+%
+
+($/+%)  % Same as non-extended below
+    [1 1 1 1 4 1 3 2 1 1 1 1 1 1 2 1 3 1 1 1 3 1 2 1 2 1 1 1 3 1 1 2 1 1 2 2 1 1 1 2 2 2 1 1 1 1 4 1 1] eq_tmpl
+
+($/+%)
+    [1 1 1 1 4 1 3 2 1 1 1 1 1 1 2 1 3 1 1 1 3 1 2 1 2 1 1 1 3 1 1 2 1 1 2 2 1 1 1 2 2 2 1 1 1 1 4 1 1] eq_nonext_tmpl
+
+($%&^039()*+,-./)
+    [1 1 1 1 4 1 3 2 1 1 1 1 2 1 1 1 3 1 3 1 1 1 2 1 2 3 1 1 1 1 3 1 1 1 2 1 1 1 2 1 1 3 3 1 1 1 2 1 1 1 2 2 1 2 3 1 1 1 2 1 1 1 2 3 1 1 3 1 1 1 2 1 1 2 2 1 1 2 1 1 3 1 2 1 3 1 1 1 2 1 1 1 1 1 2 3 1 2 1 1 3 1 3 1 1 1 1 2 1 1 2 1 3 1 2 1 2 2 1 1 1 1 1 1 1 4 1 1 1 1 4 1 1] eq_tmpl
+
+
+% Figure
+
+(CODE^01393)  % Figure B1, same
+    [1 1 1 1 4 1 2 1 1 3 1 1 1 2 1 1 2 2 2 2 1 1 1 2 2 2 1 2 1 1 1 2 1 2 2 1 1 1 1 2 2 2 1 4 1 1 1 1 1 1 1 4 1 1 2 2 1 1 1 2 1 3 1 1 2 1 1 1 1 1 4 1 1] eq_tmpl
+end
+} bind def

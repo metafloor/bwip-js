@@ -1,0 +1,277 @@
+#!/bin/bash
+
+grep -E '% --BEGIN (ENCODER|RENDERER|RESOURCE)' barcode.ps | sed -e 's,% --BEGIN [A-Z][A-Z]*\s*\(.*\)--,/\1 bwippdef,' > bwippdefs.ps
+
+rm -f ps_tests/* 2>/dev/null
+for path in ../postscriptbarcode/tests/ps_tests/*.ps.test ; do
+    name=$(basename $path .ps.test)
+    if [ $name = codeone -o $name = gs1process -o $name = gs1processdl ] ; then
+        echo "skipping $name..."
+        continue
+    fi
+    jsname=$(echo "$name" | tr '-' '_')
+
+    (
+    echo "/runtest_$jsname {"
+    echo '20 dict begin'
+    cat ../postscriptbarcode/tests/ps_tests/$name.ps.test |
+        sed -e 's,/[a-zA-Z0-9_-]* dup /uk.co.terryburton.bwipp findresource cvx def,%%&,'
+    echo 'end'
+    echo '} bind def';
+    ) > ps_tests/$name.ps
+
+    ## Fix the "code patching" done by the postscript test scripts.
+    ## In postscript, executable blocks are just arrays of tokens that can be modified.
+    ## But with our emulation, those token streams are converted to javascript functions
+    ## and cannot be modified at runtime.
+    ## Here's a typical example:
+    ##  /eq_tmpl {
+    ##      3 1 roll { 0 0 upcecomposite /pixs get }   % 0 0 are placeholders to be patched
+    ##      dup 3 -1 roll 1 exch put
+    ##      dup 3 -1 roll 0 exch put
+    ##      isEqual
+    ##  } def
+    ## We change that to be:
+    ##  /eq_tmpl {
+    ##      /e exch def  % The expected result
+    ##      /o exch def  % The encoder options
+    ##      /t exch def  % The text to encode
+    ##      { t o upcecomposite /pixs get } e isEqual
+    ##  }
+    ## maxicode is different due to its matrix layout
+    ##  /eq_tmpl {
+    ##      3 1 roll { 0 0 maxicode /p 990 array def 0 1 989 { p exch 0 put } for /pixs get { p exch 1 put } forall p }
+    ##      dup 3 -1 roll 1 exch put
+    ##      dup 3 -1 roll 0 exch put
+    ##      isEqual
+    ##  } def
+    ## The above patch both the text and options.  There are also templates that patch only the text:
+    ##  /eq_tmpl_semi {
+    ##      exch { 0 (dontdraw semi) bc412 /sbs get } dup 3 -1 roll 0 exch put
+    ##      exch isEqual
+    ##  } def
+    node <<@EOF
+    const fs = require('fs');
+    let text = fs.readFileSync('ps_tests/$name.ps', 'utf-8')
+        // Standard two-slot patching.  The target of the 'get' is either /pixs (renmatrix)
+        // or /sbs (renlinear).
+        .replace(/(\n\/\w*_tmpl(?:_\w+)?)\s*\{[^{}]+\{ 0 0 ([a-zA-Z0-9_-]+) (\/\w+) get }[^}]+(isEqual|isError)\s*\}/g,
+                (_0, _1, _2, _3, _4) => {
+                    return _1 + ' {\n' +
+                        '    /e exch def\n' +
+                        '    /o exch def\n' +
+                        '    /t exch def\n' +
+                        '    { t o ' + _2 + ' ' + _3 + ' get } e ' + _4 + '\n' +
+                        '}';
+                })
+        // maxicode patching
+        .replace(/\n\/eq_tmpl\s*\{[^{}]+\{ 0 0 maxicode (.*) \}[^}]+isEqual\s*\}/g,
+                (_0, _1) => {
+                    return '\n/eq_tmpl {\n' +
+                        '    /e exch def\n' +
+                        '    /o exch def\n' +
+                        '    /t exch def\n' +
+                        '    { t o maxicode ' + _1 + ' } e isEqual\n' +
+                        '}';
+                })
+        // One slot patching
+        .replace(/(\n\/\w*_tmpl(?:_\w+)?)\s*\{[^{}]+{ 0 (.*) ([a-zA-Z0-9_-]+) (\/\w+) get }[^}]+(isEqual|isError)\s*\}/g,
+                (_0, _1, _2, _3, _4, _5) => {
+                    return _1 + ' {\n' +
+                        '    /e exch def\n' +
+                        '    /t exch def\n' +
+                        '    { t ' + _2 + ' ' + _3 + ' ' + _4 + ' get } e ' + _5 + '\n' +
+                        '}';
+                });
+    fs.writeFileSync('ps_tests/$name.ps', text);
+@EOF
+
+    ##
+    ## Cross-compile 
+    ##
+    echo "x-compiling $name..."
+    node <<@EOF
+    var fs  = require('fs');
+    var psc = require('./psc.js');
+    var pstext = fs.readFileSync('bwippdefs.ps', 'binary').replace(/\n/g, ' ') + ' ' +
+                fs.readFileSync('ps_tests/$name.ps', 'binary');
+    var flags  = "$*".split(' ');
+    fs.writeFileSync('ps_tests/$name.js', psc(pstext, flags) +
+        'console.log("$name...")\\n' +
+        'bwipp_runtest_$jsname();\\n\\n', 'binary');
+@EOF
+
+    if [ ! -f ps_tests/$name.js ] ; then
+        echo "psc.js exited with error."
+        exit 1
+    fi
+
+done
+
+cat - <<@EOF > pstests.tmp
+const fs = require('node:fs');
+const pstestLines = fs.readFileSync('pstests.js', 'binary').split(/\r?\n/g);
+
+function isEqual(result, expect) {
+    let j = \$j;
+    let _ = \$_;
+    out:try {
+        if (typeof result == 'function') {
+            result();
+            result = \$k[--\$j];
+        }
+        compare(result, expect);
+    } catch (e) {
+        let s = ''+e;
+        let m = /Error: bwipp\.[^#]+#\d+:.*/.exec(s)
+        if (m) {
+            console.log('\nFAIL: ' + m[0].substr(7));
+            showCode();
+        } else {
+            console.log(e);
+        }
+    }
+    \$_ = _;
+    \$j = j;
+}
+function isError(fn, expect) {
+    let j = \$j;
+    let _ = \$_;
+    try {
+        fn();
+    } catch (e) {
+        let s = ''+e;
+        if (s.indexOf(expect.replace(/#\d+$/, '')) == -1) {
+            let m = /Error: bwipp\.[^#]+#\d+:.*/.exec(s)
+            if (m) {
+                console.log('\nFAIL: ' + m[0].substr(7));
+                showCode();
+            } else {
+                console.log(e);
+            }
+        }
+    }
+    \$_ = _;
+    \$j = j;
+}
+function debugIsEqual(result, expect) {
+    let j = \$j;
+    let _ = \$_;
+    try {
+        if (typeof result == 'function') {
+            result();
+            result = \$k[--\$j];
+        }
+        compare(result, expect);
+    } catch (e) {
+        let s = ''+e;
+        if (s.indexOf('bwipp.debug') == -1) {
+            let m = /Error: bwipp\.[^#]+#\d+:.*/.exec(s)
+            if (m) {
+                console.log('\nFAIL: ' + m[0].substr(7));
+                showCode();
+            } else {
+                console.log(e);
+            }
+        } else {
+            compare(\$k[--\$j], expect);
+        }
+    }
+    \$_ = _;
+    \$j = j;
+}
+function compare(result,expect) {
+    if (expect instanceof Array) {
+        let rb = result.b;
+        let eb = expect.b;
+        if (result.length != expect.length) {
+            console.log('\nFAIL: array lengths differ');
+        } else {
+            for (let i = 0, l = expect.length; i < l; i++) {
+                if (rb[i] != eb[i]) {
+                    console.log('\nFAIL: arrays differ');
+                    showCode();
+                    console.log('');
+                    if (l > 40) {
+                        console.log('> [' + rb.slice(0, 40) + ', ...]');
+                        console.log('> [' + eb.slice(0, 40) + ', ...]');
+                    } else {
+                        console.log('> [' + rb.slice(0, l) + ']');
+                        console.log('> [' + eb + ']');
+                    }
+                    return false;
+                }
+            }
+        }
+    } else {
+        if (result instanceof Uint8Array) {
+            result = String.fromCharCode.apply(String, result);
+        }
+        if (result !== expect) {
+            console.log('\nFAIL: ' + JSON.stringify(result) + ' != ' + JSON.stringify(expect));
+            showCode();
+            return false;
+        }
+    }
+    //console.log('PASS');
+    return true;
+}
+function showCode() {
+    try {
+        let stack = '' + (new Error('showcode')).stack;
+        let m = /bwipp_runtest_(\w+) .*\.js:(\d+)/.exec(stack);
+        if (m) {
+            let sym = m[1];
+            let lnbr = +m[2]
+            let line = pstestLines[lnbr-1];
+
+            // Look for the #lnbr comment
+            let l = /\/\/\s*#(\d+)/.exec(line);
+            if (l) {
+                let lnbr = l[1]-1;
+                let lines = fs.readFileSync('ps_tests/' + sym + '.ps', 'binary').split(/\r?\n/g);
+                // work backwards until we see a blank line
+                let first = lnbr;
+                while (first > lnbr-5) {
+                    if (!lines[first].trim()) {
+                        first++;
+                        break;
+                    }
+                    first--;
+                }
+                console.log('FAILED AT: ps_tests/' + sym + '.ps:' + (lnbr+1));
+                for (let i = first; i <= lnbr ; i++) {
+                    console.log('  ' + lines[i]);
+                }
+                lines[lnbr+1].trim() && console.log('  ' + lines[lnbr+1]);
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    }
+}
+function dump() {
+    console.log('[[[');
+    for (let i = \$j-1; i >= 0; i--) {
+        let v = \$k[i];
+        if (v instanceof Array) {
+            console.log(i, '[' + v.b + ']');
+        } else if (typeof v == 'function') {
+            console.log(i, v);
+        } else {
+            console.log(i, JSON.stringify(v));
+        }
+    }
+    console.log(']]]');
+}
+@EOF
+sed -e 's/$_.suppresskanjimode = true/$_.suppresskanjimode = false/' src/bwipp.js >> pstests.tmp
+cat ps_tests/*.js >> pstests.tmp
+
+js-beautify --preserve-newlines pstests.tmp > pstests.js
+
+## js-beautify does not put a ending newline on the file
+echo "" >> pstests.js
+
+rm -f pstests.tmp
+rm -f bwippdefs.ps

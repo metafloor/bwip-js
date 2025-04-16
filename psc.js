@@ -126,13 +126,14 @@ function PSLEX(str) {
                     if (tks[idx] == '\\') {
                         if (++idx >= tks.length && !_next.call(this))
                             throw 'Unexpected end of string';
-                    }
-                    else if (tks[idx] == '"')
+                        s += '\\';
+                    } else if (tks[idx] == '"') {
                         tks[idx] = '\\"';
-                    else if (tks[idx] == '(')
+                    } else if (tks[idx] == '(') {
                         l++;
-                    else if (tks[idx] == ')' && --l == 0)
+                    } else if (tks[idx] == ')' && --l == 0) {
                         break done;
+                    }
                     s += tks[idx++];
                 }
                 if (!_next.call(this)())
@@ -274,6 +275,17 @@ function PSC(str, flags) {
     const TYPE_TOKENS   = 0x1000;
     const TYPE_FUNCTION = 0x2000;
     const TYPE_PRECALC  = 0x4000;       // A precalculated value (code hoisting)
+
+    const bwippdefs = {
+        // BWIPP unknowns
+        $error     : TYPE_DICT,
+        opt        : TYPE_DICT,
+        pixx       : TYPE_INTVAL,
+        pixy       : TYPE_INTVAL,
+        pixs       : TYPE_ARRAY,
+        dontlint   : TYPE_BOOLEAN,
+        lintreqs   : TYPE_BOOLEAN,
+    };
 
     function clone(x) {
         return {
@@ -871,6 +883,9 @@ function PSC(str, flags) {
                     } else {
                         emit('$_["' + tkn.replace(/[\\"]/g,'\\$&') + '"]();');
                     }
+                } else if (dict[tkn] == TYPE_IENAME) {
+                    ctxflush();
+                    emit('bwipp_' + tkn.replace(/-/g, '_') + '();');
                 // We cannot directly use a dictionary reference as a
                 // trace expression.  Intermediate variables must be used to
                 // emulate the run-time stack.  Consider the following bit
@@ -988,6 +1003,9 @@ function PSC(str, flags) {
         // Ignore the size parameter.
         st[sp-1] = { type:TYPE_DICT, expr:'new Map', seq:++seq };
     }
+    $.systemdict = function() {
+        st[sp-1] = { type:TYPE_DICT, expr:'$_', seq:++seq };
+    }
 
     $.known = function() {
         $.get();        // Use get logic
@@ -1028,7 +1046,7 @@ function PSC(str, flags) {
             if (expr == 'bwipp_loadctx') {
                 // The function takes a single stack value, which we don't need
                 sp--;
-                emit('bwipp_loadctx(@FUNCTION@)');
+                emit('bwipp_loadctx(@FUNCTION@);');
             } else if (expr == 'bwipp_unloadctx') {
                 // unloadctx always occurs immediately before end, so we can cheat
                 // and save some code by not needing to manipulate the prototype chain.
@@ -1079,6 +1097,9 @@ function PSC(str, flags) {
         } else if (/^_[\w$_]+$/.test(st[sp-1].expr)) {
             //st[sp] = clone(st[sp-1]);
         } else {
+            if (st[sp-1].type == TYPE_TOKENS) {
+                $.bind();
+            }
             // Convert the expression to a temp-var.
             var tid = tvar();
             emit('var ' + tid + '=' + st[sp-1].expr + ';');
@@ -1125,7 +1146,7 @@ function PSC(str, flags) {
         need(2);
         var d = st[--sp];   // direction and iters
         var n = st[--sp];   // how many elts roll
-        if (n.type == TYPE_INTLIT && d.type == TYPE_INTLIT) {
+        if (n.type == TYPE_INTLIT && d.type == TYPE_INTLIT && +n.expr <= sp) {
             n = +n.expr;
             d = +d.expr;
             need(n)
@@ -1216,6 +1237,7 @@ function PSC(str, flags) {
     $.cvx = function() {
         need(1);
         if (st[sp-1].type != TYPE_STRVAL) {
+            dump('cvx');
             throw 'cvx: expected string';
         }
         var str = st[sp-1].expr;
@@ -1291,18 +1313,9 @@ function PSC(str, flags) {
             allowunknown = true;
             tvarno       = 0;
             seq          = 0;
-            dict         = {};
+            dict         = { ...bwippdefs };
             branchno     = -1;  // Disable for the first pass
             loopstate    = [];
-
-            // BWIPP unknowns
-            dict.$error     = TYPE_DICT;
-            dict.opt        = TYPE_DICT;
-            dict.pixx       = TYPE_INTVAL;
-            dict.pixy       = TYPE_INTVAL;
-            dict.pixs       = TYPE_ARRAY;
-            dict.dontlint   = TYPE_BOOLEAN;
-            dict.lintreqs   = TYPE_BOOLEAN;
 
             // bwipjs special symbols
             dict.bwipjs_dontdraw = TYPE_BOOLEAN;
@@ -1882,7 +1895,6 @@ function PSC(str, flags) {
         ctxflush();
         emit('$k[$j++]=false}catch(e){$k[$j++]=true}');
     }
-
     $.mark = function() {
         ctxflush();
         emit('$k[$j++]=Infinity;');
@@ -2340,16 +2352,60 @@ function PSC(str, flags) {
         var x  = st[--sp].expr;
         emit(`$$.arc(${x},${y},${r},${a1},${a2},0);`);  // CANVAS 0 == CW
     }
-    $.maxicode = function() {
+    // Don't make the function the same name as the symbol...
+    $.showmaxicode = function() {
         need(1);
         var pix = st[--sp].expr;
-        emit(`$$.maxicode(${pix});`);
+        emit(`$$.showmaxicode(${pix});`);
     }
     // Used by jabcode - Terry's wide (gt 64k) versions
     $.arrayw = $.array;
     $.getw = $.get;
     $.putw = $.put;
     $.copyw = $.copy;
+
+    // bwipp/tests/ps_tests functions
+    $.bwippdef = function() {
+        need(1);
+        var id = st[--sp].expr;
+        bwippdefs[id.slice(1,-1)] = TYPE_IENAME;
+    }
+    $.isError = function() {
+        need(2);
+        var id = st[--sp].expr;
+        if (st[sp-1].type == TYPE_TOKENS) {
+            $.bind();
+            var tid = tvar();
+            emit('var ' + tid + '=' + st[sp-1].expr + ';');
+            st[sp-1].expr = tid;
+        }
+        var fn = st[--sp].expr;
+        emit('isError(' + fn + ',' + id + ');');
+    }
+    $.isEqual = function() {
+        need(2);
+        var arr = st[--sp].expr;
+        if (st[sp-1].type == TYPE_TOKENS) {
+            $.bind();
+            var tid = tvar();
+            emit('var ' + tid + '=' + st[sp-1].expr + ';');
+            st[sp-1].expr = tid;
+        }
+        var fn = st[--sp].expr;
+        emit('isEqual(' + fn + ',' + arr + ');');
+    }
+    $.debugIsEqual = function() {
+        need(2);
+        var arr = st[--sp].expr;
+        if (st[sp-1].type == TYPE_TOKENS) {
+            $.bind();
+            var tid = tvar();
+            emit('var ' + tid + '=' + st[sp-1].expr + ';');
+            st[sp-1].expr = tid;
+        }
+        var fn = st[--sp].expr;
+        emit('debugIsEqual(' + fn + ',' + arr + ');');
+    }
 
     // Finally, do the actual compilation
     if (cfg.coverage) {

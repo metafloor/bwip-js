@@ -1,0 +1,75 @@
+/runtest_code2of5 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% vim: set ts=4 sw=4 et :
+
+%%/code2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+%%/industrial2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+%%/iata2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+%%/matrix2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+%%/coop2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+%%/datalogic2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) code2of5
+} /bwipp.code2of5emptyData isError
+{ () (dontdraw) industrial2of5
+} /bwipp.code2of5emptyData isError
+{ () (dontdraw) iata2of5
+} /bwipp.code2of5emptyData isError
+{ () (dontdraw) matrix2of5
+} /bwipp.code2of5emptyData isError
+{ () (dontdraw) coop2of5
+} /bwipp.code2of5emptyData isError
+{ () (dontdraw) datalogic2of5
+} /bwipp.code2of5emptyData isError
+
+{ () (dontdraw validatecheck) code2of5
+} /bwipp.code2of5emptyData isError
+
+{ (A) (dontdraw) code2of5
+} /bwipp.code2of5badCharacter isError
+
+{ (876543211) (dontdraw validatecheck) code2of5  % Check digit should be '2'
+} /bwipp.code2of5badCheckDigit isError
+
+{ (0) (dontdraw version=blah) code2of5
+} /bwipp.code2of5badVersion isError
+
+
+% Examples
+
+{ (0) (dontdraw) code2of5 /sbs get
+} [ 3 1 3 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 1 1 3 ] debugIsEqual
+
+{ (0) (dontdraw validatecheck) code2of5 /sbs get  % Degenerate case with check digit only still allowed
+} [ 3 1 3 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 1 1 3 ] debugIsEqual
+
+{ (876543212) (dontdraw validatecheck) code2of5 /sbs get
+} [ 3 1 3 1 1 1 3 1 1 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 3 1 3 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 3 1 3 1 1 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 3 1 3 1 1 1 3 ] debugIsEqual
+
+{ (87654321) (dontdraw) code2of5 /sbs get
+} [ 3 1 3 1 1 1 3 1 1 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 3 1 3 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 3 1 3 1 1 1 1 1 1 1 3 1 3 1 1 1 3 ] debugIsEqual
+
+{ (87654321) (dontdraw) industrial2of5 /sbs get  % Same as default
+} [ 3 1 3 1 1 1 3 1 1 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 3 1 3 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 3 1 3 1 1 1 1 1 1 1 3 1 3 1 1 1 3 ] debugIsEqual
+
+{ (87654321) (dontdraw) iata2of5 /sbs get
+} [ 1 1 1 1 3 1 1 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 3 1 3 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 3 1 3 1 1 1 1 1 1 1 3 1 3 1 1 ] debugIsEqual
+
+{ (87654321) (dontdraw) matrix2of5 /sbs get
+} [ 3 1 1 1 1 1 3 1 1 3 1 1 1 1 1 3 3 1 1 3 3 1 1 1 3 1 3 1 1 1 1 1 3 1 3 1 3 3 1 1 1 1 1 3 1 1 3 1 3 1 1 1 3 1 3 1 1 1 1 ] debugIsEqual
+
+{ (87654321) (dontdraw) coop2of5 /sbs get
+} [ 3 1 3 1 3 1 1 3 1 1 3 1 1 1 3 1 1 3 3 1 1 1 1 3 1 3 1 1 1 3 1 1 3 1 1 1 3 3 1 1 1 1 3 1 3 1 1 1 1 3 3 1 1 3 3 ] debugIsEqual
+
+{ (87654321) (dontdraw) datalogic2of5 /sbs get
+} [ 1 1 1 1 3 1 1 3 1 1 1 1 1 3 3 1 1 3 3 1 1 1 3 1 3 1 1 1 1 1 3 1 3 1 3 3 1 1 1 1 1 3 1 1 3 1 3 1 1 1 3 1 3 1 1 ] debugIsEqual
+end
+} bind def

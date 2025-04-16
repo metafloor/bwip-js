@@ -1,0 +1,38 @@
+/runtest_databartruncated {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 24724:2011
+
+% vim: set ts=4 sw=4 et :
+
+%%/databartruncated dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databartruncated /sbs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databartruncated /sbs get } e isError
+} def
+
+
+((01)00012345678905)  % ISO/IEC 24724:2011 Figure 4 GS1 DataBar Truncated symbol, same
+    [1 1 1 1 1 2 1 8 1 2 7 4 1 1 3 2 1 1 2 1 4 1 3 2 1 1 1 1 2 4 1 1 7 3 3 2 2 2 4 1 3 1 1 1 1]
+    eq_tmpl
+
+((01)00012345678906)    /bwipp.databartruncatedBadCheckDigit    er_tmpl
+()                      /bwipp.databartruncatedBadLength        er_tmpl
+((01)000123456789051)   /bwipp.databartruncatedBadLength        er_tmpl
+((01)000123456789)      /bwipp.databartruncatedBadLength        er_tmpl
+((01)0001234567890A)    /bwipp.databartruncatedBadCharacter     er_tmpl
+((02)0001234567890)     /bwipp.databartruncatedBadAI            er_tmpl
+end
+} bind def

@@ -1,0 +1,51 @@
+/runtest_hibcdatamatrixrectangular {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ANSI/HIBC 2.6-2016
+
+% vim: set ts=4 sw=4 et :
+
+%%/hibcdatamatrixrectangular dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) hibcdatamatrixrectangular
+} /bwipp.hibcdatamatrixrectangularEmptyData isError
+
+{ () (dontdraw validatecheck) hibcdatamatrixrectangular
+} /bwipp.hibcdatamatrixrectangularEmptyData isError
+
+{ (,) (dontdraw) hibcdatamatrixrectangular
+} /bwipp.hibcdatamatrixrectangularBadCharacter isError
+
+{ (A123BJC5D6E71H) (dontdraw validatecheck) hibcdatamatrixrectangular  % Check digit should be 'G'
+} /bwipp.hibcdatamatrixrectangularBadCheckDigit isError
+
+{ (/) (dontdraw validatecheck) hibcdatamatrixrectangular  % Check digit should be '+'
+} /bwipp.hibcdatamatrixrectangularBadCheckDigit isError
+
+
+% Example
+
+(A123BJC5D6E71G) (dontdraw validatecheck) hibcdatamatrixrectangular /pixs get
+[
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+    1 1 1 0 0 0 0 0 1 1 1 0 1 0 0 0 1 1 1 1 0 1 0 0 0 1
+    1 1 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 1 1 0 1 1 1 0 0 0
+    1 1 1 0 1 0 1 0 1 1 1 0 0 0 0 1 1 0 1 0 1 0 1 0 0 1
+    1 1 0 0 1 1 0 0 1 1 0 1 0 0 1 1 0 1 1 0 0 1 1 1 0 0
+    1 0 1 1 0 0 1 1 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 1 0 1
+    1 1 0 0 0 0 0 0 1 1 1 1 1 0 1 0 1 0 1 1 1 1 0 1 0 0
+    1 0 0 0 1 0 0 1 1 0 1 0 1 0 0 1 0 0 1 0 1 1 1 1 1 1
+    1 0 1 1 1 1 1 0 1 0 1 1 1 0 1 0 0 1 1 1 0 0 1 0 1 0
+    1 0 1 0 1 0 0 0 1 0 0 1 0 1 0 0 1 1 1 0 1 0 0 1 1 1
+    1 0 1 1 0 1 1 0 0 1 1 0 0 1 0 0 1 0 0 1 0 1 1 1 0 0
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+] debugIsEqual
+end
+} bind def

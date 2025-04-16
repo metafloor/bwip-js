@@ -1,0 +1,269 @@
+/runtest_azteccode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 24778:2008
+
+% vim: set ts=4 sw=4 et :
+
+%%/azteccode dup /uk.co.terryburton.bwipp findresource cvx def
+%%/aztecrune dup /uk.co.terryburton.bwipp findresource cvx def
+
+/aztecrune_eq_tmpl {
+    /e exch def
+    /o exch def
+    /t exch def
+    { t o aztecrune /pixs get } e isEqual
+} def
+
+/aztecrune_er_tmpl {
+    /e exch def
+    /o exch def
+    /t exch def
+    { t o aztecrune /pixs get } e isError
+} def
+
+
+% Punctuation-space combinations (PR #161)
+
+{
+    (. ) (debugcws) azteccode
+} [1 7] debugIsEqual  % P/S <.SP>
+
+{
+    (^013^010) (parse debugcws) azteccode
+} [1 5] debugIsEqual  % P/S <CRLF>
+
+{
+    (. . . . . ) (debugcws) azteccode
+} [59 56 24 49 35 7] debugIsEqual  % M/L P/L <.SP>(x5)
+
+{
+    (A. ) (debugcws) azteccode  % Upper
+} [4 1 15] debugIsEqual  % "A" P/S <.SP>
+
+{
+    (A^013^010) (parse debugcws) azteccode  % Upper
+} [4 1 11] debugIsEqual  % "A" P/S <CRLF>
+
+{
+    (A. . . . . ) (debugcws) azteccode  % Upper
+} [5 55 48 49 35 6 15] debugIsEqual  % "A" M/L P/L <.SP>(x5)
+
+{
+    (A^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Upper
+} [5 55 48 33 2 4 11] debugIsEqual  % "A" M/L P/L <CRLF>(x5)
+
+{
+    (a. ) (debugcws) azteccode  % Lower
+} [56 8 1 31] debugIsEqual  % L/L "a" P/S <.SP>
+
+{
+    (a^013^010) (parse debugcws) azteccode  % Lower
+} [56 8 1 23] debugIsEqual  % L/L "a" P/S <CRLF>
+
+{
+    (a. . . . . ) (debugcws) azteccode  % Lower
+} [56 11 47 33 35 6 12 31] debugIsEqual  % L/L "a" M/L P/L <.SP>(x5)
+
+{
+    (a^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Lower
+} [56 11 47 33 2 4 8 23] debugIsEqual  % L/L "a" M/L P/L <CRLF>(x5)
+
+{
+    (@. ) (debugcws) azteccode  % Mixed
+} [59 16 1 31] debugIsEqual  % M/L "@" P/S <.SP>
+
+{
+    (@^013^010) (parse debugcws) azteccode  % Mixed
+} [59 17 50 62] debugIsEqual  % M/L "@" <CR> <LF>
+
+{
+    (@. . ) (debugcws) azteccode  % Mixed
+} [59 19 48 49 62] debugIsEqual  % M/L "@" P/L <.SP>(x2)
+
+{
+    (@^013^010^013^010) (parse debugcws) azteccode  % Mixed
+} [59 19 48 33 31] debugIsEqual  % M/L "@" P/L <CRLF>(x2)
+
+{
+    (@. . . . . ) (debugcws) azteccode  % Mixed
+} [59 19 48 49 35 6 15] debugIsEqual  % M/L "@" P/L <.SP>(x5)
+
+{
+    (@^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Mixed
+} [59 19 48 33 2 4 11] debugIsEqual  % M/L "@" P/L <CRLF>(x5)
+
+{
+    (!. ) (debugcws) azteccode  % Punct.
+} [1 12 1 15] debugIsEqual  % P/S "!" P/S <.SP>
+
+{
+    (!^013^010) (parse debugcws) azteccode  % Punct.
+} [1 12 1 11] debugIsEqual  % P/S "!" P/S <CRLF>
+
+{
+    (!. . ) (debugcws) azteccode  % Punct.
+} [59 56 48 49 62] debugIsEqual  % M/L P/L "!" <.SP>(x2)
+
+{
+    (!^013^010^013^010) (parse debugcws) azteccode  % Punct.
+} [59 56 48 33 31] debugIsEqual  % M/L P/L "!" <CRLF>(x2)
+
+{
+    (!. . . . . ) (debugcws) azteccode  % Punct.
+} [59 56 48 49 35 6 15] debugIsEqual  % M/L P/L "!" <.SP>(x5)
+
+{
+    (!^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Punct.
+} [59 56 48 33 2 4 11] debugIsEqual  % M/L P/L "!" <CRLF>(x5)
+
+{
+    (1. ) (debugcws) azteccode  % Digit
+} [60 30 35] debugIsEqual  % D/L "1" "." <SP>
+
+{
+    (1^013^010) (parse debugcws) azteccode  % Digit
+} [60 24 2] debugIsEqual  % D/L "1" P/S <CRLF>
+
+{
+    (1. . ) (debugcws) azteccode  % Digit
+} [60 30 35 40 62] debugIsEqual  % D/L "1" "." <SP> "." <SP>
+
+{
+    (1^013^010^013^010) (parse debugcws) azteccode  % Digit
+} [60 24 2 1 11] debugIsEqual  % D/L "1" P/S <CRLF> P/S <CRLF>
+
+{
+    (1. . . ) (debugcws) azteccode  % Digit
+} [60 30 35 40 58 15] debugIsEqual  % D/L "1" "." <SP> "." <SP> "." <SP>
+
+{
+    (1^013^010^013^010^013^010) (parse debugcws) azteccode  % Digit
+} [60 24 2 1 8 1 47] debugIsEqual  % D/L "1" P/S <CRLF> P/S <CRLF> P/S <CRLF>
+
+{
+    (1. . . . ) (debugcws) azteccode  % Digit
+} [60 30 35 40 58 14 35] debugIsEqual  % D/L "1" "." <SP> "." <SP> "." <SP> "." <SP>
+
+{
+    (1^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Digit
+} [60 31 29 60 8 16 33 31] debugIsEqual  % D/L "1" U/L M/L P/L <CRLF>(x4)
+
+{
+    (1. . . . . ) (debugcws) azteccode  % Digit
+} [60 31 29 60 12 24 49 35] debugIsEqual  % D/L "1" U/L M/L P/L <.SP>(x5)
+
+{
+    (1^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Digit
+} [60 31 29 60 8 16 33 2] debugIsEqual  % D/L "1" U/L M/L P/L <CRLF>(x5)
+
+{
+    (1, ) (debugcws) azteccode  % Digit
+} [60 30 3] debugIsEqual  % D/L "1" "," <SP>
+
+{
+    (1, , , , ) (debugcws) azteccode  % Digit
+} [60 30 3 32 56 14 3] debugIsEqual  % D/L "1" "," <SP> "," <SP> "," <SP> "," <SP>
+
+{
+    (1, , , , , ) (debugcws) azteccode  % Digit
+} [60 31 29 60 16 33 2 4] debugIsEqual  % D/L "1" U/L M/L P/L <,SP>(x5)
+
+
+% #284 (BWIP-JS #354) - binary wasn't considered in PR #161 (now does nothing if in B/S)
+
+{
+    <6A 3E E8 AD F2 EF 17 99 3A 20 53 94 9F C3 1D 87> (debugcws) azteccode  % BWIP-JS #354
+} [62 32 53 7 55 17 22 62 11 47 5 57 36 58 8 5 14 20 39 60 12 29 33 62] debugIsEqual
+
+{
+    <1D CE A4 2E 20 44 04 BD 19 7D A4 C9 18 1D 3E 74> (debugcws) azteccode  % BWIP-JS #354
+} [62 32 14 57 53 8 23 4 2 8 2 23 40 50 62 26 19 9 6 1 58 31 14 39] debugIsEqual
+
+%  Binary before punct compression had a problem
+
+{
+    <6A 99 3A 20 53> (debugcws) azteccode  % "j<99>: S"
+} [62 6 53 19 9 52 6 39] debugIsEqual
+
+{ (^153. ) (parse debugcws) azteccode } [62 5 12 37 48 31] debugIsEqual
+{ (.^153 ) (parse debugcws) azteccode } [62 4 23 19 8 31] debugIsEqual
+{ (. ^153. ) (parse debugcws) azteccode } [1 7 60 20 50 23 1 62] debugIsEqual
+{ (.^153 . ) (parse debugcws) azteccode } [62 4 23 19 8 16 3] debugIsEqual
+{ (@@. ^153. ) (parse debugcws) azteccode } [59 18 32 1 62 48 51 15 33 62] debugIsEqual
+{ (@@.^153 . ) (parse debugcws) azteccode } [59 18 39 49 5 52 50 4 1 31] debugIsEqual
+{ (@@. ^153. A) (parse debugcws) azteccode } [59 18 32 1 62 48 51 15 33 62 34] debugIsEqual
+{ (@@.^153 . A) (parse debugcws) azteccode } [59 18 39 49 5 52 51 52 8 1 49 31] debugIsEqual
+{ (. . ^153. . . ) (parse debugcws) azteccode } [1 6 1 15 56 25 39 47 33 35 7] debugIsEqual
+{ (. . .^153 . . ) (parse debugcws) azteccode } [1 6 1 15 56 34 58 25 2 1 12 1 31] debugIsEqual
+{ (123^153. . . . . ) (parse debugcws) azteccode } [60 26 11 55 48 51 15 31 3 6 12 24 62] debugIsEqual
+{ (123.^153 . . . . ) (parse debugcws) azteccode } [60 26 11 47 31 3 12 33 59 56 24 49 35] debugIsEqual
+
+
+% Figures
+
+{
+    (123456789012) (debugcws) azteccode  % Figure 1 (left), same
+} [60 26 10 51 49 13 22 17 41] debugIsEqual
+
+{
+    % Figure 1 (right), same
+    (Aztec Code is a public domain 2D matrix barcode symbology of nominally square symbols built on a square grid with a distinctive square bullseye pattern at their center.) (debugcws) azteccode
+} [23 55 83 16 60 36 10 96 170 129 16 99 97 181 68 9 96 225 41 254 10 113 120 23 10 179 86 66 49 76 144 41 131 77 56 112 108 17 160 192 225 124 28 167 137 173 208 105 43 10 102 13 52 225 193 180 8 236 166 212 48 120 68 26 74 194 153 130 137 168 161 194 170 144 136 37 85 42 167 146 170 185 131 73 88 83 48 71 102 182 134 209 131 17 86 166 155 194 42 134 169 50 166 18 25 245 52 253 191] debugIsEqual
+
+{
+    (Code 2D!) (debugcws) azteccode  % Figure G.2, same
+} [9 50 1 41 47 2 39 37 1 27] debugIsEqual
+
+{
+    % Figure I.1 (left), 400 1's + CRLF, same
+    (1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111^013^010) (parse debugcws) azteccode
+} [966 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 614 409 608 191] debugIsEqual
+
+{
+    % Figure I.1 (right), 400 3's + CRLF, same
+    (3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333^013^010) (parse debugcws) azteccode
+} [970 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 672 191] debugIsEqual
+
+
+% Aztec Runes
+
+(0) (dontdraw)
+[
+    1 1 1 0 1 0 1 0 1 0 1
+    1 1 1 1 1 1 1 1 1 1 1
+    0 1 0 0 0 0 0 0 0 1 0
+    1 1 0 1 1 1 1 1 0 1 1
+    0 1 0 1 0 0 0 1 0 1 0
+    1 1 0 1 0 1 0 1 0 1 1
+    0 1 0 1 0 0 0 1 0 1 0
+    1 1 0 1 1 1 1 1 0 1 1
+    0 1 0 0 0 0 0 0 0 1 0
+    0 1 1 1 1 1 1 1 1 1 1
+    0 0 1 0 1 0 1 0 1 0 0
+] aztecrune_eq_tmpl
+
+(255) (dontdraw)
+[
+    1 1 0 1 0 1 0 1 0 0 1
+    1 1 1 1 1 1 1 1 1 1 1
+    0 1 0 0 0 0 0 0 0 1 1
+    1 1 0 1 1 1 1 1 0 1 1
+    1 1 0 1 0 0 0 1 0 1 1
+    0 1 0 1 0 1 0 1 0 1 1
+    0 1 0 1 0 0 0 1 0 1 0
+    1 1 0 1 1 1 1 1 0 1 1
+    1 1 0 0 0 0 0 0 0 1 0
+    0 1 1 1 1 1 1 1 1 1 1
+    0 0 1 1 0 0 1 1 1 0 0
+] aztecrune_eq_tmpl
+
+(/) (dontdraw) /bwipp.aztecRuneNotNumeric aztecrune_er_tmpl
+(:) (dontdraw) /bwipp.aztecRuneNotNumeric aztecrune_er_tmpl
+(256) (dontdraw) /bwipp.aztecRuneInvalid aztecrune_er_tmpl
+end
+} bind def

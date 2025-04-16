@@ -1,0 +1,66 @@
+/runtest_japanpost {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% https://www.post.japanpost.jp/zipcode/zipmanual/index.html
+
+% vim: set ts=4 sw=4 et :
+
+%%/japanpost dup /uk.co.terryburton.bwipp findresource cvx def
+
+/dump_4state_tmpl {
+    /ret exch def
+    /bhs ret /bhs get def
+    /bbs ret /bbs get def
+    [
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            bbs i get 0.05 lt { bhs i get 0.14 gt {1} {0} ifelse } { bhs i get 0.09 gt {1} {0} ifelse } ifelse
+        } for
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            1
+        } for
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            bbs i get 0.05 lt { bhs i get 0.09 gt {1} {0} ifelse } {0} ifelse
+        } for
+    ]
+} def
+
+
+% Input validation
+
+{ () (dontdraw) japanpost
+} /bwipp.japanpostEmptyData isError
+
+{ (,) (dontdraw) japanpost
+} /bwipp.japanpostBadCharacter isError
+
+{ (123456789012345678901) (dontdraw) japanpost
+} /bwipp.japanpostTooLong isError
+
+
+% Examples
+
+(15400233-16-4-205) (dontdraw) japanpost dump_4state_tmpl  % p.6 1st example, same
+[
+    1 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+    1 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 1
+] isEqual
+
+(350110622-1A308) (dontdraw) japanpost dump_4state_tmpl  % p.6 2nd example, same
+[
+    1 0 0 0 0 0 1 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 1
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+    1 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 1
+] isEqual
+end
+} bind def

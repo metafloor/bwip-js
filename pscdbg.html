@@ -31931,6 +31931,15 @@ div span:hover {
 <code>    /textyoffset 0.0 def</code>
 <code>    /textgaps 0.0 def</code>
 <code>    /alttext () def</code>
+<code>    /extratext () def</code>
+<code>    /extratextcolor (unset) def</code>
+<code>    /extratextxalign (left) def</code>
+<code>    /extratextyalign (above) def</code>
+<code>    /extratextfont (OCR-B) def</code>
+<code>    /extratextsize 10.0 def</code>
+<code>    /extratextxoffset 0.0 def</code>
+<code>    /extratextyoffset 0.0 def</code>
+<code>    /extratextgaps 0.0 def</code>
 <code>    /bordercolor (unset) def</code>
 <code>    /backgroundcolor (unset) def</code>
 <code>    /inkspread 0 def      % Was 0.15</code>
@@ -32116,6 +32125,41 @@ div span:hover {
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
+<code>    % Render any extratext</code>
+<code>    extratext () ne {</code>
+<code>        extratextcolor (unset) ne { extratextcolor setanycolor } if</code>
+<code>        extratextfont extratextsize selectfont</code>
+<code></code>
+<code>        % Find true ascent of font</code>
+<code>        gsave</code>
+<code>        newpath 0 0 moveto (0) false charpath pathbbox</code>
+<code>        4 1 roll pop pop pop</code>
+<code>        grestore</code>
+<code>%psc         currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse</code>
+<code>%psc         currentfont /StrokeWidth known and {</code>
+<code>%psc             currentfont /StrokeWidth get 2 div 0 exch</code>
+<code>%psc             currentfont /FontMatrix get dtransform</code>
+<code>%psc             dup mul exch dup mul add sqrt</code>
+<code>%psc             add</code>
+<code>%psc         } if</code>
+<code>        /textascent exch def</code>
+<code>        /textwidth extratext stringwidth pop extratext length 1 sub extratextgaps mul add def</code>
+<code></code>
+<code>        /extratextxpos extratextxoffset pixx textwidth sub 2 div add def</code>
+<code>        extratextxalign (left)     eq { /textxpos extratextxoffset def } if</code>
+<code>        extratextxalign (right)    eq { /textxpos pixx extratextxoffset sub textwidth sub def } if</code>
+<code>        extratextxalign (offleft)  eq { /textxpos textwidth extratextxoffset add neg def } if</code>
+<code>        extratextxalign (offright) eq { /textxpos pixx extratextxoffset add def } if</code>
+<code>        extratextxalign (justify)  eq textwidth pixx lt and {</code>
+<code>            /textxpos 0.0 def</code>
+<code>            /extratextgaps pixx textwidth sub extratext length 1 sub div def</code>
+<code>        } if</code>
+<code>        /textypos extratextyoffset textascent add 1 add neg def</code>
+<code>        extratextyalign (above)  eq { /textypos extratextyoffset pixy add 1 add def } if</code>
+<code>        extratextyalign (center) eq { /textypos extratextyoffset pixy textascent sub 2 div add def } if</code>
+<code>        textxpos textypos moveto extratextgaps 0 extratext ashow</code>
+<code>    } if</code>
+<code></code>
 <code>    grestore</code>
 <code></code>
 <code>    end</code>
@@ -32156,7 +32200,7 @@ div span:hover {
 <code>    gsave</code>
 <code></code>
 <code>    barcolor (unset) ne { barcolor setanycolor } if</code>
-<code>	pixs maxicode</code>
+<code>	pixs showmaxicode</code>
 <code></code>
 <code>    grestore</code>
 <code></code>

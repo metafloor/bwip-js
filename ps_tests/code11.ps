@@ -1,0 +1,48 @@
+/runtest_code11 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% vim: set ts=4 sw=4 et :
+
+%%/code11 dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) code11
+} /bwipp.code11emptyData isError
+
+{ () (dontdraw validatecheck) code11
+} /bwipp.code11emptyData isError
+
+{ (A) (dontdraw) code11
+} /bwipp.code11badCharacter isError
+
+{ (12345678901) (dontdraw validatecheck) code11
+} /bwipp.code11badLength isError
+
+{ (123-454) (dontdraw validatecheck) code11  % Check digit should be '5'
+} /bwipp.code11badCheckDigit isError
+
+{ (1234567890149) (dontdraw validatecheck) code11  % 2nd check digit should be '-'
+} /bwipp.code11badCheckDigits isError
+
+
+% Examples
+
+{ (0) (dontdraw) code11 /sbs get
+} [ 1 1 3 3 1 1 1 1 1 1 3 1 1 1 3 3 1 1 ] debugIsEqual
+
+{ (0) (dontdraw validatecheck) code11 /sbs get  % Degenerate case with check digit only still allowed
+} [ 1 1 3 3 1 1 1 1 1 1 3 1 1 1 3 3 1 1 ] debugIsEqual
+
+{ (123-455) (dontdraw validatecheck) code11 /sbs get
+} [ 1 1 3 3 1 1 3 1 1 1 3 1 1 3 1 1 3 1 3 3 1 1 1 1 1 1 3 1 1 1 1 1 3 1 3 1 3 1 3 1 1 1 3 1 3 1 1 1 1 1 3 3 1 1 ] debugIsEqual
+
+{ (123456789014-) (dontdraw validatecheck) code11 /sbs get
+} [ 1 1 3 3 1 1 3 1 1 1 3 1 1 3 1 1 3 1 3 3 1 1 1 1 1 1 3 1 3 1 3 1 3 1 1 1 1 3 3 1 1 1 1 1 1 3 3 1 3 1 1 3 1 1 3 1 1 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 1 1 3 1 3 1 1 1 3 1 1 1 1 1 3 3 1 1 ] debugIsEqual
+end
+} bind def

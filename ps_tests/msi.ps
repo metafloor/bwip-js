@@ -1,0 +1,42 @@
+/runtest_msi {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% vim: set ts=4 sw=4 et :
+
+%%/msi dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% (2211) produces mod-11 '10' check digit
+{ (2211) (dontdraw includecheck checktype=mod11 badmod11) msi /sbs get
+} [2 1 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 1 2 1 2 1] debugIsEqual
+
+{ (2211) (dontdraw includecheck checktype=ncrmod11 badmod11) msi /sbs get
+} [2 1 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 1 2 1 2 1] debugIsEqual
+
+{ (2211) (dontdraw includecheck checktype=mod1110 badmod11) msi /sbs get
+} [2 1 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1] debugIsEqual
+
+{ (2211) (dontdraw includecheck checktype=ncrmod1110 badmod11) msi /sbs get
+} [2 1 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 2 1 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1 2 1] debugIsEqual
+
+{ (2211) (dontdraw includecheck checktype=mod10 badmod11) msi
+} /bwipp.msiBadMod11Mismatch isError
+
+{ (2211) (dontdraw includecheck checktype=mod1010 badmod11) msi
+} /bwipp.msiBadMod11Mismatch isError
+
+{ (2211) (dontdraw includecheck checktype=mod11) msi
+} /bwipp.msiBadMod11NotSpecified isError
+
+% (1234567) produces different check digit for mod11 and ncrmod11
+{ (1234567) (dontdraw includecheck checktype=mod11) msi /sbs get
+} [2 1 1 2 1 2 1 2 2 1 1 2 1 2 2 1 1 2 1 2 1 2 2 1 2 1 1 2 2 1 1 2 1 2 1 2 2 1 1 2 2 1 1 2 2 1 2 1 1 2 1 2 2 1 2 1 2 1 1 2 2 1 1 2 1 2 1 2 1] debugIsEqual
+
+{ (1234567) (dontdraw includecheck checktype=ncrmod11) msi /sbs get
+} [2 1 1 2 1 2 1 2 2 1 1 2 1 2 2 1 1 2 1 2 1 2 2 1 2 1 1 2 2 1 1 2 1 2 1 2 2 1 1 2 2 1 1 2 2 1 2 1 1 2 1 2 2 1 2 1 2 1 2 1 1 2 1 2 2 1 1 2 1] debugIsEqual
+end
+} bind def

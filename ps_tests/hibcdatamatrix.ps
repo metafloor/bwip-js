@@ -1,0 +1,101 @@
+/runtest_hibcdatamatrix {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ANSI/HIBC 2.6-2016
+
+% vim: set ts=4 sw=4 et :
+
+%%/hibcdatamatrix dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) hibcdatamatrix
+} /bwipp.hibcdatamatrixEmptyData isError
+
+{ () (dontdraw validatecheck) hibcdatamatrix
+} /bwipp.hibcdatamatrixEmptyData isError
+
+{ (,) (dontdraw) hibcdatamatrix
+} /bwipp.hibcdatamatrixBadCharacter isError
+
+{ (A123BJC5D6E71H) (dontdraw validatecheck) hibcdatamatrix  % Check digit should be 'G'
+} /bwipp.hibcdatamatrixBadCheckDigit isError
+
+{ (/) (dontdraw validatecheck) hibcdatamatrix  % Check digit should be '+'
+} /bwipp.hibcdatamatrixBadCheckDigit isError
+
+
+% Examples
+
+(A123BJC5D6E71G) (dontdraw validatecheck) hibcdatamatrix /pixs get  % Figure 3, not same, figure switches to C40 after "+A12", BWIPP after "+", same no. of codewords
+[
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+    1 1 1 0 0 0 0 0 1 1 0 1 1 0 1 1
+    1 1 0 0 0 0 1 1 1 0 0 0 1 0 0 0
+    1 1 1 0 1 0 1 0 1 1 0 1 1 1 1 1
+    1 1 0 0 1 1 0 1 0 0 0 0 1 0 0 0
+    1 0 1 1 0 0 0 0 0 1 0 0 1 0 0 1
+    1 1 0 0 0 1 0 0 1 1 1 1 0 1 0 0
+    1 0 0 0 1 0 1 0 0 1 0 1 0 1 0 1
+    1 0 1 0 1 1 0 0 1 1 1 1 0 0 0 0
+    1 0 1 1 0 0 0 0 0 1 0 0 1 1 1 1
+    1 0 0 0 0 1 0 0 0 1 0 0 1 1 1 0
+    1 0 0 1 1 1 1 1 1 0 0 0 1 1 1 1
+    1 0 0 0 1 1 0 1 0 1 0 1 0 0 1 0
+    1 1 0 1 1 0 1 1 1 0 1 0 0 1 0 1
+    1 1 0 0 1 0 1 1 0 1 0 0 0 0 1 0
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+] debugIsEqual
+
+(A123BJC5D6E71/$$52001510X3C) (dontdraw validatecheck) hibcdatamatrix /pixs get  % Figure in 4.3.3, not same, figure incorrect (trailing CRLF), different encodation (figure ASC/EDI, BWIPP ASC/C40/ASC)
+[
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+    1 1 1 0 0 0 0 0 1 0 0 1 0 1 1 0 0 0 0 1
+    1 1 0 0 0 0 1 1 1 1 1 0 1 0 1 0 1 1 0 0
+    1 1 1 0 1 0 1 1 1 0 0 0 1 1 0 0 0 1 0 1
+    1 1 0 0 1 1 0 0 0 1 1 0 1 1 0 0 0 1 0 0
+    1 0 1 1 0 0 1 0 0 1 0 0 0 0 1 0 1 0 1 1
+    1 1 0 0 0 0 0 0 1 0 0 1 0 1 1 0 0 0 1 0
+    1 0 0 0 0 1 1 0 0 1 0 1 0 0 0 0 0 1 0 1
+    1 0 1 1 1 0 1 0 0 0 1 1 0 0 0 0 1 1 1 0
+    1 1 1 1 1 1 0 0 1 0 1 0 0 0 0 0 0 0 1 1
+    1 1 1 1 0 1 1 0 0 0 1 0 0 1 1 1 1 1 1 0
+    1 1 1 0 0 1 1 1 1 1 0 0 1 0 0 0 0 0 1 1
+    1 1 0 0 0 0 1 0 0 0 1 1 1 0 1 0 1 0 0 0
+    1 0 1 1 0 1 1 0 0 0 1 0 0 1 0 1 0 0 0 1
+    1 1 1 0 0 0 1 1 1 0 1 1 1 1 0 1 0 1 1 0
+    1 0 0 0 0 0 1 0 1 1 0 0 0 0 1 1 0 0 0 1
+    1 0 0 0 0 1 0 0 0 0 1 1 0 0 1 0 0 1 1 0
+    1 0 1 1 1 0 1 1 0 0 0 0 0 1 1 1 1 1 0 1
+    1 0 1 1 0 1 1 0 1 1 0 0 0 0 0 1 1 0 1 0
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+] debugIsEqual
+
+(H123ABC01234567890) (dontdraw) hibcdatamatrix /pixs get  % Figure C2, same
+[
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+    1 0 1 1 1 0 1 1 0 0 0 1 0 1 0 0 0 1
+    1 0 0 1 0 1 1 0 0 1 1 0 1 1 0 0 1 0
+    1 0 0 1 0 0 0 1 1 0 0 1 1 0 1 0 0 1
+    1 1 0 1 0 1 0 0 1 1 1 0 1 0 1 1 0 0
+    1 0 0 0 0 1 1 0 1 1 0 0 0 0 0 1 0 1
+    1 1 0 1 1 0 0 0 0 0 1 0 1 0 1 0 0 0
+    1 0 0 1 0 1 0 1 0 1 1 1 1 1 0 1 0 1
+    1 0 0 1 0 1 0 1 1 0 0 1 0 0 1 1 1 0
+    1 1 0 1 1 1 0 0 1 1 1 1 0 1 0 1 1 1
+    1 0 1 1 0 0 0 1 1 0 0 1 0 0 1 1 1 0
+    1 0 0 1 0 1 1 1 0 1 1 1 1 1 1 1 0 1
+    1 0 1 1 1 0 0 1 1 1 1 0 1 0 1 0 0 0
+    1 1 0 1 0 0 0 1 1 0 1 1 0 1 0 0 1 1
+    1 1 0 0 0 1 1 1 1 1 1 1 0 0 0 1 0 0
+    1 1 0 1 0 0 0 0 0 0 0 0 1 1 1 1 0 1
+    1 1 1 0 0 1 0 0 1 1 1 0 0 0 1 0 0 0
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+] debugIsEqual
+end
+} bind def

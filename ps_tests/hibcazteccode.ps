@@ -1,0 +1,77 @@
+/runtest_hibcazteccode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ANSI/HIBC 2.6-2016
+
+% vim: set ts=4 sw=4 et :
+
+%%/hibcazteccode dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) hibcazteccode
+} /bwipp.hibcazteccodeEmptyData isError
+
+{ () (dontdraw validatecheck) hibcazteccode
+} /bwipp.hibcazteccodeEmptyData isError
+
+{ (,) (dontdraw) hibcazteccode
+} /bwipp.hibcazteccodeBadCharacter isError
+
+{ (H123ABC01234567890E) (dontdraw validatecheck) hibcazteccode  % Check digit should be 'D'
+} /bwipp.hibcazteccodeBadCheckDigit isError
+
+{ (/) (dontdraw validatecheck) hibcazteccode  % Check digit should be '+'
+} /bwipp.hibcazteccodeBadCheckDigit isError
+
+
+% Examples
+
+(H123ABC01234567890D) (dontdraw validatecheck format=compact) hibcazteccode /pixs get  % Figure C1, same
+[
+    0 0 1 0 1 1 1 0 1 1 0 1 0 1 1 0 0 0 1
+    0 0 1 1 0 1 1 1 1 1 0 1 1 1 1 1 1 0 1
+    0 1 0 1 1 0 0 1 1 1 0 1 0 1 1 0 0 1 0
+    1 0 0 1 0 1 0 0 1 1 1 1 0 1 1 0 1 1 0
+    0 0 1 1 1 1 0 1 0 1 0 0 1 0 1 0 1 0 1
+    0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 0
+    1 0 1 0 1 1 0 0 0 0 0 0 0 1 0 1 1 1 0
+    0 1 1 0 1 1 0 1 1 1 1 1 0 1 1 0 1 1 0
+    1 1 1 1 0 1 0 1 0 0 0 1 0 1 0 0 1 1 1
+    1 1 1 0 0 1 0 1 0 1 0 1 0 1 0 0 0 0 0
+    0 0 1 0 1 1 0 1 0 0 0 1 0 1 1 0 1 1 0
+    0 1 0 1 1 1 0 1 1 1 1 1 0 1 0 0 0 0 0
+    1 0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0 1 1
+    1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 0 1 1
+    0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0
+    1 0 1 0 1 0 0 0 0 0 1 1 0 1 0 1 1 1 1
+    1 1 1 1 1 0 0 1 1 1 1 0 1 0 0 0 0 0 1
+    1 0 0 0 0 1 0 1 0 1 1 0 1 0 1 0 0 0 1
+    1 0 0 1 0 0 1 0 0 1 1 0 0 0 0 1 1 0 0
+] debugIsEqual
+
+(+) (dontdraw validatecheck format=compact) hibcazteccode /pixs get  % Degenerate case with check digit only still allowed (data is '++' due to added prefix)
+[
+    0 0 1 1 1 1 1 1 1 1 1 1 1 0 1
+    0 0 1 0 0 1 1 1 1 0 0 1 1 0 0
+    0 0 1 1 0 0 0 0 0 0 1 0 1 0 0
+    0 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 0 1 1 0 0 0 0 0 0 0 1 1 0 1
+    0 0 1 1 0 1 1 1 1 1 0 1 1 0 0
+    0 0 0 1 0 1 0 0 0 1 0 1 1 0 1
+    0 0 0 1 0 1 0 1 0 1 0 1 1 1 0
+    0 0 0 1 0 1 0 0 0 1 0 1 0 0 0
+    1 0 1 1 0 1 1 1 1 1 0 1 1 0 0
+    0 0 1 1 0 0 0 0 0 0 0 1 1 0 0
+    0 1 0 1 1 1 1 1 1 1 1 1 1 0 1
+    1 1 0 0 0 0 1 0 1 0 0 0 0 1 1
+    1 1 1 0 0 0 1 1 0 0 1 0 0 1 0
+    0 0 1 0 1 0 1 1 0 1 0 0 0 1 0
+] debugIsEqual
+end
+} bind def

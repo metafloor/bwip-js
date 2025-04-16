@@ -77,7 +77,7 @@ function $s(v) {
         v = ''+v;
     }
     var s = new Uint8Array(v.length);
-    for (var i = 0; i < v.length; i++) {
+    for (var i = 0, l = v.length; i < l; i++) {
         s[i] = v.charCodeAt(i);
     }
     return s;
@@ -525,7 +525,12 @@ var $f = (function (fa) {
 function bwipp_raiseerror() {
     var info = $k[--$j];
     var name = $k[--$j];
-    throw new Error($z(name) + ": " + $z(info));
+    if (typeof info == 'string' || info instanceof Uint8Array) {
+        throw new Error($z(name) + ": " + $z(info));
+    } else {
+        $k[$j++] = info;
+        throw new Error($z(name));
+    }
 }
 
 // This is a replacement for the BWIPP processoptions function.
@@ -538,20 +543,24 @@ function bwipp_raiseerror() {
 function bwipp_processoptions() {
     var dict = $k[--$j];
     var opts = $k[$j-1];
-    var map = opts instanceof Map;
+    if (typeof opts == 'string') {
+        let vals = opts.trim().split(/ +/g)
+        $k[$j-1] = opts = new Map();
+        for (let i = 0; i < vals.length; i++) {
+            let pair = vals[i].split('=');
+            if (pair.length == 1) {
+                opts.set(pair[0], true);
+            } else {
+                opts.set(pair[0], pair[1]);
+            }
+        }
+    }
     for (var id in dict) {
         var val;
-        if (map) {
-            if (!opts.has(id)) {
-                continue;
-            }
-            val = opts.get(id);
-        } else {
-            if (!opts.hasOwnProperty(id)) {
-                continue;
-            }
-            val = opts[id];
+        if (!opts.has(id)) {
+            continue;
         }
+        val = opts.get(id);
         var def = dict[id];
         var typ = typeof def;
 
@@ -564,7 +573,7 @@ function bwipp_processoptions() {
             }
             if (typeof val == 'string') {
                 val = +val;
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
             }
         } else if (typ == 'boolean') {
             if (val !== true && val !== false) {
@@ -580,13 +589,13 @@ function bwipp_processoptions() {
                     throw new Error('bwipp.invalidOptionType: ' + id +
                             ': not a booleantype: ' + val);
                 }
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
             }
         } else if (typ == 'string' || def instanceof Uint8Array) {
             // This allows numbers to be strings
             if (typeof val == 'number') {
                 val = ''+val;
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
             } else if (typeof val != 'string' && !(val instanceof Uint8Array)) {
                 throw new Error('bwipp.invalidOptionType: ' + id +
                         ': not a stringtype: ' + val);

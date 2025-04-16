@@ -1,0 +1,64 @@
+/runtest_databarexpanded {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 24724:2011
+
+% vim: set ts=4 sw=4 et :
+
+%%/databarexpanded dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databarexpanded /sbs get } e isEqual
+} def
+
+/eq_tmpl_dontlint {
+    /e exch def
+    /t exch def
+    { t (dontdraw dontlint) databarexpanded /sbs get } e isEqual
+} def
+
+
+((01)00012345678905(10)ABC123)  % Encoding method "1" (24724:2011 7.2.5.4.1)
+    [1 3 2 5 1 1 2 1 2 1 8 4 1 1 2 2 2 4 1 1 4 1 1 1 4 2 2 1 5 1 1 1 5 6 2 3 1 1 2 4 2 1 3 3 4 1 2 1 1 1 4 3 6 4 1 1 3 3 2 2 1 4 1 1 1 2 3 1 6 1 2 1 1 1 8 2 3 2 1 1 2 1 6 1 3 2 2 1 3 2 1 1 5 3 4 6 1 1 1 1]
+    eq_tmpl
+((01)90012345678908(3103)001750)  % Encoding method "0100" (24724:2011 7.2.5.4.2 and Figure 11)
+    [1 1 3 2 1 5 1 2 2 1 8 4 1 1 3 4 1 2 2 3 1 1 1 1 4 1 3 2 2 3 1 1 4 6 3 2 1 1 3 3 3 1 3 1 4 1 1 1 4 3 2 3 6 4 1 1 1 1 2 4 1 2 5 1 1 1]
+    eq_tmpl
+((01)90012345678908(3202)000156)  % Encoding method "0101" (24724:2011 7.2.5.4.3)
+    [1 1 1 2 1 3 4 4 1 1 8 4 1 1 1 2 3 3 1 4 2 1 1 1 4 1 3 2 2 3 1 1 4 6 3 2 1 1 3 3 3 1 3 1 4 1 1 1 4 3 2 3 6 4 1 1 2 4 1 5 1 1 1 2 1 1]
+    eq_tmpl
+((01)90012345678908(3103)012233(15)991231)  % Encoding method "0111100" (24724:2011 7.2.5.4.4)
+    [1 2 2 5 1 2 3 1 1 1 8 4 1 1 1 1 3 2 1 5 2 2 1 1 4 2 2 1 5 1 1 1 6 4 3 3 1 1 2 4 2 1 3 3 4 1 2 1 1 1 4 3 6 4 1 1 2 4 2 1 1 1 2 4 3 2 2 2 2 3 1 2 1 1 8 2 3 3 2 1 4 1 1 4 1 1 1]
+    eq_tmpl
+((01)98898765432106(3202)012345(15)991231)  % Encoding method "0111101" (24724:2011 Figure 10)
+    [1 2 1 4 2 3 2 1 2 1 8 4 1 1 3 4 2 2 1 1 1 3 2 1 1 6 2 3 1 1 1 1 6 4 3 1 1 2 3 6 1 2 1 1 1 2 5 1 3 2 2 3 6 4 1 1 3 1 2 5 1 2 1 2 1 3 4 2 1 1 2 3 1 1 8 2 3 3 2 1 4 1 1 4 1 1 1]
+    eq_tmpl
+((01)90012345678908(3922)795)  % Encoding method "01100" (24724:2011 7.2.5.4.5)
+    [1 1 2 5 1 3 1 1 3 1 8 4 1 1 1 2 3 5 1 1 2 2 1 1 4 2 2 1 5 1 1 1 6 4 3 3 1 1 2 4 2 1 3 3 4 1 2 1 1 1 4 3 6 4 1 1 1 2 4 1 3 1 1 4 2 3 2 1 3 2 1 3 1 1 8 2 3 1 1]
+    eq_tmpl_dontlint
+((01)90012345678908(3922)795(20)01)  % Encoding method "01100" with following AI so FNC1 required after price
+    [1 3 2 1 2 4 2 2 1 1 8 4 1 1 4 3 1 4 1 1 1 2 1 1 4 2 2 1 5 1 1 1 6 4 3 3 1 1 2 4 2 1 3 3 4 1 2 1 1 1 4 3 6 4 1 1 1 2 4 1 3 1 1 4 2 3 3 3 1 1 2 2 1 1 8 2 3 1 1 2 5 3 3 1 1 1 1]
+    eq_tmpl_dontlint
+
+% Currency Code "040" (Australian Shilling) was withdrawn, so these fail GS1 linting
+%((01)90012345678908(3932)0401234)  % Encoding method "01101" (24724:2011 7.2.5.4.6)
+%    [1 3 4 1 1 1 1 5 1 1 8 4 1 1 3 1 1 5 2 2 1 2 1 1 4 2 2 1 5 1 1 1 6 4 3 3 1 1 2 4 2 1 3 3 4 1 2 1 1 1 4 3 6 4 1 1 3 3 2 2 2 1 2 2 1 2 5 3 1 1 3 1 1 1 8 2 3 3 2 1 4 2 1 1 3 1 1]
+%    eq_tmpl
+%((01)90012345678908(3932)0401234(20)01)  % Encoding method "01101" with following AI so FNC1 required after price
+%    [1 3 1 3 1 3 2 1 3 1 8 4 1 1 2 4 1 1 1 3 3 2 1 1 4 2 2 1 5 1 1 1 5 6 2 3 1 1 2 4 2 1 3 3 4 1 2 1 1 1 4 3 6 4 1 1 3 3 2 2 2 1 2 2 1 2 5 3 1 1 3 1 1 1 8 2 3 3 1 2 2 2 4 2 1 2 3 1 4 2 1 3 1 3 4 6 1 1 1 1]
+%    eq_tmpl
+
+((10)12A)  % Encoding method "00" (24724:2011 Figure F.3)
+    [1 1 1 5 2 1 1 5 1 1 8 4 1 1 1 3 1 7 1 1 2 1 1 1 5 2 1 2 3 2 1 1 4 8 1 2 3 1 7 1 1 1 1 1 1]
+    eq_tmpl_dontlint
+((01)90012345678908(3103)012233(15)000000)  % Encoding method "0111100" prospect but invalid date so encoding method "1"
+    [1 1 4 2 2 2 1 3 2 1 8 4 1 1 1 2 1 3 5 2 2 1 1 1 4 2 2 1 5 1 1 1 5 6 2 3 1 1 2 4 2 1 3 3 4 1 2 1 1 1 4 3 6 4 1 1 1 2 1 1 2 3 3 4 1 5 1 2 2 3 2 1 1 1 8 2 3 2 2 1 5 1 4 1 1 1 4 1 3 4 1 2 1 3 2 8 1 1 1 1 2 4 1 6 1 1 1 1 1 1 4 1 6 2 1 1 9 2 2 1 1]
+    eq_tmpl_dontlint
+end
+} bind def

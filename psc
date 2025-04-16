@@ -90,6 +90,7 @@ cat barcode.tmp custom/*.ps | sed \
     -e 's,/bordertop -0.2 def,/bordertop -0.55 def,'\
     -e 's,/borderbottom -0.2 def,/borderbottom -0.55 def,'\
     -e '/^\s*\/setanycolor {/,/^\s*}\s*def/s/^/%psc /' \
+    -e '/^\s*\/uk.co.terryburton.bwipp.global_ctx dup where {/,/^\s*} { pop } ifelse/s/^/%psc /' \
     -e '/^currentglobal/,/^setglobal/s/^/%psc /' \
     -e '/^\/setpacking where {pop currentpacking/,/^begin/s/^/%psc /'\
     -e '/^\/[^ \t][^ \t]* dup load \/uk.co.terryburton/,/^\/setpacking where {pop setpacking} if/s/^/%psc /'\

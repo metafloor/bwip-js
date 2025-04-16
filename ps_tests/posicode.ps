@@ -1,0 +1,42 @@
+/runtest_posicode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% vim: set ts=4 sw=4 et :
+
+%%/posicode dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ (ABC123) (dontdraw version=c) posicode
+} /bwipp.posicodeInvalidVersion isError
+
+{ (a) (dontdraw version=limitedb) posicode
+} /bwipp.posicodeBadCharacter isError
+
+{ (AB^029CD) (dontdraw parse version=limitedb) posicode
+} /bwipp.posicodeBadCharacter isError
+
+
+% Examples
+
+(AB^029CD) (dontdraw parse version=a) posicode /sbs get
+[
+    1 12 1 1 1 1 1 2 1 8 1 1 1 1 1 7 1 2 1 1 1 1 1 1 1 8 1 1 1 4 1 2 1 6 1 3 1 1 1 5 1 4 1 1 1 1 1 2 1 6 1 3 1 1 1 1 1 1 1 1 1 1 1 1 1 11 1
+] debugIsEqual
+
+(AB^029CD) (dontdraw parse version=b) posicode /sbs get
+[
+    1 12 1 2 1 3 1 2 1 9 1 2 1 2 1 8 1 3 1 2 1 2 1 2 1 9 1 2 1 5 1 3 1 7 1 4 1 2 1 6 1 5 1 2 1 2 1 3 1 7 1 4 1 2 1 2 1 2 1 2 1 2 1 2 1 12 1
+] debugIsEqual
+
+(1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-.) (dontdraw version=limiteda) posicode /sbs get
+[
+    1 5 1 1 1 1 1 1 1 3 1 2 1 1 1 2 1 3 1 1 1 1 1 4 1 2 1 3 1 1 1 2 1 2 1 2 1 2 1 1 1 3 1 4 1 1 1 1 1 3 1 2 1 1 1 3 1 1 1 2 1 1 1 4 1 1 1 7 1 1 1 1 1 6 1 2 1 1 1 5 1 3 1 1 1 4 1 4 1 1 1 3 1 5 1 1 1 2 1 6 1 1 1 1 1 7 1 1 1 6 1 1 1 2 1 5 1 2 1 2 1 4 1 3 1 2 1 3 1 4 1 2 1 2 1 5 1 2 1 1 1 6 1 2 1 5 1 1 1 3 1 4 1 2 1 3 1 3 1 3 1 3 1 2 1 4 1 3 1 1 1 5 1 3 1 4 1 1 1 4 1 3 1 2 1 4 1 2 1 3 1 4 1 1 1 4 1 4 1 3 1 1 1 5 1 2 1 2 1 5 1 1 1 3 1 5 1 2 1 1 1 6 1 1 1 2 1 6 1 1 1 1 1 7 1 1 1 7 1 1 1 1 1 3 1 1 1
+] debugIsEqual
+end
+} bind def

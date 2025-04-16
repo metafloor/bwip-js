@@ -1,0 +1,37 @@
+/runtest_ean14 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% vim: set ts=4 sw=4 et :
+
+%%/ean14 dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) ean14 /sbs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) ean14 /sbs get } e isError
+} def
+
+
+((01)09528765432108)
+    [2 1 1 2 3 2 4 1 1 1 3 1 2 2 2 1 2 2 2 2 1 2 1 3 2 1 3 3 1 1 4 2 1 1 1 2 1 2 1 1 2 4 1 1 2 3 3 1 2 1 3 2 1 2 1 3 2 2 1 2 3 3 2 1 1 1 2 3 3 1 1 1 2]
+    eq_tmpl
+
+
+((01)09528765432107)    /bwipp.ean14badCheckDigit  er_tmpl
+()                      /bwipp.ean14badLength      er_tmpl
+((01)095287654321081)   /bwipp.ean14badLength      er_tmpl
+((01)095287654321)      /bwipp.ean14badLength      er_tmpl
+((01)0952876543210A)    /bwipp.ean14badCharacter   er_tmpl
+((02)0952876543210)     /bwipp.ean14badAI          er_tmpl
+end
+} bind def

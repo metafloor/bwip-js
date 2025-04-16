@@ -1,0 +1,132 @@
+/runtest_rectangularmicroqrcode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 23941:2022
+
+% vim: set ts=4 sw=4 et :
+
+%%/rectangularmicroqrcode dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /o exch def
+    /t exch def
+    { t o rectangularmicroqrcode /pixs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /o exch def
+    /t exch def
+    { t o rectangularmicroqrcode /pixs get } e isError
+} def
+
+
+% Table 3 cclens, 2019-10-18 values different from 2018-6-8 draft
+
+{
+    % Table 6 R7x43-M max 7 alphanumeric (cclen bits 4 -> 3)
+    (ABCDEFG) (version=R7x43 fixedeclevel debugcws) rectangularmicroqrcode
+} [92 230 162 149 10 128] debugIsEqual
+
+{
+    % Annex I I.2 R11x27-H example (cclen bits 5 -> 4)
+    (0123456) (version=R11x27 eclevel=H fixedeclevel debugecc) rectangularmicroqrcode
+} [46 6 43 44 0 17 132 191 191 171 228 80 46 175 36 0] debugIsEqual
+
+{
+    % Table 6 R13x43-M max 61 numeric (cclen bits 7 -> 6)
+    (1234567890123456789012345678901234567890123456789012345678901) (version=R13x43 fixedeclevel debugcws) rectangularmicroqrcode
+} [62 143 110 70 42 6 43 53 55 10 117 70 251 208 246 228 98 160 98 179 83 112 167 84 111 189 8] debugIsEqual
+
+% Table 3 cclens, ISO/IEC 23941:2022 value different from 2019-10-18 draft
+
+{
+    % Table 6 R13x77-M max 124 numeric (cclen bits 8 -> 7)
+    (123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123) (version=R13x77 fixedeclevel debugcws) rectangularmicroqrcode
+} [62 199 183 35 21 3 21 154 155 133 58 163 125 232 123 114 49 80 49 89 169 184 83 170 55 222 135 183 35 21 3 21 154 155 133 58 163 125 232 123 114 49 80 49 89 169 184 83 170 55 222 135 176] debugIsEqual
+
+
+% Encodation examples
+
+{
+    % 7.4.2.2 ECI Example, R17x139-H (using M) same codewords
+    (^ECI000009^161^162^163^164^165) (parse parsefnc version=R17x139 eclevel=M fixedeclevel debugcws) rectangularmicroqrcode
+} [225 44 22 134 138 142 146 148 0 236 71 { 17 236 } repeat ] debugIsEqual
+
+{
+    % 7.4.3 Numeric mode Example, R7x59-M, same codewords
+    (0123456789012345) (version=R7x59 fixedeclevel debugcws) rectangularmicroqrcode
+} [48 3 21 154 155 133 58 148 0 236 17 236] debugIsEqual
+
+{
+    % 7.4.4 Alphanumeric mode Example, R7x59-H, same codewords
+    (AC-42) (version=R7x59 eclevel=H fixedeclevel debugcws) rectangularmicroqrcode
+} [69 57 220 228 32 236 17] debugIsEqual
+
+{
+    % 7.4.5 Byte mode, R7x43-M, 5 bytes max (Table 6)
+    (?????) (version=R7x43 eclevel=M fixedeclevel debugcws) rectangularmicroqrcode
+} [116 252 252 252 252 252] debugIsEqual
+
+{
+    % 7.4.6 Kanji mode (点茗点), R7x43-M, 3 Kanji max (Table 6)
+    (^147^095^228^170^147^095) (parse version=R7x43 eclevel=M fixedeclevel debugcws) rectangularmicroqrcode
+} [155 103 245 84 217 240] debugIsEqual
+
+{
+    % B14, issue #237, previously unencodable A2 B12
+    (K9^000^000^000^000^000^000^000^000^000^000^000^000) (parse version=R11x59 eclevel=H fixedeclevel debugcws) rectangularmicroqrcode
+} [110 75 57 0 0 0 0 0 0 0 0 0 0 0 0] debugIsEqual
+{
+    % B14, inversion of above
+    (^000^000^000^000^000^000^000^000^000^000^000^000K9) (parse version=R11x59 eclevel=H fixedeclevel debugcws) rectangularmicroqrcode
+} [110 0 0 0 0 0 0 0 0 0 0 0 0 75 57] debugIsEqual
+
+{
+    % A7 B8
+    (K9K9K9K^000^000^000^000^000^000^000^000) (parse version=R11x59 eclevel=H fixedeclevel debugcws) rectangularmicroqrcode
+} [67 184 215 26 227 84 104 0 0 0 0 0 0 0 0] debugIsEqual
+{
+    % B8 A7, inversion of above, previously unencodable B15
+    (^000^000^000^000^000^000^000^000K9K9K9K) (parse version=R11x59 eclevel=H fixedeclevel debugcws) rectangularmicroqrcode
+} [104 0 0 0 0 0 0 0 0 67 184 215 26 227 84] debugIsEqual
+
+{
+    % A10 B6
+    (K9K9K9K9K9^000^000^000^000^000^000) (parse version=R11x59 eclevel=H fixedeclevel debugcws) rectangularmicroqrcode
+} [69 56 215 26 227 92 107 141 102 0 0 0 0 0 0] debugIsEqual
+    % Inversion of above fails with unencodable B8 A8 (terminal AorN sequence too long to produce B6 A10)
+    (^000^000^000^000^000^000K9K9K9K9K9) (parse version=R11x59 eclevel=H fixedeclevel dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
+false {
+{
+    % One less fits with B7 A8, though longer msgbits length than B6 A9
+    (^000^000^000^000^000^000K9K9K9K9K) (parse version=R11x59 eclevel=H fixedeclevel debugcws) rectangularmicroqrcode
+} [103 0 0 0 0 0 0 75 68 26 147 82 106 77 72] debugIsEqual
+} if
+
+
+% Figures
+
+(12345678901234567890123456) (dontdraw eclevel=M fixedeclevel version=R13x27)  % Figure 1
+[
+    1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 1
+    1 0 0 0 0 0 1 0 0 0 0 1 0 0 1 1 0 0 0 1 0 0 1 1 0 0 1
+    1 0 1 1 1 0 1 0 1 1 0 0 0 0 0 0 1 1 0 0 1 1 1 0 0 0 1
+    1 0 1 1 1 0 1 0 0 1 1 0 1 0 1 1 0 0 0 0 0 1 0 0 0 0 0
+    1 0 1 1 1 0 1 0 1 1 1 0 1 0 0 1 1 0 1 1 0 1 1 0 0 1 1
+    1 0 0 0 0 0 1 0 0 0 1 1 1 0 0 0 1 1 0 0 1 0 1 1 0 0 0
+    1 1 1 1 1 1 1 0 0 1 0 0 1 1 1 1 1 1 0 0 0 0 1 1 1 0 1
+    0 0 0 0 0 0 0 0 1 0 1 0 0 1 0 1 0 1 0 1 0 0 0 1 1 0 0
+    1 1 0 1 0 1 1 0 1 0 1 1 0 1 0 1 1 0 0 1 0 0 1 1 1 1 1
+    0 1 1 0 0 1 1 0 1 0 1 0 1 0 1 1 1 1 1 0 0 0 1 0 0 0 1
+    1 0 0 0 0 0 1 0 0 1 1 1 0 0 0 1 1 1 1 0 1 0 1 0 1 0 1
+    1 0 0 0 1 1 0 1 0 0 1 0 0 1 0 1 0 0 0 0 0 0 1 0 0 0 1
+    1 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 1 1 1
+] eq_tmpl
+end
+} bind def

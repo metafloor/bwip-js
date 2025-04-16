@@ -1,0 +1,54 @@
+/runtest_ean8 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+%%/ean8 dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) ean8 /sbs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) ean8 /sbs get } e isError
+} def
+
+/eq_tmpl_addon {
+    /e exch def
+    /t exch def
+    { t (dontdraw permitaddon) ean8 /sbs get } e isEqual
+} def
+
+/er_tmpl_addon {
+    /e exch def
+    /t exch def
+    { t (dontdraw permitaddon) ean8 /sbs get } e isError
+} def
+
+
+(02345673)       [1 1 1 3 2 1 1 2 1 2 2 1 4 1 1 1 1 3 2 1 1 1 1 1 1 2 3 1 1 1 1 4 1 3 1 2 1 4 1 1 1 1 1] eq_tmpl        % 8 digits
+(0234567)        [1 1 1 3 2 1 1 2 1 2 2 1 4 1 1 1 1 3 2 1 1 1 1 1 1 2 3 1 1 1 1 4 1 3 1 2 1 4 1 1 1 1 1] eq_tmpl        % Omit checksum
+(02345674)       /bwipp.ean8badCheckDigit                                                                er_tmpl        % Invalid checksum
+
+(02345673 12345) [1 1 1 3 2 1 1 2 1 2 2 1 4 1 1 1 1 3 2 1 1 1 1 1 1 2 3 1 1 1 1 4 1 3 1 2 1 4 1 1 1 1 1                 % Add 5
+                  12.0
+                  1 1 2 1 2 2 2 1 1 2 1 2 2 1 1 1 1 4 1 1 1 1 1 3 2 1 1 1 2 3 1]                         eq_tmpl_addon
+
+(02345673 12)    [1 1 1 3 2 1 1 2 1 2 2 1 4 1 1 1 1 3 2 1 1 1 1 1 1 2 3 1 1 1 1 4 1 3 1 2 1 4 1 1 1 1 1                 % Add 2
+                  12.0
+                  1 1 2 2 2 2 1 1 1 2 1 2 2]                                                             eq_tmpl_addon
+(02345673 123)   /bwipp.ean8badAddOnLength                                                               er_tmpl_addon  % Add 3!
+
+(A2345673)       /bwipp.ean8badCharacter                                                                 er_tmpl        % Bad character
+
+(023456)         /bwipp.ean8badLength                                                                    er_tmpl        % Too short
+(023456731)      /bwipp.ean8badLength                                                                    er_tmpl        % Too long
+
+end
+} bind def

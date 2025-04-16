@@ -784,17 +784,20 @@ BWIPJS.prototype.stroke = function() {
 
                 // Top and left edges are "inside" the polygon.
                 // Bottom and right edges are outside.
+
+                // counter-clockwise
                 self.drawing.polygon([
                         [ x0-bigw2, y0-bigh2 ],
                         [ x0-bigw2, y1+bigh2+1 ],
                         [ x1+bigw2+1, y1+bigh2+1 ],
-                        [ x1+bigw2+1, y0-bigh2 ]
+                        [ x1+bigw2+1, y0-bigh2 ],
                     ]);
+                // clockwise
                 self.drawing.polygon([
                         [ x0+remw2, y0+remh2 ],
-                        [ x0+remw2, y1-remh2+1 ],
-                        [ x1-remw2+1, y1-remh2+1 ],
                         [ x1-remw2+1, y0+remh2 ],
+                        [ x1-remw2+1, y1-remh2+1 ],
+                        [ x0+remw2, y1-remh2+1 ],
                     ]);
                 self.drawing.fill(rgb);
             }
@@ -876,7 +879,7 @@ BWIPJS.prototype.clip = function() {
 };
 
 // The pix array is in standard (not y-inverted postscript) orientation.
-BWIPJS.prototype.maxicode = function(pix) {
+BWIPJS.prototype.showmaxicode = function(pix) {
     var tsx = this.g_tsx;
     var tsy = this.g_tsy;
     var rgb = this.getRGB();

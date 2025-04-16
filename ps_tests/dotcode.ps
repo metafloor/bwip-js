@@ -1,0 +1,59 @@
+/runtest_dotcode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% AIM ISS DotCode, Rev 4.0, DRAFT 0.15, TSC Pre-PR #5, May 28, 2019
+
+% vim: set ts=4 sw=4 et :
+
+%%/dotcode dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /o exch def
+    /t exch def
+    { t o dotcode /pixs get } e isEqual
+} def
+
+
+{
+    (^128^1281234567890123456) (parse debugcws) dotcode  % Binary mode Latch C
+} [112 3 14 11 111 12 34 56 78 90 12 34 56] debugIsEqual
+
+{
+    ([\)>^03005^029101^030^004) (parse debugcws) dotcode  % Macro Latch B
+} [106 97 17 16 17] debugIsEqual
+
+{
+    ([\)>^03007Text^030^004) (parse debugcws) dotcode  % Macro XX include XX
+} [106 100 16 23 52 69 88 84 100] debugIsEqual
+
+{
+    (12a^013^010) (parse debugcws) dotcode  % Shift B CRLF in Code Set A
+} [107 12 103 65 96] debugIsEqual
+
+{
+    (^001a^009^013^010) (parse debugcws) dotcode  % Shift B CRLF in Code Set C
+} [101 65 98 65 97 96] debugIsEqual
+
+
+% Figures
+
+(2741) (dontdraw)  % Figure 7B bottom-left, auto Mask = 2', same
+[
+    1 0 1 0 0 0 1 0 1 0 1 0 1
+    0 0 0 1 0 0 0 0 0 0 0 0 0
+    1 0 0 0 1 0 0 0 1 0 1 0 1
+    0 1 0 0 0 0 0 1 0 1 0 0 0
+    0 0 0 0 1 0 1 0 0 0 1 0 0
+    0 1 0 0 0 1 0 0 0 0 0 1 0
+    1 0 0 0 1 0 1 0 1 0 0 0 1
+    0 1 0 1 0 1 0 0 0 1 0 0 0
+    1 0 0 0 1 0 0 0 1 0 1 0 1
+    0 1 0 1 0 0 0 1 0 0 0 1 0
+] eq_tmpl
+end
+} bind def

@@ -1,0 +1,45 @@
+/runtest_hibccode128 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ANSI/HIBC 2.6-2016
+
+% vim: set ts=4 sw=4 et :
+
+%%/hibccode128 dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) hibccode128
+} /bwipp.hibccode128emptyData isError
+
+{ () (dontdraw validatecheck) hibccode128
+} /bwipp.hibccode128emptyData isError
+
+{ (,) (dontdraw) hibccode128
+} /bwipp.hibccode128badCharacter isError
+
+{ (A123BJC5D6E71F) (dontdraw validatecheck) hibccode128  % Check digit should be 'G'
+} /bwipp.hibccode128badCheckDigit isError
+
+{ (/) (dontdraw validatecheck) hibccode128  % Check digit should be '+'
+} /bwipp.hibccode128badCheckDigit isError
+
+
+% Examples
+
+(A123BJC5D6E71G) (dontdraw validatecheck) hibccode128 /sbs get  % Figure 1, same
+[
+    2 1 1 2 1 4 2 3 1 2 1 2 1 1 1 3 2 3 1 2 3 2 2 1 2 2 3 2 1 1 2 2 1 1 3 2 1 3 1 1 2 3 1 1 2 1 3 3 1 3 1 3 2 1 2 1 3 2 1 2 1 1 2 3 1 3 2 2 3 1 1 2 1 3 2 1 1 3 3 1 2 1 3 1 1 2 3 2 2 1 2 1 1 3 1 3 2 3 2 1 2 1 2 3 3 1 1 1 2
+] debugIsEqual
+
+($$52001510X3G) (dontdraw) hibccode128 /sbs get  % Figure 5, same
+[
+    2 1 1 2 1 4 2 3 1 2 1 2 1 2 1 3 2 2 1 2 1 3 2 2 1 1 3 1 4 1 2 1 3 3 1 1 2 1 2 2 2 2 1 1 3 2 2 2 2 2 1 3 1 2 1 1 4 1 3 1 3 3 1 1 2 1 2 2 1 1 3 2 2 1 1 3 1 3 1 1 2 3 1 3 1 3 4 1 1 1 2 3 3 1 1 1 2
+] debugIsEqual
+end
+} bind def

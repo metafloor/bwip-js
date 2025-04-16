@@ -1,0 +1,29 @@
+/runtest_gs1_128 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% GS1 General Specifications 22.0 (Jan 2022)
+
+% vim: set ts=4 sw=4 et :
+
+%%/gs1-128 dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) gs1-128 /sbs get } e isEqual
+} def
+
+
+((01)09501101530003)  % GS1 General Specifications Figure 5.1-3. GS1-128 barcode, same
+    [2 1 1 2 3 2 4 1 1 1 3 1 2 2 2 1 2 2 2 2 1 2 1 3 2 3 1 1 3 1 2 3 1 2 1 2 2 2 2 1 2 2 2 1 3 1 3 1 2 1 2 2 2 2 1 2 1 2 2 3 1 2 2 1 1 4 2 3 3 1 1 1 2]
+    eq_tmpl
+
+{  % Avoid extraneous CodeC switch (with immediate switch back to CodeA/B) by re-checking digit runlength >= 4 after enca/encb push
+    ((90)111(91)2(92)3) (debugcws) gs1-128
+} [105 102 90 11 100 17 102 25 17 18 102 25 18 19 40 106] debugIsEqual
+end
+} bind def

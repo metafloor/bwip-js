@@ -1,0 +1,219 @@
+/runtest_parseinput {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+%%/parseinput dup /uk.co.terryburton.bwipp findresource cvx def
+
+/ctx null def
+
+% Sanity
+
+{
+    (ABC) << /parse false /parsefnc false >> parseinput
+} [ 65 66 67 ] isEqual
+
+{
+    (ABC) << /parse true /parsefnc false >> parseinput
+} [ 65 66 67 ] isEqual
+
+{
+    (ABC) << /parse false /parsefnc true >> parseinput
+} [ 65 66 67 ] isEqual
+
+{
+    (ABC) << /parse true /parsefnc true >> parseinput
+} [ 65 66 67 ] isEqual
+
+{
+    (ABC) << /parse true /parsefnc true /eci true >> parseinput
+} [ 65 66 67 ] isEqual
+
+{
+    (ABC) << /parseonly true /parse false /parsefnc false >> parseinput
+} (ABC) isEqual
+
+{
+    (ABC) << /parseonly true /parse true /parsefnc false >> parseinput
+} (ABC) isEqual
+
+{
+    (A^000BC) << /parse false /parsefnc false >> parseinput
+} [ 65 94 48 48 48 66 67 ] isEqual
+
+
+% parse "^NNN" -> byte
+
+{
+    (^000ABC) << /parse true /parsefnc false >> parseinput
+} [ 0 65 66 67 ] isEqual
+
+{
+    (ABC^000) << /parse true /parsefnc false >> parseinput
+} [ 65 66 67 0 ] isEqual
+
+{
+    (A^000BC) << /parse true /parsefnc false >> parseinput
+} [ 65 0 66 67 ] isEqual
+
+{
+    (A^255BC) << /parse true /parsefnc false >> parseinput
+} [ 65 255 66 67 ] isEqual
+
+{
+    (A^256BC) << /parse true /parsefnc false >> parseinput
+} /bwipp.invalidOrdinal isError
+
+{  % Truncated
+    (ABC^00) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94 48 48] isEqual
+
+{  % Truncated
+    (ABC^0) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94 48] isEqual
+
+{  % Truncated
+    (ABC^) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94] isEqual
+
+
+% parse "^NUL" -> 0, etc.
+
+{
+    (^NUL^SOH^STX^ETX^EOT^ENQ^ACK^BEL^BS^TAB^LF^VT^FF^CR^014^015^DLE^DC1^DC2^DC3^DC4^NAK^SYN^ETB^CAN^EM^SUB^ESC^FS^GS^RS^US) << /parse true /parsefnc false >> parseinput
+} [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31] isEqual
+
+{
+    (^NULABC) << /parse true /parsefnc false >> parseinput
+} [0 65 66 67] isEqual
+
+{
+    (ABC^NUL) << /parse true /parsefnc false >> parseinput
+} [65 66 67 0] isEqual
+
+{
+    (A^NULBC) << /parse true /parsefnc false >> parseinput
+} [65 0 66 67] isEqual
+
+{
+    (^USABC) << /parse true /parsefnc false >> parseinput
+} [31 65 66 67] isEqual
+
+{
+    (ABC^US) << /parse true /parsefnc false >> parseinput
+} [65 66 67 31] isEqual
+
+{
+    (A^USBC) << /parse true /parsefnc false >> parseinput
+} [65 31 66 67] isEqual
+
+{  % Truncated
+    (ABC^NU) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94 78 85] isEqual
+
+{  % Truncated
+    (ABC^N) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94 78] isEqual
+
+{  % Truncated
+    (ABC^) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94] isEqual
+
+{  % Truncated
+    (ABC^U) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94 85] isEqual
+
+{  % Truncated
+    (ABC^) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94] isEqual
+
+{
+    (ABC^094RS) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94 82 83] isEqual
+
+{
+    (ABC^094NUL) << /parse true /parsefnc false >> parseinput
+} [65 66 67 94 78 85 76] isEqual
+
+
+% parsefnc
+
+{  % FNC when not enabled
+    (^FNC1ABC) << /parse false /parsefnc false (FNC1) -1 >> parseinput
+} [ 94 70 78 67 49 65 66 67 ] isEqual
+
+{  % Start
+    (^FNC1ABC) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} [ -1 65 66 67 ] isEqual
+
+{  % Multiple in middle
+    (A^FNC1XXX^SFT+BC) << /parse false /parsefnc true (FNC1) -1 (SFT+) -2 >> parseinput
+} [ 65 -1 88 88 88 -2 66 67 ] isEqual
+
+{  % End
+    (ABC^FNC1) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} [ 65 66 67 -1 ] isEqual
+
+{  % Escaped "^^" -> "^"
+    (AB^^FNC1C) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} [ 65 66 94 70 78 67 49 67 ]  isEqual
+
+{  % Escaped "^^" -> "^" at end
+    (AB^^) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} [ 65 66 94 ]  isEqual
+
+{  % Truncated FNC
+    (ABC^FNC) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} /bwipp.truncatedFNC isError
+
+{  % Truncated FNC
+    (ABC^F) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} /bwipp.truncatedFNC isError
+
+{  % Truncated caret
+    (ABC^) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} /bwipp.truncatedCaret isError
+
+{  % No such FNC
+    (A^FNC2BC) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} /bwipp.unknownFNC isError
+
+{  % ECI when not enabled
+    (A^ECI123456BC) << /parse false /parsefnc true (FNC1) -1 >> parseinput
+} /bwipp.unknownFNC isError
+
+{  % ECI 000000
+    (A^ECI000000BC) << /parse false /parsefnc true /eci true (FNC1) -1 >> parseinput
+} [65 -1000000 66 67] isEqual
+
+{  % ECI 999999
+    (A^ECI999999BC) << /parse false /parsefnc true /eci true (FNC1) -1 >> parseinput
+} [65 -1999999 66 67] isEqual
+
+{  % Invalid ECI 99999A
+    (A^ECI99999ABC) << /parse false /parsefnc true /eci true (FNC1) -1 >> parseinput
+} /bwipp.invalidECI isError
+
+{  % No parse
+    (A^000BC) << /parse false /parsefnc true >> parseinput
+} /bwipp.unknownFNC isError
+
+{  % Parse creates carat
+    (AB^094FNC1C) << /parse true /parsefnc true (FNC1) -1 >> parseinput
+} [ 65 66 -1 67 ] isEqual
+
+
+% parseonly
+
+{  % Without parseonly
+    (XX^000XX^FNC1XX^ECI123456XX) << /parse true /parsefnc true /eci true (FNC1) -1 >> parseinput
+} [ 88 88 0 88 88 -1 88 88 -1123456 88 88 ] isEqual
+
+{  % FNCs not substituted under parseonly
+    (XX^000XX^FNC1XX^ECI123456XX) << /parseonly true /parse true /parsefnc true (FNC1) -1 >> parseinput
+} (XX\000XX^FNC1XX^ECI123456XX) isEqual
+
+end
+} bind def

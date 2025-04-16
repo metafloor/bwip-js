@@ -1,0 +1,43 @@
+/runtest_databaromni {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 24724:2011
+
+% vim: set ts=4 sw=4 et :
+
+%%/databaromni dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databaromni /sbs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databaromni /sbs get } e isError
+} def
+
+
+((01)20012345678909)  % ISO/IEC 24724:2011 Figure 1 GS1 DataBar Omnidirectional symbol representing (01)20012345678909, same
+    [1 1 1 3 3 1 1 5 1 2 7 4 1 1 1 2 2 1 2 1 5 1 2 5 1 2 1 1 1 2 1 1 2 8 3 3 2 1 2 1 2 3 2 1 1]
+    eq_tmpl
+
+((01)0441234567890)  % ISO/IEC 24724:2011 Figure 2 GS1 DataBar Omnidirectional symbol representing (01)04412345678909, same
+    [1 2 1 3 1 4 1 3 1 3 3 7 1 1 1 1 1 5 2 2 2 1 1 1 2 2 1 2 1 5 1 1 6 5 2 4 1 1 1 3 3 2 1 1 1]
+    eq_tmpl
+
+
+((01)20012345678908)    /bwipp.databaromniBadCheckDigit  er_tmpl
+()                      /bwipp.databaromniBadLength      er_tmpl
+((01)200123456789091)   /bwipp.databaromniBadLength      er_tmpl
+((01)200123456789)      /bwipp.databaromniBadLength      er_tmpl
+((01)2001234567890A)    /bwipp.databaromniBadCharacter   er_tmpl
+((02)2001234567890)     /bwipp.databaromniBadAI          er_tmpl
+end
+} bind def

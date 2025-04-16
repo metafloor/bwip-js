@@ -1,0 +1,55 @@
+/runtest_upca {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+%%/upca dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) upca /sbs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) upca /sbs get } e isError
+} def
+
+
+(416000336108)       [1 1 1 1 1 3 2 2 2 2 1 1 1 1 4 3 2 1 1 3 2 1 1 3 2 1 1 1 1 1 1 1 1 4 1 1 1 4 1 1 1 1 1 4 2 2 2 1 3 2 1 1 1 2 1 3 1 1 1] eq_tmpl  % 12 digits
+(41600033610)        [1 1 1 1 1 3 2 2 2 2 1 1 1 1 4 3 2 1 1 3 2 1 1 3 2 1 1 1 1 1 1 1 1 4 1 1 1 4 1 1 1 1 1 4 2 2 2 1 3 2 1 1 1 2 1 3 1 1 1] eq_tmpl  % Omit checksum
+(416000336109)       /bwipp.upcAbadCheckDigit                                                                                                er_tmpl  % Invalid checksum
+
+(416000336108 12345) [1 1 1 1 1 3 2 2 2 2 1 1 1 1 4 3 2 1 1 3 2 1 1 3 2 1 1 1 1 1 1 1 1 4 1 1 1 4 1 1 1 1 1 4 2 2 2 1 3 2 1 1 1 2 1 3 1 1 1           % Add 5
+                      12.0
+                      1 1 2 1 2 2 2 1 1 2 1 2 2 1 1 1 1 4 1 1 1 1 1 3 2 1 1 1 2 3 1]                                                         eq_tmpl
+
+(416000336108 12)    [1 1 1 1 1 3 2 2 2 2 1 1 1 1 4 3 2 1 1 3 2 1 1 3 2 1 1 1 1 1 1 1 1 4 1 1 1 4 1 1 1 1 1 4 2 2 2 1 3 2 1 1 1 2 1 3 1 1 1           % Add 2
+                      12.0
+                      1 1 2 2 2 2 1 1 1 2 1 2 2]                                                                                             eq_tmpl
+
+(416000336108 123)   /bwipp.upcAbadAddOnLength                                                                                               er_tmpl  % Add 3!
+
+(A16000336108)       /bwipp.upcAbadCharacter                                                                                                 er_tmpl  % Bad character
+
+(4160003361)         /bwipp.upcAbadLength                                                                                                    er_tmpl  % Too short
+(4160003361081)      /bwipp.upcAbadLength                                                                                                    er_tmpl  % Too long
+
+(00123457)           [1 1 1 3 2 1 1 3 2 1 1 2 2 2 1 2 1 2 2 1 4 1 1 1 1 3 2 1 1 1 1 1 3 2 1 1 3 2 1 1 3 2 1 1 3 2 1 1 1 2 3 1 1 3 1 2 1 1 1] eq_tmpl  % UPC-E conversion
+(0012345)            [1 1 1 3 2 1 1 3 2 1 1 2 2 2 1 2 1 2 2 1 4 1 1 1 1 3 2 1 1 1 1 1 3 2 1 1 3 2 1 1 3 2 1 1 3 2 1 1 1 2 3 1 1 3 1 2 1 1 1] eq_tmpl  % UPC-E conversion, no checksum
+(00123451)           /bwipp.upcAbadCheckDigit                                                                                                er_tmpl  % UPC-E conversion, bad checksum
+(10123454)           [1 1 1 2 2 2 1 3 2 1 1 2 2 2 1 2 1 2 2 1 4 1 1 1 1 3 2 1 1 1 1 1 3 2 1 1 3 2 1 1 3 2 1 1 3 2 1 1 1 2 3 1 1 1 3 2 1 1 1] eq_tmpl  % UPC-E conversion, system 1
+(2012345)            /bwipp.upcAupcEbadNumberSystem                                                                                          er_tmpl  % UPC-E conversion, system 2!
+(A0123457)           /bwipp.upcAupcEbadCharacter                                                                                             er_tmpl  % UPC-E conversion, bad character
+
+(00123415)           [1 1 1 3 2 1 1 3 2 1 1 2 2 2 1 2 2 2 1 3 2 1 1 3 2 1 1 1 1 1 1 1 3 2 1 1 3 2 1 1 2 1 2 2 1 4 1 1 1 1 3 2 1 2 3 1 1 1 1] eq_tmpl  % UPC-E conversion NNNNN{0-2}NN
+(00123430)           [1 1 1 3 2 1 1 3 2 1 1 2 2 2 1 2 1 2 2 3 2 1 1 3 2 1 1 1 1 1 1 1 3 2 1 1 3 2 1 1 3 2 1 1 1 4 1 1 1 1 3 2 3 2 1 1 1 1 1] eq_tmpl  % UPC-E conversion NNNNN3NN
+(00123444)           [1 1 1 3 2 1 1 3 2 1 1 2 2 2 1 2 1 2 2 1 4 1 1 3 2 1 1 1 1 1 1 1 3 2 1 1 3 2 1 1 3 2 1 1 3 2 1 1 1 1 3 2 1 1 3 2 1 1 1] eq_tmpl  % UPC-E conversion NNNNN4NN
+(00123471)           [1 1 1 3 2 1 1 3 2 1 1 2 2 2 1 2 1 2 2 1 4 1 1 1 1 3 2 1 1 1 1 1 3 2 1 1 3 2 1 1 3 2 1 1 3 2 1 1 1 3 1 2 2 2 2 1 1 1 1] eq_tmpl  % UPC-E conversion NNNNN{5-9}NN
+
+end
+} bind def

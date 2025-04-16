@@ -1,0 +1,47 @@
+/runtest_gs1_cc {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 24723:2010
+% GS1 General Specifications
+
+% vim: set ts=4 sw=4 et :
+
+%%/gs1-cc dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% CC-C columns 1-30, rows 3-30 (GS1 General Specifications 5.11.2.3)
+
+{
+    % Min composite width, small/medium linear width, rows 2 -> 3, cols 8
+    ((20)12) (ccversion=c lintype=gs1-128 linwidth=189 debugcws dontlint) gs1-cc
+} [16 920 901 50 494 840 370 378 27 610 352 885 316 132 33 8 298 30 646 132 695 846 592 225] debugIsEqual
+
+{
+    % Min composite width, large linear width, rows 1 -> 3, cols 37 -> 30
+    ((20)12) (ccversion=c lintype=gs1-128 linwidth=695 debugcws dontlint) gs1-cc
+} [82 920 901 50 494 840 370 378 27 610 352 885 316 221 383 123 782 732 55 320 705 870 633 13 755 176 442 608 110 641 511 841 366 27 610 352 885 316 221 383 123 782 732 55 320 705 870 633 13 755 176 442 608 110 641 511 841 366 27 610 352 885 316 221 383 123 782 732 55 320 705 870 633 13 755 176 442 608 66 16 132 33 6 547 99 880 511 325 849 37] debugIsEqual
+
+{
+    % Medium/large composite width, large linear width, rows 2 -> 3, cols 37 -> 30
+    ((20)12(90)123456789012345678901234567890(91)1234567890123) (ccversion=c lintype=gs1-128 linwidth=695 debugcws dontlint) gs1-cc
+} [82 920 901 50 504 633 638 559 197 44 694 740 450 287 192 554 360 354 38 798 640 545 128 55 320 705 870 633 13 755 176 442 608 110 641 511 841 366 27 610 352 885 316 221 383 123 782 732 55 320 705 870 633 13 755 176 442 608 110 641 511 841 366 27 610 352 885 316 221 383 123 782 732 55 320 705 870 633 8 66 16 132 709 843 117 302 894 112 338 907] debugIsEqual
+
+{
+    % Medium composite width, largeish linear width, rows 1 -> 3, cols 31 -> 30
+    ((20)12(90)12345678901234567890) (ccversion=c lintype=gs1-128 linwidth=585 debugcws dontlint) gs1-cc
+} [82 920 901 50 504 633 638 559 197 44 694 740 448 55 320 705 870 633 13 755 176 442 608 110 641 511 841 366 27 610 352 885 316 221 383 123 782 732 55 320 705 870 633 13 755 176 442 608 110 641 511 841 366 27 610 352 885 316 221 383 123 782 732 55 320 705 870 633 13 755 176 442 608 110 641 511 841 366 16 132 33 8 843 864 255 772 741 55 845 682] debugIsEqual
+
+
+{ ()      ()             gs1-cc }                            /bwipp.GS1aiMissingOpenParen isError
+{ ()      (lintype=upca) gs1-cc }                            /bwipp.GS1aiMissingOpenParen isError
+{ ((90)1) (ccversion=d)  gs1-cc }                            /bwipp.gs1ccBadCCversion     isError
+{ ((90)1) (cccolumns=31) gs1-cc }                            /bwipp.gs1ccColumnsTooBig    isError
+{ ((90)1) (lintype=blah) gs1-cc }                            /bwipp.gs1ccBadLinType       isError
+{ ((90)1) (lintype=gs1-128 ccversion=c) gs1-cc }             /bwipp.gs1ccMissingLinWidth  isError
+{ ((90)1) (lintype=gs1-128 ccversion=c linwidth=67) gs1-cc } /bwipp.gs1ccMinimumLinWidth  isError
+end
+} bind def

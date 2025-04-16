@@ -1,0 +1,57 @@
+/runtest_code39 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 16388:2007
+
+% vim: set ts=4 sw=4 et :
+
+%%/code39 dup /uk.co.terryburton.bwipp findresource cvx def
+%%/code39ext dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) code39
+} /bwipp.code39emptyData isError
+{ () (dontdraw) code39ext
+} /bwipp.code39emptyData isError
+
+{ () (dontdraw validatecheck) code39
+} /bwipp.code39emptyData isError
+{ () (dontdraw validatecheck) code39ext
+} /bwipp.code39emptyData isError
+
+{ (,) (dontdraw) code39
+} /bwipp.code39badCharacter isError
+
+{ (^161) (dontdraw parse) code39ext
+} /bwipp.code39extBadCharacter isError
+
+{ (Z1.) (dontdraw validatecheck) code39  % Check digit should be '-'
+} /bwipp.code39badCheckDigit isError
+{ (Z1.) (dontdraw validatecheck) code39ext
+} /bwipp.code39badCheckDigit isError
+
+
+% Examples
+
+{ (0) (dontdraw) code39 /sbs get
+} [ 1 3 1 1 3 1 3 1 1 1 1 1 1 3 3 1 3 1 1 1 1 3 1 1 3 1 3 1 1 1 ] debugIsEqual
+
+{ (0) (dontdraw validatecheck) code39 /sbs get  % Degenerate case with check digit only still allowed
+} [ 1 3 1 1 3 1 3 1 1 1 1 1 1 3 3 1 3 1 1 1 1 3 1 1 3 1 3 1 1 1 ] debugIsEqual
+
+{ (1A) (dontdraw) code39 /sbs get  % Figure 1, same
+} [ 1 3 1 1 3 1 3 1 1 1 3 1 1 3 1 1 1 1 3 1 3 1 1 1 1 3 1 1 3 1 1 3 1 1 3 1 3 1 1 1 ] debugIsEqual
+
+{ (Z1-) (dontdraw validatecheck) code39 /sbs get
+} [ 1 3 1 1 3 1 3 1 1 1 1 3 3 1 3 1 1 1 1 1 3 1 1 3 1 1 1 1 3 1 1 3 1 1 1 1 3 1 3 1 1 3 1 1 3 1 3 1 1 1 ] debugIsEqual
+
+{ (,I) (dontdraw validatecheck) code39ext /sbs get
+} [ 1 3 1 1 3 1 3 1 1 1 1 3 1 3 1 1 1 3 1 1 1 1 3 1 1 1 1 3 3 1 1 1 3 1 1 3 3 1 1 1 1 3 1 1 3 1 3 1 1 1 ] debugIsEqual
+end
+} bind def

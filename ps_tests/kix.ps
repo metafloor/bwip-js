@@ -1,0 +1,63 @@
+/runtest_kix {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% http://www.tntpost.nl/zakelijk/klantenservice/downloads/kIX_code/download.aspx
+
+% vim: set ts=4 sw=4 et :
+
+%%/kix dup /uk.co.terryburton.bwipp findresource cvx def
+
+/dump_4state_tmpl {
+    /ret exch def
+    /bhs ret /bhs get def
+    /bbs ret /bbs get def
+    [
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            bbs i get 0.05 lt { bhs i get 0.14 gt {1} {0} ifelse } { bhs i get 0.09 gt {1} {0} ifelse } ifelse
+        } for
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            1
+        } for
+        0 1 bbs length 1 sub {
+            /i exch def
+            i 0 ne {0} if
+            bbs i get 0.05 lt { bhs i get 0.09 gt {1} {0} ifelse } {0} ifelse
+        } for
+    ]
+} def
+
+
+% Input validation
+
+{ () (dontdraw) kix
+} /bwipp.kixEmptyData isError
+
+{ (,) (dontdraw) kix
+} /bwipp.kixBadCharacter isError
+
+
+% Examples
+
+(2500GG30250) (dontdraw) kix dump_4state_tmpl  % Section 2.1 Example 1, same
+[
+    0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+    0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 1 0 1
+] isEqual
+
+(1231FZ13XHS) (dontdraw) kix dump_4state_tmpl  % Section 2.1 Example 4, same (note "HS" printed in lowercase in example)
+[
+    0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 1 0 1 0 0 0 0 0 0 0 1 0 1 0 0 0 1 0 0 0 1 0 0
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1
+    0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 0
+] isEqual
+end
+} bind def

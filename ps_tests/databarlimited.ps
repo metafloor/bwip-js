@@ -1,0 +1,44 @@
+/runtest_databarlimited {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 24724:2011
+
+% vim: set ts=4 sw=4 et :
+
+%%/databarlimited dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databarlimited /sbs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databarlimited /sbs get } e isError
+} def
+
+
+((01)15012345678907)  % ISO/IEC 24724:2011 Figure 7 GS1 DataBar Limited, same
+    [1 3 2 2 2 3 2 1 2 1 1 1 1 2 3 1 1 2 1 1 1 1 2 1 1 2 2 1 1 2 1 2 1 1 2 3 2 1 3 2 2 2 2 1 1 5]
+    eq_tmpl
+
+((01)0009876543210)  % ISO/IEC 24724:2011 Figure F.2 GS1 DataBar Limited, same
+    [1 1 1 1 1 2 1 2 1 2 2 4 2 5 1 1 1 1 2 1 1 2 1 1 2 2 1 1 1 3 1 3 1 1 1 3 1 5 1 2 1 2 1 1 1 5]
+    eq_tmpl
+
+
+((01)15012345678908)    /bwipp.databarlimitedBadCheckDigit  er_tmpl
+()                      /bwipp.databarlimitedBadLength      er_tmpl
+((01)150123456789071)   /bwipp.databarlimitedBadLength      er_tmpl
+((01)150123456789)      /bwipp.databarlimitedBadLength      er_tmpl
+((01)25012345678907)    /bwipp.databarlimitedBadStartDigit  er_tmpl
+((01)1501234567890A)    /bwipp.databarlimitedBadCharacter   er_tmpl
+((02)15012345678907)    /bwipp.databarlimitedBadAI          er_tmpl
+end
+} bind def

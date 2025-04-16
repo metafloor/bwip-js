@@ -1,0 +1,52 @@
+/runtest_databarstacked {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% ISO/IEC 24724:2011
+
+% vim: set ts=4 sw=4 et :
+
+%%/databarstacked dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databarstacked /pixs get } e isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t (dontdraw) databarstacked /pixs get } e isError
+} def
+
+
+((01)0001234567890)  % ISO/IEC 24724:2011 Figure 5 GS1 DataBar Stacked, same
+[
+    0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 0 0 0 0 1 0 1 1 1 0 0 1 0 1 1 0 1 1 1 1 0 1 0
+    0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 0 0 0 0 1 0 1 1 1 0 0 1 0 1 1 0 1 1 1 1 0 1 0
+    0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 0 0 0 0 1 0 1 1 1 0 0 1 0 1 1 0 1 1 1 1 0 1 0
+    0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 0 0 0 0 1 0 1 1 1 0 0 1 0 1 1 0 1 1 1 1 0 1 0
+    0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 1 1 1 1 1 0 0 0 0 1 0 1 1 1 0 0 1 0 1 1 0 1 1 1 1 0 1 0
+    0 0 0 0 1 0 1 0 1 0 1 0 1 1 1 1 1 0 1 0 0 0 0 0 0 0 1 1 1 0 1 0 1 0 0 0 1 1 0 1 0 0 1 0 0 0 0 0 0 0
+    1 0 1 1 1 0 0 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 0 1
+    1 0 1 1 1 0 0 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 0 1
+    1 0 1 1 1 0 0 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 0 1
+    1 0 1 1 1 0 0 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 0 1
+    1 0 1 1 1 0 0 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 0 1
+    1 0 1 1 1 0 0 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 0 1
+    1 0 1 1 1 0 0 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 0 1
+] eq_tmpl
+
+
+((01)20012345678908)    /bwipp.databarstackedBadCheckDigit  er_tmpl  % Should be '9'
+()                      /bwipp.databarstackedBadLength      er_tmpl
+((01)200123456789091)   /bwipp.databarstackedBadLength      er_tmpl
+((01)200123456789)      /bwipp.databarstackedBadLength      er_tmpl
+((01)2001234567890A)    /bwipp.databarstackedBadCharacter   er_tmpl
+((02)2001234567890)     /bwipp.databarstackedBadAI          er_tmpl
+end
+} bind def

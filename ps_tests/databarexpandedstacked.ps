@@ -1,0 +1,24 @@
+/runtest_databarexpandedstacked {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% vim: set ts=4 sw=4 et :
+
+%%/databarexpandedstacked dup /uk.co.terryburton.bwipp findresource cvx def
+
+/er_tmpl_opts {
+    /e exch def
+    /o exch def
+    /t exch def
+    { t o databarexpandedstacked /pixs get } e isError
+} def
+
+((01)00628176379104(17)500723(10)103) (dontdraw segments=1)  /bwipp.gs1databarexpandedBadSegments er_tmpl_opts  % Too few
+((01)00628176379104(17)500723(10)103) (dontdraw segments=23) /bwipp.gs1databarexpandedBadSegments er_tmpl_opts  % Too many
+((01)00628176379104(17)500723(10)103) (dontdraw segments=3)  /bwipp.gs1databarexpandedBadSegments er_tmpl_opts  % Not even
+
+end
+} bind def
