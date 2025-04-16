@@ -87,7 +87,7 @@ function $s(v) {
         v = '' + v;
     }
     var s = new Uint8Array(v.length);
-    for (var i = 0; i < v.length; i++) {
+    for (var i = 0, l = v.length; i < l; i++) {
         s[i] = v.charCodeAt(i);
     }
     return s;
@@ -547,7 +547,12 @@ var $f = (function(fa) {
 function bwipp_raiseerror() {
     var info = $k[--$j];
     var name = $k[--$j];
-    throw new Error($z(name) + ": " + $z(info));
+    if (typeof info == 'string' || info instanceof Uint8Array) {
+        throw new Error($z(name) + ": " + $z(info));
+    } else {
+        $k[$j++] = info;
+        throw new Error($z(name));
+    }
 }
 
 // This is a replacement for the BWIPP processoptions function.
@@ -560,20 +565,24 @@ function bwipp_raiseerror() {
 function bwipp_processoptions() {
     var dict = $k[--$j];
     var opts = $k[$j - 1];
-    var map = opts instanceof Map;
+    if (typeof opts == 'string') {
+        let vals = opts.trim().split(/ +/g)
+        $k[$j - 1] = opts = new Map();
+        for (let i = 0; i < vals.length; i++) {
+            let pair = vals[i].split('=');
+            if (pair.length == 1) {
+                opts.set(pair[0], true);
+            } else {
+                opts.set(pair[0], pair[1]);
+            }
+        }
+    }
     for (var id in dict) {
         var val;
-        if (map) {
-            if (!opts.has(id)) {
-                continue;
-            }
-            val = opts.get(id);
-        } else {
-            if (!opts.hasOwnProperty(id)) {
-                continue;
-            }
-            val = opts[id];
+        if (!opts.has(id)) {
+            continue;
         }
+        val = opts.get(id);
         var def = dict[id];
         var typ = typeof def;
 
@@ -586,7 +595,7 @@ function bwipp_processoptions() {
             }
             if (typeof val == 'string') {
                 val = +val;
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
             }
         } else if (typ == 'boolean') {
             if (val !== true && val !== false) {
@@ -602,13 +611,13 @@ function bwipp_processoptions() {
                     throw new Error('bwipp.invalidOptionType: ' + id +
                         ': not a booleantype: ' + val);
                 }
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
             }
         } else if (typ == 'string' || def instanceof Uint8Array) {
             // This allows numbers to be strings
             if (typeof val == 'number') {
                 val = '' + val;
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
             } else if (typeof val != 'string' && !(val instanceof Uint8Array)) {
                 throw new Error('bwipp.invalidOptionType: ' + id +
                     ': not a stringtype: ' + val);
@@ -633,7 +642,7 @@ function bwipp_loadctx(f) {
 
 function bwipp_parseinput() {
     $_ = Object.create($_); //#200
-    bwipp_loadctx(bwipp_parseinput) //#202
+    bwipp_loadctx(bwipp_parseinput); //#202
     $_.fncvals = $k[--$j]; //#204
     $_.barcode = $k[--$j]; //#205
     var _2 = 'parse'; //#207
@@ -886,7 +895,7 @@ function bwipp_parseinput() {
 } //bwipp_parseinput
 function bwipp_gs1process() {
     $_ = Object.create($_); //#383
-    bwipp_loadctx(bwipp_gs1process) //#385
+    bwipp_loadctx(bwipp_gs1process); //#385
     if (!bwipp_gs1process.__2469__) { //#2469
         $_ = Object.create($_); //#2469
         var _1 = new Map([
@@ -3699,11 +3708,11 @@ function bwipp_gs1process() {
         $_ = Object.getPrototypeOf($_); //#2468
     } //#2468
     if ($eq($k[--$j], 'ai')) { //#2700
-        $anchorsearch($k[--$j], "("); //#2476
+        $anchorsearch($k[--$j], "\("); //#2476
         if ($nt($k[--$j])) { //#2478
             $j--; //#2477
             $k[$j++] = 'bwipp.GS1aiMissingOpenParen#2477'; //#2477
-            $k[$j++] = "AIs must start with '('"; //#2477
+            $k[$j++] = "AIs must start with '\('"; //#2477
             bwipp_raiseerror(); //#2477
         } //#2477
         $j--; //#2479
@@ -3719,11 +3728,11 @@ function bwipp_gs1process() {
                 $j--; //#2481
                 break; //#2481
             } //#2481
-            $search($k[--$j], ")"); //#2482
+            $search($k[--$j], "\)"); //#2482
             if ($nt($k[--$j])) { //#2484
                 $cleartomark(); //#2483
                 $k[$j++] = 'bwipp.GS1aiMissingCloseParen#2483'; //#2483
-                $k[$j++] = "AIs must end with ')'"; //#2483
+                $k[$j++] = "AIs must end with '\)'"; //#2483
                 bwipp_raiseerror(); //#2483
             } //#2483
             var _O3 = $k[--$j]; //#2485
@@ -3734,7 +3743,7 @@ function bwipp_gs1process() {
             var _O5 = $k[--$j]; //#2485
             var _O6 = $k[--$j]; //#2485
             $k[$j++] = _O5; //#2486
-            $search(_O6, "("); //#2486
+            $search(_O6, "\("); //#2486
             if ($k[--$j]) { //#2486
                 var _O8 = $k[--$j]; //#2486
                 var _O9 = $k[--$j]; //#2486
@@ -4151,9 +4160,9 @@ function bwipp_gs1process() {
                 var _RY = $k[--$j]; //#2658
                 var _RZ = _RY.length; //#2658
                 var _Ra = $s(_RZ + 46); //#2658
-                $puti(_Ra, 0, "AI ("); //#2659
+                $puti(_Ra, 0, "AI \("); //#2659
                 $puti(_Ra, 4, _RY); //#2660
-                $puti(_Ra, _RZ + 4, ") is not a valid GS1 DL URI data attribute"); //#2661
+                $puti(_Ra, _RZ + 4, "\) is not a valid GS1 DL URI data attribute"); //#2661
                 $k[$j++] = _RY; //#2662
                 $k[$j++] = _Ra; //#2662
                 $k[$j++] = _RZ; //#2662
@@ -4199,9 +4208,9 @@ function bwipp_gs1process() {
                     var _Rz = $k[--$j]; //#2675
                     var _S0 = _Rz.length; //#2675
                     var _S1 = $s(_S0 + 50); //#2675
-                    $puti(_S1, 0, "AI ("); //#2676
+                    $puti(_S1, 0, "AI \("); //#2676
                     $puti(_S1, 4, _Rz); //#2677
-                    $puti(_S1, _S0 + 4, ") from query params should be in the path info"); //#2678
+                    $puti(_S1, _S0 + 4, "\) from query params should be in the path info"); //#2678
                     $k[$j++] = _Rz; //#2679
                     $k[$j++] = _S1; //#2679
                     $k[$j++] = _S0; //#2679
@@ -4232,11 +4241,15 @@ function bwipp_gs1process() {
                 $k[$j++] = _SH; //#2698
                 if ((_SI == 8) || ((_SI == 12) || (_SI == 13))) { //#2697
                     var _SK = $strcpy($s(14), "00000000000000"); //#2694
+                    $k[$j++] = _SK; //#2694
+                    $k[$j++] = _SK; //#2694
+                    $r(3, -1); //#2694
                     var _SL = $k[--$j]; //#2694
-                    $puti(_SK, 14 - _SL.length, _SL); //#2694
-                    var _SN = $k[--$j]; //#2695
-                    $put($_.vals, _SN, _SK); //#2695
-                    $k[$j++] = _SN; //#2695
+                    $puti($k[--$j], 14 - _SL.length, _SL); //#2694
+                    var _SO = $k[--$j]; //#2695
+                    var _SP = $k[--$j]; //#2695
+                    $put($_.vals, _SP, _SO); //#2695
+                    $k[$j++] = _SP; //#2695
                 } else { //#2697
                     $j--; //#2697
                 } //#2697
@@ -4247,11 +4260,11 @@ function bwipp_gs1process() {
     if (!bwipp_gs1process.__2714__) { //#2714
         $_ = Object.create($_); //#2714
         $k[$j++] = Infinity; //#2707
-        var _SO = $a(["00", "01", "02", "03", "04", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "31", "32", "33", "34", "35", "36", "41"]); //#2712
-        for (var _SP = 0, _SQ = _SO.length; _SP < _SQ; _SP++) { //#2713
-            var _SR = $get(_SO, _SP); //#2713
-            $k[$j++] = _SR; //#2713
-            $k[$j++] = _SR; //#2713
+        var _SQ = $a(["00", "01", "02", "03", "04", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "31", "32", "33", "34", "35", "36", "41"]); //#2712
+        for (var _SR = 0, _SS = _SQ.length; _SR < _SS; _SR++) { //#2713
+            var _ST = $get(_SQ, _SR); //#2713
+            $k[$j++] = _ST; //#2713
+            $k[$j++] = _ST; //#2713
         } //#2713
         $_.aifixed = $d(); //#2713
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_gs1process.$ctx[id] = $_[id]); //#2713
@@ -4259,14 +4272,14 @@ function bwipp_gs1process() {
         $_ = Object.getPrototypeOf($_); //#2713
     } //#2713
     $k[$j++] = Infinity; //#2716
-    var _SU = $_.ais; //#2717
-    for (var _SV = 0, _SW = _SU.length; _SV < _SW; _SV++) { //#2724
-        var _SX = $get(_SU, _SV); //#2724
+    var _SW = $_.ais; //#2717
+    for (var _SX = 0, _SY = _SW.length; _SX < _SY; _SX++) { //#2724
+        var _SZ = $get(_SW, _SX); //#2724
         $k[$j++] = true; //#2723
-        $k[$j++] = _SX; //#2723
-        if (_SX.length >= 2) { //#2722
-            var _Sb = $get($_.aifixed, $geti($k[--$j], 0, 2)) !== undefined; //#2720
-            if (_Sb) { //#2720
+        $k[$j++] = _SZ; //#2723
+        if (_SZ.length >= 2) { //#2722
+            var _Sd = $get($_.aifixed, $geti($k[--$j], 0, 2)) !== undefined; //#2720
+            if (_Sd) { //#2720
                 $j--; //#2720
                 $k[$j++] = false; //#2720
             } //#2720
@@ -4279,41 +4292,41 @@ function bwipp_gs1process() {
         $_ = Object.create($_); //#2749
         $k[$j++] = Infinity; //#2730
         $k[$j++] = 0; //#2732
-        for (var _Sd = 0, _Se = "!\"%&'()*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".length; _Sd < _Se; _Sd++) { //#2732
-            var _Sg = $k[--$j]; //#2732
-            $k[$j++] = $get("!\"%&'()*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz", _Sd); //#2732
-            $k[$j++] = _Sg; //#2732
-            $k[$j++] = $f(_Sg + 1); //#2732
+        for (var _Sf = 0, _Sg = "!\"%&'\(\)*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".length; _Sf < _Sg; _Sf++) { //#2732
+            var _Si = $k[--$j]; //#2732
+            $k[$j++] = $get("!\"%&'\(\)*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz", _Sf); //#2732
+            $k[$j++] = _Si; //#2732
+            $k[$j++] = $f(_Si + 1); //#2732
         } //#2732
         $j--; //#2732
         $_.cset82 = $d(); //#2733
         $k[$j++] = Infinity; //#2735
         $k[$j++] = 0; //#2737
-        for (var _Si = 0, _Sj = "#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".length; _Si < _Sj; _Si++) { //#2737
-            var _Sl = $k[--$j]; //#2737
-            $k[$j++] = $get("#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", _Si); //#2737
-            $k[$j++] = _Sl; //#2737
-            $k[$j++] = $f(_Sl + 1); //#2737
+        for (var _Sk = 0, _Sl = "#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".length; _Sk < _Sl; _Sk++) { //#2737
+            var _Sn = $k[--$j]; //#2737
+            $k[$j++] = $get("#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", _Sk); //#2737
+            $k[$j++] = _Sn; //#2737
+            $k[$j++] = $f(_Sn + 1); //#2737
         } //#2737
         $j--; //#2737
         $_.cset39 = $d(); //#2738
         $k[$j++] = Infinity; //#2740
         $k[$j++] = 0; //#2742
-        for (var _Sn = 0, _So = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ".length; _Sn < _So; _Sn++) { //#2742
-            var _Sq = $k[--$j]; //#2742
-            $k[$j++] = $get("23456789ABCDEFGHJKLMNPQRSTUVWXYZ", _Sn); //#2742
-            $k[$j++] = _Sq; //#2742
-            $k[$j++] = $f(_Sq + 1); //#2742
+        for (var _Sp = 0, _Sq = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ".length; _Sp < _Sq; _Sp++) { //#2742
+            var _Ss = $k[--$j]; //#2742
+            $k[$j++] = $get("23456789ABCDEFGHJKLMNPQRSTUVWXYZ", _Sp); //#2742
+            $k[$j++] = _Ss; //#2742
+            $k[$j++] = $f(_Ss + 1); //#2742
         } //#2742
         $j--; //#2742
         $_.cset32 = $d(); //#2743
         $k[$j++] = Infinity; //#2745
         $k[$j++] = 0; //#2747
-        for (var _Ss = 0, _St = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".length; _Ss < _St; _Ss++) { //#2747
-            var _Sv = $k[--$j]; //#2747
-            $k[$j++] = $get("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", _Ss); //#2747
-            $k[$j++] = _Sv; //#2747
-            $k[$j++] = $f(_Sv + 1); //#2747
+        for (var _Su = 0, _Sv = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".length; _Su < _Sv; _Su++) { //#2747
+            var _Sx = $k[--$j]; //#2747
+            $k[$j++] = $get("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", _Su); //#2747
+            $k[$j++] = _Sx; //#2747
+            $k[$j++] = $f(_Sx + 1); //#2747
         } //#2747
         $j--; //#2747
         $_.cset64 = $d(); //#2748
@@ -4322,11 +4335,11 @@ function bwipp_gs1process() {
         $_ = Object.getPrototypeOf($_); //#2748
     } //#2748
     $_.lintnumeric = function() {
-        var _Sy = $k[--$j]; //#2752
+        var _T0 = $k[--$j]; //#2752
         $k[$j++] = true; //#2752
-        $forall(_Sy, function() { //#2752
-            var _Sz = $k[--$j]; //#2752
-            if ((_Sz < 48) || (_Sz > 57)) { //#2752
+        $forall(_T0, function() { //#2752
+            var _T1 = $k[--$j]; //#2752
+            if ((_T1 < 48) || (_T1 > 57)) { //#2752
                 $j--; //#2752
                 $k[$j++] = false; //#2752
                 return true; //#2752
@@ -4341,11 +4354,11 @@ function bwipp_gs1process() {
         } //#2753
     }; //#2753
     $_.lintcset82 = function() {
-        var _T1 = $k[--$j]; //#2757
+        var _T3 = $k[--$j]; //#2757
         $k[$j++] = true; //#2757
-        $forall(_T1, function() { //#2757
-            var _T4 = $get($_.cset82, $k[--$j]) !== undefined; //#2757
-            if (!_T4) { //#2757
+        $forall(_T3, function() { //#2757
+            var _T6 = $get($_.cset82, $k[--$j]) !== undefined; //#2757
+            if (!_T6) { //#2757
                 $j--; //#2757
                 $k[$j++] = false; //#2757
                 return true; //#2757
@@ -4360,11 +4373,11 @@ function bwipp_gs1process() {
         } //#2758
     }; //#2758
     $_.lintcset39 = function() {
-        var _T6 = $k[--$j]; //#2762
+        var _T8 = $k[--$j]; //#2762
         $k[$j++] = true; //#2762
-        $forall(_T6, function() { //#2762
-            var _T9 = $get($_.cset39, $k[--$j]) !== undefined; //#2762
-            if (!_T9) { //#2762
+        $forall(_T8, function() { //#2762
+            var _TB = $get($_.cset39, $k[--$j]) !== undefined; //#2762
+            if (!_TB) { //#2762
                 $j--; //#2762
                 $k[$j++] = false; //#2762
                 return true; //#2762
@@ -4379,12 +4392,12 @@ function bwipp_gs1process() {
         } //#2763
     }; //#2763
     $_.lintcset64 = function() {
-        var _TB = $k[--$j]; //#2768
+        var _TD = $k[--$j]; //#2768
         $k[$j++] = true; //#2768
-        $forall(_TB, function() { //#2768
-            var _TC = $k[--$j]; //#2768
-            var _TE = $get($_.cset64, _TC) !== undefined; //#2768
-            if ((!_TE) && (_TC != 61)) { //#2768
+        $forall(_TD, function() { //#2768
+            var _TE = $k[--$j]; //#2768
+            var _TG = $get($_.cset64, _TE) !== undefined; //#2768
+            if ((!_TG) && (_TE != 61)) { //#2768
                 $j--; //#2768
                 $k[$j++] = false; //#2768
                 return true; //#2768
@@ -4399,19 +4412,19 @@ function bwipp_gs1process() {
         } //#2769
     }; //#2769
     $_.lintkey = function() {
-        var _TG = $k[--$j]; //#2773
-        $k[$j++] = _TG; //#2773
-        if (_TG.length < 2) { //#2773
+        var _TI = $k[--$j]; //#2773
+        $k[$j++] = _TI; //#2773
+        if (_TI.length < 2) { //#2773
             $j -= 2; //#2773
             $k[$j++] = 'bwipp.GS1keyTooShort#2773'; //#2773
             $k[$j++] = "Key is too short"; //#2773
             $k[$j++] = false; //#2773
             return true; //#2773
         } //#2773
-        var _TH = $k[--$j]; //#2774
-        var _TI = $get(_TH, 0); //#2774
-        var _TJ = $get(_TH, 1); //#2775
-        if (((_TI < 48) || (_TI > 57)) || ((_TJ < 48) || (_TJ > 57))) { //#2777
+        var _TJ = $k[--$j]; //#2774
+        var _TK = $get(_TJ, 0); //#2774
+        var _TL = $get(_TJ, 1); //#2775
+        if (((_TK < 48) || (_TK > 57)) || ((_TL < 48) || (_TL > 57))) { //#2777
             $j--; //#2776
             $k[$j++] = 'bwipp.GS1badGCP#2776'; //#2776
             $k[$j++] = "Non-numeric company prefix"; //#2776
@@ -4432,29 +4445,29 @@ function bwipp_gs1process() {
     }; //#2783
     $_.lintcsum = function() {
         $k[$j++] = Infinity; //#2787
-        var _TM = $k[--$j]; //#2787
-        var _TN = $k[--$j]; //#2787
-        var _TO = ((_TN.length % 2) == 0) ? 3 : 1; //#2788
-        $k[$j++] = _TM; //#2789
+        var _TO = $k[--$j]; //#2787
+        var _TP = $k[--$j]; //#2787
+        var _TQ = ((_TP.length % 2) == 0) ? 3 : 1; //#2788
         $k[$j++] = _TO; //#2789
-        $forall(_TN, function() { //#2789
-            var _TP = $k[--$j]; //#2789
-            var _TQ = $k[--$j]; //#2789
-            $k[$j++] = $f(_TP - 48) * _TQ; //#2789
-            $k[$j++] = $f(4 - _TQ); //#2789
+        $k[$j++] = _TQ; //#2789
+        $forall(_TP, function() { //#2789
+            var _TR = $k[--$j]; //#2789
+            var _TS = $k[--$j]; //#2789
+            $k[$j++] = $f(_TR - 48) * _TS; //#2789
+            $k[$j++] = $f(4 - _TS); //#2789
         }); //#2789
         $j--; //#2789
-        var _TR = $counttomark() + 1; //#2790
+        var _TT = $counttomark() + 1; //#2790
         $k[$j++] = 0; //#2790
-        for (var _TS = 0, _TT = _TR - 1; _TS < _TT; _TS++) { //#2790
-            var _TU = $k[--$j]; //#2790
-            var _TV = $k[--$j]; //#2790
-            $k[$j++] = $f(_TV + _TU); //#2790
+        for (var _TU = 0, _TV = _TT - 1; _TU < _TV; _TU++) { //#2790
+            var _TW = $k[--$j]; //#2790
+            var _TX = $k[--$j]; //#2790
+            $k[$j++] = $f(_TX + _TW); //#2790
         } //#2790
-        var _TW = $k[--$j]; //#2790
-        var _TX = $k[--$j]; //#2790
-        $k[$j++] = _TW; //#2790
-        $k[$j++] = _TX; //#2790
+        var _TY = $k[--$j]; //#2790
+        var _TZ = $k[--$j]; //#2790
+        $k[$j++] = _TY; //#2790
+        $k[$j++] = _TZ; //#2790
         $j--; //#2790
         if (($k[--$j] % 10) != 0) { //#2791
             $j--; //#2791
@@ -4465,38 +4478,38 @@ function bwipp_gs1process() {
         } //#2791
     }; //#2791
     $_.lintcsumalpha = function() {
-        var _TZ = $k[--$j]; //#2795
-        $k[$j++] = _TZ; //#2795
-        if (_TZ.length < 2) { //#2795
+        var _Tb = $k[--$j]; //#2795
+        $k[$j++] = _Tb; //#2795
+        if (_Tb.length < 2) { //#2795
             $j -= 2; //#2795
             $k[$j++] = 'bwipp.GS1alphaTooShort#2795'; //#2795
             $k[$j++] = "Alphanumeric string is too short to check"; //#2795
             $k[$j++] = false; //#2795
             return true; //#2795
         } //#2795
-        var _Ta = $k[--$j]; //#2796
-        $k[$j++] = _Ta; //#2798
-        $k[$j++] = _Ta.length - 2; //#2798
-        $k[$j++] = $geti(_Ta, 0, _Ta.length - 2); //#2798
+        var _Tc = $k[--$j]; //#2796
+        $k[$j++] = _Tc; //#2798
+        $k[$j++] = _Tc.length - 2; //#2798
+        $k[$j++] = $geti(_Tc, 0, _Tc.length - 2); //#2798
         $k[$j++] = Infinity; //#2798
-        var _Tc = $k[--$j]; //#2798
-        var _Td = $k[--$j]; //#2798
-        $k[$j++] = _Tc; //#2800
-        $forall(_Td, function() { //#2800
-            var _Te = $k[--$j]; //#2799
-            var _Tg = $get($_.cset82, _Te) !== undefined; //#2799
-            $k[$j++] = _Te; //#2799
-            if (_Tg) { //#2799
-                var _Tj = $get($_.cset82, $k[--$j]); //#2799
-                $k[$j++] = _Tj; //#2799
+        var _Te = $k[--$j]; //#2798
+        var _Tf = $k[--$j]; //#2798
+        $k[$j++] = _Te; //#2800
+        $forall(_Tf, function() { //#2800
+            var _Tg = $k[--$j]; //#2799
+            var _Ti = $get($_.cset82, _Tg) !== undefined; //#2799
+            $k[$j++] = _Tg; //#2799
+            if (_Ti) { //#2799
+                var _Tl = $get($_.cset82, $k[--$j]); //#2799
+                $k[$j++] = _Tl; //#2799
             } else { //#2799
                 $k[$j++] = -1; //#2799
                 return true; //#2799
             } //#2799
         }); //#2799
-        var _Tk = $k[--$j]; //#2801
-        $k[$j++] = _Tk; //#2801
-        if (_Tk == -1) { //#2801
+        var _Tm = $k[--$j]; //#2801
+        $k[$j++] = _Tm; //#2801
+        if (_Tm == -1) { //#2801
             $cleartomark(); //#2801
             $j -= 3; //#2801
             $k[$j++] = 'bwipp.GS1UnknownCSET82Character#2801'; //#2801
@@ -4505,35 +4518,34 @@ function bwipp_gs1process() {
             return true; //#2801
         } //#2801
         $astore($a($counttomark())); //#2802
-        var _Tn = $k[--$j]; //#2802
-        var _To = $k[--$j]; //#2802
-        $k[$j++] = _Tn; //#2802
-        $k[$j++] = _To; //#2802
+        var _Tp = $k[--$j]; //#2802
+        var _Tq = $k[--$j]; //#2802
+        $k[$j++] = _Tp; //#2802
+        $k[$j++] = _Tq; //#2802
         $j--; //#2802
-        var _Tp = $k[--$j]; //#2803
-        var _Tq = $k[--$j]; //#2803
-        var _Ts = $geti($k[--$j], _Tq, 2); //#2804
-        $k[$j++] = _Tp; //#2804
-        $k[$j++] = _Ts; //#2804
+        $r(3, 1); //#2803
+        var _Tr = $k[--$j]; //#2804
+        var _Tt = $geti($k[--$j], _Tr, 2); //#2804
+        $k[$j++] = _Tt; //#2804
         $k[$j++] = Infinity; //#2804
-        var _Tt = $k[--$j]; //#2804
         var _Tu = $k[--$j]; //#2804
-        $k[$j++] = _Tt; //#2806
-        $forall(_Tu, function() { //#2806
-            var _Tv = $k[--$j]; //#2805
-            var _Tx = $get($_.cset32, _Tv) !== undefined; //#2805
-            $k[$j++] = _Tv; //#2805
-            if (_Tx) { //#2805
-                var _U0 = $get($_.cset32, $k[--$j]); //#2805
-                $k[$j++] = _U0; //#2805
+        var _Tv = $k[--$j]; //#2804
+        $k[$j++] = _Tu; //#2806
+        $forall(_Tv, function() { //#2806
+            var _Tw = $k[--$j]; //#2805
+            var _Ty = $get($_.cset32, _Tw) !== undefined; //#2805
+            $k[$j++] = _Tw; //#2805
+            if (_Ty) { //#2805
+                var _U1 = $get($_.cset32, $k[--$j]); //#2805
+                $k[$j++] = _U1; //#2805
             } else { //#2805
                 $k[$j++] = -1; //#2805
                 return true; //#2805
             } //#2805
         }); //#2805
-        var _U1 = $k[--$j]; //#2807
-        $k[$j++] = _U1; //#2807
-        if (_U1 == -1) { //#2807
+        var _U2 = $k[--$j]; //#2807
+        $k[$j++] = _U2; //#2807
+        if (_U2 == -1) { //#2807
             $cleartomark(); //#2807
             $j -= 2; //#2807
             $k[$j++] = 'bwipp.GS1UnknownCSET32Character#2807'; //#2807
@@ -4542,43 +4554,44 @@ function bwipp_gs1process() {
             return true; //#2807
         } //#2807
         $astore($a($counttomark())); //#2808
-        var _U4 = $k[--$j]; //#2808
         var _U5 = $k[--$j]; //#2808
-        $k[$j++] = _U4; //#2808
+        var _U6 = $k[--$j]; //#2808
         $k[$j++] = _U5; //#2808
+        $k[$j++] = _U6; //#2808
         $j--; //#2808
-        var _U6 = $k[--$j]; //#2809
-        var _U9 = $k[--$j]; //#2809
-        var _UA = $a([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83]); //#2810
-        var _UB = _U9.length; //#2812
-        $k[$j++] = $f(($get(_U6, 0) << 5) + $get(_U6, 1)); //#2812
-        $k[$j++] = _U9; //#2812
+        var _U7 = $k[--$j]; //#2809
+        var _UA = $k[--$j]; //#2809
+        var _UB = $a([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83]); //#2810
+        var _UC = _UA.length; //#2812
+        $k[$j++] = $f(($get(_U7, 0) << 5) + $get(_U7, 1)); //#2812
         $k[$j++] = _UA; //#2812
         $k[$j++] = _UB; //#2812
-        if (_UB > _UA.length) { //#2812
+        $k[$j++] = _UC; //#2812
+        if (_UC > _UB.length) { //#2812
             $j -= 5; //#2812
             $k[$j++] = 'bwipp.GS1alphaTooLong#2812'; //#2812
             $k[$j++] = "Alphanumeric string is too long to check"; //#2812
             $k[$j++] = false; //#2812
             return true; //#2812
         } //#2812
-        var _UC = $k[--$j]; //#2813
-        var _UE = $geti($k[--$j], 0, _UC); //#2813
-        for (var _UF = 0, _UG = _UE.length; _UF < _UG; _UF++) { //#2813
-            var _UI = $k[--$j]; //#2813
-            $k[$j++] = $get(_UE, _UF); //#2813
-            $k[$j++] = _UI; //#2813
+        var _UD = $k[--$j]; //#2813
+        var _UF = $geti($k[--$j], 0, _UD); //#2813
+        for (var _UG = 0, _UH = _UF.length; _UG < _UH; _UG++) { //#2813
+            var _UJ = $k[--$j]; //#2813
+            $k[$j++] = $get(_UF, _UG); //#2813
+            $k[$j++] = _UJ; //#2813
         } //#2813
-        var _UJ = $k[--$j]; //#2814
+        var _UK = $k[--$j]; //#2814
         $k[$j++] = 0; //#2814
-        $forall(_UJ, function() { //#2814
-            var _UK = $k[--$j]; //#2814
+        $forall(_UK, function() { //#2814
+            $r(3, -1); //#2814
             var _UL = $k[--$j]; //#2814
             var _UM = $k[--$j]; //#2814
-            $k[$j++] = $f(_UL + (_UM * _UK)); //#2814
+            var _UN = $k[--$j]; //#2814
+            $k[$j++] = $f(_UN + (_UL * _UM)); //#2814
         }); //#2814
-        var _UN = $k[--$j]; //#2814
-        if ($k[--$j] != (_UN % 1021)) { //#2815
+        var _UO = $k[--$j]; //#2814
+        if ($k[--$j] != (_UO % 1021)) { //#2815
             $j--; //#2815
             $k[$j++] = 'bwipp.GS1badAlphaCheckCharacters#2815'; //#2815
             $k[$j++] = "Bad alphanumeric check characters"; //#2815
@@ -4589,11 +4602,11 @@ function bwipp_gs1process() {
     if (!bwipp_gs1process.__2839__) { //#2839
         $_ = Object.create($_); //#2839
         $k[$j++] = Infinity; //#2819
-        var _UP = $a(['004', '008', '010', '012', '016', '020', '024', '028', '031', '032', '036', '040', '044', '048', '050', '051', '052', '056', '060', '064', '068', '070', '072', '074', '076', '084', '086', '090', '092', '096', '100', '104', '108', '112', '116', '120', '124', '132', '136', '140', '144', '148', '152', '156', '158', '162', '166', '170', '174', '175', '178', '180', '184', '188', '191', '192', '196', '203', '204', '208', '212', '214', '218', '222', '226', '231', '232', '233', '234', '238', '239', '242', '246', '248', '250', '254', '258', '260', '262', '266', '268', '270', '275', '276', '288', '292', '296', '300', '304', '308', '312', '316', '320', '324', '328', '332', '334', '336', '340', '344', '348', '352', '356', '360', '364', '368', '372', '376', '380', '384', '388', '392', '398', '400', '404', '408', '410', '414', '417', '418', '422', '426', '428', '430', '434', '438', '440', '442', '446', '450', '454', '458', '462', '466', '470', '474', '478', '480', '484', '492', '496', '498', '499', '500', '504', '508', '512', '516', '520', '524', '528', '531', '533', '534', '535', '540', '548', '554', '558', '562', '566', '570', '574', '578', '580', '581', '583', '584', '585', '586', '591', '598', '600', '604', '608', '612', '616', '620', '624', '626', '630', '634', '638', '642', '643', '646', '652', '654', '659', '660', '662', '663', '666', '670', '674', '678', '682', '686', '688', '690', '694', '702', '703', '704', '705', '706', '710', '716', '724', '728', '729', '732', '740', '744', '748', '752', '756', '760', '762', '764', '768', '772', '776', '780', '784', '788', '792', '795', '796', '798', '800', '804', '807', '818', '826', '831', '832', '833', '834', '840', '850', '854', '858', '860', '862', '876', '882', '887', '894']); //#2837
-        for (var _UQ = 0, _UR = _UP.length; _UQ < _UR; _UQ++) { //#2838
-            var _US = $get(_UP, _UQ); //#2838
-            $k[$j++] = _US; //#2838
-            $k[$j++] = _US; //#2838
+        var _UQ = $a(['004', '008', '010', '012', '016', '020', '024', '028', '031', '032', '036', '040', '044', '048', '050', '051', '052', '056', '060', '064', '068', '070', '072', '074', '076', '084', '086', '090', '092', '096', '100', '104', '108', '112', '116', '120', '124', '132', '136', '140', '144', '148', '152', '156', '158', '162', '166', '170', '174', '175', '178', '180', '184', '188', '191', '192', '196', '203', '204', '208', '212', '214', '218', '222', '226', '231', '232', '233', '234', '238', '239', '242', '246', '248', '250', '254', '258', '260', '262', '266', '268', '270', '275', '276', '288', '292', '296', '300', '304', '308', '312', '316', '320', '324', '328', '332', '334', '336', '340', '344', '348', '352', '356', '360', '364', '368', '372', '376', '380', '384', '388', '392', '398', '400', '404', '408', '410', '414', '417', '418', '422', '426', '428', '430', '434', '438', '440', '442', '446', '450', '454', '458', '462', '466', '470', '474', '478', '480', '484', '492', '496', '498', '499', '500', '504', '508', '512', '516', '520', '524', '528', '531', '533', '534', '535', '540', '548', '554', '558', '562', '566', '570', '574', '578', '580', '581', '583', '584', '585', '586', '591', '598', '600', '604', '608', '612', '616', '620', '624', '626', '630', '634', '638', '642', '643', '646', '652', '654', '659', '660', '662', '663', '666', '670', '674', '678', '682', '686', '688', '690', '694', '702', '703', '704', '705', '706', '710', '716', '724', '728', '729', '732', '740', '744', '748', '752', '756', '760', '762', '764', '768', '772', '776', '780', '784', '788', '792', '795', '796', '798', '800', '804', '807', '818', '826', '831', '832', '833', '834', '840', '850', '854', '858', '860', '862', '876', '882', '887', '894']); //#2837
+        for (var _UR = 0, _US = _UQ.length; _UR < _US; _UR++) { //#2838
+            var _UT = $get(_UQ, _UR); //#2838
+            $k[$j++] = _UT; //#2838
+            $k[$j++] = _UT; //#2838
         } //#2838
         $_.iso3166 = $d(); //#2838
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_gs1process.$ctx[id] = $_[id]); //#2838
@@ -4601,8 +4614,8 @@ function bwipp_gs1process() {
         $_ = Object.getPrototypeOf($_); //#2838
     } //#2838
     $_.lintiso3166 = function() {
-        var _UX = $get($_.iso3166, $k[--$j]) !== undefined; //#2842
-        if (!_UX) { //#2842
+        var _UY = $get($_.iso3166, $k[--$j]) !== undefined; //#2842
+        if (!_UY) { //#2842
             $j--; //#2842
             $k[$j++] = 'bwipp.GS1UnknownCountry#2842'; //#2842
             $k[$j++] = "Unknown country code"; //#2842
@@ -4611,11 +4624,11 @@ function bwipp_gs1process() {
         } //#2842
     }; //#2842
     $_.lintiso3166999 = function() {
-        var _UY = $k[--$j]; //#2846
-        $k[$j++] = _UY; //#2850
-        if ($ne(_UY, '999')) { //#2849
-            var _Ub = $get($_.iso3166, $k[--$j]) !== undefined; //#2847
-            if (!_Ub) { //#2847
+        var _UZ = $k[--$j]; //#2846
+        $k[$j++] = _UZ; //#2850
+        if ($ne(_UZ, '999')) { //#2849
+            var _Uc = $get($_.iso3166, $k[--$j]) !== undefined; //#2847
+            if (!_Uc) { //#2847
                 $j--; //#2847
                 $k[$j++] = 'bwipp.GS1UnknownCountryOr999#2847'; //#2847
                 $k[$j++] = "Unknown country code or not 999"; //#2847
@@ -4627,25 +4640,25 @@ function bwipp_gs1process() {
         } //#2849
     }; //#2849
     $_.lintiso3166list = function() {
-        var _Uc = $k[--$j]; //#2854
-        $k[$j++] = _Uc; //#2856
-        if ((_Uc.length % 3) != 0) { //#2856
+        var _Ud = $k[--$j]; //#2854
+        $k[$j++] = _Ud; //#2856
+        if ((_Ud.length % 3) != 0) { //#2856
             $j -= 2; //#2855
             $k[$j++] = 'bwipp.GS1BadCountryListLength#2855'; //#2855
             $k[$j++] = "Not a group of three-digit country codes"; //#2855
             $k[$j++] = false; //#2855
             return true; //#2855
         } //#2855
-        var _Ud = $k[--$j]; //#2858
-        $k[$j++] = _Ud; //#2861
+        var _Ue = $k[--$j]; //#2858
+        $k[$j++] = _Ue; //#2861
         $k[$j++] = true; //#2861
-        for (var _Uf = 0, _Ue = _Ud.length - 1; _Uf <= _Ue; _Uf += 3) { //#2861
-            var _Ug = $k[--$j]; //#2859
+        for (var _Ug = 0, _Uf = _Ue.length - 1; _Ug <= _Uf; _Ug += 3) { //#2861
             var _Uh = $k[--$j]; //#2859
-            var _Uk = $get($_.iso3166, $geti(_Uh, _Uf, 3)) !== undefined; //#2860
+            var _Ui = $k[--$j]; //#2859
+            var _Ul = $get($_.iso3166, $geti(_Ui, _Ug, 3)) !== undefined; //#2860
+            $k[$j++] = _Ui; //#2860
             $k[$j++] = _Uh; //#2860
-            $k[$j++] = _Ug; //#2860
-            if (!_Uk) { //#2860
+            if (!_Ul) { //#2860
                 $j -= 2; //#2860
                 $k[$j++] = false; //#2860
                 break; //#2860
@@ -4663,11 +4676,11 @@ function bwipp_gs1process() {
     if (!bwipp_gs1process.__2893__) { //#2893
         $_ = Object.create($_); //#2893
         $k[$j++] = Infinity; //#2867
-        var _Um = $a(['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM', 'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU', 'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST', 'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'UM', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW']); //#2891
-        for (var _Un = 0, _Uo = _Um.length; _Un < _Uo; _Un++) { //#2892
-            var _Up = $get(_Um, _Un); //#2892
-            $k[$j++] = _Up; //#2892
-            $k[$j++] = _Up; //#2892
+        var _Un = $a(['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AW', 'AX', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BL', 'BM', 'BN', 'BO', 'BQ', 'BR', 'BS', 'BT', 'BV', 'BW', 'BY', 'BZ', 'CA', 'CC', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CW', 'CX', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM', 'FO', 'FR', 'GA', 'GB', 'GD', 'GE', 'GF', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GP', 'GQ', 'GR', 'GS', 'GT', 'GU', 'GW', 'GY', 'HK', 'HM', 'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MF', 'MG', 'MH', 'MK', 'ML', 'MM', 'MN', 'MO', 'MP', 'MQ', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NE', 'NF', 'NG', 'NI', 'NL', 'NO', 'NP', 'NR', 'NU', 'NZ', 'OM', 'PA', 'PE', 'PF', 'PG', 'PH', 'PK', 'PL', 'PM', 'PN', 'PR', 'PS', 'PT', 'PW', 'PY', 'QA', 'RE', 'RO', 'RS', 'RU', 'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SJ', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST', 'SV', 'SX', 'SY', 'SZ', 'TC', 'TD', 'TF', 'TG', 'TH', 'TJ', 'TK', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'UM', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WF', 'WS', 'YE', 'YT', 'ZA', 'ZM', 'ZW']); //#2891
+        for (var _Uo = 0, _Up = _Un.length; _Uo < _Up; _Uo++) { //#2892
+            var _Uq = $get(_Un, _Uo); //#2892
+            $k[$j++] = _Uq; //#2892
+            $k[$j++] = _Uq; //#2892
         } //#2892
         $_.iso3166alpha2 = $d(); //#2892
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_gs1process.$ctx[id] = $_[id]); //#2892
@@ -4675,8 +4688,8 @@ function bwipp_gs1process() {
         $_ = Object.getPrototypeOf($_); //#2892
     } //#2892
     $_.lintiso3166alpha2 = function() {
-        var _Uu = $get($_.iso3166alpha2, $k[--$j]) !== undefined; //#2896
-        if (!_Uu) { //#2896
+        var _Uv = $get($_.iso3166alpha2, $k[--$j]) !== undefined; //#2896
+        if (!_Uv) { //#2896
             $j--; //#2896
             $k[$j++] = 'bwipp.GS1UnknownCountryAlpha#2896'; //#2896
             $k[$j++] = "Unknown country alpha code"; //#2896
@@ -4687,11 +4700,11 @@ function bwipp_gs1process() {
     if (!bwipp_gs1process.__2924__) { //#2924
         $_ = Object.create($_); //#2924
         $k[$j++] = Infinity; //#2900
-        var _Uv = $a(['008', '012', '032', '036', '044', '048', '050', '051', '052', '060', '064', '068', '072', '084', '090', '096', '104', '108', '116', '124', '132', '136', '144', '152', '156', '170', '174', '188', '191', '192', '203', '208', '214', '222', '230', '232', '238', '242', '262', '270', '292', '320', '324', '328', '332', '340', '344', '348', '352', '356', '360', '364', '368', '376', '388', '392', '398', '400', '404', '408', '410', '414', '417', '418', '422', '426', '430', '434', '446', '454', '458', '462', '480', '484', '496', '498', '504', '512', '516', '524', '532', '533', '548', '554', '558', '566', '578', '586', '590', '598', '600', '604', '608', '634', '643', '646', '654', '682', '690', '694', '702', '704', '706', '710', '728', '748', '752', '756', '760', '764', '776', '780', '784', '788', '800', '807', '818', '826', '834', '840', '858', '860', '882', '886', '901', '925', '927', '928', '929', '930', '931', '932', '933', '934', '936', '938', '940', '941', '943', '944', '946', '947', '948', '949', '950', '951', '952', '953', '955', '956', '957', '958', '959', '960', '961', '962', '963', '964', '965', '967', '968', '969', '970', '971', '972', '973', '975', '976', '977', '978', '979', '980', '981', '984', '985', '986', '990', '994', '997', '999']); //#2922
-        for (var _Uw = 0, _Ux = _Uv.length; _Uw < _Ux; _Uw++) { //#2923
-            var _Uy = $get(_Uv, _Uw); //#2923
-            $k[$j++] = _Uy; //#2923
-            $k[$j++] = _Uy; //#2923
+        var _Uw = $a(['008', '012', '032', '036', '044', '048', '050', '051', '052', '060', '064', '068', '072', '084', '090', '096', '104', '108', '116', '124', '132', '136', '144', '152', '156', '170', '174', '188', '191', '192', '203', '208', '214', '222', '230', '232', '238', '242', '262', '270', '292', '320', '324', '328', '332', '340', '344', '348', '352', '356', '360', '364', '368', '376', '388', '392', '398', '400', '404', '408', '410', '414', '417', '418', '422', '426', '430', '434', '446', '454', '458', '462', '480', '484', '496', '498', '504', '512', '516', '524', '532', '533', '548', '554', '558', '566', '578', '586', '590', '598', '600', '604', '608', '634', '643', '646', '654', '682', '690', '694', '702', '704', '706', '710', '728', '748', '752', '756', '760', '764', '776', '780', '784', '788', '800', '807', '818', '826', '834', '840', '858', '860', '882', '886', '901', '925', '927', '928', '929', '930', '931', '932', '933', '934', '936', '938', '940', '941', '943', '944', '946', '947', '948', '949', '950', '951', '952', '953', '955', '956', '957', '958', '959', '960', '961', '962', '963', '964', '965', '967', '968', '969', '970', '971', '972', '973', '975', '976', '977', '978', '979', '980', '981', '984', '985', '986', '990', '994', '997', '999']); //#2922
+        for (var _Ux = 0, _Uy = _Uw.length; _Ux < _Uy; _Ux++) { //#2923
+            var _Uz = $get(_Uw, _Ux); //#2923
+            $k[$j++] = _Uz; //#2923
+            $k[$j++] = _Uz; //#2923
         } //#2923
         $_.iso4217 = $d(); //#2923
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_gs1process.$ctx[id] = $_[id]); //#2923
@@ -4699,8 +4712,8 @@ function bwipp_gs1process() {
         $_ = Object.getPrototypeOf($_); //#2923
     } //#2923
     $_.lintiso4217 = function() {
-        var _V3 = $get($_.iso4217, $k[--$j]) !== undefined; //#2927
-        if (!_V3) { //#2927
+        var _V4 = $get($_.iso4217, $k[--$j]) !== undefined; //#2927
+        if (!_V4) { //#2927
             $j--; //#2927
             $k[$j++] = 'bwipp.GS1UnknownCurrency#2927'; //#2927
             $k[$j++] = "Unknown currency code"; //#2927
@@ -4709,8 +4722,8 @@ function bwipp_gs1process() {
         } //#2927
     }; //#2927
     $_.lintiso5218 = function() {
-        var _V4 = $k[--$j]; //#2931
-        if ($ne(_V4, "0") && ($ne(_V4, "1") && ($ne(_V4, "2") && $ne(_V4, "9")))) { //#2933
+        var _V5 = $k[--$j]; //#2931
+        if ($ne(_V5, "0") && ($ne(_V5, "1") && ($ne(_V5, "2") && $ne(_V5, "9")))) { //#2933
             $j--; //#2932
             $k[$j++] = 'bwipp.GS1biologicalSexCode#2932'; //#2932
             $k[$j++] = "Invalid biological sex code"; //#2932
@@ -4719,22 +4732,28 @@ function bwipp_gs1process() {
         } //#2932
     }; //#2932
     $_.lintiban = function() {
-        var _V5 = $k[--$j]; //#2937
-        $k[$j++] = _V5; //#2937
-        if (_V5.length <= 4) { //#2937
+        var _V6 = $k[--$j]; //#2937
+        $k[$j++] = _V6; //#2937
+        if (_V6.length <= 4) { //#2937
             $j -= 2; //#2937
             $k[$j++] = 'bwipp.GS1tooShort#2937'; //#2937
             $k[$j++] = "IBAN too short"; //#2937
             $k[$j++] = false; //#2937
             return true; //#2937
         } //#2937
-        var _V6 = $k[--$j]; //#2938
-        $k[$j++] = _V6; //#2943
+        var _V7 = $k[--$j]; //#2938
+        $k[$j++] = _V7; //#2943
         $k[$j++] = true; //#2943
-        $forall(_V6, function() { //#2943
-            var _V7 = $s(1); //#2939
-            $put(_V7, 0, $k[--$j]); //#2939
-            $search("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", _V7); //#2941
+        $forall(_V7, function() { //#2943
+            var _V8 = $s(1); //#2939
+            $k[$j++] = _V8; //#2939
+            $k[$j++] = _V8; //#2939
+            $k[$j++] = 0; //#2939
+            $r(4, -1); //#2939
+            var _V9 = $k[--$j]; //#2939
+            var _VA = $k[--$j]; //#2939
+            $put($k[--$j], _VA, _V9); //#2939
+            $search("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", $k[--$j]); //#2941
             if ($nt($k[--$j])) { //#2941
                 $j -= 2; //#2941
                 $k[$j++] = false; //#2941
@@ -4749,47 +4768,47 @@ function bwipp_gs1process() {
             $k[$j++] = false; //#2944
             return true; //#2944
         } //#2944
-        var _VB = $k[--$j]; //#2945
-        $k[$j++] = _VB; //#2945
-        $k[$j++] = _VB; //#2945
-        $k[$j++] = Infinity; //#2945
-        var _VC = $k[--$j]; //#2945
-        var _VD = $k[--$j]; //#2945
-        $k[$j++] = _VC; //#2945
-        $k[$j++] = _VD; //#2945
-        $k[$j++] = Infinity; //#2945
-        var _VE = $k[--$j]; //#2945
         var _VF = $k[--$j]; //#2945
-        $k[$j++] = _VE; //#2945
-        $forall(_VF); //#2945
+        $k[$j++] = _VF; //#2945
+        $k[$j++] = _VF; //#2945
+        $k[$j++] = Infinity; //#2945
+        var _VG = $k[--$j]; //#2945
+        var _VH = $k[--$j]; //#2945
+        $k[$j++] = _VG; //#2945
+        $k[$j++] = _VH; //#2945
+        $k[$j++] = Infinity; //#2945
+        var _VI = $k[--$j]; //#2945
+        var _VJ = $k[--$j]; //#2945
+        $k[$j++] = _VI; //#2945
+        $forall(_VJ); //#2945
         $r($counttomark(), -4); //#2945
         $astore($a($counttomark())); //#2945
-        var _VJ = $k[--$j]; //#2945
-        var _VK = $k[--$j]; //#2945
-        $k[$j++] = _VJ; //#2945
-        $k[$j++] = _VK; //#2945
+        var _VN = $k[--$j]; //#2945
+        var _VO = $k[--$j]; //#2945
+        $k[$j++] = _VN; //#2945
+        $k[$j++] = _VO; //#2945
         $j--; //#2945
         $forall($k[--$j], function() { //#2947
-            var _VN = $f($k[--$j] - 48); //#2946
-            $k[$j++] = _VN; //#2946
-            if (_VN > 9) { //#2946
-                var _VP = $f($k[--$j] - 7); //#2946
-                $k[$j++] = ~~(_VP / 10); //#2946
-                $k[$j++] = _VP % 10; //#2946
+            var _VR = $f($k[--$j] - 48); //#2946
+            $k[$j++] = _VR; //#2946
+            if (_VR > 9) { //#2946
+                var _VT = $f($k[--$j] - 7); //#2946
+                $k[$j++] = ~~(_VT / 10); //#2946
+                $k[$j++] = _VT % 10; //#2946
             } //#2946
         }); //#2946
         $astore($a($counttomark())); //#2947
-        var _VS = $k[--$j]; //#2947
-        var _VT = $k[--$j]; //#2947
-        $k[$j++] = _VS; //#2947
-        $k[$j++] = _VT; //#2947
+        var _VW = $k[--$j]; //#2947
+        var _VX = $k[--$j]; //#2947
+        $k[$j++] = _VW; //#2947
+        $k[$j++] = _VX; //#2947
         $j--; //#2947
-        var _VU = $k[--$j]; //#2948
+        var _VY = $k[--$j]; //#2948
         $k[$j++] = 0; //#2948
-        $forall(_VU, function() { //#2948
-            var _VV = $k[--$j]; //#2948
-            var _VW = $k[--$j]; //#2948
-            $k[$j++] = ($f(_VV + (_VW * 10))) % 97; //#2948
+        $forall(_VY, function() { //#2948
+            var _VZ = $k[--$j]; //#2948
+            var _Va = $k[--$j]; //#2948
+            $k[$j++] = ($f(_VZ + (_Va * 10))) % 97; //#2948
         }); //#2948
         if ($k[--$j] != 1) { //#2949
             $j -= 2; //#2949
@@ -4798,8 +4817,8 @@ function bwipp_gs1process() {
             $k[$j++] = false; //#2949
             return true; //#2949
         } //#2949
-        var _VZ = $geti($k[--$j], 0, 2); //#2950
-        $k[$j++] = _VZ; //#2950
+        var _Vd = $geti($k[--$j], 0, 2); //#2950
+        $k[$j++] = _Vd; //#2950
         $_.lintiso3166alpha2(); //#2950
     }; //#2950
     $_.lintzero = function() {
@@ -4812,9 +4831,9 @@ function bwipp_gs1process() {
         } //#2954
     }; //#2954
     $_.lintnonzero = function() {
-        var _Vb = $k[--$j]; //#2958
+        var _Vf = $k[--$j]; //#2958
         $k[$j++] = false; //#2958
-        $forall(_Vb, function() { //#2958
+        $forall(_Vf, function() { //#2958
             if ($k[--$j] != 48) { //#2958
                 $j--; //#2958
                 $k[$j++] = true; //#2958
@@ -4829,8 +4848,8 @@ function bwipp_gs1process() {
         } //#2959
     }; //#2959
     $_.lintnozeroprefix = function() {
-        var _Ve = $k[--$j]; //#2963
-        if ((_Ve.length > 1) && ($get(_Ve, 0) == 48)) { //#2965
+        var _Vi = $k[--$j]; //#2963
+        if ((_Vi.length > 1) && ($get(_Vi, 0) == 48)) { //#2965
             $j--; //#2964
             $k[$j++] = 'bwipp.GS1badZeroPrefix#2964'; //#2964
             $k[$j++] = "Zero prefix is not permitted"; //#2964
@@ -4839,11 +4858,11 @@ function bwipp_gs1process() {
         } //#2964
     }; //#2964
     $_.linthasnondigit = function() {
-        var _Vg = $k[--$j]; //#2969
+        var _Vk = $k[--$j]; //#2969
         $k[$j++] = false; //#2969
-        $forall(_Vg, function() { //#2969
-            var _Vh = $k[--$j]; //#2969
-            if ((_Vh < 48) || (_Vh > 57)) { //#2969
+        $forall(_Vk, function() { //#2969
+            var _Vl = $k[--$j]; //#2969
+            if ((_Vl < 48) || (_Vl > 57)) { //#2969
                 $j--; //#2969
                 $k[$j++] = true; //#2969
                 return true; //#2969
@@ -4866,39 +4885,38 @@ function bwipp_gs1process() {
         } //#2974
     }; //#2974
     $_.lintyyyymmd0 = function() {
-        var _Vk = $k[--$j]; //#2978
-        var _Vm = $cvi($geti(_Vk, 4, 2)); //#2978
-        $k[$j++] = _Vk; //#2978
-        if ((_Vm < 1) || (_Vm > 12)) { //#2978
+        var _Vo = $k[--$j]; //#2978
+        var _Vq = $cvi($geti(_Vo, 4, 2)); //#2978
+        $k[$j++] = _Vo; //#2978
+        if ((_Vq < 1) || (_Vq > 12)) { //#2978
             $j--; //#2978
             $k[$j++] = 'bwipp.GS1badMonth#2978'; //#2978
             $k[$j++] = "Invalid month"; //#2978
             $k[$j++] = false; //#2978
             return true; //#2978
         } //#2978
-        var _Vn = $k[--$j]; //#2979
-        var _Vp = $cvi($geti(_Vn, 0, 4)); //#2979
-        $k[$j++] = _Vn; //#2980
-        $k[$j++] = ((_Vp % 400) == 0) || (((_Vp % 4) == 0) && ((_Vp % 100) != 0)); //#2980
+        var _Vr = $k[--$j]; //#2979
+        var _Vt = $cvi($geti(_Vr, 0, 4)); //#2979
+        $k[$j++] = _Vr; //#2980
+        $k[$j++] = ((_Vt % 400) == 0) || (((_Vt % 4) == 0) && ((_Vt % 100) != 0)); //#2980
         $k[$j++] = Infinity; //#2980
-        var _Vq = $k[--$j]; //#2980
-        var _Vs = $k[--$j] ? 29 : 28; //#2980
-        $k[$j++] = _Vq; //#2980
         $k[$j++] = 31; //#2980
-        $k[$j++] = _Vs; //#2980
-        $k[$j++] = 31; //#2980
-        $k[$j++] = 30; //#2980
-        $k[$j++] = 31; //#2980
-        $k[$j++] = 30; //#2980
-        $k[$j++] = 31; //#2980
+        $r(3, -1); //#2980
+        var _Vv = $k[--$j] ? 29 : 28; //#2980
+        $k[$j++] = _Vv; //#2980
         $k[$j++] = 31; //#2980
         $k[$j++] = 30; //#2980
         $k[$j++] = 31; //#2980
         $k[$j++] = 30; //#2980
         $k[$j++] = 31; //#2980
-        var _Vt = $a(); //#2980
-        var _Vu = $k[--$j]; //#2981
-        if ($get(_Vt, $cvi($geti(_Vu, 4, 2)) - 1) < $cvi($geti(_Vu, 6, 2))) { //#2982
+        $k[$j++] = 31; //#2980
+        $k[$j++] = 30; //#2980
+        $k[$j++] = 31; //#2980
+        $k[$j++] = 30; //#2980
+        $k[$j++] = 31; //#2980
+        var _Vw = $a(); //#2980
+        var _Vx = $k[--$j]; //#2981
+        if ($get(_Vw, $cvi($geti(_Vx, 4, 2)) - 1) < $cvi($geti(_Vx, 6, 2))) { //#2982
             $j--; //#2982
             $k[$j++] = 'bwipp.GS1badDay#2982'; //#2982
             $k[$j++] = "Invalid day of month"; //#2982
@@ -4907,18 +4925,18 @@ function bwipp_gs1process() {
         } //#2982
     }; //#2982
     $_.lintyyyymmdd = function() {
-        var _Vy = $k[--$j]; //#2986
-        $k[$j++] = _Vy; //#2986
-        if (_Vy.length != 8) { //#2986
+        var _W1 = $k[--$j]; //#2986
+        $k[$j++] = _W1; //#2986
+        if (_W1.length != 8) { //#2986
             $j--; //#2986
             $k[$j++] = 'bwipp.GS1badDateLength#2986'; //#2986
             $k[$j++] = "Invalid length for yyyymmdd date"; //#2986
             $k[$j++] = false; //#2986
             return true; //#2986
         } //#2986
-        var _Vz = $k[--$j]; //#2987
-        $k[$j++] = _Vz; //#2987
-        if ($cvi($geti(_Vz, 6, 2)) < 1) { //#2987
+        var _W2 = $k[--$j]; //#2987
+        $k[$j++] = _W2; //#2987
+        if ($cvi($geti(_W2, 6, 2)) < 1) { //#2987
             $j--; //#2987
             $k[$j++] = 'bwipp.GS1badDay#2987'; //#2987
             $k[$j++] = "Invalid day of month"; //#2987
@@ -4928,13 +4946,13 @@ function bwipp_gs1process() {
         $_.lintyyyymmd0(); //#2988
     }; //#2988
     $_.lintyymmd0 = function() {
-        var _W1 = $k[--$j]; //#2992
-        var _W3 = $cvi($geti(_W1, 0, 2)); //#2992
-        var _W4 = _W3 - 21; //#2993
-        $k[$j++] = _W1; //#2993
-        $k[$j++] = _W3; //#2993
+        var _W4 = $k[--$j]; //#2992
+        var _W6 = $cvi($geti(_W4, 0, 2)); //#2992
+        var _W7 = _W6 - 21; //#2993
         $k[$j++] = _W4; //#2993
-        if (_W4 >= 51) { //#2993
+        $k[$j++] = _W6; //#2993
+        $k[$j++] = _W7; //#2993
+        if (_W7 >= 51) { //#2993
             $j--; //#2993
             $k[$j++] = "19"; //#2993
         } else { //#2993
@@ -4944,30 +4962,42 @@ function bwipp_gs1process() {
                 $k[$j++] = "20"; //#2993
             } //#2993
         } //#2993
-        var _W6 = $k[--$j]; //#2993
-        var _W7 = $k[--$j]; //#2993
-        $k[$j++] = _W6; //#2993
-        $k[$j++] = _W7; //#2993
+        var _W9 = $k[--$j]; //#2993
+        var _WA = $k[--$j]; //#2993
+        $k[$j++] = _W9; //#2993
+        $k[$j++] = _WA; //#2993
         $j--; //#2993
-        var _W8 = $s(8); //#2994
-        $puti(_W8, 0, $k[--$j]); //#2994
-        $puti(_W8, 2, $k[--$j]); //#2994
-        $k[$j++] = _W8; //#2995
+        var _WB = $s(8); //#2994
+        $k[$j++] = _WB; //#2994
+        $k[$j++] = _WB; //#2994
+        $k[$j++] = 0; //#2994
+        $r(4, -1); //#2994
+        var _WC = $k[--$j]; //#2994
+        var _WD = $k[--$j]; //#2994
+        $puti($k[--$j], _WD, _WC); //#2994
+        var _WF = $k[--$j]; //#2994
+        $k[$j++] = _WF; //#2994
+        $k[$j++] = _WF; //#2994
+        $k[$j++] = 2; //#2994
+        $r(4, -1); //#2994
+        var _WG = $k[--$j]; //#2994
+        var _WH = $k[--$j]; //#2994
+        $puti($k[--$j], _WH, _WG); //#2994
         $_.lintyyyymmd0(); //#2995
     }; //#2995
     $_.lintyymmdd = function() {
-        var _WB = $k[--$j]; //#2999
-        $k[$j++] = _WB; //#2999
-        if (_WB.length != 6) { //#2999
+        var _WJ = $k[--$j]; //#2999
+        $k[$j++] = _WJ; //#2999
+        if (_WJ.length != 6) { //#2999
             $j--; //#2999
             $k[$j++] = 'bwipp.GS1badDateLength#2999'; //#2999
             $k[$j++] = "Invalid length for yymmdd date"; //#2999
             $k[$j++] = false; //#2999
             return true; //#2999
         } //#2999
-        var _WC = $k[--$j]; //#3000
-        $k[$j++] = _WC; //#3000
-        if ($cvi($geti(_WC, 4, 2)) < 1) { //#3000
+        var _WK = $k[--$j]; //#3000
+        $k[$j++] = _WK; //#3000
+        if ($cvi($geti(_WK, 4, 2)) < 1) { //#3000
             $j--; //#3000
             $k[$j++] = 'bwipp.GS1badDay#3000'; //#3000
             $k[$j++] = "Invalid day of month"; //#3000
@@ -4977,32 +5007,32 @@ function bwipp_gs1process() {
         $_.lintyymmd0(); //#3001
     }; //#3001
     $_.lintyymmddhh = function() {
-        var _WE = $k[--$j]; //#3005
-        $k[$j++] = _WE; //#3005
-        if (_WE.length != 8) { //#3005
+        var _WM = $k[--$j]; //#3005
+        $k[$j++] = _WM; //#3005
+        if (_WM.length != 8) { //#3005
             $j--; //#3005
             $k[$j++] = 'bwipp.GS1badYYMMDDHHLength#3005'; //#3005
             $k[$j++] = "Invalid length for yymmdd date with hour"; //#3005
             $k[$j++] = false; //#3005
             return true; //#3005
         } //#3005
-        var _WF = $k[--$j]; //#3006
-        $k[$j++] = _WF; //#3006
-        if ($cvi($geti(_WF, 6, 2)) > 23) { //#3006
+        var _WN = $k[--$j]; //#3006
+        $k[$j++] = _WN; //#3006
+        if ($cvi($geti(_WN, 6, 2)) > 23) { //#3006
             $j -= 2; //#3006
             $k[$j++] = 'bwipp.GS1badHour#3006'; //#3006
             $k[$j++] = "Invalid hour of day"; //#3006
             $k[$j++] = false; //#3006
             return true; //#3006
         } //#3006
-        var _WI = $geti($k[--$j], 0, 6); //#3007
-        $k[$j++] = _WI; //#3007
+        var _WQ = $geti($k[--$j], 0, 6); //#3007
+        $k[$j++] = _WQ; //#3007
         $_.lintyymmdd(); //#3007
     }; //#3007
     $_.linthhmm = function() {
-        var _WJ = $k[--$j]; //#3011
-        $k[$j++] = _WJ; //#3011
-        if ($cvi($geti(_WJ, 0, 2)) > 23) { //#3011
+        var _WR = $k[--$j]; //#3011
+        $k[$j++] = _WR; //#3011
+        if ($cvi($geti(_WR, 0, 2)) > 23) { //#3011
             $j -= 2; //#3011
             $k[$j++] = 'bwipp.GS1badHour#3011'; //#3011
             $k[$j++] = "Invalid hour of day"; //#3011
@@ -5018,31 +5048,31 @@ function bwipp_gs1process() {
         } //#3012
     }; //#3012
     $_.lintmmoptss = function() {
-        var _WN = $k[--$j]; //#3016
-        var _WO = _WN.length; //#3016
-        $k[$j++] = _WN; //#3018
-        if ((_WO != 2) && (_WO != 4)) { //#3018
+        var _WV = $k[--$j]; //#3016
+        var _WW = _WV.length; //#3016
+        $k[$j++] = _WV; //#3018
+        if ((_WW != 2) && (_WW != 4)) { //#3018
             $j--; //#3017
             $k[$j++] = 'bwipp.GS1badTimeLength#3017'; //#3017
             $k[$j++] = "Invalid length for optional minutes and seconds"; //#3017
             $k[$j++] = false; //#3017
             return true; //#3017
         } //#3017
-        var _WP = $k[--$j]; //#3019
-        $k[$j++] = _WP; //#3019
-        if ($cvi($geti(_WP, 0, 2)) > 59) { //#3019
+        var _WX = $k[--$j]; //#3019
+        $k[$j++] = _WX; //#3019
+        if ($cvi($geti(_WX, 0, 2)) > 59) { //#3019
             $j -= 2; //#3019
             $k[$j++] = 'bwipp.GS1badMinute#3019'; //#3019
             $k[$j++] = "Invalid minute in the hour"; //#3019
             $k[$j++] = false; //#3019
             return true; //#3019
         } //#3019
-        var _WR = $k[--$j]; //#3020
-        $k[$j++] = _WR; //#3022
-        if (_WR.length >= 4) { //#3022
-            var _WS = $k[--$j]; //#3021
-            $k[$j++] = _WS; //#3021
-            if ($cvi($geti(_WS, 2, 2)) > 59) { //#3021
+        var _WZ = $k[--$j]; //#3020
+        $k[$j++] = _WZ; //#3022
+        if (_WZ.length >= 4) { //#3022
+            var _Wa = $k[--$j]; //#3021
+            $k[$j++] = _Wa; //#3021
+            if ($cvi($geti(_Wa, 2, 2)) > 59) { //#3021
                 $j -= 2; //#3021
                 $k[$j++] = 'bwipp.GS1badSecond#3021'; //#3021
                 $k[$j++] = "Invalid second in the minute"; //#3021
@@ -5053,8 +5083,8 @@ function bwipp_gs1process() {
         $j--; //#3023
     }; //#3023
     $_.lintyesno = function() {
-        var _WU = $k[--$j]; //#3027
-        if ($ne(_WU, "0") && $ne(_WU, "1")) { //#3029
+        var _Wc = $k[--$j]; //#3027
+        if ($ne(_Wc, "0") && $ne(_Wc, "1")) { //#3029
             $j--; //#3028
             $k[$j++] = 'bwipp.GS1badBoolean#3028'; //#3028
             $k[$j++] = "Neither 0 nor 1 for yes or no"; //#3028
@@ -5063,8 +5093,8 @@ function bwipp_gs1process() {
         } //#3028
     }; //#3028
     $_.lintwinding = function() {
-        var _WV = $k[--$j]; //#3033
-        if ($ne(_WV, "0") && ($ne(_WV, "1") && $ne(_WV, "9"))) { //#3035
+        var _Wd = $k[--$j]; //#3033
+        if ($ne(_Wd, "0") && ($ne(_Wd, "1") && $ne(_Wd, "9"))) { //#3035
             $j--; //#3034
             $k[$j++] = 'bwipp.GS1badWinding#3034'; //#3034
             $k[$j++] = "Invalid winding direction"; //#3034
@@ -5073,41 +5103,41 @@ function bwipp_gs1process() {
         } //#3034
     }; //#3034
     $_.lintpieceoftotal = function() {
-        var _WW = $k[--$j]; //#3039
-        $k[$j++] = _WW; //#3039
-        if ((_WW.length % 2) != 0) { //#3039
+        var _We = $k[--$j]; //#3039
+        $k[$j++] = _We; //#3039
+        if ((_We.length % 2) != 0) { //#3039
             $j -= 2; //#3039
             $k[$j++] = 'bwipp.GS1badPieceTotalLength#3039'; //#3039
             $k[$j++] = "Invalid piece/total length"; //#3039
             $k[$j++] = false; //#3039
             return true; //#3039
         } //#3039
-        var _WX = $k[--$j]; //#3040
-        var _WZ = $cvi($geti(_WX, 0, ~~(_WX.length / 2))); //#3041
-        $k[$j++] = _WX; //#3041
-        $k[$j++] = _WZ; //#3041
-        if (_WZ == 0) { //#3041
+        var _Wf = $k[--$j]; //#3040
+        var _Wh = $cvi($geti(_Wf, 0, ~~(_Wf.length / 2))); //#3041
+        $k[$j++] = _Wf; //#3041
+        $k[$j++] = _Wh; //#3041
+        if (_Wh == 0) { //#3041
             $j -= 3; //#3041
             $k[$j++] = 'bwipp.GS1badPieceNumber#3041'; //#3041
             $k[$j++] = "Invalid piece number"; //#3041
             $k[$j++] = false; //#3041
             return true; //#3041
         } //#3041
-        var _Wa = $k[--$j]; //#3042
-        var _Wb = $k[--$j]; //#3042
-        var _Wc = ~~(_Wb.length / 2); //#3042
-        var _We = $cvi($geti(_Wb, _Wc, _Wc)); //#3043
-        $k[$j++] = _Wa; //#3043
-        $k[$j++] = _We; //#3043
-        if (_We == 0) { //#3043
+        var _Wi = $k[--$j]; //#3042
+        var _Wj = $k[--$j]; //#3042
+        var _Wk = ~~(_Wj.length / 2); //#3042
+        var _Wm = $cvi($geti(_Wj, _Wk, _Wk)); //#3043
+        $k[$j++] = _Wi; //#3043
+        $k[$j++] = _Wm; //#3043
+        if (_Wm == 0) { //#3043
             $j -= 3; //#3043
             $k[$j++] = 'bwipp.GS1badPieceTotal#3043'; //#3043
             $k[$j++] = "Invalid total number"; //#3043
             $k[$j++] = false; //#3043
             return true; //#3043
         } //#3043
-        var _Wf = $k[--$j]; //#3044
-        if ($gt($k[--$j], _Wf)) { //#3044
+        var _Wn = $k[--$j]; //#3044
+        if ($gt($k[--$j], _Wn)) { //#3044
             $j--; //#3044
             $k[$j++] = 'bwipp.GS1pieceExceedsTotal#3044'; //#3044
             $k[$j++] = "Piece number exceeds total"; //#3044
@@ -5124,37 +5154,37 @@ function bwipp_gs1process() {
             $k[$j++] = false; //#3049
             return true; //#3049
         } //#3049
-        var _Wj = $k[--$j]; //#3051
-        var _Wk = $k[--$j]; //#3051
-        $k[$j++] = _Wj; //#3051
-        $k[$j++] = _Wk; //#3051
+        var _Wr = $k[--$j]; //#3051
+        var _Ws = $k[--$j]; //#3051
+        $k[$j++] = _Wr; //#3051
+        $k[$j++] = _Ws; //#3051
         $j--; //#3051
-        var _Wl = $k[--$j]; //#3052
-        $k[$j++] = _Wl; //#3054
-        if (_Wl.length == 0) { //#3054
+        var _Wt = $k[--$j]; //#3052
+        $k[$j++] = _Wt; //#3054
+        if (_Wt.length == 0) { //#3054
             $j -= 2; //#3053
             $k[$j++] = 'bwipp.invalidPosInSeqFormat#3053'; //#3053
             $k[$j++] = "Invalid <pos>/<end> format"; //#3053
             $k[$j++] = false; //#3053
             return true; //#3053
         } //#3053
-        var _Wm = $k[--$j]; //#3055
-        var _Wn = $k[--$j]; //#3055
-        $k[$j++] = _Wn; //#3057
-        $k[$j++] = _Wm; //#3057
-        if (_Wn.length == 0) { //#3057
+        var _Wu = $k[--$j]; //#3055
+        var _Wv = $k[--$j]; //#3055
+        $k[$j++] = _Wv; //#3057
+        $k[$j++] = _Wu; //#3057
+        if (_Wv.length == 0) { //#3057
             $j -= 2; //#3056
             $k[$j++] = 'bwipp.invalidPosInSeqFormat#3056'; //#3056
             $k[$j++] = "Invalid <pos>/<end> format"; //#3056
             $k[$j++] = false; //#3056
             return true; //#3056
         } //#3056
-        var _Wo = $k[--$j]; //#3058
-        $k[$j++] = _Wo; //#3060
+        var _Ww = $k[--$j]; //#3058
+        $k[$j++] = _Ww; //#3060
         $k[$j++] = true; //#3060
-        $forall(_Wo, function() { //#3060
-            var _Wp = $k[--$j]; //#3059
-            if ((_Wp < 48) || (_Wp > 57)) { //#3059
+        $forall(_Ww, function() { //#3060
+            var _Wx = $k[--$j]; //#3059
+            if ((_Wx < 48) || (_Wx > 57)) { //#3059
                 $j--; //#3059
                 $k[$j++] = false; //#3059
                 return true; //#3059
@@ -5167,14 +5197,14 @@ function bwipp_gs1process() {
             $k[$j++] = false; //#3061
             return true; //#3061
         } //#3061
-        var _Wr = $k[--$j]; //#3062
-        var _Ws = $k[--$j]; //#3062
-        $k[$j++] = _Ws; //#3064
-        $k[$j++] = _Wr; //#3064
+        var _Wz = $k[--$j]; //#3062
+        var _X0 = $k[--$j]; //#3062
+        $k[$j++] = _X0; //#3064
+        $k[$j++] = _Wz; //#3064
         $k[$j++] = true; //#3064
-        $forall(_Ws, function() { //#3064
-            var _Wt = $k[--$j]; //#3063
-            if ((_Wt < 48) || (_Wt > 57)) { //#3063
+        $forall(_X0, function() { //#3064
+            var _X1 = $k[--$j]; //#3063
+            if ((_X1 < 48) || (_X1 > 57)) { //#3063
                 $j--; //#3063
                 $k[$j++] = false; //#3063
                 return true; //#3063
@@ -5187,28 +5217,28 @@ function bwipp_gs1process() {
             $k[$j++] = false; //#3065
             return true; //#3065
         } //#3065
-        var _Wv = $k[--$j]; //#3066
-        $k[$j++] = _Wv; //#3066
-        if ($get(_Wv, 0) == 48) { //#3066
+        var _X3 = $k[--$j]; //#3066
+        $k[$j++] = _X3; //#3066
+        if ($get(_X3, 0) == 48) { //#3066
             $j -= 2; //#3066
             $k[$j++] = 'bwipp.positionZeroPrefix#3066'; //#3066
             $k[$j++] = "Position cannot have zero prefix"; //#3066
             $k[$j++] = false; //#3066
             return true; //#3066
         } //#3066
-        var _Wx = $k[--$j]; //#3067
-        var _Wy = $k[--$j]; //#3067
-        $k[$j++] = _Wy; //#3067
-        $k[$j++] = _Wx; //#3067
-        if ($get(_Wy, 0) == 48) { //#3067
+        var _X5 = $k[--$j]; //#3067
+        var _X6 = $k[--$j]; //#3067
+        $k[$j++] = _X6; //#3067
+        $k[$j++] = _X5; //#3067
+        if ($get(_X6, 0) == 48) { //#3067
             $j -= 2; //#3067
             $k[$j++] = 'bwipp.endZeroPrefix#3067'; //#3067
             $k[$j++] = "End cannot have zero prefix"; //#3067
             $k[$j++] = false; //#3067
             return true; //#3067
         } //#3067
-        var _X0 = $k[--$j]; //#3068
-        if ($cvi($k[--$j]) < $cvi(_X0)) { //#3069
+        var _X8 = $k[--$j]; //#3068
+        if ($cvi($k[--$j]) < $cvi(_X8)) { //#3069
             $k[$j++] = 'bwipp.positionExceedsEnd#3069'; //#3069
             $k[$j++] = "Position exceeds end"; //#3069
             $k[$j++] = false; //#3069
@@ -5223,23 +5253,23 @@ function bwipp_gs1process() {
                 break; //#3074
             } //#3074
             $j -= 2; //#3075
-            var _X4 = $k[--$j]; //#3075
-            $k[$j++] = _X4; //#3075
-            if (_X4.length < 2) { //#3075
+            var _XC = $k[--$j]; //#3075
+            $k[$j++] = _XC; //#3075
+            if (_XC.length < 2) { //#3075
                 $j -= 2; //#3075
                 $k[$j++] = 'bwipp.GS1badPercentEscape#3075'; //#3075
                 $k[$j++] = "Invalid % escape"; //#3075
                 $k[$j++] = false; //#3075
                 break; //#3075
             } //#3075
-            var _X5 = $k[--$j]; //#3076
-            var _X6 = $geti(_X5, 0, 2); //#3076
-            $k[$j++] = _X5; //#3081
+            var _XD = $k[--$j]; //#3076
+            var _XE = $geti(_XD, 0, 2); //#3076
+            $k[$j++] = _XD; //#3081
             $k[$j++] = true; //#3081
-            for (var _X7 = 0, _X8 = _X6.length; _X7 < _X8; _X7++) { //#3081
-                var _XA = $s(1); //#3077
-                $put(_XA, 0, $get(_X6, _X7)); //#3077
-                $search("0123456789ABCDEFabcdef", _XA); //#3079
+            for (var _XF = 0, _XG = _XE.length; _XF < _XG; _XF++) { //#3081
+                var _XI = $s(1); //#3077
+                $put(_XI, 0, $get(_XE, _XF)); //#3077
+                $search("0123456789ABCDEFabcdef", _XI); //#3079
                 if ($nt($k[--$j])) { //#3079
                     $j -= 2; //#3079
                     $k[$j++] = false; //#3079
@@ -5257,12 +5287,12 @@ function bwipp_gs1process() {
         } //#3082
     }; //#3082
     $_.lintcouponcode = function() {
-        var _XD = $k[--$j]; //#3087
-        $k[$j++] = _XD; //#3089
+        var _XL = $k[--$j]; //#3087
+        $k[$j++] = _XL; //#3089
         $k[$j++] = true; //#3089
-        $forall(_XD, function() { //#3089
-            var _XE = $k[--$j]; //#3088
-            if ((_XE < 48) || (_XE > 57)) { //#3088
+        $forall(_XL, function() { //#3089
+            var _XM = $k[--$j]; //#3088
+            if ((_XM < 48) || (_XM > 57)) { //#3088
                 $j--; //#3088
                 $k[$j++] = false; //#3088
                 return true; //#3088
@@ -5275,551 +5305,549 @@ function bwipp_gs1process() {
             $k[$j++] = false; //#3090
             return true; //#3090
         } //#3090
-        var _XG = $k[--$j]; //#3093
-        $k[$j++] = _XG; //#3095
-        if (_XG.length < 1) { //#3095
+        var _XO = $k[--$j]; //#3093
+        $k[$j++] = _XO; //#3095
+        if (_XO.length < 1) { //#3095
             $j -= 2; //#3094
             $k[$j++] = 'bwipp.GS1couponTooShortGCPVLI#3094'; //#3094
             $k[$j++] = "Coupon too short: Missing GCP VLI"; //#3094
             $k[$j++] = false; //#3094
             return true; //#3094
         } //#3094
-        var _XH = $k[--$j]; //#3096
-        var _XJ = $cvi($geti(_XH, 0, 1)); //#3096
-        $k[$j++] = _XH; //#3098
-        $k[$j++] = _XJ; //#3098
-        if (_XJ > 6) { //#3098
+        var _XP = $k[--$j]; //#3096
+        var _XR = $cvi($geti(_XP, 0, 1)); //#3096
+        $k[$j++] = _XP; //#3098
+        $k[$j++] = _XR; //#3098
+        if (_XR > 6) { //#3098
             $j -= 2; //#3097
             $k[$j++] = 'bwipp.GS1couponBadGCPVLI#3097'; //#3097
             $k[$j++] = "Coupon GCP length indicator must be 0-6"; //#3097
             $k[$j++] = false; //#3097
             return true; //#3097
         } //#3097
-        var _XK = $k[--$j]; //#3099
-        var _XL = $k[--$j]; //#3100
-        $k[$j++] = _XL; //#3102
-        $k[$j++] = $f($f(_XK + 6) + 1); //#3102
-        if (($f($f(_XK + 6) + 1)) > _XL.length) { //#3102
+        var _XS = $k[--$j]; //#3099
+        var _XT = $k[--$j]; //#3100
+        $k[$j++] = _XT; //#3102
+        $k[$j++] = $f($f(_XS + 6) + 1); //#3102
+        if (($f($f(_XS + 6) + 1)) > _XT.length) { //#3102
             $j -= 3; //#3101
             $k[$j++] = 'bwipp.GS1couponTooShortGCP#3101'; //#3101
             $k[$j++] = "Coupon too short: GCP truncated"; //#3101
             $k[$j++] = false; //#3101
             return true; //#3101
         } //#3101
-        var _XM = $k[--$j]; //#3103
-        var _XN = $k[--$j]; //#3103
-        var _XO = $geti(_XN, _XM, $f(_XN.length - _XM)); //#3103
-        $k[$j++] = _XO; //#3108
-        if (_XO.length < 6) { //#3108
+        var _XU = $k[--$j]; //#3103
+        var _XV = $k[--$j]; //#3103
+        var _XW = $geti(_XV, _XU, $f(_XV.length - _XU)); //#3103
+        $k[$j++] = _XW; //#3108
+        if (_XW.length < 6) { //#3108
             $j -= 2; //#3107
             $k[$j++] = 'bwipp.GS1couponTooShortOfferCode#3107'; //#3107
             $k[$j++] = "Coupon too short: Offer Code truncated"; //#3107
             $k[$j++] = false; //#3107
             return true; //#3107
         } //#3107
-        var _XP = $k[--$j]; //#3109
-        var _XQ = $geti(_XP, 6, _XP.length - 6); //#3109
-        $k[$j++] = _XQ; //#3114
-        if (_XQ.length < 1) { //#3114
+        var _XX = $k[--$j]; //#3109
+        var _XY = $geti(_XX, 6, _XX.length - 6); //#3109
+        $k[$j++] = _XY; //#3114
+        if (_XY.length < 1) { //#3114
             $j -= 2; //#3113
             $k[$j++] = 'bwipp.GS1couponTooShortSaveValueVLI#3113'; //#3113
             $k[$j++] = "Coupon too short: Missing Save Value VLI"; //#3113
             $k[$j++] = false; //#3113
             return true; //#3113
         } //#3113
-        var _XR = $k[--$j]; //#3115
-        var _XT = $cvi($geti(_XR, 0, 1)); //#3115
-        $k[$j++] = _XR; //#3117
-        $k[$j++] = _XT; //#3117
-        if ((_XT < 1) || (_XT > 5)) { //#3117
+        var _XZ = $k[--$j]; //#3115
+        var _Xb = $cvi($geti(_XZ, 0, 1)); //#3115
+        $k[$j++] = _XZ; //#3117
+        $k[$j++] = _Xb; //#3117
+        if ((_Xb < 1) || (_Xb > 5)) { //#3117
             $j -= 2; //#3116
             $k[$j++] = 'bwipp.GS1couponBadSaveValueVLI#3116'; //#3116
             $k[$j++] = "Coupon Save Value length indicator must be 1-5"; //#3116
             $k[$j++] = false; //#3116
             return true; //#3116
         } //#3116
-        var _XU = $k[--$j]; //#3118
-        var _XV = $k[--$j]; //#3119
-        $k[$j++] = _XV; //#3121
-        $k[$j++] = $f(_XU + 1); //#3121
-        if ($f(_XU + 1) > _XV.length) { //#3121
+        var _Xc = $k[--$j]; //#3118
+        var _Xd = $k[--$j]; //#3119
+        $k[$j++] = _Xd; //#3121
+        $k[$j++] = $f(_Xc + 1); //#3121
+        if ($f(_Xc + 1) > _Xd.length) { //#3121
             $j -= 3; //#3120
             $k[$j++] = 'bwipp.GS1couponTooShortSaveValue#3120'; //#3120
             $k[$j++] = "Coupon too short: Save Value truncated"; //#3120
             $k[$j++] = false; //#3120
             return true; //#3120
         } //#3120
-        var _XW = $k[--$j]; //#3122
-        var _XX = $k[--$j]; //#3122
-        var _XY = $geti(_XX, _XW, $f(_XX.length - _XW)); //#3122
-        $k[$j++] = _XY; //#3127
-        if (_XY.length < 1) { //#3127
+        var _Xe = $k[--$j]; //#3122
+        var _Xf = $k[--$j]; //#3122
+        var _Xg = $geti(_Xf, _Xe, $f(_Xf.length - _Xe)); //#3122
+        $k[$j++] = _Xg; //#3127
+        if (_Xg.length < 1) { //#3127
             $j -= 2; //#3126
             $k[$j++] = 'bwipp.GS1couponTooShort1stPurchaseRequirementVLI#3126'; //#3126
             $k[$j++] = "Coupon too short: Missing 1st Purchase Requirement VLI"; //#3126
             $k[$j++] = false; //#3126
             return true; //#3126
         } //#3126
-        var _XZ = $k[--$j]; //#3128
-        var _Xb = $cvi($geti(_XZ, 0, 1)); //#3128
-        $k[$j++] = _XZ; //#3130
-        $k[$j++] = _Xb; //#3130
-        if ((_Xb < 1) || (_Xb > 5)) { //#3130
+        var _Xh = $k[--$j]; //#3128
+        var _Xj = $cvi($geti(_Xh, 0, 1)); //#3128
+        $k[$j++] = _Xh; //#3130
+        $k[$j++] = _Xj; //#3130
+        if ((_Xj < 1) || (_Xj > 5)) { //#3130
             $j -= 2; //#3129
             $k[$j++] = 'bwipp.GS1couponBad1stPurchaseRequirementVLI#3129'; //#3129
             $k[$j++] = "Coupon 1st Purchase Requirement length indicator must be 1-5"; //#3129
             $k[$j++] = false; //#3129
             return true; //#3129
         } //#3129
-        var _Xc = $k[--$j]; //#3131
-        var _Xd = $k[--$j]; //#3132
-        $k[$j++] = _Xd; //#3134
-        $k[$j++] = $f(_Xc + 1); //#3134
-        if ($f(_Xc + 1) > _Xd.length) { //#3134
+        var _Xk = $k[--$j]; //#3131
+        var _Xl = $k[--$j]; //#3132
+        $k[$j++] = _Xl; //#3134
+        $k[$j++] = $f(_Xk + 1); //#3134
+        if ($f(_Xk + 1) > _Xl.length) { //#3134
             $j -= 3; //#3133
             $k[$j++] = 'bwipp.GS1couponTooShort1stPurchaseRequirement#3133'; //#3133
             $k[$j++] = "Coupon too short: 1st Purchase Requirement truncated"; //#3133
             $k[$j++] = false; //#3133
             return true; //#3133
         } //#3133
-        var _Xe = $k[--$j]; //#3135
-        var _Xf = $k[--$j]; //#3135
-        var _Xg = $geti(_Xf, _Xe, $f(_Xf.length - _Xe)); //#3135
-        $k[$j++] = _Xg; //#3140
-        if (_Xg.length < 1) { //#3140
+        var _Xm = $k[--$j]; //#3135
+        var _Xn = $k[--$j]; //#3135
+        var _Xo = $geti(_Xn, _Xm, $f(_Xn.length - _Xm)); //#3135
+        $k[$j++] = _Xo; //#3140
+        if (_Xo.length < 1) { //#3140
             $j -= 2; //#3139
             $k[$j++] = 'bwipp.GS1couponTooShort1stPurchaseRequirementCode#3139'; //#3139
             $k[$j++] = "Coupon too short: Missing 1st Purchase Requirement Code"; //#3139
             $k[$j++] = false; //#3139
             return true; //#3139
         } //#3139
-        var _Xh = $k[--$j]; //#3141
-        var _Xj = $cvi($geti(_Xh, 0, 1)); //#3141
-        $k[$j++] = _Xh; //#3143
-        if ((_Xj > 4) && (_Xj != 9)) { //#3143
+        var _Xp = $k[--$j]; //#3141
+        var _Xr = $cvi($geti(_Xp, 0, 1)); //#3141
+        $k[$j++] = _Xp; //#3143
+        if ((_Xr > 4) && (_Xr != 9)) { //#3143
             $j -= 2; //#3142
             $k[$j++] = 'bwipp.GS1couponBad1stPurchaseRequirementCode#3142'; //#3142
             $k[$j++] = "Coupon 1st Purchase Requirement Code must be 0-4 or 9"; //#3142
             $k[$j++] = false; //#3142
             return true; //#3142
         } //#3142
-        var _Xk = $k[--$j]; //#3144
-        var _Xl = $geti(_Xk, 1, _Xk.length - 1); //#3144
-        $k[$j++] = _Xl; //#3149
-        if (_Xl.length < 3) { //#3149
+        var _Xs = $k[--$j]; //#3144
+        var _Xt = $geti(_Xs, 1, _Xs.length - 1); //#3144
+        $k[$j++] = _Xt; //#3149
+        if (_Xt.length < 3) { //#3149
             $j -= 2; //#3148
             $k[$j++] = 'bwipp.GS1couponTooShort1stPurchaseFamilyCode#3148'; //#3148
             $k[$j++] = "Coupon too short: 1st Purchase Family Code truncated"; //#3148
             $k[$j++] = false; //#3148
             return true; //#3148
         } //#3148
-        var _Xm = $k[--$j]; //#3150
-        var _Xn = $geti(_Xm, 3, _Xm.length - 3); //#3150
-        $k[$j++] = _Xn; //#3206
-        if (_Xn.length >= 1) { //#3206
-            var _Xo = $k[--$j]; //#3153
-            $k[$j++] = _Xo; //#3206
-            if ($cvi($geti(_Xo, 0, 1)) == 1) { //#3206
-                var _Xq = $k[--$j]; //#3154
-                var _Xr = $geti(_Xq, 1, _Xq.length - 1); //#3154
-                $k[$j++] = _Xr; //#3159
-                if (_Xr.length < 1) { //#3159
+        var _Xu = $k[--$j]; //#3150
+        var _Xv = $geti(_Xu, 3, _Xu.length - 3); //#3150
+        $k[$j++] = _Xv; //#3206
+        if (_Xv.length >= 1) { //#3206
+            var _Xw = $k[--$j]; //#3153
+            $k[$j++] = _Xw; //#3206
+            if ($cvi($geti(_Xw, 0, 1)) == 1) { //#3206
+                var _Xy = $k[--$j]; //#3154
+                var _Xz = $geti(_Xy, 1, _Xy.length - 1); //#3154
+                $k[$j++] = _Xz; //#3159
+                if (_Xz.length < 1) { //#3159
                     $j -= 2; //#3158
                     $k[$j++] = 'bwipp.GS1couponTooShortAdditionalPurchaseRulesCode#3158'; //#3158
                     $k[$j++] = "Coupon too short: Missing Additional Purchase Rules Code"; //#3158
                     $k[$j++] = false; //#3158
                     return true; //#3158
                 } //#3158
-                var _Xs = $k[--$j]; //#3160
-                $k[$j++] = _Xs; //#3162
-                if ($cvi($geti(_Xs, 0, 1)) > 3) { //#3162
+                var _Y0 = $k[--$j]; //#3160
+                $k[$j++] = _Y0; //#3162
+                if ($cvi($geti(_Y0, 0, 1)) > 3) { //#3162
                     $j -= 2; //#3161
                     $k[$j++] = 'bwipp.GS1couponBadAdditionalPurchaseRulesCode#3161'; //#3161
                     $k[$j++] = "Coupon Additional Purchase Rules Code must be 0-3"; //#3161
                     $k[$j++] = false; //#3161
                     return true; //#3161
                 } //#3161
-                var _Xu = $k[--$j]; //#3163
-                var _Xv = $geti(_Xu, 1, _Xu.length - 1); //#3163
-                $k[$j++] = _Xv; //#3168
-                if (_Xv.length < 1) { //#3168
+                var _Y2 = $k[--$j]; //#3163
+                var _Y3 = $geti(_Y2, 1, _Y2.length - 1); //#3163
+                $k[$j++] = _Y3; //#3168
+                if (_Y3.length < 1) { //#3168
                     $j -= 2; //#3167
                     $k[$j++] = 'bwipp.GS1couponTooShort2ndPurchaseRequirementVLI#3167'; //#3167
                     $k[$j++] = "Coupon too short: Missing 2nd Purchase Requirement VLI"; //#3167
                     $k[$j++] = false; //#3167
                     return true; //#3167
                 } //#3167
-                var _Xw = $k[--$j]; //#3169
-                var _Xy = $cvi($geti(_Xw, 0, 1)); //#3169
-                $k[$j++] = _Xw; //#3171
-                $k[$j++] = _Xy; //#3171
-                if ((_Xy < 1) || (_Xy > 5)) { //#3171
+                var _Y4 = $k[--$j]; //#3169
+                var _Y6 = $cvi($geti(_Y4, 0, 1)); //#3169
+                $k[$j++] = _Y4; //#3171
+                $k[$j++] = _Y6; //#3171
+                if ((_Y6 < 1) || (_Y6 > 5)) { //#3171
                     $j -= 2; //#3170
                     $k[$j++] = 'bwipp.GS1couponBad2ndPurchaseRequirementVLI#3170'; //#3170
                     $k[$j++] = "Coupon 2nd Purchase Requirement length indicator must be 1-5"; //#3170
                     $k[$j++] = false; //#3170
                     return true; //#3170
                 } //#3170
-                var _Xz = $k[--$j]; //#3172
-                var _Y0 = $k[--$j]; //#3173
-                $k[$j++] = _Y0; //#3175
-                $k[$j++] = $f(_Xz + 1); //#3175
-                if ($f(_Xz + 1) > _Y0.length) { //#3175
+                var _Y7 = $k[--$j]; //#3172
+                var _Y8 = $k[--$j]; //#3173
+                $k[$j++] = _Y8; //#3175
+                $k[$j++] = $f(_Y7 + 1); //#3175
+                if ($f(_Y7 + 1) > _Y8.length) { //#3175
                     $j -= 3; //#3174
                     $k[$j++] = 'bwipp.GS1couponTooShort2ndPurchaseRequirement#3174'; //#3174
                     $k[$j++] = "Coupon too short: 2nd Purchase Requirement truncated"; //#3174
                     $k[$j++] = false; //#3174
                     return true; //#3174
                 } //#3174
-                var _Y1 = $k[--$j]; //#3176
-                var _Y2 = $k[--$j]; //#3176
-                var _Y3 = $geti(_Y2, _Y1, $f(_Y2.length - _Y1)); //#3176
-                $k[$j++] = _Y3; //#3181
-                if (_Y3.length < 1) { //#3181
+                var _Y9 = $k[--$j]; //#3176
+                var _YA = $k[--$j]; //#3176
+                var _YB = $geti(_YA, _Y9, $f(_YA.length - _Y9)); //#3176
+                $k[$j++] = _YB; //#3181
+                if (_YB.length < 1) { //#3181
                     $j -= 2; //#3180
                     $k[$j++] = 'bwipp.GS1couponTooShort2ndPurchaseRequirementCode#3180'; //#3180
                     $k[$j++] = "Coupon too short: Missing 2nd Purchase Requirement Code"; //#3180
                     $k[$j++] = false; //#3180
                     return true; //#3180
                 } //#3180
-                var _Y4 = $k[--$j]; //#3182
-                var _Y6 = $cvi($geti(_Y4, 0, 1)); //#3182
-                $k[$j++] = _Y4; //#3184
-                if ((_Y6 > 4) && (_Y6 != 9)) { //#3184
+                var _YC = $k[--$j]; //#3182
+                var _YE = $cvi($geti(_YC, 0, 1)); //#3182
+                $k[$j++] = _YC; //#3184
+                if ((_YE > 4) && (_YE != 9)) { //#3184
                     $j -= 2; //#3183
                     $k[$j++] = 'bwipp.GS1couponBad2ndPurchaseRequirementCode#3183'; //#3183
                     $k[$j++] = "Coupon 2nd Purchase Requirement Code must be 0-4 or 9"; //#3183
                     $k[$j++] = false; //#3183
                     return true; //#3183
                 } //#3183
-                var _Y7 = $k[--$j]; //#3185
-                var _Y8 = $geti(_Y7, 1, _Y7.length - 1); //#3185
-                $k[$j++] = _Y8; //#3190
-                if (_Y8.length < 3) { //#3190
+                var _YF = $k[--$j]; //#3185
+                var _YG = $geti(_YF, 1, _YF.length - 1); //#3185
+                $k[$j++] = _YG; //#3190
+                if (_YG.length < 3) { //#3190
                     $j -= 2; //#3189
                     $k[$j++] = 'bwipp.GS1couponTooShort2ndPurchaseFamilyCode#3189'; //#3189
                     $k[$j++] = "Coupon too short: 2nd Purchase Family Code truncated"; //#3189
                     $k[$j++] = false; //#3189
                     return true; //#3189
                 } //#3189
-                var _Y9 = $k[--$j]; //#3191
-                var _YA = $geti(_Y9, 3, _Y9.length - 3); //#3191
-                $k[$j++] = _YA; //#3196
-                if (_YA.length < 1) { //#3196
+                var _YH = $k[--$j]; //#3191
+                var _YI = $geti(_YH, 3, _YH.length - 3); //#3191
+                $k[$j++] = _YI; //#3196
+                if (_YI.length < 1) { //#3196
                     $j -= 2; //#3195
                     $k[$j++] = 'bwipp.GS1couponTooShort2ndPurchaseGCPVLI#3195'; //#3195
                     $k[$j++] = "Coupon too short: Missing 2nd Purchase GCP VLI"; //#3195
                     $k[$j++] = false; //#3195
                     return true; //#3195
                 } //#3195
-                var _YB = $k[--$j]; //#3197
-                var _YD = $cvi($geti(_YB, 0, 1)); //#3197
-                $k[$j++] = _YB; //#3199
-                $k[$j++] = _YD; //#3199
-                if ((_YD > 6) && (_YD != 9)) { //#3199
+                var _YJ = $k[--$j]; //#3197
+                var _YL = $cvi($geti(_YJ, 0, 1)); //#3197
+                $k[$j++] = _YJ; //#3199
+                $k[$j++] = _YL; //#3199
+                if ((_YL > 6) && (_YL != 9)) { //#3199
                     $j -= 2; //#3198
                     $k[$j++] = 'bwipp.GS1couponBad2ndPurchaseGCPVLI#3198'; //#3198
                     $k[$j++] = "Coupon 2nd Purchase GCP length indicator must be 0-6 or 9"; //#3198
                     $k[$j++] = false; //#3198
                     return true; //#3198
                 } //#3198
-                var _YE = $k[--$j]; //#3200
-                $k[$j++] = _YE; //#3200
-                if (_YE != 9) { //#3200
-                    var _YF = $k[--$j]; //#3200
-                    $k[$j++] = $f(_YF + 6); //#3200
+                var _YM = $k[--$j]; //#3200
+                $k[$j++] = _YM; //#3200
+                if (_YM != 9) { //#3200
+                    var _YN = $k[--$j]; //#3200
+                    $k[$j++] = $f(_YN + 6); //#3200
                 } else { //#3200
                     $j--; //#3200
                     $k[$j++] = 0; //#3200
                 } //#3200
-                var _YG = $k[--$j]; //#3200
-                var _YH = $k[--$j]; //#3201
-                $k[$j++] = _YH; //#3203
-                $k[$j++] = $f(_YG + 1); //#3203
-                if ($f(_YG + 1) > _YH.length) { //#3203
+                var _YO = $k[--$j]; //#3200
+                var _YP = $k[--$j]; //#3201
+                $k[$j++] = _YP; //#3203
+                $k[$j++] = $f(_YO + 1); //#3203
+                if ($f(_YO + 1) > _YP.length) { //#3203
                     $j -= 3; //#3202
                     $k[$j++] = 'bwipp.GS1couponTooShort2ndPurchaseGCP#3202'; //#3202
                     $k[$j++] = "Coupon too short: 2nd Purchase GCP truncated"; //#3202
                     $k[$j++] = false; //#3202
                     return true; //#3202
                 } //#3202
-                var _YI = $k[--$j]; //#3204
-                var _YJ = $k[--$j]; //#3204
-                $k[$j++] = $geti(_YJ, _YI, $f(_YJ.length - _YI)); //#3204
+                var _YQ = $k[--$j]; //#3204
+                var _YR = $k[--$j]; //#3204
+                $k[$j++] = $geti(_YR, _YQ, $f(_YR.length - _YQ)); //#3204
             } //#3204
         } //#3204
-        var _YL = $k[--$j]; //#3209
-        $k[$j++] = _YL; //#3253
-        if (_YL.length >= 1) { //#3253
-            var _YM = $k[--$j]; //#3209
-            $k[$j++] = _YM; //#3253
-            if ($cvi($geti(_YM, 0, 1)) == 2) { //#3253
-                var _YO = $k[--$j]; //#3210
-                var _YP = $geti(_YO, 1, _YO.length - 1); //#3210
-                $k[$j++] = _YP; //#3215
-                if (_YP.length < 1) { //#3215
+        var _YT = $k[--$j]; //#3209
+        $k[$j++] = _YT; //#3253
+        if (_YT.length >= 1) { //#3253
+            var _YU = $k[--$j]; //#3209
+            $k[$j++] = _YU; //#3253
+            if ($cvi($geti(_YU, 0, 1)) == 2) { //#3253
+                var _YW = $k[--$j]; //#3210
+                var _YX = $geti(_YW, 1, _YW.length - 1); //#3210
+                $k[$j++] = _YX; //#3215
+                if (_YX.length < 1) { //#3215
                     $j -= 2; //#3214
                     $k[$j++] = 'bwipp.GS1couponTooShort3rdPurchaseRequirementVLI#3214'; //#3214
                     $k[$j++] = "Coupon too short: Missing 3rd Purchase Requirement VLI"; //#3214
                     $k[$j++] = false; //#3214
                     return true; //#3214
                 } //#3214
-                var _YQ = $k[--$j]; //#3216
-                var _YS = $cvi($geti(_YQ, 0, 1)); //#3216
-                $k[$j++] = _YQ; //#3218
-                $k[$j++] = _YS; //#3218
-                if ((_YS < 1) || (_YS > 5)) { //#3218
+                var _YY = $k[--$j]; //#3216
+                var _Ya = $cvi($geti(_YY, 0, 1)); //#3216
+                $k[$j++] = _YY; //#3218
+                $k[$j++] = _Ya; //#3218
+                if ((_Ya < 1) || (_Ya > 5)) { //#3218
                     $j -= 2; //#3217
                     $k[$j++] = 'bwipp.GS1couponBad3rdPurchaseRequirementVLI#3217'; //#3217
                     $k[$j++] = "Coupon 3rd Purchase Requirement length indicator must be 1-5"; //#3217
                     $k[$j++] = false; //#3217
                     return true; //#3217
                 } //#3217
-                var _YT = $k[--$j]; //#3219
-                var _YU = $k[--$j]; //#3220
-                $k[$j++] = _YU; //#3222
-                $k[$j++] = $f(_YT + 1); //#3222
-                if ($f(_YT + 1) > _YU.length) { //#3222
+                var _Yb = $k[--$j]; //#3219
+                var _Yc = $k[--$j]; //#3220
+                $k[$j++] = _Yc; //#3222
+                $k[$j++] = $f(_Yb + 1); //#3222
+                if ($f(_Yb + 1) > _Yc.length) { //#3222
                     $j -= 3; //#3221
                     $k[$j++] = 'bwipp.GS1couponTooShort3rdPurchaseRequirement#3221'; //#3221
                     $k[$j++] = "Coupon too short: 3rd Purchase Requirement truncated"; //#3221
                     $k[$j++] = false; //#3221
                     return true; //#3221
                 } //#3221
-                var _YV = $k[--$j]; //#3223
-                var _YW = $k[--$j]; //#3223
-                var _YX = $geti(_YW, _YV, $f(_YW.length - _YV)); //#3223
-                $k[$j++] = _YX; //#3228
-                if (_YX.length < 1) { //#3228
+                var _Yd = $k[--$j]; //#3223
+                var _Ye = $k[--$j]; //#3223
+                var _Yf = $geti(_Ye, _Yd, $f(_Ye.length - _Yd)); //#3223
+                $k[$j++] = _Yf; //#3228
+                if (_Yf.length < 1) { //#3228
                     $j -= 2; //#3227
                     $k[$j++] = 'bwipp.GS1couponTooShort3rdPurchaseRequirementCode#3227'; //#3227
                     $k[$j++] = "Coupon too short: Missing 3rd Purchase Requirement Code"; //#3227
                     $k[$j++] = false; //#3227
                     return true; //#3227
                 } //#3227
-                var _YY = $k[--$j]; //#3229
-                var _Ya = $cvi($geti(_YY, 0, 1)); //#3229
-                $k[$j++] = _YY; //#3231
-                if ((_Ya > 4) && (_Ya != 9)) { //#3231
+                var _Yg = $k[--$j]; //#3229
+                var _Yi = $cvi($geti(_Yg, 0, 1)); //#3229
+                $k[$j++] = _Yg; //#3231
+                if ((_Yi > 4) && (_Yi != 9)) { //#3231
                     $j -= 2; //#3230
                     $k[$j++] = 'bwipp.GS1couponBad3rdPurchaseRequirementCode#3230'; //#3230
                     $k[$j++] = "Coupon 3rd Purchase Requirement Code must be 0-4 or 9"; //#3230
                     $k[$j++] = false; //#3230
                     return true; //#3230
                 } //#3230
-                var _Yb = $k[--$j]; //#3232
-                var _Yc = $geti(_Yb, 1, _Yb.length - 1); //#3232
-                $k[$j++] = _Yc; //#3237
-                if (_Yc.length < 3) { //#3237
+                var _Yj = $k[--$j]; //#3232
+                var _Yk = $geti(_Yj, 1, _Yj.length - 1); //#3232
+                $k[$j++] = _Yk; //#3237
+                if (_Yk.length < 3) { //#3237
                     $j -= 2; //#3236
                     $k[$j++] = 'bwipp.GS1couponTooShort3rdPurchaseFamilyCode#3236'; //#3236
                     $k[$j++] = "Coupon too short: 3rd Purchase Family Code truncated"; //#3236
                     $k[$j++] = false; //#3236
                     return true; //#3236
                 } //#3236
-                var _Yd = $k[--$j]; //#3238
-                var _Ye = $geti(_Yd, 3, _Yd.length - 3); //#3238
-                $k[$j++] = _Ye; //#3243
-                if (_Ye.length < 1) { //#3243
+                var _Yl = $k[--$j]; //#3238
+                var _Ym = $geti(_Yl, 3, _Yl.length - 3); //#3238
+                $k[$j++] = _Ym; //#3243
+                if (_Ym.length < 1) { //#3243
                     $j -= 2; //#3242
                     $k[$j++] = 'bwipp.GS1couponTooShort3rdPurchaseGCPVLI#3242'; //#3242
                     $k[$j++] = "Coupon too short: Missing 3rd Purchase GCP VLI"; //#3242
                     $k[$j++] = false; //#3242
                     return true; //#3242
                 } //#3242
-                var _Yf = $k[--$j]; //#3244
-                var _Yh = $cvi($geti(_Yf, 0, 1)); //#3244
-                $k[$j++] = _Yf; //#3246
-                $k[$j++] = _Yh; //#3246
-                if ((_Yh > 6) && (_Yh != 9)) { //#3246
+                var _Yn = $k[--$j]; //#3244
+                var _Yp = $cvi($geti(_Yn, 0, 1)); //#3244
+                $k[$j++] = _Yn; //#3246
+                $k[$j++] = _Yp; //#3246
+                if ((_Yp > 6) && (_Yp != 9)) { //#3246
                     $j -= 2; //#3245
                     $k[$j++] = 'bwipp.GS1couponBad3rdPurchaseGCPVLI#3245'; //#3245
                     $k[$j++] = "Coupon 3rd Purchase GCP length indicator must be 0-6 or 9"; //#3245
                     $k[$j++] = false; //#3245
                     return true; //#3245
                 } //#3245
-                var _Yi = $k[--$j]; //#3247
-                $k[$j++] = _Yi; //#3247
-                if (_Yi != 9) { //#3247
-                    var _Yj = $k[--$j]; //#3247
-                    $k[$j++] = $f(_Yj + 6); //#3247
+                var _Yq = $k[--$j]; //#3247
+                $k[$j++] = _Yq; //#3247
+                if (_Yq != 9) { //#3247
+                    var _Yr = $k[--$j]; //#3247
+                    $k[$j++] = $f(_Yr + 6); //#3247
                 } else { //#3247
                     $j--; //#3247
                     $k[$j++] = 0; //#3247
                 } //#3247
-                var _Yk = $k[--$j]; //#3247
-                var _Yl = $k[--$j]; //#3248
-                $k[$j++] = _Yl; //#3250
-                $k[$j++] = $f(_Yk + 1); //#3250
-                if ($f(_Yk + 1) > _Yl.length) { //#3250
+                var _Ys = $k[--$j]; //#3247
+                var _Yt = $k[--$j]; //#3248
+                $k[$j++] = _Yt; //#3250
+                $k[$j++] = $f(_Ys + 1); //#3250
+                if ($f(_Ys + 1) > _Yt.length) { //#3250
                     $j -= 3; //#3249
                     $k[$j++] = 'bwipp.GS1couponTooShort3rdPurchaseGCP#3249'; //#3249
                     $k[$j++] = "Coupon too short: 3rd Purchase GCP truncated"; //#3249
                     $k[$j++] = false; //#3249
                     return true; //#3249
                 } //#3249
-                var _Ym = $k[--$j]; //#3251
-                var _Yn = $k[--$j]; //#3251
-                $k[$j++] = $geti(_Yn, _Ym, $f(_Yn.length - _Ym)); //#3251
+                var _Yu = $k[--$j]; //#3251
+                var _Yv = $k[--$j]; //#3251
+                $k[$j++] = $geti(_Yv, _Yu, $f(_Yv.length - _Yu)); //#3251
             } //#3251
         } //#3251
         $_.couponexpire = -1; //#3256
-        var _Yp = $k[--$j]; //#3257
-        $k[$j++] = _Yp; //#3275
-        if (_Yp.length >= 1) { //#3275
-            var _Yq = $k[--$j]; //#3257
-            $k[$j++] = _Yq; //#3275
-            if ($cvi($geti(_Yq, 0, 1)) == 3) { //#3275
-                var _Ys = $k[--$j]; //#3258
-                var _Yt = $geti(_Ys, 1, _Ys.length - 1); //#3258
-                $k[$j++] = _Yt; //#3263
-                if (_Yt.length < 6) { //#3263
+        var _Yx = $k[--$j]; //#3257
+        $k[$j++] = _Yx; //#3275
+        if (_Yx.length >= 1) { //#3275
+            var _Yy = $k[--$j]; //#3257
+            $k[$j++] = _Yy; //#3275
+            if ($cvi($geti(_Yy, 0, 1)) == 3) { //#3275
+                var _Z0 = $k[--$j]; //#3258
+                var _Z1 = $geti(_Z0, 1, _Z0.length - 1); //#3258
+                $k[$j++] = _Z1; //#3263
+                if (_Z1.length < 6) { //#3263
                     $j -= 2; //#3262
                     $k[$j++] = 'bwipp.GS1couponTooShortExpirationDate#3262'; //#3262
                     $k[$j++] = "Coupon too short: Expiration date"; //#3262
                     $k[$j++] = false; //#3262
                     return true; //#3262
                 } //#3262
-                var _Yu = $k[--$j]; //#3264
-                var _Yw = $cvi($geti(_Yu, 2, 2)); //#3264
-                $k[$j++] = _Yu; //#3264
-                if ((_Yw < 1) || (_Yw > 12)) { //#3264
+                var _Z2 = $k[--$j]; //#3264
+                var _Z4 = $cvi($geti(_Z2, 2, 2)); //#3264
+                $k[$j++] = _Z2; //#3264
+                if ((_Z4 < 1) || (_Z4 > 12)) { //#3264
                     $j -= 2; //#3264
                     $k[$j++] = 'bwipp.GS1couponExpirationDateBadMonth#3264'; //#3264
                     $k[$j++] = "Invalid month in expiration date"; //#3264
                     $k[$j++] = false; //#3264
                     return true; //#3264
                 } //#3264
-                var _Yx = $k[--$j]; //#3265
-                var _Yz = $cvi($geti(_Yx, 0, 2)); //#3265
-                var _Z0 = _Yz - 21; //#3266
-                $k[$j++] = _Yx; //#3266
-                $k[$j++] = _Yz; //#3266
-                $k[$j++] = _Z0; //#3266
-                if (_Z0 >= 51) { //#3266
+                var _Z5 = $k[--$j]; //#3265
+                var _Z7 = $cvi($geti(_Z5, 0, 2)); //#3265
+                var _Z8 = _Z7 - 21; //#3266
+                $k[$j++] = _Z5; //#3266
+                $k[$j++] = _Z7; //#3266
+                $k[$j++] = _Z8; //#3266
+                if (_Z8 >= 51) { //#3266
                     $j--; //#3266
-                    var _Z1 = $k[--$j]; //#3266
-                    $k[$j++] = $f(_Z1 + 1900); //#3266
+                    var _Z9 = $k[--$j]; //#3266
+                    $k[$j++] = $f(_Z9 + 1900); //#3266
                 } else { //#3266
                     if ($k[--$j] <= -50) { //#3266
-                        var _Z3 = $k[--$j]; //#3266
-                        $k[$j++] = $f(_Z3 + 2100); //#3266
+                        var _ZB = $k[--$j]; //#3266
+                        $k[$j++] = $f(_ZB + 2100); //#3266
                     } else { //#3266
-                        var _Z4 = $k[--$j]; //#3266
-                        $k[$j++] = $f(_Z4 + 2000); //#3266
+                        var _ZC = $k[--$j]; //#3266
+                        $k[$j++] = $f(_ZC + 2000); //#3266
                     } //#3266
                 } //#3266
-                var _Z5 = $k[--$j]; //#3267
-                $k[$j++] = ((_Z5 % 400) == 0) || (((_Z5 % 4) == 0) && ((_Z5 % 100) != 0)); //#3268
+                var _ZD = $k[--$j]; //#3267
+                $k[$j++] = ((_ZD % 400) == 0) || (((_ZD % 4) == 0) && ((_ZD % 100) != 0)); //#3268
                 $k[$j++] = Infinity; //#3268
-                var _Z6 = $k[--$j]; //#3268
-                var _Z8 = $k[--$j] ? 29 : 28; //#3268
-                $k[$j++] = _Z6; //#3268
                 $k[$j++] = 31; //#3268
-                $k[$j++] = _Z8; //#3268
-                $k[$j++] = 31; //#3268
-                $k[$j++] = 30; //#3268
-                $k[$j++] = 31; //#3268
-                $k[$j++] = 30; //#3268
-                $k[$j++] = 31; //#3268
+                $r(3, -1); //#3268
+                var _ZF = $k[--$j] ? 29 : 28; //#3268
+                $k[$j++] = _ZF; //#3268
                 $k[$j++] = 31; //#3268
                 $k[$j++] = 30; //#3268
                 $k[$j++] = 31; //#3268
                 $k[$j++] = 30; //#3268
                 $k[$j++] = 31; //#3268
-                var _Z9 = $a(); //#3268
-                var _ZA = $k[--$j]; //#3269
-                var _ZE = $cvi($geti(_ZA, 4, 2)); //#3270
-                $k[$j++] = _ZA; //#3271
-                if (($get(_Z9, $cvi($geti(_ZA, 2, 2)) - 1) < _ZE) || (_ZE < 1)) { //#3271
+                $k[$j++] = 31; //#3268
+                $k[$j++] = 30; //#3268
+                $k[$j++] = 31; //#3268
+                $k[$j++] = 30; //#3268
+                $k[$j++] = 31; //#3268
+                var _ZG = $a(); //#3268
+                var _ZH = $k[--$j]; //#3269
+                var _ZL = $cvi($geti(_ZH, 4, 2)); //#3270
+                $k[$j++] = _ZH; //#3271
+                if (($get(_ZG, $cvi($geti(_ZH, 2, 2)) - 1) < _ZL) || (_ZL < 1)) { //#3271
                     $j -= 2; //#3271
                     $k[$j++] = 'bwipp.GS1couponExpirationDateBadDay#3271'; //#3271
                     $k[$j++] = "Invalid day of month in expiration date"; //#3271
                     $k[$j++] = false; //#3271
                     return true; //#3271
                 } //#3271
-                var _ZF = $k[--$j]; //#3272
-                $_.couponexpire = $cvi($geti(_ZF, 0, 6)); //#3272
-                $k[$j++] = $geti(_ZF, 6, _ZF.length - 6); //#3273
+                var _ZM = $k[--$j]; //#3272
+                $_.couponexpire = $cvi($geti(_ZM, 0, 6)); //#3272
+                $k[$j++] = $geti(_ZM, 6, _ZM.length - 6); //#3273
             } //#3273
         } //#3273
-        var _ZI = $k[--$j]; //#3278
-        $k[$j++] = _ZI; //#3299
-        if (_ZI.length >= 1) { //#3299
-            var _ZJ = $k[--$j]; //#3278
-            $k[$j++] = _ZJ; //#3299
-            if ($cvi($geti(_ZJ, 0, 1)) == 4) { //#3299
-                var _ZL = $k[--$j]; //#3279
-                var _ZM = $geti(_ZL, 1, _ZL.length - 1); //#3279
-                $k[$j++] = _ZM; //#3284
-                if (_ZM.length < 6) { //#3284
+        var _ZP = $k[--$j]; //#3278
+        $k[$j++] = _ZP; //#3299
+        if (_ZP.length >= 1) { //#3299
+            var _ZQ = $k[--$j]; //#3278
+            $k[$j++] = _ZQ; //#3299
+            if ($cvi($geti(_ZQ, 0, 1)) == 4) { //#3299
+                var _ZS = $k[--$j]; //#3279
+                var _ZT = $geti(_ZS, 1, _ZS.length - 1); //#3279
+                $k[$j++] = _ZT; //#3284
+                if (_ZT.length < 6) { //#3284
                     $j -= 2; //#3283
                     $k[$j++] = 'bwipp.GS1couponTooShortStartDate#3283'; //#3283
                     $k[$j++] = "Coupon too short: Start date"; //#3283
                     $k[$j++] = false; //#3283
                     return true; //#3283
                 } //#3283
-                var _ZN = $k[--$j]; //#3285
-                var _ZP = $cvi($geti(_ZN, 2, 2)); //#3285
-                $k[$j++] = _ZN; //#3285
-                if ((_ZP < 1) || (_ZP > 12)) { //#3285
+                var _ZU = $k[--$j]; //#3285
+                var _ZW = $cvi($geti(_ZU, 2, 2)); //#3285
+                $k[$j++] = _ZU; //#3285
+                if ((_ZW < 1) || (_ZW > 12)) { //#3285
                     $j -= 2; //#3285
                     $k[$j++] = 'bwipp.GS1couponStartDateBadMonth#3285'; //#3285
                     $k[$j++] = "Invalid month in start date"; //#3285
                     $k[$j++] = false; //#3285
                     return true; //#3285
                 } //#3285
-                var _ZQ = $k[--$j]; //#3286
-                var _ZS = $cvi($geti(_ZQ, 0, 2)); //#3286
-                var _ZT = _ZS - 21; //#3287
-                $k[$j++] = _ZQ; //#3287
-                $k[$j++] = _ZS; //#3287
-                $k[$j++] = _ZT; //#3287
-                if (_ZT >= 51) { //#3287
+                var _ZX = $k[--$j]; //#3286
+                var _ZZ = $cvi($geti(_ZX, 0, 2)); //#3286
+                var _Za = _ZZ - 21; //#3287
+                $k[$j++] = _ZX; //#3287
+                $k[$j++] = _ZZ; //#3287
+                $k[$j++] = _Za; //#3287
+                if (_Za >= 51) { //#3287
                     $j--; //#3287
-                    var _ZU = $k[--$j]; //#3287
-                    $k[$j++] = $f(_ZU + 1900); //#3287
+                    var _Zb = $k[--$j]; //#3287
+                    $k[$j++] = $f(_Zb + 1900); //#3287
                 } else { //#3287
                     if ($k[--$j] <= -50) { //#3287
-                        var _ZW = $k[--$j]; //#3287
-                        $k[$j++] = $f(_ZW + 2100); //#3287
+                        var _Zd = $k[--$j]; //#3287
+                        $k[$j++] = $f(_Zd + 2100); //#3287
                     } else { //#3287
-                        var _ZX = $k[--$j]; //#3287
-                        $k[$j++] = $f(_ZX + 2000); //#3287
+                        var _Ze = $k[--$j]; //#3287
+                        $k[$j++] = $f(_Ze + 2000); //#3287
                     } //#3287
                 } //#3287
-                var _ZY = $k[--$j]; //#3288
-                $k[$j++] = ((_ZY % 400) == 0) || (((_ZY % 4) == 0) && ((_ZY % 100) != 0)); //#3289
+                var _Zf = $k[--$j]; //#3288
+                $k[$j++] = ((_Zf % 400) == 0) || (((_Zf % 4) == 0) && ((_Zf % 100) != 0)); //#3289
                 $k[$j++] = Infinity; //#3289
-                var _ZZ = $k[--$j]; //#3289
-                var _Zb = $k[--$j] ? 29 : 28; //#3289
-                $k[$j++] = _ZZ; //#3289
                 $k[$j++] = 31; //#3289
-                $k[$j++] = _Zb; //#3289
-                $k[$j++] = 31; //#3289
-                $k[$j++] = 30; //#3289
-                $k[$j++] = 31; //#3289
-                $k[$j++] = 30; //#3289
-                $k[$j++] = 31; //#3289
+                $r(3, -1); //#3289
+                var _Zh = $k[--$j] ? 29 : 28; //#3289
+                $k[$j++] = _Zh; //#3289
                 $k[$j++] = 31; //#3289
                 $k[$j++] = 30; //#3289
                 $k[$j++] = 31; //#3289
                 $k[$j++] = 30; //#3289
                 $k[$j++] = 31; //#3289
-                var _Zc = $a(); //#3289
-                var _Zd = $k[--$j]; //#3290
-                var _Zh = $cvi($geti(_Zd, 4, 2)); //#3291
-                $k[$j++] = _Zd; //#3292
-                if (($get(_Zc, $cvi($geti(_Zd, 2, 2)) - 1) < _Zh) || (_Zh < 1)) { //#3292
+                $k[$j++] = 31; //#3289
+                $k[$j++] = 30; //#3289
+                $k[$j++] = 31; //#3289
+                $k[$j++] = 30; //#3289
+                $k[$j++] = 31; //#3289
+                var _Zi = $a(); //#3289
+                var _Zj = $k[--$j]; //#3290
+                var _Zn = $cvi($geti(_Zj, 4, 2)); //#3291
+                $k[$j++] = _Zj; //#3292
+                if (($get(_Zi, $cvi($geti(_Zj, 2, 2)) - 1) < _Zn) || (_Zn < 1)) { //#3292
                     $j -= 2; //#3292
                     $k[$j++] = 'bwipp.GS1couponStartDateBadDay#3292'; //#3292
                     $k[$j++] = "Invalid day of month in start date"; //#3292
                     $k[$j++] = false; //#3292
                     return true; //#3292
                 } //#3292
-                var _Zi = $k[--$j]; //#3293
-                $_.couponstart = $cvi($geti(_Zi, 0, 6)); //#3293
-                $k[$j++] = _Zi; //#3296
+                var _Zo = $k[--$j]; //#3293
+                $_.couponstart = $cvi($geti(_Zo, 0, 6)); //#3293
+                $k[$j++] = _Zo; //#3296
                 if (($_.couponexpire != -1) && ($_.couponexpire < $_.couponstart)) { //#3296
                     $j -= 2; //#3295
                     $k[$j++] = 'bwipp.GS1couponExpireDateBeforeStartDate#3295'; //#3295
@@ -5827,166 +5855,166 @@ function bwipp_gs1process() {
                     $k[$j++] = false; //#3295
                     return true; //#3295
                 } //#3295
-                var _Zn = $k[--$j]; //#3297
-                $k[$j++] = $geti(_Zn, 6, _Zn.length - 6); //#3297
+                var _Zt = $k[--$j]; //#3297
+                $k[$j++] = $geti(_Zt, 6, _Zt.length - 6); //#3297
             } //#3297
         } //#3297
-        var _Zp = $k[--$j]; //#3302
-        $k[$j++] = _Zp; //#3315
-        if (_Zp.length >= 1) { //#3315
-            var _Zq = $k[--$j]; //#3302
-            $k[$j++] = _Zq; //#3315
-            if ($cvi($geti(_Zq, 0, 1)) == 5) { //#3315
-                var _Zs = $k[--$j]; //#3303
-                var _Zt = $geti(_Zs, 1, _Zs.length - 1); //#3303
-                $k[$j++] = _Zt; //#3308
-                if (_Zt.length < 1) { //#3308
+        var _Zv = $k[--$j]; //#3302
+        $k[$j++] = _Zv; //#3315
+        if (_Zv.length >= 1) { //#3315
+            var _Zw = $k[--$j]; //#3302
+            $k[$j++] = _Zw; //#3315
+            if ($cvi($geti(_Zw, 0, 1)) == 5) { //#3315
+                var _Zy = $k[--$j]; //#3303
+                var _Zz = $geti(_Zy, 1, _Zy.length - 1); //#3303
+                $k[$j++] = _Zz; //#3308
+                if (_Zz.length < 1) { //#3308
                     $j -= 2; //#3307
                     $k[$j++] = 'bwipp.GS1couponTooShortSerialNumberVLI#3307'; //#3307
                     $k[$j++] = "Coupon too short: Missing Serial Number VLI"; //#3307
                     $k[$j++] = false; //#3307
                     return true; //#3307
                 } //#3307
-                var _Zu = $k[--$j]; //#3309
-                var _Zv = $geti(_Zu, 0, 1); //#3309
-                $k[$j++] = _Zu; //#3312
-                $k[$j++] = ($cvi(_Zv) + 6) + 1; //#3312
-                if ((($cvi(_Zv) + 6) + 1) > _Zu.length) { //#3312
+                var _a0 = $k[--$j]; //#3309
+                var _a1 = $geti(_a0, 0, 1); //#3309
+                $k[$j++] = _a0; //#3312
+                $k[$j++] = ($cvi(_a1) + 6) + 1; //#3312
+                if ((($cvi(_a1) + 6) + 1) > _a0.length) { //#3312
                     $j -= 3; //#3311
                     $k[$j++] = 'bwipp.GS1couponTooShortSerialNumber#3311'; //#3311
                     $k[$j++] = "Coupon too short: Serial Number truncated"; //#3311
                     $k[$j++] = false; //#3311
                     return true; //#3311
                 } //#3311
-                var _Zw = $k[--$j]; //#3313
-                var _Zx = $k[--$j]; //#3313
-                $k[$j++] = $geti(_Zx, _Zw, $f(_Zx.length - _Zw)); //#3313
+                var _a2 = $k[--$j]; //#3313
+                var _a3 = $k[--$j]; //#3313
+                $k[$j++] = $geti(_a3, _a2, $f(_a3.length - _a2)); //#3313
             } //#3313
         } //#3313
-        var _Zz = $k[--$j]; //#3318
-        $k[$j++] = _Zz; //#3334
-        if (_Zz.length >= 1) { //#3334
-            var _a0 = $k[--$j]; //#3318
-            $k[$j++] = _a0; //#3334
-            if ($cvi($geti(_a0, 0, 1)) == 6) { //#3334
-                var _a2 = $k[--$j]; //#3319
-                var _a3 = $geti(_a2, 1, _a2.length - 1); //#3319
-                $k[$j++] = _a3; //#3324
-                if (_a3.length < 1) { //#3324
+        var _a5 = $k[--$j]; //#3318
+        $k[$j++] = _a5; //#3334
+        if (_a5.length >= 1) { //#3334
+            var _a6 = $k[--$j]; //#3318
+            $k[$j++] = _a6; //#3334
+            if ($cvi($geti(_a6, 0, 1)) == 6) { //#3334
+                var _a8 = $k[--$j]; //#3319
+                var _a9 = $geti(_a8, 1, _a8.length - 1); //#3319
+                $k[$j++] = _a9; //#3324
+                if (_a9.length < 1) { //#3324
                     $j -= 2; //#3323
                     $k[$j++] = 'bwipp.GS1couponTooShortRetailerGCPGLNVLI#3323'; //#3323
                     $k[$j++] = "Coupon too short: Missing Retailer GCP/GLN VLI"; //#3323
                     $k[$j++] = false; //#3323
                     return true; //#3323
                 } //#3323
-                var _a4 = $k[--$j]; //#3325
-                var _a6 = $cvi($geti(_a4, 0, 1)); //#3325
-                $k[$j++] = _a4; //#3327
-                $k[$j++] = _a6; //#3327
-                if ((_a6 < 1) || (_a6 > 7)) { //#3327
+                var _aA = $k[--$j]; //#3325
+                var _aC = $cvi($geti(_aA, 0, 1)); //#3325
+                $k[$j++] = _aA; //#3327
+                $k[$j++] = _aC; //#3327
+                if ((_aC < 1) || (_aC > 7)) { //#3327
                     $j -= 2; //#3326
                     $k[$j++] = 'bwipp.GS1couponBadRetailerGCPGLNVLI#3326'; //#3326
                     $k[$j++] = "Coupon Retailer GCP/GLN length indicator must be 1-7"; //#3326
                     $k[$j++] = false; //#3326
                     return true; //#3326
                 } //#3326
-                var _a7 = $k[--$j]; //#3328
-                var _a8 = $k[--$j]; //#3329
-                $k[$j++] = _a8; //#3331
-                $k[$j++] = $f($f(_a7 + 6) + 1); //#3331
-                if (($f($f(_a7 + 6) + 1)) > _a8.length) { //#3331
+                var _aD = $k[--$j]; //#3328
+                var _aE = $k[--$j]; //#3329
+                $k[$j++] = _aE; //#3331
+                $k[$j++] = $f($f(_aD + 6) + 1); //#3331
+                if (($f($f(_aD + 6) + 1)) > _aE.length) { //#3331
                     $j -= 3; //#3330
                     $k[$j++] = 'bwipp.GS1couponTooShortRetailerGCPGLN#3330'; //#3330
                     $k[$j++] = "Coupon too short: Retailer GCP/GLN truncated"; //#3330
                     $k[$j++] = false; //#3330
                     return true; //#3330
                 } //#3330
-                var _a9 = $k[--$j]; //#3332
-                var _aA = $k[--$j]; //#3332
-                $k[$j++] = $geti(_aA, _a9, $f(_aA.length - _a9)); //#3332
+                var _aF = $k[--$j]; //#3332
+                var _aG = $k[--$j]; //#3332
+                $k[$j++] = $geti(_aG, _aF, $f(_aG.length - _aF)); //#3332
             } //#3332
         } //#3332
-        var _aC = $k[--$j]; //#3337
-        $k[$j++] = _aC; //#3373
-        if (_aC.length >= 1) { //#3373
-            var _aD = $k[--$j]; //#3337
-            $k[$j++] = _aD; //#3373
-            if ($cvi($geti(_aD, 0, 1)) == 9) { //#3373
-                var _aF = $k[--$j]; //#3338
-                var _aG = $geti(_aF, 1, _aF.length - 1); //#3338
-                $k[$j++] = _aG; //#3343
-                if (_aG.length < 1) { //#3343
+        var _aI = $k[--$j]; //#3337
+        $k[$j++] = _aI; //#3373
+        if (_aI.length >= 1) { //#3373
+            var _aJ = $k[--$j]; //#3337
+            $k[$j++] = _aJ; //#3373
+            if ($cvi($geti(_aJ, 0, 1)) == 9) { //#3373
+                var _aL = $k[--$j]; //#3338
+                var _aM = $geti(_aL, 1, _aL.length - 1); //#3338
+                $k[$j++] = _aM; //#3343
+                if (_aM.length < 1) { //#3343
                     $j -= 2; //#3342
                     $k[$j++] = 'bwipp.GS1couponTooShortSaveValueCode#3342'; //#3342
                     $k[$j++] = "Coupon too short: Missing Save Value Code"; //#3342
                     $k[$j++] = false; //#3342
                     return true; //#3342
                 } //#3342
-                var _aH = $k[--$j]; //#3344
-                var _aJ = $cvi($geti(_aH, 0, 1)); //#3344
-                $k[$j++] = _aH; //#3346
-                if ((_aJ > 6) || ((_aJ == 3) || (_aJ == 4))) { //#3346
+                var _aN = $k[--$j]; //#3344
+                var _aP = $cvi($geti(_aN, 0, 1)); //#3344
+                $k[$j++] = _aN; //#3346
+                if ((_aP > 6) || ((_aP == 3) || (_aP == 4))) { //#3346
                     $j -= 2; //#3345
                     $k[$j++] = 'bwipp.GS1couponBadSaveValueCode#3345'; //#3345
                     $k[$j++] = "Coupon Save Value Code must be 0,1,2,5 or 6"; //#3345
                     $k[$j++] = false; //#3345
                     return true; //#3345
                 } //#3345
-                var _aK = $k[--$j]; //#3347
-                var _aL = $geti(_aK, 1, _aK.length - 1); //#3347
-                $k[$j++] = _aL; //#3352
-                if (_aL.length < 1) { //#3352
+                var _aQ = $k[--$j]; //#3347
+                var _aR = $geti(_aQ, 1, _aQ.length - 1); //#3347
+                $k[$j++] = _aR; //#3352
+                if (_aR.length < 1) { //#3352
                     $j -= 2; //#3351
                     $k[$j++] = 'bwipp.GS1couponTooShortSaveValueAppliesToItem#3351'; //#3351
                     $k[$j++] = "Coupon too short: Missing Save Value Applies to Item"; //#3351
                     $k[$j++] = false; //#3351
                     return true; //#3351
                 } //#3351
-                var _aM = $k[--$j]; //#3353
-                $k[$j++] = _aM; //#3355
-                if ($cvi($geti(_aM, 0, 1)) > 2) { //#3355
+                var _aS = $k[--$j]; //#3353
+                $k[$j++] = _aS; //#3355
+                if ($cvi($geti(_aS, 0, 1)) > 2) { //#3355
                     $j -= 2; //#3354
                     $k[$j++] = 'bwipp.GS1couponBadSaveValueAppliesToItem#3354'; //#3354
                     $k[$j++] = "Coupon Save Value Applies to Item must be 0-2"; //#3354
                     $k[$j++] = false; //#3354
                     return true; //#3354
                 } //#3354
-                var _aO = $k[--$j]; //#3356
-                var _aP = $geti(_aO, 1, _aO.length - 1); //#3356
-                $k[$j++] = _aP; //#3361
-                if (_aP.length < 1) { //#3361
+                var _aU = $k[--$j]; //#3356
+                var _aV = $geti(_aU, 1, _aU.length - 1); //#3356
+                $k[$j++] = _aV; //#3361
+                if (_aV.length < 1) { //#3361
                     $j -= 2; //#3360
                     $k[$j++] = 'bwipp.GS1couponTooShortStoreCouponFlag#3360'; //#3360
                     $k[$j++] = "Coupon too short: Missing Store Coupon Flag"; //#3360
                     $k[$j++] = false; //#3360
                     return true; //#3360
                 } //#3360
-                var _aQ = $k[--$j]; //#3362
-                var _aR = $geti(_aQ, 1, _aQ.length - 1); //#3362
-                $k[$j++] = _aR; //#3367
-                if (_aR.length < 1) { //#3367
+                var _aW = $k[--$j]; //#3362
+                var _aX = $geti(_aW, 1, _aW.length - 1); //#3362
+                $k[$j++] = _aX; //#3367
+                if (_aX.length < 1) { //#3367
                     $j -= 2; //#3366
                     $k[$j++] = 'bwipp.GS1couponTooShortDontMultiplyFlag#3366'; //#3366
                     $k[$j++] = "Coupon too short: Missing Don't Multiply Flag"; //#3366
                     $k[$j++] = false; //#3366
                     return true; //#3366
                 } //#3366
-                var _aS = $k[--$j]; //#3368
-                $k[$j++] = _aS; //#3370
-                if ($cvi($geti(_aS, 0, 1)) > 1) { //#3370
+                var _aY = $k[--$j]; //#3368
+                $k[$j++] = _aY; //#3370
+                if ($cvi($geti(_aY, 0, 1)) > 1) { //#3370
                     $j -= 2; //#3369
                     $k[$j++] = 'bwipp.GS1couponBadDontMultiplyFlag#3369'; //#3369
                     $k[$j++] = "Don't Multiply Flag must be 0 or 1"; //#3369
                     $k[$j++] = false; //#3369
                     return true; //#3369
                 } //#3369
-                var _aU = $k[--$j]; //#3371
-                $k[$j++] = $geti(_aU, 1, _aU.length - 1); //#3371
+                var _aa = $k[--$j]; //#3371
+                $k[$j++] = $geti(_aa, 1, _aa.length - 1); //#3371
             } //#3371
         } //#3371
-        var _aW = $k[--$j]; //#3375
-        $k[$j++] = _aW; //#3377
-        if (_aW.length != 0) { //#3377
+        var _ac = $k[--$j]; //#3375
+        $k[$j++] = _ac; //#3377
+        if (_ac.length != 0) { //#3377
             $j -= 2; //#3376
             $k[$j++] = 'bwipp.GS1couponUnrecognisedOptionalField#3376'; //#3376
             $k[$j++] = "Coupon fields must be 1,2,3,4,5,6 or 9, increasing order"; //#3376
@@ -5996,12 +6024,12 @@ function bwipp_gs1process() {
         $j--; //#3378
     }; //#3378
     $_.lintcouponposoffer = function() {
-        var _aX = $k[--$j]; //#3382
-        $k[$j++] = _aX; //#3384
+        var _ad = $k[--$j]; //#3382
+        $k[$j++] = _ad; //#3384
         $k[$j++] = true; //#3384
-        $forall(_aX, function() { //#3384
-            var _aY = $k[--$j]; //#3383
-            if ((_aY < 48) || (_aY > 57)) { //#3383
+        $forall(_ad, function() { //#3384
+            var _ae = $k[--$j]; //#3383
+            if ((_ae < 48) || (_ae > 57)) { //#3383
                 $j--; //#3383
                 $k[$j++] = false; //#3383
                 return true; //#3383
@@ -6014,94 +6042,94 @@ function bwipp_gs1process() {
             $k[$j++] = false; //#3385
             return true; //#3385
         } //#3385
-        var _aa = $k[--$j]; //#3387
-        $k[$j++] = _aa; //#3389
-        if (_aa.length < 1) { //#3389
+        var _ag = $k[--$j]; //#3387
+        $k[$j++] = _ag; //#3389
+        if (_ag.length < 1) { //#3389
             $j -= 2; //#3388
             $k[$j++] = 'bwipp.GS1couponTooShortFormatCode#3388'; //#3388
             $k[$j++] = "Coupon too short: Missing Format Code"; //#3388
             $k[$j++] = false; //#3388
             return true; //#3388
         } //#3388
-        var _ab = $k[--$j]; //#3390
-        var _ac = $geti(_ab, 0, 1); //#3390
-        $k[$j++] = _ab; //#3392
-        if ($ne(_ac, "0") && $ne(_ac, "1")) { //#3392
+        var _ah = $k[--$j]; //#3390
+        var _ai = $geti(_ah, 0, 1); //#3390
+        $k[$j++] = _ah; //#3392
+        if ($ne(_ai, "0") && $ne(_ai, "1")) { //#3392
             $j -= 2; //#3391
             $k[$j++] = 'bwipp.GS1couponBadFormatCode#3391'; //#3391
             $k[$j++] = "Coupon format must be 0 or 1"; //#3391
             $k[$j++] = false; //#3391
             return true; //#3391
         } //#3391
-        var _ad = $k[--$j]; //#3393
-        var _ae = $geti(_ad, 1, _ad.length - 1); //#3393
-        $k[$j++] = _ae; //#3397
-        if (_ae.length < 1) { //#3397
+        var _aj = $k[--$j]; //#3393
+        var _ak = $geti(_aj, 1, _aj.length - 1); //#3393
+        $k[$j++] = _ak; //#3397
+        if (_ak.length < 1) { //#3397
             $j -= 2; //#3396
             $k[$j++] = 'bwipp.GS1couponTooShortFunderVLI#3396'; //#3396
             $k[$j++] = "Coupon too short: Missing Funder VLI"; //#3396
             $k[$j++] = false; //#3396
             return true; //#3396
         } //#3396
-        var _af = $k[--$j]; //#3398
-        var _ah = $cvi($geti(_af, 0, 1)); //#3398
-        $k[$j++] = _af; //#3400
-        $k[$j++] = _ah; //#3400
-        if (_ah > 6) { //#3400
+        var _al = $k[--$j]; //#3398
+        var _an = $cvi($geti(_al, 0, 1)); //#3398
+        $k[$j++] = _al; //#3400
+        $k[$j++] = _an; //#3400
+        if (_an > 6) { //#3400
             $j -= 3; //#3399
             $k[$j++] = 'bwipp.GS1couponBadFunderVLI#3399'; //#3399
             $k[$j++] = "Coupon Funder length indicator must be 0-6"; //#3399
             $k[$j++] = false; //#3399
             return true; //#3399
         } //#3399
-        var _ai = $k[--$j]; //#3401
-        var _aj = $k[--$j]; //#3402
-        $k[$j++] = _aj; //#3404
-        $k[$j++] = $f($f(_ai + 6) + 1); //#3404
-        if (($f($f(_ai + 6) + 1)) > _aj.length) { //#3404
+        var _ao = $k[--$j]; //#3401
+        var _ap = $k[--$j]; //#3402
+        $k[$j++] = _ap; //#3404
+        $k[$j++] = $f($f(_ao + 6) + 1); //#3404
+        if (($f($f(_ao + 6) + 1)) > _ap.length) { //#3404
             $j -= 3; //#3403
             $k[$j++] = 'bwipp.GS1couponTooShortFunder#3403'; //#3403
             $k[$j++] = "Coupon too short: Truncated Funder ID"; //#3403
             $k[$j++] = false; //#3403
             return true; //#3403
         } //#3403
-        var _ak = $k[--$j]; //#3405
-        var _al = $k[--$j]; //#3405
-        var _am = $geti(_al, _ak, $f(_al.length - _ak)); //#3405
-        $k[$j++] = _am; //#3409
-        if (_am.length < 6) { //#3409
+        var _aq = $k[--$j]; //#3405
+        var _ar = $k[--$j]; //#3405
+        var _as = $geti(_ar, _aq, $f(_ar.length - _aq)); //#3405
+        $k[$j++] = _as; //#3409
+        if (_as.length < 6) { //#3409
             $j -= 2; //#3408
             $k[$j++] = 'bwipp.GS1couponTooShortOfferCode#3408'; //#3408
             $k[$j++] = "Coupon too short: Truncated Offer Code"; //#3408
             $k[$j++] = false; //#3408
             return true; //#3408
         } //#3408
-        var _an = $k[--$j]; //#3410
-        var _ao = $geti(_an, 6, _an.length - 6); //#3410
-        $k[$j++] = _ao; //#3414
-        if (_ao.length < 1) { //#3414
+        var _at = $k[--$j]; //#3410
+        var _au = $geti(_at, 6, _at.length - 6); //#3410
+        $k[$j++] = _au; //#3414
+        if (_au.length < 1) { //#3414
             $j -= 2; //#3413
             $k[$j++] = 'bwipp.GS1couponTooShortSnVLI#3413'; //#3413
             $k[$j++] = "Coupon too short: Missing SN VLI"; //#3413
             $k[$j++] = false; //#3413
             return true; //#3413
         } //#3413
-        var _ap = $k[--$j]; //#3415
-        var _aq = $geti(_ap, 0, 1); //#3415
-        $k[$j++] = _ap; //#3419
-        $k[$j++] = ($cvi(_aq) + 6) + 1; //#3419
-        if ((($cvi(_aq) + 6) + 1) > _ap.length) { //#3419
+        var _av = $k[--$j]; //#3415
+        var _aw = $geti(_av, 0, 1); //#3415
+        $k[$j++] = _av; //#3419
+        $k[$j++] = ($cvi(_aw) + 6) + 1; //#3419
+        if ((($cvi(_aw) + 6) + 1) > _av.length) { //#3419
             $j -= 3; //#3418
             $k[$j++] = 'bwipp.GS1couponTooShortSn#3418'; //#3418
             $k[$j++] = "Coupon too short: Truncated SN"; //#3418
             $k[$j++] = false; //#3418
             return true; //#3418
         } //#3418
-        var _ar = $k[--$j]; //#3420
-        var _as = $k[--$j]; //#3420
-        var _at = $geti(_as, _ar, $f(_as.length - _ar)); //#3420
-        $k[$j++] = _at; //#3423
-        if (_at.length != 0) { //#3423
+        var _ax = $k[--$j]; //#3420
+        var _ay = $k[--$j]; //#3420
+        var _az = $geti(_ay, _ax, $f(_ay.length - _ax)); //#3420
+        $k[$j++] = _az; //#3423
+        if (_az.length != 0) { //#3423
             $j -= 2; //#3422
             $k[$j++] = 'bwipp.GS1couponTooLong#3422'; //#3422
             $k[$j++] = "Coupon too long"; //#3422
@@ -6111,9 +6139,9 @@ function bwipp_gs1process() {
         $j--; //#3424
     }; //#3424
     $_.lintlatitude = function() {
-        var _au = $k[--$j]; //#3428
-        $k[$j++] = _au; //#3430
-        if (_au.length != 10) { //#3430
+        var _b0 = $k[--$j]; //#3428
+        $k[$j++] = _b0; //#3430
+        if (_b0.length != 10) { //#3430
             $j--; //#3429
             $k[$j++] = 'bwipp.GS1badLatitudeLength#3429'; //#3429
             $k[$j++] = "Invalid length for a latitude"; //#3429
@@ -6129,9 +6157,9 @@ function bwipp_gs1process() {
         } //#3433
     }; //#3433
     $_.lintlongitude = function() {
-        var _aw = $k[--$j]; //#3437
-        $k[$j++] = _aw; //#3439
-        if (_aw.length != 10) { //#3439
+        var _b2 = $k[--$j]; //#3437
+        $k[$j++] = _b2; //#3439
+        if (_b2.length != 10) { //#3439
             $j--; //#3438
             $k[$j++] = 'bwipp.GS1badLongitudeLength#3438'; //#3438
             $k[$j++] = "Invalid length for a longitude"; //#3438
@@ -6149,11 +6177,11 @@ function bwipp_gs1process() {
     if (!bwipp_gs1process.__3452__) { //#3452
         $_ = Object.create($_); //#3452
         $k[$j++] = Infinity; //#3447
-        var _ay = $a(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99']); //#3450
-        for (var _az = 0, _b0 = _ay.length; _az < _b0; _az++) { //#3451
-            var _b1 = $get(_ay, _az); //#3451
-            $k[$j++] = _b1; //#3451
-            $k[$j++] = _b1; //#3451
+        var _b4 = $a(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99']); //#3450
+        for (var _b5 = 0, _b6 = _b4.length; _b5 < _b6; _b5++) { //#3451
+            var _b7 = $get(_b4, _b5); //#3451
+            $k[$j++] = _b7; //#3451
+            $k[$j++] = _b7; //#3451
         } //#3451
         $_.aidcmediatype = $d(); //#3451
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_gs1process.$ctx[id] = $_[id]); //#3451
@@ -6161,8 +6189,8 @@ function bwipp_gs1process() {
         $_ = Object.getPrototypeOf($_); //#3451
     } //#3451
     $_.lintmediatype = function() {
-        var _b6 = $get($_.aidcmediatype, $k[--$j]) !== undefined; //#3455
-        if (!_b6) { //#3455
+        var _bC = $get($_.aidcmediatype, $k[--$j]) !== undefined; //#3455
+        if (!_bC) { //#3455
             $j--; //#3455
             $k[$j++] = 'bwipp.GS1UnknownMediaType#3455'; //#3455
             $k[$j++] = "Unknown AIDC media type"; //#3455
@@ -6172,27 +6200,27 @@ function bwipp_gs1process() {
     }; //#3455
     if (!$_.dontlint) { //#3596
         $k[$j++] = true; //#3499
-        for (var _bA = 0, _b9 = $_.vals.length - 1; _bA <= _b9; _bA += 1) { //#3499
-            $_.ai = $get($_.ais, _bA); //#3463
-            $_.val = $get($_.vals, _bA); //#3464
-            var _bH = $get($_.gs1syntax, $_.ai) !== undefined; //#3465
-            if (_bH) { //#3497
-                var _bL = $get($get($_.gs1syntax, $_.ai), 'parts'); //#3466
-                $k[$j++] = _bL; //#3468
+        for (var _bG = 0, _bF = $_.vals.length - 1; _bG <= _bF; _bG += 1) { //#3499
+            $_.ai = $get($_.ais, _bG); //#3463
+            $_.val = $get($_.vals, _bG); //#3464
+            var _bN = $get($_.gs1syntax, $_.ai) !== undefined; //#3465
+            if (_bN) { //#3497
+                var _bR = $get($get($_.gs1syntax, $_.ai), 'parts'); //#3466
+                $k[$j++] = _bR; //#3468
                 $k[$j++] = 0; //#3468
-                $forall(_bL, function() { //#3468
-                    var _bM = $k[--$j]; //#3468
-                    $k[$j++] = _bM; //#3468
-                    if ($get(_bM, 'opt')) { //#3468
+                $forall(_bR, function() { //#3468
+                    var _bS = $k[--$j]; //#3468
+                    $k[$j++] = _bS; //#3468
+                    if ($get(_bS, 'opt')) { //#3468
                         $j--; //#3468
                         $k[$j++] = 0; //#3468
                     } else { //#3468
-                        var _bP = $get($k[--$j], 'min'); //#3468
-                        $k[$j++] = _bP; //#3468
+                        var _bV = $get($k[--$j], 'min'); //#3468
+                        $k[$j++] = _bV; //#3468
                     } //#3468
-                    var _bQ = $k[--$j]; //#3468
-                    var _bR = $k[--$j]; //#3468
-                    $k[$j++] = $f(_bR + _bQ); //#3468
+                    var _bW = $k[--$j]; //#3468
+                    var _bX = $k[--$j]; //#3468
+                    $k[$j++] = $f(_bX + _bW); //#3468
                 }); //#3468
                 if ($k[--$j] > $_.val.length) { //#3470
                     $j--; //#3469
@@ -6201,13 +6229,13 @@ function bwipp_gs1process() {
                     $k[$j++] = false; //#3469
                     break; //#3469
                 } //#3469
-                var _bU = $k[--$j]; //#3471
-                $k[$j++] = _bU; //#3471
+                var _ba = $k[--$j]; //#3471
+                $k[$j++] = _ba; //#3471
                 $k[$j++] = 0; //#3471
-                $forall(_bU, function() { //#3471
-                    var _bW = $get($k[--$j], 'max'); //#3471
-                    var _bX = $k[--$j]; //#3471
-                    $k[$j++] = $f(_bX + _bW); //#3471
+                $forall(_ba, function() { //#3471
+                    var _bc = $get($k[--$j], 'max'); //#3471
+                    var _bd = $k[--$j]; //#3471
+                    $k[$j++] = $f(_bd + _bc); //#3471
                 }); //#3471
                 if ($k[--$j] < $_.val.length) { //#3473
                     $j--; //#3472
@@ -6218,17 +6246,17 @@ function bwipp_gs1process() {
                 } //#3472
                 $forall($k[--$j], function() { //#3491
                     $_.props = $k[--$j]; //#3475
-                    var _bd = $get($_.props, 'max'); //#3476
-                    var _be = $_.val; //#3476
-                    var _bf = _be.length; //#3476
-                    if (_bd > _be.length) { //#3476
-                        var _ = _bf; //#3476
-                        _bf = _bd; //#3476
-                        _bd = _; //#3476
+                    var _bj = $get($_.props, 'max'); //#3476
+                    var _bk = $_.val; //#3476
+                    var _bl = _bk.length; //#3476
+                    if (_bj > _bk.length) { //#3476
+                        var _ = _bl; //#3476
+                        _bl = _bj; //#3476
+                        _bj = _; //#3476
                     } //#3476
-                    $_.eval = $geti($_.val, 0, _bd); //#3477
-                    var _bk = $_.eval.length; //#3478
-                    $_.val = $geti($_.val, _bk, $_.val.length - _bk); //#3478
+                    $_.eval = $geti($_.val, 0, _bj); //#3477
+                    var _bq = $_.eval.length; //#3478
+                    $_.val = $geti($_.val, _bq, $_.val.length - _bq); //#3478
                     if ($_.eval.length == 0) { //#3489
                         if ($nt($get($_.props, 'opt'))) { //#3482
                             $j--; //#3481
@@ -6245,28 +6273,28 @@ function bwipp_gs1process() {
                             $k[$j++] = false; //#3485
                             return true; //#3485
                         } //#3485
-                        var _bt = new Map([
+                        var _bz = new Map([
                             ["N", 'lintnumeric'],
                             ["X", 'lintcset82'],
                             ["Y", 'lintcset39'],
                             ["Z", 'lintcset64']
                         ]); //#3487
                         $k[$j++] = $_.eval; //#3488
-                        if ($_[$get(_bt, $get($_.props, 'cset'))]() === true) {
+                        if ($_[$get(_bz, $get($_.props, 'cset'))]() === true) {
                             return true;
                         } //#3488
                         $forall($get($_.props, 'linters'), function() { //#3489
-                            var _c3 = $_[$k[--$j]]; //#3489
+                            var _c9 = $_[$k[--$j]]; //#3489
                             $k[$j++] = $_.eval; //#3489
-                            if (_c3() === true) {
+                            if (_c9() === true) {
                                 return true;
                             } //#3489
                         }); //#3489
                     } //#3489
                 }); //#3489
-                var _c4 = $k[--$j]; //#3492
-                $k[$j++] = _c4; //#3492
-                if ($nt(_c4)) { //#3492
+                var _cA = $k[--$j]; //#3492
+                $k[$j++] = _cA; //#3492
+                if ($nt(_cA)) { //#3492
                     break; //#3492
                 } //#3492
                 if ($_.val.length != 0) { //#3495
@@ -6285,34 +6313,34 @@ function bwipp_gs1process() {
             } //#3497
         } //#3497
         if ($nt($k[--$j])) { //#3507
-            var _c7 = $k[--$j]; //#3501
-            var _c9 = $s((_c7.length + $_.ai.length) + 5); //#3501
-            $puti(_c9, 0, "AI "); //#3502
-            $puti(_c9, 3, $_.ai); //#3503
-            $puti(_c9, 3 + $_.ai.length, ": "); //#3504
-            $puti(_c9, 5 + $_.ai.length, _c7); //#3505
-            $k[$j++] = _c9; //#3506
+            var _cD = $k[--$j]; //#3501
+            var _cF = $s((_cD.length + $_.ai.length) + 5); //#3501
+            $puti(_cF, 0, "AI "); //#3502
+            $puti(_cF, 3, $_.ai); //#3503
+            $puti(_cF, 3 + $_.ai.length, ": "); //#3504
+            $puti(_cF, 5 + $_.ai.length, _cD); //#3505
+            $k[$j++] = _cF; //#3506
             bwipp_raiseerror(); //#3506
         } //#3506
         $_.aiexists = function() {
             $_.this = $k[--$j]; //#3511
             $_.patt = $k[--$j]; //#3512
-            for (var _cF = 0, _cG = 1; _cF < _cG; _cF++) { //#3533
-                var _cJ = $get($_.aivals, $_.patt) !== undefined; //#3514
-                if (_cJ) { //#3514
+            for (var _cL = 0, _cM = 1; _cL < _cM; _cL++) { //#3533
+                var _cP = $get($_.aivals, $_.patt) !== undefined; //#3514
+                if (_cP) { //#3514
                     $k[$j++] = true; //#3514
                     break; //#3514
                 } //#3514
                 if ($_.patt.length == 4) { //#3531
                     if ($eq($geti($_.patt, 3, 1), "n")) { //#3529
-                        var _cP = $eq($geti($_.patt, 2, 1), "n") ? 2 : 3; //#3517
-                        $_.pfxlen = _cP; //#3517
-                        var _cQ = $_.ais; //#3519
+                        var _cV = $eq($geti($_.patt, 2, 1), "n") ? 2 : 3; //#3517
+                        $_.pfxlen = _cV; //#3517
+                        var _cW = $_.ais; //#3519
                         $k[$j++] = false; //#3527
-                        for (var _cR = 0, _cS = _cQ.length; _cR < _cS; _cR++) { //#3527
-                            var _cT = $get(_cQ, _cR); //#3527
-                            $k[$j++] = _cT; //#3526
-                            if ($ne(_cT, $_.this) && (_cT.length == 4)) { //#3525
+                        for (var _cX = 0, _cY = _cW.length; _cX < _cY; _cX++) { //#3527
+                            var _cZ = $get(_cW, _cX); //#3527
+                            $k[$j++] = _cZ; //#3526
+                            if ($ne(_cZ, $_.this) && (_cZ.length == 4)) { //#3525
                                 if ($eq($geti($k[--$j], 0, $_.pfxlen), $geti($_.patt, 0, $_.pfxlen))) { //#3523
                                     $j--; //#3522
                                     $k[$j++] = true; //#3522
@@ -6330,48 +6358,48 @@ function bwipp_gs1process() {
                 break; //#3532
             } //#3532
         }; //#3532
-        var _cb = $_.vals; //#3537
+        var _ch = $_.vals; //#3537
         $_.aivals = new Map; //#3537
-        for (var _ce = 0, _cd = $_.vals.length - 1; _ce <= _cd; _ce += 1) { //#3552
-            $_.ai = $get($_.ais, _ce); //#3539
-            $_.val = $get($_.vals, _ce); //#3540
-            var _cl = $get($_.aivals, $_.ai) !== undefined; //#3541
-            if (_cl) { //#3550
+        for (var _ck = 0, _cj = $_.vals.length - 1; _ck <= _cj; _ck += 1) { //#3552
+            $_.ai = $get($_.ais, _ck); //#3539
+            $_.val = $get($_.vals, _ck); //#3540
+            var _cr = $get($_.aivals, $_.ai) !== undefined; //#3541
+            if (_cr) { //#3550
                 if ($ne($get($_.aivals, $_.ai), $_.val)) { //#3548
-                    var _cr = $s($_.ai.length + 40); //#3543
-                    $puti(_cr, 0, "Repeated AIs ("); //#3544
-                    $puti(_cr, 14, $_.ai); //#3545
-                    $puti(_cr, 14 + $_.ai.length, ") must have the same value"); //#3546
+                    var _cx = $s($_.ai.length + 40); //#3543
+                    $puti(_cx, 0, "Repeated AIs \("); //#3544
+                    $puti(_cx, 14, $_.ai); //#3545
+                    $puti(_cx, 14 + $_.ai.length, "\) must have the same value"); //#3546
                     $k[$j++] = 'bwipp.GS1repeatedDifferingAIs#3547'; //#3547
-                    $k[$j++] = _cr; //#3547
+                    $k[$j++] = _cx; //#3547
                     bwipp_raiseerror(); //#3547
                 } //#3547
             } else { //#3550
                 $put($_.aivals, $_.ai, $_.val); //#3550
             } //#3550
         } //#3550
-        for (var _cz = 0, _cy = $_.vals.length - 1; _cz <= _cy; _cz += 1) { //#3594
-            $_.ai = $get($_.ais, _cz); //#3556
-            var _d4 = $get($_.gs1syntax, $_.ai); //#3557
-            var _d5 = $get(_d4, 'ex') !== undefined; //#3557
-            $k[$j++] = _d4; //#3572
+        for (var _d5 = 0, _d4 = $_.vals.length - 1; _d5 <= _d4; _d5 += 1) { //#3594
+            $_.ai = $get($_.ais, _d5); //#3556
+            var _dA = $get($_.gs1syntax, $_.ai); //#3557
+            var _dB = $get(_dA, 'ex') !== undefined; //#3557
+            $k[$j++] = _dA; //#3572
             $k[$j++] = 'ex'; //#3572
-            if (_d5) { //#3571
-                var _d6 = $k[--$j]; //#3558
-                $forall($get($k[--$j], _d6), function() { //#3569
+            if (_dB) { //#3571
+                var _dC = $k[--$j]; //#3558
+                $forall($get($k[--$j], _dC), function() { //#3569
                     $_.patt = $k[--$j]; //#3559
                     $k[$j++] = $_.patt; //#3560
                     $k[$j++] = $_.ai; //#3560
                     $_.aiexists(); //#3560
                     if ($k[--$j]) { //#3568
-                        var _dF = $s(($_.ai.length + $_.patt.length) + 36); //#3561
-                        $puti(_dF, 0, "AIs ("); //#3562
-                        $puti(_dF, 5, $_.ai); //#3563
-                        $puti(_dF, 5 + $_.ai.length, ") and ("); //#3564
-                        $puti(_dF, 12 + $_.ai.length, $_.patt); //#3565
-                        $puti(_dF, (12 + $_.ai.length) + $_.patt.length, ") are mutually exclusive"); //#3566
+                        var _dL = $s(($_.ai.length + $_.patt.length) + 36); //#3561
+                        $puti(_dL, 0, "AIs \("); //#3562
+                        $puti(_dL, 5, $_.ai); //#3563
+                        $puti(_dL, 5 + $_.ai.length, "\) and \("); //#3564
+                        $puti(_dL, 12 + $_.ai.length, $_.patt); //#3565
+                        $puti(_dL, (12 + $_.ai.length) + $_.patt.length, "\) are mutually exclusive"); //#3566
                         $k[$j++] = 'bwipp.GS1exclusiveAIs#3567'; //#3567
-                        $k[$j++] = _dF; //#3567
+                        $k[$j++] = _dL; //#3567
                         bwipp_raiseerror(); //#3567
                     } //#3567
                 }); //#3567
@@ -6379,19 +6407,19 @@ function bwipp_gs1process() {
                 $j -= 2; //#3571
             } //#3571
             if ($_.lintreqs) { //#3593
-                var _dP = $get($_.gs1syntax, $_.ai); //#3574
-                var _dQ = $get(_dP, 'req') !== undefined; //#3574
-                $k[$j++] = _dP; //#3592
+                var _dV = $get($_.gs1syntax, $_.ai); //#3574
+                var _dW = $get(_dV, 'req') !== undefined; //#3574
+                $k[$j++] = _dV; //#3592
                 $k[$j++] = 'req'; //#3592
-                if (_dQ) { //#3591
-                    var _dR = $k[--$j]; //#3575
-                    $forall($get($k[--$j], _dR), function() { //#3589
-                        var _dU = $k[--$j]; //#3576
+                if (_dW) { //#3591
+                    var _dX = $k[--$j]; //#3575
+                    $forall($get($k[--$j], _dX), function() { //#3589
+                        var _da = $k[--$j]; //#3576
                         $k[$j++] = false; //#3581
-                        $forall(_dU, function() { //#3581
-                            var _dV = $k[--$j]; //#3577
+                        $forall(_da, function() { //#3581
+                            var _db = $k[--$j]; //#3577
                             $k[$j++] = true; //#3579
-                            $forall(_dV, function() { //#3579
+                            $forall(_db, function() { //#3579
                                 $k[$j++] = $_.ai; //#3578
                                 $_.aiexists(); //#3578
                                 if ($nt($k[--$j])) { //#3578
@@ -6406,12 +6434,12 @@ function bwipp_gs1process() {
                             } //#3580
                         }); //#3580
                         if ($nt($k[--$j])) { //#3588
-                            var _db = $s($_.ai.length + 47); //#3583
-                            $puti(_db, 0, "One of more requisite AIs for AI ("); //#3584
-                            $puti(_db, 34, $_.ai); //#3585
-                            $puti(_db, 34 + $_.ai.length, ") are missing"); //#3586
+                            var _dh = $s($_.ai.length + 47); //#3583
+                            $puti(_dh, 0, "One of more requisite AIs for AI \("); //#3584
+                            $puti(_dh, 34, $_.ai); //#3585
+                            $puti(_dh, 34 + $_.ai.length, "\) are missing"); //#3586
                             $k[$j++] = 'bwipp.GS1missingAIs#3587'; //#3587
-                            $k[$j++] = _db; //#3587
+                            $k[$j++] = _dh; //#3587
                             bwipp_raiseerror(); //#3587
                         } //#3587
                     }); //#3587
@@ -6497,12 +6525,19 @@ function bwipp_renmatrix() {
         var _N = $k[--$j]; //#3943
         $k[$j++] = _N; //#3947
         if ((_N % 4) == 0) { //#3946
-            var _O = $k[--$j]; //#3944
+            $r(3, 1); //#3944
+            var _O = $_.pixx; //#3944
             var _P = $k[--$j]; //#3944
             var _Q = $k[--$j]; //#3944
-            var _R = $_.pixx; //#3944
-            var _S = $_.cache; //#3944
-            $put(_S, $f(_Q + (_P * _R)), $or($get(_S, $f(_Q + (_P * _R))), _O)); //#3944
+            var _R = $_.cache; //#3944
+            $k[$j++] = _R; //#3944
+            $k[$j++] = $f(_Q + (_P * _O)); //#3944
+            $k[$j++] = $get(_R, $f(_Q + (_P * _O))); //#3944
+            $r(4, -1); //#3944
+            var _T = $k[--$j]; //#3944
+            var _U = $k[--$j]; //#3944
+            var _V = $k[--$j]; //#3944
+            $put($k[--$j], _V, $or(_U, _T)); //#3944
         } else { //#3946
             $j -= 3; //#3946
         } //#3946
@@ -6511,29 +6546,20 @@ function bwipp_renmatrix() {
         $k[$j++] = $s(4); //#3955
         $k[$j++] = 0; //#3955
         $k[$j++] = Infinity; //#3951
-        var _V = $k[--$j]; //#3952
-        var _W = $k[--$j]; //#3952
-        var _X = $k[--$j]; //#3952
-        var _Y = $k[--$j]; //#3952
-        var _b = $f($k[--$j] + (_Y * $_.pixx)); //#3953
-        $k[$j++] = _X; //#3954
-        $k[$j++] = _W; //#3954
-        $k[$j++] = _V; //#3954
+        $r(5, -2); //#3952
+        var _Z = $k[--$j]; //#3953
+        var _b = $f($k[--$j] + (_Z * $_.pixx)); //#3953
         $k[$j++] = _b; //#3954
         $aload($geti($_.pixs, _b, 2)); //#3954
-        var _e = $k[--$j]; //#3954
-        var _f = $k[--$j]; //#3954
-        var _j = $geti($_.pixs, $f($k[--$j] + $_.pixx), 2); //#3955
-        $k[$j++] = _f; //#3955
-        $k[$j++] = _e; //#3955
-        $aload(_j); //#3955
-        var _k = $a(); //#3955
-        for (var _l = 0, _m = _k.length; _l < _m; _l++) { //#3956
-            var _o = $k[--$j]; //#3956
-            var _p = $k[--$j]; //#3956
-            $put(_p, _o, $f($get(_k, _l) + 48)); //#3956
-            $k[$j++] = _p; //#3956
-            $k[$j++] = $f(_o + 1); //#3956
+        $r(3, -1); //#3954
+        $aload($geti($_.pixs, $f($k[--$j] + $_.pixx), 2)); //#3955
+        var _i = $a(); //#3955
+        for (var _j = 0, _k = _i.length; _j < _k; _j++) { //#3956
+            var _m = $k[--$j]; //#3956
+            var _n = $k[--$j]; //#3956
+            $put(_n, _m, $f($get(_i, _j) + 48)); //#3956
+            $k[$j++] = _n; //#3956
+            $k[$j++] = $f(_m + 1); //#3956
         } //#3956
         $j--; //#3956
     }; //#3956
@@ -6588,8 +6614,8 @@ function bwipp_renmatrix() {
         $k[$j++] = $f($_.x + 1); //#3968
         $k[$j++] = $f($_.y + 1); //#3968
         $_.xyget(); //#3968
-        var _1R = ($k[--$j] == 1) ? 8 : 4; //#3968
-        $_[$k[--$j]] = _1R; //#3968
+        var _1P = ($k[--$j] == 1) ? 8 : 4; //#3968
+        $_[$k[--$j]] = _1P; //#3968
         $_.sx = $_.x; //#3969
         $_.sy = $_.y; //#3969
         $_.sdir = $_.dir; //#3969
@@ -6598,38 +6624,38 @@ function bwipp_renmatrix() {
             $k[$j++] = $_.x; //#3974
             $k[$j++] = $_.y; //#3974
             $_.abcd(); //#3974
-            for (var _1Y = 0, _1Z = 1; _1Y < _1Z; _1Y++) { //#3985
-                var _1a = $k[--$j]; //#3976
-                $k[$j++] = _1a; //#3976
-                if ($eq(_1a, "0001") || ($eq(_1a, "0011") || $eq(_1a, "1011"))) { //#3976
+            for (var _1W = 0, _1X = 1; _1W < _1X; _1W++) { //#3985
+                var _1Y = $k[--$j]; //#3976
+                $k[$j++] = _1Y; //#3976
+                if ($eq(_1Y, "0001") || ($eq(_1Y, "0011") || $eq(_1Y, "1011"))) { //#3976
                     $j--; //#3976
                     $_.right(); //#3976
                     break; //#3976
                 } //#3976
-                var _1b = $k[--$j]; //#3977
-                $k[$j++] = _1b; //#3977
-                if ($eq(_1b, "0010") || ($eq(_1b, "1010") || $eq(_1b, "1110"))) { //#3977
+                var _1Z = $k[--$j]; //#3977
+                $k[$j++] = _1Z; //#3977
+                if ($eq(_1Z, "0010") || ($eq(_1Z, "1010") || $eq(_1Z, "1110"))) { //#3977
                     $j--; //#3977
                     $_.down(); //#3977
                     break; //#3977
                 } //#3977
-                var _1c = $k[--$j]; //#3978
-                $k[$j++] = _1c; //#3978
-                if ($eq(_1c, "1000") || ($eq(_1c, "1100") || $eq(_1c, "1101"))) { //#3978
+                var _1a = $k[--$j]; //#3978
+                $k[$j++] = _1a; //#3978
+                if ($eq(_1a, "1000") || ($eq(_1a, "1100") || $eq(_1a, "1101"))) { //#3978
                     $j--; //#3978
                     $_.left(); //#3978
                     break; //#3978
                 } //#3978
-                var _1d = $k[--$j]; //#3979
-                $k[$j++] = _1d; //#3979
-                if ($eq(_1d, "0100") || ($eq(_1d, "0101") || $eq(_1d, "0111"))) { //#3979
+                var _1b = $k[--$j]; //#3979
+                $k[$j++] = _1b; //#3979
+                if ($eq(_1b, "0100") || ($eq(_1b, "0101") || $eq(_1b, "0111"))) { //#3979
                     $j--; //#3979
                     $_.up(); //#3979
                     break; //#3979
                 } //#3979
-                var _1e = $k[--$j]; //#3980
-                $k[$j++] = _1e; //#3984
-                if ($eq(_1e, "1001")) { //#3983
+                var _1c = $k[--$j]; //#3980
+                $k[$j++] = _1c; //#3984
+                if ($eq(_1c, "1001")) { //#3983
                     if ($_.dir == 2) { //#3981
                         $j--; //#3981
                         $_.left(); //#3981
@@ -6656,46 +6682,46 @@ function bwipp_renmatrix() {
             } //#3986
         } //#3986
         $astore($a($counttomark())); //#3988
-        var _1p = $k[--$j]; //#3988
-        var _1q = $k[--$j]; //#3988
-        $k[$j++] = _1p; //#3988
-        $k[$j++] = _1q; //#3988
+        var _1n = $k[--$j]; //#3988
+        var _1o = $k[--$j]; //#3988
+        $k[$j++] = _1n; //#3988
+        $k[$j++] = _1o; //#3988
         $j--; //#3988
     }; //#3988
     $_.drawlayer = function() {
         $_.pixsorig = $_.pixs; //#4033
         $_.pixs = $k[--$j]; //#4034
         $k[$j++] = Infinity; //#4037
-        for (var _1u = 0, _1v = $_.pixx + 2; _1u < _1v; _1u++) { //#4038
+        for (var _1s = 0, _1t = $_.pixx + 2; _1s < _1t; _1s++) { //#4038
             $k[$j++] = 0; //#4038
         } //#4038
-        for (var _1z = 0, _20 = $_.pixx, _1y = $_.pixs.length - 1; _20 < 0 ? _1z >= _1y : _1z <= _1y; _1z += _20) { //#4043
+        for (var _1x = 0, _1y = $_.pixx, _1w = $_.pixs.length - 1; _1y < 0 ? _1x >= _1w : _1x <= _1w; _1x += _1y) { //#4043
             $k[$j++] = 0; //#4041
-            $aload($geti($_.pixs, _1z, $_.pixx)); //#4041
+            $aload($geti($_.pixs, _1x, $_.pixx)); //#4041
             $k[$j++] = 0; //#4042
         } //#4042
-        for (var _25 = 0, _26 = $_.pixx + 2; _25 < _26; _25++) { //#4044
+        for (var _23 = 0, _24 = $_.pixx + 2; _23 < _24; _23++) { //#4044
             $k[$j++] = 0; //#4044
         } //#4044
         $_.pixs = $a(); //#4044
         $_.pixx = $_.pixx + 2; //#4046
         $_.pixy = $_.pixy + 2; //#4047
         $k[$j++] = Infinity; //#4050
-        for (var _2B = 0, _2C = $_.pixs.length; _2B < _2C; _2B++) { //#4050
+        for (var _29 = 0, _2A = $_.pixs.length; _29 < _2A; _29++) { //#4050
             $k[$j++] = 0; //#4050
         } //#4050
         $_.cache = $a(); //#4050
         $k[$j++] = Infinity; //#4053
-        for (var _2G = 0, _2F = $_.pixy - 2; _2G <= _2F; _2G += 1) { //#4070
-            $_.j = _2G; //#4055
-            for (var _2J = 0, _2I = $_.pixx - 2; _2J <= _2I; _2J += 1) { //#4069
-                $_.i = _2J; //#4057
+        for (var _2E = 0, _2D = $_.pixy - 2; _2E <= _2D; _2E += 1) { //#4070
+            $_.j = _2E; //#4055
+            for (var _2H = 0, _2G = $_.pixx - 2; _2H <= _2G; _2H += 1) { //#4069
+                $_.i = _2H; //#4057
                 $k[$j++] = 'k'; //#4058
                 $k[$j++] = $_.i; //#4058
                 $k[$j++] = $_.j; //#4058
                 $_.abcd(); //#4058
-                var _2M = $k[--$j]; //#4058
-                $_[$k[--$j]] = _2M; //#4058
+                var _2K = $k[--$j]; //#4058
+                $_[$k[--$j]] = _2K; //#4058
                 if ($eq($_.k, "0001") || $eq($_.k, "1001")) { //#4063
                     $k[$j++] = 8; //#4060
                     $k[$j++] = $_.i; //#4060
@@ -6724,71 +6750,70 @@ function bwipp_renmatrix() {
         $_.pixx = $_.pixx - 2; //#4074
         $_.pixy = $_.pixy - 2; //#4075
         $$.newpath(); //#4078
-        var _2e = $_.paths; //#4079
-        for (var _2f = 0, _2g = _2e.length; _2f < _2g; _2f++) { //#4097
-            $_.p = $get(_2e, _2f); //#4080
+        var _2c = $_.paths; //#4079
+        for (var _2d = 0, _2e = _2c.length; _2d < _2e; _2d++) { //#4097
+            $_.p = $get(_2c, _2d); //#4080
             $_.len = $_.p.length; //#4081
             $aload($get($_.p, $_.len - 1)); //#4082
             $aload($get($_.p, 0)); //#4083
-            for (var _2q = 0, _2p = $_.len - 1; _2q <= _2p; _2q += 1) { //#4094
-                $_.i = _2q; //#4085
+            for (var _2o = 0, _2n = $_.len - 1; _2o <= _2n; _2o += 1) { //#4094
+                $_.i = _2o; //#4085
                 $aload($get($_.p, ($_.i + 1) % $_.len)); //#4086
-                var _2v = $k[--$j]; //#4086
-                var _2w = $k[--$j]; //#4086
-                var _2x = $k[--$j]; //#4086
-                var _2y = $k[--$j]; //#4086
-                var _2z = $k[--$j]; //#4086
-                var _30 = $k[--$j]; //#4086
+                $r(6, -2); //#4086
+                var _2t = $k[--$j]; //#4087
+                var _2u = $k[--$j]; //#4087
+                var _2v = $k[--$j]; //#4087
+                var _2w = $k[--$j]; //#4087
+                var _2x = $k[--$j]; //#4087
+                var _2y = $k[--$j]; //#4087
                 $k[$j++] = _2y; //#4088
                 $k[$j++] = _2x; //#4088
                 $k[$j++] = _2w; //#4088
                 $k[$j++] = _2v; //#4088
-                $k[$j++] = _30; //#4088
+                $k[$j++] = _2u; //#4088
                 $k[$j++] = _2y; //#4088
                 $k[$j++] = $_.inkspreadh; //#4088
-                if ($lt(_2v, _2z)) { //#4088
+                if ($lt(_2v, _2t)) { //#4088
+                    var _30 = $k[--$j]; //#4088
+                    var _31 = $k[--$j]; //#4088
+                    $k[$j++] = $f(_31 + _30); //#4088
+                } else { //#4088
                     var _32 = $k[--$j]; //#4088
                     var _33 = $k[--$j]; //#4088
-                    $k[$j++] = $f(_33 + _32); //#4088
-                } else { //#4088
-                    var _34 = $k[--$j]; //#4088
-                    var _35 = $k[--$j]; //#4088
-                    $k[$j++] = $f(_35 - _34); //#4088
+                    $k[$j++] = $f(_33 - _32); //#4088
                 } //#4088
-                var _36 = $k[--$j]; //#4089
-                var _37 = $k[--$j]; //#4089
-                var _38 = $k[--$j]; //#4089
-                var _39 = $k[--$j]; //#4089
-                var _3A = $k[--$j]; //#4090
-                $k[$j++] = _3A; //#4091
-                $k[$j++] = _36; //#4091
-                $k[$j++] = _39; //#4091
+                $r(4, 1); //#4089
+                var _34 = $k[--$j]; //#4090
+                var _35 = $k[--$j]; //#4090
+                var _36 = $k[--$j]; //#4090
+                var _37 = $k[--$j]; //#4090
+                var _38 = $k[--$j]; //#4090
                 $k[$j++] = _38; //#4091
-                $k[$j++] = _3A; //#4091
+                $k[$j++] = _37; //#4091
+                $k[$j++] = _36; //#4091
+                $k[$j++] = _35; //#4091
+                $k[$j++] = _38; //#4091
                 $k[$j++] = $_.inkspreadv; //#4091
-                if ($gt(_39, _37)) { //#4091
+                if ($gt(_36, _34)) { //#4091
+                    var _3A = $k[--$j]; //#4091
+                    var _3B = $k[--$j]; //#4091
+                    $k[$j++] = $f(_3B + _3A); //#4091
+                } else { //#4091
                     var _3C = $k[--$j]; //#4091
                     var _3D = $k[--$j]; //#4091
-                    $k[$j++] = $f(_3D + _3C); //#4091
-                } else { //#4091
-                    var _3E = $k[--$j]; //#4091
-                    var _3F = $k[--$j]; //#4091
-                    $k[$j++] = $f(_3F - _3E); //#4091
+                    $k[$j++] = $f(_3D - _3C); //#4091
                 } //#4091
-                var _3G = $k[--$j]; //#4092
-                var _3H = $k[--$j]; //#4092
-                var _3I = $k[--$j]; //#4092
-                var _3J = $k[--$j]; //#4092
-                $k[$j++] = _3I; //#4093
-                $k[$j++] = _3H; //#4093
-                $k[$j++] = _3J; //#4093
-                $k[$j++] = $f($_.pixy - _3G); //#4093
+                $r(4, -1); //#4092
+                var _3E = $k[--$j]; //#4092
+                var _3F = $k[--$j]; //#4092
+                $k[$j++] = _3E; //#4093
+                $k[$j++] = $f($_.pixy - _3F); //#4093
                 if ($_.i == 0) { //#4093
-                    var _3M = $k[--$j]; //#4093
-                    $$.moveto($k[--$j], _3M); //#4093
+                    var _3I = $k[--$j]; //#4093
+                    $$.moveto($k[--$j], _3I); //#4093
                 } else { //#4093
-                    var _3O = $k[--$j]; //#4093
-                    $$.lineto($k[--$j], _3O); //#4093
+                    var _3K = $k[--$j]; //#4093
+                    $$.lineto($k[--$j], _3K); //#4093
                 } //#4093
             } //#4093
             $$.closepath(); //#4095
@@ -6801,9 +6826,9 @@ function bwipp_renmatrix() {
         $_.pixsorig = $_.pixs; //#4106
         $_.pixs = $k[--$j]; //#4107
         $$.newpath(); //#4109
-        for (var _3V = 0, _3U = $_.pixs.length - 1; _3V <= _3U; _3V += 1) { //#4117
-            $_.x = _3V % $_.pixx; //#4111
-            $_.y = ~~(_3V / $_.pixx); //#4112
+        for (var _3R = 0, _3Q = $_.pixs.length - 1; _3R <= _3Q; _3R += 1) { //#4117
+            $_.x = _3R % $_.pixx; //#4111
+            $_.y = ~~(_3R / $_.pixx); //#4112
             $k[$j++] = $_.x; //#4113
             $k[$j++] = $_.y; //#4113
             $_.xyget(); //#4113
@@ -6816,8 +6841,8 @@ function bwipp_renmatrix() {
         $_.pixs = $_.pixsorig; //#4120
     }; //#4120
     $$.save(); //#4124
-    var _3j = $$.currpos(); //#4126
-    $$.translate(_3j.x, _3j.y); //#4126
+    var _3f = $$.currpos(); //#4126
+    $$.translate(_3f.x, _3f.y); //#4126
     $_.inkspread = $_.inkspread / 2; //#4128
     $_.inkspreadh = $_.inkspreadh / 2; //#4129
     $_.inkspreadv = $_.inkspreadv / 2; //#4130
@@ -6830,13 +6855,13 @@ function bwipp_renmatrix() {
         $$.save(); //#4141
         $$.newpath(); //#4142
         $aload($_.bl); //#4142
-        var _4H = $k[--$j]; //#4142
-        $$.moveto($k[--$j], _4H); //#4142
-        var _4M = $a([$_.br, $_.tr, $_.tl]); //#4142
-        for (var _4N = 0, _4O = _4M.length; _4N < _4O; _4N++) { //#4142
-            $aload($get(_4M, _4N)); //#4142
-            var _4Q = $k[--$j]; //#4142
-            $$.lineto($k[--$j], _4Q); //#4142
+        var _4D = $k[--$j]; //#4142
+        $$.moveto($k[--$j], _4D); //#4142
+        var _4I = $a([$_.br, $_.tr, $_.tl]); //#4142
+        for (var _4J = 0, _4K = _4I.length; _4J < _4K; _4J++) { //#4142
+            $aload($get(_4I, _4J)); //#4142
+            var _4M = $k[--$j]; //#4142
+            $$.lineto($k[--$j], _4M); //#4142
         } //#4142
         $$.closepath(); //#4142
         $$.setcolor($_.backgroundcolor); //#4143
@@ -6847,13 +6872,13 @@ function bwipp_renmatrix() {
         $$.save(); //#4147
         $$.newpath(); //#4148
         $aload($_.bl); //#4148
-        var _4V = $k[--$j]; //#4148
-        $$.moveto($k[--$j], _4V); //#4148
-        var _4a = $a([$_.br, $_.tr, $_.tl]); //#4148
-        for (var _4b = 0, _4c = _4a.length; _4b < _4c; _4b++) { //#4148
-            $aload($get(_4a, _4b)); //#4148
-            var _4e = $k[--$j]; //#4148
-            $$.lineto($k[--$j], _4e); //#4148
+        var _4R = $k[--$j]; //#4148
+        $$.moveto($k[--$j], _4R); //#4148
+        var _4W = $a([$_.br, $_.tr, $_.tl]); //#4148
+        for (var _4X = 0, _4Y = _4W.length; _4X < _4Y; _4X++) { //#4148
+            $aload($get(_4W, _4X)); //#4148
+            var _4a = $k[--$j]; //#4148
+            $$.lineto($k[--$j], _4a); //#4148
         } //#4148
         $$.closepath(); //#4148
         if ($ne($_.bordercolor, "unset")) { //#4149
@@ -6864,31 +6889,31 @@ function bwipp_renmatrix() {
         $$.restore(); //#4151
     } //#4151
     if ($eq($_.colormap, "unset")) { //#4157
-        var _4m = new Map([
+        var _4i = new Map([
             [1, $_.barcolor]
         ]); //#4156
-        $_.colormap = _4m; //#4156
+        $_.colormap = _4i; //#4156
     } //#4156
-    var _4n = $_.colormap; //#4159
-    for (var _4s = _4n.size, _4r = _4n.keys(), _4q = 0; _4q < _4s; _4q++) { //#4165
-        var _4o = _4r.next().value; //#4165
-        var _4p = _4n.get(_4o); //#4165
-        $k[$j++] = _4o; //#4160
-        $k[$j++] = _4p; //#4160
-        if ($ne(_4p, "unset")) { //#4160
+    var _4j = $_.colormap; //#4159
+    for (var _4o = _4j.size, _4n = _4j.keys(), _4m = 0; _4m < _4o; _4m++) { //#4165
+        var _4k = _4n.next().value; //#4165
+        var _4l = _4j.get(_4k); //#4165
+        $k[$j++] = _4k; //#4160
+        $k[$j++] = _4l; //#4160
+        if ($ne(_4l, "unset")) { //#4160
             $$.setcolor($k[--$j]); //#4160
         } else { //#4160
             $j--; //#4160
         } //#4160
         $_.key = $k[--$j]; //#4161
         $k[$j++] = Infinity; //#4162
-        var _4v = $_.pixs; //#4163
-        for (var _4w = 0, _4x = _4v.length; _4w < _4x; _4w++) { //#4163
-            var _50 = $eq($get(_4v, _4w), $_.key) ? 1 : 0; //#4163
-            $k[$j++] = _50; //#4163
+        var _4r = $_.pixs; //#4163
+        for (var _4s = 0, _4t = _4r.length; _4s < _4t; _4s++) { //#4163
+            var _4w = $eq($get(_4r, _4s), $_.key) ? 1 : 0; //#4163
+            $k[$j++] = _4w; //#4163
         } //#4163
-        var _51 = $a(); //#4163
-        $k[$j++] = _51; //#4164
+        var _4x = $a(); //#4163
+        $k[$j++] = _4x; //#4164
         if ($_.dotty) { //#4164
             $_.drawlayerdots(); //#4164
         } else { //#4164
@@ -6902,46 +6927,46 @@ function bwipp_renmatrix() {
         if (($eq($_.textxalign, "unset") && $eq($_.textyalign, "unset")) && $eq($_.alttext, "")) { //#4227
             $_.s = 0; //#4171
             $_.fn = ""; //#4171
-            var _59 = $_.txt; //#4172
-            for (var _5A = 0, _5B = _59.length; _5A < _5B; _5A++) { //#4185
-                $forall($get(_59, _5A)); //#4173
-                var _5D = $k[--$j]; //#4174
-                var _5E = $k[--$j]; //#4174
-                $k[$j++] = _5E; //#4183
-                $k[$j++] = _5D; //#4183
-                if ((_5D != $_.s) || $ne(_5E, $_.fn)) { //#4182
-                    var _5H = $k[--$j]; //#4175
-                    $k[$j++] = _5H; //#4178
-                    if (_5H <= 0) { //#4178
+            var _55 = $_.txt; //#4172
+            for (var _56 = 0, _57 = _55.length; _56 < _57; _56++) { //#4185
+                $forall($get(_55, _56)); //#4173
+                var _59 = $k[--$j]; //#4174
+                var _5A = $k[--$j]; //#4174
+                $k[$j++] = _5A; //#4183
+                $k[$j++] = _59; //#4183
+                if ((_59 != $_.s) || $ne(_5A, $_.fn)) { //#4182
+                    var _5D = $k[--$j]; //#4175
+                    $k[$j++] = _5D; //#4178
+                    if (_5D <= 0) { //#4178
                         $j -= 5; //#4176
                         $k[$j++] = 'bwipp.renmatrixFontTooSmall#4177'; //#4177
                         $k[$j++] = "The font size is too small"; //#4177
                         bwipp_raiseerror(); //#4177
                     } //#4177
-                    var _5I = $k[--$j]; //#4179
-                    var _5J = $k[--$j]; //#4179
-                    $_.s = _5I; //#4179
-                    $_.fn = _5J; //#4179
-                    $$.selectfont(_5J, _5I); //#4180
+                    var _5E = $k[--$j]; //#4179
+                    var _5F = $k[--$j]; //#4179
+                    $_.s = _5E; //#4179
+                    $_.fn = _5F; //#4179
+                    $$.selectfont(_5F, _5E); //#4180
                 } else { //#4182
                     $j -= 2; //#4182
                 } //#4182
-                var _5K = $k[--$j]; //#4184
-                $$.moveto($k[--$j], _5K); //#4184
+                var _5G = $k[--$j]; //#4184
+                $$.moveto($k[--$j], _5G); //#4184
                 $$.show($k[--$j], 0, 0); //#4184
             } //#4184
         } else { //#4227
             $$.selectfont($_.textfont, $_.textsize); //#4187
             if ($eq($_.alttext, "")) { //#4193
                 $k[$j++] = Infinity; //#4189
-                var _5Q = $_.txt; //#4189
-                for (var _5R = 0, _5S = _5Q.length; _5R < _5S; _5R++) { //#4189
-                    $forall($get($get(_5Q, _5R), 0)); //#4189
+                var _5M = $_.txt; //#4189
+                for (var _5N = 0, _5O = _5M.length; _5N < _5O; _5N++) { //#4189
+                    $forall($get($get(_5M, _5N), 0)); //#4189
                 } //#4189
                 $_.txt = $a(); //#4189
                 $_.tstr = $s($_.txt.length); //#4190
-                for (var _5a = 0, _5Z = $_.txt.length - 1; _5a <= _5Z; _5a += 1) { //#4191
-                    $put($_.tstr, _5a, $get($_.txt, _5a)); //#4191
+                for (var _5W = 0, _5V = $_.txt.length - 1; _5W <= _5V; _5W += 1) { //#4191
+                    $put($_.tstr, _5W, $get($_.txt, _5W)); //#4191
                 } //#4191
             } else { //#4193
                 $_.tstr = $_.alttext; //#4193
@@ -6953,13 +6978,13 @@ function bwipp_renmatrix() {
                 $$.newpath(); //#4201
                 $$.moveto(0, 0); //#4201
                 $$.charpath("0", false); //#4201
-                var _5g = $$.pathbbox(); //#4201
+                var _5c = $$.pathbbox(); //#4201
                 $$.restore(); //#4203
-                $k[$j++] = _5g.ury; //#4203
+                $k[$j++] = _5c.ury; //#4203
             } //#4203
             $_.textascent = $k[--$j]; //#4212
-            var _5j = $$.stringwidth($_.tstr); //#4213
-            $_.textwidth = $f(_5j.w + (($_.tstr.length - 1) * $_.textgaps)); //#4213
+            var _5f = $$.stringwidth($_.tstr); //#4213
+            $_.textwidth = $f(_5f.w + (($_.tstr.length - 1) * $_.textgaps)); //#4213
             $_.textxpos = $f($_.textxoffset + ($f($_.pixx - $_.textwidth) / 2)); //#4215
             if ($eq($_.textxalign, "left")) { //#4216
                 $_.textxpos = $_.textxoffset; //#4216
@@ -7007,7 +7032,7 @@ function bwipp_ean5() {
     if ($eq($_.textyoffset, null)) { //#4416
         $_.textyoffset = $f(($_.height * 72) + 1); //#4415
     } //#4415
-    bwipp_loadctx(bwipp_ean5) //#4418
+    bwipp_loadctx(bwipp_ean5); //#4418
     if ($_.barcode.length != 5) { //#4423
         $k[$j++] = 'bwipp.ean5badLength#4422'; //#4422
         $k[$j++] = "EAN-5 add-on must be 5 digits"; //#4422
@@ -7134,7 +7159,7 @@ function bwipp_ean2() {
     if ($eq($_.textyoffset, null)) { //#4561
         $_.textyoffset = $f(($_.height * 72) + 1); //#4560
     } //#4560
-    bwipp_loadctx(bwipp_ean2) //#4563
+    bwipp_loadctx(bwipp_ean2); //#4563
     if ($_.barcode.length != 2) { //#4568
         $k[$j++] = 'bwipp.ean2badLength#4567'; //#4567
         $k[$j++] = "EAN-2 add-on must be 2 digits"; //#4567
@@ -7252,7 +7277,7 @@ function bwipp_ean13() {
     bwipp_processoptions(); //#4694
     $_.options = $k[--$j]; //#4694
     $_.barcode = $k[--$j]; //#4695
-    bwipp_loadctx(bwipp_ean13) //#4697
+    bwipp_loadctx(bwipp_ean13); //#4697
     $search($_.barcode, " "); //#4700
     if ($k[--$j]) { //#4706
         $_.barcode = $k[--$j]; //#4701
@@ -7520,7 +7545,7 @@ function bwipp_ean8() {
     bwipp_processoptions(); //#4914
     $_.options = $k[--$j]; //#4914
     $_.barcode = $k[--$j]; //#4915
-    bwipp_loadctx(bwipp_ean8) //#4917
+    bwipp_loadctx(bwipp_ean8); //#4917
     $search($_.barcode, " "); //#4920
     if ($k[--$j]) { //#4926
         $_.barcode = $k[--$j]; //#4921
@@ -7777,7 +7802,7 @@ function bwipp_upca() {
     bwipp_processoptions(); //#5115
     $_.options = $k[--$j]; //#5115
     $_.barcode = $k[--$j]; //#5116
-    bwipp_loadctx(bwipp_upca) //#5118
+    bwipp_loadctx(bwipp_upca); //#5118
     $search($_.barcode, " "); //#5121
     if ($k[--$j]) { //#5127
         $_.barcode = $k[--$j]; //#5122
@@ -8096,7 +8121,7 @@ function bwipp_upce() {
     bwipp_processoptions(); //#5368
     $_.options = $k[--$j]; //#5368
     $_.barcode = $k[--$j]; //#5369
-    bwipp_loadctx(bwipp_upce) //#5371
+    bwipp_loadctx(bwipp_upce); //#5371
     $search($_.barcode, " "); //#5374
     if ($k[--$j]) { //#5380
         $_.barcode = $k[--$j]; //#5375
@@ -9195,7 +9220,7 @@ function bwipp_code128() {
     bwipp_processoptions(); //#6394
     $_.options = $k[--$j]; //#6394
     $_.barcode = $k[--$j]; //#6395
-    bwipp_loadctx(bwipp_code128) //#6397
+    bwipp_loadctx(bwipp_code128); //#6397
     if (!bwipp_code128.__6406__) { //#6406
         $_ = Object.create($_); //#6406
         $_.sta = -1; //#6401
@@ -9867,7 +9892,7 @@ function bwipp_ean14() {
         $k[$j++] = "GS1-14 must be 13 or 14 digits"; //#6950
         bwipp_raiseerror(); //#6950
     } //#6950
-    if ($ne($geti($_.barcode, 0, 4), "(01)")) { //#6954
+    if ($ne($geti($_.barcode, 0, 4), "\(01\)")) { //#6954
         $k[$j++] = 'bwipp.ean14badAI#6953'; //#6953
         $k[$j++] = "GS1-14 must begin with (01) application identifier"; //#6953
         bwipp_raiseerror(); //#6953
@@ -9975,7 +10000,7 @@ function bwipp_sscc18() {
         $k[$j++] = "SSCC-18 must be 17 or 18 digits"; //#7054
         bwipp_raiseerror(); //#7054
     } //#7054
-    if ($ne($geti($_.barcode, 0, 4), "(00)")) { //#7058
+    if ($ne($geti($_.barcode, 0, 4), "\(00\)")) { //#7058
         $k[$j++] = 'bwipp.sscc18badAI#7057'; //#7057
         $k[$j++] = "SSCC-18 must begin with (00) application identifier"; //#7057
         bwipp_raiseerror(); //#7057
@@ -10065,7 +10090,7 @@ function bwipp_code39() {
         $k[$j++] = "The data must not be empty"; //#7154
         bwipp_raiseerror(); //#7154
     } //#7154
-    bwipp_loadctx(bwipp_code39) //#7157
+    bwipp_loadctx(bwipp_code39); //#7157
     if (!bwipp_code39.__7177__) { //#7177
         $_ = Object.create($_); //#7177
         $_.encs = $a(["1113313111", "3113111131", "1133111131", "3133111111", "1113311131", "3113311111", "1133311111", "1113113131", "3113113111", "1133113111", "3111131131", "1131131131", "3131131111", "1111331131", "3111331111", "1131331111", "1111133131", "3111133111", "1131133111", "1111333111", "3111111331", "1131111331", "3131111311", "1111311331", "3111311311", "1131311311", "1111113331", "3111113311", "1131113311", "1111313311", "3311111131", "1331111131", "3331111111", "1311311131", "3311311111", "1331311111", "1311113131", "3311113111", "1331113111", "1313131111", "1313111311", "1311131311", "1113131311", "1311313111"]); //#7171
@@ -10193,7 +10218,7 @@ function bwipp_code39ext() {
     bwipp_processoptions(); //#7298
     $_.options = $k[--$j]; //#7298
     $_.barcode = $k[--$j]; //#7299
-    bwipp_loadctx(bwipp_code39ext) //#7301
+    bwipp_loadctx(bwipp_code39ext); //#7301
     var _3 = new Map([
         ["parse", $_.parse],
         ["parseonly", true],
@@ -10347,8 +10372,11 @@ function bwipp_code32() {
             $k[$j++] = _f; //#7450
         } //#7450
         $j--; //#7450
+        $k[$j++] = $_.barcode; //#7451
+        $r(3, 1); //#7451
         var _h = $k[--$j]; //#7451
-        $put($_.barcode, $k[--$j], _h); //#7451
+        var _i = $k[--$j]; //#7451
+        $put($k[--$j], _i, _h); //#7451
     } //#7451
     $puti($_.text, 1, $geti($_.text, 0, 9)); //#7455
     $put($_.text, 0, 65); //#7456
@@ -10357,9 +10385,8 @@ function bwipp_code32() {
     $k[$j++] = $_.barcode; //#7460
     $k[$j++] = $_.options; //#7460
     bwipp_code39(); //#7460
-    var _q = $k[--$j]; //#7460
     var _r = $k[--$j]; //#7460
-    $_[_r] = _q; //#7460
+    $_[$k[--$j]] = _r; //#7460
     $put($_.args, "txt", $a([$a([$_.text, $_.textxoffset, $_.textyoffset, $_.textfont, $_.textsize])])); //#7462
     $put($_.args, "textxalign", "center"); //#7463
     $put($_.args, "opt", $_.options); //#7464
@@ -10465,7 +10492,7 @@ function bwipp_code93() {
     bwipp_processoptions(); //#7612
     $_.options = $k[--$j]; //#7612
     $_.barcode = $k[--$j]; //#7613
-    bwipp_loadctx(bwipp_code93) //#7615
+    bwipp_loadctx(bwipp_code93); //#7615
     if (!bwipp_code93.__7643__) { //#7643
         $_ = Object.create($_); //#7643
         $_.encs = $a(["131112", "111213", "111312", "111411", "121113", "121212", "121311", "111114", "131211", "141111", "211113", "211212", "211311", "221112", "221211", "231111", "112113", "112212", "112311", "122112", "132111", "111123", "111222", "111321", "121122", "131121", "212112", "212211", "211122", "211221", "221121", "222111", "112122", "112221", "122121", "123111", "121131", "311112", "311211", "321111", "112131", "113121", "211131", "121221", "312111", "311121", "122211", "111141", "1111411"]); //#7629
@@ -10532,11 +10559,16 @@ function bwipp_code93() {
             $k[$j++] = " "; //#7679
         } else { //#7679
             var _w = $s(1); //#7679
-            $put(_w, 0, $k[--$j]); //#7679
             $k[$j++] = _w; //#7679
+            $k[$j++] = _w; //#7679
+            $k[$j++] = 0; //#7679
+            $r(4, -1); //#7679
+            var _x = $k[--$j]; //#7679
+            var _y = $k[--$j]; //#7679
+            $put($k[--$j], _y, _x); //#7679
         } //#7679
-        var _y = $k[--$j]; //#7679
-        $_[$k[--$j]] = _y; //#7679
+        var _10 = $k[--$j]; //#7679
+        $_[$k[--$j]] = _10; //#7679
         $put($_.txt, $_.i, $a([$_.char, ($_.i * 9) + 9, $_.textyoffset, $_.textfont, $_.textsize])); //#7680
         $_.checksum1 = $f($_.checksum1 + ((((($_.msglen - $_.i) - 1) % 20) + 1) * $_.indx)); //#7681
         $_.checksum2 = $f($_.checksum2 + (((($_.msglen - $_.i) % 15) + 1) * $_.indx)); //#7682
@@ -10552,37 +10584,37 @@ function bwipp_code93() {
     } //#7695
     $k[$j++] = Infinity; //#7699
     $k[$j++] = Infinity; //#7701
-    var _1c = $_.sbs; //#7701
-    for (var _1d = 0, _1e = _1c.length; _1d < _1e; _1d++) { //#7701
-        $k[$j++] = $get(_1c, _1d) - 48; //#7701
+    var _1e = $_.sbs; //#7701
+    for (var _1f = 0, _1g = _1e.length; _1f < _1g; _1f++) { //#7701
+        $k[$j++] = $get(_1e, _1f) - 48; //#7701
     } //#7701
-    var _1g = $a(); //#7701
+    var _1i = $a(); //#7701
     $k[$j++] = Infinity; //#7702
-    for (var _1i = 0, _1j = ~~(($_.sbs.length + 1) / 2); _1i < _1j; _1i++) { //#7702
+    for (var _1k = 0, _1l = ~~(($_.sbs.length + 1) / 2); _1k < _1l; _1k++) { //#7702
         $k[$j++] = $_.height; //#7702
     } //#7702
-    var _1l = $a(); //#7702
+    var _1n = $a(); //#7702
     $k[$j++] = Infinity; //#7703
-    for (var _1n = 0, _1o = ~~(($_.sbs.length + 1) / 2); _1n < _1o; _1n++) { //#7703
+    for (var _1p = 0, _1q = ~~(($_.sbs.length + 1) / 2); _1p < _1q; _1p++) { //#7703
         $k[$j++] = 0; //#7703
     } //#7703
-    var _1p = $a(); //#7703
+    var _1r = $a(); //#7703
     $k[$j++] = 'ren'; //#7706
     $k[$j++] = 'renlinear'; //#7706
     $k[$j++] = 'sbs'; //#7706
-    $k[$j++] = _1g; //#7706
+    $k[$j++] = _1i; //#7706
     $k[$j++] = 'bhs'; //#7706
-    $k[$j++] = _1l; //#7706
+    $k[$j++] = _1n; //#7706
     $k[$j++] = 'bbs'; //#7706
-    $k[$j++] = _1p; //#7706
+    $k[$j++] = _1r; //#7706
     if ($_.includetext) { //#7706
         $k[$j++] = 'txt'; //#7705
         $k[$j++] = $_.txt; //#7705
     } //#7705
     $k[$j++] = 'opt'; //#7707
     $k[$j++] = $_.options; //#7707
-    var _1t = $d(); //#7707
-    $k[$j++] = _1t; //#7710
+    var _1v = $d(); //#7707
+    $k[$j++] = _1v; //#7710
     if (!$_.dontdraw) { //#7710
         bwipp_renlinear(); //#7710
     } //#7710
@@ -10598,7 +10630,7 @@ function bwipp_code93ext() {
     bwipp_processoptions(); //#7753
     $_.options = $k[--$j]; //#7753
     $_.barcode = $k[--$j]; //#7754
-    bwipp_loadctx(bwipp_code93ext) //#7756
+    bwipp_loadctx(bwipp_code93ext); //#7756
     var _3 = new Map([
         ["parse", $_.parse],
         ["parseonly", true],
@@ -10698,7 +10730,7 @@ function bwipp_interleaved2of5() {
     bwipp_processoptions(); //#7875
     $_.options = $k[--$j]; //#7875
     $_.barcode = $k[--$j]; //#7876
-    bwipp_loadctx(bwipp_interleaved2of5) //#7878
+    bwipp_loadctx(bwipp_interleaved2of5); //#7878
     $forall($_.barcode, function() { //#7885
         var _3 = $k[--$j]; //#7882
         if ((_3 < 48) || (_3 > 57)) { //#7884
@@ -11105,7 +11137,7 @@ function bwipp_databaromni() {
         $k[$j++] = "GS1 DataBar Omnidirectional must be 13 or 14 digits"; //#8325
         bwipp_raiseerror(); //#8325
     } //#8325
-    if ($ne($geti($_.barcode, 0, 4), "(01)")) { //#8329
+    if ($ne($geti($_.barcode, 0, 4), "\(01\)")) { //#8329
         $k[$j++] = 'bwipp.databaromniBadAI#8328'; //#8328
         $k[$j++] = "GS1 DataBar Omnidirectional must begin with (01) application identifier"; //#8328
         bwipp_raiseerror(); //#8328
@@ -11132,7 +11164,7 @@ function bwipp_databaromni() {
     if ($eq($_.format, "truncated")) { //#8344
         $_.height = 13 / 72; //#8344
     } //#8344
-    bwipp_loadctx(bwipp_databaromni) //#8346
+    bwipp_loadctx(bwipp_databaromni); //#8346
     $_.checksum = 0; //#8349
     for (var _I = 0; _I <= 12; _I += 1) { //#8353
         $_.i = _I; //#8351
@@ -11303,7 +11335,12 @@ function bwipp_databaromni() {
             $j--; //#8446
         } else { //#8449
             $_.i = false; //#8448
-            $_.left = $f($_.left + ($k[--$j] * (~~Math.pow(10, 13 - $_.j)))); //#8449
+            $k[$j++] = 'left'; //#8449
+            $k[$j++] = $_.left; //#8449
+            $r(3, -1); //#8449
+            var _2l = $k[--$j]; //#8449
+            var _2m = $k[--$j]; //#8449
+            $_[$k[--$j]] = $f(_2m + (_2l * (~~Math.pow(10, 13 - $_.j)))); //#8449
         } //#8449
     } //#8449
     $_.d1 = ~~($_.left / 1597); //#8453
@@ -11321,9 +11358,9 @@ function bwipp_databaromni() {
     $_.i = 0; //#8475
     for (;;) { //#8485
         if ($_.d1 <= $get($_.tab164, $_.i)) { //#8483
-            var _2z = $geti($_.tab164, $_.i + 1, 7); //#8477
-            for (var _30 = 0, _31 = _2z.length; _30 < _31; _30++) { //#8477
-                $k[$j++] = $get(_2z, _30); //#8477
+            var _31 = $geti($_.tab164, $_.i + 1, 7); //#8477
+            for (var _32 = 0, _33 = _31.length; _32 < _33; _32++) { //#8477
+                $k[$j++] = $get(_31, _32); //#8477
             } //#8477
             $_.d1te = $k[--$j]; //#8478
             $_.d1to = $k[--$j]; //#8478
@@ -11339,9 +11376,9 @@ function bwipp_databaromni() {
     $_.i = 0; //#8487
     for (;;) { //#8497
         if ($_.d2 <= $get($_.tab154, $_.i)) { //#8495
-            var _3H = $geti($_.tab154, $_.i + 1, 7); //#8489
-            for (var _3I = 0, _3J = _3H.length; _3I < _3J; _3I++) { //#8489
-                $k[$j++] = $get(_3H, _3I); //#8489
+            var _3J = $geti($_.tab154, $_.i + 1, 7); //#8489
+            for (var _3K = 0, _3L = _3J.length; _3K < _3L; _3K++) { //#8489
+                $k[$j++] = $get(_3J, _3K); //#8489
             } //#8489
             $_.d2te = $k[--$j]; //#8490
             $_.d2to = $k[--$j]; //#8490
@@ -11357,9 +11394,9 @@ function bwipp_databaromni() {
     $_.i = 0; //#8499
     for (;;) { //#8509
         if ($_.d3 <= $get($_.tab164, $_.i)) { //#8507
-            var _3Z = $geti($_.tab164, $_.i + 1, 7); //#8501
-            for (var _3a = 0, _3b = _3Z.length; _3a < _3b; _3a++) { //#8501
-                $k[$j++] = $get(_3Z, _3a); //#8501
+            var _3b = $geti($_.tab164, $_.i + 1, 7); //#8501
+            for (var _3c = 0, _3d = _3b.length; _3c < _3d; _3c++) { //#8501
+                $k[$j++] = $get(_3b, _3c); //#8501
             } //#8501
             $_.d3te = $k[--$j]; //#8502
             $_.d3to = $k[--$j]; //#8502
@@ -11375,9 +11412,9 @@ function bwipp_databaromni() {
     $_.i = 0; //#8511
     for (;;) { //#8521
         if ($_.d4 <= $get($_.tab154, $_.i)) { //#8519
-            var _3r = $geti($_.tab154, $_.i + 1, 7); //#8513
-            for (var _3s = 0, _3t = _3r.length; _3s < _3t; _3s++) { //#8513
-                $k[$j++] = $get(_3r, _3s); //#8513
+            var _3t = $geti($_.tab154, $_.i + 1, 7); //#8513
+            for (var _3u = 0, _3v = _3t.length; _3u < _3v; _3u++) { //#8513
+                $k[$j++] = $get(_3t, _3u); //#8513
             } //#8513
             $_.d4te = $k[--$j]; //#8514
             $_.d4to = $k[--$j]; //#8514
@@ -11397,8 +11434,8 @@ function bwipp_databaromni() {
     $k[$j++] = 4; //#8523
     $k[$j++] = false; //#8523
     $_.getRSSwidths(); //#8523
-    var _48 = $k[--$j]; //#8523
-    $_[$k[--$j]] = _48; //#8523
+    var _4A = $k[--$j]; //#8523
+    $_[$k[--$j]] = _4A; //#8523
     $k[$j++] = 'd1we'; //#8524
     $k[$j++] = $f($_.d1 - $_.d1gs) % $_.d1te; //#8524
     $k[$j++] = $_.d1ele; //#8524
@@ -11406,8 +11443,8 @@ function bwipp_databaromni() {
     $k[$j++] = 4; //#8524
     $k[$j++] = true; //#8524
     $_.getRSSwidths(); //#8524
-    var _4F = $k[--$j]; //#8524
-    $_[$k[--$j]] = _4F; //#8524
+    var _4H = $k[--$j]; //#8524
+    $_[$k[--$j]] = _4H; //#8524
     $k[$j++] = 'd2wo'; //#8525
     $k[$j++] = $f($_.d2 - $_.d2gs) % $_.d2to; //#8525
     $k[$j++] = $_.d2elo; //#8525
@@ -11415,8 +11452,8 @@ function bwipp_databaromni() {
     $k[$j++] = 4; //#8525
     $k[$j++] = true; //#8525
     $_.getRSSwidths(); //#8525
-    var _4M = $k[--$j]; //#8525
-    $_[$k[--$j]] = _4M; //#8525
+    var _4O = $k[--$j]; //#8525
+    $_[$k[--$j]] = _4O; //#8525
     $k[$j++] = 'd2we'; //#8526
     $k[$j++] = ~~($f($_.d2 - $_.d2gs) / $_.d2to); //#8526
     $k[$j++] = $_.d2ele; //#8526
@@ -11424,8 +11461,8 @@ function bwipp_databaromni() {
     $k[$j++] = 4; //#8526
     $k[$j++] = false; //#8526
     $_.getRSSwidths(); //#8526
-    var _4T = $k[--$j]; //#8526
-    $_[$k[--$j]] = _4T; //#8526
+    var _4V = $k[--$j]; //#8526
+    $_[$k[--$j]] = _4V; //#8526
     $k[$j++] = 'd3wo'; //#8527
     $k[$j++] = ~~($f($_.d3 - $_.d3gs) / $_.d3te); //#8527
     $k[$j++] = $_.d3elo; //#8527
@@ -11433,8 +11470,8 @@ function bwipp_databaromni() {
     $k[$j++] = 4; //#8527
     $k[$j++] = false; //#8527
     $_.getRSSwidths(); //#8527
-    var _4a = $k[--$j]; //#8527
-    $_[$k[--$j]] = _4a; //#8527
+    var _4c = $k[--$j]; //#8527
+    $_[$k[--$j]] = _4c; //#8527
     $k[$j++] = 'd3we'; //#8528
     $k[$j++] = $f($_.d3 - $_.d3gs) % $_.d3te; //#8528
     $k[$j++] = $_.d3ele; //#8528
@@ -11442,8 +11479,8 @@ function bwipp_databaromni() {
     $k[$j++] = 4; //#8528
     $k[$j++] = true; //#8528
     $_.getRSSwidths(); //#8528
-    var _4h = $k[--$j]; //#8528
-    $_[$k[--$j]] = _4h; //#8528
+    var _4j = $k[--$j]; //#8528
+    $_[$k[--$j]] = _4j; //#8528
     $k[$j++] = 'd4wo'; //#8529
     $k[$j++] = $f($_.d4 - $_.d4gs) % $_.d4to; //#8529
     $k[$j++] = $_.d4elo; //#8529
@@ -11451,8 +11488,8 @@ function bwipp_databaromni() {
     $k[$j++] = 4; //#8529
     $k[$j++] = true; //#8529
     $_.getRSSwidths(); //#8529
-    var _4o = $k[--$j]; //#8529
-    $_[$k[--$j]] = _4o; //#8529
+    var _4q = $k[--$j]; //#8529
+    $_[$k[--$j]] = _4q; //#8529
     $k[$j++] = 'd4we'; //#8530
     $k[$j++] = ~~($f($_.d4 - $_.d4gs) / $_.d4to); //#8530
     $k[$j++] = $_.d4ele; //#8530
@@ -11460,48 +11497,48 @@ function bwipp_databaromni() {
     $k[$j++] = 4; //#8530
     $k[$j++] = false; //#8530
     $_.getRSSwidths(); //#8530
-    var _4v = $k[--$j]; //#8530
-    $_[$k[--$j]] = _4v; //#8530
+    var _4x = $k[--$j]; //#8530
+    $_[$k[--$j]] = _4x; //#8530
     $_.d1w = $a(8); //#8532
-    for (var _4y = 0; _4y <= 3; _4y += 1) { //#8537
-        $_.i = _4y; //#8534
+    for (var _50 = 0; _50 <= 3; _50 += 1) { //#8537
+        $_.i = _50; //#8534
         $put($_.d1w, $_.i * 2, $get($_.d1wo, $_.i)); //#8535
         $put($_.d1w, ($_.i * 2) + 1, $get($_.d1we, $_.i)); //#8536
     } //#8536
     $_.d2w = $a(8); //#8539
-    for (var _5A = 0; _5A <= 3; _5A += 1) { //#8544
-        $_.i = _5A; //#8541
+    for (var _5C = 0; _5C <= 3; _5C += 1) { //#8544
+        $_.i = _5C; //#8541
         $put($_.d2w, 7 - ($_.i * 2), $get($_.d2wo, $_.i)); //#8542
         $put($_.d2w, 6 - ($_.i * 2), $get($_.d2we, $_.i)); //#8543
     } //#8543
     $_.d3w = $a(8); //#8546
-    for (var _5M = 0; _5M <= 3; _5M += 1) { //#8551
-        $_.i = _5M; //#8548
+    for (var _5O = 0; _5O <= 3; _5O += 1) { //#8551
+        $_.i = _5O; //#8548
         $put($_.d3w, 7 - ($_.i * 2), $get($_.d3wo, $_.i)); //#8549
         $put($_.d3w, 6 - ($_.i * 2), $get($_.d3we, $_.i)); //#8550
     } //#8550
     $_.d4w = $a(8); //#8553
-    for (var _5Y = 0; _5Y <= 3; _5Y += 1) { //#8558
-        $_.i = _5Y; //#8555
+    for (var _5a = 0; _5a <= 3; _5a += 1) { //#8558
+        $_.i = _5a; //#8555
         $put($_.d4w, $_.i * 2, $get($_.d4wo, $_.i)); //#8556
         $put($_.d4w, ($_.i * 2) + 1, $get($_.d4we, $_.i)); //#8557
     } //#8557
     $k[$j++] = Infinity; //#8560
-    var _5j = $_.d1w; //#8561
-    for (var _5k = 0, _5l = _5j.length; _5k < _5l; _5k++) { //#8561
-        $k[$j++] = $get(_5j, _5k); //#8561
+    var _5l = $_.d1w; //#8561
+    for (var _5m = 0, _5n = _5l.length; _5m < _5n; _5m++) { //#8561
+        $k[$j++] = $get(_5l, _5m); //#8561
     } //#8561
-    var _5n = $_.d2w; //#8562
-    for (var _5o = 0, _5p = _5n.length; _5o < _5p; _5o++) { //#8562
-        $k[$j++] = $get(_5n, _5o); //#8562
+    var _5p = $_.d2w; //#8562
+    for (var _5q = 0, _5r = _5p.length; _5q < _5r; _5q++) { //#8562
+        $k[$j++] = $get(_5p, _5q); //#8562
     } //#8562
-    var _5r = $_.d3w; //#8563
-    for (var _5s = 0, _5t = _5r.length; _5s < _5t; _5s++) { //#8563
-        $k[$j++] = $get(_5r, _5s); //#8563
+    var _5t = $_.d3w; //#8563
+    for (var _5u = 0, _5v = _5t.length; _5u < _5v; _5u++) { //#8563
+        $k[$j++] = $get(_5t, _5u); //#8563
     } //#8563
-    var _5v = $_.d4w; //#8564
-    for (var _5w = 0, _5x = _5v.length; _5w < _5x; _5w++) { //#8564
-        $k[$j++] = $get(_5v, _5w); //#8564
+    var _5x = $_.d4w; //#8564
+    for (var _5y = 0, _5z = _5x.length; _5y < _5z; _5y++) { //#8564
+        $k[$j++] = $get(_5x, _5y); //#8564
     } //#8564
     $_.widths = $a(); //#8564
     if (!bwipp_databaromni.__8580__) { //#8580
@@ -11513,8 +11550,8 @@ function bwipp_databaromni() {
         $_ = Object.getPrototypeOf($_); //#8579
     } //#8579
     $_.checksum = 0; //#8582
-    for (var _63 = 0; _63 <= 31; _63 += 1) { //#8586
-        $_.i = _63; //#8584
+    for (var _65 = 0; _65 <= 31; _65 += 1) { //#8586
+        $_.i = _65; //#8584
         $_.checksum = $f($_.checksum + ($get($_.widths, $_.i) * $get($_.checkweights, $_.i))); //#8585
     } //#8585
     $_.checksum = $_.checksum % 79; //#8587
@@ -11527,60 +11564,60 @@ function bwipp_databaromni() {
     $_.checklt = $geti($_.checkwidths, (~~($_.checksum / 9)) * 5, 5); //#8590
     $_.checkrtrev = $geti($_.checkwidths, ($_.checksum % 9) * 5, 5); //#8591
     $_.checkrt = $a(5); //#8592
-    for (var _6N = 0; _6N <= 4; _6N += 1) { //#8596
-        $_.i = _6N; //#8594
+    for (var _6P = 0; _6P <= 4; _6P += 1) { //#8596
+        $_.i = _6P; //#8594
         $put($_.checkrt, $_.i, $get($_.checkrtrev, 4 - $_.i)); //#8595
     } //#8595
     if ($eq($_.format, "omni") || $eq($_.format, "truncated")) { //#8724
         $k[$j++] = Infinity; //#8601
-        var _6V = $_.d1w; //#8602
+        var _6X = $_.d1w; //#8602
         $k[$j++] = 1; //#8602
-        for (var _6W = 0, _6X = _6V.length; _6W < _6X; _6W++) { //#8602
-            $k[$j++] = $get(_6V, _6W); //#8602
+        for (var _6Y = 0, _6Z = _6X.length; _6Y < _6Z; _6Y++) { //#8602
+            $k[$j++] = $get(_6X, _6Y); //#8602
         } //#8602
-        var _6Z = $_.checklt; //#8602
-        for (var _6a = 0, _6b = _6Z.length; _6a < _6b; _6a++) { //#8602
-            $k[$j++] = $get(_6Z, _6a); //#8602
+        var _6b = $_.checklt; //#8602
+        for (var _6c = 0, _6d = _6b.length; _6c < _6d; _6c++) { //#8602
+            $k[$j++] = $get(_6b, _6c); //#8602
         } //#8602
-        var _6d = $_.d2w; //#8602
-        for (var _6e = 0, _6f = _6d.length; _6e < _6f; _6e++) { //#8602
-            $k[$j++] = $get(_6d, _6e); //#8602
+        var _6f = $_.d2w; //#8602
+        for (var _6g = 0, _6h = _6f.length; _6g < _6h; _6g++) { //#8602
+            $k[$j++] = $get(_6f, _6g); //#8602
         } //#8602
-        var _6h = $_.d4w; //#8603
-        for (var _6i = 0, _6j = _6h.length; _6i < _6j; _6i++) { //#8603
-            $k[$j++] = $get(_6h, _6i); //#8603
+        var _6j = $_.d4w; //#8603
+        for (var _6k = 0, _6l = _6j.length; _6k < _6l; _6k++) { //#8603
+            $k[$j++] = $get(_6j, _6k); //#8603
         } //#8603
-        var _6l = $_.checkrt; //#8603
-        for (var _6m = 0, _6n = _6l.length; _6m < _6n; _6m++) { //#8603
-            $k[$j++] = $get(_6l, _6m); //#8603
+        var _6n = $_.checkrt; //#8603
+        for (var _6o = 0, _6p = _6n.length; _6o < _6p; _6o++) { //#8603
+            $k[$j++] = $get(_6n, _6o); //#8603
         } //#8603
-        var _6p = $_.d3w; //#8603
-        for (var _6q = 0, _6r = _6p.length; _6q < _6r; _6q++) { //#8603
-            $k[$j++] = $get(_6p, _6q); //#8603
+        var _6r = $_.d3w; //#8603
+        for (var _6s = 0, _6t = _6r.length; _6s < _6t; _6s++) { //#8603
+            $k[$j++] = $get(_6r, _6s); //#8603
         } //#8603
         $k[$j++] = 1; //#8603
         $k[$j++] = 1; //#8603
         $_.sbs = $a(); //#8603
         $k[$j++] = Infinity; //#8606
-        var _6u = $_.sbs; //#8608
+        var _6w = $_.sbs; //#8608
         $k[$j++] = Infinity; //#8609
-        for (var _6w = 0, _6x = ~~(($_.sbs.length + 1) / 2); _6w < _6x; _6w++) { //#8609
+        for (var _6y = 0, _6z = ~~(($_.sbs.length + 1) / 2); _6y < _6z; _6y++) { //#8609
             $k[$j++] = $_.height; //#8609
         } //#8609
-        var _6z = $a(); //#8609
+        var _71 = $a(); //#8609
         $k[$j++] = Infinity; //#8610
-        for (var _71 = 0, _72 = ~~(($_.sbs.length + 1) / 2); _71 < _72; _71++) { //#8610
+        for (var _73 = 0, _74 = ~~(($_.sbs.length + 1) / 2); _73 < _74; _73++) { //#8610
             $k[$j++] = 0; //#8610
         } //#8610
-        var _73 = $a(); //#8610
+        var _75 = $a(); //#8610
         $k[$j++] = 'ren'; //#8615
         $k[$j++] = 'renlinear'; //#8615
         $k[$j++] = 'sbs'; //#8615
-        $k[$j++] = _6u; //#8615
+        $k[$j++] = _6w; //#8615
         $k[$j++] = 'bhs'; //#8615
-        $k[$j++] = _6z; //#8615
+        $k[$j++] = _71; //#8615
         $k[$j++] = 'bbs'; //#8615
-        $k[$j++] = _73; //#8615
+        $k[$j++] = _75; //#8615
         $k[$j++] = 'txt'; //#8615
         $k[$j++] = $_.txt; //#8615
         $k[$j++] = 'textxalign'; //#8615
@@ -11591,67 +11628,67 @@ function bwipp_databaromni() {
         $k[$j++] = 0; //#8615
         $k[$j++] = 'opt'; //#8615
         $k[$j++] = $_.options; //#8615
-        var _76 = $d(); //#8615
-        $k[$j++] = _76; //#8618
+        var _78 = $d(); //#8615
+        $k[$j++] = _78; //#8618
         if (!$_.dontdraw) { //#8618
             bwipp_renlinear(); //#8618
         } //#8618
     } else { //#8724
         $k[$j++] = Infinity; //#8622
-        var _78 = $_.d1w; //#8622
+        var _7A = $_.d1w; //#8622
         $k[$j++] = 1; //#8622
         $k[$j++] = 1; //#8622
-        for (var _79 = 0, _7A = _78.length; _79 < _7A; _79++) { //#8622
-            $k[$j++] = $get(_78, _79); //#8622
+        for (var _7B = 0, _7C = _7A.length; _7B < _7C; _7B++) { //#8622
+            $k[$j++] = $get(_7A, _7B); //#8622
         } //#8622
-        var _7C = $_.checklt; //#8622
-        for (var _7D = 0, _7E = _7C.length; _7D < _7E; _7D++) { //#8622
-            $k[$j++] = $get(_7C, _7D); //#8622
+        var _7E = $_.checklt; //#8622
+        for (var _7F = 0, _7G = _7E.length; _7F < _7G; _7F++) { //#8622
+            $k[$j++] = $get(_7E, _7F); //#8622
         } //#8622
-        var _7G = $_.d2w; //#8622
-        for (var _7H = 0, _7I = _7G.length; _7H < _7I; _7H++) { //#8622
-            $k[$j++] = $get(_7G, _7H); //#8622
+        var _7I = $_.d2w; //#8622
+        for (var _7J = 0, _7K = _7I.length; _7J < _7K; _7J++) { //#8622
+            $k[$j++] = $get(_7I, _7J); //#8622
         } //#8622
         $k[$j++] = 1; //#8622
         $k[$j++] = 1; //#8622
         $k[$j++] = 0; //#8622
         $_.top = $a(); //#8622
         $k[$j++] = Infinity; //#8623
-        var _7L = $_.d4w; //#8623
+        var _7N = $_.d4w; //#8623
         $k[$j++] = 1; //#8623
         $k[$j++] = 1; //#8623
-        for (var _7M = 0, _7N = _7L.length; _7M < _7N; _7M++) { //#8623
-            $k[$j++] = $get(_7L, _7M); //#8623
+        for (var _7O = 0, _7P = _7N.length; _7O < _7P; _7O++) { //#8623
+            $k[$j++] = $get(_7N, _7O); //#8623
         } //#8623
-        var _7P = $_.checkrt; //#8623
-        for (var _7Q = 0, _7R = _7P.length; _7Q < _7R; _7Q++) { //#8623
-            $k[$j++] = $get(_7P, _7Q); //#8623
+        var _7R = $_.checkrt; //#8623
+        for (var _7S = 0, _7T = _7R.length; _7S < _7T; _7S++) { //#8623
+            $k[$j++] = $get(_7R, _7S); //#8623
         } //#8623
-        var _7T = $_.d3w; //#8623
-        for (var _7U = 0, _7V = _7T.length; _7U < _7V; _7U++) { //#8623
-            $k[$j++] = $get(_7T, _7U); //#8623
+        var _7V = $_.d3w; //#8623
+        for (var _7W = 0, _7X = _7V.length; _7W < _7X; _7W++) { //#8623
+            $k[$j++] = $get(_7V, _7W); //#8623
         } //#8623
         $k[$j++] = 1; //#8623
         $k[$j++] = 1; //#8623
         $k[$j++] = 0; //#8623
         $_.bot = $a(); //#8623
-        for (var _7Y = 0; _7Y <= 24; _7Y += 2) { //#8628
-            $_.i = _7Y; //#8625
-            for (var _7c = 0, _7d = $get($_.top, $_.i); _7c < _7d; _7c++) { //#8626
+        for (var _7a = 0; _7a <= 24; _7a += 2) { //#8628
+            $_.i = _7a; //#8625
+            for (var _7e = 0, _7f = $get($_.top, $_.i); _7e < _7f; _7e++) { //#8626
                 $k[$j++] = 0; //#8626
             } //#8626
-            for (var _7h = 0, _7i = $get($_.top, $_.i + 1); _7h < _7i; _7h++) { //#8627
+            for (var _7j = 0, _7k = $get($_.top, $_.i + 1); _7j < _7k; _7j++) { //#8627
                 $k[$j++] = 1; //#8627
             } //#8627
         } //#8627
         $astore($a(50)); //#8629
         $_.top = $k[--$j]; //#8629
-        for (var _7l = 0; _7l <= 24; _7l += 2) { //#8634
-            $_.i = _7l; //#8631
-            for (var _7p = 0, _7q = $get($_.bot, $_.i); _7p < _7q; _7p++) { //#8632
+        for (var _7n = 0; _7n <= 24; _7n += 2) { //#8634
+            $_.i = _7n; //#8631
+            for (var _7r = 0, _7s = $get($_.bot, $_.i); _7r < _7s; _7r++) { //#8632
                 $k[$j++] = 1; //#8632
             } //#8632
-            for (var _7u = 0, _7v = $get($_.bot, $_.i + 1); _7u < _7v; _7u++) { //#8633
+            for (var _7w = 0, _7x = $get($_.bot, $_.i + 1); _7w < _7x; _7w++) { //#8633
                 $k[$j++] = 0; //#8633
             } //#8633
         } //#8633
@@ -11660,8 +11697,8 @@ function bwipp_databaromni() {
         if ($eq($_.format, "stacked")) { //#8657
             $_.sep = $a(50); //#8639
             $put($_.sep, 0, 0); //#8640
-            for (var _81 = 1; _81 <= 49; _81 += 1) { //#8648
-                $_.i = _81; //#8642
+            for (var _83 = 1; _83 <= 49; _83 += 1) { //#8648
+                $_.i = _83; //#8642
                 if ($eq($get($_.top, $_.i), $get($_.bot, $_.i))) { //#8646
                     $put($_.sep, $_.i, $f(1 - $get($_.top, $_.i))); //#8644
                 } else { //#8646
@@ -11671,11 +11708,11 @@ function bwipp_databaromni() {
             $puti($_.sep, 0, $a([0, 0, 0, 0])); //#8649
             $puti($_.sep, 46, $a([0, 0, 0, 0])); //#8650
             $k[$j++] = Infinity; //#8651
-            for (var _8M = 0, _8N = 5; _8M < _8N; _8M++) { //#8652
+            for (var _8O = 0, _8P = 5; _8O < _8P; _8O++) { //#8652
                 $aload($_.top); //#8652
             } //#8652
             $aload($_.sep); //#8653
-            for (var _8Q = 0, _8R = 7; _8Q < _8R; _8Q++) { //#8654
+            for (var _8S = 0, _8T = 7; _8S < _8T; _8S++) { //#8654
                 $aload($_.bot); //#8654
             } //#8654
             $_.pixs = $a(); //#8654
@@ -11684,20 +11721,20 @@ function bwipp_databaromni() {
         if ($eq($_.format, "stackedomni")) { //#8707
             $k[$j++] = Infinity; //#8661
             $forall($_.top, function() { //#8661
-                var _8X = $k[--$j]; //#8661
-                $k[$j++] = $f(1 - _8X); //#8661
+                var _8Z = $k[--$j]; //#8661
+                $k[$j++] = $f(1 - _8Z); //#8661
             }); //#8661
             $_.sep1 = $a(); //#8661
             $puti($_.sep1, 0, $a([0, 0, 0, 0])); //#8662
             $puti($_.sep1, 46, $a([0, 0, 0, 0])); //#8663
-            for (var _8d = 18; _8d <= 30; _8d += 1) { //#8676
-                $_.i = _8d; //#8665
+            for (var _8f = 18; _8f <= 30; _8f += 1) { //#8676
+                $_.i = _8f; //#8665
                 if ($get($_.top, $_.i) == 0) { //#8673
                     if ($get($_.top, $_.i - 1) == 1) { //#8670
                         $k[$j++] = 1; //#8668
                     } else { //#8670
-                        var _8n = ($get($_.sep1, $_.i - 1) == 0) ? 1 : 0; //#8670
-                        $k[$j++] = _8n; //#8670
+                        var _8p = ($get($_.sep1, $_.i - 1) == 0) ? 1 : 0; //#8670
+                        $k[$j++] = _8p; //#8670
                     } //#8670
                 } else { //#8673
                     $k[$j++] = 0; //#8673
@@ -11709,7 +11746,7 @@ function bwipp_databaromni() {
             $k[$j++] = 0; //#8677
             $k[$j++] = 0; //#8677
             $k[$j++] = 0; //#8677
-            for (var _8r = 0, _8s = 21; _8r < _8s; _8r++) { //#8677
+            for (var _8t = 0, _8u = 21; _8t < _8u; _8t++) { //#8677
                 $k[$j++] = 0; //#8677
                 $k[$j++] = 1; //#8677
             } //#8677
@@ -11720,20 +11757,20 @@ function bwipp_databaromni() {
             $_.sep2 = $a(); //#8677
             $k[$j++] = Infinity; //#8678
             $forall($_.bot, function() { //#8678
-                var _8v = $k[--$j]; //#8678
-                $k[$j++] = $f(1 - _8v); //#8678
+                var _8x = $k[--$j]; //#8678
+                $k[$j++] = $f(1 - _8x); //#8678
             }); //#8678
             $_.sep3 = $a(); //#8678
             $puti($_.sep3, 0, $a([0, 0, 0, 0])); //#8679
             $puti($_.sep3, 46, $a([0, 0, 0, 0])); //#8680
-            for (var _91 = 19; _91 <= 31; _91 += 1) { //#8693
-                $_.i = _91; //#8682
+            for (var _93 = 19; _93 <= 31; _93 += 1) { //#8693
+                $_.i = _93; //#8682
                 if ($get($_.bot, $_.i) == 0) { //#8690
                     if ($get($_.bot, $_.i - 1) == 1) { //#8687
                         $k[$j++] = 1; //#8685
                     } else { //#8687
-                        var _9B = ($get($_.sep3, $_.i - 1) == 0) ? 1 : 0; //#8687
-                        $k[$j++] = _9B; //#8687
+                        var _9D = ($get($_.sep3, $_.i - 1) == 0) ? 1 : 0; //#8687
+                        $k[$j++] = _9D; //#8687
                     } //#8687
                 } else { //#8690
                     $k[$j++] = 0; //#8690
@@ -11742,27 +11779,27 @@ function bwipp_databaromni() {
             } //#8692
             $_.f3 = $a([1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1]); //#8694
             $k[$j++] = true; //#8695
-            for (var _9G = 0; _9G <= 12; _9G += 1) { //#8695
-                var _9L = $k[--$j]; //#8695
-                $k[$j++] = _9L && $eq($get($_.bot, _9G + 19), $get($_.f3, _9G)); //#8695
+            for (var _9I = 0; _9I <= 12; _9I += 1) { //#8695
+                var _9N = $k[--$j]; //#8695
+                $k[$j++] = _9N && $eq($get($_.bot, _9I + 19), $get($_.f3, _9I)); //#8695
             } //#8695
             if ($k[--$j]) { //#8698
                 $puti($_.sep3, 19, $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])); //#8697
             } //#8697
             $k[$j++] = Infinity; //#8699
-            for (var _9Q = 0, _9R = $_.barxmult; _9Q < _9R; _9Q++) { //#8700
+            for (var _9S = 0, _9T = $_.barxmult; _9S < _9T; _9S++) { //#8700
                 $aload($_.top); //#8700
             } //#8700
             $aload($_.sep1); //#8701
             $aload($_.sep2); //#8702
             $aload($_.sep3); //#8703
-            for (var _9X = 0, _9Y = $_.barxmult; _9X < _9Y; _9X++) { //#8704
+            for (var _9Z = 0, _9a = $_.barxmult; _9Z < _9a; _9Z++) { //#8704
                 $aload($_.bot); //#8704
             } //#8704
             $_.pixs = $a(); //#8704
             $_.pixy = ~~($_.pixs.length / 50); //#8706
         } //#8706
-        var _9g = new Map([
+        var _9i = new Map([
             ["ren", 'renmatrix'],
             ["pixs", $_.pixs],
             ["pixx", 50],
@@ -11775,7 +11812,7 @@ function bwipp_databaromni() {
             ["borderbottom", 0],
             ["opt", $_.options]
         ]); //#8721
-        $k[$j++] = _9g; //#8724
+        $k[$j++] = _9i; //#8724
         if (!$_.dontdraw) { //#8724
             bwipp_renmatrix(); //#8724
         } //#8724
@@ -11795,7 +11832,7 @@ function bwipp_databarstacked() {
         $k[$j++] = "GS1 DataBar Stacked must be 13 or 14 digits"; //#8769
         bwipp_raiseerror(); //#8769
     } //#8769
-    if ($ne($geti($_.barcode, 0, 4), "(01)")) { //#8773
+    if ($ne($geti($_.barcode, 0, 4), "\(01\)")) { //#8773
         $k[$j++] = 'bwipp.databarstackedBadAI#8772'; //#8772
         $k[$j++] = "GS1 DataBar Stacked must begin with (01) application identifier"; //#8772
         bwipp_raiseerror(); //#8772
@@ -11857,7 +11894,7 @@ function bwipp_databarstackedomni() {
     bwipp_processoptions(); //#8842
     $_.options = $k[--$j]; //#8842
     $_.barcode = $k[--$j]; //#8843
-    if ($ne($geti($_.barcode, 0, 4), "(01)")) { //#8848
+    if ($ne($geti($_.barcode, 0, 4), "\(01\)")) { //#8848
         $k[$j++] = 'bwipp.databarstackedomniBadAI#8847'; //#8847
         $k[$j++] = "GS1 DataBar Stacked Omnidirectional must begin with (01) application identifier"; //#8847
         bwipp_raiseerror(); //#8847
@@ -11929,7 +11966,7 @@ function bwipp_databartruncated() {
         $k[$j++] = "GS1 DataBar Truncated must be 13 or 14 digits"; //#8925
         bwipp_raiseerror(); //#8925
     } //#8925
-    if ($ne($geti($_.barcode, 0, 4), "(01)")) { //#8929
+    if ($ne($geti($_.barcode, 0, 4), "\(01\)")) { //#8929
         $k[$j++] = 'bwipp.databartruncatedBadAI#8928'; //#8928
         $k[$j++] = "GS1 DataBar Truncated must begin with (01) application identifier"; //#8928
         bwipp_raiseerror(); //#8928
@@ -11993,13 +12030,13 @@ function bwipp_databarlimited() {
     bwipp_processoptions(); //#9001
     $_.options = $k[--$j]; //#9001
     $_.barcode = $k[--$j]; //#9002
-    bwipp_loadctx(bwipp_databarlimited) //#9004
+    bwipp_loadctx(bwipp_databarlimited); //#9004
     if (($_.barcode.length != 17) && ($_.barcode.length != 18)) { //#9009
         $k[$j++] = 'bwipp.databarlimitedBadLength#9008'; //#9008
         $k[$j++] = "GS1 DataBar Limited must be 13 or 14 digits"; //#9008
         bwipp_raiseerror(); //#9008
     } //#9008
-    if ($ne($geti($_.barcode, 0, 4), "(01)")) { //#9012
+    if ($ne($geti($_.barcode, 0, 4), "\(01\)")) { //#9012
         $k[$j++] = 'bwipp.databarlimitedBadAI#9011'; //#9011
         $k[$j++] = "GS1 DataBar Limited must begin with (01) application identifier"; //#9011
         bwipp_raiseerror(); //#9011
@@ -12200,7 +12237,12 @@ function bwipp_databarlimited() {
             $j--; //#9129
         } else { //#9132
             $_.i = false; //#9131
-            $_.d1 = $f($_.d1 + ($k[--$j] * (~~Math.pow(10, 12 - $_.j)))); //#9132
+            $k[$j++] = 'd1'; //#9132
+            $k[$j++] = $_.d1; //#9132
+            $r(3, -1); //#9132
+            var _2t = $k[--$j]; //#9132
+            var _2u = $k[--$j]; //#9132
+            $_[$k[--$j]] = $f(_2u + (_2t * (~~Math.pow(10, 12 - $_.j)))); //#9132
         } //#9132
     } //#9132
     if (!bwipp_databarlimited.__9146__) { //#9146
@@ -12213,9 +12255,9 @@ function bwipp_databarlimited() {
     $_.i = 0; //#9148
     for (;;) { //#9158
         if ($_.d1 <= $get($_.tab267, $_.i)) { //#9156
-            var _32 = $geti($_.tab267, $_.i + 1, 7); //#9150
-            for (var _33 = 0, _34 = _32.length; _33 < _34; _33++) { //#9150
-                $k[$j++] = $get(_32, _33); //#9150
+            var _34 = $geti($_.tab267, $_.i + 1, 7); //#9150
+            for (var _35 = 0, _36 = _34.length; _35 < _36; _35++) { //#9150
+                $k[$j++] = $get(_34, _35); //#9150
             } //#9150
             $_.d1te = $k[--$j]; //#9151
             $_.d1to = $k[--$j]; //#9151
@@ -12231,9 +12273,9 @@ function bwipp_databarlimited() {
     $_.i = 0; //#9160
     for (;;) { //#9170
         if ($_.d2 <= $get($_.tab267, $_.i)) { //#9168
-            var _3K = $geti($_.tab267, $_.i + 1, 7); //#9162
-            for (var _3L = 0, _3M = _3K.length; _3L < _3M; _3L++) { //#9162
-                $k[$j++] = $get(_3K, _3L); //#9162
+            var _3M = $geti($_.tab267, $_.i + 1, 7); //#9162
+            for (var _3N = 0, _3O = _3M.length; _3N < _3O; _3N++) { //#9162
+                $k[$j++] = $get(_3M, _3N); //#9162
             } //#9162
             $_.d2te = $k[--$j]; //#9163
             $_.d2to = $k[--$j]; //#9163
@@ -12253,8 +12295,8 @@ function bwipp_databarlimited() {
     $k[$j++] = 7; //#9172
     $k[$j++] = false; //#9172
     $_.getRSSwidths(); //#9172
-    var _3b = $k[--$j]; //#9172
-    $_[$k[--$j]] = _3b; //#9172
+    var _3d = $k[--$j]; //#9172
+    $_[$k[--$j]] = _3d; //#9172
     $k[$j++] = 'd1we'; //#9173
     $k[$j++] = $f($_.d1 - $_.d1gs) % $_.d1te; //#9173
     $k[$j++] = $_.d1ele; //#9173
@@ -12262,8 +12304,8 @@ function bwipp_databarlimited() {
     $k[$j++] = 7; //#9173
     $k[$j++] = true; //#9173
     $_.getRSSwidths(); //#9173
-    var _3i = $k[--$j]; //#9173
-    $_[$k[--$j]] = _3i; //#9173
+    var _3k = $k[--$j]; //#9173
+    $_[$k[--$j]] = _3k; //#9173
     $k[$j++] = 'd2wo'; //#9174
     $k[$j++] = ~~($f($_.d2 - $_.d2gs) / $_.d2te); //#9174
     $k[$j++] = $_.d2elo; //#9174
@@ -12271,8 +12313,8 @@ function bwipp_databarlimited() {
     $k[$j++] = 7; //#9174
     $k[$j++] = false; //#9174
     $_.getRSSwidths(); //#9174
-    var _3p = $k[--$j]; //#9174
-    $_[$k[--$j]] = _3p; //#9174
+    var _3r = $k[--$j]; //#9174
+    $_[$k[--$j]] = _3r; //#9174
     $k[$j++] = 'd2we'; //#9175
     $k[$j++] = $f($_.d2 - $_.d2gs) % $_.d2te; //#9175
     $k[$j++] = $_.d2ele; //#9175
@@ -12280,60 +12322,60 @@ function bwipp_databarlimited() {
     $k[$j++] = 7; //#9175
     $k[$j++] = true; //#9175
     $_.getRSSwidths(); //#9175
-    var _3w = $k[--$j]; //#9175
-    $_[$k[--$j]] = _3w; //#9175
+    var _3y = $k[--$j]; //#9175
+    $_[$k[--$j]] = _3y; //#9175
     $_.d1w = $a(14); //#9177
-    for (var _3z = 0; _3z <= 6; _3z += 1) { //#9182
-        $_.i = _3z; //#9179
+    for (var _41 = 0; _41 <= 6; _41 += 1) { //#9182
+        $_.i = _41; //#9179
         $put($_.d1w, $_.i * 2, $get($_.d1wo, $_.i)); //#9180
         $put($_.d1w, ($_.i * 2) + 1, $get($_.d1we, $_.i)); //#9181
     } //#9181
     $_.d2w = $a(14); //#9184
-    for (var _4B = 0; _4B <= 6; _4B += 1) { //#9189
-        $_.i = _4B; //#9186
+    for (var _4D = 0; _4D <= 6; _4D += 1) { //#9189
+        $_.i = _4D; //#9186
         $put($_.d2w, $_.i * 2, $get($_.d2wo, $_.i)); //#9187
         $put($_.d2w, ($_.i * 2) + 1, $get($_.d2we, $_.i)); //#9188
     } //#9188
     $k[$j++] = Infinity; //#9191
-    var _4M = $_.d1w; //#9192
-    for (var _4N = 0, _4O = _4M.length; _4N < _4O; _4N++) { //#9192
-        $k[$j++] = $get(_4M, _4N); //#9192
+    var _4O = $_.d1w; //#9192
+    for (var _4P = 0, _4Q = _4O.length; _4P < _4Q; _4P++) { //#9192
+        $k[$j++] = $get(_4O, _4P); //#9192
     } //#9192
-    var _4Q = $_.d2w; //#9193
-    for (var _4R = 0, _4S = _4Q.length; _4R < _4S; _4R++) { //#9193
-        $k[$j++] = $get(_4Q, _4R); //#9193
+    var _4S = $_.d2w; //#9193
+    for (var _4T = 0, _4U = _4S.length; _4T < _4U; _4T++) { //#9193
+        $k[$j++] = $get(_4S, _4T); //#9193
     } //#9193
     $_.widths = $a(); //#9193
     if (!bwipp_databarlimited.__9217__) { //#9217
         $_ = Object.create($_); //#9217
         $_.checkweights = $a([1, 3, 9, 27, 81, 65, 17, 51, 64, 14, 42, 37, 22, 66, 20, 60, 2, 6, 18, 54, 73, 41, 34, 13, 39, 28, 84, 74]); //#9200
         $k[$j++] = Infinity; //#9202
-        for (var _4W = 0; _4W <= 43; _4W += 1) { //#9203
-            $k[$j++] = _4W; //#9203
+        for (var _4Y = 0; _4Y <= 43; _4Y += 1) { //#9203
+            $k[$j++] = _4Y; //#9203
         } //#9203
         $k[$j++] = 45; //#9205
         $k[$j++] = 52; //#9205
         $k[$j++] = 57; //#9205
-        for (var _4X = 63; _4X <= 66; _4X += 1) { //#9205
-            $k[$j++] = _4X; //#9205
+        for (var _4Z = 63; _4Z <= 66; _4Z += 1) { //#9205
+            $k[$j++] = _4Z; //#9205
         } //#9205
-        for (var _4Y = 73; _4Y <= 79; _4Y += 1) { //#9206
-            $k[$j++] = _4Y; //#9206
+        for (var _4a = 73; _4a <= 79; _4a += 1) { //#9206
+            $k[$j++] = _4a; //#9206
         } //#9206
         $k[$j++] = 82; //#9208
-        for (var _4Z = 126; _4Z <= 130; _4Z += 1) { //#9208
-            $k[$j++] = _4Z; //#9208
+        for (var _4b = 126; _4b <= 130; _4b += 1) { //#9208
+            $k[$j++] = _4b; //#9208
         } //#9208
         $k[$j++] = 132; //#9210
-        for (var _4a = 141; _4a <= 146; _4a += 1) { //#9210
-            $k[$j++] = _4a; //#9210
+        for (var _4c = 141; _4c <= 146; _4c += 1) { //#9210
+            $k[$j++] = _4c; //#9210
         } //#9210
-        for (var _4b = 210; _4b <= 217; _4b += 1) { //#9211
-            $k[$j++] = _4b; //#9211
+        for (var _4d = 210; _4d <= 217; _4d += 1) { //#9211
+            $k[$j++] = _4d; //#9211
         } //#9211
         $k[$j++] = 220; //#9213
-        for (var _4c = 316; _4c <= 320; _4c += 1) { //#9213
-            $k[$j++] = _4c; //#9213
+        for (var _4e = 316; _4e <= 320; _4e += 1) { //#9213
+            $k[$j++] = _4e; //#9213
         } //#9213
         $k[$j++] = 322; //#9215
         $k[$j++] = 323; //#9215
@@ -12345,8 +12387,8 @@ function bwipp_databarlimited() {
         $_ = Object.getPrototypeOf($_); //#9216
     } //#9216
     $_.checksum = 0; //#9219
-    for (var _4f = 0; _4f <= 27; _4f += 1) { //#9223
-        $_.i = _4f; //#9221
+    for (var _4h = 0; _4h <= 27; _4h += 1) { //#9223
+        $_.i = _4h; //#9221
         $_.checksum = $f($_.checksum + ($get($_.widths, $_.i) * $get($_.checkweights, $_.i))); //#9222
     } //#9222
     $_.checksum = $_.checksum % 89; //#9224
@@ -12358,8 +12400,8 @@ function bwipp_databarlimited() {
     $k[$j++] = 6; //#9226
     $k[$j++] = false; //#9226
     $_.getRSSwidths(); //#9226
-    var _4s = $k[--$j]; //#9226
-    $_[$k[--$j]] = _4s; //#9226
+    var _4u = $k[--$j]; //#9226
+    $_[$k[--$j]] = _4u; //#9226
     $k[$j++] = 'bwidths'; //#9227
     $k[$j++] = $_.seq % 21; //#9227
     $k[$j++] = 8; //#9227
@@ -12367,52 +12409,52 @@ function bwipp_databarlimited() {
     $k[$j++] = 6; //#9227
     $k[$j++] = false; //#9227
     $_.getRSSwidths(); //#9227
-    var _4v = $k[--$j]; //#9227
-    $_[$k[--$j]] = _4v; //#9227
+    var _4x = $k[--$j]; //#9227
+    $_[$k[--$j]] = _4x; //#9227
     $_.checkwidths = $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]); //#9229
-    for (var _4y = 0; _4y <= 5; _4y += 1) { //#9234
-        $_.i = _4y; //#9231
+    for (var _50 = 0; _50 <= 5; _50 += 1) { //#9234
+        $_.i = _50; //#9231
         $put($_.checkwidths, $_.i * 2, $get($_.swidths, $_.i)); //#9232
         $put($_.checkwidths, ($_.i * 2) + 1, $get($_.bwidths, $_.i)); //#9233
     } //#9233
     $k[$j++] = Infinity; //#9236
-    var _59 = $_.d1w; //#9237
+    var _5B = $_.d1w; //#9237
     $k[$j++] = 1; //#9237
-    for (var _5A = 0, _5B = _59.length; _5A < _5B; _5A++) { //#9237
-        $k[$j++] = $get(_59, _5A); //#9237
+    for (var _5C = 0, _5D = _5B.length; _5C < _5D; _5C++) { //#9237
+        $k[$j++] = $get(_5B, _5C); //#9237
     } //#9237
-    var _5D = $_.checkwidths; //#9237
-    for (var _5E = 0, _5F = _5D.length; _5E < _5F; _5E++) { //#9237
-        $k[$j++] = $get(_5D, _5E); //#9237
+    var _5F = $_.checkwidths; //#9237
+    for (var _5G = 0, _5H = _5F.length; _5G < _5H; _5G++) { //#9237
+        $k[$j++] = $get(_5F, _5G); //#9237
     } //#9237
-    var _5H = $_.d2w; //#9237
-    for (var _5I = 0, _5J = _5H.length; _5I < _5J; _5I++) { //#9237
-        $k[$j++] = $get(_5H, _5I); //#9237
+    var _5J = $_.d2w; //#9237
+    for (var _5K = 0, _5L = _5J.length; _5K < _5L; _5K++) { //#9237
+        $k[$j++] = $get(_5J, _5K); //#9237
     } //#9237
     $k[$j++] = 1; //#9237
     $k[$j++] = 1; //#9237
     $k[$j++] = 5; //#9237
     $_.sbs = $a(); //#9237
     $k[$j++] = Infinity; //#9241
-    var _5M = $_.sbs; //#9243
+    var _5O = $_.sbs; //#9243
     $k[$j++] = Infinity; //#9244
-    for (var _5O = 0, _5P = ~~(($_.sbs.length + 1) / 2); _5O < _5P; _5O++) { //#9244
+    for (var _5Q = 0, _5R = ~~(($_.sbs.length + 1) / 2); _5Q < _5R; _5Q++) { //#9244
         $k[$j++] = $_.height; //#9244
     } //#9244
-    var _5R = $a(); //#9244
+    var _5T = $a(); //#9244
     $k[$j++] = Infinity; //#9245
-    for (var _5T = 0, _5U = ~~(($_.sbs.length + 1) / 2); _5T < _5U; _5T++) { //#9245
+    for (var _5V = 0, _5W = ~~(($_.sbs.length + 1) / 2); _5V < _5W; _5V++) { //#9245
         $k[$j++] = 0; //#9245
     } //#9245
-    var _5V = $a(); //#9245
+    var _5X = $a(); //#9245
     $k[$j++] = 'ren'; //#9250
     $k[$j++] = 'renlinear'; //#9250
     $k[$j++] = 'sbs'; //#9250
-    $k[$j++] = _5M; //#9250
+    $k[$j++] = _5O; //#9250
     $k[$j++] = 'bhs'; //#9250
-    $k[$j++] = _5R; //#9250
+    $k[$j++] = _5T; //#9250
     $k[$j++] = 'bbs'; //#9250
-    $k[$j++] = _5V; //#9250
+    $k[$j++] = _5X; //#9250
     $k[$j++] = 'txt'; //#9250
     $k[$j++] = $_.txt; //#9250
     $k[$j++] = 'textxalign'; //#9250
@@ -12423,8 +12465,8 @@ function bwipp_databarlimited() {
     $k[$j++] = 0; //#9250
     $k[$j++] = 'opt'; //#9250
     $k[$j++] = $_.options; //#9250
-    var _5Y = $d(); //#9250
-    $k[$j++] = _5Y; //#9253
+    var _5a = $d(); //#9250
+    $k[$j++] = _5a; //#9253
     if (!$_.dontdraw) { //#9253
         bwipp_renlinear(); //#9253
     } //#9253
@@ -12446,7 +12488,7 @@ function bwipp_databarexpanded() {
     bwipp_processoptions(); //#9302
     $_.options = $k[--$j]; //#9302
     $_.barcode = $k[--$j]; //#9303
-    bwipp_loadctx(bwipp_databarexpanded) //#9305
+    bwipp_loadctx(bwipp_databarexpanded); //#9305
     if ($_.barxmult < 34) { //#9309
         $k[$j++] = 'bwipp.databarStackedOmniBarXmult#9308'; //#9308
         $k[$j++] = "GS1 DataBar Expanded Stacked must have a barxmult of at least 34"; //#9308
@@ -12675,9 +12717,13 @@ function bwipp_databarexpanded() {
             $k[$j++] = _34; //#9434
         } //#9434
         var _35 = $k[--$j]; //#9435
-        var _38 = $cvrs($s(_35.length), $k[--$j], 2); //#9435
-        $puti(_35, _35.length - _38.length, _38); //#9435
         $k[$j++] = _35; //#9435
+        $k[$j++] = _35; //#9435
+        $r(3, -1); //#9435
+        var _36 = $k[--$j]; //#9435
+        var _37 = $k[--$j]; //#9435
+        var _39 = $cvrs($s(_37.length), _36, 2); //#9435
+        $puti(_37, _37.length - _39.length, _39); //#9435
     }; //#9435
     $_.fnc1 = -1; //#9438
     $_.lnumeric = -2; //#9438
@@ -12691,12 +12737,12 @@ function bwipp_databarexpanded() {
         $k[$j++] = 'cdf'; //#9446
         $k[$j++] = $geti($get($_.vals, 0), 0, 13); //#9446
         $_.conv13to44(); //#9446
-        var _3G = $k[--$j]; //#9446
-        $_[$k[--$j]] = _3G; //#9446
+        var _3H = $k[--$j]; //#9446
+        $_[$k[--$j]] = _3H; //#9446
         $k[$j++] = Infinity; //#9447
-        var _3I = $_.cdf; //#9447
-        for (var _3J = 0, _3K = _3I.length; _3J < _3K; _3J++) { //#9447
-            $k[$j++] = $f($get(_3I, _3J) - 48); //#9447
+        var _3J = $_.cdf; //#9447
+        for (var _3K = 0, _3L = _3J.length; _3K < _3L; _3K++) { //#9447
+            $k[$j++] = $f($get(_3J, _3K) - 48); //#9447
         } //#9447
         $_.cdf = $a(); //#9447
         $_.gpf = $a([]); //#9448
@@ -12710,21 +12756,21 @@ function bwipp_databarexpanded() {
         $k[$j++] = 0; //#9456
         $k[$j++] = $geti($get($_.vals, 0), 1, 12); //#9456
         $_.conv12to40(); //#9456
-        var _3d = $k[--$j]; //#9456
         var _3e = $k[--$j]; //#9456
-        $puti($k[--$j], _3e, _3d); //#9456
+        var _3f = $k[--$j]; //#9456
+        $puti($k[--$j], _3f, _3e); //#9456
         $k[$j++] = $_.cdf; //#9457
         $k[$j++] = 40; //#9457
         $k[$j++] = $cvi($get($_.vals, 1)); //#9457
         $k[$j++] = 15; //#9457
         $_.tobin(); //#9457
-        var _3j = $k[--$j]; //#9457
         var _3k = $k[--$j]; //#9457
-        $puti($k[--$j], _3k, _3j); //#9457
+        var _3l = $k[--$j]; //#9457
+        $puti($k[--$j], _3l, _3k); //#9457
         $k[$j++] = Infinity; //#9458
-        var _3m = $_.cdf; //#9458
-        for (var _3n = 0, _3o = _3m.length; _3n < _3o; _3n++) { //#9458
-            $k[$j++] = $get(_3m, _3n) - 48; //#9458
+        var _3n = $_.cdf; //#9458
+        for (var _3o = 0, _3p = _3n.length; _3o < _3p; _3o++) { //#9458
+            $k[$j++] = $get(_3n, _3o) - 48; //#9458
         } //#9458
         $_.cdf = $a(); //#9458
         $_.gpf = $a([]); //#9459
@@ -12738,9 +12784,9 @@ function bwipp_databarexpanded() {
         $k[$j++] = 0; //#9467
         $k[$j++] = $geti($get($_.vals, 0), 1, 12); //#9467
         $_.conv12to40(); //#9467
-        var _41 = $k[--$j]; //#9467
         var _42 = $k[--$j]; //#9467
-        $puti($k[--$j], _42, _41); //#9467
+        var _43 = $k[--$j]; //#9467
+        $puti($k[--$j], _43, _42); //#9467
         if ($eq($get($_.ais, 1), "3202")) { //#9471
             $k[$j++] = $cvi($get($_.vals, 1)); //#9469
             $k[$j++] = 15; //#9469
@@ -12752,9 +12798,9 @@ function bwipp_databarexpanded() {
         } //#9471
         $puti($_.cdf, 40, $k[--$j]); //#9473
         $k[$j++] = Infinity; //#9474
-        var _4C = $_.cdf; //#9474
-        for (var _4D = 0, _4E = _4C.length; _4D < _4E; _4D++) { //#9474
-            $k[$j++] = $get(_4C, _4D) - 48; //#9474
+        var _4D = $_.cdf; //#9474
+        for (var _4E = 0, _4F = _4D.length; _4E < _4F; _4E++) { //#9474
+            $k[$j++] = $get(_4D, _4E) - 48; //#9474
         } //#9474
         $_.cdf = $a(); //#9474
         $_.gpf = $a([]); //#9475
@@ -12768,19 +12814,19 @@ function bwipp_databarexpanded() {
         $k[$j++] = 0; //#9483
         $k[$j++] = $geti($get($_.vals, 0), 1, 12); //#9483
         $_.conv12to40(); //#9483
-        var _4R = $k[--$j]; //#9483
         var _4S = $k[--$j]; //#9483
-        $puti($k[--$j], _4S, _4R); //#9483
-        var _4U = $s(6); //#9484
-        $puti(_4U, 0, $geti($get($_.ais, 1), 3, 1)); //#9484
-        $puti(_4U, 1, $geti($get($_.vals, 1), 1, 5)); //#9485
-        $k[$j++] = $cvi(_4U); //#9485
+        var _4T = $k[--$j]; //#9483
+        $puti($k[--$j], _4T, _4S); //#9483
+        var _4V = $s(6); //#9484
+        $puti(_4V, 0, $geti($get($_.ais, 1), 3, 1)); //#9484
+        $puti(_4V, 1, $geti($get($_.vals, 1), 1, 5)); //#9485
+        $k[$j++] = $cvi(_4V); //#9485
         $k[$j++] = 20; //#9485
         $_.tobin(); //#9485
         $puti($_.cdf, 40, $k[--$j]); //#9486
         if ($_.ais.length == 3) { //#9493
-            var _4f = $get($_.vals, 2); //#9488
-            $k[$j++] = ($cvi($geti(_4f, 0, 2)) * 384) + ((($cvi($geti(_4f, 2, 2)) - 1) * 32) + $cvi($geti(_4f, 4, 2))); //#9491
+            var _4g = $get($_.vals, 2); //#9488
+            $k[$j++] = ($cvi($geti(_4g, 0, 2)) * 384) + ((($cvi($geti(_4g, 2, 2)) - 1) * 32) + $cvi($geti(_4g, 4, 2))); //#9491
         } else { //#9493
             $k[$j++] = 38400; //#9493
         } //#9493
@@ -12788,9 +12834,9 @@ function bwipp_databarexpanded() {
         $_.tobin(); //#9495
         $puti($_.cdf, 60, $k[--$j]); //#9495
         $k[$j++] = Infinity; //#9496
-        var _4l = $_.cdf; //#9496
-        for (var _4m = 0, _4n = _4l.length; _4m < _4n; _4m++) { //#9496
-            $k[$j++] = $get(_4l, _4m) - 48; //#9496
+        var _4m = $_.cdf; //#9496
+        for (var _4n = 0, _4o = _4m.length; _4n < _4o; _4n++) { //#9496
+            $k[$j++] = $get(_4m, _4n) - 48; //#9496
         } //#9496
         $_.cdf = $a(); //#9496
         $_.gpf = $a([]); //#9497
@@ -12804,21 +12850,21 @@ function bwipp_databarexpanded() {
         $k[$j++] = 0; //#9505
         $k[$j++] = $geti($get($_.vals, 0), 1, 12); //#9505
         $_.conv12to40(); //#9505
-        var _50 = $k[--$j]; //#9505
         var _51 = $k[--$j]; //#9505
-        $puti($k[--$j], _51, _50); //#9505
+        var _52 = $k[--$j]; //#9505
+        $puti($k[--$j], _52, _51); //#9505
         $k[$j++] = $_.cdf; //#9506
         $k[$j++] = 40; //#9506
         $k[$j++] = $cvi($geti($get($_.ais, 1), 3, 1)); //#9506
         $k[$j++] = 2; //#9506
         $_.tobin(); //#9506
-        var _57 = $k[--$j]; //#9506
         var _58 = $k[--$j]; //#9506
-        $puti($k[--$j], _58, _57); //#9506
+        var _59 = $k[--$j]; //#9506
+        $puti($k[--$j], _59, _58); //#9506
         $k[$j++] = Infinity; //#9507
-        var _5A = $_.cdf; //#9507
-        for (var _5B = 0, _5C = _5A.length; _5B < _5C; _5B++) { //#9507
-            $k[$j++] = $get(_5A, _5B) - 48; //#9507
+        var _5B = $_.cdf; //#9507
+        for (var _5C = 0, _5D = _5B.length; _5C < _5D; _5C++) { //#9507
+            $k[$j++] = $get(_5B, _5C) - 48; //#9507
         } //#9507
         $_.cdf = $a(); //#9507
         $k[$j++] = Infinity; //#9508
@@ -12837,36 +12883,36 @@ function bwipp_databarexpanded() {
         $k[$j++] = 0; //#9516
         $k[$j++] = $geti($get($_.vals, 0), 1, 12); //#9516
         $_.conv12to40(); //#9516
-        var _5Z = $k[--$j]; //#9516
         var _5a = $k[--$j]; //#9516
-        $puti($k[--$j], _5a, _5Z); //#9516
+        var _5b = $k[--$j]; //#9516
+        $puti($k[--$j], _5b, _5a); //#9516
         $k[$j++] = $_.cdf; //#9517
         $k[$j++] = 40; //#9517
         $k[$j++] = $cvi($geti($get($_.ais, 1), 3, 1)); //#9517
         $k[$j++] = 2; //#9517
         $_.tobin(); //#9517
-        var _5g = $k[--$j]; //#9517
         var _5h = $k[--$j]; //#9517
-        $puti($k[--$j], _5h, _5g); //#9517
+        var _5i = $k[--$j]; //#9517
+        $puti($k[--$j], _5i, _5h); //#9517
         $k[$j++] = $_.cdf; //#9518
         $k[$j++] = 42; //#9518
         $k[$j++] = $cvi($geti($get($_.vals, 1), 0, 3)); //#9518
         $k[$j++] = 10; //#9518
         $_.tobin(); //#9518
-        var _5n = $k[--$j]; //#9518
         var _5o = $k[--$j]; //#9518
-        $puti($k[--$j], _5o, _5n); //#9518
+        var _5p = $k[--$j]; //#9518
+        $puti($k[--$j], _5p, _5o); //#9518
         $k[$j++] = Infinity; //#9519
-        var _5q = $_.cdf; //#9519
-        for (var _5r = 0, _5s = _5q.length; _5r < _5s; _5r++) { //#9519
-            $k[$j++] = $get(_5q, _5r) - 48; //#9519
+        var _5r = $_.cdf; //#9519
+        for (var _5s = 0, _5t = _5r.length; _5s < _5t; _5s++) { //#9519
+            $k[$j++] = $get(_5r, _5s) - 48; //#9519
         } //#9519
         $_.cdf = $a(); //#9519
         $k[$j++] = Infinity; //#9520
-        var _5w = $get($_.vals, 1); //#9520
-        var _5x = $geti(_5w, 3, _5w.length - 3); //#9520
-        for (var _5y = 0, _5z = _5x.length; _5y < _5z; _5y++) { //#9520
-            $k[$j++] = $get(_5x, _5y); //#9520
+        var _5x = $get($_.vals, 1); //#9520
+        var _5y = $geti(_5x, 3, _5x.length - 3); //#9520
+        for (var _5z = 0, _60 = _5y.length; _5z < _60; _5z++) { //#9520
+            $k[$j++] = $get(_5y, _5z); //#9520
         } //#9520
         if ($_.ais.length > 2) { //#9520
             $k[$j++] = $_.fnc1; //#9520
@@ -12884,54 +12930,54 @@ function bwipp_databarexpanded() {
     if (!bwipp_databarexpanded.__9571__) { //#9571
         $_ = Object.create($_); //#9571
         $k[$j++] = Infinity; //#9534
-        for (var _6G = 0; _6G <= 119; _6G += 1) { //#9543
-            var _6I = $strcpy($s(2), "00"); //#9536
-            var _6K = $cvrs($s(2), _6G, 11); //#9536
-            $puti(_6I, 2 - _6K.length, _6K); //#9537
-            $k[$j++] = _6G; //#9538
-            $k[$j++] = _6I; //#9538
-            if ($get(_6I, 0) == 65) { //#9538
-                var _6M = $k[--$j]; //#9538
-                $put(_6M, 0, 94); //#9538
-                $k[$j++] = _6M; //#9538
+        for (var _6H = 0; _6H <= 119; _6H += 1) { //#9543
+            var _6J = $strcpy($s(2), "00"); //#9536
+            var _6L = $cvrs($s(2), _6H, 11); //#9536
+            $puti(_6J, 2 - _6L.length, _6L); //#9537
+            $k[$j++] = _6H; //#9538
+            $k[$j++] = _6J; //#9538
+            if ($get(_6J, 0) == 65) { //#9538
+                var _6N = $k[--$j]; //#9538
+                $put(_6N, 0, 94); //#9538
+                $k[$j++] = _6N; //#9538
             } //#9538
-            var _6N = $k[--$j]; //#9539
-            $k[$j++] = _6N; //#9539
-            if ($get(_6N, 1) == 65) { //#9539
-                var _6P = $k[--$j]; //#9539
-                $put(_6P, 1, 94); //#9539
-                $k[$j++] = _6P; //#9539
+            var _6O = $k[--$j]; //#9539
+            $k[$j++] = _6O; //#9539
+            if ($get(_6O, 1) == 65) { //#9539
+                var _6Q = $k[--$j]; //#9539
+                $put(_6Q, 1, 94); //#9539
+                $k[$j++] = _6Q; //#9539
             } //#9539
-            var _6Q = $k[--$j]; //#9540
-            var _6T = $strcpy($s(7), "0000000"); //#9541
-            var _6V = $cvrs($s(7), $f($k[--$j] + 8), 2); //#9541
-            $puti(_6T, 7 - _6V.length, _6V); //#9542
-            $k[$j++] = _6Q; //#9542
-            $k[$j++] = _6T; //#9542
+            var _6R = $k[--$j]; //#9540
+            var _6U = $strcpy($s(7), "0000000"); //#9541
+            var _6W = $cvrs($s(7), $f($k[--$j] + 8), 2); //#9541
+            $puti(_6U, 7 - _6W.length, _6W); //#9542
+            $k[$j++] = _6R; //#9542
+            $k[$j++] = _6U; //#9542
         } //#9542
         $k[$j++] = $_.lalphanumeric; //#9544
         $k[$j++] = "0000"; //#9544
         $_.numeric = $d(); //#9545
         $k[$j++] = Infinity; //#9547
-        for (var _6Y = 48; _6Y <= 57; _6Y += 1) { //#9548
-            $k[$j++] = _6Y; //#9548
-            $k[$j++] = _6Y - 43; //#9548
+        for (var _6Z = 48; _6Z <= 57; _6Z += 1) { //#9548
+            $k[$j++] = _6Z; //#9548
+            $k[$j++] = _6Z - 43; //#9548
             $k[$j++] = 5; //#9548
             $_.tobin(); //#9548
         } //#9548
         $k[$j++] = $_.fnc1; //#9550
         $k[$j++] = "01111"; //#9550
-        for (var _6a = 65; _6a <= 90; _6a += 1) { //#9550
-            $k[$j++] = _6a; //#9550
-            $k[$j++] = _6a - 33; //#9550
+        for (var _6b = 65; _6b <= 90; _6b += 1) { //#9550
+            $k[$j++] = _6b; //#9550
+            $k[$j++] = _6b - 33; //#9550
             $k[$j++] = 6; //#9550
             $_.tobin(); //#9550
         } //#9550
         $k[$j++] = 42; //#9552
         $k[$j++] = "111010"; //#9552
-        for (var _6b = 44; _6b <= 47; _6b += 1) { //#9552
-            $k[$j++] = _6b; //#9552
-            $k[$j++] = _6b + 15; //#9552
+        for (var _6c = 44; _6c <= 47; _6c += 1) { //#9552
+            $k[$j++] = _6c; //#9552
+            $k[$j++] = _6c + 15; //#9552
             $k[$j++] = 6; //#9552
             $_.tobin(); //#9552
         } //#9552
@@ -12941,23 +12987,23 @@ function bwipp_databarexpanded() {
         $k[$j++] = "00100"; //#9554
         $_.alphanumeric = $d(); //#9555
         $k[$j++] = Infinity; //#9557
-        for (var _6f = 48; _6f <= 57; _6f += 1) { //#9558
-            $k[$j++] = _6f; //#9558
-            $k[$j++] = _6f - 43; //#9558
+        for (var _6g = 48; _6g <= 57; _6g += 1) { //#9558
+            $k[$j++] = _6g; //#9558
+            $k[$j++] = _6g - 43; //#9558
             $k[$j++] = 5; //#9558
             $_.tobin(); //#9558
         } //#9558
         $k[$j++] = $_.fnc1; //#9560
         $k[$j++] = "01111"; //#9560
-        for (var _6h = 65; _6h <= 90; _6h += 1) { //#9560
-            $k[$j++] = _6h; //#9560
-            $k[$j++] = _6h - 1; //#9560
+        for (var _6i = 65; _6i <= 90; _6i += 1) { //#9560
+            $k[$j++] = _6i; //#9560
+            $k[$j++] = _6i - 1; //#9560
             $k[$j++] = 7; //#9560
             $_.tobin(); //#9560
         } //#9560
-        for (var _6i = 97; _6i <= 122; _6i += 1) { //#9561
-            $k[$j++] = _6i; //#9561
-            $k[$j++] = _6i - 7; //#9561
+        for (var _6j = 97; _6j <= 122; _6j += 1) { //#9561
+            $k[$j++] = _6j; //#9561
+            $k[$j++] = _6j - 7; //#9561
             $k[$j++] = 7; //#9561
             $_.tobin(); //#9561
         } //#9561
@@ -12965,15 +13011,15 @@ function bwipp_databarexpanded() {
         $k[$j++] = "11101000"; //#9564
         $k[$j++] = 34; //#9564
         $k[$j++] = "11101001"; //#9564
-        for (var _6j = 37; _6j <= 47; _6j += 1) { //#9564
-            $k[$j++] = _6j; //#9564
-            $k[$j++] = _6j + 197; //#9564
+        for (var _6k = 37; _6k <= 47; _6k += 1) { //#9564
+            $k[$j++] = _6k; //#9564
+            $k[$j++] = _6k + 197; //#9564
             $k[$j++] = 8; //#9564
             $_.tobin(); //#9564
         } //#9564
-        for (var _6k = 58; _6k <= 63; _6k += 1) { //#9565
-            $k[$j++] = _6k; //#9565
-            $k[$j++] = _6k + 187; //#9565
+        for (var _6l = 58; _6l <= 63; _6l += 1) { //#9565
+            $k[$j++] = _6l; //#9565
+            $k[$j++] = _6l + 187; //#9565
             $k[$j++] = 8; //#9565
             $_.tobin(); //#9565
         } //#9565
@@ -12990,169 +13036,169 @@ function bwipp_databarexpanded() {
         bwipp_databarexpanded.__9571__ = 1; //#9570
         $_ = Object.getPrototypeOf($_); //#9570
     } //#9570
-    for (var _6r = 0, _6q = $_.ais.length - 1; _6r <= _6q; _6r += 1) { //#9589
-        $_.i = _6r; //#9575
+    for (var _6s = 0, _6r = $_.ais.length - 1; _6s <= _6r; _6s += 1) { //#9589
+        $_.i = _6s; //#9575
         $_.ai = $get($_.ais, $_.i); //#9576
         $_.val = $get($_.vals, $_.i); //#9577
-        var _71 = $a(($_.gpf.length + $_.ai.length) + $_.val.length); //#9578
-        $puti(_71, 0, $_.gpf); //#9579
-        $k[$j++] = _71; //#9580
-        $k[$j++] = _71; //#9580
+        var _72 = $a(($_.gpf.length + $_.ai.length) + $_.val.length); //#9578
+        $puti(_72, 0, $_.gpf); //#9579
+        $k[$j++] = _72; //#9580
+        $k[$j++] = _72; //#9580
         $k[$j++] = $_.gpf.length; //#9580
         $k[$j++] = $_.ai; //#9580
         $k[$j++] = Infinity; //#9580
-        var _75 = $k[--$j]; //#9580
         var _76 = $k[--$j]; //#9580
-        $k[$j++] = _75; //#9580
-        $forall(_76); //#9580
-        var _77 = $a(); //#9580
-        var _78 = $k[--$j]; //#9580
-        $puti($k[--$j], _78, _77); //#9580
-        var _7A = $k[--$j]; //#9581
-        $k[$j++] = _7A; //#9581
-        $k[$j++] = _7A; //#9581
+        var _77 = $k[--$j]; //#9580
+        $k[$j++] = _76; //#9580
+        $forall(_77); //#9580
+        var _78 = $a(); //#9580
+        var _79 = $k[--$j]; //#9580
+        $puti($k[--$j], _79, _78); //#9580
+        var _7B = $k[--$j]; //#9581
+        $k[$j++] = _7B; //#9581
+        $k[$j++] = _7B; //#9581
         $k[$j++] = $_.gpf.length + $_.ai.length; //#9581
         $k[$j++] = $_.val; //#9581
         $k[$j++] = Infinity; //#9581
-        var _7E = $k[--$j]; //#9581
         var _7F = $k[--$j]; //#9581
-        $k[$j++] = _7E; //#9581
-        $forall(_7F); //#9581
-        var _7G = $a(); //#9581
-        var _7H = $k[--$j]; //#9581
-        $puti($k[--$j], _7H, _7G); //#9581
+        var _7G = $k[--$j]; //#9581
+        $k[$j++] = _7F; //#9581
+        $forall(_7G); //#9581
+        var _7H = $a(); //#9581
+        var _7I = $k[--$j]; //#9581
+        $puti($k[--$j], _7I, _7H); //#9581
         $_.gpf = $k[--$j]; //#9582
         if (($_.i != ($_.ais.length - 1)) && $get($_.fncs, $_.i)) { //#9588
-            var _7Q = $a($_.gpf.length + 1); //#9584
-            $puti(_7Q, 0, $_.gpf); //#9585
-            $put(_7Q, $_.gpf.length, $_.fnc1); //#9586
-            $_.gpf = _7Q; //#9587
+            var _7R = $a($_.gpf.length + 1); //#9584
+            $puti(_7R, 0, $_.gpf); //#9585
+            $put(_7R, $_.gpf.length, $_.fnc1); //#9586
+            $_.gpf = _7R; //#9587
         } //#9587
     } //#9587
     $_.rembits = function() {
-        var _7U = $k[--$j]; //#9593
-        var _7V = 48; //#9595
-        var _7W = (~~Math.ceil(_7U / 12)) * 12; //#9595
-        if (((~~Math.ceil(_7U / 12)) * 12) < 48) { //#9595
-            var _ = _7V; //#9595
-            _7V = _7W; //#9595
-            _7W = _; //#9595
+        var _7V = $k[--$j]; //#9593
+        var _7W = 48; //#9595
+        var _7X = (~~Math.ceil(_7V / 12)) * 12; //#9595
+        if (((~~Math.ceil(_7V / 12)) * 12) < 48) { //#9595
+            var _ = _7W; //#9595
+            _7W = _7X; //#9595
+            _7X = _; //#9595
         } //#9595
-        var _7X = ~~(_7W / 12); //#9596
-        $k[$j++] = _7U; //#9600
-        $k[$j++] = _7W; //#9600
+        var _7Y = ~~(_7X / 12); //#9596
+        $k[$j++] = _7V; //#9600
         $k[$j++] = _7X; //#9600
-        if ((_7X % $_.segments) == 1) { //#9599
-            var _7Z = $k[--$j]; //#9597
+        $k[$j++] = _7Y; //#9600
+        if ((_7Y % $_.segments) == 1) { //#9599
             var _7a = $k[--$j]; //#9597
-            $k[$j++] = $f(_7Z + 1) * 12; //#9597
-            $k[$j++] = _7a; //#9597
+            var _7b = $k[--$j]; //#9597
+            $k[$j++] = $f(_7a + 1) * 12; //#9597
+            $k[$j++] = _7b; //#9597
             $j--; //#9597
         } else { //#9599
             $j--; //#9599
         } //#9599
-        var _7b = $k[--$j]; //#9601
         var _7c = $k[--$j]; //#9601
-        $k[$j++] = $f(_7b - _7c); //#9601
+        var _7d = $k[--$j]; //#9601
+        $k[$j++] = $f(_7c - _7d); //#9601
     }; //#9601
     $_.encode = function() {
-        var _7d = $k[--$j]; //#9605
-        $k[$j++] = _7d; //#9605
-        if ($ne(_7d, 'raw')) { //#9605
-            var _7e = $k[--$j]; //#9605
-            var _7g = $get(_7e, $k[--$j]); //#9605
-            $k[$j++] = _7g; //#9605
+        var _7e = $k[--$j]; //#9605
+        $k[$j++] = _7e; //#9605
+        if ($ne(_7e, 'raw')) { //#9605
+            var _7f = $k[--$j]; //#9605
+            var _7h = $get(_7f, $k[--$j]); //#9605
+            $k[$j++] = _7h; //#9605
         } else { //#9605
             $j--; //#9605
         } //#9605
-        var _7h = $k[--$j]; //#9606
-        $k[$j++] = _7h; //#9608
-        if ((_7h.length + $_.j) >= 252) { //#9608
+        var _7i = $k[--$j]; //#9606
+        $k[$j++] = _7i; //#9608
+        if ((_7i.length + $_.j) >= 252) { //#9608
             $j--; //#9607
             $k[$j++] = 'bwipp.gs1databarexpandedTooLong#9607'; //#9607
             $k[$j++] = "Maximum length exceeded"; //#9607
             bwipp_raiseerror(); //#9607
         } //#9607
         $k[$j++] = Infinity; //#9609
-        var _7j = $k[--$j]; //#9609
         var _7k = $k[--$j]; //#9609
-        $k[$j++] = _7j; //#9609
-        $forall(_7k, function() { //#9609
-            var _7l = $k[--$j]; //#9609
-            $k[$j++] = $f(_7l - 48); //#9609
+        var _7l = $k[--$j]; //#9609
+        $k[$j++] = _7k; //#9609
+        $forall(_7l, function() { //#9609
+            var _7m = $k[--$j]; //#9609
+            $k[$j++] = $f(_7m - 48); //#9609
         }); //#9609
-        var _7m = $a(); //#9609
-        $puti($_.gpfenc, $_.j, _7m); //#9611
-        $_.j = _7m.length + $_.j; //#9612
+        var _7n = $a(); //#9609
+        $puti($_.gpfenc, $_.j, _7n); //#9611
+        $_.j = _7n.length + $_.j; //#9612
     }; //#9612
     $k[$j++] = Infinity; //#9616
-    for (var _7r = 0, _7s = $_.gpf.length; _7r < _7s; _7r++) { //#9616
+    for (var _7s = 0, _7t = $_.gpf.length; _7s < _7t; _7s++) { //#9616
         $k[$j++] = 0; //#9616
     } //#9616
     $k[$j++] = 0; //#9616
     $k[$j++] = -1; //#9616
     $_.numericruns = $a(); //#9616
     $k[$j++] = Infinity; //#9617
-    for (var _7v = 0, _7w = $_.gpf.length; _7v < _7w; _7v++) { //#9617
+    for (var _7w = 0, _7x = $_.gpf.length; _7w < _7x; _7w++) { //#9617
         $k[$j++] = 0; //#9617
     } //#9617
     $k[$j++] = 0; //#9617
     $_.alphanumericruns = $a(); //#9617
     $k[$j++] = Infinity; //#9618
-    for (var _7z = 0, _80 = $_.gpf.length; _7z < _80; _7z++) { //#9618
+    for (var _80 = 0, _81 = $_.gpf.length; _80 < _81; _80++) { //#9618
         $k[$j++] = 0; //#9618
     } //#9618
     $k[$j++] = 9999; //#9618
     $_.nextiso646only = $a(); //#9618
-    for (var _83 = $_.gpf.length - 1; _83 >= 0; _83 -= 1) { //#9640
-        $_.i = _83; //#9620
-        var _88 = $strcpy($s(2), "00"); //#9622
-        var _8B = $get($_.gpf, $_.i); //#9623
+    for (var _84 = $_.gpf.length - 1; _84 >= 0; _84 -= 1) { //#9640
+        $_.i = _84; //#9620
+        var _89 = $strcpy($s(2), "00"); //#9622
+        var _8C = $get($_.gpf, $_.i); //#9623
         $k[$j++] = $get($_.gpf, $_.i); //#9623
-        $k[$j++] = _88; //#9623
-        $k[$j++] = _88; //#9623
+        $k[$j++] = _89; //#9623
+        $k[$j++] = _89; //#9623
         $k[$j++] = 0; //#9623
-        $k[$j++] = _8B; //#9623
-        if (_8B == $_.fnc1) { //#9623
+        $k[$j++] = _8C; //#9623
+        if (_8C == $_.fnc1) { //#9623
             $j--; //#9623
             $k[$j++] = 94; //#9623
         } //#9623
-        var _8D = $k[--$j]; //#9623
         var _8E = $k[--$j]; //#9623
-        $put($k[--$j], _8E, _8D); //#9623
+        var _8F = $k[--$j]; //#9623
+        $put($k[--$j], _8F, _8E); //#9623
         if ($_.i < ($_.gpf.length - 1)) { //#9624
-            var _8I = $k[--$j]; //#9624
-            var _8L = $get($_.gpf, $_.i + 1); //#9624
-            $k[$j++] = _8I; //#9624
-            $k[$j++] = _8I; //#9624
+            var _8J = $k[--$j]; //#9624
+            var _8M = $get($_.gpf, $_.i + 1); //#9624
+            $k[$j++] = _8J; //#9624
+            $k[$j++] = _8J; //#9624
             $k[$j++] = 1; //#9624
-            $k[$j++] = _8L; //#9624
-            if (_8L == $_.fnc1) { //#9624
+            $k[$j++] = _8M; //#9624
+            if (_8M == $_.fnc1) { //#9624
                 $j--; //#9624
                 $k[$j++] = 94; //#9624
             } //#9624
-            var _8N = $k[--$j]; //#9624
             var _8O = $k[--$j]; //#9624
-            $put($k[--$j], _8O, _8N); //#9624
+            var _8P = $k[--$j]; //#9624
+            $put($k[--$j], _8P, _8O); //#9624
         } //#9624
-        var _8S = $get($_.numeric, $k[--$j]) !== undefined; //#9625
-        if (_8S) { //#9628
+        var _8T = $get($_.numeric, $k[--$j]) !== undefined; //#9625
+        if (_8T) { //#9628
             $put($_.numericruns, $_.i, $f($get($_.numericruns, $_.i + 2) + 2)); //#9626
         } else { //#9628
             $put($_.numericruns, $_.i, 0); //#9628
         } //#9628
-        var _8a = $k[--$j]; //#9630
-        var _8c = $get($_.alphanumeric, _8a) !== undefined; //#9630
-        $k[$j++] = _8a; //#9634
-        if (_8c) { //#9633
+        var _8b = $k[--$j]; //#9630
+        var _8d = $get($_.alphanumeric, _8b) !== undefined; //#9630
+        $k[$j++] = _8b; //#9634
+        if (_8d) { //#9633
             $put($_.alphanumericruns, $_.i, $f($get($_.alphanumericruns, $_.i + 1) + 1)); //#9631
         } else { //#9633
             $put($_.alphanumericruns, $_.i, 0); //#9633
         } //#9633
-        var _8k = $k[--$j]; //#9635
-        var _8m = $get($_.iso646, _8k) !== undefined; //#9635
-        var _8o = $get($_.alphanumeric, _8k) !== undefined; //#9635
-        if (_8m && (!_8o)) { //#9638
+        var _8l = $k[--$j]; //#9635
+        var _8n = $get($_.iso646, _8l) !== undefined; //#9635
+        var _8p = $get($_.alphanumeric, _8l) !== undefined; //#9635
+        if (_8n && (!_8p)) { //#9638
             $put($_.nextiso646only, $_.i, 0); //#9636
         } else { //#9638
             $put($_.nextiso646only, $_.i, $f($get($_.nextiso646only, $_.i + 1) + 1)); //#9638
@@ -13169,36 +13215,36 @@ function bwipp_databarexpanded() {
         for (;;) { //#9733
             if ($eq($_.mode, "numeric")) { //#9682
                 if ($_.i <= ($_.gpf.length - 2)) { //#9679
-                    var _92 = $s(2); //#9651
-                    var _95 = $get($_.gpf, $_.i); //#9652
-                    $k[$j++] = _92; //#9652
-                    $k[$j++] = _92; //#9652
+                    var _93 = $s(2); //#9651
+                    var _96 = $get($_.gpf, $_.i); //#9652
+                    $k[$j++] = _93; //#9652
+                    $k[$j++] = _93; //#9652
                     $k[$j++] = 0; //#9652
-                    $k[$j++] = _95; //#9652
-                    if (_95 == $_.fnc1) { //#9652
+                    $k[$j++] = _96; //#9652
+                    if (_96 == $_.fnc1) { //#9652
                         $j--; //#9652
                         $k[$j++] = 94; //#9652
                     } //#9652
-                    var _97 = $k[--$j]; //#9652
                     var _98 = $k[--$j]; //#9652
-                    $put($k[--$j], _98, _97); //#9652
-                    var _9A = $k[--$j]; //#9653
-                    var _9D = $get($_.gpf, $_.i + 1); //#9653
-                    $k[$j++] = _9A; //#9653
-                    $k[$j++] = _9A; //#9653
+                    var _99 = $k[--$j]; //#9652
+                    $put($k[--$j], _99, _98); //#9652
+                    var _9B = $k[--$j]; //#9653
+                    var _9E = $get($_.gpf, $_.i + 1); //#9653
+                    $k[$j++] = _9B; //#9653
+                    $k[$j++] = _9B; //#9653
                     $k[$j++] = 1; //#9653
-                    $k[$j++] = _9D; //#9653
-                    if (_9D == $_.fnc1) { //#9653
+                    $k[$j++] = _9E; //#9653
+                    if (_9E == $_.fnc1) { //#9653
                         $j--; //#9653
                         $k[$j++] = 94; //#9653
                     } //#9653
-                    var _9F = $k[--$j]; //#9653
                     var _9G = $k[--$j]; //#9653
-                    $put($k[--$j], _9G, _9F); //#9653
-                    var _9I = $k[--$j]; //#9654
-                    var _9K = $get($_.numeric, _9I) !== undefined; //#9654
-                    $k[$j++] = _9I; //#9658
-                    if (_9K) { //#9658
+                    var _9H = $k[--$j]; //#9653
+                    $put($k[--$j], _9H, _9G); //#9653
+                    var _9J = $k[--$j]; //#9654
+                    var _9L = $get($_.numeric, _9J) !== undefined; //#9654
+                    $k[$j++] = _9J; //#9658
+                    if (_9L) { //#9658
                         $k[$j++] = $_.numeric; //#9655
                         $_.encode(); //#9655
                         $_.i = $_.i + 2; //#9656
@@ -13211,8 +13257,8 @@ function bwipp_databarexpanded() {
                     $_.mode = "alphanumeric"; //#9661
                     break; //#9662
                 } else { //#9679
-                    var _9R = $get($_.gpf, $_.i); //#9664
-                    if ((_9R < 48) || (_9R > 57)) { //#9668
+                    var _9S = $get($_.gpf, $_.i); //#9664
+                    if ((_9S < 48) || (_9S > 57)) { //#9668
                         $k[$j++] = $_.lalphanumeric; //#9665
                         $k[$j++] = $_.numeric; //#9665
                         $_.encode(); //#9665
@@ -13222,22 +13268,22 @@ function bwipp_databarexpanded() {
                     $k[$j++] = 'rem'; //#9669
                     $k[$j++] = ((((12 + 1) + $_.method.length) + $_.vlf.length) + $_.cdf.length) + $_.j; //#9669
                     $_.rembits(); //#9669
-                    var _9Y = $k[--$j]; //#9669
-                    $_[$k[--$j]] = _9Y; //#9669
+                    var _9Z = $k[--$j]; //#9669
+                    $_[$k[--$j]] = _9Z; //#9669
                     if (($_.rem >= 4) && ($_.rem <= 6)) { //#9679
-                        var _9f = $geti($strcpy($s(6), "000000"), 0, $_.rem); //#9671
-                        var _9k = $cvrs($s(4), $f($get($_.gpf, $_.i) - 47), 2); //#9672
-                        $puti(_9f, 4 - _9k.length, _9k); //#9673
-                        $k[$j++] = _9f; //#9673
+                        var _9g = $geti($strcpy($s(6), "000000"), 0, $_.rem); //#9671
+                        var _9l = $cvrs($s(4), $f($get($_.gpf, $_.i) - 47), 2); //#9672
+                        $puti(_9g, 4 - _9l.length, _9l); //#9673
+                        $k[$j++] = _9g; //#9673
                         $k[$j++] = 'raw'; //#9673
                         $_.encode(); //#9673
                         $_.i = $_.i + 1; //#9674
                         break; //#9675
                     } else { //#9679
-                        var _9m = $s(2); //#9677
-                        $put(_9m, 0, $get($_.gpf, $_.i)); //#9677
-                        $put(_9m, 1, 94); //#9677
-                        $k[$j++] = _9m; //#9677
+                        var _9n = $s(2); //#9677
+                        $put(_9n, 0, $get($_.gpf, $_.i)); //#9677
+                        $put(_9n, 1, 94); //#9677
+                        $k[$j++] = _9n; //#9677
                         $k[$j++] = $_.numeric; //#9677
                         $_.encode(); //#9677
                         $_.i = $_.i + 1; //#9678
@@ -13254,10 +13300,10 @@ function bwipp_databarexpanded() {
                     $_.i = $_.i + 1; //#9688
                     break; //#9689
                 } //#9689
-                var _A2 = $get($_.gpf, $_.i); //#9691
-                var _A4 = $get($_.iso646, _A2) !== undefined; //#9691
-                var _A6 = $get($_.alphanumeric, _A2) !== undefined; //#9691
-                if (_A4 && (!_A6)) { //#9695
+                var _A3 = $get($_.gpf, $_.i); //#9691
+                var _A5 = $get($_.iso646, _A3) !== undefined; //#9691
+                var _A7 = $get($_.alphanumeric, _A3) !== undefined; //#9691
+                if (_A5 && (!_A7)) { //#9695
                     $k[$j++] = $_.liso646; //#9692
                     $k[$j++] = $_.alphanumeric; //#9692
                     $_.encode(); //#9692
@@ -13271,8 +13317,8 @@ function bwipp_databarexpanded() {
                     $_.mode = "numeric"; //#9698
                     break; //#9699
                 } //#9699
-                var _AG = $get($_.numericruns, $_.i); //#9701
-                if ((_AG >= 4) && ($f(_AG + $_.i) == $_.gpf.length)) { //#9705
+                var _AH = $get($_.numericruns, $_.i); //#9701
+                if ((_AH >= 4) && ($f(_AH + $_.i) == $_.gpf.length)) { //#9705
                     $k[$j++] = $_.lnumeric; //#9702
                     $k[$j++] = $_.alphanumeric; //#9702
                     $_.encode(); //#9702
@@ -13317,38 +13363,38 @@ function bwipp_databarexpanded() {
         } //#9730
     } //#9730
     $_.gpf = $geti($_.gpfenc, 0, $_.j); //#9735
-    var _B0 = ((((1 + 12) + $_.method.length) + $_.vlf.length) + $_.cdf.length) + $_.gpf.length; //#9739
-    $k[$j++] = _B0; //#9739
-    $k[$j++] = _B0; //#9739
+    var _B1 = ((((1 + 12) + $_.method.length) + $_.vlf.length) + $_.cdf.length) + $_.gpf.length; //#9739
+    $k[$j++] = _B1; //#9739
+    $k[$j++] = _B1; //#9739
     $_.rembits(); //#9739
-    var _B1 = $k[--$j]; //#9739
-    $_.pad = $a(_B1); //#9739
-    $k[$j++] = _B1; //#9746
+    var _B2 = $k[--$j]; //#9739
+    $_.pad = $a(_B2); //#9739
+    $k[$j++] = _B2; //#9746
     if ($_.vlf.length != 0) { //#9745
-        var _B4 = $k[--$j]; //#9741
-        var _B6 = ~~($f($k[--$j] + _B4) / 12); //#9742
-        $put($_.vlf, 0, _B6 % 2); //#9742
-        var _B8 = (_B6 <= 14) ? 0 : 1; //#9743
-        $put($_.vlf, 1, _B8); //#9743
+        var _B5 = $k[--$j]; //#9741
+        var _B7 = ~~($f($k[--$j] + _B5) / 12); //#9742
+        $put($_.vlf, 0, _B7 % 2); //#9742
+        var _B9 = (_B7 <= 14) ? 0 : 1; //#9743
+        $put($_.vlf, 1, _B9); //#9743
     } else { //#9745
         $j -= 2; //#9745
     } //#9745
     if ($_.pad.length > 0) { //#9755
-        for (var _BD = 0, _BC = $_.pad.length - 1; _BD <= _BC; _BD += 5) { //#9751
-            $_.i = _BD; //#9749
-            var _BE = $_.pad; //#9750
-            var _BF = $_.i; //#9750
-            var _BG = $a([0, 0, 1, 0, 0]); //#9750
-            var _BH = $_.pad; //#9750
-            var _BI = $_.i; //#9750
-            var _BJ = 5; //#9750
-            var _BK = _BH.length - _BI; //#9750
-            if ((_BH.length - _BI) > 5) { //#9750
-                var _ = _BJ; //#9750
-                _BJ = _BK; //#9750
-                _BK = _; //#9750
+        for (var _BE = 0, _BD = $_.pad.length - 1; _BE <= _BD; _BE += 5) { //#9751
+            $_.i = _BE; //#9749
+            var _BF = $_.pad; //#9750
+            var _BG = $_.i; //#9750
+            var _BH = $a([0, 0, 1, 0, 0]); //#9750
+            var _BI = $_.pad; //#9750
+            var _BJ = $_.i; //#9750
+            var _BK = 5; //#9750
+            var _BL = _BI.length - _BJ; //#9750
+            if ((_BI.length - _BJ) > 5) { //#9750
+                var _ = _BK; //#9750
+                _BK = _BL; //#9750
+                _BL = _; //#9750
             } //#9750
-            $puti(_BE, _BF, $geti(_BG, 0, _BK)); //#9750
+            $puti(_BF, _BG, $geti(_BH, 0, _BL)); //#9750
         } //#9750
         if ($eq($_.mode, "numeric")) { //#9754
             $k[$j++] = Infinity; //#9753
@@ -13361,11 +13407,11 @@ function bwipp_databarexpanded() {
         } //#9753
     } //#9753
     $k[$j++] = Infinity; //#9758
-    var _BS = $_.linkage ? 1 : 0; //#9759
-    $k[$j++] = _BS; //#9760
+    var _BT = $_.linkage ? 1 : 0; //#9759
+    $k[$j++] = _BT; //#9760
     $forall($_.method, function() { //#9760
-        var _BU = $k[--$j]; //#9760
-        $k[$j++] = $f(_BU - 48); //#9760
+        var _BV = $k[--$j]; //#9760
+        $k[$j++] = $f(_BV - 48); //#9760
     }); //#9760
     $aload($_.vlf); //#9761
     $aload($_.cdf); //#9762
@@ -13374,55 +13420,55 @@ function bwipp_databarexpanded() {
     $_.binval = $a(); //#9764
     $_.datalen = ~~($_.binval.length / 12); //#9766
     $_.ncr = function() {
-        var _Bb = $k[--$j]; //#9769
         var _Bc = $k[--$j]; //#9769
-        var _Bd = $f(_Bc - _Bb); //#9769
-        if (_Bb < $f(_Bc - _Bb)) { //#9769
-            var _ = _Bd; //#9769
-            _Bd = _Bb; //#9769
-            _Bb = _; //#9769
+        var _Bd = $k[--$j]; //#9769
+        var _Be = $f(_Bd - _Bc); //#9769
+        if (_Bc < $f(_Bd - _Bc)) { //#9769
+            var _ = _Be; //#9769
+            _Be = _Bc; //#9769
+            _Bc = _; //#9769
         } //#9769
-        $k[$j++] = _Bd; //#9776
+        $k[$j++] = _Be; //#9776
         $k[$j++] = 1; //#9776
         $k[$j++] = 1; //#9776
-        for (var _Bf = _Bc, _Be = $f(_Bb + 1); _Bf >= _Be; _Bf -= 1) { //#9776
-            var _Bg = $k[--$j]; //#9772
-            var _Bh = $k[--$j]; //#9773
+        for (var _Bg = _Bd, _Bf = $f(_Bc + 1); _Bg >= _Bf; _Bg -= 1) { //#9776
+            var _Bh = $k[--$j]; //#9772
             var _Bi = $k[--$j]; //#9773
+            var _Bj = $k[--$j]; //#9773
+            $k[$j++] = _Bj; //#9775
             $k[$j++] = _Bi; //#9775
-            $k[$j++] = _Bh; //#9775
-            $k[$j++] = _Bg * _Bf; //#9775
-            if ($le(_Bh, _Bi)) { //#9775
-                var _Bj = $k[--$j]; //#9774
+            $k[$j++] = _Bh * _Bg; //#9775
+            if ($le(_Bi, _Bj)) { //#9775
                 var _Bk = $k[--$j]; //#9774
-                $k[$j++] = $f(_Bk + 1); //#9774
-                $k[$j++] = ~~(_Bj / _Bk); //#9774
+                var _Bl = $k[--$j]; //#9774
+                $k[$j++] = $f(_Bl + 1); //#9774
+                $k[$j++] = ~~(_Bk / _Bl); //#9774
             } //#9774
         } //#9774
         for (;;) { //#9780
-            var _Bl = $k[--$j]; //#9778
             var _Bm = $k[--$j]; //#9778
             var _Bn = $k[--$j]; //#9778
+            var _Bo = $k[--$j]; //#9778
+            $k[$j++] = _Bo; //#9778
             $k[$j++] = _Bn; //#9778
             $k[$j++] = _Bm; //#9778
-            $k[$j++] = _Bl; //#9778
-            if ($gt(_Bm, _Bn)) { //#9778
+            if ($gt(_Bn, _Bo)) { //#9778
                 break; //#9778
             } //#9778
-            var _Bo = $k[--$j]; //#9779
             var _Bp = $k[--$j]; //#9779
-            $k[$j++] = $f(_Bp + 1); //#9779
-            $k[$j++] = ~~(_Bo / _Bp); //#9779
+            var _Bq = $k[--$j]; //#9779
+            $k[$j++] = $f(_Bq + 1); //#9779
+            $k[$j++] = ~~(_Bp / _Bq); //#9779
         } //#9779
-        var _Bq = $k[--$j]; //#9781
         var _Br = $k[--$j]; //#9781
-        $k[$j++] = _Bq; //#9781
-        $k[$j++] = _Br; //#9781
-        $j--; //#9781
         var _Bs = $k[--$j]; //#9781
-        var _Bt = $k[--$j]; //#9781
+        $k[$j++] = _Br; //#9781
         $k[$j++] = _Bs; //#9781
+        $j--; //#9781
+        var _Bt = $k[--$j]; //#9781
+        var _Bu = $k[--$j]; //#9781
         $k[$j++] = _Bt; //#9781
+        $k[$j++] = _Bu; //#9781
         $j--; //#9781
     }; //#9781
     $_.getRSSwidths = function() {
@@ -13433,32 +13479,32 @@ function bwipp_databarexpanded() {
         $_.val = $k[--$j]; //#9789
         $_.out = $a($_.el); //#9790
         $_.mask = 0; //#9791
-        for (var _C3 = 0, _C2 = $f($_.el - 2); _C3 <= _C2; _C3 += 1) { //#9818
-            $_.bar = _C3; //#9793
+        for (var _C4 = 0, _C3 = $f($_.el - 2); _C4 <= _C3; _C4 += 1) { //#9818
+            $_.bar = _C4; //#9793
             $_.ew = 1; //#9794
-            var _C5 = $_.bar; //#9795
-            $_.mask = $_.mask | ((_C5 < 0 ? 1 >>> -_C5 : 1 << _C5)); //#9795
+            var _C6 = $_.bar; //#9795
+            $_.mask = $_.mask | ((_C6 < 0 ? 1 >>> -_C6 : 1 << _C6)); //#9795
             for (;;) { //#9814
                 $k[$j++] = 'sval'; //#9796
                 $k[$j++] = $f($f($_.nm - $_.ew) - 1); //#9796
                 $k[$j++] = $f($f($_.el - $_.bar) - 2); //#9796
                 $_.ncr(); //#9796
-                var _CA = $k[--$j]; //#9796
-                $_[$k[--$j]] = _CA; //#9796
+                var _CB = $k[--$j]; //#9796
+                $_[$k[--$j]] = _CB; //#9796
                 if (($_.oe && ($_.mask == 0)) && (($f(($f($f($_.nm - $_.ew) - ($_.el * 2))) + ($_.bar * 2))) >= -2)) { //#9799
                     $k[$j++] = 'sval'; //#9798
                     $k[$j++] = $_.sval; //#9798
                     $k[$j++] = $f(($f($f($_.nm - $_.ew) - $_.el)) + $_.bar); //#9798
                     $k[$j++] = $f($f($_.el - $_.bar) - 2); //#9798
                     $_.ncr(); //#9798
-                    var _CP = $k[--$j]; //#9798
                     var _CQ = $k[--$j]; //#9798
-                    $_[$k[--$j]] = $f(_CQ - _CP); //#9798
+                    var _CR = $k[--$j]; //#9798
+                    $_[$k[--$j]] = $f(_CR - _CQ); //#9798
                 } //#9798
                 if ($f($_.el - $_.bar) > 2) { //#9808
                     $_.lval = 0; //#9801
-                    for (var _Ca = $f(($f(($f($f($_.nm - $_.ew) - $_.el)) + $_.bar)) + 2), _CZ = $f($_.mw + 1); _Ca >= _CZ; _Ca -= 1) { //#9805
-                        $k[$j++] = $f(($f($f($_.nm - _Ca) - $_.ew)) - 1); //#9803
+                    for (var _Cb = $f(($f(($f($f($_.nm - $_.ew) - $_.el)) + $_.bar)) + 2), _Ca = $f($_.mw + 1); _Cb >= _Ca; _Cb -= 1) { //#9805
+                        $k[$j++] = $f(($f($f($_.nm - _Cb) - $_.ew)) - 1); //#9803
                         $k[$j++] = $f($f($_.el - $_.bar) - 3); //#9803
                         $_.ncr(); //#9803
                         $_.lval = $f($k[--$j] + $_.lval); //#9804
@@ -13474,8 +13520,8 @@ function bwipp_databarexpanded() {
                     break; //#9811
                 } //#9811
                 $_.ew = $_.ew + 1; //#9812
-                var _Cu = $_.bar; //#9813
-                $_.mask = $_.mask & (~((_Cu < 0 ? 1 >>> -_Cu : 1 << _Cu))); //#9813
+                var _Cv = $_.bar; //#9813
+                $_.mask = $_.mask & (~((_Cv < 0 ? 1 >>> -_Cv : 1 << _Cv))); //#9813
             } //#9813
             $_.val = $f($_.val + $_.sval); //#9815
             $_.nm = $f($_.nm - $_.ew); //#9816
@@ -13492,24 +13538,24 @@ function bwipp_databarexpanded() {
         $_ = Object.getPrototypeOf($_); //#9830
     } //#9830
     $_.dxw = $a($_.datalen); //#9833
-    for (var _DC = 0, _DB = $_.datalen - 1; _DC <= _DB; _DC += 1) { //#9874
-        $_.x = _DC; //#9837
+    for (var _DD = 0, _DC = $_.datalen - 1; _DD <= _DC; _DD += 1) { //#9874
+        $_.x = _DD; //#9837
         $_.d = $geti($_.binval, $_.x * 12, 12); //#9839
         $k[$j++] = 'd'; //#9840
         $k[$j++] = 0; //#9840
-        for (var _DG = 0; _DG <= 11; _DG += 1) { //#9840
-            $_.j = _DG; //#9840
-            var _DL = $k[--$j]; //#9840
-            $k[$j++] = $f(_DL + ((~~Math.pow(2, 11 - $_.j)) * $get($_.d, $_.j))); //#9840
+        for (var _DH = 0; _DH <= 11; _DH += 1) { //#9840
+            $_.j = _DH; //#9840
+            var _DM = $k[--$j]; //#9840
+            $k[$j++] = $f(_DM + ((~~Math.pow(2, 11 - $_.j)) * $get($_.d, $_.j))); //#9840
         } //#9840
-        var _DM = $k[--$j]; //#9840
-        $_[$k[--$j]] = _DM; //#9840
+        var _DN = $k[--$j]; //#9840
+        $_[$k[--$j]] = _DN; //#9840
         $_.j = 0; //#9842
         for (;;) { //#9852
             if ($le($_.d, $get($_.tab174, $_.j))) { //#9850
-                var _DU = $geti($_.tab174, $_.j + 1, 7); //#9844
-                for (var _DV = 0, _DW = _DU.length; _DV < _DW; _DV++) { //#9844
-                    $k[$j++] = $get(_DU, _DV); //#9844
+                var _DV = $geti($_.tab174, $_.j + 1, 7); //#9844
+                for (var _DW = 0, _DX = _DV.length; _DW < _DX; _DW++) { //#9844
+                    $k[$j++] = $get(_DV, _DW); //#9844
                 } //#9844
                 $_.dte = $k[--$j]; //#9845
                 $_.dto = $k[--$j]; //#9845
@@ -13529,8 +13575,8 @@ function bwipp_databarexpanded() {
         $k[$j++] = 4; //#9854
         $k[$j++] = true; //#9854
         $_.getRSSwidths(); //#9854
-        var _Dl = $k[--$j]; //#9854
-        $_[$k[--$j]] = _Dl; //#9854
+        var _Dm = $k[--$j]; //#9854
+        $_[$k[--$j]] = _Dm; //#9854
         $k[$j++] = 'dwe'; //#9855
         $k[$j++] = $f($_.d - $_.dgs) % $_.dte; //#9855
         $k[$j++] = $_.dele; //#9855
@@ -13538,18 +13584,18 @@ function bwipp_databarexpanded() {
         $k[$j++] = 4; //#9855
         $k[$j++] = false; //#9855
         $_.getRSSwidths(); //#9855
-        var _Ds = $k[--$j]; //#9855
-        $_[$k[--$j]] = _Ds; //#9855
+        var _Dt = $k[--$j]; //#9855
+        $_[$k[--$j]] = _Dt; //#9855
         $_.dw = $a(8); //#9857
         if (($_.x % 2) == 0) { //#9868
-            for (var _Dw = 0; _Dw <= 3; _Dw += 1) { //#9863
-                $_.j = _Dw; //#9860
+            for (var _Dx = 0; _Dx <= 3; _Dx += 1) { //#9863
+                $_.j = _Dx; //#9860
                 $put($_.dw, 7 - ($_.j * 2), $get($_.dwo, $_.j)); //#9861
                 $put($_.dw, 6 - ($_.j * 2), $get($_.dwe, $_.j)); //#9862
             } //#9862
         } else { //#9868
-            for (var _E7 = 0; _E7 <= 3; _E7 += 1) { //#9869
-                $_.j = _E7; //#9866
+            for (var _E8 = 0; _E8 <= 3; _E8 += 1) { //#9869
+                $_.j = _E8; //#9866
                 $put($_.dw, $_.j * 2, $get($_.dwo, $_.j)); //#9867
                 $put($_.dw, ($_.j * 2) + 1, $get($_.dwe, $_.j)); //#9868
             } //#9868
@@ -13566,8 +13612,8 @@ function bwipp_databarexpanded() {
     } //#9897
     $_.seq = $get($_.finderseq, ~~(($_.datalen - 2) / 2)); //#9900
     $_.fxw = $a($_.seq.length); //#9901
-    for (var _Ef = 0, _Ee = $_.seq.length - 1; _Ef <= _Ee; _Ef += 1) { //#9905
-        $_.x = _Ef; //#9903
+    for (var _Eg = 0, _Ef = $_.seq.length - 1; _Eg <= _Ef; _Eg += 1) { //#9905
+        $_.x = _Eg; //#9903
         $put($_.fxw, $_.x, $geti($_.finderwidths, $get($_.seq, $_.x) * 5, 5)); //#9904
     } //#9904
     if (!bwipp_databarexpanded.__9934__) { //#9934
@@ -13581,26 +13627,26 @@ function bwipp_databarexpanded() {
     $forall($_.seq, function() { //#9937
         $aload($geti($_.checkweights, $k[--$j] * 16, 16)); //#9937
     }); //#9937
-    var _Et = $a(); //#9937
-    $_.checkweightseq = $geti(_Et, 8, _Et.length - 8); //#9938
+    var _Eu = $a(); //#9937
+    $_.checkweightseq = $geti(_Eu, 8, _Eu.length - 8); //#9938
     $k[$j++] = Infinity; //#9940
-    var _Ev = $_.dxw; //#9941
-    for (var _Ew = 0, _Ex = _Ev.length; _Ew < _Ex; _Ew++) { //#9941
-        $forall($get(_Ev, _Ew)); //#9941
+    var _Ew = $_.dxw; //#9941
+    for (var _Ex = 0, _Ey = _Ew.length; _Ex < _Ey; _Ex++) { //#9941
+        $forall($get(_Ew, _Ex)); //#9941
     } //#9941
     $_.widths = $a(); //#9941
     $_.checksum = 0; //#9944
-    for (var _F2 = 0, _F1 = $_.widths.length - 1; _F2 <= _F1; _F2 += 1) { //#9948
-        $_.i = _F2; //#9946
+    for (var _F3 = 0, _F2 = $_.widths.length - 1; _F3 <= _F2; _F3 += 1) { //#9948
+        $_.i = _F3; //#9946
         $_.checksum = $f($_.checksum + ($get($_.widths, $_.i) * $get($_.checkweightseq, $_.i))); //#9947
     } //#9947
     $_.checksum = $f(($_.checksum % 211) + (($_.datalen - 3) * 211)); //#9949
     $_.i = 0; //#9951
     for (;;) { //#9961
         if ($_.checksum <= $get($_.tab174, $_.i)) { //#9959
-            var _FI = $geti($_.tab174, $_.i + 1, 7); //#9953
-            for (var _FJ = 0, _FK = _FI.length; _FJ < _FK; _FJ++) { //#9953
-                $k[$j++] = $get(_FI, _FJ); //#9953
+            var _FJ = $geti($_.tab174, $_.i + 1, 7); //#9953
+            for (var _FK = 0, _FL = _FJ.length; _FK < _FL; _FK++) { //#9953
+                $k[$j++] = $get(_FJ, _FK); //#9953
             } //#9953
             $_.cte = $k[--$j]; //#9954
             $_.cto = $k[--$j]; //#9954
@@ -13620,8 +13666,8 @@ function bwipp_databarexpanded() {
     $k[$j++] = 4; //#9963
     $k[$j++] = true; //#9963
     $_.getRSSwidths(); //#9963
-    var _FZ = $k[--$j]; //#9963
-    $_[$k[--$j]] = _FZ; //#9963
+    var _Fa = $k[--$j]; //#9963
+    $_[$k[--$j]] = _Fa; //#9963
     $k[$j++] = 'cwe'; //#9964
     $k[$j++] = $f($_.checksum - $_.cgs) % $_.cte; //#9964
     $k[$j++] = $_.cele; //#9964
@@ -13629,31 +13675,31 @@ function bwipp_databarexpanded() {
     $k[$j++] = 4; //#9964
     $k[$j++] = false; //#9964
     $_.getRSSwidths(); //#9964
-    var _Fg = $k[--$j]; //#9964
-    $_[$k[--$j]] = _Fg; //#9964
+    var _Fh = $k[--$j]; //#9964
+    $_[$k[--$j]] = _Fh; //#9964
     $_.cw = $a(8); //#9966
-    for (var _Fj = 0; _Fj <= 3; _Fj += 1) { //#9971
-        $_.i = _Fj; //#9968
+    for (var _Fk = 0; _Fk <= 3; _Fk += 1) { //#9971
+        $_.i = _Fk; //#9968
         $put($_.cw, $_.i * 2, $get($_.cwo, $_.i)); //#9969
         $put($_.cw, ($_.i * 2) + 1, $get($_.cwe, $_.i)); //#9970
     } //#9970
-    var _Fu = $a(22); //#9973
-    $put(_Fu, 0, $_.cw); //#9974
-    $puti(_Fu, 1, $_.dxw); //#9974
-    $_.dxw = $geti(_Fu, 0, $_.datalen + 1); //#9975
+    var _Fv = $a(22); //#9973
+    $put(_Fv, 0, $_.cw); //#9974
+    $puti(_Fv, 1, $_.dxw); //#9974
+    $_.dxw = $geti(_Fv, 0, $_.datalen + 1); //#9975
     $_.datalen = $_.dxw.length; //#9976
     $_.rows = $a(~~Math.ceil($_.datalen / $_.segments)); //#9979
     $_.numrows = $_.rows.length; //#9980
-    for (var _G6 = 0, _G5 = $_.numrows - 1; _G6 <= _G5; _G6 += 1) { //#9995
-        $_.r = _G6; //#9982
+    for (var _G7 = 0, _G6 = $_.numrows - 1; _G7 <= _G6; _G7 += 1) { //#9995
+        $_.r = _G7; //#9982
         $k[$j++] = Infinity; //#9983
         if ((($_.segments % 4) != 0) && (($_.r % 2) == 1)) { //#9984
             $k[$j++] = 0; //#9984
         } //#9984
         $k[$j++] = 1; //#9992
         $k[$j++] = 1; //#9992
-        for (var _GB = 0, _GA = $_.segments - 1; _GB <= _GA; _GB += 1) { //#9992
-            $_.pos = _GB + ($_.r * $_.segments); //#9987
+        for (var _GC = 0, _GB = $_.segments - 1; _GC <= _GB; _GC += 1) { //#9992
+            $_.pos = _GC + ($_.r * $_.segments); //#9987
             if ($_.pos < $_.datalen) { //#9991
                 $forall($get($_.dxw, $_.pos)); //#9989
                 if (($_.pos % 2) == 0) { //#9990
@@ -13661,20 +13707,20 @@ function bwipp_databarexpanded() {
                 } //#9990
             } //#9990
         } //#9990
-        var _GN = $counttomark() + 2; //#9994
+        var _GO = $counttomark() + 2; //#9994
         $k[$j++] = 1; //#9994
         $k[$j++] = 1; //#9994
-        $astore($a(_GN)); //#9994
+        $astore($a(_GO)); //#9994
         $put($_.rows, $_.r, $k[--$j]); //#9994
         $j--; //#9994
     } //#9994
     if ($ne($_.format, "expandedstacked")) { //#10127
-        var _GU = $get($_.rows, 0); //#10000
-        $_.sbs = $geti(_GU, 1, _GU.length - 1); //#10000
+        var _GV = $get($_.rows, 0); //#10000
+        $_.sbs = $geti(_GV, 1, _GV.length - 1); //#10000
         $k[$j++] = Infinity; //#10002
         $k[$j++] = 1; //#10008
-        for (var _GY = 0, _GX = $_.datalen - 1; _GY <= _GX; _GY += 1) { //#10008
-            $_.i = _GY; //#10005
+        for (var _GZ = 0, _GY = $_.datalen - 1; _GZ <= _GY; _GZ += 1) { //#10008
+            $_.i = _GZ; //#10005
             $forall($get($_.dxw, $_.i)); //#10006
             if (($_.i % 2) == 0) { //#10007
                 $forall($get($_.fxw, ~~($_.i / 2))); //#10007
@@ -13684,25 +13730,25 @@ function bwipp_databarexpanded() {
         $k[$j++] = 1; //#10009
         $_.sbs = $a(); //#10009
         $k[$j++] = Infinity; //#10012
-        var _Gh = $_.sbs; //#10014
+        var _Gi = $_.sbs; //#10014
         $k[$j++] = Infinity; //#10015
-        for (var _Gj = 0, _Gk = ~~(($_.sbs.length + 1) / 2); _Gj < _Gk; _Gj++) { //#10015
+        for (var _Gk = 0, _Gl = ~~(($_.sbs.length + 1) / 2); _Gk < _Gl; _Gk++) { //#10015
             $k[$j++] = $_.height; //#10015
         } //#10015
-        var _Gm = $a(); //#10015
+        var _Gn = $a(); //#10015
         $k[$j++] = Infinity; //#10016
-        for (var _Go = 0, _Gp = ~~(($_.sbs.length + 1) / 2); _Go < _Gp; _Go++) { //#10016
+        for (var _Gp = 0, _Gq = ~~(($_.sbs.length + 1) / 2); _Gp < _Gq; _Gp++) { //#10016
             $k[$j++] = 0; //#10016
         } //#10016
-        var _Gq = $a(); //#10016
+        var _Gr = $a(); //#10016
         $k[$j++] = 'ren'; //#10021
         $k[$j++] = 'renlinear'; //#10021
         $k[$j++] = 'sbs'; //#10021
-        $k[$j++] = _Gh; //#10021
+        $k[$j++] = _Gi; //#10021
         $k[$j++] = 'bhs'; //#10021
-        $k[$j++] = _Gm; //#10021
+        $k[$j++] = _Gn; //#10021
         $k[$j++] = 'bbs'; //#10021
-        $k[$j++] = _Gq; //#10021
+        $k[$j++] = _Gr; //#10021
         $k[$j++] = 'borderleft'; //#10021
         $k[$j++] = 0; //#10021
         $k[$j++] = 'borderright'; //#10021
@@ -13713,24 +13759,24 @@ function bwipp_databarexpanded() {
         $k[$j++] = 0; //#10021
         $k[$j++] = 'opt'; //#10021
         $k[$j++] = $_.options; //#10021
-        var _Gs = $d(); //#10021
-        $k[$j++] = _Gs; //#10024
+        var _Gt = $d(); //#10021
+        $k[$j++] = _Gt; //#10024
         if (!$_.dontdraw) { //#10024
             bwipp_renlinear(); //#10024
         } //#10024
     } else { //#10127
         $_.seps = $a($_.numrows); //#10028
-        for (var _Gy = 0, _Gx = $_.numrows - 1; _Gy <= _Gx; _Gy += 1) { //#10084
-            $_.r = _Gy; //#10031
+        for (var _Gz = 0, _Gy = $_.numrows - 1; _Gz <= _Gy; _Gz += 1) { //#10084
+            $_.r = _Gz; //#10031
             $_.row = $get($_.rows, $_.r); //#10032
             $k[$j++] = Infinity; //#10035
-            for (var _H4 = 0, _H3 = $_.row.length - 1; _H4 <= _H3; _H4 += 2) { //#10040
-                $_.i = _H4; //#10037
-                for (var _H8 = 0, _H9 = $get($_.row, $_.i); _H8 < _H9; _H8++) { //#10038
+            for (var _H5 = 0, _H4 = $_.row.length - 1; _H5 <= _H4; _H5 += 2) { //#10040
+                $_.i = _H5; //#10037
+                for (var _H9 = 0, _HA = $get($_.row, $_.i); _H9 < _HA; _H9++) { //#10038
                     $k[$j++] = 0; //#10038
                 } //#10038
                 if ($_.i < ($_.row.length - 1)) { //#10039
-                    for (var _HF = 0, _HG = $get($_.row, $_.i + 1); _HF < _HG; _HF++) { //#10039
+                    for (var _HG = 0, _HH = $get($_.row, $_.i + 1); _HG < _HH; _HG++) { //#10039
                         $k[$j++] = 1; //#10039
                     } //#10039
                 } //#10039
@@ -13740,29 +13786,29 @@ function bwipp_databarexpanded() {
             $j--; //#10041
             $k[$j++] = Infinity; //#10044
             $forall($_.row, function() { //#10044
-                var _HL = $k[--$j]; //#10044
-                $k[$j++] = $f(1 - _HL); //#10044
+                var _HM = $k[--$j]; //#10044
+                $k[$j++] = $f(1 - _HM); //#10044
             }); //#10044
             $_.sep = $a(); //#10044
             $k[$j++] = Infinity; //#10045
-            for (var _HP = 19, _HO = $_.row.length - 13; _HP <= _HO; _HP += 98) { //#10046
-                $k[$j++] = _HP; //#10046
+            for (var _HQ = 19, _HP = $_.row.length - 13; _HQ <= _HP; _HQ += 98) { //#10046
+                $k[$j++] = _HQ; //#10046
             } //#10046
-            for (var _HS = 68, _HR = $_.row.length - 13; _HS <= _HR; _HS += 98) { //#10047
-                $k[$j++] = _HS; //#10047
+            for (var _HT = 68, _HS = $_.row.length - 13; _HT <= _HS; _HT += 98) { //#10047
+                $k[$j++] = _HT; //#10047
             } //#10047
             $_.finderpos = $a(); //#10047
-            var _HU = $_.finderpos; //#10049
-            for (var _HV = 0, _HW = _HU.length; _HV < _HW; _HV++) { //#10063
-                var _HX = $get(_HU, _HV); //#10063
-                for (var _HZ = _HX, _HY = $f(_HX + 14); _HZ <= _HY; _HZ += 1) { //#10062
-                    $_.i = _HZ; //#10051
+            var _HV = $_.finderpos; //#10049
+            for (var _HW = 0, _HX = _HV.length; _HW < _HX; _HW++) { //#10063
+                var _HY = $get(_HV, _HW); //#10063
+                for (var _Ha = _HY, _HZ = $f(_HY + 14); _Ha <= _HZ; _Ha += 1) { //#10062
+                    $_.i = _Ha; //#10051
                     if ($get($_.row, $_.i) == 0) { //#10059
                         if ($get($_.row, $_.i - 1) == 1) { //#10056
                             $k[$j++] = 1; //#10054
                         } else { //#10056
-                            var _Hj = ($get($_.sep, $_.i - 1) == 0) ? 1 : 0; //#10056
-                            $k[$j++] = _Hj; //#10056
+                            var _Hk = ($get($_.sep, $_.i - 1) == 0) ? 1 : 0; //#10056
+                            $k[$j++] = _Hk; //#10056
                         } //#10056
                     } else { //#10059
                         $k[$j++] = 0; //#10059
@@ -13783,13 +13829,13 @@ function bwipp_databarexpanded() {
                     $aload($_.sep); //#10072
                     $_.sep = $a(); //#10072
                 } else { //#10077
-                    for (var _I5 = $_.row.length - 1; _I5 >= 0; _I5 -= 1) { //#10074
-                        $k[$j++] = $get($_.row, _I5); //#10074
+                    for (var _I6 = $_.row.length - 1; _I6 >= 0; _I6 -= 1) { //#10074
+                        $k[$j++] = $get($_.row, _I6); //#10074
                     } //#10074
                     $astore($_.row); //#10075
                     $j--; //#10075
-                    for (var _IA = $_.sep.length - 1; _IA >= 0; _IA -= 1) { //#10076
-                        $k[$j++] = $get($_.sep, _IA); //#10076
+                    for (var _IB = $_.sep.length - 1; _IB >= 0; _IB -= 1) { //#10076
+                        $k[$j++] = $get($_.sep, _IB); //#10076
                     } //#10076
                     $astore($_.sep); //#10077
                     $j--; //#10077
@@ -13800,21 +13846,21 @@ function bwipp_databarexpanded() {
         } //#10082
         $_.pixx = $get($_.rows, 0).length; //#10087
         $k[$j++] = Infinity; //#10088
-        for (var _IN = 0, _IO = $_.pixx; _IN < _IO; _IN++) { //#10088
+        for (var _IO = 0, _IP = $_.pixx; _IO < _IP; _IO++) { //#10088
             $k[$j++] = 0; //#10088
         } //#10088
-        var _IP = $a(); //#10088
-        $puti(_IP, 0, $get($_.rows, $_.numrows - 1)); //#10088
-        $put($_.rows, $_.numrows - 1, _IP); //#10089
+        var _IQ = $a(); //#10088
+        $puti(_IQ, 0, $get($_.rows, $_.numrows - 1)); //#10088
+        $put($_.rows, $_.numrows - 1, _IQ); //#10089
         $k[$j++] = Infinity; //#10090
-        for (var _IW = 0, _IX = $_.pixx; _IW < _IX; _IW++) { //#10090
+        for (var _IX = 0, _IY = $_.pixx; _IX < _IY; _IX++) { //#10090
             $k[$j++] = 0; //#10090
         } //#10090
-        var _IY = $a(); //#10090
-        $puti(_IY, 0, $get($_.seps, $_.numrows - 1)); //#10090
-        $put($_.seps, $_.numrows - 1, _IY); //#10091
+        var _IZ = $a(); //#10090
+        $puti(_IZ, 0, $get($_.seps, $_.numrows - 1)); //#10090
+        $put($_.seps, $_.numrows - 1, _IZ); //#10091
         $k[$j++] = Infinity; //#10094
-        for (var _If = 0, _Ig = (~~($_.pixx / 2)) + 1; _If < _Ig; _If++) { //#10094
+        for (var _Ig = 0, _Ih = (~~($_.pixx / 2)) + 1; _Ig < _Ih; _Ig++) { //#10094
             $k[$j++] = 0; //#10094
             $k[$j++] = 1; //#10094
         } //#10094
@@ -13822,12 +13868,12 @@ function bwipp_databarexpanded() {
         $puti($_.sep, 0, $a([0, 0, 0, 0])); //#10095
         $puti($_.sep, $_.pixx - 4, $a([0, 0, 0, 0])); //#10096
         $k[$j++] = Infinity; //#10099
-        for (var _Ir = 0, _Iq = $_.numrows - 1; _Ir <= _Iq; _Ir += 1) { //#10110
-            $_.r = _Ir; //#10101
+        for (var _Is = 0, _Ir = $_.numrows - 1; _Is <= _Ir; _Is += 1) { //#10110
+            $_.r = _Is; //#10101
             if ($_.r != 0) { //#10104
                 $aload($get($_.seps, $_.r)); //#10103
             } //#10103
-            for (var _Ix = 0, _Iy = $_.barxmult; _Ix < _Iy; _Ix++) { //#10105
+            for (var _Iy = 0, _Iz = $_.barxmult; _Iy < _Iz; _Iy++) { //#10105
                 $aload($get($_.rows, $_.r)); //#10105
             } //#10105
             if ($_.r != ($_.numrows - 1)) { //#10109
@@ -13836,7 +13882,7 @@ function bwipp_databarexpanded() {
             } //#10108
         } //#10108
         $_.pixs = $a(); //#10108
-        var _JH = new Map([
+        var _JI = new Map([
             ["ren", 'renmatrix'],
             ["pixs", $_.pixs],
             ["pixx", $_.pixx],
@@ -13849,7 +13895,7 @@ function bwipp_databarexpanded() {
             ["borderbottom", 0],
             ["opt", $_.options]
         ]); //#10124
-        $k[$j++] = _JH; //#10127
+        $k[$j++] = _JI; //#10127
         if (!$_.dontdraw) { //#10127
             bwipp_renmatrix(); //#10127
         } //#10127
@@ -14146,7 +14192,7 @@ function bwipp_code2of5() {
         $k[$j++] = "The data must not be empty"; //#10520
         bwipp_raiseerror(); //#10520
     } //#10520
-    bwipp_loadctx(bwipp_code2of5) //#10523
+    bwipp_loadctx(bwipp_code2of5); //#10523
     $forall($_.barcode, function() { //#10530
         var _4 = $k[--$j]; //#10527
         if ((_4 < 48) || (_4 > 57)) { //#10529
@@ -14444,7 +14490,7 @@ function bwipp_code11() {
         $k[$j++] = "The data must not be empty"; //#10925
         bwipp_raiseerror(); //#10925
     } //#10925
-    bwipp_loadctx(bwipp_code11) //#10928
+    bwipp_loadctx(bwipp_code11); //#10928
     if (!bwipp_code11.__10942__) { //#10942
         $_ = Object.create($_); //#10942
         $_.encs = $a(["111131", "311131", "131131", "331111", "113131", "313111", "133111", "111331", "311311", "311111", "113111", "113311"]); //#10936
@@ -14618,7 +14664,7 @@ function bwipp_bc412() {
     if ($_.semi) { //#11103
         $_.includestartstop = true; //#11102
     } //#11102
-    bwipp_loadctx(bwipp_bc412) //#11105
+    bwipp_loadctx(bwipp_bc412); //#11105
     if (!bwipp_bc412.__11112__) { //#11112
         $_ = Object.create($_); //#11112
         $_.barchars = "0R9GLVHA8EZ4NTS1J2Q6C7DYKBUIX3FWP5M"; //#11109
@@ -14809,7 +14855,7 @@ function bwipp_rationalizedCodabar() {
         $k[$j++] = "Codabar must be at least 2 characters in length excluding any check digit"; //#11300
         bwipp_raiseerror(); //#11300
     } //#11300
-    bwipp_loadctx(bwipp_rationalizedCodabar) //#11303
+    bwipp_loadctx(bwipp_rationalizedCodabar); //#11303
     if (!bwipp_rationalizedCodabar.__11317__) { //#11317
         $_ = Object.create($_); //#11317
         $_.encs = $a(["11111331", "11113311", "11131131", "33111111", "11311311", "31111311", "13111131", "13113111", "13311111", "31131111", "11133111", "11331111", "31113131", "31311131", "31313111", "11313131", "11331311", "13131131", "11131331", "11133311"]); //#11312
@@ -14975,7 +15021,7 @@ function bwipp_onecode() {
     bwipp_processoptions(); //#11456
     $_.options = $k[--$j]; //#11456
     $_.barcode = $k[--$j]; //#11457
-    bwipp_loadctx(bwipp_onecode) //#11459
+    bwipp_loadctx(bwipp_onecode); //#11459
     $_.barlen = $_.barcode.length; //#11461
     $forall($_.barcode, function() { //#11467
         var _4 = $k[--$j]; //#11464
@@ -15205,10 +15251,15 @@ function bwipp_onecode() {
             var _3e = $get($_.tab213, $f($k[--$j] - 1287)); //#11706
             $k[$j++] = _3e; //#11706
         } //#11706
-        $put($_.chars, $_.i, $k[--$j]); //#11708
+        $k[$j++] = $_.chars; //#11708
+        $k[$j++] = $_.i; //#11708
+        $r(3, -1); //#11708
+        var _3h = $k[--$j]; //#11708
+        var _3i = $k[--$j]; //#11708
+        $put($k[--$j], _3i, _3h); //#11708
     } //#11708
-    for (var _3i = 9; _3i >= 0; _3i -= 1) { //#11716
-        $_.i = _3i; //#11712
+    for (var _3k = 9; _3k >= 0; _3k -= 1) { //#11716
+        $_.i = _3k; //#11712
         if (((~~Math.pow(2, $_.i)) & $_.fcs) != 0) { //#11715
             $put($_.chars, $_.i, $get($_.chars, $_.i) ^ 8191); //#11714
         } //#11714
@@ -15222,8 +15273,8 @@ function bwipp_onecode() {
     } //#11734
     $_.bbs = $a(65); //#11737
     $_.bhs = $a(65); //#11738
-    for (var _3u = 0; _3u <= 64; _3u += 1) { //#11759
-        $_.i = _3u; //#11740
+    for (var _3w = 0; _3w <= 64; _3w += 1) { //#11759
+        $_.i = _3w; //#11740
         $_.dec = ($get($_.chars, $get($_.barmap, $_.i * 4)) & (~~Math.pow(2, $get($_.barmap, ($_.i * 4) + 1)))) != 0; //#11741
         $_.asc = ($get($_.chars, $get($_.barmap, ($_.i * 4) + 2)) & (~~Math.pow(2, $get($_.barmap, ($_.i * 4) + 3)))) != 0; //#11742
         if ((!$_.dec) && (!$_.asc)) { //#11746
@@ -15244,23 +15295,23 @@ function bwipp_onecode() {
         } //#11757
     } //#11757
     $k[$j++] = Infinity; //#11762
-    var _4h = $_.bbs; //#11764
-    var _4i = $_.bhs; //#11765
+    var _4j = $_.bbs; //#11764
+    var _4k = $_.bhs; //#11765
     $k[$j++] = Infinity; //#11766
-    for (var _4k = 0, _4l = $_.bhs.length - 1; _4k < _4l; _4k++) { //#11766
+    for (var _4m = 0, _4n = $_.bhs.length - 1; _4m < _4n; _4m++) { //#11766
         $k[$j++] = 1.44; //#11766
         $k[$j++] = 1.872; //#11766
     } //#11766
     $k[$j++] = 1.44; //#11766
-    var _4m = $a(); //#11766
+    var _4o = $a(); //#11766
     $k[$j++] = 'ren'; //#11772
     $k[$j++] = 'renlinear'; //#11772
     $k[$j++] = 'bbs'; //#11772
-    $k[$j++] = _4h; //#11772
+    $k[$j++] = _4j; //#11772
     $k[$j++] = 'bhs'; //#11772
-    $k[$j++] = _4i; //#11772
+    $k[$j++] = _4k; //#11772
     $k[$j++] = 'sbs'; //#11772
-    $k[$j++] = _4m; //#11772
+    $k[$j++] = _4o; //#11772
     $k[$j++] = 'txt'; //#11772
     $k[$j++] = $_.txt; //#11772
     $k[$j++] = 'textxalign'; //#11772
@@ -15273,8 +15324,8 @@ function bwipp_onecode() {
     $k[$j++] = -0.3; //#11772
     $k[$j++] = 'opt'; //#11772
     $k[$j++] = $_.options; //#11772
-    var _4p = $d(); //#11772
-    $k[$j++] = _4p; //#11775
+    var _4r = $d(); //#11772
+    $k[$j++] = _4r; //#11775
     if (!$_.dontdraw) { //#11775
         bwipp_renlinear(); //#11775
     } //#11775
@@ -15295,7 +15346,7 @@ function bwipp_postnet() {
     bwipp_processoptions(); //#11821
     $_.options = $k[--$j]; //#11821
     $_.barcode = $k[--$j]; //#11822
-    bwipp_loadctx(bwipp_postnet) //#11824
+    bwipp_loadctx(bwipp_postnet); //#11824
     $k[$j++] = 'barlen'; //#11826
     $k[$j++] = $_.barcode.length; //#11826
     if ($_.validatecheck) { //#11826
@@ -15428,7 +15479,7 @@ function bwipp_planet() {
     bwipp_processoptions(); //#11969
     $_.options = $k[--$j]; //#11969
     $_.barcode = $k[--$j]; //#11970
-    bwipp_loadctx(bwipp_planet) //#11972
+    bwipp_loadctx(bwipp_planet); //#11972
     $k[$j++] = 'barlen'; //#11974
     $k[$j++] = $_.barcode.length; //#11974
     if ($_.validatecheck) { //#11974
@@ -15566,7 +15617,7 @@ function bwipp_royalmail() {
         $k[$j++] = "The data must not be empty"; //#12122
         bwipp_raiseerror(); //#12122
     } //#12122
-    bwipp_loadctx(bwipp_royalmail) //#12125
+    bwipp_loadctx(bwipp_royalmail); //#12125
     if (!bwipp_royalmail.__12143__) { //#12143
         $_ = Object.create($_); //#12143
         $_.barchars = "ZUVWXY501234B6789AHCDEFGNIJKLMTOPQRS"; //#12129
@@ -15700,7 +15751,7 @@ function bwipp_auspost() {
         $k[$j++] = "Customer information encoding must be either character or numeric"; //#12278
         bwipp_raiseerror(); //#12278
     } //#12278
-    bwipp_loadctx(bwipp_auspost) //#12281
+    bwipp_loadctx(bwipp_auspost); //#12281
     if (!bwipp_auspost.__12304__) { //#12304
         $_ = Object.create($_); //#12304
         $_.encs = $a(["000", "001", "002", "010", "011", "012", "020", "021", "022", "100", "101", "102", "110", "111", "112", "120", "121", "122", "200", "201", "202", "210", "211", "212", "220", "221", "222", "300", "301", "302", "310", "311", "312", "320", "321", "322", "023", "030", "031", "032", "033", "103", "113", "123", "130", "131", "132", "133", "203", "213", "223", "230", "231", "232", "233", "303", "313", "323", "330", "331", "332", "333", "003", "013", "00", "01", "02", "10", "11", "12", "20", "21", "22", "30", "13", "3"]); //#12296
@@ -15970,7 +16021,7 @@ function bwipp_kix() {
         $k[$j++] = "The data must not be empty"; //#12524
         bwipp_raiseerror(); //#12524
     } //#12524
-    bwipp_loadctx(bwipp_kix) //#12527
+    bwipp_loadctx(bwipp_kix); //#12527
     if (!bwipp_kix.__12544__) { //#12544
         $_ = Object.create($_); //#12544
         $_.encs = $a(["0033", "0123", "0132", "1023", "1032", "1122", "0213", "0303", "0312", "1203", "1212", "1302", "0231", "0321", "0330", "1221", "1230", "1320", "2013", "2103", "2112", "3003", "3012", "3102", "2031", "2121", "2130", "3021", "3030", "3120", "2211", "2301", "2310", "3201", "3210", "3300"]); //#12538
@@ -16072,7 +16123,7 @@ function bwipp_japanpost() {
         $k[$j++] = "The data must not be empty"; //#12648
         bwipp_raiseerror(); //#12648
     } //#12648
-    bwipp_loadctx(bwipp_japanpost) //#12651
+    bwipp_loadctx(bwipp_japanpost); //#12651
     $forall($_.barcode, function() { //#12660
         var _4 = $k[--$j]; //#12655
         if (!(((_4 >= 48) && (_4 <= 57)) || (((_4 >= 65) && (_4 <= 90)) || (_4 == 45)))) { //#12659
@@ -16244,7 +16295,7 @@ function bwipp_msi() {
     if ($eq($_.checktype, "unset")) { //#12846
         $_.checktype = "mod10"; //#12846
     } //#12846
-    bwipp_loadctx(bwipp_msi) //#12848
+    bwipp_loadctx(bwipp_msi); //#12848
     $forall($_.barcode, function() { //#12855
         var _B = $k[--$j]; //#12852
         if ((_B < 48) || (_B > 57)) { //#12854
@@ -16326,10 +16377,11 @@ function bwipp_msi() {
         $j--; //#12883
         $k[$j++] = 0; //#12884
         for (var _j = 0, _k = $_.code.length; _j < _k; _j++) { //#12884
+            $r(3, 1); //#12884
             var _l = $k[--$j]; //#12884
             var _m = $k[--$j]; //#12884
             var _n = $k[--$j]; //#12884
-            $k[$j++] = $f(_l + (_n * _m)); //#12884
+            $k[$j++] = $f(_n + (_m * _l)); //#12884
         } //#12884
         var _p = ($f(11 - ($k[--$j] % 11))) % 11; //#12886
         $k[$j++] = _p; //#12894
@@ -16349,37 +16401,43 @@ function bwipp_msi() {
         } else { //#12893
             var _w = $s($_.code.length + 1); //#12893
             $puti(_w, 0, $_.code); //#12893
-            $put(_w, $_.code.length, $f($k[--$j] + 48)); //#12893
             $k[$j++] = _w; //#12893
+            $k[$j++] = _w; //#12893
+            $k[$j++] = $_.code.length; //#12893
+            $r(4, -1); //#12893
+            var _z = $k[--$j]; //#12893
+            var _10 = $k[--$j]; //#12893
+            $put($k[--$j], _10, $f(_z + 48)); //#12893
         } //#12893
     }; //#12893
     $_.ncrmod11 = function() {
         $_.code = $k[--$j]; //#12898
         $k[$j++] = $_.code.length - 1; //#12899
         $forall($_.code, function() { //#12899
-            var _13 = $k[--$j]; //#12899
-            var _14 = $k[--$j]; //#12899
-            $k[$j++] = $f(_13 - 48); //#12899
-            $k[$j++] = $f((_14 % 8) + 2); //#12899
-            $k[$j++] = $f(_14 - 1); //#12899
+            var _15 = $k[--$j]; //#12899
+            var _16 = $k[--$j]; //#12899
+            $k[$j++] = $f(_15 - 48); //#12899
+            $k[$j++] = $f((_16 % 8) + 2); //#12899
+            $k[$j++] = $f(_16 - 1); //#12899
         }); //#12899
         $j--; //#12899
         $k[$j++] = 0; //#12900
-        for (var _16 = 0, _17 = $_.code.length; _16 < _17; _16++) { //#12900
-            var _18 = $k[--$j]; //#12900
-            var _19 = $k[--$j]; //#12900
+        for (var _18 = 0, _19 = $_.code.length; _18 < _19; _18++) { //#12900
+            $r(3, 1); //#12900
             var _1A = $k[--$j]; //#12900
-            $k[$j++] = $f(_18 + (_1A * _19)); //#12900
+            var _1B = $k[--$j]; //#12900
+            var _1C = $k[--$j]; //#12900
+            $k[$j++] = $f(_1C + (_1B * _1A)); //#12900
         } //#12900
-        var _1C = ($f(11 - ($k[--$j] % 11))) % 11; //#12902
-        $k[$j++] = _1C; //#12910
-        if (_1C == 10) { //#12909
+        var _1E = ($f(11 - ($k[--$j] % 11))) % 11; //#12902
+        $k[$j++] = _1E; //#12910
+        if (_1E == 10) { //#12909
             if ($_.badmod11) { //#12906
                 $j--; //#12904
-                var _1F = $s($_.code.length + 2); //#12904
-                $puti(_1F, 0, $_.code); //#12904
-                $puti(_1F, $_.code.length, "10"); //#12904
-                $k[$j++] = _1F; //#12904
+                var _1H = $s($_.code.length + 2); //#12904
+                $puti(_1H, 0, $_.code); //#12904
+                $puti(_1H, $_.code.length, "10"); //#12904
+                $k[$j++] = _1H; //#12904
             } else { //#12906
                 $j--; //#12906
                 $k[$j++] = 'bwipp.msiBadMod11NotSpecified#12906'; //#12906
@@ -16387,15 +16445,20 @@ function bwipp_msi() {
                 bwipp_raiseerror(); //#12906
             } //#12906
         } else { //#12909
-            var _1J = $s($_.code.length + 1); //#12909
-            $puti(_1J, 0, $_.code); //#12909
-            $put(_1J, $_.code.length, $f($k[--$j] + 48)); //#12909
-            $k[$j++] = _1J; //#12909
+            var _1L = $s($_.code.length + 1); //#12909
+            $puti(_1L, 0, $_.code); //#12909
+            $k[$j++] = _1L; //#12909
+            $k[$j++] = _1L; //#12909
+            $k[$j++] = $_.code.length; //#12909
+            $r(4, -1); //#12909
+            var _1O = $k[--$j]; //#12909
+            var _1P = $k[--$j]; //#12909
+            $put($k[--$j], _1P, $f(_1O + 48)); //#12909
         } //#12909
     }; //#12909
     if (!bwipp_msi.__12922__) { //#12922
         $_ = Object.create($_); //#12922
-        var _1N = new Map([
+        var _1R = new Map([
             ["mod10", function() {
                 $_.mod10(); //#12915
             }],
@@ -16418,27 +16481,27 @@ function bwipp_msi() {
                 $_.mod10(); //#12920
             }]
         ]); //#12920
-        $_.checkfunc = _1N; //#12921
+        $_.checkfunc = _1R; //#12921
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_msi.$ctx[id] = $_[id]); //#12921
         bwipp_msi.__12922__ = 1; //#12921
         $_ = Object.getPrototypeOf($_); //#12921
     } //#12921
     if ($_.includecheck) { //#12932
-        var _1Q = $_.checkfunc; //#12926
-        var _1R = $_.checktype; //#12926
-        var _1S = $get(_1Q, _1R) !== undefined; //#12926
-        $k[$j++] = _1Q; //#12928
-        $k[$j++] = _1R; //#12928
-        if (!_1S) { //#12928
+        var _1U = $_.checkfunc; //#12926
+        var _1V = $_.checktype; //#12926
+        var _1W = $get(_1U, _1V) !== undefined; //#12926
+        $k[$j++] = _1U; //#12928
+        $k[$j++] = _1V; //#12928
+        if (!_1W) { //#12928
             $j -= 2; //#12927
             $k[$j++] = 'bwipp.msiBadCharacter#12927'; //#12927
             $k[$j++] = "MSI checktype must be mod10, mod1010, mod11, ncrmod11, mod1110 or ncrmod1110"; //#12927
             bwipp_raiseerror(); //#12927
         } //#12927
-        var _1T = $k[--$j]; //#12929
-        var _1V = $get($k[--$j], _1T); //#12929
+        var _1X = $k[--$j]; //#12929
+        var _1Z = $get($k[--$j], _1X); //#12929
         $k[$j++] = $_.barcode; //#12929
-        if (_1V() === true) {
+        if (_1Z() === true) {
             return true;
         } //#12929
         $_.barcode = $k[--$j]; //#12929
@@ -16450,8 +16513,8 @@ function bwipp_msi() {
     $_.sbs = $s(($_.barlen * 8) + 5); //#12934
     $_.txt = $a($_.barlen); //#12935
     $puti($_.sbs, 0, $get($_.encs, 10)); //#12938
-    for (var _1k = 0, _1j = $_.barlen - 1; _1k <= _1j; _1k += 1) { //#12950
-        $_.i = _1k; //#12941
+    for (var _1o = 0, _1n = $_.barlen - 1; _1o <= _1n; _1o += 1) { //#12950
+        $_.i = _1o; //#12941
         $search($_.barchars, $geti($_.barcode, $_.i, 1)); //#12943
         $j--; //#12944
         $_.indx = $k[--$j].length; //#12945
@@ -16463,37 +16526,37 @@ function bwipp_msi() {
     $puti($_.sbs, ($_.barlen * 8) + 2, $get($_.encs, 11)); //#12953
     $k[$j++] = Infinity; //#12956
     $k[$j++] = Infinity; //#12958
-    var _2A = $_.sbs; //#12958
-    for (var _2B = 0, _2C = _2A.length; _2B < _2C; _2B++) { //#12958
-        $k[$j++] = $get(_2A, _2B) - 48; //#12958
+    var _2E = $_.sbs; //#12958
+    for (var _2F = 0, _2G = _2E.length; _2F < _2G; _2F++) { //#12958
+        $k[$j++] = $get(_2E, _2F) - 48; //#12958
     } //#12958
-    var _2E = $a(); //#12958
+    var _2I = $a(); //#12958
     $k[$j++] = Infinity; //#12959
-    for (var _2G = 0, _2H = ~~(($_.sbs.length + 1) / 2); _2G < _2H; _2G++) { //#12959
+    for (var _2K = 0, _2L = ~~(($_.sbs.length + 1) / 2); _2K < _2L; _2K++) { //#12959
         $k[$j++] = $_.height; //#12959
     } //#12959
-    var _2J = $a(); //#12959
+    var _2N = $a(); //#12959
     $k[$j++] = Infinity; //#12960
-    for (var _2L = 0, _2M = ~~(($_.sbs.length + 1) / 2); _2L < _2M; _2L++) { //#12960
+    for (var _2P = 0, _2Q = ~~(($_.sbs.length + 1) / 2); _2P < _2Q; _2P++) { //#12960
         $k[$j++] = 0; //#12960
     } //#12960
-    var _2N = $a(); //#12960
+    var _2R = $a(); //#12960
     $k[$j++] = 'ren'; //#12963
     $k[$j++] = 'renlinear'; //#12963
     $k[$j++] = 'sbs'; //#12963
-    $k[$j++] = _2E; //#12963
+    $k[$j++] = _2I; //#12963
     $k[$j++] = 'bhs'; //#12963
-    $k[$j++] = _2J; //#12963
-    $k[$j++] = 'bbs'; //#12963
     $k[$j++] = _2N; //#12963
+    $k[$j++] = 'bbs'; //#12963
+    $k[$j++] = _2R; //#12963
     if ($_.includetext) { //#12963
         $k[$j++] = 'txt'; //#12962
         $k[$j++] = $geti($_.txt, 0, $_.txtlen); //#12962
     } //#12962
     $k[$j++] = 'opt'; //#12964
     $k[$j++] = $_.options; //#12964
-    var _2T = $d(); //#12964
-    $k[$j++] = _2T; //#12967
+    var _2X = $d(); //#12964
+    $k[$j++] = _2X; //#12967
     if (!$_.dontdraw) { //#12967
         bwipp_renlinear(); //#12967
     } //#12967
@@ -16520,7 +16583,7 @@ function bwipp_plessey() {
         $k[$j++] = "The data must not be empty"; //#13018
         bwipp_raiseerror(); //#13018
     } //#13018
-    bwipp_loadctx(bwipp_plessey) //#13021
+    bwipp_loadctx(bwipp_plessey); //#13021
     if (!bwipp_plessey.__13037__) { //#13037
         $_ = Object.create($_); //#13037
         $_.barchars = "0123456789ABCDEF"; //#13025
@@ -16655,7 +16718,7 @@ function bwipp_telepen() {
     bwipp_processoptions(); //#13172
     $_.options = $k[--$j]; //#13172
     $_.barcode = $k[--$j]; //#13173
-    bwipp_loadctx(bwipp_telepen) //#13175
+    bwipp_loadctx(bwipp_telepen); //#13175
     var _3 = new Map([
         ["parse", $_.parse],
         ["parseonly", true],
@@ -16840,7 +16903,7 @@ function bwipp_posicode() {
     $_.options = $k[--$j]; //#13410
     var _1 = $k[--$j]; //#13411
     $_.barcode = _1; //#13411
-    bwipp_loadctx(bwipp_posicode) //#13413
+    bwipp_loadctx(bwipp_posicode); //#13413
     if (!bwipp_posicode.__13456__) { //#13456
         $_ = Object.create($_); //#13456
         $_.la0 = -1; //#13417
@@ -17284,7 +17347,7 @@ function bwipp_codablockf() {
         $k[$j++] = "Codablock F must have sepheight of at least 1"; //#13827
         bwipp_raiseerror(); //#13827
     } //#13827
-    bwipp_loadctx(bwipp_codablockf) //#13830
+    bwipp_loadctx(bwipp_codablockf); //#13830
     $k[$j++] = 'c'; //#13832
     if (($_.columns >= 4) && ($_.columns <= 62)) { //#13832
         $k[$j++] = $_.columns; //#13832
@@ -17921,19 +17984,24 @@ function bwipp_codablockf() {
         $k[$j++] = _AW; //#14280
         $k[$j++] = _AX; //#14280
         $j--; //#14280
-        $put($_.rowbits, $_.i, $k[--$j]); //#14281
+        $k[$j++] = $_.rowbits; //#14281
+        $k[$j++] = $_.i; //#14281
+        $r(3, -1); //#14281
+        var _Aa = $k[--$j]; //#14281
+        var _Ab = $k[--$j]; //#14281
+        $put($k[--$j], _Ab, _Aa); //#14281
     } //#14281
     $_.symwid = $f(($_.c * 11) + 57); //#14285
     $k[$j++] = Infinity; //#14286
-    for (var _Ae = 0, _Af = $_.symwid * $_.sepheight; _Ae < _Af; _Ae++) { //#14287
+    for (var _Ag = 0, _Ah = $_.symwid * $_.sepheight; _Ag < _Ah; _Ag++) { //#14287
         $k[$j++] = 1; //#14287
     } //#14287
-    for (var _Ai = 0, _Ah = $_.r - 2; _Ai <= _Ah; _Ai += 1) { //#14296
-        $_.i = _Ai; //#14289
-        for (var _Ak = 0, _Al = $_.rowheight; _Ak < _Al; _Ak++) { //#14290
+    for (var _Ak = 0, _Aj = $_.r - 2; _Ak <= _Aj; _Ak += 1) { //#14296
+        $_.i = _Ak; //#14289
+        for (var _Am = 0, _An = $_.rowheight; _Am < _An; _Am++) { //#14290
             $aload($get($_.rowbits, $_.i)); //#14290
         } //#14290
-        for (var _Aq = 0, _Ar = $_.sepheight; _Aq < _Ar; _Aq++) { //#14295
+        for (var _As = 0, _At = $_.sepheight; _As < _At; _As++) { //#14295
             $k[$j++] = 1; //#14293
             $k[$j++] = 1; //#14293
             $k[$j++] = 0; //#14293
@@ -17945,7 +18013,7 @@ function bwipp_codablockf() {
             $k[$j++] = 1; //#14293
             $k[$j++] = 0; //#14293
             $k[$j++] = 0; //#14293
-            for (var _At = 0, _Au = $f($_.symwid - 24); _At < _Au; _At++) { //#14293
+            for (var _Av = 0, _Aw = $f($_.symwid - 24); _Av < _Aw; _Av++) { //#14293
                 $k[$j++] = 1; //#14293
             } //#14293
             $k[$j++] = 1; //#14294
@@ -17963,14 +18031,14 @@ function bwipp_codablockf() {
             $k[$j++] = 1; //#14294
         } //#14294
     } //#14294
-    for (var _Aw = 0, _Ax = $_.rowheight; _Aw < _Ax; _Aw++) { //#14297
+    for (var _Ay = 0, _Az = $_.rowheight; _Ay < _Az; _Ay++) { //#14297
         $aload($get($_.rowbits, $_.r - 1)); //#14297
     } //#14297
-    for (var _B3 = 0, _B4 = $_.symwid * $_.sepheight; _B3 < _B4; _B3++) { //#14298
+    for (var _B5 = 0, _B6 = $_.symwid * $_.sepheight; _B5 < _B6; _B5++) { //#14298
         $k[$j++] = 1; //#14298
     } //#14298
     $_.pixs = $a(); //#14298
-    var _BE = new Map([
+    var _BG = new Map([
         ["ren", 'renmatrix'],
         ["pixs", $_.pixs],
         ["pixx", $_.symwid],
@@ -17979,7 +18047,7 @@ function bwipp_codablockf() {
         ["width", $_.symwid / 72],
         ["opt", $_.options]
     ]); //#14309
-    $k[$j++] = _BE; //#14312
+    $k[$j++] = _BG; //#14312
     if (!$_.dontdraw) { //#14312
         bwipp_renmatrix(); //#14312
     } //#14312
@@ -18041,7 +18109,7 @@ function bwipp_code16k() {
             bwipp_raiseerror(); //#14382
         } //#14382
     } //#14382
-    bwipp_loadctx(bwipp_code16k) //#14386
+    bwipp_loadctx(bwipp_code16k); //#14386
     if ($_.sam != -1) { //#14388
         $_.rows = 16; //#14388
     } //#14388
@@ -18922,35 +18990,40 @@ function bwipp_code16k() {
         $k[$j++] = _E3; //#15037
         $k[$j++] = _E4; //#15037
         $j--; //#15037
-        $put($_.rowbits, $_.i, $k[--$j]); //#15038
+        $k[$j++] = $_.rowbits; //#15038
+        $k[$j++] = $_.i; //#15038
+        $r(3, -1); //#15038
+        var _E7 = $k[--$j]; //#15038
+        var _E8 = $k[--$j]; //#15038
+        $put($k[--$j], _E8, _E7); //#15038
     } //#15038
     $k[$j++] = Infinity; //#15042
-    for (var _E9 = 0, _EA = 81 * $_.sepheight; _E9 < _EA; _E9++) { //#15043
+    for (var _EB = 0, _EC = 81 * $_.sepheight; _EB < _EC; _EB++) { //#15043
         $k[$j++] = 1; //#15043
     } //#15043
-    for (var _ED = 0, _EC = $f($_.r - 2); _ED <= _EC; _ED += 1) { //#15048
-        $_.i = _ED; //#15045
-        for (var _EF = 0, _EG = $_.rowheight; _EF < _EG; _EF++) { //#15046
+    for (var _EF = 0, _EE = $f($_.r - 2); _EF <= _EE; _EF += 1) { //#15048
+        $_.i = _EF; //#15045
+        for (var _EH = 0, _EI = $_.rowheight; _EH < _EI; _EH++) { //#15046
             $aload($get($_.rowbits, $_.i)); //#15046
         } //#15046
-        for (var _EL = 0, _EM = $_.sepheight; _EL < _EM; _EL++) { //#15047
-            for (var _EN = 0, _EO = 10; _EN < _EO; _EN++) { //#15047
+        for (var _EN = 0, _EO = $_.sepheight; _EN < _EO; _EN++) { //#15047
+            for (var _EP = 0, _EQ = 10; _EP < _EQ; _EP++) { //#15047
                 $k[$j++] = 0; //#15047
             } //#15047
-            for (var _EP = 0, _EQ = 70; _EP < _EQ; _EP++) { //#15047
+            for (var _ER = 0, _ES = 70; _ER < _ES; _ER++) { //#15047
                 $k[$j++] = 1; //#15047
             } //#15047
             $k[$j++] = 0; //#15047
         } //#15047
     } //#15047
-    for (var _ES = 0, _ET = $_.rowheight; _ES < _ET; _ES++) { //#15049
+    for (var _EU = 0, _EV = $_.rowheight; _EU < _EV; _EU++) { //#15049
         $aload($get($_.rowbits, $f($_.r - 1))); //#15049
     } //#15049
-    for (var _EY = 0, _EZ = 81 * $_.sepheight; _EY < _EZ; _EY++) { //#15050
+    for (var _Ea = 0, _Eb = 81 * $_.sepheight; _Ea < _Eb; _Ea++) { //#15050
         $k[$j++] = 1; //#15050
     } //#15050
     $_.pixs = $a(); //#15050
-    var _Ef = new Map([
+    var _Eh = new Map([
         ["ren", 'renmatrix'],
         ["pixs", $_.pixs],
         ["pixx", 81],
@@ -18959,7 +19032,7 @@ function bwipp_code16k() {
         ["width", 81 / 72],
         ["opt", $_.options]
     ]); //#15061
-    $k[$j++] = _Ef; //#15064
+    $k[$j++] = _Eh; //#15064
     if (!$_.dontdraw) { //#15064
         bwipp_renmatrix(); //#15064
     } //#15064
@@ -19026,7 +19099,7 @@ function bwipp_code49() {
             bwipp_raiseerror(); //#15138
         } //#15138
     } //#15138
-    bwipp_loadctx(bwipp_code49) //#15142
+    bwipp_loadctx(bwipp_code49); //#15142
     if (!bwipp_code49.__15146__) { //#15146
         $_ = Object.create($_); //#15146
         $_.s1 = -1; //#15145
@@ -19111,80 +19184,79 @@ function bwipp_code49() {
             $k[$j++] = $f($f(_1O - 48) + (_1P * 10)); //#15215
         }); //#15215
         $k[$j++] = Infinity; //#15216
+        $r(3, 1); //#15216
         var _1Q = $k[--$j]; //#15216
         var _1R = $k[--$j]; //#15216
-        var _1S = $k[--$j]; //#15216
         $k[$j++] = _1Q; //#15216
-        $k[$j++] = _1R; //#15216
-        for (var _1T = 0, _1U = $f(_1S - 1); _1T < _1U; _1T++) { //#15216
-            var _1V = $k[--$j]; //#15216
-            $k[$j++] = _1V % 48; //#15216
-            $k[$j++] = ~~(_1V / 48); //#15216
+        for (var _1S = 0, _1T = $f(_1R - 1); _1S < _1T; _1S++) { //#15216
+            var _1U = $k[--$j]; //#15216
+            $k[$j++] = _1U % 48; //#15216
+            $k[$j++] = ~~(_1U / 48); //#15216
         } //#15216
-        var _1W = $a(); //#15216
-        $k[$j++] = _1W; //#15217
+        var _1V = $a(); //#15216
+        $k[$j++] = _1V; //#15217
         $k[$j++] = Infinity; //#15217
+        var _1W = $k[--$j]; //#15217
         var _1X = $k[--$j]; //#15217
-        var _1Y = $k[--$j]; //#15217
+        $k[$j++] = _1W; //#15217
         $k[$j++] = _1X; //#15217
-        $k[$j++] = _1Y; //#15217
-        for (var _1Z = _1Y.length - 1; _1Z >= 0; _1Z -= 1) { //#15217
-            var _1a = $k[--$j]; //#15217
-            $k[$j++] = $get(_1a, _1Z); //#15217
-            $k[$j++] = _1a; //#15217
+        for (var _1Y = _1X.length - 1; _1Y >= 0; _1Y -= 1) { //#15217
+            var _1Z = $k[--$j]; //#15217
+            $k[$j++] = $get(_1Z, _1Y); //#15217
+            $k[$j++] = _1Z; //#15217
         } //#15217
         $j--; //#15217
-        var _1c = $a(); //#15217
-        $puti($_.cws, $_.j, _1c); //#15218
-        $_.j = _1c.length + $_.j; //#15219
+        var _1b = $a(); //#15217
+        $puti($_.cws, $_.j, _1b); //#15218
+        $_.j = _1b.length + $_.j; //#15219
     }; //#15219
     $_.encodenumeric = function() {
         $_.nums = $k[--$j]; //#15223
-        var _1i = $_.nums.length; //#15224
-        var _1j = _1i % 5; //#15224
+        var _1h = $_.nums.length; //#15224
+        var _1i = _1h % 5; //#15224
         $k[$j++] = 'pre'; //#15224
+        $k[$j++] = _1h; //#15224
         $k[$j++] = _1i; //#15224
-        $k[$j++] = _1j; //#15224
-        if (_1j != 2) { //#15224
+        if (_1i != 2) { //#15224
+            var _1j = $k[--$j]; //#15224
             var _1k = $k[--$j]; //#15224
-            var _1l = $k[--$j]; //#15224
-            $k[$j++] = $f(_1l - _1k); //#15224
+            $k[$j++] = $f(_1k - _1j); //#15224
         } else { //#15224
+            var _1l = $k[--$j]; //#15224
             var _1m = $k[--$j]; //#15224
-            var _1n = $k[--$j]; //#15224
-            $k[$j++] = $f($f(_1n - _1m) - 5); //#15224
+            $k[$j++] = $f($f(_1m - _1l) - 5); //#15224
         } //#15224
-        var _1o = $k[--$j]; //#15224
-        $_[$k[--$j]] = _1o; //#15224
-        for (var _1s = 0, _1r = $f($_.pre - 1); _1s <= _1r; _1s += 5) { //#15225
+        var _1n = $k[--$j]; //#15224
+        $_[$k[--$j]] = _1n; //#15224
+        for (var _1r = 0, _1q = $f($_.pre - 1); _1r <= _1q; _1r += 5) { //#15225
             $k[$j++] = 3; //#15225
-            $k[$j++] = $geti($_.nums, _1s, 5); //#15225
+            $k[$j++] = $geti($_.nums, _1r, 5); //#15225
             $_.base48(); //#15225
         } //#15225
         $_.nums = $geti($_.nums, $_.pre, $f($_.nums.length - $_.pre)); //#15226
-        var _21 = $_.nums.length; //#15228
-        $k[$j++] = _21; //#15228
-        if (_21 == 1) { //#15228
+        var _20 = $_.nums.length; //#15228
+        $k[$j++] = _20; //#15228
+        if (_20 == 1) { //#15228
             $k[$j++] = $get($_.nums, $_.i); //#15228
             $_.encodealpha(); //#15228
         } //#15228
-        var _25 = $k[--$j]; //#15229
-        $k[$j++] = _25; //#15229
-        if (_25 == 3) { //#15229
+        var _24 = $k[--$j]; //#15229
+        $k[$j++] = _24; //#15229
+        if (_24 == 3) { //#15229
             $k[$j++] = 2; //#15229
             $k[$j++] = $_.nums; //#15229
             $_.base48(); //#15229
         } //#15229
-        var _27 = $k[--$j]; //#15230
-        $k[$j++] = _27; //#15230
-        if (_27 == 4) { //#15230
+        var _26 = $k[--$j]; //#15230
+        $k[$j++] = _26; //#15230
+        if (_26 == 4) { //#15230
             $k[$j++] = 3; //#15230
             $k[$j++] = Infinity; //#15230
             $k[$j++] = 49; //#15230
             $k[$j++] = 48; //#15230
             $aload($_.nums); //#15230
-            var _29 = $a(); //#15230
-            $k[$j++] = _29; //#15230
+            var _28 = $a(); //#15230
+            $k[$j++] = _28; //#15230
             $_.base48(); //#15230
         } //#15230
         if ($k[--$j] == 7) { //#15234
@@ -19193,8 +19265,8 @@ function bwipp_code49() {
             $k[$j++] = 49; //#15232
             $k[$j++] = 48; //#15232
             $aload($geti($_.nums, 0, 4)); //#15232
-            var _2D = $a(); //#15232
-            $k[$j++] = _2D; //#15232
+            var _2C = $a(); //#15232
+            $k[$j++] = _2C; //#15232
             $_.base48(); //#15232
             $k[$j++] = 2; //#15233
             $k[$j++] = $geti($_.nums, 4, 3); //#15233
@@ -19202,15 +19274,15 @@ function bwipp_code49() {
         } //#15233
     }; //#15233
     $k[$j++] = Infinity; //#15238
-    for (var _2H = 0, _2I = $_.msglen; _2H < _2I; _2H++) { //#15238
+    for (var _2G = 0, _2H = $_.msglen; _2G < _2H; _2G++) { //#15238
         $k[$j++] = 0; //#15238
     } //#15238
     $k[$j++] = 0; //#15238
     $_.numericruns = $a(); //#15238
-    for (var _2L = $_.msglen - 1; _2L >= 0; _2L -= 1) { //#15247
-        $_.i = _2L; //#15240
-        var _2O = $get($_.msg, $_.i); //#15241
-        if ((_2O >= 48) && (_2O <= 57)) { //#15245
+    for (var _2K = $_.msglen - 1; _2K >= 0; _2K -= 1) { //#15247
+        $_.i = _2K; //#15240
+        var _2N = $get($_.msg, $_.i); //#15241
+        if ((_2N >= 48) && (_2N <= 57)) { //#15245
             $put($_.numericruns, $_.i, $f($get($_.numericruns, $_.i + 1) + 1)); //#15243
         } else { //#15245
             $put($_.numericruns, $_.i, 0); //#15245
@@ -19236,15 +19308,15 @@ function bwipp_code49() {
             $_.mode = 3; //#15273
             $k[$j++] = $_.cws; //#15274
             $k[$j++] = 0; //#15274
-            for (var _2d = 0; _2d <= 43; _2d += 1) { //#15274
-                $k[$j++] = _2d; //#15274
-                if ($get($_.samval, _2d) != $_.sam) { //#15274
+            for (var _2c = 0; _2c <= 43; _2c += 1) { //#15274
+                $k[$j++] = _2c; //#15274
+                if ($get($_.samval, _2c) != $_.sam) { //#15274
                     $j--; //#15274
                 } //#15274
             } //#15274
+            var _2g = $k[--$j]; //#15274
             var _2h = $k[--$j]; //#15274
-            var _2i = $k[--$j]; //#15274
-            $put($k[--$j], _2i, $f(_2h + 1)); //#15274
+            $put($k[--$j], _2h, $f(_2g + 1)); //#15274
             $_.method = "alpha"; //#15275
             $_.i = 0; //#15276
             $_.j = 1; //#15276
@@ -19257,9 +19329,9 @@ function bwipp_code49() {
             $_.j = 0; //#15281
             break; //#15282
         } //#15282
-        var _2p = $get($_.charvals, $get($_.msg, 0)); //#15284
-        $k[$j++] = _2p; //#15291
-        if ($ne($type(_2p), 'arraytype')) { //#15291
+        var _2o = $get($_.charvals, $get($_.msg, 0)); //#15284
+        $k[$j++] = _2o; //#15291
+        if ($ne($type(_2o), 'arraytype')) { //#15291
             $j--; //#15286
             $_.mode = 0; //#15287
             $_.method = "alpha"; //#15288
@@ -19267,8 +19339,8 @@ function bwipp_code49() {
             $_.j = 0; //#15289
             break; //#15290
         } //#15290
-        var _2t = ($get($k[--$j], 0) == 43) ? 4 : 5; //#15293
-        $_.mode = _2t; //#15293
+        var _2s = ($get($k[--$j], 0) == 43) ? 4 : 5; //#15293
+        $_.mode = _2s; //#15293
         $put($_.cws, 0, $get($get($_.charvals, $get($_.msg, 0)), 1)); //#15294
         $_.method = "alpha"; //#15295
         $_.i = 1; //#15296
@@ -19315,9 +19387,9 @@ function bwipp_code49() {
         $_ = Object.getPrototypeOf($_); //#15339
     } //#15339
     $_.urows = $_.rows; //#15343
-    var _3d = $_.metrics; //#15344
-    for (var _3e = 0, _3f = _3d.length; _3e < _3f; _3e++) { //#15352
-        $_.m = $get(_3d, _3e); //#15345
+    var _3c = $_.metrics; //#15344
+    for (var _3d = 0, _3e = _3c.length; _3d < _3e; _3d++) { //#15352
+        $_.m = $get(_3c, _3d); //#15345
         $_.r = $get($_.m, 0); //#15346
         $_.dcws = $get($_.m, 1); //#15347
         $_.okay = true; //#15348
@@ -19338,27 +19410,27 @@ function bwipp_code49() {
     } //#15355
     $k[$j++] = Infinity; //#15359
     $aload($_.cws); //#15359
-    for (var _3v = 0, _3w = $f($_.dcws - $_.cws.length); _3v < _3w; _3v++) { //#15359
+    for (var _3u = 0, _3v = $f($_.dcws - $_.cws.length); _3u < _3v; _3u++) { //#15359
         $k[$j++] = 48; //#15359
     } //#15359
     $_.cws = $a(); //#15359
     $_.ccs = $a($_.r * 8); //#15362
     $_.j = 0; //#15363
-    for (var _42 = 0, _41 = $f($_.r - 2); _42 <= _41; _42 += 1) { //#15370
-        $_.i = _42; //#15365
+    for (var _41 = 0, _40 = $f($_.r - 2); _41 <= _40; _41 += 1) { //#15370
+        $_.i = _41; //#15365
         $_.cc = $geti($_.cws, $_.j, 7); //#15366
         $puti($_.ccs, $_.i * 8, $_.cc); //#15367
-        var _4B = $_.cc; //#15368
+        var _4A = $_.cc; //#15368
         $k[$j++] = $_.ccs; //#15368
         $k[$j++] = ($_.i * 8) + 7; //#15368
         $k[$j++] = 0; //#15368
-        for (var _4C = 0, _4D = _4B.length; _4C < _4D; _4C++) { //#15368
-            var _4F = $k[--$j]; //#15368
-            $k[$j++] = $f(_4F + $get(_4B, _4C)); //#15368
+        for (var _4B = 0, _4C = _4A.length; _4B < _4C; _4B++) { //#15368
+            var _4E = $k[--$j]; //#15368
+            $k[$j++] = $f(_4E + $get(_4A, _4B)); //#15368
         } //#15368
+        var _4F = $k[--$j]; //#15368
         var _4G = $k[--$j]; //#15368
-        var _4H = $k[--$j]; //#15368
-        $put($k[--$j], _4H, _4G % 49); //#15368
+        $put($k[--$j], _4G, _4F % 49); //#15368
         $_.j = $_.j + 7; //#15369
     } //#15369
     if ($_.j < $_.dcws) { //#15373
@@ -19368,32 +19440,32 @@ function bwipp_code49() {
     $put($_.ccs, $_.ccs.length - 2, $_.cr7); //#15377
     if (!bwipp_code49.__15386__) { //#15386
         $_ = Object.create($_); //#15386
-        var _4Y = $a([1, 9, 31, 26, 2, 12, 17, 23, 37, 18, 22, 6, 27, 44, 15, 43, 39, 11, 13, 5, 41, 33, 36, 8, 4, 32, 3, 19, 40, 25, 29, 10, 24, 30]); //#15382
-        $k[$j++] = _4Y; //#15383
-        $k[$j++] = _4Y; //#15383
+        var _4X = $a([1, 9, 31, 26, 2, 12, 17, 23, 37, 18, 22, 6, 27, 44, 15, 43, 39, 11, 13, 5, 41, 33, 36, 8, 4, 32, 3, 19, 40, 25, 29, 10, 24, 30]); //#15382
+        $k[$j++] = _4X; //#15383
+        $k[$j++] = _4X; //#15383
         $k[$j++] = Infinity; //#15383
-        var _4Z = $k[--$j]; //#15383
-        var _4b = $geti($k[--$j], 0, 32); //#15383
-        $k[$j++] = _4Z; //#15383
+        var _4Y = $k[--$j]; //#15383
+        var _4a = $geti($k[--$j], 0, 32); //#15383
+        $k[$j++] = _4Y; //#15383
         $k[$j++] = 20; //#15383
-        $aload(_4b); //#15383
+        $aload(_4a); //#15383
         $_.weightx = $a(); //#15383
-        var _4d = $k[--$j]; //#15384
-        $k[$j++] = _4d; //#15384
-        $k[$j++] = _4d; //#15384
+        var _4c = $k[--$j]; //#15384
+        $k[$j++] = _4c; //#15384
+        $k[$j++] = _4c; //#15384
         $k[$j++] = Infinity; //#15384
-        var _4e = $k[--$j]; //#15384
-        var _4g = $geti($k[--$j], 1, 32); //#15384
-        $k[$j++] = _4e; //#15384
+        var _4d = $k[--$j]; //#15384
+        var _4f = $geti($k[--$j], 1, 32); //#15384
+        $k[$j++] = _4d; //#15384
         $k[$j++] = 16; //#15384
-        $aload(_4g); //#15384
+        $aload(_4f); //#15384
         $_.weighty = $a(); //#15384
         $k[$j++] = Infinity; //#15385
-        var _4i = $k[--$j]; //#15385
-        var _4k = $geti($k[--$j], 2, 32); //#15385
-        $k[$j++] = _4i; //#15385
+        var _4h = $k[--$j]; //#15385
+        var _4j = $geti($k[--$j], 2, 32); //#15385
+        $k[$j++] = _4h; //#15385
         $k[$j++] = 38; //#15385
-        $aload(_4k); //#15385
+        $aload(_4j); //#15385
         $_.weightz = $a(); //#15385
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_code49.$ctx[id] = $_[id]); //#15385
         bwipp_code49.__15386__ = 1; //#15385
@@ -19402,8 +19474,8 @@ function bwipp_code49() {
     $_.calccheck = function() {
         $_.weights = $k[--$j]; //#15388
         $_.score = 0; //#15389
-        for (var _4q = 0, _4p = (~~(($f($_.r - 1) * 8) / 2)) - 1; _4q <= _4p; _4q += 1) { //#15394
-            $_.i = _4q; //#15391
+        for (var _4p = 0, _4o = (~~(($f($_.r - 1) * 8) / 2)) - 1; _4p <= _4o; _4p += 1) { //#15394
+            $_.i = _4p; //#15391
             $_.score = $f((($f(($get($_.ccs, $_.i * 2) * 49) + $get($_.ccs, ($_.i * 2) + 1))) * $get($_.weights, $_.i + 1)) + $_.score); //#15393
         } //#15393
         $k[$j++] = $_.score; //#15395
@@ -19413,42 +19485,57 @@ function bwipp_code49() {
         $k[$j++] = $_.cr7 * $get($_.weightz, 0); //#15401
         $k[$j++] = $_.weightz; //#15401
         $_.calccheck(); //#15401
-        var _5A = $k[--$j]; //#15401
-        var _5C = $f($k[--$j] + _5A) % 2401; //#15402
-        $k[$j++] = ~~(_5C / 49); //#15402
-        $k[$j++] = _5C % 49; //#15402
+        var _59 = $k[--$j]; //#15401
+        var _5B = $f($k[--$j] + _59) % 2401; //#15402
+        $k[$j++] = ~~(_5B / 49); //#15402
+        $k[$j++] = _5B % 49; //#15402
         $astore($a(2)); //#15402
-        $puti($_.lastrow, 0, $k[--$j]); //#15403
+        $k[$j++] = $_.lastrow; //#15403
+        $k[$j++] = 0; //#15403
+        $r(3, -1); //#15403
+        var _5E = $k[--$j]; //#15403
+        var _5F = $k[--$j]; //#15403
+        $puti($k[--$j], _5F, _5E); //#15403
     } //#15403
     $_.wr1 = $f(($get($_.lastrow, 0) * 49) + $get($_.lastrow, 1)); //#15405
     $k[$j++] = $_.cr7 * $get($_.weighty, 0); //#15408
     $k[$j++] = $_.weighty; //#15408
     $_.calccheck(); //#15408
-    var _5O = $k[--$j]; //#15408
-    var _5U = ($f($f($k[--$j] + _5O) + ($_.wr1 * $get($_.weighty, $f(($_.r * 4) - 3))))) % 2401; //#15410
-    $_.wr2 = _5U; //#15410
-    $k[$j++] = ~~(_5U / 49); //#15411
-    $k[$j++] = _5U % 49; //#15411
+    var _5P = $k[--$j]; //#15408
+    var _5V = ($f($f($k[--$j] + _5P) + ($_.wr1 * $get($_.weighty, $f(($_.r * 4) - 3))))) % 2401; //#15410
+    $_.wr2 = _5V; //#15410
+    $k[$j++] = ~~(_5V / 49); //#15411
+    $k[$j++] = _5V % 49; //#15411
     $astore($a(2)); //#15411
-    $puti($_.lastrow, 2, $k[--$j]); //#15412
+    $k[$j++] = $_.lastrow; //#15412
+    $k[$j++] = 2; //#15412
+    $r(3, -1); //#15412
+    var _5Y = $k[--$j]; //#15412
+    var _5Z = $k[--$j]; //#15412
+    $puti($k[--$j], _5Z, _5Y); //#15412
     $k[$j++] = $_.cr7 * $get($_.weightx, 0); //#15415
     $k[$j++] = $_.weightx; //#15415
     $_.calccheck(); //#15415
-    var _5c = $k[--$j]; //#15415
-    var _5m = ($f(($f($f($k[--$j] + _5c) + ($_.wr1 * $get($_.weightx, $f(($_.r * 4) - 3))))) + ($_.wr2 * $get($_.weightx, $f(($_.r * 4) - 2))))) % 2401; //#15419
-    $k[$j++] = ~~(_5m / 49); //#15419
-    $k[$j++] = _5m % 49; //#15419
+    var _5f = $k[--$j]; //#15415
+    var _5p = ($f(($f($f($k[--$j] + _5f) + ($_.wr1 * $get($_.weightx, $f(($_.r * 4) - 3))))) + ($_.wr2 * $get($_.weightx, $f(($_.r * 4) - 2))))) % 2401; //#15419
+    $k[$j++] = ~~(_5p / 49); //#15419
+    $k[$j++] = _5p % 49; //#15419
     $astore($a(2)); //#15419
-    $puti($_.lastrow, 4, $k[--$j]); //#15420
-    var _5s = $geti($_.ccs, $_.ccs.length - 8, 7); //#15423
+    $k[$j++] = $_.lastrow; //#15420
+    $k[$j++] = 4; //#15420
+    $r(3, -1); //#15420
+    var _5s = $k[--$j]; //#15420
+    var _5t = $k[--$j]; //#15420
+    $puti($k[--$j], _5t, _5s); //#15420
+    var _5x = $geti($_.ccs, $_.ccs.length - 8, 7); //#15423
     $k[$j++] = 0; //#15423
-    for (var _5t = 0, _5u = _5s.length; _5t < _5u; _5t++) { //#15423
-        var _5w = $k[--$j]; //#15423
-        $k[$j++] = $f(_5w + $get(_5s, _5t)); //#15423
+    for (var _5y = 0, _5z = _5x.length; _5y < _5z; _5y++) { //#15423
+        var _61 = $k[--$j]; //#15423
+        $k[$j++] = $f(_61 + $get(_5x, _5y)); //#15423
     } //#15423
     $put($_.ccs, $_.ccs.length - 1, $k[--$j] % 49); //#15424
-    var _61 = $get($_.options, 'debugcws') !== undefined; //#15426
-    if (_61) { //#15426
+    var _66 = $get($_.options, 'debugcws') !== undefined; //#15426
+    if (_66) { //#15426
         $k[$j++] = 'bwipp.debugcws#15426'; //#15426
         $k[$j++] = $_.ccs; //#15426
         bwipp_raiseerror(); //#15426
@@ -19462,90 +19549,95 @@ function bwipp_code49() {
         $_ = Object.getPrototypeOf($_); //#16123
     } //#16123
     $_.rowbits = $a($_.r); //#16127
-    for (var _6C = 0, _6B = $f($_.r - 1); _6C <= _6B; _6C += 1) { //#16147
-        $_.i = _6C; //#16129
+    for (var _6H = 0, _6G = $f($_.r - 1); _6H <= _6G; _6H += 1) { //#16147
+        $_.i = _6H; //#16129
         $k[$j++] = 'p'; //#16130
         if ($_.i != $f($_.r - 1)) { //#16130
             $k[$j++] = $get($_.parity, $_.i); //#16130
         } else { //#16130
             $k[$j++] = "0000"; //#16130
         } //#16130
-        var _6I = $k[--$j]; //#16130
-        $_[$k[--$j]] = _6I; //#16130
+        var _6N = $k[--$j]; //#16130
+        $_[$k[--$j]] = _6N; //#16130
         $_.ccrow = $geti($_.ccs, $_.i * 8, 8); //#16131
         $k[$j++] = Infinity; //#16132
-        for (var _6N = 0; _6N <= 7; _6N += 2) { //#16133
-            $aload($geti($_.ccrow, _6N, 2)); //#16133
-            var _6Q = $k[--$j]; //#16133
-            var _6R = $k[--$j]; //#16133
-            $k[$j++] = $f(_6Q + (_6R * 49)); //#16133
+        for (var _6S = 0; _6S <= 7; _6S += 2) { //#16133
+            $aload($geti($_.ccrow, _6S, 2)); //#16133
+            var _6V = $k[--$j]; //#16133
+            var _6W = $k[--$j]; //#16133
+            $k[$j++] = $f(_6V + (_6W * 49)); //#16133
         } //#16133
         $_.scrow = $a(); //#16133
         $k[$j++] = Infinity; //#16135
         $k[$j++] = 10; //#16140
         $k[$j++] = 1; //#16140
         $k[$j++] = 1; //#16140
-        for (var _6T = 0; _6T <= 3; _6T += 1) { //#16140
-            $_.j = _6T; //#16138
+        for (var _6Y = 0; _6Y <= 3; _6Y += 1) { //#16140
+            $_.j = _6Y; //#16138
             $forall($get($get($_.patterns, $f($get($_.p, $_.j) - 48)), $get($_.scrow, $_.j)), function() { //#16139
-                var _6d = $k[--$j]; //#16139
-                $k[$j++] = $f(_6d - 48); //#16139
+                var _6i = $k[--$j]; //#16139
+                $k[$j++] = $f(_6i - 48); //#16139
             }); //#16139
         } //#16139
         $k[$j++] = 4; //#16141
         $k[$j++] = 1; //#16141
         $_.sbs = $a(); //#16141
         $k[$j++] = Infinity; //#16143
-        var _6f = $_.sbs; //#16144
+        var _6k = $_.sbs; //#16144
         $k[$j++] = 1; //#16144
-        for (var _6g = 0, _6h = _6f.length; _6g < _6h; _6g++) { //#16144
-            var _6j = $k[--$j]; //#16144
-            var _6k = (_6j == 0) ? 1 : 0; //#16144
-            $k[$j++] = _6j; //#16144
-            for (var _6l = 0, _6m = $get(_6f, _6g); _6l < _6m; _6l++) { //#16144
-                $k[$j++] = _6k //#16144
+        for (var _6l = 0, _6m = _6k.length; _6l < _6m; _6l++) { //#16144
+            var _6o = $k[--$j]; //#16144
+            var _6p = (_6o == 0) ? 1 : 0; //#16144
+            $k[$j++] = _6o; //#16144
+            for (var _6q = 0, _6r = $get(_6k, _6l); _6q < _6r; _6q++) { //#16144
+                $k[$j++] = _6p //#16144
             } //#16144
         } //#16144
         $astore($a($counttomark() - 1)); //#16145
-        var _6p = $k[--$j]; //#16145
-        var _6q = $k[--$j]; //#16145
-        $k[$j++] = _6p; //#16145
-        $k[$j++] = _6q; //#16145
+        var _6u = $k[--$j]; //#16145
+        var _6v = $k[--$j]; //#16145
+        $k[$j++] = _6u; //#16145
+        $k[$j++] = _6v; //#16145
         $j--; //#16145
-        var _6r = $k[--$j]; //#16145
-        var _6s = $k[--$j]; //#16145
-        $k[$j++] = _6r; //#16145
-        $k[$j++] = _6s; //#16145
+        var _6w = $k[--$j]; //#16145
+        var _6x = $k[--$j]; //#16145
+        $k[$j++] = _6w; //#16145
+        $k[$j++] = _6x; //#16145
         $j--; //#16145
-        $put($_.rowbits, $_.i, $k[--$j]); //#16146
+        $k[$j++] = $_.rowbits; //#16146
+        $k[$j++] = $_.i; //#16146
+        $r(3, -1); //#16146
+        var _70 = $k[--$j]; //#16146
+        var _71 = $k[--$j]; //#16146
+        $put($k[--$j], _71, _70); //#16146
     } //#16146
     $k[$j++] = Infinity; //#16150
-    for (var _6x = 0, _6y = 81 * $_.sepheight; _6x < _6y; _6x++) { //#16151
+    for (var _74 = 0, _75 = 81 * $_.sepheight; _74 < _75; _74++) { //#16151
         $k[$j++] = 1; //#16151
     } //#16151
-    for (var _71 = 0, _70 = $f($_.r - 2); _71 <= _70; _71 += 1) { //#16156
-        $_.i = _71; //#16153
-        for (var _73 = 0, _74 = $_.rowheight; _73 < _74; _73++) { //#16154
+    for (var _78 = 0, _77 = $f($_.r - 2); _78 <= _77; _78 += 1) { //#16156
+        $_.i = _78; //#16153
+        for (var _7A = 0, _7B = $_.rowheight; _7A < _7B; _7A++) { //#16154
             $aload($get($_.rowbits, $_.i)); //#16154
         } //#16154
-        for (var _79 = 0, _7A = $_.sepheight; _79 < _7A; _79++) { //#16155
-            for (var _7B = 0, _7C = 10; _7B < _7C; _7B++) { //#16155
+        for (var _7G = 0, _7H = $_.sepheight; _7G < _7H; _7G++) { //#16155
+            for (var _7I = 0, _7J = 10; _7I < _7J; _7I++) { //#16155
                 $k[$j++] = 0; //#16155
             } //#16155
-            for (var _7D = 0, _7E = 70; _7D < _7E; _7D++) { //#16155
+            for (var _7K = 0, _7L = 70; _7K < _7L; _7K++) { //#16155
                 $k[$j++] = 1; //#16155
             } //#16155
             $k[$j++] = 0; //#16155
         } //#16155
     } //#16155
-    for (var _7G = 0, _7H = $_.rowheight; _7G < _7H; _7G++) { //#16157
+    for (var _7N = 0, _7O = $_.rowheight; _7N < _7O; _7N++) { //#16157
         $aload($get($_.rowbits, $f($_.r - 1))); //#16157
     } //#16157
-    for (var _7M = 0, _7N = 81 * $_.sepheight; _7M < _7N; _7M++) { //#16158
+    for (var _7T = 0, _7U = 81 * $_.sepheight; _7T < _7U; _7T++) { //#16158
         $k[$j++] = 1; //#16158
     } //#16158
     $_.pixs = $a(); //#16158
-    var _7T = new Map([
+    var _7a = new Map([
         ["ren", 'renmatrix'],
         ["pixs", $_.pixs],
         ["pixx", 81],
@@ -19554,7 +19646,7 @@ function bwipp_code49() {
         ["width", 81 / 72],
         ["opt", $_.options]
     ]); //#16169
-    $k[$j++] = _7T; //#16172
+    $k[$j++] = _7a; //#16172
     if (!$_.dontdraw) { //#16172
         bwipp_renmatrix(); //#16172
     } //#16172
@@ -19573,7 +19665,7 @@ function bwipp_flattermarken() {
     bwipp_processoptions(); //#16480
     $_.options = $k[--$j]; //#16480
     $_.barcode = $k[--$j]; //#16481
-    bwipp_loadctx(bwipp_flattermarken) //#16483
+    bwipp_loadctx(bwipp_flattermarken); //#16483
     $forall($_.barcode, function() { //#16490
         var _3 = $k[--$j]; //#16487
         if ((_3 < 48) || (_3 > 57)) { //#16489
@@ -19769,7 +19861,7 @@ function bwipp_symbol() {
     $_.options = $k[--$j]; //#16708
     var _1 = $k[--$j]; //#16709
     $_.barcode = _1; //#16709
-    bwipp_loadctx(bwipp_symbol) //#16711
+    bwipp_loadctx(bwipp_symbol); //#16711
     if (!bwipp_symbol.__16747__) { //#16747
         $_ = Object.create($_); //#16747
         $_.fimasbs = $a([2.25, 2.25, 2.25, 11.25, 2.25, 11.25, 2.25, 2.25, 2.25]); //#16715
@@ -20003,7 +20095,7 @@ function bwipp_pdf417() {
         $k[$j++] = "The row multiplier must be greater than zero"; //#16844
         bwipp_raiseerror(); //#16844
     } //#16844
-    bwipp_loadctx(bwipp_pdf417) //#16847
+    bwipp_loadctx(bwipp_pdf417); //#16847
     if (!bwipp_pdf417.__16938__) { //#16938
         $_ = Object.create($_); //#16938
         $_.T = 0; //#16851
@@ -21112,7 +21204,7 @@ function bwipp_micropdf417() {
             bwipp_raiseerror(); //#17880
         } //#17880
     } //#17880
-    bwipp_loadctx(bwipp_micropdf417) //#17884
+    bwipp_loadctx(bwipp_micropdf417); //#17884
     if (!bwipp_micropdf417.__17974__) { //#17974
         $_ = Object.create($_); //#17974
         $_.T = 0; //#17888
@@ -22312,7 +22404,7 @@ function bwipp_datamatrix() {
         $k[$j++] = "The format must be either square or rectangle"; //#19005
         bwipp_raiseerror(); //#19005
     } //#19005
-    bwipp_loadctx(bwipp_datamatrix) //#19008
+    bwipp_loadctx(bwipp_datamatrix); //#19008
     if (!bwipp_datamatrix.__19065__) { //#19065
         $_ = Object.create($_); //#19065
         var _19 = $a([20, 36, 1, 2, 28, 1, 1]); //#19055
@@ -23816,143 +23908,121 @@ function bwipp_datamatrix() {
         $put($_.cws, $f($_.ncws + $_.i), $get($get($_.ecbs, $_.i % $_.rsbl), ~~($_.i / $_.rsbl))); //#19736
     } //#19736
     $_.module = function() {
-        var _Mk = $k[--$j]; //#19742
-        var _Ml = $k[--$j]; //#19742
-        var _Mm = $k[--$j]; //#19742
-        var _Mp = $strcpy($s(8), "00000000"); //#19743
-        var _Mr = $cvrs($s(8), $k[--$j], 2); //#19743
-        $puti(_Mp, 8 - _Mr.length, _Mr); //#19744
-        $k[$j++] = _Mm; //#19745
-        $k[$j++] = _Ml; //#19745
-        $k[$j++] = _Mk; //#19745
-        $k[$j++] = _Mp; //#19745
-        for (var _Ms = 7; _Ms >= 0; _Ms -= 1) { //#19745
-            var _Mt = $k[--$j]; //#19745
-            $k[$j++] = $f($get(_Mt, _Ms) - 48); //#19745
-            $k[$j++] = _Mt; //#19745
+        $r(4, -1); //#19742
+        var _Ml = $strcpy($s(8), "00000000"); //#19743
+        $k[$j++] = _Ml; //#19743
+        $k[$j++] = _Ml; //#19743
+        $r(3, -1); //#19743
+        var _Mo = $cvrs($s(8), $k[--$j], 2); //#19743
+        $puti($k[--$j], 8 - _Mo.length, _Mo); //#19744
+        for (var _Mq = 7; _Mq >= 0; _Mq -= 1) { //#19745
+            var _Mr = $k[--$j]; //#19745
+            $k[$j++] = $f($get(_Mr, _Mq) - 48); //#19745
+            $k[$j++] = _Mr; //#19745
         } //#19745
         $j--; //#19745
-        var _Mv = $k[--$j]; //#19746
-        var _Mw = $k[--$j]; //#19746
-        var _Mx = $k[--$j]; //#19746
-        var _My = $k[--$j]; //#19746
-        var _Mz = $k[--$j]; //#19746
-        var _N0 = $k[--$j]; //#19746
-        var _N1 = $k[--$j]; //#19746
-        var _N2 = $k[--$j]; //#19746
-        var _N3 = $k[--$j]; //#19746
-        var _N4 = $k[--$j]; //#19746
-        var _N5 = $k[--$j]; //#19746
-        $k[$j++] = _N2; //#19763
-        $k[$j++] = _N1; //#19763
-        $k[$j++] = _N0; //#19763
-        $k[$j++] = _Mz; //#19763
-        $k[$j++] = _My; //#19763
-        $k[$j++] = _Mx; //#19763
-        $k[$j++] = _Mw; //#19763
-        $k[$j++] = _Mv; //#19763
-        $k[$j++] = _N5; //#19763
-        $k[$j++] = _N4; //#19763
-        $forall(_N3, function() { //#19763
+        $r(11, -3); //#19746
+        $forall($k[--$j], function() { //#19763
             if ($k[--$j]() === true) {
                 return true;
             } //#19749
-            var _N7 = $k[--$j]; //#19750
-            var _N8 = $k[--$j]; //#19750
-            $k[$j++] = _N8; //#19753
-            $k[$j++] = _N7; //#19753
-            if (_N8 < 0) { //#19753
-                var _N9 = $k[--$j]; //#19751
-                var _NA = $k[--$j]; //#19751
-                $k[$j++] = $f(_NA + $_.mrows); //#19752
-                $k[$j++] = $f(_N9 + ($f(4 - ($f($_.mrows + 4) % 8)))); //#19752
+            var _Mv = $k[--$j]; //#19750
+            var _Mw = $k[--$j]; //#19750
+            $k[$j++] = _Mw; //#19753
+            $k[$j++] = _Mv; //#19753
+            if (_Mw < 0) { //#19753
+                var _Mx = $k[--$j]; //#19751
+                var _My = $k[--$j]; //#19751
+                $k[$j++] = $f(_My + $_.mrows); //#19752
+                $k[$j++] = $f(_Mx + ($f(4 - ($f($_.mrows + 4) % 8)))); //#19752
             } //#19752
-            var _ND = $k[--$j]; //#19754
-            $k[$j++] = _ND; //#19757
-            if (_ND < 0) { //#19757
-                var _NF = $k[--$j]; //#19755
-                var _NG = $k[--$j]; //#19755
-                $k[$j++] = $f(_NG + ($f(4 - ($f($_.mcols + 4) % 8)))); //#19756
-                $k[$j++] = $f(_NF + $_.mcols); //#19756
+            var _N1 = $k[--$j]; //#19754
+            $k[$j++] = _N1; //#19757
+            if (_N1 < 0) { //#19757
+                var _N3 = $k[--$j]; //#19755
+                var _N4 = $k[--$j]; //#19755
+                $k[$j++] = $f(_N4 + ($f(4 - ($f($_.mcols + 4) % 8)))); //#19756
+                $k[$j++] = $f(_N3 + $_.mcols); //#19756
             } //#19756
-            var _NI = $k[--$j]; //#19758
-            var _NJ = $k[--$j]; //#19758
-            $k[$j++] = _NJ; //#19760
-            $k[$j++] = _NI; //#19760
-            if (_NJ >= $_.mrows) { //#19760
-                var _NL = $k[--$j]; //#19759
-                var _NM = $k[--$j]; //#19759
-                $k[$j++] = $f(_NM - $_.mrows); //#19759
-                $k[$j++] = _NL; //#19759
+            var _N6 = $k[--$j]; //#19758
+            var _N7 = $k[--$j]; //#19758
+            $k[$j++] = _N7; //#19760
+            $k[$j++] = _N6; //#19760
+            if (_N7 >= $_.mrows) { //#19760
+                var _N9 = $k[--$j]; //#19759
+                var _NA = $k[--$j]; //#19759
+                $k[$j++] = $f(_NA - $_.mrows); //#19759
+                $k[$j++] = _N9; //#19759
             } //#19759
-            var _NO = $k[--$j]; //#19761
-            var _NP = $k[--$j]; //#19761
-            var _NS = $k[--$j]; //#19762
-            var _NT = $k[--$j]; //#19762
-            $put($_.mmat, $f(_NO + (_NP * $_.mcols)), $k[--$j]); //#19762
-            $k[$j++] = _NT; //#19762
-            $k[$j++] = _NS; //#19762
+            var _NC = $k[--$j]; //#19761
+            var _ND = $k[--$j]; //#19761
+            $k[$j++] = $_.mmat; //#19762
+            $k[$j++] = $f(_NC + (_ND * $_.mcols)); //#19762
+            $r(5, -1); //#19762
+            var _NG = $k[--$j]; //#19762
+            var _NH = $k[--$j]; //#19762
+            $put($k[--$j], _NH, _NG); //#19762
         }); //#19762
     }; //#19762
-    var _Nl = $a([function() {
-        var _NV = $k[--$j]; //#19768
-        var _NW = $k[--$j]; //#19768
-        $k[$j++] = _NW; //#19768
-        $k[$j++] = _NV; //#19768
-        $k[$j++] = $f(_NW - 2); //#19768
-        $k[$j++] = $f(_NV - 2); //#19768
+    var _NZ = $a([function() {
+        var _NJ = $k[--$j]; //#19768
+        var _NK = $k[--$j]; //#19768
+        $k[$j++] = _NK; //#19768
+        $k[$j++] = _NJ; //#19768
+        $k[$j++] = $f(_NK - 2); //#19768
+        $k[$j++] = $f(_NJ - 2); //#19768
     }, function() {
-        var _NX = $k[--$j]; //#19768
-        var _NY = $k[--$j]; //#19768
-        $k[$j++] = _NY; //#19768
-        $k[$j++] = _NX; //#19768
-        $k[$j++] = $f(_NY - 2); //#19768
-        $k[$j++] = $f(_NX - 1); //#19768
+        var _NL = $k[--$j]; //#19768
+        var _NM = $k[--$j]; //#19768
+        $k[$j++] = _NM; //#19768
+        $k[$j++] = _NL; //#19768
+        $k[$j++] = $f(_NM - 2); //#19768
+        $k[$j++] = $f(_NL - 1); //#19768
     }, function() {
-        var _NZ = $k[--$j]; //#19769
-        var _Na = $k[--$j]; //#19769
-        $k[$j++] = _Na; //#19769
-        $k[$j++] = _NZ; //#19769
-        $k[$j++] = $f(_Na - 1); //#19769
-        $k[$j++] = $f(_NZ - 2); //#19769
+        var _NN = $k[--$j]; //#19769
+        var _NO = $k[--$j]; //#19769
+        $k[$j++] = _NO; //#19769
+        $k[$j++] = _NN; //#19769
+        $k[$j++] = $f(_NO - 1); //#19769
+        $k[$j++] = $f(_NN - 2); //#19769
     }, function() {
-        var _Nb = $k[--$j]; //#19769
-        var _Nc = $k[--$j]; //#19769
-        $k[$j++] = _Nc; //#19769
-        $k[$j++] = _Nb; //#19769
-        $k[$j++] = $f(_Nc - 1); //#19769
-        $k[$j++] = $f(_Nb - 1); //#19769
+        var _NP = $k[--$j]; //#19769
+        var _NQ = $k[--$j]; //#19769
+        $k[$j++] = _NQ; //#19769
+        $k[$j++] = _NP; //#19769
+        $k[$j++] = $f(_NQ - 1); //#19769
+        $k[$j++] = $f(_NP - 1); //#19769
     }, function() {
-        var _Nd = $k[--$j]; //#19770
-        var _Ne = $k[--$j]; //#19770
-        $k[$j++] = _Ne; //#19770
-        $k[$j++] = _Nd; //#19770
-        $k[$j++] = $f(_Ne - 1); //#19770
-        $k[$j++] = _Nd; //#19770
+        var _NR = $k[--$j]; //#19770
+        var _NS = $k[--$j]; //#19770
+        $k[$j++] = _NS; //#19770
+        $k[$j++] = _NR; //#19770
+        $k[$j++] = $f(_NS - 1); //#19770
+        $k[$j++] = _NR; //#19770
     }, function() {
-        var _Nf = $k[--$j]; //#19770
-        var _Ng = $k[--$j]; //#19770
-        $k[$j++] = _Ng; //#19770
-        $k[$j++] = _Nf; //#19770
-        $k[$j++] = _Ng; //#19770
-        $k[$j++] = $f(_Nf - 2); //#19770
+        var _NT = $k[--$j]; //#19770
+        var _NU = $k[--$j]; //#19770
+        $k[$j++] = _NU; //#19770
+        $k[$j++] = _NT; //#19770
+        $k[$j++] = _NU; //#19770
+        $k[$j++] = $f(_NT - 2); //#19770
     }, function() {
-        var _Nh = $k[--$j]; //#19771
-        var _Ni = $k[--$j]; //#19771
-        $k[$j++] = _Ni; //#19771
-        $k[$j++] = _Nh; //#19771
-        $k[$j++] = _Ni; //#19771
-        $k[$j++] = $f(_Nh - 1); //#19771
+        var _NV = $k[--$j]; //#19771
+        var _NW = $k[--$j]; //#19771
+        $k[$j++] = _NW; //#19771
+        $k[$j++] = _NV; //#19771
+        $k[$j++] = _NW; //#19771
+        $k[$j++] = $f(_NV - 1); //#19771
     }, function() {
-        var _Nj = $k[--$j]; //#19771
-        var _Nk = $k[--$j]; //#19771
-        $k[$j++] = _Nk; //#19771
-        $k[$j++] = _Nj; //#19771
-        $k[$j++] = _Nk; //#19771
-        $k[$j++] = _Nj; //#19771
+        var _NX = $k[--$j]; //#19771
+        var _NY = $k[--$j]; //#19771
+        $k[$j++] = _NY; //#19771
+        $k[$j++] = _NX; //#19771
+        $k[$j++] = _NY; //#19771
+        $k[$j++] = _NX; //#19771
     }]); //#19771
-    $_.dmn = _Nl; //#19772
-    var _Nu = $a([function() {
+    $_.dmn = _NZ; //#19772
+    var _Ni = $a([function() {
         $k[$j++] = $f($_.mrows - 1); //#19775
         $k[$j++] = 0; //#19775
     }, function() {
@@ -23977,8 +24047,8 @@ function bwipp_datamatrix() {
         $k[$j++] = 3; //#19778
         $k[$j++] = $f($_.mcols - 1); //#19778
     }]); //#19778
-    $_.dmc1 = _Nu; //#19779
-    var _O3 = $a([function() {
+    $_.dmc1 = _Ni; //#19779
+    var _Nr = $a([function() {
         $k[$j++] = $f($_.mrows - 3); //#19782
         $k[$j++] = 0; //#19782
     }, function() {
@@ -24003,8 +24073,8 @@ function bwipp_datamatrix() {
         $k[$j++] = 1; //#19785
         $k[$j++] = $f($_.mcols - 1); //#19785
     }]); //#19785
-    $_.dmc2 = _O3; //#19786
-    var _OC = $a([function() {
+    $_.dmc2 = _Nr; //#19786
+    var _O0 = $a([function() {
         $k[$j++] = $f($_.mrows - 3); //#19789
         $k[$j++] = 0; //#19789
     }, function() {
@@ -24029,8 +24099,8 @@ function bwipp_datamatrix() {
         $k[$j++] = 3; //#19792
         $k[$j++] = $f($_.mcols - 1); //#19792
     }]); //#19792
-    $_.dmc3 = _OC; //#19793
-    var _OM = $a([function() {
+    $_.dmc3 = _O0; //#19793
+    var _OA = $a([function() {
         $k[$j++] = $f($_.mrows - 1); //#19796
         $k[$j++] = 0; //#19796
     }, function() {
@@ -24055,105 +24125,105 @@ function bwipp_datamatrix() {
         $k[$j++] = 1; //#19799
         $k[$j++] = $f($_.mcols - 1); //#19799
     }]); //#19799
-    $_.dmc4 = _OM; //#19800
+    $_.dmc4 = _OA; //#19800
     $k[$j++] = Infinity; //#19802
-    for (var _OP = 0, _OQ = $_.mrows * $_.mcols; _OP < _OQ; _OP++) { //#19802
+    for (var _OD = 0, _OE = $_.mrows * $_.mcols; _OD < _OE; _OD++) { //#19802
         $k[$j++] = -1; //#19802
     } //#19802
     $_.mmat = $a(); //#19802
-    for (var _OT = $_.cws.length - 1; _OT >= 0; _OT -= 1) { //#19803
-        $k[$j++] = $get($_.cws, _OT); //#19803
+    for (var _OH = $_.cws.length - 1; _OH >= 0; _OH -= 1) { //#19803
+        $k[$j++] = $get($_.cws, _OH); //#19803
     } //#19803
     $k[$j++] = 4; //#19843
     $k[$j++] = 0; //#19843
     for (;;) { //#19843
-        var _OW = $k[--$j]; //#19806
-        var _OX = $k[--$j]; //#19806
-        $k[$j++] = _OX; //#19808
-        $k[$j++] = _OW; //#19808
-        if ((_OW == 0) && (_OX == $_.mrows)) { //#19808
+        var _OK = $k[--$j]; //#19806
+        var _OL = $k[--$j]; //#19806
+        $k[$j++] = _OL; //#19808
+        $k[$j++] = _OK; //#19808
+        if ((_OK == 0) && (_OL == $_.mrows)) { //#19808
             $k[$j++] = $_.dmc1; //#19807
             $_.module(); //#19807
         } //#19807
-        var _Oa = $k[--$j]; //#19809
-        var _Ob = $k[--$j]; //#19809
-        $k[$j++] = _Ob; //#19811
-        $k[$j++] = _Oa; //#19811
-        if (((_Oa == 0) && (_Ob == $f($_.mrows - 2))) && (($_.mcols % 4) != 0)) { //#19811
+        var _OO = $k[--$j]; //#19809
+        var _OP = $k[--$j]; //#19809
+        $k[$j++] = _OP; //#19811
+        $k[$j++] = _OO; //#19811
+        if (((_OO == 0) && (_OP == $f($_.mrows - 2))) && (($_.mcols % 4) != 0)) { //#19811
             $k[$j++] = $_.dmc2; //#19810
             $_.module(); //#19810
         } //#19810
-        var _Of = $k[--$j]; //#19812
-        var _Og = $k[--$j]; //#19812
-        $k[$j++] = _Og; //#19814
-        $k[$j++] = _Of; //#19814
-        if (((_Of == 0) && (_Og == $f($_.mrows - 2))) && (($_.mcols % 8) == 4)) { //#19814
+        var _OT = $k[--$j]; //#19812
+        var _OU = $k[--$j]; //#19812
+        $k[$j++] = _OU; //#19814
+        $k[$j++] = _OT; //#19814
+        if (((_OT == 0) && (_OU == $f($_.mrows - 2))) && (($_.mcols % 8) == 4)) { //#19814
             $k[$j++] = $_.dmc3; //#19813
             $_.module(); //#19813
         } //#19813
-        var _Ok = $k[--$j]; //#19815
-        var _Ol = $k[--$j]; //#19815
-        $k[$j++] = _Ol; //#19817
-        $k[$j++] = _Ok; //#19817
-        if (((_Ok == 2) && (_Ol == $f($_.mrows + 4))) && (($_.mcols % 8) == 0)) { //#19817
+        var _OY = $k[--$j]; //#19815
+        var _OZ = $k[--$j]; //#19815
+        $k[$j++] = _OZ; //#19817
+        $k[$j++] = _OY; //#19817
+        if (((_OY == 2) && (_OZ == $f($_.mrows + 4))) && (($_.mcols % 8) == 0)) { //#19817
             $k[$j++] = $_.dmc4; //#19816
             $_.module(); //#19816
         } //#19816
         for (;;) { //#19827
-            var _Op = $k[--$j]; //#19820
-            var _Oq = $k[--$j]; //#19820
-            $k[$j++] = _Oq; //#19824
-            $k[$j++] = _Op; //#19824
-            if ((_Op >= 0) && (_Oq < $_.mrows)) { //#19824
-                var _Os = $k[--$j]; //#19821
-                var _Ot = $k[--$j]; //#19821
-                $k[$j++] = _Ot; //#19823
-                $k[$j++] = _Os; //#19823
-                if ($get($_.mmat, $f(_Os + (_Ot * $_.mcols))) == -1) { //#19823
+            var _Od = $k[--$j]; //#19820
+            var _Oe = $k[--$j]; //#19820
+            $k[$j++] = _Oe; //#19824
+            $k[$j++] = _Od; //#19824
+            if ((_Od >= 0) && (_Oe < $_.mrows)) { //#19824
+                var _Og = $k[--$j]; //#19821
+                var _Oh = $k[--$j]; //#19821
+                $k[$j++] = _Oh; //#19823
+                $k[$j++] = _Og; //#19823
+                if ($get($_.mmat, $f(_Og + (_Oh * $_.mcols))) == -1) { //#19823
                     $k[$j++] = $_.dmn; //#19822
                     $_.module(); //#19822
                 } //#19822
             } //#19822
-            var _Oy = $k[--$j]; //#19825
-            var _Oz = $k[--$j]; //#19825
-            $k[$j++] = $f(_Oz - 2); //#19826
-            $k[$j++] = $f(_Oy + 2); //#19826
-            if (!(($f(_Oy + 2) < $_.mcols) && ($f(_Oz - 2) >= 0))) { //#19826
+            var _Om = $k[--$j]; //#19825
+            var _On = $k[--$j]; //#19825
+            $k[$j++] = $f(_On - 2); //#19826
+            $k[$j++] = $f(_Om + 2); //#19826
+            if (!(($f(_Om + 2) < $_.mcols) && ($f(_On - 2) >= 0))) { //#19826
                 break; //#19826
             } //#19826
         } //#19826
-        var _P1 = $k[--$j]; //#19828
-        var _P2 = $k[--$j]; //#19828
-        $k[$j++] = $f(_P2 + 1); //#19838
-        $k[$j++] = $f(_P1 + 3); //#19838
+        var _Op = $k[--$j]; //#19828
+        var _Oq = $k[--$j]; //#19828
+        $k[$j++] = $f(_Oq + 1); //#19838
+        $k[$j++] = $f(_Op + 3); //#19838
         for (;;) { //#19838
-            var _P3 = $k[--$j]; //#19831
-            var _P4 = $k[--$j]; //#19831
-            $k[$j++] = _P4; //#19835
-            $k[$j++] = _P3; //#19835
-            if ((_P3 < $_.mcols) && (_P4 >= 0)) { //#19835
-                var _P6 = $k[--$j]; //#19832
-                var _P7 = $k[--$j]; //#19832
-                $k[$j++] = _P7; //#19834
-                $k[$j++] = _P6; //#19834
-                if ($get($_.mmat, $f(_P6 + (_P7 * $_.mcols))) == -1) { //#19834
+            var _Or = $k[--$j]; //#19831
+            var _Os = $k[--$j]; //#19831
+            $k[$j++] = _Os; //#19835
+            $k[$j++] = _Or; //#19835
+            if ((_Or < $_.mcols) && (_Os >= 0)) { //#19835
+                var _Ou = $k[--$j]; //#19832
+                var _Ov = $k[--$j]; //#19832
+                $k[$j++] = _Ov; //#19834
+                $k[$j++] = _Ou; //#19834
+                if ($get($_.mmat, $f(_Ou + (_Ov * $_.mcols))) == -1) { //#19834
                     $k[$j++] = $_.dmn; //#19833
                     $_.module(); //#19833
                 } //#19833
             } //#19833
-            var _PC = $k[--$j]; //#19836
-            var _PD = $k[--$j]; //#19836
-            $k[$j++] = $f(_PD + 2); //#19837
-            $k[$j++] = $f(_PC - 2); //#19837
-            if (!(($f(_PC - 2) >= 0) && ($f(_PD + 2) < $_.mrows))) { //#19837
+            var _P0 = $k[--$j]; //#19836
+            var _P1 = $k[--$j]; //#19836
+            $k[$j++] = $f(_P1 + 2); //#19837
+            $k[$j++] = $f(_P0 - 2); //#19837
+            if (!(($f(_P0 - 2) >= 0) && ($f(_P1 + 2) < $_.mrows))) { //#19837
                 break; //#19837
             } //#19837
         } //#19837
-        var _PF = $k[--$j]; //#19839
-        var _PG = $k[--$j]; //#19839
-        $k[$j++] = $f(_PG + 3); //#19841
-        $k[$j++] = $f(_PF + 1); //#19841
-        if (!(($f(_PF + 1) < $_.mcols) || ($f(_PG + 3) < $_.mrows))) { //#19841
+        var _P3 = $k[--$j]; //#19839
+        var _P4 = $k[--$j]; //#19839
+        $k[$j++] = $f(_P4 + 3); //#19841
+        $k[$j++] = $f(_P3 + 1); //#19841
+        if (!(($f(_P3 + 1) < $_.mcols) || ($f(_P4 + 3) < $_.mrows))) { //#19841
             $j -= 2; //#19841
             break; //#19841
         } //#19841
@@ -24164,34 +24234,34 @@ function bwipp_datamatrix() {
     } //#19848
     $_.pixs = $a($_.rows * $_.cols); //#19852
     $_.cwpos = 0; //#19853
-    for (var _Pa = 0, _PZ = $f($_.rows - 1); _Pa <= _PZ; _Pa += 1) { //#19869
-        $_.i = _Pa; //#19855
+    for (var _PO = 0, _PN = $f($_.rows - 1); _PO <= _PN; _PO += 1) { //#19869
+        $_.i = _PO; //#19855
         if (($_.i % ($_.rrows + 2)) == 0) { //#19856
             $k[$j++] = $_.pixs; //#19856
             $k[$j++] = $_.i * $_.cols; //#19856
             $k[$j++] = Infinity; //#19856
-            for (var _Ph = 0, _Pi = ~~($_.cols / 2); _Ph < _Pi; _Ph++) { //#19856
+            for (var _PV = 0, _PW = ~~($_.cols / 2); _PV < _PW; _PV++) { //#19856
                 $k[$j++] = 1; //#19856
                 $k[$j++] = 0; //#19856
             } //#19856
-            var _Pj = $a(); //#19856
-            var _Pk = $k[--$j]; //#19856
-            $puti($k[--$j], _Pk, _Pj); //#19856
+            var _PX = $a(); //#19856
+            var _PY = $k[--$j]; //#19856
+            $puti($k[--$j], _PY, _PX); //#19856
         } //#19856
         if (($_.i % ($_.rrows + 2)) == ($_.rrows + 1)) { //#19857
             $k[$j++] = $_.pixs; //#19857
             $k[$j++] = $_.i * $_.cols; //#19857
             $k[$j++] = Infinity; //#19857
-            for (var _Pt = 0, _Pu = $_.cols; _Pt < _Pu; _Pt++) { //#19857
+            for (var _Ph = 0, _Pi = $_.cols; _Ph < _Pi; _Ph++) { //#19857
                 $k[$j++] = 1; //#19857
             } //#19857
-            var _Pv = $a(); //#19857
-            var _Pw = $k[--$j]; //#19857
-            $puti($k[--$j], _Pw, _Pv); //#19857
+            var _Pj = $a(); //#19857
+            var _Pk = $k[--$j]; //#19857
+            $puti($k[--$j], _Pk, _Pj); //#19857
         } //#19857
         if ((($_.i % ($_.rrows + 2)) != 0) && (($_.i % ($_.rrows + 2)) != ($_.rrows + 1))) { //#19868
-            for (var _Q5 = 0, _Q4 = $f($_.cols - 1); _Q5 <= _Q4; _Q5 += 1) { //#19867
-                $_.j = _Q5; //#19860
+            for (var _Pt = 0, _Ps = $f($_.cols - 1); _Pt <= _Ps; _Pt += 1) { //#19867
+                $_.j = _Pt; //#19860
                 if (($_.j % ($_.rcols + 2)) == 0) { //#19861
                     $put($_.pixs, $f(($_.i * $_.cols) + $_.j), 1); //#19861
                 } //#19861
@@ -24205,7 +24275,7 @@ function bwipp_datamatrix() {
             } //#19865
         } //#19865
     } //#19865
-    var _Qd = new Map([
+    var _QR = new Map([
         ["ren", 'renmatrix'],
         ["pixs", $_.pixs],
         ["pixx", $_.cols],
@@ -24218,7 +24288,7 @@ function bwipp_datamatrix() {
         ["borderbottom", 1],
         ["opt", $_.options]
     ]); //#19883
-    $k[$j++] = _Qd; //#19886
+    $k[$j++] = _QR; //#19886
     if (!$_.dontdraw) { //#19886
         bwipp_renmatrix(); //#19886
     } //#19886
@@ -24351,7 +24421,7 @@ function bwipp_qrcode() {
     bwipp_processoptions(); //#20115
     $_.options = $k[--$j]; //#20115
     $_.barcode = $k[--$j]; //#20116
-    bwipp_loadctx(bwipp_qrcode) //#20118
+    bwipp_loadctx(bwipp_qrcode); //#20118
     if ($eq($_.barcode, "")) { //#20122
         $k[$j++] = 'bwipp.qrcodeEmptyData#20121'; //#20121
         $k[$j++] = "The data must not be empty"; //#20121
@@ -24552,18 +24622,22 @@ function bwipp_qrcode() {
             $k[$j++] = _2K; //#20305
         } //#20305
         var _2L = $k[--$j]; //#20306
-        var _2O = $cvrs($s(_2L.length), $k[--$j], 2); //#20306
-        $puti(_2L, _2L.length - _2O.length, _2O); //#20306
         $k[$j++] = _2L; //#20306
+        $k[$j++] = _2L; //#20306
+        $r(3, -1); //#20306
+        var _2M = $k[--$j]; //#20306
+        var _2N = $k[--$j]; //#20306
+        var _2P = $cvrs($s(_2N.length), _2M, 2); //#20306
+        $puti(_2N, _2N.length - _2P.length, _2P); //#20306
     }; //#20306
     $_.encA = function() {
         $_.in = $k[--$j]; //#20310
         if ($_.fnc1first) { //#20313
             $k[$j++] = Infinity; //#20312
             $forall($_.in, function() { //#20312
-                var _2S = $k[--$j]; //#20312
-                $k[$j++] = _2S; //#20312
-                if (_2S == $_.fn1) { //#20312
+                var _2T = $k[--$j]; //#20312
+                $k[$j++] = _2T; //#20312
+                if (_2T == $_.fn1) { //#20312
                     $j--; //#20312
                     $k[$j++] = 37; //#20312
                 } //#20312
@@ -24588,9 +24662,9 @@ function bwipp_qrcode() {
                 $_.tobin(); //#20321
                 $_.k = $_.k + 1; //#20322
             } //#20322
-            var _2s = $k[--$j]; //#20324
-            $puti($_.out, $_.m, _2s); //#20324
-            $_.m = _2s.length + $_.m; //#20325
+            var _2t = $k[--$j]; //#20324
+            $puti($_.out, $_.m, _2t); //#20324
+            $_.m = _2t.length + $_.m; //#20325
         } //#20325
         $k[$j++] = $geti($_.out, 0, $_.m); //#20327
     }; //#20327
@@ -24604,41 +24678,41 @@ function bwipp_qrcode() {
                 break; //#20334
             } //#20334
             if ($_.k < ($_.in.length - 2)) { //#20344
-                var _38 = $geti($_.in, $_.k, 3); //#20336
+                var _39 = $geti($_.in, $_.k, 3); //#20336
                 $k[$j++] = 0; //#20336
-                for (var _39 = 0, _3A = _38.length; _39 < _3A; _39++) { //#20336
-                    var _3C = $k[--$j]; //#20336
-                    $k[$j++] = $f($get(_38, _39) + ($f((_3C * 10) - 48))); //#20336
+                for (var _3A = 0, _3B = _39.length; _3A < _3B; _3A++) { //#20336
+                    var _3D = $k[--$j]; //#20336
+                    $k[$j++] = $f($get(_39, _3A) + ($f((_3D * 10) - 48))); //#20336
                 } //#20336
                 $k[$j++] = 10; //#20336
                 $_.tobin(); //#20336
                 $_.k = $_.k + 3; //#20337
             } else { //#20344
                 if ($_.k == ($_.in.length - 2)) { //#20344
-                    var _3I = $geti($_.in, $_.k, 2); //#20340
+                    var _3J = $geti($_.in, $_.k, 2); //#20340
                     $k[$j++] = 0; //#20340
-                    for (var _3J = 0, _3K = _3I.length; _3J < _3K; _3J++) { //#20340
-                        var _3M = $k[--$j]; //#20340
-                        $k[$j++] = $f($get(_3I, _3J) + ($f((_3M * 10) - 48))); //#20340
+                    for (var _3K = 0, _3L = _3J.length; _3K < _3L; _3K++) { //#20340
+                        var _3N = $k[--$j]; //#20340
+                        $k[$j++] = $f($get(_3J, _3K) + ($f((_3N * 10) - 48))); //#20340
                     } //#20340
                     $k[$j++] = 7; //#20340
                     $_.tobin(); //#20340
                     $_.k = $_.k + 2; //#20341
                 } else { //#20344
-                    var _3Q = $geti($_.in, $_.k, 1); //#20343
+                    var _3R = $geti($_.in, $_.k, 1); //#20343
                     $k[$j++] = 0; //#20343
-                    for (var _3R = 0, _3S = _3Q.length; _3R < _3S; _3R++) { //#20343
-                        var _3U = $k[--$j]; //#20343
-                        $k[$j++] = $f($get(_3Q, _3R) + ($f((_3U * 10) - 48))); //#20343
+                    for (var _3S = 0, _3T = _3R.length; _3S < _3T; _3S++) { //#20343
+                        var _3V = $k[--$j]; //#20343
+                        $k[$j++] = $f($get(_3R, _3S) + ($f((_3V * 10) - 48))); //#20343
                     } //#20343
                     $k[$j++] = 4; //#20343
                     $_.tobin(); //#20343
                     $_.k = $_.k + 1; //#20344
                 } //#20344
             } //#20344
-            var _3W = $k[--$j]; //#20347
-            $puti($_.out, $_.m, _3W); //#20347
-            $_.m = _3W.length + $_.m; //#20348
+            var _3X = $k[--$j]; //#20347
+            $puti($_.out, $_.m, _3X); //#20347
+            $_.m = _3X.length + $_.m; //#20348
         } //#20348
         $k[$j++] = $geti($_.out, 0, $_.m); //#20350
     }; //#20350
@@ -24647,9 +24721,9 @@ function bwipp_qrcode() {
         if ($_.fnc1first) { //#20357
             $k[$j++] = Infinity; //#20356
             $forall($_.in, function() { //#20356
-                var _3g = $k[--$j]; //#20356
-                $k[$j++] = _3g; //#20356
-                if (_3g == $_.fn1) { //#20356
+                var _3h = $k[--$j]; //#20356
+                $k[$j++] = _3h; //#20356
+                if (_3h == $_.fn1) { //#20356
                     $j--; //#20356
                     $k[$j++] = 29; //#20356
                 } //#20356
@@ -24657,12 +24731,17 @@ function bwipp_qrcode() {
             $_.in = $a(); //#20356
         } //#20356
         $_.out = $s($_.in.length * 8); //#20358
-        for (var _3n = 0, _3m = $_.in.length - 1; _3n <= _3m; _3n += 1) { //#20363
-            $_.k = _3n; //#20360
+        for (var _3o = 0, _3n = $_.in.length - 1; _3o <= _3n; _3o += 1) { //#20363
+            $_.k = _3o; //#20360
             $k[$j++] = $cvi($get($_.in, $_.k)); //#20361
             $k[$j++] = 8; //#20361
             $_.tobin(); //#20361
-            $puti($_.out, $_.k * 8, $k[--$j]); //#20362
+            $k[$j++] = $_.out; //#20362
+            $k[$j++] = $_.k * 8; //#20362
+            $r(3, -1); //#20362
+            var _3u = $k[--$j]; //#20362
+            var _3v = $k[--$j]; //#20362
+            $puti($k[--$j], _3v, _3u); //#20362
         } //#20362
         $k[$j++] = $_.out; //#20364
     }; //#20364
@@ -24675,42 +24754,42 @@ function bwipp_qrcode() {
             if ($_.k == $_.in.length) { //#20371
                 break; //#20371
             } //#20371
-            var _46 = $f(($get($_.in, $_.k) * 256) + $get($_.in, $_.k + 1)); //#20373
-            $k[$j++] = _46; //#20373
-            if (_46 < 57408) { //#20373
+            var _49 = $f(($get($_.in, $_.k) * 256) + $get($_.in, $_.k + 1)); //#20373
+            $k[$j++] = _49; //#20373
+            if (_49 < 57408) { //#20373
                 $k[$j++] = 33088; //#20373
             } else { //#20373
                 $k[$j++] = 49472; //#20373
             } //#20373
-            var _47 = $k[--$j]; //#20373
-            var _49 = $f($k[--$j] - _47); //#20374
-            $k[$j++] = $f(((_49 >>> 8) * 192) + (_49 & 255)); //#20375
+            var _4A = $k[--$j]; //#20373
+            var _4C = $f($k[--$j] - _4A); //#20374
+            $k[$j++] = $f(((_4C >>> 8) * 192) + (_4C & 255)); //#20375
             $k[$j++] = 13; //#20375
             $_.tobin(); //#20375
-            var _4A = $k[--$j]; //#20375
-            $puti($_.out, $_.m, _4A); //#20375
-            $_.m = _4A.length + $_.m; //#20376
+            var _4D = $k[--$j]; //#20375
+            $puti($_.out, $_.m, _4D); //#20375
+            $_.m = _4D.length + $_.m; //#20376
             $_.k = $_.k + 2; //#20377
         } //#20377
         $k[$j++] = $_.out; //#20379
     }; //#20379
     $_.encE = function() {
-        var _4I = $f((-$get($k[--$j], 0)) - 1000000); //#20384
-        $k[$j++] = _4I; //#20390
-        if (_4I <= 127) { //#20389
+        var _4L = $f((-$get($k[--$j], 0)) - 1000000); //#20384
+        $k[$j++] = _4L; //#20390
+        if (_4L <= 127) { //#20389
             $k[$j++] = 8; //#20385
             $_.tobin(); //#20385
         } else { //#20389
-            var _4J = $k[--$j]; //#20386
-            $k[$j++] = _4J; //#20390
-            if (_4J <= 16383) { //#20389
-                var _4K = $k[--$j]; //#20387
-                $k[$j++] = $f(_4K + 32768); //#20387
+            var _4M = $k[--$j]; //#20386
+            $k[$j++] = _4M; //#20390
+            if (_4M <= 16383) { //#20389
+                var _4N = $k[--$j]; //#20387
+                $k[$j++] = $f(_4N + 32768); //#20387
                 $k[$j++] = 16; //#20387
                 $_.tobin(); //#20387
             } else { //#20389
-                var _4L = $k[--$j]; //#20389
-                $k[$j++] = $f(_4L + 12582912); //#20389
+                var _4O = $k[--$j]; //#20389
+                $k[$j++] = $f(_4O + 12582912); //#20389
                 $k[$j++] = 24; //#20389
                 $_.tobin(); //#20389
             } //#20389
@@ -24718,78 +24797,78 @@ function bwipp_qrcode() {
     }; //#20389
     $_.encfuncs = $a(['encN', 'encA', 'encB', 'encK', 'encE']); //#20393
     $_.addtobits = function() {
-        var _4N = $k[--$j]; //#20396
-        $puti($_.bits, $_.j, _4N); //#20396
-        $_.j = _4N.length + $_.j; //#20397
+        var _4Q = $k[--$j]; //#20396
+        $puti($_.bits, $_.j, _4Q); //#20396
+        $_.j = _4Q.length + $_.j; //#20397
     }; //#20397
     $k[$j++] = Infinity; //#20400
-    for (var _4S = 0, _4T = $_.msglen; _4S < _4T; _4S++) { //#20400
+    for (var _4V = 0, _4W = $_.msglen; _4V < _4W; _4V++) { //#20400
         $k[$j++] = 0; //#20400
     } //#20400
     $k[$j++] = 0; //#20400
     $_.numNs = $a(); //#20400
     $k[$j++] = Infinity; //#20401
-    for (var _4W = 0, _4X = $_.msglen; _4W < _4X; _4W++) { //#20401
+    for (var _4Z = 0, _4a = $_.msglen; _4Z < _4a; _4Z++) { //#20401
         $k[$j++] = 0; //#20401
     } //#20401
     $k[$j++] = 0; //#20401
     $_.numAs = $a(); //#20401
     $k[$j++] = Infinity; //#20402
-    for (var _4a = 0, _4b = $_.msglen; _4a < _4b; _4a++) { //#20402
+    for (var _4d = 0, _4e = $_.msglen; _4d < _4e; _4d++) { //#20402
         $k[$j++] = 0; //#20402
     } //#20402
     $k[$j++] = 0; //#20402
     $_.numAorNs = $a(); //#20402
     $k[$j++] = Infinity; //#20403
-    for (var _4e = 0, _4f = $_.msglen; _4e < _4f; _4e++) { //#20403
+    for (var _4h = 0, _4i = $_.msglen; _4h < _4i; _4h++) { //#20403
         $k[$j++] = 0; //#20403
     } //#20403
     $k[$j++] = 0; //#20403
     $_.numBs = $a(); //#20403
     $k[$j++] = Infinity; //#20404
-    for (var _4i = 0, _4j = $_.msglen; _4i < _4j; _4i++) { //#20404
+    for (var _4l = 0, _4m = $_.msglen; _4l < _4m; _4l++) { //#20404
         $k[$j++] = 0; //#20404
     } //#20404
     $k[$j++] = 0; //#20404
     $_.numKs = $a(); //#20404
     $k[$j++] = Infinity; //#20405
-    for (var _4m = 0, _4n = $_.msglen; _4m < _4n; _4m++) { //#20405
+    for (var _4p = 0, _4q = $_.msglen; _4p < _4q; _4p++) { //#20405
         $k[$j++] = 0; //#20405
     } //#20405
     $k[$j++] = 9999; //#20405
     $_.nextNs = $a(); //#20405
     $k[$j++] = Infinity; //#20406
-    for (var _4q = 0, _4r = $_.msglen; _4q < _4r; _4q++) { //#20406
+    for (var _4t = 0, _4u = $_.msglen; _4t < _4u; _4t++) { //#20406
         $k[$j++] = 0; //#20406
     } //#20406
     $k[$j++] = 9999; //#20406
     $_.nextBs = $a(); //#20406
     $k[$j++] = Infinity; //#20407
-    for (var _4u = 0, _4v = $_.msglen; _4u < _4v; _4u++) { //#20407
+    for (var _4x = 0, _4y = $_.msglen; _4x < _4y; _4x++) { //#20407
         $k[$j++] = 0; //#20407
     } //#20407
     $k[$j++] = 9999; //#20407
     $_.nextAs = $a(); //#20407
     $k[$j++] = Infinity; //#20408
-    for (var _4y = 0, _4z = $_.msglen; _4y < _4z; _4y++) { //#20408
+    for (var _51 = 0, _52 = $_.msglen; _51 < _52; _51++) { //#20408
         $k[$j++] = 0; //#20408
     } //#20408
     $k[$j++] = 9999; //#20408
     $_.nextKs = $a(); //#20408
     $_.isECI = $a($_.msglen); //#20409
-    for (var _54 = $_.msglen - 1; _54 >= 0; _54 -= 1) { //#20444
-        $_.i = _54; //#20411
+    for (var _57 = $_.msglen - 1; _57 >= 0; _57 -= 1) { //#20444
+        $_.i = _57; //#20411
         $_.barchar = $get($_.msg, $_.i); //#20412
-        var _5A = $get($_.Kexcl, $_.barchar) !== undefined; //#20413
-        if (_5A && (!$_.suppresskanjimode)) { //#20427
+        var _5D = $get($_.Kexcl, $_.barchar) !== undefined; //#20413
+        if (_5D && (!$_.suppresskanjimode)) { //#20427
             if (($_.i + 1) < $_.msglen) { //#20414
                 $k[$j++] = $f(($_.barchar * 256) + $get($_.msg, $_.i + 1)); //#20414
             } else { //#20414
                 $k[$j++] = 0; //#20414
             } //#20414
-            var _5I = $k[--$j]; //#20415
-            var _5J = _5I & 255; //#20419
-            if ((((_5I >= 33088) && (_5I <= 40956)) || ((_5I >= 57408) && (_5I <= 60351))) && (((_5J >= 64) && (_5J <= 252)) && (_5J != 127))) { //#20424
+            var _5L = $k[--$j]; //#20415
+            var _5M = _5L & 255; //#20419
+            if ((((_5L >= 33088) && (_5L <= 40956)) || ((_5L >= 57408) && (_5L <= 60351))) && (((_5M >= 64) && (_5M <= 252)) && (_5M != 127))) { //#20424
                 $put($_.nextKs, $_.i, 0); //#20421
                 $put($_.numKs, $_.i, $f($get($_.numKs, $_.i + 2) + 1)); //#20422
             } else { //#20424
@@ -24798,16 +24877,16 @@ function bwipp_qrcode() {
         } else { //#20427
             $put($_.nextKs, $_.i, $f($get($_.nextKs, $_.i + 1) + 1)); //#20427
         } //#20427
-        var _5d = $get($_.Nexcl, $_.barchar) !== undefined; //#20429
-        if (_5d) { //#20434
+        var _5g = $get($_.Nexcl, $_.barchar) !== undefined; //#20429
+        if (_5g) { //#20434
             $put($_.nextNs, $_.i, 0); //#20430
             $put($_.numNs, $_.i, $f($get($_.numNs, $_.i + 1) + 1)); //#20431
             $put($_.numAorNs, $_.i, $f($get($_.numAorNs, $_.i + 1) + 1)); //#20432
         } else { //#20434
             $put($_.nextNs, $_.i, $f($get($_.nextNs, $_.i + 1) + 1)); //#20434
         } //#20434
-        var _5x = $get($_.Aexcl, $_.barchar) !== undefined; //#20436
-        if (_5x) { //#20441
+        var _60 = $get($_.Aexcl, $_.barchar) !== undefined; //#20436
+        if (_60) { //#20441
             $put($_.nextAs, $_.i, 0); //#20437
             $put($_.numAs, $_.i, $f($get($_.numAs, $_.i + 1) + 1)); //#20438
             $put($_.numAorNs, $_.i, $f($get($_.numAorNs, $_.i + 1) + 1)); //#20439
@@ -24816,15 +24895,15 @@ function bwipp_qrcode() {
         } //#20441
         $put($_.isECI, $_.i, $_.barchar <= -1000000); //#20443
     } //#20443
-    for (var _6K = 0, _6J = $_.msglen - 1; _6K <= _6J; _6K += 1) { //#20451
-        $_.i = _6K; //#20446
+    for (var _6N = 0, _6M = $_.msglen - 1; _6N <= _6M; _6N += 1) { //#20451
+        $_.i = _6N; //#20446
         if ($get($_.numKs, $_.i) > 0) { //#20450
             $put($_.numKs, $_.i + 1, 0); //#20448
             $put($_.nextKs, $_.i + 1, $f($get($_.nextKs, $_.i + 1) + 1)); //#20449
         } //#20449
     } //#20449
-    for (var _6W = $_.msglen - 1; _6W >= 0; _6W -= 1) { //#20460
-        $_.i = _6W; //#20453
+    for (var _6Z = $_.msglen - 1; _6Z >= 0; _6Z -= 1) { //#20460
+        $_.i = _6Z; //#20453
         if ((($f($get($_.numNs, $_.i) + $f($get($_.numAs, $_.i) + $get($_.numKs, $_.i)))) == 0) && $nt($get($_.isECI, $_.i))) { //#20458
             $put($_.nextBs, $_.i, 0); //#20455
             $put($_.numBs, $_.i, $f($get($_.numBs, $_.i + 1) + 1)); //#20456
@@ -24833,68 +24912,68 @@ function bwipp_qrcode() {
         } //#20458
     } //#20458
     $_.KbeforeB = function() {
-        var _6y = $get($k[--$j], $_.ver); //#20462
-        $k[$j++] = $ge($_.numK, _6y) && ($get($_.nextBs, $f(($_.numK * 2) + $_.i)) == 0); //#20462
+        var _71 = $get($k[--$j], $_.ver); //#20462
+        $k[$j++] = $ge($_.numK, _71) && ($get($_.nextBs, $f(($_.numK * 2) + $_.i)) == 0); //#20462
     }; //#20462
     $_.KbeforeA = function() {
-        var _76 = $get($k[--$j], $_.ver); //#20463
-        $k[$j++] = $ge($_.numK, _76) && ($get($_.nextAs, $f(($_.numK * 2) + $_.i)) == 0); //#20463
+        var _79 = $get($k[--$j], $_.ver); //#20463
+        $k[$j++] = $ge($_.numK, _79) && ($get($_.nextAs, $f(($_.numK * 2) + $_.i)) == 0); //#20463
     }; //#20463
     $_.KbeforeN = function() {
-        var _7E = $get($k[--$j], $_.ver); //#20464
-        $k[$j++] = $ge($_.numK, _7E) && ($get($_.nextNs, $f(($_.numK * 2) + $_.i)) == 0); //#20464
+        var _7H = $get($k[--$j], $_.ver); //#20464
+        $k[$j++] = $ge($_.numK, _7H) && ($get($_.nextNs, $f(($_.numK * 2) + $_.i)) == 0); //#20464
     }; //#20464
     $_.KbeforeE = function() {
-        var _7M = $get($k[--$j], $_.ver); //#20465
-        $k[$j++] = $ge($_.numK, _7M) && (($f(($_.numK * 2) + $_.i)) == $_.msglen); //#20465
+        var _7P = $get($k[--$j], $_.ver); //#20465
+        $k[$j++] = $ge($_.numK, _7P) && (($f(($_.numK * 2) + $_.i)) == $_.msglen); //#20465
     }; //#20465
     $_.AbeforeK = function() {
-        var _7T = $get($k[--$j], $_.ver); //#20466
-        $k[$j++] = $ge($_.numA, _7T) && ($get($_.nextKs, $f($_.numA + $_.i)) == 0); //#20466
+        var _7W = $get($k[--$j], $_.ver); //#20466
+        $k[$j++] = $ge($_.numA, _7W) && ($get($_.nextKs, $f($_.numA + $_.i)) == 0); //#20466
     }; //#20466
     $_.AbeforeB = function() {
-        var _7b = $get($k[--$j], $_.ver); //#20467
-        $k[$j++] = $ge($_.numA, _7b) && ($get($_.nextBs, $f($_.numA + $_.i)) == 0); //#20467
+        var _7e = $get($k[--$j], $_.ver); //#20467
+        $k[$j++] = $ge($_.numA, _7e) && ($get($_.nextBs, $f($_.numA + $_.i)) == 0); //#20467
     }; //#20467
     $_.AbeforeN = function() {
-        var _7j = $get($k[--$j], $_.ver); //#20468
-        $k[$j++] = $ge($_.numA, _7j) && ($get($_.nextNs, $f($_.numA + $_.i)) == 0); //#20468
+        var _7m = $get($k[--$j], $_.ver); //#20468
+        $k[$j++] = $ge($_.numA, _7m) && ($get($_.nextNs, $f($_.numA + $_.i)) == 0); //#20468
     }; //#20468
     $_.AbeforeE = function() {
-        var _7r = $get($k[--$j], $_.ver); //#20469
-        $k[$j++] = $ge($_.numA, _7r) && ($f($_.numA + $_.i) == $_.msglen); //#20469
+        var _7u = $get($k[--$j], $_.ver); //#20469
+        $k[$j++] = $ge($_.numA, _7u) && ($f($_.numA + $_.i) == $_.msglen); //#20469
     }; //#20469
     $_.NbeforeK = function() {
-        var _7y = $get($k[--$j], $_.ver); //#20470
-        $k[$j++] = $ge($_.numN, _7y) && ($get($_.nextKs, $f($_.numN + $_.i)) == 0); //#20470
+        var _81 = $get($k[--$j], $_.ver); //#20470
+        $k[$j++] = $ge($_.numN, _81) && ($get($_.nextKs, $f($_.numN + $_.i)) == 0); //#20470
     }; //#20470
     $_.NbeforeB = function() {
-        var _86 = $get($k[--$j], $_.ver); //#20471
-        $k[$j++] = $ge($_.numN, _86) && ($get($_.nextBs, $f($_.numN + $_.i)) == 0); //#20471
+        var _89 = $get($k[--$j], $_.ver); //#20471
+        $k[$j++] = $ge($_.numN, _89) && ($get($_.nextBs, $f($_.numN + $_.i)) == 0); //#20471
     }; //#20471
     $_.NbeforeA = function() {
-        var _8E = $get($k[--$j], $_.ver); //#20472
-        $k[$j++] = $ge($_.numN, _8E) && ($get($_.nextAs, $f($_.numN + $_.i)) == 0); //#20472
+        var _8H = $get($k[--$j], $_.ver); //#20472
+        $k[$j++] = $ge($_.numN, _8H) && ($get($_.nextAs, $f($_.numN + $_.i)) == 0); //#20472
     }; //#20472
     $_.NbeforeE = function() {
-        var _8M = $get($k[--$j], $_.ver); //#20473
-        $k[$j++] = $ge($_.numN, _8M) && ($f($_.numN + $_.i) == $_.msglen); //#20473
+        var _8P = $get($k[--$j], $_.ver); //#20473
+        $k[$j++] = $ge($_.numN, _8P) && ($f($_.numN + $_.i) == $_.msglen); //#20473
     }; //#20473
     $_.AorNbeforeB = function() {
-        var _8T = $get($k[--$j], $_.ver); //#20474
-        $k[$j++] = $ge($_.numAorN, _8T) && ($get($_.nextBs, $f($_.numAorN + $_.i)) == 0); //#20474
+        var _8W = $get($k[--$j], $_.ver); //#20474
+        $k[$j++] = $ge($_.numAorN, _8W) && ($get($_.nextBs, $f($_.numAorN + $_.i)) == 0); //#20474
     }; //#20474
     $_.AorNbeforeE = function() {
-        var _8b = $get($k[--$j], $_.ver); //#20475
-        $k[$j++] = $ge($_.numAorN, _8b) && ($f($_.numAorN + $_.i) == $_.msglen); //#20475
+        var _8e = $get($k[--$j], $_.ver); //#20475
+        $k[$j++] = $ge($_.numAorN, _8e) && ($f($_.numAorN + $_.i) == $_.msglen); //#20475
     }; //#20475
     $_.nextNslt = function() {
         if ($get($_.nextNs, $_.i) >= $_.msglen) { //#20477
             $j--; //#20477
             $k[$j++] = true; //#20477
         } else { //#20477
-            var _8r = $get($k[--$j], $_.ver); //#20477
-            $k[$j++] = $lt($get($_.numNs, $f($get($_.nextNs, $_.i) + $_.i)), _8r); //#20477
+            var _8u = $get($k[--$j], $_.ver); //#20477
+            $k[$j++] = $lt($get($_.numNs, $f($get($_.nextNs, $_.i) + $_.i)), _8u); //#20477
         } //#20477
     }; //#20477
     if (!bwipp_qrcode.__20507__) { //#20507
@@ -24902,26 +24981,26 @@ function bwipp_qrcode() {
         $k[$j++] = Infinity; //#20487
         $k[$j++] = "full"; //#20491
         $k[$j++] = Infinity; //#20488
-        for (var _8s = 0; _8s <= 9; _8s += 1) { //#20489
-            $k[$j++] = $cvrs($s(2), _8s, 10); //#20489
+        for (var _8v = 0; _8v <= 9; _8v += 1) { //#20489
+            $k[$j++] = $cvrs($s(2), _8v, 10); //#20489
             $k[$j++] = $_.v1to9; //#20489
         } //#20489
-        for (var _8w = 10; _8w <= 26; _8w += 1) { //#20490
-            $k[$j++] = $cvrs($s(2), _8w, 10); //#20490
+        for (var _8z = 10; _8z <= 26; _8z += 1) { //#20490
+            $k[$j++] = $cvrs($s(2), _8z, 10); //#20490
             $k[$j++] = $_.v10to26; //#20490
         } //#20490
-        for (var _90 = 27; _90 <= 40; _90 += 1) { //#20491
-            $k[$j++] = $cvrs($s(2), _90, 10); //#20491
+        for (var _93 = 27; _93 <= 40; _93 += 1) { //#20491
+            $k[$j++] = $cvrs($s(2), _93, 10); //#20491
             $k[$j++] = $_.v27to40; //#20491
         } //#20491
-        var _94 = $d(); //#20491
-        var _99 = new Map([
+        var _97 = $d(); //#20491
+        var _9C = new Map([
             ["M1", $_.vM1],
             ["M2", $_.vM2],
             ["M3", $_.vM3],
             ["M4", $_.vM4]
         ]); //#20494
-        var _9g = new Map([
+        var _9j = new Map([
             ["R7x43", $_.vR7x43],
             ["R7x59", $_.vR7x59],
             ["R7x77", $_.vR7x77],
@@ -24955,11 +25034,11 @@ function bwipp_qrcode() {
             ["R17x99", $_.vR17x99],
             ["R17x139", $_.vR17x139]
         ]); //#20502
-        $k[$j++] = _94; //#20502
+        $k[$j++] = _97; //#20502
         $k[$j++] = "micro"; //#20502
-        $k[$j++] = _99; //#20502
+        $k[$j++] = _9C; //#20502
         $k[$j++] = "rmqr"; //#20502
-        $k[$j++] = _9g; //#20502
+        $k[$j++] = _9j; //#20502
         $_.versetmap = $d(); //#20504
         $_.versetfull = $a([$_.v1to9, $_.v10to26, $_.v27to40]); //#20505
         $_.versetmicro = $a([$_.vM1, $_.vM2, $_.vM3, $_.vM4]); //#20506
@@ -24968,12 +25047,12 @@ function bwipp_qrcode() {
         $_ = Object.getPrototypeOf($_); //#20506
     } //#20506
     if ($ne($_.version, "unset")) { //#20525
-        var _9v = $get($_.versetmap, $_.format); //#20510
-        var _9w = $_.version; //#20510
-        var _9x = $get(_9v, _9w) !== undefined; //#20510
-        $k[$j++] = _9v; //#20520
-        $k[$j++] = _9w; //#20520
-        if (!_9x) { //#20520
+        var _9y = $get($_.versetmap, $_.format); //#20510
+        var _9z = $_.version; //#20510
+        var _A0 = $get(_9y, _9z) !== undefined; //#20510
+        $k[$j++] = _9y; //#20520
+        $k[$j++] = _9z; //#20520
+        if (!_A0) { //#20520
             $j -= 2; //#20511
             if ($eq($_.format, "full")) { //#20518
                 $k[$j++] = 'bwipp.qrcodeInvalidFullVersion#20513'; //#20513
@@ -24991,14 +25070,14 @@ function bwipp_qrcode() {
                 } //#20518
             } //#20518
         } //#20518
-        var _A0 = $k[--$j]; //#20521
-        var _A2 = $get($k[--$j], _A0); //#20521
-        $k[$j++] = _A2; //#20521
-        $k[$j++] = Infinity; //#20521
         var _A3 = $k[--$j]; //#20521
-        var _A4 = $k[--$j]; //#20521
-        $k[$j++] = _A3; //#20521
-        $k[$j++] = _A4; //#20521
+        var _A5 = $get($k[--$j], _A3); //#20521
+        $k[$j++] = _A5; //#20521
+        $k[$j++] = Infinity; //#20521
+        var _A6 = $k[--$j]; //#20521
+        var _A7 = $k[--$j]; //#20521
+        $k[$j++] = _A6; //#20521
+        $k[$j++] = _A7; //#20521
         $_.verset = $a(); //#20521
     } else { //#20525
         if ($eq($_.format, "full")) { //#20524
@@ -25009,7 +25088,7 @@ function bwipp_qrcode() {
         } //#20525
     } //#20525
     $k[$j++] = Infinity; //#20530
-    for (var _AA = 0, _AB = 39; _AA < _AB; _AA++) { //#20530
+    for (var _AD = 0, _AE = 39; _AD < _AE; _AD++) { //#20530
         $k[$j++] = -1; //#20530
     } //#20530
     $_.msgbits = $a(); //#20530
@@ -25039,9 +25118,9 @@ function bwipp_qrcode() {
         bwipp_qrcode.__20561__ = 1; //#20560
         $_ = Object.getPrototypeOf($_); //#20560
     } //#20560
-    var _B4 = $_.verset; //#20563
-    for (var _B5 = 0, _B6 = _B4.length; _B5 < _B6; _B5++) { //#20695
-        $_.ver = $get(_B4, _B5); //#20564
+    var _B7 = $_.verset; //#20563
+    for (var _B8 = 0, _B9 = _B7.length; _B8 < _B9; _B8++) { //#20695
+        $_.ver = $get(_B7, _B8); //#20564
         $_.mode = -1; //#20567
         $_.seq = $a([]); //#20567
         $_.i = 0; //#20567
@@ -25245,8 +25324,8 @@ function bwipp_qrcode() {
                     } //#20615
                     $k[$j++] = $_.modeBAbeforeE; //#20616
                     $_.AorNbeforeE(); //#20616
-                    var _DE = $k[--$j]; //#20616
-                    if (_DE && $le($_.numAorN, $get($_.modeBAbeforeN, $_.ver))) { //#20618
+                    var _DH = $k[--$j]; //#20616
+                    if (_DH && $le($_.numAorN, $get($_.modeBAbeforeN, $_.ver))) { //#20618
                         $k[$j++] = $_.modeBNbeforeA; //#20617
                         $_.nextNslt(); //#20617
                         if ($k[--$j]) { //#20617
@@ -25332,28 +25411,28 @@ function bwipp_qrcode() {
                     break; //#20642
                 } //#20642
             } //#20642
-            var _Dy = $k[--$j]; //#20645
-            $k[$j++] = _Dy; //#20645
-            if ((_Dy == $_.K) && $_.fnc1first) { //#20645
+            var _E1 = $k[--$j]; //#20645
+            $k[$j++] = _E1; //#20645
+            if ((_E1 == $_.K) && $_.fnc1first) { //#20645
                 $j--; //#20645
                 $k[$j++] = $_.B; //#20645
             } //#20645
-            var _E2 = $k[--$j]; //#20646
-            $k[$j++] = _E2; //#20662
-            if (_E2 == $_.mode) { //#20661
+            var _E5 = $k[--$j]; //#20646
+            $k[$j++] = _E5; //#20662
+            if (_E5 == $_.mode) { //#20661
                 $j--; //#20647
-                var _E8 = ($_.mode == $_.K) ? 2 : 1; //#20648
-                $_.dat = $geti($_.msg, $_.i, _E8); //#20648
+                var _EB = ($_.mode == $_.K) ? 2 : 1; //#20648
+                $_.dat = $geti($_.msg, $_.i, _EB); //#20648
                 $k[$j++] = Infinity; //#20649
                 $aload($_.seq); //#20650
                 $k[$j++] = Infinity; //#20651
-                var _EB = $k[--$j]; //#20651
-                var _EC = $k[--$j]; //#20651
-                $k[$j++] = _EB; //#20651
-                $aload(_EC); //#20651
-                $aload($_.dat); //#20651
-                var _EE = $a(); //#20651
+                var _EE = $k[--$j]; //#20651
+                var _EF = $k[--$j]; //#20651
                 $k[$j++] = _EE; //#20651
+                $aload(_EF); //#20651
+                $aload($_.dat); //#20651
+                var _EH = $a(); //#20651
+                $k[$j++] = _EH; //#20651
                 $_.seq = $a(); //#20651
             } else { //#20661
                 $_.mode = $k[--$j]; //#20654
@@ -25403,8 +25482,8 @@ function bwipp_qrcode() {
                 $_.addtobits(); //#20672
             } //#20672
             $_.abort = false; //#20674
-            for (var _F4 = 0, _F3 = $_.seq.length - 1; _F4 <= _F3; _F4 += 2) { //#20689
-                $_.i = _F4; //#20676
+            for (var _F7 = 0, _F6 = $_.seq.length - 1; _F7 <= _F6; _F7 += 2) { //#20689
+                $_.i = _F7; //#20676
                 $_.mode = $get($_.seq, $_.i); //#20677
                 $k[$j++] = $get($get($_.mids, $_.ver), $_.mode); //#20678
                 $_.addtobits(); //#20678
@@ -25412,11 +25491,11 @@ function bwipp_qrcode() {
                 $k[$j++] = 'charslen'; //#20680
                 $k[$j++] = $_.chars.length; //#20680
                 if ($_.mode == $_.K) { //#20680
-                    var _FJ = $k[--$j]; //#20680
-                    $k[$j++] = ~~(_FJ / 2); //#20680
+                    var _FM = $k[--$j]; //#20680
+                    $k[$j++] = ~~(_FM / 2); //#20680
                 } //#20680
-                var _FK = $k[--$j]; //#20680
-                $_[$k[--$j]] = _FK; //#20680
+                var _FN = $k[--$j]; //#20680
+                $_[$k[--$j]] = _FN; //#20680
                 if ($_.mode != $_.E) { //#20687
                     $_.cclen = $get($get($_.cclens, $_.ver), $_.mode); //#20682
                     if ($_.charslen >= (~~Math.pow(2, $_.cclen))) { //#20685
@@ -25452,20 +25531,20 @@ function bwipp_qrcode() {
     $k[$j++] = 'eclval'; //#20781
     $search("LMQH", $_.eclevel); //#20781
     $j--; //#20781
-    var _Kg = $k[--$j]; //#20781
-    var _Kh = $k[--$j]; //#20781
-    $k[$j++] = _Kg.length; //#20781
-    $k[$j++] = _Kh; //#20781
-    $j--; //#20781
-    var _Ki = $k[--$j]; //#20781
     var _Kj = $k[--$j]; //#20781
-    $k[$j++] = _Ki; //#20781
-    $k[$j++] = _Kj; //#20781
-    $j--; //#20781
     var _Kk = $k[--$j]; //#20781
-    $_[$k[--$j]] = _Kk; //#20781
-    for (var _Ko = 0, _Kn = $_.metrics.length - 1; _Ko <= _Kn; _Ko += 1) { //#20820
-        $_.i = _Ko; //#20783
+    $k[$j++] = _Kj.length; //#20781
+    $k[$j++] = _Kk; //#20781
+    $j--; //#20781
+    var _Kl = $k[--$j]; //#20781
+    var _Km = $k[--$j]; //#20781
+    $k[$j++] = _Kl; //#20781
+    $k[$j++] = _Km; //#20781
+    $j--; //#20781
+    var _Kn = $k[--$j]; //#20781
+    $_[$k[--$j]] = _Kn; //#20781
+    for (var _Kr = 0, _Kq = $_.metrics.length - 1; _Kr <= _Kq; _Kr += 1) { //#20820
+        $_.i = _Kr; //#20783
         $_.m = $get($_.metrics, $_.i); //#20784
         $_.frmt = $get($_.m, 0); //#20785
         $_.vers = $get($_.m, 1); //#20786
@@ -25486,8 +25565,8 @@ function bwipp_qrcode() {
         } //#20800
         $_.ecws = $get($get($_.m, 8), $_.eclval); //#20802
         $_.dcws = $f($_.ncws - $_.ecws); //#20803
-        var _LM = $_.lc4b ? 4 : 0; //#20804
-        $_.dmod = $f(($_.dcws * 8) - _LM); //#20804
+        var _LP = $_.lc4b ? 4 : 0; //#20804
+        $_.dmod = $f(($_.dcws * 8) - _LP); //#20804
         $_.ecb1 = $get($get($_.m, 9), $_.eclval * 2); //#20805
         $_.ecb2 = $get($get($_.m, 9), $f(($_.eclval * 2) + 1)); //#20806
         $_.okay = true; //#20807
@@ -25526,55 +25605,55 @@ function bwipp_qrcode() {
     $_.msgbits = $_.verbits; //#20828
     $_.dcpb = ~~($_.dcws / $f($_.ecb1 + $_.ecb2)); //#20829
     $_.ecpb = (~~($_.ncws / $f($_.ecb1 + $_.ecb2))) - $_.dcpb; //#20830
-    var _M0 = $_.term; //#20833
-    var _M1 = $_.dmod; //#20833
-    var _M2 = $_.msgbits; //#20833
     var _M3 = $_.term; //#20833
-    var _M4 = _M3.length; //#20833
-    var _M5 = $f(_M1 - _M2.length); //#20833
-    if ($f(_M1 - _M2.length) > _M3.length) { //#20833
-        var _ = _M4; //#20833
-        _M4 = _M5; //#20833
-        _M5 = _; //#20833
+    var _M4 = $_.dmod; //#20833
+    var _M5 = $_.msgbits; //#20833
+    var _M6 = $_.term; //#20833
+    var _M7 = _M6.length; //#20833
+    var _M8 = $f(_M4 - _M5.length); //#20833
+    if ($f(_M4 - _M5.length) > _M6.length) { //#20833
+        var _ = _M7; //#20833
+        _M7 = _M8; //#20833
+        _M8 = _; //#20833
     } //#20833
-    $_.term = $geti(_M0, 0, _M5); //#20833
-    var _M9 = $s($_.msgbits.length + $_.term.length); //#20834
-    $puti(_M9, 0, $_.msgbits); //#20835
-    $puti(_M9, $_.msgbits.length, $_.term); //#20836
-    $_.msgbits = _M9; //#20837
+    $_.term = $geti(_M3, 0, _M8); //#20833
+    var _MC = $s($_.msgbits.length + $_.term.length); //#20834
+    $puti(_MC, 0, $_.msgbits); //#20835
+    $puti(_MC, $_.msgbits.length, $_.term); //#20836
+    $_.msgbits = _MC; //#20837
     $_.pad = $s($_.dmod); //#20840
-    for (var _MH = 0, _MG = $_.pad.length - 1; _MH <= _MG; _MH += 1) { //#20841
-        $put($_.pad, _MH, 48); //#20841
+    for (var _MK = 0, _MJ = $_.pad.length - 1; _MK <= _MJ; _MK += 1) { //#20841
+        $put($_.pad, _MK, 48); //#20841
     } //#20841
     $puti($_.pad, 0, $_.msgbits); //#20842
     $_.padnum = 0; //#20843
-    var _MO = $_.lc4b ? 5 : 1; //#20844
-    for (var _MQ = ~~(Math.ceil($_.msgbits.length / 8) * 8), _MP = $f($_.dmod - _MO); _MQ <= _MP; _MQ += 8) { //#20847
-        $puti($_.pad, _MQ, $get($_.padstrs, $_.padnum)); //#20845
+    var _MR = $_.lc4b ? 5 : 1; //#20844
+    for (var _MT = ~~(Math.ceil($_.msgbits.length / 8) * 8), _MS = $f($_.dmod - _MR); _MT <= _MS; _MT += 8) { //#20847
+        $puti($_.pad, _MT, $get($_.padstrs, $_.padnum)); //#20845
         $_.padnum = ($_.padnum + 1) % 2; //#20846
     } //#20846
     $_.cws = $a($_.dcws); //#20850
-    for (var _Ma = 0, _MZ = $_.cws.length - 1; _Ma <= _MZ; _Ma += 1) { //#20862
-        $_.c = _Ma; //#20852
+    for (var _Md = 0, _Mc = $_.cws.length - 1; _Md <= _Mc; _Md += 1) { //#20862
+        $_.c = _Md; //#20852
         $_.bpcw = 8; //#20853
         if ($_.lc4b && ($_.c == ($_.cws.length - 1))) { //#20854
             $_.bpcw = 4; //#20854
         } //#20854
         $_.cwb = $geti($_.pad, $_.c * 8, $_.bpcw); //#20855
         $_.cw = 0; //#20856
-        for (var _Mk = 0, _Mj = $_.bpcw - 1; _Mk <= _Mj; _Mk += 1) { //#20860
-            $_.i = _Mk; //#20858
+        for (var _Mn = 0, _Mm = $_.bpcw - 1; _Mn <= _Mm; _Mn += 1) { //#20860
+            $_.i = _Mn; //#20858
             $_.cw = $f($_.cw + ((~~(Math.pow(2, ($_.bpcw - $_.i) - 1))) * $f($get($_.cwb, $_.i) - 48))); //#20859
         } //#20859
         $put($_.cws, $_.c, $_.cw); //#20861
     } //#20861
     if ($_.lc4b) { //#20865
-        var _Mv = $_.cws; //#20865
-        var _Mw = $_.cws; //#20865
-        $put(_Mv, _Mw.length - 1, $get(_Mv, _Mw.length - 1) << 4); //#20865
+        var _My = $_.cws; //#20865
+        var _Mz = $_.cws; //#20865
+        $put(_My, _Mz.length - 1, $get(_My, _Mz.length - 1) << 4); //#20865
     } //#20865
-    var _Mz = $get($_.options, 'debugcws') !== undefined; //#20867
-    if (_Mz) { //#20867
+    var _N2 = $get($_.options, 'debugcws') !== undefined; //#20867
+    if (_N2) { //#20867
         $k[$j++] = 'bwipp.debugcws#20867'; //#20867
         $k[$j++] = $_.cws; //#20867
         bwipp_raiseerror(); //#20867
@@ -25583,34 +25662,34 @@ function bwipp_qrcode() {
         $_ = Object.create($_); //#20874
         $k[$j++] = Infinity; //#20871
         $k[$j++] = 1; //#20871
-        for (var _N1 = 0, _N2 = 255; _N1 < _N2; _N1++) { //#20871
-            var _N3 = $k[--$j]; //#20871
-            var _N4 = _N3 * 2; //#20871
-            $k[$j++] = _N3; //#20871
-            $k[$j++] = _N4; //#20871
-            if (_N4 >= 256) { //#20871
-                var _N5 = $k[--$j]; //#20871
-                $k[$j++] = _N5 ^ 285; //#20871
+        for (var _N4 = 0, _N5 = 255; _N4 < _N5; _N4++) { //#20871
+            var _N6 = $k[--$j]; //#20871
+            var _N7 = _N6 * 2; //#20871
+            $k[$j++] = _N6; //#20871
+            $k[$j++] = _N7; //#20871
+            if (_N7 >= 256) { //#20871
+                var _N8 = $k[--$j]; //#20871
+                $k[$j++] = _N8 ^ 285; //#20871
             } //#20871
         } //#20871
         $_.rsalog = $a(); //#20871
         $_.rslog = $a(256); //#20872
-        for (var _N8 = 1; _N8 <= 255; _N8 += 1) { //#20873
-            $put($_.rslog, $get($_.rsalog, _N8), _N8); //#20873
+        for (var _NB = 1; _NB <= 255; _NB += 1) { //#20873
+            $put($_.rslog, $get($_.rsalog, _NB), _NB); //#20873
         } //#20873
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_qrcode.$ctx[id] = $_[id]); //#20873
         bwipp_qrcode.__20874__ = 1; //#20873
         $_ = Object.getPrototypeOf($_); //#20873
     } //#20873
     $_.rsprod = function() {
-        var _ND = $k[--$j]; //#20878
-        var _NE = $k[--$j]; //#20878
-        $k[$j++] = _NE; //#20882
-        $k[$j++] = _ND; //#20882
-        if ((_ND != 0) && (_NE != 0)) { //#20881
-            var _NH = $get($_.rslog, $k[--$j]); //#20879
-            var _NM = $get($_.rsalog, $f(_NH + $get($_.rslog, $k[--$j])) % 255); //#20879
-            $k[$j++] = _NM; //#20879
+        var _NG = $k[--$j]; //#20878
+        var _NH = $k[--$j]; //#20878
+        $k[$j++] = _NH; //#20882
+        $k[$j++] = _NG; //#20882
+        if ((_NG != 0) && (_NH != 0)) { //#20881
+            var _NK = $get($_.rslog, $k[--$j]); //#20879
+            var _NP = $get($_.rsalog, $f(_NK + $get($_.rslog, $k[--$j])) % 255); //#20879
+            $k[$j++] = _NP; //#20879
         } else { //#20881
             $j -= 2; //#20881
             $k[$j++] = 0; //#20881
@@ -25618,34 +25697,34 @@ function bwipp_qrcode() {
     }; //#20881
     $k[$j++] = Infinity; //#20886
     $k[$j++] = 1; //#20886
-    for (var _NO = 0, _NP = $_.ecpb; _NO < _NP; _NO++) { //#20886
+    for (var _NR = 0, _NS = $_.ecpb; _NR < _NS; _NR++) { //#20886
         $k[$j++] = 0; //#20886
     } //#20886
     $_.coeffs = $a(); //#20886
-    for (var _NT = 0, _NS = $_.ecpb - 1; _NT <= _NS; _NT += 1) { //#20895
-        $_.i = _NT; //#20888
+    for (var _NW = 0, _NV = $_.ecpb - 1; _NW <= _NV; _NW += 1) { //#20895
+        $_.i = _NW; //#20888
         $put($_.coeffs, $_.i + 1, $get($_.coeffs, $_.i)); //#20889
-        for (var _Na = $_.i; _Na >= 1; _Na -= 1) { //#20893
-            $_.j = _Na; //#20891
+        for (var _Nd = $_.i; _Nd >= 1; _Nd -= 1) { //#20893
+            $_.j = _Nd; //#20891
             $k[$j++] = $_.coeffs; //#20892
             $k[$j++] = $_.j; //#20892
             $k[$j++] = $get($_.coeffs, $_.j - 1); //#20892
             $k[$j++] = $get($_.coeffs, $_.j); //#20892
             $k[$j++] = $get($_.rsalog, $_.i); //#20892
             $_.rsprod(); //#20892
-            var _Nm = $k[--$j]; //#20892
-            var _Nn = $k[--$j]; //#20892
-            var _No = $k[--$j]; //#20892
-            $put($k[--$j], _No, $xo(_Nn, _Nm)); //#20892
+            var _Np = $k[--$j]; //#20892
+            var _Nq = $k[--$j]; //#20892
+            var _Nr = $k[--$j]; //#20892
+            $put($k[--$j], _Nr, $xo(_Nq, _Np)); //#20892
         } //#20892
         $k[$j++] = $_.coeffs; //#20894
         $k[$j++] = 0; //#20894
         $k[$j++] = $get($_.coeffs, 0); //#20894
         $k[$j++] = $get($_.rsalog, $_.i); //#20894
         $_.rsprod(); //#20894
-        var _Nw = $k[--$j]; //#20894
-        var _Nx = $k[--$j]; //#20894
-        $put($k[--$j], _Nx, _Nw); //#20894
+        var _Nz = $k[--$j]; //#20894
+        var _O0 = $k[--$j]; //#20894
+        $put($k[--$j], _O0, _Nz); //#20894
     } //#20894
     $_.coeffs = $geti($_.coeffs, 0, $_.coeffs.length - 1); //#20896
     $_.rscodes = function() {
@@ -25653,67 +25732,67 @@ function bwipp_qrcode() {
         $_.rsnd = $_.rscws.length; //#20901
         $k[$j++] = Infinity; //#20902
         $forall($_.rscws); //#20902
-        for (var _O6 = 0, _O7 = $_.ecpb; _O6 < _O7; _O6++) { //#20902
+        for (var _O9 = 0, _OA = $_.ecpb; _O9 < _OA; _O9++) { //#20902
             $k[$j++] = 0; //#20902
         } //#20902
         $_.rscws = $a(); //#20902
-        for (var _OB = 0, _OA = $_.rsnd - 1; _OB <= _OA; _OB += 1) { //#20910
-            $_.m = _OB; //#20904
+        for (var _OE = 0, _OD = $_.rsnd - 1; _OE <= _OD; _OE += 1) { //#20910
+            $_.m = _OE; //#20904
             $_.k = $get($_.rscws, $_.m); //#20905
-            for (var _OH = 0, _OG = $_.ecpb - 1; _OH <= _OG; _OH += 1) { //#20909
-                $_.j = _OH; //#20907
+            for (var _OK = 0, _OJ = $_.ecpb - 1; _OK <= _OJ; _OK += 1) { //#20909
+                $_.j = _OK; //#20907
                 $k[$j++] = $_.rscws; //#20908
                 $k[$j++] = ($_.m + $_.j) + 1; //#20908
                 $k[$j++] = $get($_.coeffs, ($_.ecpb - $_.j) - 1); //#20908
                 $k[$j++] = $_.k; //#20908
                 $_.rsprod(); //#20908
-                var _OU = $k[--$j]; //#20908
-                var _OV = $k[--$j]; //#20908
-                $put($k[--$j], _OV, $xo(_OU, $get($_.rscws, ($_.m + $_.j) + 1))); //#20908
+                var _OX = $k[--$j]; //#20908
+                var _OY = $k[--$j]; //#20908
+                $put($k[--$j], _OY, $xo(_OX, $get($_.rscws, ($_.m + $_.j) + 1))); //#20908
             } //#20908
         } //#20908
         $k[$j++] = $geti($_.rscws, $_.rsnd, $_.ecpb); //#20911
     }; //#20911
     $_.dcwsb = $a($f($_.ecb1 + $_.ecb2)); //#20915
     $_.ecwsb = $a($f($_.ecb1 + $_.ecb2)); //#20916
-    for (var _Oj = 0, _Oi = $f($_.ecb1 - 1); _Oj <= _Oi; _Oj += 1) { //#20921
-        $_.i = _Oj; //#20918
+    for (var _Om = 0, _Ol = $f($_.ecb1 - 1); _Om <= _Ol; _Om += 1) { //#20921
+        $_.i = _Om; //#20918
         $put($_.dcwsb, $_.i, $geti($_.cws, $_.i * $_.dcpb, $_.dcpb)); //#20919
         $k[$j++] = $_.ecwsb; //#20920
         $k[$j++] = $_.i; //#20920
         $k[$j++] = $get($_.dcwsb, $_.i); //#20920
         $_.rscodes(); //#20920
-        var _Ow = $k[--$j]; //#20920
-        var _Ox = $k[--$j]; //#20920
-        $put($k[--$j], _Ox, _Ow); //#20920
+        var _Oz = $k[--$j]; //#20920
+        var _P0 = $k[--$j]; //#20920
+        $put($k[--$j], _P0, _Oz); //#20920
     } //#20920
-    for (var _P1 = 0, _P0 = $f($_.ecb2 - 1); _P1 <= _P0; _P1 += 1) { //#20926
-        $_.i = _P1; //#20923
+    for (var _P4 = 0, _P3 = $f($_.ecb2 - 1); _P4 <= _P3; _P4 += 1) { //#20926
+        $_.i = _P4; //#20923
         $put($_.dcwsb, $f($_.ecb1 + $_.i), $geti($_.cws, $f(($_.ecb1 * $_.dcpb) + ($_.i * ($_.dcpb + 1))), $_.dcpb + 1)); //#20924
         $k[$j++] = $_.ecwsb; //#20925
         $k[$j++] = $f($_.ecb1 + $_.i); //#20925
         $k[$j++] = $get($_.dcwsb, $f($_.ecb1 + $_.i)); //#20925
         $_.rscodes(); //#20925
-        var _PJ = $k[--$j]; //#20925
-        var _PK = $k[--$j]; //#20925
-        $put($k[--$j], _PK, _PJ); //#20925
+        var _PM = $k[--$j]; //#20925
+        var _PN = $k[--$j]; //#20925
+        $put($k[--$j], _PN, _PM); //#20925
     } //#20925
     $_.cws = $a($_.ncws); //#20929
     $_.cw = 0; //#20930
-    for (var _PQ = 0, _PP = $_.dcpb; _PQ <= _PP; _PQ += 1) { //#20940
-        $_.i = _PQ; //#20932
-        for (var _PU = 0, _PT = $f($f($_.ecb1 + $_.ecb2) - 1); _PU <= _PT; _PU += 1) { //#20939
-            $_.j = _PU; //#20934
+    for (var _PT = 0, _PS = $_.dcpb; _PT <= _PS; _PT += 1) { //#20940
+        $_.i = _PT; //#20932
+        for (var _PX = 0, _PW = $f($f($_.ecb1 + $_.ecb2) - 1); _PX <= _PW; _PX += 1) { //#20939
+            $_.j = _PX; //#20934
             if ($_.i < $get($_.dcwsb, $_.j).length) { //#20938
                 $put($_.cws, $_.cw, $get($get($_.dcwsb, $_.j), $_.i)); //#20936
                 $_.cw = $_.cw + 1; //#20937
             } //#20937
         } //#20937
     } //#20937
-    for (var _Pj = 0, _Pi = $_.ecpb - 1; _Pj <= _Pi; _Pj += 1) { //#20948
-        $_.i = _Pj; //#20942
-        for (var _Pn = 0, _Pm = $f($f($_.ecb1 + $_.ecb2) - 1); _Pn <= _Pm; _Pn += 1) { //#20947
-            $_.j = _Pn; //#20944
+    for (var _Pm = 0, _Pl = $_.ecpb - 1; _Pm <= _Pl; _Pm += 1) { //#20948
+        $_.i = _Pm; //#20942
+        for (var _Pq = 0, _Pp = $f($f($_.ecb1 + $_.ecb2) - 1); _Pq <= _Pp; _Pq += 1) { //#20947
+            $_.j = _Pq; //#20944
             $put($_.cws, $_.cw, $get($get($_.ecwsb, $_.j), $_.i)); //#20945
             $_.cw = $_.cw + 1; //#20946
         } //#20946
@@ -25725,107 +25804,107 @@ function bwipp_qrcode() {
         $_.cws = $_.pad; //#20955
     } //#20955
     if ($_.lc4b) { //#20967
-        var _Q5 = $_.cws; //#20960
-        var _Q6 = $_.dcws; //#20960
-        $put(_Q5, $f(_Q6 - 1), $get(_Q5, $f(_Q6 - 1)) >>> 4); //#20960
-        for (var _QB = $f($_.dcws - 1), _QA = $_.ncws - 2; _QB <= _QA; _QB += 1) { //#20965
-            $_.i = _QB; //#20962
+        var _Q8 = $_.cws; //#20960
+        var _Q9 = $_.dcws; //#20960
+        $put(_Q8, $f(_Q9 - 1), $get(_Q8, $f(_Q9 - 1)) >>> 4); //#20960
+        for (var _QE = $f($_.dcws - 1), _QD = $_.ncws - 2; _QE <= _QD; _QE += 1) { //#20965
+            $_.i = _QE; //#20962
             $put($_.cws, $_.i, ($get($_.cws, $_.i) & 15) << 4); //#20963
             $put($_.cws, $_.i, (($get($_.cws, $_.i + 1) >>> 4) & 15) | $get($_.cws, $_.i)); //#20964
         } //#20964
         $put($_.cws, $_.ncws - 1, ($get($_.cws, $_.ncws - 1) & 15) << 4); //#20966
     } //#20966
-    var _QV = $get($_.options, 'debugecc') !== undefined; //#20969
-    if (_QV) { //#20969
+    var _QY = $get($_.options, 'debugecc') !== undefined; //#20969
+    if (_QY) { //#20969
         $k[$j++] = 'bwipp.debugecc#20969'; //#20969
         $k[$j++] = $_.cws; //#20969
         bwipp_raiseerror(); //#20969
     } //#20969
     $k[$j++] = Infinity; //#20972
-    for (var _QZ = 0, _Qa = $_.rows * $_.cols; _QZ < _Qa; _QZ++) { //#20972
+    for (var _Qc = 0, _Qd = $_.rows * $_.cols; _Qc < _Qd; _Qc++) { //#20972
         $k[$j++] = -1; //#20972
     } //#20972
     $_.pixs = $a(); //#20972
     $_.qmv = function() {
-        var _Qd = $k[--$j]; //#20973
-        var _Qe = $k[--$j]; //#20973
-        $k[$j++] = $f(_Qe + (_Qd * $_.cols)); //#20973
+        var _Qg = $k[--$j]; //#20973
+        var _Qh = $k[--$j]; //#20973
+        $k[$j++] = $f(_Qh + (_Qg * $_.cols)); //#20973
     }; //#20973
     if ($eq($_.format, "full")) { //#20982
-        for (var _Qi = 8, _Qh = $f($_.cols - 9); _Qi <= _Qh; _Qi += 1) { //#20981
-            $_.i = _Qi; //#20978
+        for (var _Ql = 8, _Qk = $f($_.cols - 9); _Ql <= _Qk; _Ql += 1) { //#20981
+            $_.i = _Ql; //#20978
             $k[$j++] = $_.pixs; //#20979
             $k[$j++] = $_.i; //#20979
             $k[$j++] = 6; //#20979
             $_.qmv(); //#20979
-            var _Qm = $k[--$j]; //#20979
-            $put($k[--$j], _Qm, ($_.i + 1) % 2); //#20979
+            var _Qp = $k[--$j]; //#20979
+            $put($k[--$j], _Qp, ($_.i + 1) % 2); //#20979
             $k[$j++] = $_.pixs; //#20980
             $k[$j++] = 6; //#20980
             $k[$j++] = $_.i; //#20980
             $_.qmv(); //#20980
-            var _Qr = $k[--$j]; //#20980
-            $put($k[--$j], _Qr, ($_.i + 1) % 2); //#20980
+            var _Qu = $k[--$j]; //#20980
+            $put($k[--$j], _Qu, ($_.i + 1) % 2); //#20980
         } //#20980
     } //#20980
     if ($eq($_.format, "micro")) { //#20989
-        for (var _Qw = 8, _Qv = $f($_.cols - 1); _Qw <= _Qv; _Qw += 1) { //#20988
-            $_.i = _Qw; //#20985
+        for (var _Qz = 8, _Qy = $f($_.cols - 1); _Qz <= _Qy; _Qz += 1) { //#20988
+            $_.i = _Qz; //#20985
             $k[$j++] = $_.pixs; //#20986
             $k[$j++] = $_.i; //#20986
             $k[$j++] = 0; //#20986
             $_.qmv(); //#20986
-            var _R0 = $k[--$j]; //#20986
-            $put($k[--$j], _R0, ($_.i + 1) % 2); //#20986
+            var _R3 = $k[--$j]; //#20986
+            $put($k[--$j], _R3, ($_.i + 1) % 2); //#20986
             $k[$j++] = $_.pixs; //#20987
             $k[$j++] = 0; //#20987
             $k[$j++] = $_.i; //#20987
             $_.qmv(); //#20987
-            var _R5 = $k[--$j]; //#20987
-            $put($k[--$j], _R5, ($_.i + 1) % 2); //#20987
+            var _R8 = $k[--$j]; //#20987
+            $put($k[--$j], _R8, ($_.i + 1) % 2); //#20987
         } //#20987
     } //#20987
     if ($eq($_.format, "rmqr")) { //#21008
-        for (var _RA = 3, _R9 = $f($_.cols - 4); _RA <= _R9; _RA += 1) { //#20995
-            $_.i = _RA; //#20992
+        for (var _RD = 3, _RC = $f($_.cols - 4); _RD <= _RC; _RD += 1) { //#20995
+            $_.i = _RD; //#20992
             $k[$j++] = $_.pixs; //#20993
             $k[$j++] = $_.i; //#20993
             $k[$j++] = 0; //#20993
             $_.qmv(); //#20993
-            var _RE = $k[--$j]; //#20993
-            $put($k[--$j], _RE, ($_.i + 1) % 2); //#20993
+            var _RH = $k[--$j]; //#20993
+            $put($k[--$j], _RH, ($_.i + 1) % 2); //#20993
             $k[$j++] = $_.pixs; //#20994
             $k[$j++] = $_.i; //#20994
             $k[$j++] = $f($_.rows - 1); //#20994
             $_.qmv(); //#20994
-            var _RK = $k[--$j]; //#20994
-            $put($k[--$j], _RK, ($_.i + 1) % 2); //#20994
+            var _RN = $k[--$j]; //#20994
+            $put($k[--$j], _RN, ($_.i + 1) % 2); //#20994
         } //#20994
-        for (var _RO = 3, _RN = $f($_.rows - 4); _RO <= _RN; _RO += 1) { //#21000
-            $_.i = _RO; //#20997
+        for (var _RR = 3, _RQ = $f($_.rows - 4); _RR <= _RQ; _RR += 1) { //#21000
+            $_.i = _RR; //#20997
             $k[$j++] = $_.pixs; //#20998
             $k[$j++] = 0; //#20998
             $k[$j++] = $_.i; //#20998
             $_.qmv(); //#20998
-            var _RS = $k[--$j]; //#20998
-            $put($k[--$j], _RS, ($_.i + 1) % 2); //#20998
+            var _RV = $k[--$j]; //#20998
+            $put($k[--$j], _RV, ($_.i + 1) % 2); //#20998
             $k[$j++] = $_.pixs; //#20999
             $k[$j++] = $f($_.cols - 1); //#20999
             $k[$j++] = $_.i; //#20999
             $_.qmv(); //#20999
-            var _RY = $k[--$j]; //#20999
-            $put($k[--$j], _RY, ($_.i + 1) % 2); //#20999
+            var _Rb = $k[--$j]; //#20999
+            $put($k[--$j], _Rb, ($_.i + 1) % 2); //#20999
         } //#20999
-        for (var _Rf = $f($_.asp2 - 1), _Rg = $f($_.asp3 - $_.asp2), _Re = $f($_.cols - 13); _Rg < 0 ? _Rf >= _Re : _Rf <= _Re; _Rf += _Rg) { //#21007
-            $_.i = _Rf; //#21002
-            for (var _Rj = 3, _Ri = $f($_.rows - 4); _Rj <= _Ri; _Rj += 1) { //#21006
-                $_.j = _Rj; //#21004
+        for (var _Ri = $f($_.asp2 - 1), _Rj = $f($_.asp3 - $_.asp2), _Rh = $f($_.cols - 13); _Rj < 0 ? _Ri >= _Rh : _Ri <= _Rh; _Ri += _Rj) { //#21007
+            $_.i = _Ri; //#21002
+            for (var _Rm = 3, _Rl = $f($_.rows - 4); _Rm <= _Rl; _Rm += 1) { //#21006
+                $_.j = _Rm; //#21004
                 $k[$j++] = $_.pixs; //#21005
                 $k[$j++] = $_.i; //#21005
                 $k[$j++] = $_.j; //#21005
                 $_.qmv(); //#21005
-                var _Ro = $k[--$j]; //#21005
-                $put($k[--$j], _Ro, ($_.j + 1) % 2); //#21005
+                var _Rr = $k[--$j]; //#21005
+                $put($k[--$j], _Rr, ($_.j + 1) % 2); //#21005
             } //#21005
         } //#21005
     } //#21005
@@ -25835,21 +25914,21 @@ function bwipp_qrcode() {
         $_.fsubpat = $a([$a([1, 1, 1, 1, 1, 9, 9, 9]), $a([1, 0, 0, 0, 1, 9, 9, 9]), $a([1, 0, 1, 0, 1, 9, 9, 9]), $a([1, 0, 0, 0, 1, 9, 9, 9]), $a([1, 1, 1, 1, 1, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9])]); //#21031
         $_.fcorpat = $a([$a([1, 1, 1, 9, 9, 9, 9, 9]), $a([1, 0, 9, 9, 9, 9, 9, 9]), $a([1, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9])]); //#21041
         $_.fnullpat = $a([$a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9]), $a([9, 9, 9, 9, 9, 9, 9, 9])]); //#21051
-        var _Sf = new Map([
+        var _Si = new Map([
             ["full", $a([$_.fpat, $_.fpat, $_.fpat, $_.fnullpat])],
             ["micro", $a([$_.fpat, $_.fnullpat, $_.fnullpat, $_.fnullpat])],
             ["rmqr", $a([$_.fpat, $_.fcorpat, $_.fcorpat, $_.fsubpat])]
         ]); //#21056
-        $_.fpatmap = _Sf; //#21057
+        $_.fpatmap = _Si; //#21057
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_qrcode.$ctx[id] = $_[id]); //#21057
         bwipp_qrcode.__21058__ = 1; //#21057
         $_ = Object.getPrototypeOf($_); //#21057
     } //#21057
     $_.fpats = $get($_.fpatmap, $_.format); //#21059
-    for (var _Sk = 0; _Sk <= 7; _Sk += 1) { //#21073
-        $_.y = _Sk; //#21061
-        for (var _Sl = 0; _Sl <= 7; _Sl += 1) { //#21072
-            $_.x = _Sl; //#21063
+    for (var _Sn = 0; _Sn <= 7; _Sn += 1) { //#21073
+        $_.y = _Sn; //#21061
+        for (var _So = 0; _So <= 7; _So += 1) { //#21072
+            $_.x = _So; //#21063
             $_.fpb0 = $get($get($get($_.fpats, 0), $_.y), $_.x); //#21064
             $_.fpb1 = $get($get($get($_.fpats, 1), $_.y), $_.x); //#21065
             $_.fpb2 = $get($get($get($_.fpats, 2), $_.y), $_.x); //#21066
@@ -25859,32 +25938,32 @@ function bwipp_qrcode() {
                 $k[$j++] = $_.x; //#21068
                 $k[$j++] = $_.y; //#21068
                 $_.qmv(); //#21068
-                var _TH = $k[--$j]; //#21068
-                $put($k[--$j], _TH, $_.fpb0); //#21068
+                var _TK = $k[--$j]; //#21068
+                $put($k[--$j], _TK, $_.fpb0); //#21068
             } //#21068
             if ($_.fpb1 != 9) { //#21069
                 $k[$j++] = $_.pixs; //#21069
                 $k[$j++] = $f($f($_.cols - $_.x) - 1); //#21069
                 $k[$j++] = $_.y; //#21069
                 $_.qmv(); //#21069
-                var _TP = $k[--$j]; //#21069
-                $put($k[--$j], _TP, $_.fpb1); //#21069
+                var _TS = $k[--$j]; //#21069
+                $put($k[--$j], _TS, $_.fpb1); //#21069
             } //#21069
             if ($_.fpb2 != 9) { //#21070
                 $k[$j++] = $_.pixs; //#21070
                 $k[$j++] = $_.x; //#21070
                 $k[$j++] = $f($f($_.rows - $_.y) - 1); //#21070
                 $_.qmv(); //#21070
-                var _TX = $k[--$j]; //#21070
-                $put($k[--$j], _TX, $_.fpb2); //#21070
+                var _Ta = $k[--$j]; //#21070
+                $put($k[--$j], _Ta, $_.fpb2); //#21070
             } //#21070
             if ($_.fpb3 != 9) { //#21071
                 $k[$j++] = $_.pixs; //#21071
                 $k[$j++] = $f($f($_.cols - $_.x) - 1); //#21071
                 $k[$j++] = $f($f($_.rows - $_.y) - 1); //#21071
                 $_.qmv(); //#21071
-                var _Tg = $k[--$j]; //#21071
-                $put($k[--$j], _Tg, $_.fpb3); //#21071
+                var _Tj = $k[--$j]; //#21071
+                $put($k[--$j], _Tj, $_.fpb3); //#21071
             } //#21071
         } //#21071
     } //#21071
@@ -25899,26 +25978,26 @@ function bwipp_qrcode() {
     $_.putalgnpat = function() {
         $_.py = $k[--$j]; //#21094
         $_.px = $k[--$j]; //#21095
-        for (var _Tx = 0; _Tx <= 4; _Tx += 1) { //#21105
-            $_.pb = _Tx; //#21097
-            for (var _Ty = 0; _Ty <= 4; _Ty += 1) { //#21104
-                $_.pa = _Ty; //#21099
+        for (var _U0 = 0; _U0 <= 4; _U0 += 1) { //#21105
+            $_.pb = _U0; //#21097
+            for (var _U1 = 0; _U1 <= 4; _U1 += 1) { //#21104
+                $_.pa = _U1; //#21099
                 $_.algnb = $get($get($_.algnpat, $_.pb), $_.pa); //#21100
                 if ($_.algnb != 9) { //#21103
                     $k[$j++] = $_.pixs; //#21102
                     $k[$j++] = $f($_.px + $_.pa); //#21102
                     $k[$j++] = $f($_.py + $_.pb); //#21102
                     $_.qmv(); //#21102
-                    var _UB = $k[--$j]; //#21102
-                    $put($k[--$j], _UB, $_.algnb); //#21102
+                    var _UE = $k[--$j]; //#21102
+                    $put($k[--$j], _UE, $_.algnb); //#21102
                 } //#21102
             } //#21102
         } //#21102
     }; //#21102
     if ($eq($_.format, "full")) { //#21121
         $_.algnpat = $_.algnpatfull; //#21108
-        for (var _UK = $f($_.asp2 - 2), _UL = $f($_.asp3 - $_.asp2), _UJ = $f($_.cols - 13); _UL < 0 ? _UK >= _UJ : _UK <= _UJ; _UK += _UL) { //#21113
-            $_.i = _UK; //#21110
+        for (var _UN = $f($_.asp2 - 2), _UO = $f($_.asp3 - $_.asp2), _UM = $f($_.cols - 13); _UO < 0 ? _UN >= _UM : _UN <= _UM; _UN += _UO) { //#21113
+            $_.i = _UN; //#21110
             $k[$j++] = $_.i; //#21111
             $k[$j++] = 4; //#21111
             $_.putalgnpat(); //#21111
@@ -25926,10 +26005,10 @@ function bwipp_qrcode() {
             $k[$j++] = $_.i; //#21112
             $_.putalgnpat(); //#21112
         } //#21112
-        for (var _UT = $f($_.asp2 - 2), _UU = $f($_.asp3 - $_.asp2), _US = $f($_.cols - 9); _UU < 0 ? _UT >= _US : _UT <= _US; _UT += _UU) { //#21120
-            $_.x = _UT; //#21115
-            for (var _Ua = $f($_.asp2 - 2), _Ub = $f($_.asp3 - $_.asp2), _UZ = $f($_.rows - 9); _Ub < 0 ? _Ua >= _UZ : _Ua <= _UZ; _Ua += _Ub) { //#21119
-                $_.y = _Ua; //#21117
+        for (var _UW = $f($_.asp2 - 2), _UX = $f($_.asp3 - $_.asp2), _UV = $f($_.cols - 9); _UX < 0 ? _UW >= _UV : _UW <= _UV; _UW += _UX) { //#21120
+            $_.x = _UW; //#21115
+            for (var _Ud = $f($_.asp2 - 2), _Ue = $f($_.asp3 - $_.asp2), _Uc = $f($_.rows - 9); _Ue < 0 ? _Ud >= _Uc : _Ud <= _Uc; _Ud += _Ue) { //#21119
+                $_.y = _Ud; //#21117
                 $k[$j++] = $_.x; //#21118
                 $k[$j++] = $_.y; //#21118
                 $_.putalgnpat(); //#21118
@@ -25938,8 +26017,8 @@ function bwipp_qrcode() {
     } //#21118
     if ($eq($_.format, "rmqr")) { //#21129
         $_.algnpat = $_.algnpatrmqr; //#21123
-        for (var _Ul = $f($_.asp2 - 2), _Um = $f($_.asp3 - $_.asp2), _Uk = $f($_.cols - 13); _Um < 0 ? _Ul >= _Uk : _Ul <= _Uk; _Ul += _Um) { //#21128
-            $_.i = _Ul; //#21125
+        for (var _Uo = $f($_.asp2 - 2), _Up = $f($_.asp3 - $_.asp2), _Un = $f($_.cols - 13); _Up < 0 ? _Uo >= _Un : _Uo <= _Un; _Uo += _Up) { //#21128
+            $_.i = _Uo; //#21125
             $k[$j++] = $_.i; //#21126
             $k[$j++] = 0; //#21126
             $_.putalgnpat(); //#21126
@@ -25955,12 +26034,12 @@ function bwipp_qrcode() {
         bwipp_qrcode.__21138__ = 1; //#21137
         $_ = Object.getPrototypeOf($_); //#21137
     } //#21137
-    var _Xp = new Map([
+    var _Xs = new Map([
         ["full", $a([$a([$a([0, 8]), $a([8, $f($_.cols - 1)])]), $a([$a([1, 8]), $a([8, $f($_.cols - 2)])]), $a([$a([2, 8]), $a([8, $f($_.cols - 3)])]), $a([$a([3, 8]), $a([8, $f($_.cols - 4)])]), $a([$a([4, 8]), $a([8, $f($_.cols - 5)])]), $a([$a([5, 8]), $a([8, $f($_.cols - 6)])]), $a([$a([7, 8]), $a([8, $f($_.cols - 7)])]), $a([$a([8, 8]), $a([$f($_.cols - 8), 8])]), $a([$a([8, 7]), $a([$f($_.cols - 7), 8])]), $a([$a([8, 5]), $a([$f($_.cols - 6), 8])]), $a([$a([8, 4]), $a([$f($_.cols - 5), 8])]), $a([$a([8, 3]), $a([$f($_.cols - 4), 8])]), $a([$a([8, 2]), $a([$f($_.cols - 3), 8])]), $a([$a([8, 1]), $a([$f($_.cols - 2), 8])]), $a([$a([8, 0]), $a([$f($_.cols - 1), 8])])])],
         ["micro", $_.formatmapmicro],
         ["rmqr", $a([$a([$a([11, 3]), $a([$f($_.cols - 3), $f($_.rows - 6)])]), $a([$a([11, 2]), $a([$f($_.cols - 4), $f($_.rows - 6)])]), $a([$a([11, 1]), $a([$f($_.cols - 5), $f($_.rows - 6)])]), $a([$a([10, 5]), $a([$f($_.cols - 6), $f($_.rows - 2)])]), $a([$a([10, 4]), $a([$f($_.cols - 6), $f($_.rows - 3)])]), $a([$a([10, 3]), $a([$f($_.cols - 6), $f($_.rows - 4)])]), $a([$a([10, 2]), $a([$f($_.cols - 6), $f($_.rows - 5)])]), $a([$a([10, 1]), $a([$f($_.cols - 6), $f($_.rows - 6)])]), $a([$a([9, 5]), $a([$f($_.cols - 7), $f($_.rows - 2)])]), $a([$a([9, 4]), $a([$f($_.cols - 7), $f($_.rows - 3)])]), $a([$a([9, 3]), $a([$f($_.cols - 7), $f($_.rows - 4)])]), $a([$a([9, 2]), $a([$f($_.cols - 7), $f($_.rows - 5)])]), $a([$a([9, 1]), $a([$f($_.cols - 7), $f($_.rows - 6)])]), $a([$a([8, 5]), $a([$f($_.cols - 8), $f($_.rows - 2)])]), $a([$a([8, 4]), $a([$f($_.cols - 8), $f($_.rows - 3)])]), $a([$a([8, 3]), $a([$f($_.cols - 8), $f($_.rows - 4)])]), $a([$a([8, 2]), $a([$f($_.cols - 8), $f($_.rows - 5)])]), $a([$a([8, 1]), $a([$f($_.cols - 8), $f($_.rows - 6)])])])]
     ]); //#21154
-    $_.formatmap = $get(_Xp, $_.format); //#21156
+    $_.formatmap = $get(_Xs, $_.format); //#21156
     $forall($_.formatmap, function() { //#21159
         $forall($k[--$j], function() { //#21158
             $forall($k[--$j]); //#21158
@@ -25973,9 +26052,9 @@ function bwipp_qrcode() {
     } else { //#21175
         $_.versionmap = $a([]); //#21175
     } //#21175
-    var _ZT = $_.versionmap; //#21177
-    for (var _ZU = 0, _ZV = _ZT.length; _ZU < _ZV; _ZU++) { //#21179
-        $forall($get(_ZT, _ZU), function() { //#21178
+    var _ZW = $_.versionmap; //#21177
+    for (var _ZX = 0, _ZY = _ZW.length; _ZX < _ZY; _ZX++) { //#21179
+        $forall($get(_ZW, _ZX), function() { //#21178
             $forall($k[--$j]); //#21178
             $_.qmv(); //#21178
             $put($_.pixs, $k[--$j], 0); //#21178
@@ -25986,119 +26065,120 @@ function bwipp_qrcode() {
         $k[$j++] = 8; //#21183
         $k[$j++] = $f($_.rows - 8); //#21183
         $_.qmv(); //#21183
-        var _Zd = $k[--$j]; //#21183
-        $put($k[--$j], _Zd, 0); //#21183
+        var _Zg = $k[--$j]; //#21183
+        $put($k[--$j], _Zg, 0); //#21183
     } //#21183
-    var _Zx = $a([function() {
-        var _Zf = $k[--$j]; //#21189
-        var _Zg = $k[--$j]; //#21189
-        $k[$j++] = $f(_Zg + _Zf) % 2; //#21189
+    var _a0 = $a([function() {
+        var _Zi = $k[--$j]; //#21189
+        var _Zj = $k[--$j]; //#21189
+        $k[$j++] = $f(_Zj + _Zi) % 2; //#21189
     }, function() {
-        var _Zh = $k[--$j]; //#21190
-        var _Zi = $k[--$j]; //#21190
-        $k[$j++] = _Zh; //#21190
-        $k[$j++] = _Zi; //#21190
+        var _Zk = $k[--$j]; //#21190
+        var _Zl = $k[--$j]; //#21190
+        $k[$j++] = _Zk; //#21190
+        $k[$j++] = _Zl; //#21190
         $j--; //#21190
-        var _Zj = $k[--$j]; //#21190
-        $k[$j++] = _Zj % 2; //#21190
+        var _Zm = $k[--$j]; //#21190
+        $k[$j++] = _Zm % 2; //#21190
     }, function() {
         $j--; //#21191
-        var _Zk = $k[--$j]; //#21191
-        $k[$j++] = _Zk % 3; //#21191
+        var _Zn = $k[--$j]; //#21191
+        $k[$j++] = _Zn % 3; //#21191
     }, function() {
-        var _Zl = $k[--$j]; //#21192
-        var _Zm = $k[--$j]; //#21192
-        $k[$j++] = $f(_Zm + _Zl) % 3; //#21192
+        var _Zo = $k[--$j]; //#21192
+        var _Zp = $k[--$j]; //#21192
+        $k[$j++] = $f(_Zp + _Zo) % 3; //#21192
     }, function() {
-        var _Zn = $k[--$j]; //#21193
-        var _Zo = $k[--$j]; //#21193
-        $k[$j++] = ((~~(_Zn / 2)) + (~~(_Zo / 3))) % 2; //#21193
+        var _Zq = $k[--$j]; //#21193
+        var _Zr = $k[--$j]; //#21193
+        $k[$j++] = ((~~(_Zq / 2)) + (~~(_Zr / 3))) % 2; //#21193
     }, function() {
-        var _Zp = $k[--$j]; //#21194
-        var _Zr = $k[--$j] * _Zp; //#21194
-        $k[$j++] = $f((_Zr % 2) + (_Zr % 3)); //#21194
+        var _Zs = $k[--$j]; //#21194
+        var _Zu = $k[--$j] * _Zs; //#21194
+        $k[$j++] = $f((_Zu % 2) + (_Zu % 3)); //#21194
     }, function() {
-        var _Zs = $k[--$j]; //#21195
-        var _Zu = $k[--$j] * _Zs; //#21195
-        $k[$j++] = ($f((_Zu % 2) + (_Zu % 3))) % 2; //#21195
+        var _Zv = $k[--$j]; //#21195
+        var _Zx = $k[--$j] * _Zv; //#21195
+        $k[$j++] = ($f((_Zx % 2) + (_Zx % 3))) % 2; //#21195
     }, function() {
-        var _Zv = $k[--$j]; //#21196
-        var _Zw = $k[--$j]; //#21196
-        $k[$j++] = ($f(((_Zw * _Zv) % 3) + ($f(_Zw + _Zv) % 2))) % 2; //#21196
+        var _Zy = $k[--$j]; //#21196
+        var _Zz = $k[--$j]; //#21196
+        $k[$j++] = ($f(((_Zz * _Zy) % 3) + ($f(_Zz + _Zy) % 2))) % 2; //#21196
     }]); //#21196
-    var _a8 = $a([function() {
-        var _Zy = $k[--$j]; //#21199
-        var _Zz = $k[--$j]; //#21199
-        $k[$j++] = _Zy; //#21199
-        $k[$j++] = _Zz; //#21199
-        $j--; //#21199
-        var _a0 = $k[--$j]; //#21199
-        $k[$j++] = _a0 % 2; //#21199
-    }, function() {
-        var _a1 = $k[--$j]; //#21200
-        var _a2 = $k[--$j]; //#21200
-        $k[$j++] = ((~~(_a1 / 2)) + (~~(_a2 / 3))) % 2; //#21200
-    }, function() {
-        var _a3 = $k[--$j]; //#21201
-        var _a5 = $k[--$j] * _a3; //#21201
-        $k[$j++] = ($f((_a5 % 2) + (_a5 % 3))) % 2; //#21201
-    }, function() {
-        var _a6 = $k[--$j]; //#21202
-        var _a7 = $k[--$j]; //#21202
-        $k[$j++] = ($f(((_a7 * _a6) % 3) + ($f(_a7 + _a6) % 2))) % 2; //#21202
-    }]); //#21202
     var _aB = $a([function() {
-        var _a9 = $k[--$j]; //#21205
-        var _aA = $k[--$j]; //#21205
-        $k[$j++] = ((~~(_a9 / 2)) + (~~(_aA / 3))) % 2; //#21205
+        var _a1 = $k[--$j]; //#21199
+        var _a2 = $k[--$j]; //#21199
+        $k[$j++] = _a1; //#21199
+        $k[$j++] = _a2; //#21199
+        $j--; //#21199
+        var _a3 = $k[--$j]; //#21199
+        $k[$j++] = _a3 % 2; //#21199
+    }, function() {
+        var _a4 = $k[--$j]; //#21200
+        var _a5 = $k[--$j]; //#21200
+        $k[$j++] = ((~~(_a4 / 2)) + (~~(_a5 / 3))) % 2; //#21200
+    }, function() {
+        var _a6 = $k[--$j]; //#21201
+        var _a8 = $k[--$j] * _a6; //#21201
+        $k[$j++] = ($f((_a8 % 2) + (_a8 % 3))) % 2; //#21201
+    }, function() {
+        var _a9 = $k[--$j]; //#21202
+        var _aA = $k[--$j]; //#21202
+        $k[$j++] = ($f(((_aA * _a9) % 3) + ($f(_aA + _a9) % 2))) % 2; //#21202
+    }]); //#21202
+    var _aE = $a([function() {
+        var _aC = $k[--$j]; //#21205
+        var _aD = $k[--$j]; //#21205
+        $k[$j++] = ((~~(_aC / 2)) + (~~(_aD / 3))) % 2; //#21205
     }]); //#21205
-    var _aC = new Map([
-        ["full", _Zx],
-        ["micro", _a8],
-        ["rmqr", _aB]
+    var _aF = new Map([
+        ["full", _a0],
+        ["micro", _aB],
+        ["rmqr", _aE]
     ]); //#21205
-    $_.maskfuncs = $get(_aC, $_.format); //#21207
+    $_.maskfuncs = $get(_aF, $_.format); //#21207
     if ($_.mask != -1) { //#21211
         $_.maskfuncs = $a([$get($_.maskfuncs, $_.mask - 1)]); //#21209
         $_.bestmaskval = $_.mask - 1; //#21210
     } //#21210
     $_.masks = $a($_.maskfuncs.length); //#21212
-    for (var _aP = 0, _aO = $_.masks.length - 1; _aP <= _aO; _aP += 1) { //#21226
-        $_.m = _aP; //#21214
+    for (var _aS = 0, _aR = $_.masks.length - 1; _aS <= _aR; _aS += 1) { //#21226
+        $_.m = _aS; //#21214
         $_.mask = $a($_.rows * $_.cols); //#21215
-        for (var _aV = 0, _aU = $f($_.rows - 1); _aV <= _aU; _aV += 1) { //#21224
-            $_.j = _aV; //#21217
-            for (var _aY = 0, _aX = $f($_.cols - 1); _aY <= _aX; _aY += 1) { //#21223
-                $_.i = _aY; //#21219
+        for (var _aY = 0, _aX = $f($_.rows - 1); _aY <= _aX; _aY += 1) { //#21224
+            $_.j = _aY; //#21217
+            for (var _ab = 0, _aa = $f($_.cols - 1); _ab <= _aa; _ab += 1) { //#21223
+                $_.i = _ab; //#21219
                 $k[$j++] = $_.i; //#21220
                 $k[$j++] = $_.j; //#21220
                 if ($get($_.maskfuncs, $_.m)() === true) {
                     break;
                 } //#21220
-                var _ae = $k[--$j]; //#21220
-                $k[$j++] = _ae == 0; //#21221
+                var _ah = $k[--$j]; //#21220
+                $k[$j++] = _ah == 0; //#21221
                 $k[$j++] = $_.pixs; //#21221
                 $k[$j++] = $_.i; //#21221
                 $k[$j++] = $_.j; //#21221
                 $_.qmv(); //#21221
-                var _ai = $k[--$j]; //#21221
-                var _ak = $get($k[--$j], _ai); //#21221
                 var _al = $k[--$j]; //#21221
-                var _am = (_al && (_ak == -1)) ? 1 : 0; //#21221
-                $k[$j++] = _am; //#21222
+                var _an = $get($k[--$j], _al); //#21221
+                var _ao = $k[--$j]; //#21221
+                var _ap = (_ao && (_an == -1)) ? 1 : 0; //#21221
+                $k[$j++] = _ap; //#21222
                 $k[$j++] = $_.mask; //#21222
                 $k[$j++] = $_.i; //#21222
                 $k[$j++] = $_.j; //#21222
                 $_.qmv(); //#21222
-                var _aq = $k[--$j]; //#21222
-                var _ar = $k[--$j]; //#21222
-                $put(_ar, _aq, $k[--$j]); //#21222
+                $r(3, -1); //#21222
+                var _at = $k[--$j]; //#21222
+                var _au = $k[--$j]; //#21222
+                $put($k[--$j], _au, _at); //#21222
             } //#21222
         } //#21222
         $put($_.masks, $_.m, $_.mask); //#21225
     } //#21225
-    var _ay = $ne($_.format, "rmqr") ? 1 : 2; //#21229
-    $_.posx = $f($_.cols - _ay); //#21229
+    var _b1 = $ne($_.format, "rmqr") ? 1 : 2; //#21229
+    $_.posx = $f($_.cols - _b1); //#21229
     $_.posy = $f($_.rows - 1); //#21230
     $_.dir = -1; //#21231
     $_.col = 1; //#21232
@@ -26111,18 +26191,19 @@ function bwipp_qrcode() {
         $k[$j++] = $_.posx; //#21236
         $k[$j++] = $_.posy; //#21236
         $_.qmv(); //#21236
-        var _b4 = $k[--$j]; //#21236
-        if ($get($k[--$j], _b4) == -1) { //#21240
-            var _b9 = $get($_.cws, ~~($_.num / 8)); //#21237
-            var _bB = -(7 - ($_.num % 8)); //#21237
-            $k[$j++] = ((_bB < 0 ? _b9 >>> -_bB : _b9 << _bB)) & 1; //#21238
+        var _b7 = $k[--$j]; //#21236
+        if ($get($k[--$j], _b7) == -1) { //#21240
+            var _bC = $get($_.cws, ~~($_.num / 8)); //#21237
+            var _bE = -(7 - ($_.num % 8)); //#21237
+            $k[$j++] = ((_bE < 0 ? _bC >>> -_bE : _bC << _bE)) & 1; //#21238
             $k[$j++] = $_.pixs; //#21238
             $k[$j++] = $_.posx; //#21238
             $k[$j++] = $_.posy; //#21238
             $_.qmv(); //#21238
-            var _bF = $k[--$j]; //#21238
-            var _bG = $k[--$j]; //#21238
-            $put(_bG, _bF, $k[--$j]); //#21238
+            $r(3, -1); //#21238
+            var _bI = $k[--$j]; //#21238
+            var _bJ = $k[--$j]; //#21238
+            $put($k[--$j], _bJ, _bI); //#21238
             $_.num = $_.num + 1; //#21239
         } //#21239
         if ($_.col == 1) { //#21253
@@ -26147,37 +26228,37 @@ function bwipp_qrcode() {
         $k[$j++] = 'scr1'; //#21262
         $k[$j++] = 0; //#21262
         $forall($_.scrle, function() { //#21262
-            var _ba = $k[--$j]; //#21262
-            $k[$j++] = _ba; //#21262
-            if (_ba >= 5) { //#21262
-                var _bb = $k[--$j]; //#21262
-                var _bd = $f($f($k[--$j] + _bb) - 2); //#21262
-                $k[$j++] = _bd; //#21262
-                $k[$j++] = _bd; //#21262
+            var _bd = $k[--$j]; //#21262
+            $k[$j++] = _bd; //#21262
+            if (_bd >= 5) { //#21262
+                var _be = $k[--$j]; //#21262
+                var _bg = $f($f($k[--$j] + _be) - 2); //#21262
+                $k[$j++] = _bg; //#21262
+                $k[$j++] = _bg; //#21262
             } //#21262
             $j--; //#21262
         }); //#21262
-        var _be = $k[--$j]; //#21262
-        $_[$k[--$j]] = _be; //#21262
+        var _bh = $k[--$j]; //#21262
+        $_[$k[--$j]] = _bh; //#21262
         $_.scr3 = 0; //#21264
-        for (var _bi = 3, _bh = $_.scrle.length - 3; _bi <= _bh; _bi += 2) { //#21279
-            $_.j = _bi; //#21266
+        for (var _bl = 3, _bk = $_.scrle.length - 3; _bl <= _bk; _bl += 2) { //#21279
+            $_.j = _bl; //#21266
             if (($get($_.scrle, $_.j) % 3) == 0) { //#21278
                 $_.fact = ~~($get($_.scrle, $_.j) / 3); //#21268
-                var _br = $geti($_.scrle, $_.j - 2, 5); //#21269
-                for (var _bs = 0, _bt = _br.length; _bs < _bt; _bs++) { //#21269
-                    $k[$j++] = $get(_br, _bs) == $_.fact; //#21269
+                var _bu = $geti($_.scrle, $_.j - 2, 5); //#21269
+                for (var _bv = 0, _bw = _bu.length; _bv < _bw; _bv++) { //#21269
+                    $k[$j++] = $get(_bu, _bv) == $_.fact; //#21269
                 } //#21269
-                var _bw = $k[--$j]; //#21269
-                var _bx = $k[--$j]; //#21269
-                var _by = $k[--$j]; //#21269
-                $k[$j++] = $an(_bx, _bw); //#21269
-                $k[$j++] = _by; //#21269
-                $j--; //#21269
                 var _bz = $k[--$j]; //#21269
                 var _c0 = $k[--$j]; //#21269
                 var _c1 = $k[--$j]; //#21269
-                if (_c1 && (_c0 && _bz)) { //#21277
+                $k[$j++] = $an(_c0, _bz); //#21269
+                $k[$j++] = _c1; //#21269
+                $j--; //#21269
+                var _c2 = $k[--$j]; //#21269
+                var _c3 = $k[--$j]; //#21269
+                var _c4 = $k[--$j]; //#21269
+                if (_c4 && (_c3 && _c2)) { //#21277
                     if (($_.j == 3) || (($_.j + 4) >= $_.scrle.length)) { //#21274
                         $_.scr3 = $_.scr3 + 40; //#21271
                     } else { //#21274
@@ -26200,72 +26281,72 @@ function bwipp_qrcode() {
         $_.lastpairs = $a($_.cols); //#21289
         $_.thispairs = $a($_.cols); //#21290
         $_.colsadd1 = $f($_.cols + 1); //#21291
-        for (var _cP = 0, _cO = $f($_.cols - 1); _cP <= _cO; _cP += 1) { //#21330
-            $_.i = _cP; //#21293
+        for (var _cS = 0, _cR = $f($_.cols - 1); _cS <= _cR; _cS += 1) { //#21330
+            $_.i = _cS; //#21293
             $k[$j++] = Infinity; //#21296
-            var _cR = $_.cols; //#21297
+            var _cU = $_.cols; //#21297
             $k[$j++] = 0; //#21299
             $k[$j++] = 0; //#21299
-            for (var _cT = $_.i, _cU = _cR, _cS = $f((_cR * _cR) - 1); _cU < 0 ? _cT >= _cS : _cT <= _cS; _cT += _cU) { //#21299
-                var _cW = $get($_.sym, _cT); //#21298
-                var _cX = $k[--$j]; //#21298
-                $k[$j++] = _cW; //#21298
-                if ($eq(_cX, _cW)) { //#21298
-                    var _cY = $k[--$j]; //#21298
-                    var _cZ = $k[--$j]; //#21298
-                    $k[$j++] = $f(_cZ + 1); //#21298
-                    $k[$j++] = _cY; //#21298
+            for (var _cW = $_.i, _cX = _cU, _cV = $f((_cU * _cU) - 1); _cX < 0 ? _cW >= _cV : _cW <= _cV; _cW += _cX) { //#21299
+                var _cZ = $get($_.sym, _cW); //#21298
+                var _ca = $k[--$j]; //#21298
+                $k[$j++] = _cZ; //#21298
+                if ($eq(_ca, _cZ)) { //#21298
+                    var _cb = $k[--$j]; //#21298
+                    var _cc = $k[--$j]; //#21298
+                    $k[$j++] = $f(_cc + 1); //#21298
+                    $k[$j++] = _cb; //#21298
                 } else { //#21298
-                    var _ca = $k[--$j]; //#21298
+                    var _cd = $k[--$j]; //#21298
                     $k[$j++] = 1; //#21298
-                    $k[$j++] = _ca; //#21298
+                    $k[$j++] = _cd; //#21298
                 } //#21298
             } //#21298
             $j--; //#21300
-            var _cc = $counttomark() + 2; //#21301
-            $astore($geti($_.rle, 0, _cc - 2)); //#21301
+            var _cf = $counttomark() + 2; //#21301
+            $astore($geti($_.rle, 0, _cf - 2)); //#21301
             $_.evalfulln1n3(); //#21302
             $_.n3 = $f($k[--$j] + $_.n3); //#21302
             $_.n1 = $f($k[--$j] + $_.n1); //#21302
             $j--; //#21303
             $_.symrow = $geti($_.sym, $_.i * $_.cols, $_.cols); //#21306
             $k[$j++] = Infinity; //#21307
-            var _cn = $_.symrow; //#21308
+            var _cq = $_.symrow; //#21308
             $k[$j++] = 0; //#21310
             $k[$j++] = 0; //#21310
-            for (var _co = 0, _cp = _cn.length; _co < _cp; _co++) { //#21310
-                var _cq = $get(_cn, _co); //#21310
-                var _cr = $k[--$j]; //#21309
-                $k[$j++] = _cq; //#21309
-                if ($eq(_cr, _cq)) { //#21309
-                    var _cs = $k[--$j]; //#21309
-                    var _ct = $k[--$j]; //#21309
-                    $k[$j++] = $f(_ct + 1); //#21309
-                    $k[$j++] = _cs; //#21309
+            for (var _cr = 0, _cs = _cq.length; _cr < _cs; _cr++) { //#21310
+                var _ct = $get(_cq, _cr); //#21310
+                var _cu = $k[--$j]; //#21309
+                $k[$j++] = _ct; //#21309
+                if ($eq(_cu, _ct)) { //#21309
+                    var _cv = $k[--$j]; //#21309
+                    var _cw = $k[--$j]; //#21309
+                    $k[$j++] = $f(_cw + 1); //#21309
+                    $k[$j++] = _cv; //#21309
                 } else { //#21309
-                    var _cu = $k[--$j]; //#21309
+                    var _cx = $k[--$j]; //#21309
                     $k[$j++] = 1; //#21309
-                    $k[$j++] = _cu; //#21309
+                    $k[$j++] = _cx; //#21309
                 } //#21309
             } //#21309
             $j--; //#21311
-            var _cw = $counttomark() + 2; //#21312
-            $astore($geti($_.rle, 0, _cw - 2)); //#21312
+            var _cz = $counttomark() + 2; //#21312
+            $astore($geti($_.rle, 0, _cz - 2)); //#21312
             $_.evalfulln1n3(); //#21313
             $_.n3 = $f($k[--$j] + $_.n3); //#21313
             $_.n1 = $f($k[--$j] + $_.n1); //#21313
             $j--; //#21314
-            var _d2 = $_.thispairs; //#21317
+            var _d5 = $_.thispairs; //#21317
             $_.thispairs = $_.lastpairs; //#21317
-            $_.lastpairs = _d2; //#21317
-            var _d6 = ($get($_.symrow, 0) == 1) ? 0 : 1; //#21318
-            var _d7 = $_.symrow; //#21319
-            $k[$j++] = _d6; //#21319
-            for (var _d8 = 0, _d9 = _d7.length; _d8 < _d9; _d8++) { //#21319
-                var _dA = $get(_d7, _d8); //#21319
-                var _dB = $k[--$j]; //#21319
-                $k[$j++] = $f(_dB + _dA); //#21319
-                $k[$j++] = _dA; //#21319
+            $_.lastpairs = _d5; //#21317
+            var _d9 = ($get($_.symrow, 0) == 1) ? 0 : 1; //#21318
+            var _dA = $_.symrow; //#21319
+            $k[$j++] = _d9; //#21319
+            for (var _dB = 0, _dC = _dA.length; _dB < _dC; _dB++) { //#21319
+                var _dD = $get(_dA, _dB); //#21319
+                var _dE = $k[--$j]; //#21319
+                $k[$j++] = $f(_dE + _dD); //#21319
+                $k[$j++] = _dD; //#21319
             } //#21319
             $j--; //#21320
             $astore($_.thispairs); //#21321
@@ -26275,15 +26356,15 @@ function bwipp_qrcode() {
                 $aload($_.lastpairs); //#21324
                 $aload($_.thispairs); //#21324
                 $k[$j++] = $_.n2; //#21325
-                for (var _dI = 0, _dJ = $_.cols; _dI < _dJ; _dI++) { //#21325
-                    var _dK = $k[--$j]; //#21325
-                    var _dL = $k[--$j]; //#21325
-                    $k[$j++] = _dK; //#21325
-                    $k[$j++] = _dL; //#21325
-                    var _dN = $k[$j - 1 - $_.colsadd1]; //#21325
-                    if (($f($k[--$j] + _dN) & 3) == 0) { //#21325
-                        var _dP = $k[--$j]; //#21325
-                        $k[$j++] = $f(_dP + 3); //#21325
+                for (var _dL = 0, _dM = $_.cols; _dL < _dM; _dL++) { //#21325
+                    var _dN = $k[--$j]; //#21325
+                    var _dO = $k[--$j]; //#21325
+                    $k[$j++] = _dN; //#21325
+                    $k[$j++] = _dO; //#21325
+                    var _dQ = $k[$j - 1 - $_.colsadd1]; //#21325
+                    if (($f($k[--$j] + _dQ) & 3) == 0) { //#21325
+                        var _dS = $k[--$j]; //#21325
+                        $k[$j++] = $f(_dS + 3); //#21325
                     } //#21325
                 } //#21325
                 $_.n2 = $k[--$j]; //#21326
@@ -26293,42 +26374,42 @@ function bwipp_qrcode() {
         $k[$j++] = 'dark'; //#21333
         $k[$j++] = 0; //#21333
         $forall($_.sym, function() { //#21333
-            var _dS = $k[--$j]; //#21333
-            var _dT = $k[--$j]; //#21333
-            $k[$j++] = $f(_dT + _dS); //#21333
+            var _dV = $k[--$j]; //#21333
+            var _dW = $k[--$j]; //#21333
+            $k[$j++] = $f(_dW + _dV); //#21333
         }); //#21333
-        var _dU = $k[--$j]; //#21333
-        $_[$k[--$j]] = _dU; //#21333
-        var _dX = $_.cols; //#21334
-        $_.n4 = (~~((Math.abs($f((($_.dark * 100) / (_dX * _dX)) - 50))) / 5)) * 10; //#21334
+        var _dX = $k[--$j]; //#21333
+        $_[$k[--$j]] = _dX; //#21333
+        var _da = $_.cols; //#21334
+        $_.n4 = (~~((Math.abs($f((($_.dark * 100) / (_da * _da)) - 50))) / 5)) * 10; //#21334
         $k[$j++] = $f(($f($f($_.n1 + $_.n2) + $_.n3)) + $_.n4); //#21336
     }; //#21336
     $_.evalmicro = function() {
         $_.sym = $k[--$j]; //#21341
         $_.dkrhs = 0; //#21342
         $_.dkbot = 0; //#21342
-        for (var _df = 1, _de = $f($_.cols - 1); _df <= _de; _df += 1) { //#21347
-            $_.i = _df; //#21344
+        for (var _di = 1, _dh = $f($_.cols - 1); _di <= _dh; _di += 1) { //#21347
+            $_.i = _di; //#21344
             $k[$j++] = 'dkrhs'; //#21345
             $k[$j++] = $_.dkrhs; //#21345
             $k[$j++] = $_.sym; //#21345
             $k[$j++] = $f($_.cols - 1); //#21345
             $k[$j++] = $_.i; //#21345
             $_.qmv(); //#21345
-            var _dk = $k[--$j]; //#21345
-            var _dm = $get($k[--$j], _dk); //#21345
             var _dn = $k[--$j]; //#21345
-            $_[$k[--$j]] = $f(_dn + _dm); //#21345
+            var _dp = $get($k[--$j], _dn); //#21345
+            var _dq = $k[--$j]; //#21345
+            $_[$k[--$j]] = $f(_dq + _dp); //#21345
             $k[$j++] = 'dkbot'; //#21346
             $k[$j++] = $_.dkbot; //#21346
             $k[$j++] = $_.sym; //#21346
             $k[$j++] = $_.i; //#21346
             $k[$j++] = $f($_.cols - 1); //#21346
             $_.qmv(); //#21346
-            var _dt = $k[--$j]; //#21346
-            var _dv = $get($k[--$j], _dt); //#21346
             var _dw = $k[--$j]; //#21346
-            $_[$k[--$j]] = $f(_dw + _dv); //#21346
+            var _dy = $get($k[--$j], _dw); //#21346
+            var _dz = $k[--$j]; //#21346
+            $_[$k[--$j]] = $f(_dz + _dy); //#21346
         } //#21346
         if ($_.dkrhs <= $_.dkbot) { //#21351
             $k[$j++] = -(($_.dkrhs * 16) + $_.dkbot); //#21349
@@ -26337,11 +26418,11 @@ function bwipp_qrcode() {
         } //#21351
     }; //#21351
     $_.bestscore = 999999999; //#21356
-    for (var _e6 = 0, _e5 = $_.masks.length - 1; _e6 <= _e5; _e6 += 1) { //#21378
-        $_.m = _e6; //#21358
+    for (var _e9 = 0, _e8 = $_.masks.length - 1; _e9 <= _e8; _e9 += 1) { //#21378
+        $_.m = _e9; //#21358
         $_.masksym = $a($_.rows * $_.cols); //#21359
-        for (var _eD = 0, _eC = $f(($_.rows * $_.cols) - 1); _eD <= _eC; _eD += 1) { //#21363
-            $_.i = _eD; //#21361
+        for (var _eG = 0, _eF = $f(($_.rows * $_.cols) - 1); _eG <= _eF; _eG += 1) { //#21363
+            $_.i = _eG; //#21361
             $put($_.masksym, $_.i, $xo($get($_.pixs, $_.i), $get($get($_.masks, $_.m), $_.i))); //#21362
         } //#21362
         if ($_.masks.length != 1) { //#21376
@@ -26369,8 +26450,8 @@ function bwipp_qrcode() {
         $k[$j++] = 8; //#21383
         $k[$j++] = $f($_.cols - 8); //#21383
         $_.qmv(); //#21383
-        var _ee = $k[--$j]; //#21383
-        $put($k[--$j], _ee, 1); //#21383
+        var _eh = $k[--$j]; //#21383
+        $put($k[--$j], _eh, 1); //#21383
     } //#21383
     if (!bwipp_qrcode.__21420__) { //#21420
         $_ = Object.create($_); //#21420
@@ -26386,81 +26467,81 @@ function bwipp_qrcode() {
         $k[$j++] = 'ecid'; //#21422
         $search("MLHQ", $_.eclevel); //#21422
         $j--; //#21422
-        var _en = $k[--$j]; //#21422
-        var _eo = $k[--$j]; //#21422
-        $k[$j++] = _en.length; //#21422
-        $k[$j++] = _eo; //#21422
-        $j--; //#21422
-        var _ep = $k[--$j]; //#21422
         var _eq = $k[--$j]; //#21422
-        $k[$j++] = _ep; //#21422
-        $k[$j++] = _eq; //#21422
-        $j--; //#21422
         var _er = $k[--$j]; //#21422
-        $_[$k[--$j]] = _er; //#21422
+        $k[$j++] = _eq.length; //#21422
+        $k[$j++] = _er; //#21422
+        $j--; //#21422
+        var _es = $k[--$j]; //#21422
+        var _et = $k[--$j]; //#21422
+        $k[$j++] = _es; //#21422
+        $k[$j++] = _et; //#21422
+        $j--; //#21422
+        var _eu = $k[--$j]; //#21422
+        $_[$k[--$j]] = _eu; //#21422
         $_.fmtval = $get($_.fmtvalsfull, ($_.ecid << 3) + $_.bestmaskval); //#21423
-        for (var _ez = 0, _ey = $_.formatmap.length - 1; _ez <= _ey; _ez += 1) { //#21429
-            $_.i = _ez; //#21425
+        for (var _f2 = 0, _f1 = $_.formatmap.length - 1; _f2 <= _f1; _f2 += 1) { //#21429
+            $_.i = _f2; //#21425
             $forall($get($_.formatmap, $_.i), function() { //#21428
-                var _f4 = $k[--$j]; //#21427
+                var _f7 = $k[--$j]; //#21427
                 $k[$j++] = $_.pixs; //#21427
-                $aload(_f4); //#21427
+                $aload(_f7); //#21427
                 $_.qmv(); //#21427
-                var _f5 = $_.fmtval; //#21427
-                var _f7 = -(14 - $_.i); //#21427
-                var _f8 = $k[--$j]; //#21427
-                $put($k[--$j], _f8, ((_f7 < 0 ? _f5 >>> -_f7 : _f5 << _f7)) & 1); //#21427
+                var _f8 = $_.fmtval; //#21427
+                var _fA = -(14 - $_.i); //#21427
+                var _fB = $k[--$j]; //#21427
+                $put($k[--$j], _fB, ((_fA < 0 ? _f8 >>> -_fA : _f8 << _fA)) & 1); //#21427
             }); //#21427
         } //#21427
     } //#21427
     if ($eq($_.format, "micro")) { //#21438
         $_.symid = $get($get($a([$a([0]), $a([1, 2]), $a([3, 4]), $a([5, 6, 7])]), ~~($f($_.cols - 11) / 2)), $_.eclval); //#21432
         $_.fmtval = $get($_.fmtvalsmicro, ($_.symid << 2) + $_.bestmaskval); //#21433
-        for (var _fQ = 0, _fP = $_.formatmap.length - 1; _fQ <= _fP; _fQ += 1) { //#21437
-            $_.i = _fQ; //#21435
+        for (var _fT = 0, _fS = $_.formatmap.length - 1; _fT <= _fS; _fT += 1) { //#21437
+            $_.i = _fT; //#21435
             $k[$j++] = $_.pixs; //#21436
             $aload($get($get($_.formatmap, $_.i), 0)); //#21436
             $_.qmv(); //#21436
-            var _fW = $_.fmtval; //#21436
-            var _fY = -(14 - $_.i); //#21436
-            var _fZ = $k[--$j]; //#21436
-            $put($k[--$j], _fZ, ((_fY < 0 ? _fW >>> -_fY : _fW << _fY)) & 1); //#21436
+            var _fZ = $_.fmtval; //#21436
+            var _fb = -(14 - $_.i); //#21436
+            var _fc = $k[--$j]; //#21436
+            $put($k[--$j], _fc, ((_fb < 0 ? _fZ >>> -_fb : _fZ << _fb)) & 1); //#21436
         } //#21436
     } //#21436
     if ($eq($_.format, "rmqr")) { //#21448
         $k[$j++] = 'fmtvalu'; //#21440
         $search("MH", $_.eclevel); //#21440
         $j--; //#21440
-        var _fd = $k[--$j]; //#21440
-        var _fe = $k[--$j]; //#21440
-        $k[$j++] = _fd.length; //#21440
-        $k[$j++] = _fe; //#21440
-        $j--; //#21440
-        var _ff = $k[--$j]; //#21440
         var _fg = $k[--$j]; //#21440
-        $k[$j++] = _ff; //#21440
-        $k[$j++] = _fg; //#21440
-        $j--; //#21440
         var _fh = $k[--$j]; //#21440
-        $_[$k[--$j]] = (_fh << 5) + $_.verind; //#21440
+        $k[$j++] = _fg.length; //#21440
+        $k[$j++] = _fh; //#21440
+        $j--; //#21440
+        var _fi = $k[--$j]; //#21440
+        var _fj = $k[--$j]; //#21440
+        $k[$j++] = _fi; //#21440
+        $k[$j++] = _fj; //#21440
+        $j--; //#21440
+        var _fk = $k[--$j]; //#21440
+        $_[$k[--$j]] = (_fk << 5) + $_.verind; //#21440
         $_.fmtval1 = $get($_.fmtvalsrmqr1, $_.fmtvalu); //#21441
         $_.fmtval2 = $get($_.fmtvalsrmqr2, $_.fmtvalu); //#21442
-        for (var _fs = 0, _fr = $_.formatmap.length - 1; _fs <= _fr; _fs += 1) { //#21447
-            $_.i = _fs; //#21444
+        for (var _fv = 0, _fu = $_.formatmap.length - 1; _fv <= _fu; _fv += 1) { //#21447
+            $_.i = _fv; //#21444
             $k[$j++] = $_.pixs; //#21445
             $aload($get($get($_.formatmap, $_.i), 0)); //#21445
             $_.qmv(); //#21445
-            var _fy = $_.fmtval1; //#21445
-            var _g0 = -(17 - $_.i); //#21445
-            var _g1 = $k[--$j]; //#21445
-            $put($k[--$j], _g1, ((_g0 < 0 ? _fy >>> -_g0 : _fy << _g0)) & 1); //#21445
+            var _g1 = $_.fmtval1; //#21445
+            var _g3 = -(17 - $_.i); //#21445
+            var _g4 = $k[--$j]; //#21445
+            $put($k[--$j], _g4, ((_g3 < 0 ? _g1 >>> -_g3 : _g1 << _g3)) & 1); //#21445
             $k[$j++] = $_.pixs; //#21446
             $aload($get($get($_.formatmap, $_.i), 1)); //#21446
             $_.qmv(); //#21446
-            var _g8 = $_.fmtval2; //#21446
-            var _gA = -(17 - $_.i); //#21446
-            var _gB = $k[--$j]; //#21446
-            $put($k[--$j], _gB, ((_gA < 0 ? _g8 >>> -_gA : _g8 << _gA)) & 1); //#21446
+            var _gB = $_.fmtval2; //#21446
+            var _gD = -(17 - $_.i); //#21446
+            var _gE = $k[--$j]; //#21446
+            $put($k[--$j], _gE, ((_gD < 0 ? _gB >>> -_gD : _gB << _gD)) & 1); //#21446
         } //#21446
     } //#21446
     if (!bwipp_qrcode.__21459__) { //#21459
@@ -26472,17 +26553,17 @@ function bwipp_qrcode() {
     } //#21458
     if ($eq($_.format, "full") && ($_.cols >= 45)) { //#21468
         $_.verval = $get($_.vervals, (~~($f($_.cols - 17) / 4)) - 7); //#21461
-        for (var _gM = 0, _gL = $_.versionmap.length - 1; _gM <= _gL; _gM += 1) { //#21467
-            $_.i = _gM; //#21463
+        for (var _gP = 0, _gO = $_.versionmap.length - 1; _gP <= _gO; _gP += 1) { //#21467
+            $_.i = _gP; //#21463
             $forall($get($_.versionmap, $_.i), function() { //#21466
-                var _gR = $k[--$j]; //#21465
+                var _gU = $k[--$j]; //#21465
                 $k[$j++] = $_.pixs; //#21465
-                $forall(_gR); //#21465
+                $forall(_gU); //#21465
                 $_.qmv(); //#21465
-                var _gS = $_.verval; //#21465
-                var _gU = -(17 - $_.i); //#21465
-                var _gV = $k[--$j]; //#21465
-                $put($k[--$j], _gV, ((_gU < 0 ? _gS >>> -_gU : _gS << _gU)) & 1); //#21465
+                var _gV = $_.verval; //#21465
+                var _gX = -(17 - $_.i); //#21465
+                var _gY = $k[--$j]; //#21465
+                $put($k[--$j], _gY, ((_gX < 0 ? _gV >>> -_gX : _gV << _gX)) & 1); //#21465
             }); //#21465
         } //#21465
     } //#21465
@@ -26525,8 +26606,8 @@ function bwipp_qrcode() {
     } //#21481
     $k[$j++] = 'opt'; //#21482
     $k[$j++] = $_.options; //#21482
-    var _gh = $d(); //#21482
-    $k[$j++] = _gh; //#21485
+    var _gk = $d(); //#21482
+    $k[$j++] = _gk; //#21485
     if (!$_.dontdraw) { //#21485
         bwipp_renmatrix(); //#21485
     } //#21485
@@ -26715,7 +26796,7 @@ function bwipp_maxicode() {
             bwipp_raiseerror(); //#21773
         } //#21773
     } //#21773
-    bwipp_loadctx(bwipp_maxicode) //#21777
+    bwipp_loadctx(bwipp_maxicode); //#21777
     var _H = new Map([
         ["parse", $_.parse],
         ["parsefnc", $_.parsefnc],
@@ -27044,21 +27125,8 @@ function bwipp_maxicode() {
                     $k[$j++] = _58; //#22044
                 } //#22044
                 $astore($a(6)); //#22044
-                var _5A = $k[--$j]; //#22044
-                var _5B = $k[--$j]; //#22044
-                var _5C = $k[--$j]; //#22044
-                var _5D = $k[--$j]; //#22044
-                var _5E = $k[--$j]; //#22044
-                var _5F = $k[--$j]; //#22044
-                var _5G = $k[--$j]; //#22044
-                $k[$j++] = _5A; //#22044
-                $k[$j++] = _5G; //#22044
-                $k[$j++] = _5F; //#22044
-                $k[$j++] = _5E; //#22044
-                $k[$j++] = _5D; //#22044
-                $k[$j++] = _5C; //#22044
-                $k[$j++] = _5B; //#22044
-                for (var _5H = 0, _5I = 6; _5H < _5I; _5H++) { //#22044
+                $r(7, 1); //#22044
+                for (var _5A = 0, _5B = 6; _5A < _5B; _5A++) { //#22044
                     $j--; //#22044
                 } //#22044
                 $puti($_.out, $_.j, $k[--$j]); //#22045
@@ -27073,28 +27141,28 @@ function bwipp_maxicode() {
             } else { //#22053
                 $k[$j++] = -99; //#22053
             } //#22053
-            var _5W = $k[--$j]; //#22053
-            $_[$k[--$j]] = _5W; //#22053
+            var _5P = $k[--$j]; //#22053
+            $_[$k[--$j]] = _5P; //#22053
             $k[$j++] = 'char3'; //#22054
             if (($_.i + 2) < $_.msglen) { //#22054
                 $k[$j++] = $get($_.msg, $_.i + 2); //#22054
             } else { //#22054
                 $k[$j++] = -99; //#22054
             } //#22054
-            var _5d = $k[--$j]; //#22054
-            $_[$k[--$j]] = _5d; //#22054
-            var _5i = $get($_[$_.cset], $_.char1) !== undefined; //#22057
-            if (_5i) { //#22061
+            var _5W = $k[--$j]; //#22054
+            $_[$k[--$j]] = _5W; //#22054
+            var _5b = $get($_[$_.cset], $_.char1) !== undefined; //#22057
+            if (_5b) { //#22061
                 $k[$j++] = $_.char1; //#22058
                 $k[$j++] = $_[$_.cset]; //#22058
                 $_.enc(); //#22058
                 $_.i = $_.i + 1; //#22059
                 break; //#22060
             } //#22060
-            var _5q = $get($_.setb, $_.char1) !== undefined; //#22064
-            if ($eq($_.cset, "seta") && _5q) { //#22074
-                var _5t = $get($_.setb, $_.char2) !== undefined; //#22065
-                if (_5t) { //#22071
+            var _5j = $get($_.setb, $_.char1) !== undefined; //#22064
+            if ($eq($_.cset, "seta") && _5j) { //#22074
+                var _5m = $get($_.setb, $_.char2) !== undefined; //#22065
+                if (_5m) { //#22071
                     $k[$j++] = $_.lb; //#22066
                     $k[$j++] = $_.seta; //#22066
                     $_.enc(); //#22066
@@ -27110,26 +27178,26 @@ function bwipp_maxicode() {
                 } //#22071
                 break; //#22073
             } //#22073
-            var _64 = $get($_.seta, $_.char1) !== undefined; //#22077
-            if ($eq($_.cset, "setb") && _64) { //#22102
-                var _65 = $_.seta; //#22078
-                var _66 = $_.msg; //#22078
-                var _67 = $_.i; //#22078
-                var _68 = $_.msglen; //#22078
-                var _69 = $_.i; //#22078
-                var _6A = _68 - _69; //#22078
-                var _6B = 4; //#22078
-                if (4 > (_68 - _69)) { //#22078
-                    var _ = _6A; //#22078
-                    _6A = _6B; //#22078
-                    _6B = _; //#22078
+            var _5x = $get($_.seta, $_.char1) !== undefined; //#22077
+            if ($eq($_.cset, "setb") && _5x) { //#22102
+                var _5y = $_.seta; //#22078
+                var _5z = $_.msg; //#22078
+                var _60 = $_.i; //#22078
+                var _61 = $_.msglen; //#22078
+                var _62 = $_.i; //#22078
+                var _63 = _61 - _62; //#22078
+                var _64 = 4; //#22078
+                if (4 > (_61 - _62)) { //#22078
+                    var _ = _63; //#22078
+                    _63 = _64; //#22078
+                    _64 = _; //#22078
                 } //#22078
                 $k[$j++] = 'p'; //#22078
-                $k[$j++] = _65; //#22078
-                $k[$j++] = $geti(_66, _67, _6B); //#22078
+                $k[$j++] = _5y; //#22078
+                $k[$j++] = $geti(_5z, _60, _64); //#22078
                 $_.prefixinset(); //#22078
-                var _6D = $k[--$j]; //#22078
-                $_[$k[--$j]] = _6D; //#22078
+                var _66 = $k[--$j]; //#22078
+                $_[$k[--$j]] = _66; //#22078
                 if ($_.p == 1) { //#22083
                     $k[$j++] = $_.sa; //#22080
                     $k[$j++] = $_.setb; //#22080
@@ -27174,58 +27242,58 @@ function bwipp_maxicode() {
                 } //#22099
                 break; //#22101
             } //#22101
-            var _6i = $get($_.seta, $_.char1) !== undefined; //#22105
-            if (_6i) { //#22109
+            var _6b = $get($_.seta, $_.char1) !== undefined; //#22105
+            if (_6b) { //#22109
                 $k[$j++] = $_.la; //#22106
                 $k[$j++] = $_[$_.cset]; //#22106
                 $_.enc(); //#22106
                 $_.cset = "seta"; //#22107
                 break; //#22108
             } //#22108
-            var _6o = $get($_.setb, $_.char1) !== undefined; //#22110
-            if (_6o) { //#22114
+            var _6h = $get($_.setb, $_.char1) !== undefined; //#22110
+            if (_6h) { //#22114
                 $k[$j++] = $_.lb; //#22111
                 $k[$j++] = $_[$_.cset]; //#22111
                 $_.enc(); //#22111
                 $_.cset = "setb"; //#22112
                 break; //#22113
             } //#22113
-            var _6u = $get($_.setc, $_.char1) !== undefined; //#22117
-            if (_6u) { //#22117
+            var _6n = $get($_.setc, $_.char1) !== undefined; //#22117
+            if (_6n) { //#22117
                 $_.setx = "setc"; //#22117
                 $_.sx = $_.sc; //#22117
                 $_.lkx = $_.lkc; //#22117
             } //#22117
-            var _6z = $get($_.setd, $_.char1) !== undefined; //#22118
-            if (_6z) { //#22118
+            var _6s = $get($_.setd, $_.char1) !== undefined; //#22118
+            if (_6s) { //#22118
                 $_.setx = "setd"; //#22118
                 $_.sx = $_.sd; //#22118
                 $_.lkx = $_.lkd; //#22118
             } //#22118
-            var _74 = $get($_.sete, $_.char1) !== undefined; //#22119
-            if (_74) { //#22119
+            var _6x = $get($_.sete, $_.char1) !== undefined; //#22119
+            if (_6x) { //#22119
                 $_.setx = "sete"; //#22119
                 $_.sx = $_.se; //#22119
                 $_.lkx = $_.lke; //#22119
             } //#22119
-            var _78 = $_[$_.setx]; //#22122
-            var _79 = $_.msg; //#22122
-            var _7A = $_.i; //#22122
-            var _7B = $_.msglen; //#22122
-            var _7C = $_.i; //#22122
-            var _7D = _7B - _7C; //#22122
-            var _7E = 4; //#22122
-            if (4 > (_7B - _7C)) { //#22122
-                var _ = _7D; //#22122
-                _7D = _7E; //#22122
-                _7E = _; //#22122
+            var _71 = $_[$_.setx]; //#22122
+            var _72 = $_.msg; //#22122
+            var _73 = $_.i; //#22122
+            var _74 = $_.msglen; //#22122
+            var _75 = $_.i; //#22122
+            var _76 = _74 - _75; //#22122
+            var _77 = 4; //#22122
+            if (4 > (_74 - _75)) { //#22122
+                var _ = _76; //#22122
+                _76 = _77; //#22122
+                _77 = _; //#22122
             } //#22122
             $k[$j++] = 'p'; //#22122
-            $k[$j++] = _78; //#22122
-            $k[$j++] = $geti(_79, _7A, _7E); //#22122
+            $k[$j++] = _71; //#22122
+            $k[$j++] = $geti(_72, _73, _77); //#22122
             $_.prefixinset(); //#22122
-            var _7G = $k[--$j]; //#22122
-            $_[$k[--$j]] = _7G; //#22122
+            var _79 = $k[--$j]; //#22122
+            $_[$k[--$j]] = _79; //#22122
             if ($_.p == 1) { //#22127
                 $k[$j++] = $_.sx; //#22124
                 $k[$j++] = $_[$_.cset]; //#22124
@@ -27291,8 +27359,8 @@ function bwipp_maxicode() {
     } else { //#22157
         $k[$j++] = $a([]); //#22157
     } //#22157
-    var _8L = $k[--$j]; //#22157
-    $_[$k[--$j]] = _8L; //#22157
+    var _8E = $k[--$j]; //#22157
+    $_[$k[--$j]] = _8E; //#22157
     $k[$j++] = Infinity; //#22158
     $aload($_.sami); //#22158
     $aload($_.encmsg); //#22158
@@ -27303,47 +27371,47 @@ function bwipp_maxicode() {
             $k[$j++] = "The secondary message is too long"; //#22164
             bwipp_raiseerror(); //#22164
         } //#22164
-        var _8U = $strcpy($s(4), "0000"); //#22168
-        var _8X = $cvrs($s(4), ~~$_.mode, 2); //#22168
-        $puti(_8U, 4 - _8X.length, _8X); //#22168
-        $_.mdb = _8U; //#22168
-        var _8Z = $strcpy($s(10), "0000000000"); //#22169
-        var _8c = $cvrs($s(10), $cvi($_.ccode), 2); //#22169
-        $puti(_8Z, 10 - _8c.length, _8c); //#22169
-        $_.ccb = _8Z; //#22169
-        var _8e = $strcpy($s(10), "0000000000"); //#22170
-        var _8h = $cvrs($s(10), $cvi($_.scode), 2); //#22170
-        $puti(_8e, 10 - _8h.length, _8h); //#22170
-        $_.scb = _8e; //#22170
+        var _8N = $strcpy($s(4), "0000"); //#22168
+        var _8Q = $cvrs($s(4), ~~$_.mode, 2); //#22168
+        $puti(_8N, 4 - _8Q.length, _8Q); //#22168
+        $_.mdb = _8N; //#22168
+        var _8S = $strcpy($s(10), "0000000000"); //#22169
+        var _8V = $cvrs($s(10), $cvi($_.ccode), 2); //#22169
+        $puti(_8S, 10 - _8V.length, _8V); //#22169
+        $_.ccb = _8S; //#22169
+        var _8X = $strcpy($s(10), "0000000000"); //#22170
+        var _8a = $cvrs($s(10), $cvi($_.scode), 2); //#22170
+        $puti(_8X, 10 - _8a.length, _8a); //#22170
+        $_.scb = _8X; //#22170
         $_.pcb = $strcpy($s(36), "000000000000000000000000000000000000"); //#22171
         if ($_.mode == 2) { //#22184
-            var _8o = $cvrs($s(6), $_.pcode.length, 2); //#22174
-            $puti($_.pcb, 6 - _8o.length, _8o); //#22174
-            var _8s = $cvrs($s(30), $cvi($_.pcode), 2); //#22175
-            $puti($_.pcb, 36 - _8s.length, _8s); //#22175
+            var _8h = $cvrs($s(6), $_.pcode.length, 2); //#22174
+            $puti($_.pcb, 6 - _8h.length, _8h); //#22174
+            var _8l = $cvrs($s(30), $cvi($_.pcode), 2); //#22175
+            $puti($_.pcb, 36 - _8l.length, _8l); //#22175
         } else { //#22184
             $k[$j++] = Infinity; //#22178
-            var _8u = $strcpy($s(6), "      "); //#22179
-            $k[$j++] = _8u; //#22179
-            $k[$j++] = _8u; //#22179
+            var _8n = $strcpy($s(6), "      "); //#22179
+            $k[$j++] = _8n; //#22179
+            $k[$j++] = _8n; //#22179
             $k[$j++] = 0; //#22179
             if ($_.pcode.length > 6) { //#22179
                 $k[$j++] = $geti($_.pcode, 0, 6); //#22179
             } else { //#22179
                 $k[$j++] = $_.pcode; //#22179
             } //#22179
-            var _8z = $k[--$j]; //#22179
-            var _90 = $k[--$j]; //#22179
-            $puti($k[--$j], _90, _8z); //#22179
+            var _8s = $k[--$j]; //#22179
+            var _8t = $k[--$j]; //#22179
+            $puti($k[--$j], _8t, _8s); //#22179
             $forall($k[--$j], function() { //#22180
-                var _95 = $get($_.seta, $k[--$j]); //#22180
-                $k[$j++] = _95; //#22180
+                var _8y = $get($_.seta, $k[--$j]); //#22180
+                $k[$j++] = _8y; //#22180
             }); //#22180
             $_.pccw = $a(); //#22180
-            for (var _97 = 0; _97 <= 5; _97 += 1) { //#22185
-                $_.i = _97; //#22183
-                var _9D = $cvrs($s(6), $get($_.pccw, $_.i), 2); //#22184
-                $puti($_.pcb, ((6 * $_.i) + 6) - _9D.length, _9D); //#22184
+            for (var _90 = 0; _90 <= 5; _90 += 1) { //#22185
+                $_.i = _90; //#22183
+                var _96 = $cvrs($s(6), $get($_.pccw, $_.i), 2); //#22184
+                $puti($_.pcb, ((6 * $_.i) + 6) - _96.length, _96); //#22184
             } //#22184
         } //#22184
         $_.scm = $s(60); //#22189
@@ -27361,14 +27429,14 @@ function bwipp_maxicode() {
         $puti($_.scm, 54, $geti($_.scb, 0, 6)); //#22201
         $puti($_.scm, 48, $geti($_.scb, 6, 4)); //#22202
         $_.pri = $a([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); //#22205
-        for (var _9t = 0; _9t <= 59; _9t += 1) { //#22211
-            $_.i = _9t; //#22207
+        for (var _9m = 0; _9m <= 59; _9m += 1) { //#22211
+            $_.i = _9m; //#22207
             $_.ps = ~~($_.i / 6); //#22208
             $_.ep = (~~(Math.pow(2, 5 - ($_.i % 6)))) * ($get($_.scm, $_.i) - 48); //#22209
             $put($_.pri, $_.ps, $f($get($_.pri, $_.ps) + $_.ep)); //#22210
         } //#22210
         $k[$j++] = Infinity; //#22214
-        for (var _A5 = 0, _A6 = 84; _A5 < _A6; _A5++) { //#22214
+        for (var _9y = 0, _9z = 84; _9y < _9z; _9y++) { //#22214
             $k[$j++] = $_.padval; //#22214
         } //#22214
         $_.sec = $a(); //#22214
@@ -27376,12 +27444,12 @@ function bwipp_maxicode() {
     } //#22215
     if (((($_.mode == 4) || ($_.mode == 5)) || ($_.mode == 6)) || ($_.mode == -1)) { //#22238
         if ($_.mode == -1) { //#22225
-            var _AH = ($_.encmsg.length <= 77) ? 5 : 4; //#22224
-            $_.mode = _AH; //#22224
+            var _AA = ($_.encmsg.length <= 77) ? 5 : 4; //#22224
+            $_.mode = _AA; //#22224
         } //#22224
         $k[$j++] = Infinity; //#22227
-        var _AJ = ($_.mode == 5) ? 78 : 94; //#22227
-        for (var _AK = 0, _AL = _AJ; _AK < _AL; _AK++) { //#22227
+        var _AC = ($_.mode == 5) ? 78 : 94; //#22227
+        for (var _AD = 0, _AE = _AC; _AD < _AE; _AD++) { //#22227
             $k[$j++] = $_.padval; //#22227
         } //#22227
         $_.cws = $a(); //#22227
@@ -27399,34 +27467,34 @@ function bwipp_maxicode() {
         $_ = Object.create($_); //#22245
         $k[$j++] = Infinity; //#22242
         $k[$j++] = 1; //#22242
-        for (var _AZ = 0, _Aa = 63; _AZ < _Aa; _AZ++) { //#22242
-            var _Ab = $k[--$j]; //#22242
-            var _Ac = _Ab * 2; //#22242
-            $k[$j++] = _Ab; //#22242
-            $k[$j++] = _Ac; //#22242
-            if (_Ac >= 64) { //#22242
-                var _Ad = $k[--$j]; //#22242
-                $k[$j++] = _Ad ^ 67; //#22242
+        for (var _AS = 0, _AT = 63; _AS < _AT; _AS++) { //#22242
+            var _AU = $k[--$j]; //#22242
+            var _AV = _AU * 2; //#22242
+            $k[$j++] = _AU; //#22242
+            $k[$j++] = _AV; //#22242
+            if (_AV >= 64) { //#22242
+                var _AW = $k[--$j]; //#22242
+                $k[$j++] = _AW ^ 67; //#22242
             } //#22242
         } //#22242
         $_.rsalog = $a(); //#22242
         $_.rslog = $a(64); //#22243
-        for (var _Ag = 1; _Ag <= 63; _Ag += 1) { //#22244
-            $put($_.rslog, $get($_.rsalog, _Ag), _Ag); //#22244
+        for (var _AZ = 1; _AZ <= 63; _AZ += 1) { //#22244
+            $put($_.rslog, $get($_.rsalog, _AZ), _AZ); //#22244
         } //#22244
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_maxicode.$ctx[id] = $_[id]); //#22244
         bwipp_maxicode.__22245__ = 1; //#22244
         $_ = Object.getPrototypeOf($_); //#22244
     } //#22244
     $_.rsprod = function() {
-        var _Al = $k[--$j]; //#22249
-        var _Am = $k[--$j]; //#22249
-        $k[$j++] = _Am; //#22253
-        $k[$j++] = _Al; //#22253
-        if ((_Al != 0) && (_Am != 0)) { //#22252
-            var _Ap = $get($_.rslog, $k[--$j]); //#22250
-            var _Au = $get($_.rsalog, $f(_Ap + $get($_.rslog, $k[--$j])) % 63); //#22250
-            $k[$j++] = _Au; //#22250
+        var _Ae = $k[--$j]; //#22249
+        var _Af = $k[--$j]; //#22249
+        $k[$j++] = _Af; //#22253
+        $k[$j++] = _Ae; //#22253
+        if ((_Ae != 0) && (_Af != 0)) { //#22252
+            var _Ai = $get($_.rslog, $k[--$j]); //#22250
+            var _An = $get($_.rsalog, $f(_Ai + $get($_.rslog, $k[--$j])) % 63); //#22250
+            $k[$j++] = _An; //#22250
         } else { //#22252
             $j -= 2; //#22252
             $k[$j++] = 0; //#22252
@@ -27437,54 +27505,54 @@ function bwipp_maxicode() {
         $_.cwb = $k[--$j]; //#22260
         $k[$j++] = Infinity; //#22263
         $k[$j++] = 1; //#22263
-        for (var _Ay = 0, _Az = $_.rsnum; _Ay < _Az; _Ay++) { //#22263
+        for (var _Ar = 0, _As = $_.rsnum; _Ar < _As; _Ar++) { //#22263
             $k[$j++] = 0; //#22263
         } //#22263
         $_.coeffs = $a(); //#22263
-        for (var _B3 = 1, _B2 = $_.rsnum; _B3 <= _B2; _B3 += 1) { //#22272
-            $_.i = _B3; //#22265
+        for (var _Aw = 1, _Av = $_.rsnum; _Aw <= _Av; _Aw += 1) { //#22272
+            $_.i = _Aw; //#22265
             $put($_.coeffs, $_.i, $get($_.coeffs, $_.i - 1)); //#22266
-            for (var _BA = $_.i - 1; _BA >= 1; _BA -= 1) { //#22270
-                $_.j = _BA; //#22268
+            for (var _B3 = $_.i - 1; _B3 >= 1; _B3 -= 1) { //#22270
+                $_.j = _B3; //#22268
                 $k[$j++] = $_.coeffs; //#22269
                 $k[$j++] = $_.j; //#22269
                 $k[$j++] = $get($_.coeffs, $_.j - 1); //#22269
                 $k[$j++] = $get($_.coeffs, $_.j); //#22269
                 $k[$j++] = $get($_.rsalog, $_.i); //#22269
                 $_.rsprod(); //#22269
-                var _BM = $k[--$j]; //#22269
-                var _BN = $k[--$j]; //#22269
-                var _BO = $k[--$j]; //#22269
-                $put($k[--$j], _BO, $xo(_BN, _BM)); //#22269
+                var _BF = $k[--$j]; //#22269
+                var _BG = $k[--$j]; //#22269
+                var _BH = $k[--$j]; //#22269
+                $put($k[--$j], _BH, $xo(_BG, _BF)); //#22269
             } //#22269
             $k[$j++] = $_.coeffs; //#22271
             $k[$j++] = 0; //#22271
             $k[$j++] = $get($_.coeffs, 0); //#22271
             $k[$j++] = $get($_.rsalog, $_.i); //#22271
             $_.rsprod(); //#22271
-            var _BW = $k[--$j]; //#22271
-            var _BX = $k[--$j]; //#22271
-            $put($k[--$j], _BX, _BW); //#22271
+            var _BP = $k[--$j]; //#22271
+            var _BQ = $k[--$j]; //#22271
+            $put($k[--$j], _BQ, _BP); //#22271
         } //#22271
         $_.coeffs = $geti($_.coeffs, 0, $_.coeffs.length - 1); //#22273
         $k[$j++] = Infinity; //#22276
-        for (var _Bd = 0, _Be = $_.rsnum; _Bd < _Be; _Bd++) { //#22276
+        for (var _BW = 0, _BX = $_.rsnum; _BW < _BX; _BW++) { //#22276
             $k[$j++] = 0; //#22276
         } //#22276
         $_.ecb = $a(); //#22276
-        for (var _Bi = 0, _Bh = $_.cwb.length - 1; _Bi <= _Bh; _Bi += 1) { //#22285
-            $_.t = $xo($get($_.cwb, _Bi), $get($_.ecb, 0)); //#22278
-            for (var _Bo = $_.ecb.length - 1; _Bo >= 0; _Bo -= 1) { //#22284
-                $_.i = _Bo; //#22280
+        for (var _Bb = 0, _Ba = $_.cwb.length - 1; _Bb <= _Ba; _Bb += 1) { //#22285
+            $_.t = $xo($get($_.cwb, _Bb), $get($_.ecb, 0)); //#22278
+            for (var _Bh = $_.ecb.length - 1; _Bh >= 0; _Bh -= 1) { //#22284
+                $_.i = _Bh; //#22280
                 $_.p = ($_.ecb.length - $_.i) - 1; //#22281
                 $k[$j++] = $_.ecb; //#22282
                 $k[$j++] = $_.p; //#22282
                 $k[$j++] = $_.t; //#22282
                 $k[$j++] = $get($_.coeffs, $_.i); //#22282
                 $_.rsprod(); //#22282
-                var _Bx = $k[--$j]; //#22282
-                var _By = $k[--$j]; //#22282
-                $put($k[--$j], _By, _Bx); //#22282
+                var _Bq = $k[--$j]; //#22282
+                var _Br = $k[--$j]; //#22282
+                $put($k[--$j], _Br, _Bq); //#22282
                 if ($_.i > 0) { //#22283
                     $put($_.ecb, $_.p, $xo($get($_.ecb, $_.p + 1), $get($_.ecb, $_.p))); //#22283
                 } //#22283
@@ -27493,33 +27561,33 @@ function bwipp_maxicode() {
         $k[$j++] = $_.ecb; //#22287
     }; //#22287
     $k[$j++] = Infinity; //#22292
-    for (var _CC = 0, _CB = $_.sec.length - 1; _CC <= _CB; _CC += 2) { //#22292
-        $k[$j++] = $get($_.sec, _CC); //#22292
+    for (var _C5 = 0, _C4 = $_.sec.length - 1; _C5 <= _C4; _C5 += 2) { //#22292
+        $k[$j++] = $get($_.sec, _C5); //#22292
     } //#22292
     $_.seco = $a(); //#22292
     $k[$j++] = Infinity; //#22293
-    for (var _CI = 1, _CH = $_.sec.length - 1; _CI <= _CH; _CI += 2) { //#22293
-        $k[$j++] = $get($_.sec, _CI); //#22293
+    for (var _CB = 1, _CA = $_.sec.length - 1; _CB <= _CA; _CB += 2) { //#22293
+        $k[$j++] = $get($_.sec, _CB); //#22293
     } //#22293
     $_.sece = $a(); //#22293
-    var _CN = ($_.sec.length == 84) ? 20 : 28; //#22296
-    $_.scodes = _CN; //#22296
+    var _CG = ($_.sec.length == 84) ? 20 : 28; //#22296
+    $_.scodes = _CG; //#22296
     $k[$j++] = 'secochk'; //#22297
     $k[$j++] = $_.seco; //#22297
     $k[$j++] = $_.scodes; //#22297
     $_.rscodes(); //#22297
-    var _CQ = $k[--$j]; //#22297
-    $_[$k[--$j]] = _CQ; //#22297
+    var _CJ = $k[--$j]; //#22297
+    $_[$k[--$j]] = _CJ; //#22297
     $k[$j++] = 'secechk'; //#22298
     $k[$j++] = $_.sece; //#22298
     $k[$j++] = $_.scodes; //#22298
     $_.rscodes(); //#22298
-    var _CU = $k[--$j]; //#22298
-    $_[$k[--$j]] = _CU; //#22298
+    var _CN = $k[--$j]; //#22298
+    $_[$k[--$j]] = _CN; //#22298
     $k[$j++] = Infinity; //#22301
-    for (var _CY = 0, _CX = $_.scodes - 1; _CY <= _CX; _CY += 1) { //#22301
-        $k[$j++] = $get($_.secochk, _CY); //#22301
-        $k[$j++] = $get($_.secechk, _CY); //#22301
+    for (var _CR = 0, _CQ = $_.scodes - 1; _CR <= _CQ; _CR += 1) { //#22301
+        $k[$j++] = $get($_.secochk, _CR); //#22301
+        $k[$j++] = $get($_.secechk, _CR); //#22301
     } //#22301
     $_.secchk = $a(); //#22301
     $k[$j++] = Infinity; //#22304
@@ -27532,16 +27600,16 @@ function bwipp_maxicode() {
     $aload($_.secchk); //#22308
     $_.codewords = $a(); //#22308
     $k[$j++] = Infinity; //#22312
-    for (var _Ck = 0, _Cl = 864; _Ck < _Cl; _Ck++) { //#22312
+    for (var _Cd = 0, _Ce = 864; _Cd < _Ce; _Cd++) { //#22312
         $k[$j++] = 0; //#22312
     } //#22312
     $_.mods = $a(); //#22312
-    for (var _Cn = 0; _Cn <= 143; _Cn += 1) { //#22317
-        $_.i = _Cn; //#22314
+    for (var _Cg = 0; _Cg <= 143; _Cg += 1) { //#22317
+        $_.i = _Cg; //#22314
         $k[$j++] = Infinity; //#22315
-        var _Cs = $cvrs($s(6), $get($_.codewords, $_.i), 2); //#22315
-        for (var _Ct = 0, _Cu = _Cs.length; _Ct < _Cu; _Ct++) { //#22315
-            $k[$j++] = $get(_Cs, _Ct) - 48; //#22315
+        var _Cl = $cvrs($s(6), $get($_.codewords, $_.i), 2); //#22315
+        for (var _Cm = 0, _Cn = _Cl.length; _Cm < _Cn; _Cm++) { //#22315
+            $k[$j++] = $get(_Cl, _Cm) - 48; //#22315
         } //#22315
         $_.cw = $a(); //#22315
         $puti($_.mods, (6 * $_.i) + (6 - $_.cw.length), $_.cw); //#22316
@@ -27555,8 +27623,8 @@ function bwipp_maxicode() {
     } //#22366
     $_.pixs = $a(864); //#22370
     $_.j = 0; //#22371
-    for (var _D6 = 0, _D5 = $_.mods.length - 1; _D6 <= _D5; _D6 += 1) { //#22378
-        $_.i = _D6; //#22373
+    for (var _Cz = 0, _Cy = $_.mods.length - 1; _Cz <= _Cy; _Cz += 1) { //#22378
+        $_.i = _Cz; //#22373
         if ($get($_.mods, $_.i) == 1) { //#22377
             $put($_.pixs, $_.j, $get($_.modmap, $_.i)); //#22375
             $_.j = $_.j + 1; //#22376
@@ -27578,7 +27646,7 @@ function bwipp_maxicode() {
     $k[$j++] = 677; //#22379
     $k[$j++] = 707; //#22379
     $_.pixs = $a(); //#22379
-    var _DM = new Map([
+    var _DF = new Map([
         ["ren", 'renmaximatrix'],
         ["pixs", $_.pixs],
         ["borderleft", 1],
@@ -27587,7 +27655,7 @@ function bwipp_maxicode() {
         ["borderbottom", 1],
         ["opt", $_.options]
     ]); //#22389
-    $k[$j++] = _DM; //#22392
+    $k[$j++] = _DF; //#22392
     if (!$_.dontdraw) { //#22392
         bwipp_renmaximatrix(); //#22392
     } //#22392
@@ -27609,7 +27677,7 @@ function bwipp_azteccode() {
     bwipp_processoptions(); //#22440
     $_.options = $k[--$j]; //#22440
     $_.barcode = $k[--$j]; //#22441
-    bwipp_loadctx(bwipp_azteccode) //#22443
+    bwipp_loadctx(bwipp_azteccode); //#22443
     if ($eq($_.barcode, "")) { //#22447
         $k[$j++] = 'bwipp.aztecEmptyData#22446'; //#22446
         $k[$j++] = "The data must not be empty"; //#22446
@@ -28050,85 +28118,89 @@ function bwipp_azteccode() {
                 $k[$j++] = _9T; //#22808
             } //#22808
             var _9U = $k[--$j]; //#22809
-            var _9X = $cvrs($s(_9U.length), $k[--$j], 2); //#22809
-            $puti(_9U, _9U.length - _9X.length, _9X); //#22809
             $k[$j++] = _9U; //#22809
+            $k[$j++] = _9U; //#22809
+            $r(3, -1); //#22809
+            var _9V = $k[--$j]; //#22809
+            var _9W = $k[--$j]; //#22809
+            var _9Y = $cvrs($s(_9W.length), _9V, 2); //#22809
+            $puti(_9W, _9W.length - _9Y.length, _9Y); //#22809
         }; //#22809
         $_.encu = function() {
-            var _9c = $get($get($_.charvals, $_.U), $k[--$j]); //#22812
-            $k[$j++] = _9c; //#22812
+            var _9d = $get($get($_.charvals, $_.U), $k[--$j]); //#22812
+            $k[$j++] = _9d; //#22812
             $k[$j++] = 5; //#22812
             $_.tobin(); //#22812
         }; //#22812
         $_.encl = function() {
-            var _9h = $get($get($_.charvals, $_.L), $k[--$j]); //#22813
-            $k[$j++] = _9h; //#22813
+            var _9i = $get($get($_.charvals, $_.L), $k[--$j]); //#22813
+            $k[$j++] = _9i; //#22813
             $k[$j++] = 5; //#22813
             $_.tobin(); //#22813
         }; //#22813
         $_.encm = function() {
-            var _9m = $get($get($_.charvals, $_.M), $k[--$j]); //#22814
-            $k[$j++] = _9m; //#22814
+            var _9n = $get($get($_.charvals, $_.M), $k[--$j]); //#22814
+            $k[$j++] = _9n; //#22814
             $k[$j++] = 5; //#22814
             $_.tobin(); //#22814
         }; //#22814
         $_.encd = function() {
-            var _9r = $get($get($_.charvals, $_.D), $k[--$j]); //#22815
-            $k[$j++] = _9r; //#22815
+            var _9s = $get($get($_.charvals, $_.D), $k[--$j]); //#22815
+            $k[$j++] = _9s; //#22815
             $k[$j++] = 4; //#22815
             $_.tobin(); //#22815
         }; //#22815
         $_.encp = function() {
-            var _9s = $k[--$j]; //#22818
-            $k[$j++] = _9s; //#22835
-            if (_9s == $_.fn1) { //#22834
+            var _9t = $k[--$j]; //#22818
+            $k[$j++] = _9t; //#22835
+            if (_9t == $_.fn1) { //#22834
                 $j--; //#22819
                 $k[$j++] = "00000000"; //#22819
             } else { //#22834
-                var _9u = $k[--$j]; //#22821
-                $k[$j++] = _9u; //#22835
-                if (_9u <= -1000000) { //#22834
-                    var _9w = $f((-$k[--$j]) - 1000000); //#22822
-                    $k[$j++] = _9w; //#22822
-                    $k[$j++] = _9w; //#22822
-                    if (_9w == 0) { //#22822
+                var _9v = $k[--$j]; //#22821
+                $k[$j++] = _9v; //#22835
+                if (_9v <= -1000000) { //#22834
+                    var _9x = $f((-$k[--$j]) - 1000000); //#22822
+                    $k[$j++] = _9x; //#22822
+                    $k[$j++] = _9x; //#22822
+                    if (_9x == 0) { //#22822
                         $j--; //#22822
                         $k[$j++] = 1; //#22822
                     } //#22822
-                    var _9y = ~~(Math.log($k[--$j]) / Math.log(10)); //#22824
-                    var _9z = $s(((_9y + 1) * 4) + 8); //#22824
-                    $puti(_9z, 0, "00000"); //#22825
-                    $k[$j++] = _9y; //#22826
+                    var _9z = ~~(Math.log($k[--$j]) / Math.log(10)); //#22824
+                    var _A0 = $s(((_9z + 1) * 4) + 8); //#22824
+                    $puti(_A0, 0, "00000"); //#22825
                     $k[$j++] = _9z; //#22826
-                    $k[$j++] = _9z; //#22826
-                    $k[$j++] = _9y + 1; //#22826
+                    $k[$j++] = _A0; //#22826
+                    $k[$j++] = _A0; //#22826
+                    $k[$j++] = _9z + 1; //#22826
                     $k[$j++] = 3; //#22826
                     $_.tobin(); //#22826
-                    var _A0 = $k[--$j]; //#22826
-                    $puti($k[--$j], 5, _A0); //#22826
-                    var _A2 = $k[--$j]; //#22827
-                    var _A3 = $k[--$j]; //#22827
-                    var _A4 = $k[--$j]; //#22827
-                    $k[$j++] = _A2; //#22831
-                    $k[$j++] = _A4; //#22831
-                    for (var _A5 = _A3; _A5 >= 0; _A5 -= 1) { //#22831
-                        var _A6 = $k[--$j]; //#22828
-                        var _A7 = $k[--$j]; //#22829
-                        $k[$j++] = _A7; //#22830
-                        $k[$j++] = ~~(_A6 / 10); //#22830
-                        $k[$j++] = _A7; //#22830
-                        $k[$j++] = (_A5 * 4) + 8; //#22830
-                        $k[$j++] = $f((_A6 % 10) + 2); //#22830
+                    var _A1 = $k[--$j]; //#22826
+                    $puti($k[--$j], 5, _A1); //#22826
+                    $r(3, 1); //#22827
+                    $k[$j++] = -1; //#22831
+                    $k[$j++] = 0; //#22831
+                    if ($j < 3) throw "--stack-underflow--"; //#22831
+                    $j -= 3; //#22831
+                    for (var _A6 = $k[$j], _A7 = $k[$j + 1], _A5 = $k[$j + 2]; _A7 < 0 ? _A6 >= _A5 : _A6 <= _A5; _A6 += _A7) { //#22831
+                        var _A8 = $k[--$j]; //#22828
+                        var _A9 = $k[--$j]; //#22829
+                        $k[$j++] = _A9; //#22830
+                        $k[$j++] = ~~(_A8 / 10); //#22830
+                        $k[$j++] = _A9; //#22830
+                        $k[$j++] = (_A6 * 4) + 8; //#22830
+                        $k[$j++] = $f((_A8 % 10) + 2); //#22830
                         $k[$j++] = 4; //#22830
                         $_.tobin(); //#22830
-                        var _A8 = $k[--$j]; //#22830
-                        var _A9 = $k[--$j]; //#22830
-                        $puti($k[--$j], _A9, _A8); //#22830
+                        var _AA = $k[--$j]; //#22830
+                        var _AB = $k[--$j]; //#22830
+                        $puti($k[--$j], _AB, _AA); //#22830
                     } //#22830
                     $j--; //#22832
                 } else { //#22834
-                    var _AF = $get($get($_.charvals, $_.P), $k[--$j]); //#22834
-                    $k[$j++] = _AF; //#22834
+                    var _AH = $get($get($_.charvals, $_.P), $k[--$j]); //#22834
+                    $k[$j++] = _AH; //#22834
                     $k[$j++] = 5; //#22834
                     $_.tobin(); //#22834
                 } //#22834
@@ -28210,7 +28282,7 @@ function bwipp_azteccode() {
                     $_.tobin(); //#22888
                     $_.addtomsgbits(); //#22888
                 } //#22888
-                for (var _BH = 0, _BI = $_.numbytes; _BH < _BI; _BH++) { //#22895
+                for (var _BJ = 0, _BK = $_.numbytes; _BJ < _BK; _BJ++) { //#22895
                     $k[$j++] = $get($_.seq, $_.i); //#22893
                     $k[$j++] = 8; //#22893
                     $_.tobin(); //#22893
@@ -28241,9 +28313,9 @@ function bwipp_azteccode() {
         bwipp_azteccode.__22930__ = 1; //#22929
         $_ = Object.getPrototypeOf($_); //#22929
     } //#22929
-    var _CI = $_.metrics; //#22932
-    for (var _CJ = 0, _CK = _CI.length; _CJ < _CK; _CJ++) { //#22948
-        $_.m = $get(_CI, _CJ); //#22933
+    var _CK = $_.metrics; //#22932
+    for (var _CL = 0, _CM = _CK.length; _CL < _CM; _CL++) { //#22948
+        $_.m = $get(_CK, _CL); //#22933
         $_.frmt = $get($_.m, 0); //#22934
         $_.mlyr = $get($_.m, 1); //#22935
         $_.icap = $get($_.m, 2); //#22936
@@ -28278,12 +28350,12 @@ function bwipp_azteccode() {
     } //#22951
     $_.layers = $_.mlyr; //#22954
     $_.allzero = function() {
-        var _Cp = $k[--$j]; //#22957
-        $k[$j++] = $eq(_Cp, $geti("000000000000", 0, _Cp.length)); //#22957
+        var _Cr = $k[--$j]; //#22957
+        $k[$j++] = $eq(_Cr, $geti("000000000000", 0, _Cr.length)); //#22957
     }; //#22957
     $_.allones = function() {
-        var _Cr = $k[--$j]; //#22958
-        $k[$j++] = $eq(_Cr, $geti("111111111111", 0, _Cr.length)); //#22958
+        var _Ct = $k[--$j]; //#22958
+        $k[$j++] = $eq(_Ct, $geti("111111111111", 0, _Ct.length)); //#22958
     }; //#22958
     $_.cws = $a($_.ncws); //#22959
     $_.m = 0; //#22960
@@ -28307,15 +28379,15 @@ function bwipp_azteccode() {
                 $_.cwf = "0"; //#22967
                 $_.m = $_.m - 1; //#22967
             } //#22967
-            var _DE = $s(12); //#22969
-            $puti(_DE, 0, $_.cwb); //#22969
-            $puti(_DE, $f($_.bpcw - 1), $_.cwf); //#22970
-            $_.cwb = $geti(_DE, 0, $_.bpcw); //#22972
+            var _DG = $s(12); //#22969
+            $puti(_DG, 0, $_.cwb); //#22969
+            $puti(_DG, $f($_.bpcw - 1), $_.cwf); //#22970
+            $_.cwb = $geti(_DG, 0, $_.bpcw); //#22972
         } else { //#22976
             $_.cwb = $geti($_.msgbits, $_.m, $_.msgbits.length - $_.m); //#22974
-            var _DQ = $strcpy($s(12), "111111111111"); //#22975
-            $puti(_DQ, 0, $_.cwb); //#22975
-            $_.cwb = $geti(_DQ, 0, $_.bpcw); //#22975
+            var _DS = $strcpy($s(12), "111111111111"); //#22975
+            $puti(_DS, 0, $_.cwb); //#22975
+            $_.cwb = $geti(_DS, 0, $_.bpcw); //#22975
             $k[$j++] = $_.cwb; //#22976
             $_.allones(); //#22976
             if ($k[--$j]) { //#22976
@@ -28323,8 +28395,8 @@ function bwipp_azteccode() {
             } //#22976
         } //#22976
         $_.cw = 0; //#22979
-        for (var _Da = 0, _DZ = $f($_.bpcw - 1); _Da <= _DZ; _Da += 1) { //#22983
-            $_.i = _Da; //#22981
+        for (var _Dc = 0, _Db = $f($_.bpcw - 1); _Dc <= _Db; _Dc += 1) { //#22983
+            $_.i = _Dc; //#22981
             $_.cw = $f($_.cw + ((~~(Math.pow(2, $f($f($_.bpcw - $_.i) - 1)))) * $f($get($_.cwb, $_.i) - 48))); //#22982
         } //#22982
         $put($_.cws, $_.c, $_.cw); //#22984
@@ -28332,8 +28404,8 @@ function bwipp_azteccode() {
         $_.c = $_.c + 1; //#22986
     } //#22986
     $_.cws = $geti($_.cws, 0, $_.c); //#22988
-    var _Dr = $get($_.options, 'debugcws') !== undefined; //#22990
-    if (_Dr) { //#22990
+    var _Dt = $get($_.options, 'debugcws') !== undefined; //#22990
+    if (_Dt) { //#22990
         $k[$j++] = 'bwipp.debugcws#22990'; //#22990
         $k[$j++] = $_.cws; //#22990
         bwipp_raiseerror(); //#22990
@@ -28345,30 +28417,30 @@ function bwipp_azteccode() {
         $_.rscws = $k[--$j]; //#22998
         $k[$j++] = Infinity; //#23001
         $k[$j++] = 1; //#23001
-        for (var _Dy = 0, _Dz = $f($_.rsgf - 1); _Dy < _Dz; _Dy++) { //#23001
-            var _E0 = $k[--$j]; //#23001
-            var _E1 = _E0 * 2; //#23001
-            $k[$j++] = _E0; //#23001
-            $k[$j++] = _E1; //#23001
-            if (_E1 >= $_.rsgf) { //#23001
-                var _E4 = $k[--$j]; //#23001
-                $k[$j++] = $xo(_E4, $_.rspm); //#23001
+        for (var _E0 = 0, _E1 = $f($_.rsgf - 1); _E0 < _E1; _E0++) { //#23001
+            var _E2 = $k[--$j]; //#23001
+            var _E3 = _E2 * 2; //#23001
+            $k[$j++] = _E2; //#23001
+            $k[$j++] = _E3; //#23001
+            if (_E3 >= $_.rsgf) { //#23001
+                var _E6 = $k[--$j]; //#23001
+                $k[$j++] = $xo(_E6, $_.rspm); //#23001
             } //#23001
         } //#23001
         $_.rsalog = $a(); //#23001
         $_.rslog = $a($_.rsgf); //#23002
-        for (var _EA = 1, _E9 = $f($_.rsgf - 1); _EA <= _E9; _EA += 1) { //#23003
-            $put($_.rslog, $get($_.rsalog, _EA), _EA); //#23003
+        for (var _EC = 1, _EB = $f($_.rsgf - 1); _EC <= _EB; _EC += 1) { //#23003
+            $put($_.rslog, $get($_.rsalog, _EC), _EC); //#23003
         } //#23003
         $_.rsprod = function() {
-            var _EE = $k[--$j]; //#23007
-            var _EF = $k[--$j]; //#23007
-            $k[$j++] = _EF; //#23011
-            $k[$j++] = _EE; //#23011
-            if ((_EE != 0) && (_EF != 0)) { //#23010
-                var _EI = $get($_.rslog, $k[--$j]); //#23008
-                var _EO = $get($_.rsalog, $f(_EI + $get($_.rslog, $k[--$j])) % $f($_.rsgf - 1)); //#23008
-                $k[$j++] = _EO; //#23008
+            var _EG = $k[--$j]; //#23007
+            var _EH = $k[--$j]; //#23007
+            $k[$j++] = _EH; //#23011
+            $k[$j++] = _EG; //#23011
+            if ((_EG != 0) && (_EH != 0)) { //#23010
+                var _EK = $get($_.rslog, $k[--$j]); //#23008
+                var _EQ = $get($_.rsalog, $f(_EK + $get($_.rslog, $k[--$j])) % $f($_.rsgf - 1)); //#23008
+                $k[$j++] = _EQ; //#23008
             } else { //#23010
                 $j -= 2; //#23010
                 $k[$j++] = 0; //#23010
@@ -28376,57 +28448,57 @@ function bwipp_azteccode() {
         }; //#23010
         $k[$j++] = Infinity; //#23015
         $k[$j++] = 1; //#23015
-        for (var _EQ = 0, _ER = $_.rsnc; _EQ < _ER; _EQ++) { //#23015
+        for (var _ES = 0, _ET = $_.rsnc; _ES < _ET; _ES++) { //#23015
             $k[$j++] = 0; //#23015
         } //#23015
         $_.coeffs = $a(); //#23015
-        for (var _EV = 1, _EU = $_.rsnc; _EV <= _EU; _EV += 1) { //#23024
-            $_.i = _EV; //#23017
+        for (var _EX = 1, _EW = $_.rsnc; _EX <= _EW; _EX += 1) { //#23024
+            $_.i = _EX; //#23017
             $put($_.coeffs, $_.i, $get($_.coeffs, $_.i - 1)); //#23018
-            for (var _Ec = $_.i - 1; _Ec >= 1; _Ec -= 1) { //#23022
-                $_.j = _Ec; //#23020
+            for (var _Ee = $_.i - 1; _Ee >= 1; _Ee -= 1) { //#23022
+                $_.j = _Ee; //#23020
                 $k[$j++] = $_.coeffs; //#23021
                 $k[$j++] = $_.j; //#23021
                 $k[$j++] = $get($_.coeffs, $_.j - 1); //#23021
                 $k[$j++] = $get($_.coeffs, $_.j); //#23021
                 $k[$j++] = $get($_.rsalog, $_.i); //#23021
                 $_.rsprod(); //#23021
-                var _Eo = $k[--$j]; //#23021
-                var _Ep = $k[--$j]; //#23021
                 var _Eq = $k[--$j]; //#23021
-                $put($k[--$j], _Eq, $xo(_Ep, _Eo)); //#23021
+                var _Er = $k[--$j]; //#23021
+                var _Es = $k[--$j]; //#23021
+                $put($k[--$j], _Es, $xo(_Er, _Eq)); //#23021
             } //#23021
             $k[$j++] = $_.coeffs; //#23023
             $k[$j++] = 0; //#23023
             $k[$j++] = $get($_.coeffs, 0); //#23023
             $k[$j++] = $get($_.rsalog, $_.i); //#23023
             $_.rsprod(); //#23023
-            var _Ey = $k[--$j]; //#23023
-            var _Ez = $k[--$j]; //#23023
-            $put($k[--$j], _Ez, _Ey); //#23023
+            var _F0 = $k[--$j]; //#23023
+            var _F1 = $k[--$j]; //#23023
+            $put($k[--$j], _F1, _F0); //#23023
         } //#23023
         $_.nd = $_.rscws.length; //#23027
         $k[$j++] = Infinity; //#23028
         $aload($_.rscws); //#23028
-        for (var _F4 = 0, _F5 = $_.rsnc; _F4 < _F5; _F4++) { //#23028
+        for (var _F6 = 0, _F7 = $_.rsnc; _F6 < _F7; _F6++) { //#23028
             $k[$j++] = 0; //#23028
         } //#23028
         $k[$j++] = 0; //#23028
         $_.rscws = $a(); //#23028
-        for (var _F9 = 0, _F8 = $_.nd - 1; _F9 <= _F8; _F9 += 1) { //#23035
-            $_.k = $xo($get($_.rscws, _F9), $get($_.rscws, $_.nd)); //#23030
-            for (var _FH = 0, _FG = $f($_.rsnc - 1); _FH <= _FG; _FH += 1) { //#23034
-                $_.j = _FH; //#23032
+        for (var _FB = 0, _FA = $_.nd - 1; _FB <= _FA; _FB += 1) { //#23035
+            $_.k = $xo($get($_.rscws, _FB), $get($_.rscws, $_.nd)); //#23030
+            for (var _FJ = 0, _FI = $f($_.rsnc - 1); _FJ <= _FI; _FJ += 1) { //#23034
+                $_.j = _FJ; //#23032
                 $k[$j++] = $_.rscws; //#23033
                 $k[$j++] = $_.nd + $_.j; //#23033
                 $k[$j++] = $get($_.rscws, ($_.nd + $_.j) + 1); //#23033
                 $k[$j++] = $_.k; //#23033
                 $k[$j++] = $get($_.coeffs, $f($f($_.rsnc - $_.j) - 1)); //#23033
                 $_.rsprod(); //#23033
-                var _FU = $k[--$j]; //#23033
-                var _FV = $k[--$j]; //#23033
                 var _FW = $k[--$j]; //#23033
-                $put($k[--$j], _FW, $xo(_FV, _FU)); //#23033
+                var _FX = $k[--$j]; //#23033
+                var _FY = $k[--$j]; //#23033
+                $put($k[--$j], _FY, $xo(_FX, _FW)); //#23033
             } //#23033
         } //#23033
         $k[$j++] = $geti($_.rscws, 0, $_.rscws.length - 1); //#23038
@@ -28443,8 +28515,8 @@ function bwipp_azteccode() {
         $k[$j++] = 16; //#23052
         $k[$j++] = 19; //#23052
         $_.rscodes(); //#23052
-        var _Fm = $k[--$j]; //#23052
-        $_[$k[--$j]] = _Fm; //#23052
+        var _Fo = $k[--$j]; //#23052
+        $_[$k[--$j]] = _Fo; //#23052
     } //#23052
     if ($eq($_.format, "compact")) { //#23062
         $_.mode = ($f($_.layers - 1) << 6) + ($_.cws.length - 1); //#23055
@@ -28458,8 +28530,8 @@ function bwipp_azteccode() {
         $k[$j++] = 16; //#23061
         $k[$j++] = 19; //#23061
         $_.rscodes(); //#23061
-        var _Fx = $k[--$j]; //#23061
-        $_[$k[--$j]] = _Fx; //#23061
+        var _Fz = $k[--$j]; //#23061
+        $_[$k[--$j]] = _Fz; //#23061
     } //#23061
     if ($eq($_.format, "rune")) { //#23071
         $_.mode = $cvi($_.barcode); //#23064
@@ -28470,23 +28542,23 @@ function bwipp_azteccode() {
         $k[$j++] = 16; //#23069
         $k[$j++] = 19; //#23069
         $_.rscodes(); //#23069
-        var _G5 = $k[--$j]; //#23069
-        $_[$k[--$j]] = _G5; //#23069
+        var _G7 = $k[--$j]; //#23069
+        $_[$k[--$j]] = _G7; //#23069
         $k[$j++] = Infinity; //#23070
-        var _G7 = $_.mode; //#23070
-        for (var _G8 = 0, _G9 = _G7.length; _G8 < _G9; _G8++) { //#23070
-            $k[$j++] = $get(_G7, _G8) ^ 10; //#23070
+        var _G9 = $_.mode; //#23070
+        for (var _GA = 0, _GB = _G9.length; _GA < _GB; _GA++) { //#23070
+            $k[$j++] = $get(_G9, _GA) ^ 10; //#23070
         } //#23070
         $_.mode = $a(); //#23070
     } //#23070
     $_.modebits = $s($_.mode.length * 4); //#23072
-    for (var _GG = 0, _GF = $_.modebits.length - 1; _GG <= _GF; _GG += 1) { //#23073
-        $puti($_.modebits, _GG, "0"); //#23073
+    for (var _GI = 0, _GH = $_.modebits.length - 1; _GI <= _GH; _GI += 1) { //#23073
+        $puti($_.modebits, _GI, "0"); //#23073
     } //#23073
-    for (var _GK = 0, _GJ = $_.mode.length - 1; _GK <= _GJ; _GK += 1) { //#23077
-        $_.i = _GK; //#23075
-        var _GQ = $cvrs($s(4), $get($_.mode, $_.i), 2); //#23076
-        $puti($_.modebits, (4 - _GQ.length) + (4 * $_.i), _GQ); //#23076
+    for (var _GM = 0, _GL = $_.mode.length - 1; _GM <= _GL; _GM += 1) { //#23077
+        $_.i = _GM; //#23075
+        var _GS = $cvrs($s(4), $get($_.mode, $_.i), 2); //#23076
+        $puti($_.modebits, (4 - _GS.length) + (4 * $_.i), _GS); //#23076
     } //#23076
     if (!bwipp_azteccode.__23091__) { //#23091
         $_ = Object.create($_); //#23091
@@ -28500,25 +28572,25 @@ function bwipp_azteccode() {
     $k[$j++] = $f($_.ncws - $_.cws.length); //#23092
     $aload($get($_.rsparams, $_.bpcw)); //#23092
     $_.rscodes(); //#23092
-    var _Gn = $k[--$j]; //#23092
-    $_[$k[--$j]] = _Gn; //#23092
+    var _Gp = $k[--$j]; //#23092
+    $_[$k[--$j]] = _Gp; //#23092
     if ($eq($_.format, "full")) { //#23096
         $_.databits = $s($f((($_.layers * $_.layers) * 16) + ($_.layers * 112))); //#23094
     } else { //#23096
         $_.databits = $s($f((($_.layers * $_.layers) * 16) + ($_.layers * 88))); //#23096
     } //#23096
-    for (var _H0 = 0, _Gz = $_.databits.length - 1; _H0 <= _Gz; _H0 += 1) { //#23098
-        $puti($_.databits, _H0, "0"); //#23098
+    for (var _H2 = 0, _H1 = $_.databits.length - 1; _H2 <= _H1; _H2 += 1) { //#23098
+        $puti($_.databits, _H2, "0"); //#23098
     } //#23098
-    for (var _H4 = 0, _H3 = $f($_.ncws - 1); _H4 <= _H3; _H4 += 1) { //#23104
-        $_.i = _H4; //#23100
-        var _HB = $cvrs($s($_.bpcw), $get($_.cws, $_.i), 2); //#23101
-        $puti($_.databits, $f(($f($f($_.bpcw - _HB.length) + ($_.bpcw * $_.i))) + ($f($_.databits.length - ($_.ncws * $_.bpcw)))), _HB); //#23103
+    for (var _H6 = 0, _H5 = $f($_.ncws - 1); _H6 <= _H5; _H6 += 1) { //#23104
+        $_.i = _H6; //#23100
+        var _HD = $cvrs($s($_.bpcw), $get($_.cws, $_.i), 2); //#23101
+        $puti($_.databits, $f(($f($f($_.bpcw - _HD.length) + ($_.bpcw * $_.i))) + ($f($_.databits.length - ($_.ncws * $_.bpcw)))), _HD); //#23103
     } //#23103
     $_.cmv = function() {
-        var _HJ = $k[--$j]; //#23107
-        var _HK = $k[--$j]; //#23107
-        $k[$j++] = $f(($f(_HK - (_HJ * $_.size))) + $_.mid); //#23107
+        var _HL = $k[--$j]; //#23107
+        var _HM = $k[--$j]; //#23107
+        $k[$j++] = $f(($f(_HM - (_HL * $_.size))) + $_.mid); //#23107
     }; //#23107
     $_.lmv = function() {
         $_.lbit = $k[--$j]; //#23111
@@ -28553,22 +28625,22 @@ function bwipp_azteccode() {
     } //#23139
     $_.size = $f(($f($_.fw + ($_.layers * 4))) + 2); //#23140
     $k[$j++] = Infinity; //#23141
-    for (var _Hz = 0, _I0 = $_.size * $_.size; _Hz < _I0; _Hz++) { //#23141
+    for (var _I1 = 0, _I2 = $_.size * $_.size; _I1 < _I2; _I1++) { //#23141
         $k[$j++] = -1; //#23141
     } //#23141
     $_.pixs = $a(); //#23141
     $_.mid = $f(((~~($f($_.size - 1) / 2)) * $_.size) + (~~($f($_.size - 1) / 2))); //#23142
     $_.i = 0; //#23145
-    for (var _I7 = 1, _I6 = $_.layers; _I7 <= _I6; _I7 += 1) { //#23153
-        $_.layer = _I7; //#23147
-        for (var _IB = 0, _IA = (($_.fw + ($_.layer * 4)) * 8) - 1; _IB <= _IA; _IB += 1) { //#23152
-            $_.pos = _IB; //#23149
+    for (var _I9 = 1, _I8 = $_.layers; _I9 <= _I8; _I9 += 1) { //#23153
+        $_.layer = _I9; //#23147
+        for (var _ID = 0, _IC = (($_.fw + ($_.layer * 4)) * 8) - 1; _ID <= _IC; _ID += 1) { //#23152
+            $_.pos = _ID; //#23149
             $k[$j++] = $_.pixs; //#23150
             $k[$j++] = $_.layer; //#23150
             $k[$j++] = $_.pos; //#23150
             $_.lmv(); //#23150
-            var _IJ = $k[--$j]; //#23150
-            $put($k[--$j], _IJ, $get($_.databits, ($_.databits.length - $_.i) - 1) - 48); //#23150
+            var _IL = $k[--$j]; //#23150
+            $put($k[--$j], _IL, $get($_.databits, ($_.databits.length - $_.i) - 1) - 48); //#23150
             $_.i = $_.i + 1; //#23151
         } //#23151
     } //#23151
@@ -28577,43 +28649,43 @@ function bwipp_azteccode() {
         $_.size = $f(($f(($f($_.fw + ($_.layers * 4))) + 2)) + ((~~($f(($f($_.layers + 10.5) / 7.5) - 1))) * 2)); //#23158
         $_.mid = ~~(($_.size * $_.size) / 2); //#23159
         $k[$j++] = Infinity; //#23160
-        for (var _IU = 0, _IV = $_.size * $_.size; _IU < _IV; _IU++) { //#23160
+        for (var _IW = 0, _IX = $_.size * $_.size; _IW < _IX; _IW++) { //#23160
             $k[$j++] = -2; //#23160
         } //#23160
         $_.npixs = $a(); //#23160
-        for (var _IZ = 0, _IY = ~~($_.size / 2); _IZ <= _IY; _IZ += 16) { //#23170
-            $_.i = _IZ; //#23162
-            for (var _Ic = 0, _Ib = $f($_.size - 1); _Ic <= _Ib; _Ic += 1) { //#23169
-                $_.j = _Ic; //#23164
+        for (var _Ib = 0, _Ia = ~~($_.size / 2); _Ib <= _Ia; _Ib += 16) { //#23170
+            $_.i = _Ib; //#23162
+            for (var _Ie = 0, _Id = $f($_.size - 1); _Ie <= _Id; _Ie += 1) { //#23169
+                $_.j = _Ie; //#23164
                 $k[$j++] = $_.npixs; //#23165
                 $k[$j++] = (-(~~($_.size / 2))) + $_.j; //#23165
                 $k[$j++] = $_.i; //#23165
                 $_.cmv(); //#23165
-                var _Il = $k[--$j]; //#23165
-                $puti($k[--$j], _Il, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#23165
+                var _In = $k[--$j]; //#23165
+                $puti($k[--$j], _In, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#23165
                 $k[$j++] = $_.npixs; //#23166
                 $k[$j++] = (-(~~($_.size / 2))) + $_.j; //#23166
                 $k[$j++] = -$_.i; //#23166
                 $_.cmv(); //#23166
-                var _Iv = $k[--$j]; //#23166
-                $puti($k[--$j], _Iv, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#23166
+                var _Ix = $k[--$j]; //#23166
+                $puti($k[--$j], _Ix, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#23166
                 $k[$j++] = $_.npixs; //#23167
                 $k[$j++] = $_.i; //#23167
                 $k[$j++] = (-(~~($_.size / 2))) + $_.j; //#23167
                 $_.cmv(); //#23167
-                var _J5 = $k[--$j]; //#23167
-                $puti($k[--$j], _J5, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#23167
+                var _J7 = $k[--$j]; //#23167
+                $puti($k[--$j], _J7, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#23167
                 $k[$j++] = $_.npixs; //#23168
                 $k[$j++] = -$_.i; //#23168
                 $k[$j++] = (-(~~($_.size / 2))) + $_.j; //#23168
                 $_.cmv(); //#23168
-                var _JF = $k[--$j]; //#23168
-                $puti($k[--$j], _JF, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#23168
+                var _JH = $k[--$j]; //#23168
+                $puti($k[--$j], _JH, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#23168
             } //#23168
         } //#23168
         $_.j = 0; //#23171
-        for (var _JJ = 0, _JI = $_.npixs.length - 1; _JJ <= _JI; _JJ += 1) { //#23178
-            $_.i = _JJ; //#23173
+        for (var _JL = 0, _JK = $_.npixs.length - 1; _JL <= _JK; _JL += 1) { //#23178
+            $_.i = _JL; //#23173
             if ($get($_.npixs, $_.i) == -2) { //#23177
                 $put($_.npixs, $_.i, $get($_.pixs, $_.j)); //#23175
                 $_.j = $_.j + 1; //#23176
@@ -28622,10 +28694,10 @@ function bwipp_azteccode() {
         $_.pixs = $_.npixs; //#23179
     } //#23179
     $_.fw = ~~($_.fw / 2); //#23183
-    for (var _JY = -$_.fw, _JX = $_.fw; _JY <= _JX; _JY += 1) { //#23192
-        $_.i = _JY; //#23185
-        for (var _Jc = -$_.fw, _Jb = $_.fw; _Jc <= _Jb; _Jc += 1) { //#23191
-            $_.j = _Jc; //#23187
+    for (var _Ja = -$_.fw, _JZ = $_.fw; _Ja <= _JZ; _Ja += 1) { //#23192
+        $_.i = _Ja; //#23185
+        for (var _Je = -$_.fw, _Jd = $_.fw; _Je <= _Jd; _Je += 1) { //#23191
+            $_.j = _Je; //#23187
             $k[$j++] = $_.pixs; //#23188
             $k[$j++] = $_.i; //#23188
             $k[$j++] = $_.j; //#23188
@@ -28635,25 +28707,20 @@ function bwipp_azteccode() {
             } else { //#23189
                 $k[$j++] = Math.abs($_.j); //#23189
             } //#23189
-            var _Jk = $k[--$j]; //#23189
-            var _Jl = $k[--$j]; //#23190
-            $put($k[--$j], _Jl, $f(_Jk + 1) % 2); //#23190
+            var _Jm = $k[--$j]; //#23189
+            var _Jn = $k[--$j]; //#23190
+            $put($k[--$j], _Jn, $f(_Jm + 1) % 2); //#23190
         } //#23190
     } //#23190
-    var _KN = $a([$a([-($_.fw + 1), $_.fw, 1]), $a([-($_.fw + 1), $_.fw + 1, 1]), $a([-$_.fw, $_.fw + 1, 1]), $a([$_.fw + 1, $_.fw + 1, 1]), $a([$_.fw + 1, $_.fw, 1]), $a([$_.fw + 1, -$_.fw, 1]), $a([$_.fw, $_.fw + 1, 0]), $a([$_.fw + 1, -($_.fw + 1), 0]), $a([$_.fw, -($_.fw + 1), 0]), $a([-$_.fw, -($_.fw + 1), 0]), $a([-($_.fw + 1), -($_.fw + 1), 0]), $a([-($_.fw + 1), -$_.fw, 0])]); //#23200
-    for (var _KO = 0, _KP = _KN.length; _KO < _KP; _KO++) { //#23201
+    var _KP = $a([$a([-($_.fw + 1), $_.fw, 1]), $a([-($_.fw + 1), $_.fw + 1, 1]), $a([-$_.fw, $_.fw + 1, 1]), $a([$_.fw + 1, $_.fw + 1, 1]), $a([$_.fw + 1, $_.fw, 1]), $a([$_.fw + 1, -$_.fw, 1]), $a([$_.fw, $_.fw + 1, 0]), $a([$_.fw + 1, -($_.fw + 1), 0]), $a([$_.fw, -($_.fw + 1), 0]), $a([-$_.fw, -($_.fw + 1), 0]), $a([-($_.fw + 1), -($_.fw + 1), 0]), $a([-($_.fw + 1), -$_.fw, 0])]); //#23200
+    for (var _KQ = 0, _KR = _KP.length; _KQ < _KR; _KQ++) { //#23201
         $k[$j++] = $_.pixs; //#23201
-        $aload($get(_KN, _KO)); //#23201
-        var _KS = $k[--$j]; //#23201
-        var _KT = $k[--$j]; //#23201
-        var _KU = $k[--$j]; //#23201
-        $k[$j++] = _KS; //#23201
-        $k[$j++] = _KU; //#23201
-        $k[$j++] = _KT; //#23201
+        $aload($get(_KP, _KQ)); //#23201
+        $r(3, 1); //#23201
         $_.cmv(); //#23201
+        var _KU = $k[--$j]; //#23201
         var _KV = $k[--$j]; //#23201
-        var _KW = $k[--$j]; //#23201
-        $put($k[--$j], _KV, _KW); //#23201
+        $put($k[--$j], _KU, _KV); //#23201
     } //#23201
     if (!bwipp_azteccode.__23217__) { //#23217
         $_ = Object.create($_); //#23217
@@ -28669,18 +28736,18 @@ function bwipp_azteccode() {
     } else { //#23218
         $k[$j++] = $_.modemapcompact; //#23218
     } //#23218
-    var _Lk = $k[--$j]; //#23218
-    $_[$k[--$j]] = _Lk; //#23218
-    for (var _Lo = 0, _Ln = $_.modemap.length - 1; _Lo <= _Ln; _Lo += 1) { //#23222
-        $k[$j++] = _Lo; //#23220
+    var _Lj = $k[--$j]; //#23218
+    $_[$k[--$j]] = _Lj; //#23218
+    for (var _Ln = 0, _Lm = $_.modemap.length - 1; _Ln <= _Lm; _Ln += 1) { //#23222
+        $k[$j++] = _Ln; //#23220
         $k[$j++] = $_.pixs; //#23220
-        $aload($get($_.modemap, _Lo)); //#23220
+        $aload($get($_.modemap, _Ln)); //#23220
         $_.cmv(); //#23220
+        var _Ls = $k[--$j]; //#23220
         var _Lt = $k[--$j]; //#23220
-        var _Lu = $k[--$j]; //#23220
-        $put(_Lu, _Lt, $get($_.modebits, $k[--$j]) - 48); //#23220
+        $put(_Lt, _Ls, $get($_.modebits, $k[--$j]) - 48); //#23220
     } //#23221
-    var _M3 = new Map([
+    var _M2 = new Map([
         ["ren", 'renmatrix'],
         ["pixs", $_.pixs],
         ["pixx", $_.size],
@@ -28689,7 +28756,7 @@ function bwipp_azteccode() {
         ["width", ($_.size * 2) / 72],
         ["opt", $_.options]
     ]); //#23231
-    $k[$j++] = _M3; //#23234
+    $k[$j++] = _M2; //#23234
     if (!$_.dontdraw) { //#23234
         bwipp_renmatrix(); //#23234
     } //#23234
@@ -28761,7 +28828,7 @@ function bwipp_codeone() {
         $k[$j++] = "version must be A to H, T-16, T-32, T-48, S-10, S-20 or S-30"; //#23378
         bwipp_raiseerror(); //#23378
     } //#23378
-    bwipp_loadctx(bwipp_codeone) //#23381
+    bwipp_loadctx(bwipp_codeone); //#23381
     $_.stype = $eq($geti($_.version, 0, 1), "S"); //#23383
     $_.ttype = $eq($geti($_.version, 0, 1), "T"); //#23384
     if (!bwipp_codeone.__23542__) { //#23542
@@ -29692,38 +29759,42 @@ function bwipp_codeone() {
                 $k[$j++] = _BO; //#23757
             } //#23757
             var _BP = $k[--$j]; //#23758
-            var _BS = $cvrs($s(_BP.length), $k[--$j], 2); //#23758
-            $puti(_BP, _BP.length - _BS.length, _BS); //#23758
-            $k[$j++] = _BP; //#23759
+            $k[$j++] = _BP; //#23758
+            $k[$j++] = _BP; //#23758
+            $r(3, -1); //#23758
+            var _BQ = $k[--$j]; //#23758
+            var _BR = $k[--$j]; //#23758
+            var _BT = $cvrs($s(_BR.length), _BQ, 2); //#23758
+            $puti(_BR, _BR.length - _BT.length, _BT); //#23758
             $k[$j++] = Infinity; //#23759
-            var _BT = $k[--$j]; //#23759
             var _BU = $k[--$j]; //#23759
-            $k[$j++] = _BT; //#23759
-            $forall(_BU, function() { //#23759
-                var _BV = $k[--$j]; //#23759
-                $k[$j++] = $f(_BV - 48); //#23759
+            var _BV = $k[--$j]; //#23759
+            $k[$j++] = _BU; //#23759
+            $forall(_BV, function() { //#23759
+                var _BW = $k[--$j]; //#23759
+                $k[$j++] = $f(_BW - 48); //#23759
             }); //#23759
-            var _BW = $a(); //#23759
-            $k[$j++] = _BW; //#23759
+            var _BX = $a(); //#23759
+            $k[$j++] = _BX; //#23759
         }; //#23759
         $_.encA = function() {
-            for (var _BX = 0, _BY = 1; _BX < _BY; _BX++) { //#23804
+            for (var _BY = 0, _BZ = 1; _BY < _BZ; _BY++) { //#23804
                 if ($get($_.numD, $_.i) >= 21) { //#23768
                     $_.Dbits = $a([1, 1, 1, 1]); //#23765
                     $_.mode = $_.D; //#23766
                     break; //#23767
                 } //#23767
-                var _Bg = $get($_.numD, $_.i); //#23769
-                if ((_Bg >= 13) && ($f(_Bg + $_.i) == $_.msglen)) { //#23773
+                var _Bh = $get($_.numD, $_.i); //#23769
+                if ((_Bh >= 13) && ($f(_Bh + $_.i) == $_.msglen)) { //#23773
                     $_.Dbits = $a([1, 1, 1, 1]); //#23770
                     $_.mode = $_.D; //#23771
                     break; //#23772
                 } //#23772
                 if ($get($_.numD, $_.i) >= 2) { //#23778
-                    var _Bo = $s(2); //#23775
-                    $put(_Bo, 0, $get($_.msg, $_.i)); //#23775
-                    $put(_Bo, 1, $get($_.msg, $_.i + 1)); //#23775
-                    $k[$j++] = $get($_.Avals, _Bo); //#23775
+                    var _Bp = $s(2); //#23775
+                    $put(_Bp, 0, $get($_.msg, $_.i)); //#23775
+                    $put(_Bp, 1, $get($_.msg, $_.i + 1)); //#23775
+                    $k[$j++] = $get($_.Avals, _Bp); //#23775
                     $_.addtocws(); //#23775
                     $_.i = $_.i + 2; //#23776
                     break; //#23777
@@ -29737,8 +29808,8 @@ function bwipp_codeone() {
                         $_.mode = $_.D; //#23784
                         break; //#23785
                     } //#23785
-                    var _CD = $get($_.numD, $_.i + 1); //#23787
-                    if ((_CD >= 7) && (($f($f(_CD + $_.i) + 1)) == $_.msglen)) { //#23793
+                    var _CE = $get($_.numD, $_.i + 1); //#23787
+                    if ((_CE >= 7) && (($f($f(_CE + $_.i) + 1)) == $_.msglen)) { //#23793
                         $k[$j++] = $get($_.Avals, $_.fnc1lD); //#23788
                         $_.addtocws(); //#23788
                         $_.i = $_.i + 1; //#23789
@@ -29749,8 +29820,8 @@ function bwipp_codeone() {
                 } //#23792
                 $k[$j++] = 'newmode'; //#23795
                 $_.lookup(); //#23795
-                var _CM = $k[--$j]; //#23795
-                $_[$k[--$j]] = _CM; //#23795
+                var _CN = $k[--$j]; //#23795
+                $_[$k[--$j]] = _CN; //#23795
                 if ($_.newmode != $_.mode) { //#23800
                     $k[$j++] = $get($_.Avals, $get($a([-1, $_.lC, $_.lT, $_.lX, $_.lD, $_.lB]), $_.newmode)); //#23797
                     $_.addtocws(); //#23797
@@ -29766,22 +29837,22 @@ function bwipp_codeone() {
         $_.CTXvalstocws = function() {
             $_.in = $k[--$j]; //#23808
             $k[$j++] = Infinity; //#23809
-            for (var _Ck = 0, _Cj = $_.in.length - 1; _Ck <= _Cj; _Ck += 3) { //#23813
-                var _Cm = $geti($_.in, _Ck, 3); //#23811
+            for (var _Cl = 0, _Ck = $_.in.length - 1; _Cl <= _Ck; _Cl += 3) { //#23813
+                var _Cn = $geti($_.in, _Cl, 3); //#23811
                 $k[$j++] = 0; //#23811
-                for (var _Cn = 0, _Co = _Cm.length; _Cn < _Co; _Cn++) { //#23811
-                    var _Cq = $k[--$j]; //#23811
-                    $k[$j++] = $f(_Cq + $get(_Cm, _Cn)) * 40; //#23811
+                for (var _Co = 0, _Cp = _Cn.length; _Co < _Cp; _Co++) { //#23811
+                    var _Cr = $k[--$j]; //#23811
+                    $k[$j++] = $f(_Cr + $get(_Cn, _Co)) * 40; //#23811
                 } //#23811
-                var _Cs = (~~($k[--$j] / 40)) + 1; //#23812
-                $k[$j++] = ~~(_Cs / 256); //#23812
-                $k[$j++] = _Cs % 256; //#23812
+                var _Ct = (~~($k[--$j] / 40)) + 1; //#23812
+                $k[$j++] = ~~(_Ct / 256); //#23812
+                $k[$j++] = _Ct % 256; //#23812
             } //#23812
             $astore($a($counttomark())); //#23814
-            var _Cv = $k[--$j]; //#23814
             var _Cw = $k[--$j]; //#23814
-            $k[$j++] = _Cv; //#23814
+            var _Cx = $k[--$j]; //#23814
             $k[$j++] = _Cw; //#23814
+            $k[$j++] = _Cx; //#23814
             $j--; //#23814
         }; //#23814
         $_.encCTX = function() {
@@ -29801,8 +29872,8 @@ function bwipp_codeone() {
                         $_.mode = $_.A; //#23828
                         break; //#23829
                     } //#23829
-                    var _DC = $get($_.numD, $_.i); //#23831
-                    if ((_DC >= 8) && ($f(_DC + $_.i) == $_.msglen)) { //#23836
+                    var _DD = $get($_.numD, $_.i); //#23831
+                    if ((_DD >= 8) && ($f(_DD + $_.i) == $_.msglen)) { //#23836
                         $k[$j++] = $geti($_.ctxvals, 0, $_.p); //#23832
                         $_.CTXvalstocws(); //#23832
                         $_.addtocws(); //#23832
@@ -29812,8 +29883,8 @@ function bwipp_codeone() {
                         break; //#23835
                     } //#23835
                     if ($_.mode == $_.X) { //#23858
-                        var _DR = $get($_.Xvals, $get($_.msg, $_.i)) !== undefined; //#23838
-                        if (!_DR) { //#23846
+                        var _DS = $get($_.Xvals, $get($_.msg, $_.i)) !== undefined; //#23838
+                        if (!_DS) { //#23846
                             $k[$j++] = $geti($_.ctxvals, 0, $_.p); //#23839
                             $_.CTXvalstocws(); //#23839
                             $_.addtocws(); //#23839
@@ -29825,13 +29896,13 @@ function bwipp_codeone() {
                             break; //#23845
                         } //#23845
                         if (($_.i + 1) < $_.msglen) { //#23852
-                            var _Dk = $get($_.Xvals, $get($_.msg, $_.i + 1)) !== undefined; //#23848
-                            if (!_Dk) { //#23848
+                            var _Dl = $get($_.Xvals, $get($_.msg, $_.i + 1)) !== undefined; //#23848
+                            if (!_Dl) { //#23848
                                 break; //#23848
                             } //#23848
                             if (($_.i + 2) < $_.msglen) { //#23851
-                                var _Dr = $get($_.Xvals, $get($_.msg, $_.i + 2)) !== undefined; //#23850
-                                if (!_Dr) { //#23850
+                                var _Ds = $get($_.Xvals, $get($_.msg, $_.i + 2)) !== undefined; //#23850
+                                if (!_Ds) { //#23850
                                     break; //#23850
                                 } //#23850
                             } //#23850
@@ -29851,12 +29922,12 @@ function bwipp_codeone() {
                     if (($_.msglen - $_.i) <= 3) { //#23910
                         $_.remcws = $get($_.numremcws, $_.j + ((~~($_.p / 3)) * 2)); //#23862
                         $k[$j++] = Infinity; //#23863
-                        var _EA = $geti($_.msg, $_.i, $_.msglen - $_.i); //#23864
-                        for (var _EB = 0, _EC = _EA.length; _EB < _EC; _EB++) { //#23870
-                            var _ED = $get(_EA, _EB); //#23870
-                            var _EH = $get($get($_.encvals, $_.mode), _ED) !== undefined; //#23865
-                            $k[$j++] = _ED; //#23869
-                            if (_EH) { //#23868
+                        var _EB = $geti($_.msg, $_.i, $_.msglen - $_.i); //#23864
+                        for (var _EC = 0, _ED = _EB.length; _EC < _ED; _EC++) { //#23870
+                            var _EE = $get(_EB, _EC); //#23870
+                            var _EI = $get($get($_.encvals, $_.mode), _EE) !== undefined; //#23865
+                            $k[$j++] = _EE; //#23869
+                            if (_EI) { //#23868
                                 $aload($get($get($_.encvals, $_.mode), $k[--$j])); //#23866
                             } else { //#23868
                                 $j--; //#23868
@@ -29871,8 +29942,8 @@ function bwipp_codeone() {
                             $k[$j++] = Infinity; //#23874
                             $aload($geti($_.ctxvals, 0, $_.p)); //#23875
                             $aload($_.remvals); //#23876
-                            var _EU = $a(); //#23876
-                            $k[$j++] = _EU; //#23877
+                            var _EV = $a(); //#23876
+                            $k[$j++] = _EV; //#23877
                             $_.CTXvalstocws(); //#23877
                             $_.addtocws(); //#23877
                             $_.mode = $_.A; //#23878
@@ -29884,8 +29955,8 @@ function bwipp_codeone() {
                             $aload($geti($_.ctxvals, 0, $_.p)); //#23885
                             $aload($_.remvals); //#23886
                             $aload($get($get($_.encvals, $_.mode), $_.sft1)); //#23887
-                            var _Ek = $a(); //#23887
-                            $k[$j++] = _Ek; //#23888
+                            var _El = $a(); //#23887
+                            $k[$j++] = _El; //#23888
                             $_.CTXvalstocws(); //#23888
                             $_.addtocws(); //#23888
                             $_.mode = $_.A; //#23889
@@ -29916,9 +29987,9 @@ function bwipp_codeone() {
                         } //#23908
                     } //#23908
                 } //#23908
-                var _FJ = $get($get($_.encvals, $_.mode), $get($_.msg, $_.i)); //#23912
-                $puti($_.ctxvals, $_.p, _FJ); //#23913
-                $_.p = _FJ.length + $_.p; //#23914
+                var _FK = $get($get($_.encvals, $_.mode), $get($_.msg, $_.i)); //#23912
+                $puti($_.ctxvals, $_.p, _FK); //#23913
+                $_.p = _FK.length + $_.p; //#23914
                 $_.i = $_.i + 1; //#23915
             } //#23915
             if ($_.mode != $_.A) { //#23940
@@ -29931,8 +30002,8 @@ function bwipp_codeone() {
                 } //#23923
                 $k[$j++] = Infinity; //#23925
                 $aload($geti($_.ctxvals, 0, $_.p)); //#23926
-                var _Fd = $a(); //#23926
-                $k[$j++] = _Fd; //#23927
+                var _Fe = $a(); //#23926
+                $k[$j++] = _Fe; //#23927
                 $_.CTXvalstocws(); //#23927
                 $_.addtocws(); //#23927
                 $k[$j++] = $a([$_.unlcw]); //#23928
@@ -29940,10 +30011,10 @@ function bwipp_codeone() {
                 $_.mode = $_.A; //#23929
                 if ($_.i != $_.msglen) { //#23939
                     if ($get($_.numD, $_.i) >= 2) { //#23937
-                        var _Fm = $s(2); //#23933
-                        $put(_Fm, 0, $get($_.msg, $_.i)); //#23933
-                        $put(_Fm, 1, $get($_.msg, $_.i + 1)); //#23933
-                        $k[$j++] = $get($_.Avals, _Fm); //#23933
+                        var _Fn = $s(2); //#23933
+                        $put(_Fn, 0, $get($_.msg, $_.i)); //#23933
+                        $put(_Fn, 1, $get($_.msg, $_.i + 1)); //#23933
+                        $k[$j++] = $get($_.Avals, _Fn); //#23933
                         $_.addtocws(); //#23933
                         $_.i = $_.i + 2; //#23934
                     } else { //#23937
@@ -30026,14 +30097,14 @@ function bwipp_codeone() {
                 } //#23989
                 $k[$j++] = Infinity; //#23994
                 $aload($_.Dbits); //#23995
-                var _H9 = $geti($_.msg, $_.i, 3); //#23996
+                var _HA = $geti($_.msg, $_.i, 3); //#23996
                 $k[$j++] = 0; //#23996
-                for (var _HA = 0, _HB = _H9.length; _HA < _HB; _HA++) { //#23996
-                    var _HD = $k[--$j]; //#23996
-                    $k[$j++] = ($f(_HD + $f($get(_H9, _HA) - 48))) * 10; //#23996
+                for (var _HB = 0, _HC = _HA.length; _HB < _HC; _HB++) { //#23996
+                    var _HE = $k[--$j]; //#23996
+                    $k[$j++] = ($f(_HE + $f($get(_HA, _HB) - 48))) * 10; //#23996
                 } //#23996
-                var _HE = $k[--$j]; //#23996
-                $k[$j++] = (~~(_HE / 10)) + 1; //#23997
+                var _HF = $k[--$j]; //#23996
+                $k[$j++] = (~~(_HF / 10)) + 1; //#23997
                 $k[$j++] = 10; //#23997
                 $_.tobin(); //#23997
                 $aload($k[--$j]); //#23997
@@ -30041,21 +30112,21 @@ function bwipp_codeone() {
                 $_.i = $_.i + 3; //#23999
             } //#23999
             $k[$j++] = Infinity; //#24003
-            for (var _HK = 0, _HJ = $_.Dbits.length - 1; _HK <= _HJ; _HK += 8) { //#24006
-                var _HM = $geti($_.Dbits, _HK, 8); //#24005
+            for (var _HL = 0, _HK = $_.Dbits.length - 1; _HL <= _HK; _HL += 8) { //#24006
+                var _HN = $geti($_.Dbits, _HL, 8); //#24005
                 $k[$j++] = 0; //#24005
-                for (var _HN = 0, _HO = _HM.length; _HN < _HO; _HN++) { //#24005
-                    var _HQ = $k[--$j]; //#24005
-                    $k[$j++] = $f(_HQ + $get(_HM, _HN)) * 2; //#24005
+                for (var _HO = 0, _HP = _HN.length; _HO < _HP; _HO++) { //#24005
+                    var _HR = $k[--$j]; //#24005
+                    $k[$j++] = $f(_HR + $get(_HN, _HO)) * 2; //#24005
                 } //#24005
-                var _HR = $k[--$j]; //#24005
-                $k[$j++] = ~~(_HR / 2); //#24005
+                var _HS = $k[--$j]; //#24005
+                $k[$j++] = ~~(_HS / 2); //#24005
             } //#24005
             $astore($a($counttomark())); //#24007
-            var _HU = $k[--$j]; //#24007
             var _HV = $k[--$j]; //#24007
-            $k[$j++] = _HU; //#24007
+            var _HW = $k[--$j]; //#24007
             $k[$j++] = _HV; //#24007
+            $k[$j++] = _HW; //#24007
             $j--; //#24007
             $_.addtocws(); //#24007
             $_.mode = $_.A; //#24008
@@ -30110,9 +30181,9 @@ function bwipp_codeone() {
         } //#24038
         $_.cws = $geti($_.cws, 0, $_.j); //#24040
     } //#24040
-    var _IE = $_.metrics; //#24045
-    for (var _IF = 0, _IG = _IE.length; _IF < _IG; _IF++) { //#24063
-        $_.m = $get(_IE, _IF); //#24046
+    var _IF = $_.metrics; //#24045
+    for (var _IG = 0, _IH = _IF.length; _IG < _IH; _IG++) { //#24063
+        $_.m = $get(_IF, _IG); //#24046
         $_.vers = $get($_.m, 0); //#24047
         $_.rows = $get($_.m, 1); //#24048
         $_.cols = $get($_.m, 2); //#24049
@@ -30144,66 +30215,66 @@ function bwipp_codeone() {
     if (!$_.stype) { //#24073
         $k[$j++] = Infinity; //#24071
         $aload($_.cws); //#24071
-        for (var _Ir = 0, _Is = $f($_.dcws - $_.cws.length); _Ir < _Is; _Ir++) { //#24071
+        for (var _Is = 0, _It = $f($_.dcws - $_.cws.length); _Is < _It; _Is++) { //#24071
             $k[$j++] = 129; //#24071
         } //#24071
         $_.cws = $a(); //#24071
     } else { //#24073
         $k[$j++] = Infinity; //#24073
-        for (var _Iw = 0, _Ix = $f($_.dcws - $_.cws.length); _Iw < _Ix; _Iw++) { //#24073
+        for (var _Ix = 0, _Iy = $f($_.dcws - $_.cws.length); _Ix < _Iy; _Ix++) { //#24073
             $k[$j++] = 0; //#24073
         } //#24073
         $aload($_.cws); //#24073
         $_.cws = $a(); //#24073
     } //#24073
-    var _J1 = $get($_.options, 'debugcws') !== undefined; //#24076
-    if (_J1) { //#24076
+    var _J2 = $get($_.options, 'debugcws') !== undefined; //#24076
+    if (_J2) { //#24076
         $k[$j++] = 'bwipp.debugcws#24076'; //#24076
         $k[$j++] = $_.cws; //#24076
         bwipp_raiseerror(); //#24076
     } //#24076
     $_.cwbs = $a($_.rsbl); //#24079
     $_.ecbs = $a($_.rsbl); //#24080
-    for (var _J9 = 0, _J8 = $f($_.rsbl - 1); _J9 <= _J8; _J9 += 1) { //#24089
-        $_.i = _J9; //#24082
+    for (var _JA = 0, _J9 = $f($_.rsbl - 1); _JA <= _J9; _JA += 1) { //#24089
+        $_.i = _JA; //#24082
         $_.cwb = $a($_.dcpb); //#24083
-        for (var _JE = 0, _JD = $_.dcpb - 1; _JE <= _JD; _JE += 1) { //#24087
-            $_.j = _JE; //#24085
+        for (var _JF = 0, _JE = $_.dcpb - 1; _JF <= _JE; _JF += 1) { //#24087
+            $_.j = _JF; //#24085
             $put($_.cwb, $_.j, $get($_.cws, $f(($_.j * $_.rsbl) + $_.i))); //#24086
         } //#24086
         $put($_.cwbs, $_.i, $_.cwb); //#24088
     } //#24088
-    var _JQ = $_.stype ? 32 : 256; //#24092
-    $_.gf = _JQ; //#24092
+    var _JR = $_.stype ? 32 : 256; //#24092
+    $_.gf = _JR; //#24092
     $_['gf-1'] = $_.gf - 1; //#24093
-    var _JT = $_.stype ? 37 : 301; //#24094
-    $_.pm = _JT; //#24094
+    var _JU = $_.stype ? 37 : 301; //#24094
+    $_.pm = _JU; //#24094
     $k[$j++] = Infinity; //#24095
     $k[$j++] = 1; //#24095
-    for (var _JV = 0, _JW = $_["gf-1"]; _JV < _JW; _JV++) { //#24095
-        var _JX = $k[--$j]; //#24095
-        var _JY = _JX * 2; //#24095
-        $k[$j++] = _JX; //#24095
+    for (var _JW = 0, _JX = $_["gf-1"]; _JW < _JX; _JW++) { //#24095
+        var _JY = $k[--$j]; //#24095
+        var _JZ = _JY * 2; //#24095
         $k[$j++] = _JY; //#24095
-        if (_JY >= $_.gf) { //#24095
-            var _Jb = $k[--$j]; //#24095
-            $k[$j++] = _Jb ^ $_.pm; //#24095
+        $k[$j++] = _JZ; //#24095
+        if (_JZ >= $_.gf) { //#24095
+            var _Jc = $k[--$j]; //#24095
+            $k[$j++] = _Jc ^ $_.pm; //#24095
         } //#24095
     } //#24095
     $_.rsalog = $a(); //#24095
     $_.rslog = $a($_.gf); //#24096
-    for (var _Jh = 1, _Jg = $_["gf-1"]; _Jh <= _Jg; _Jh += 1) { //#24097
-        $put($_.rslog, $get($_.rsalog, _Jh), _Jh); //#24097
+    for (var _Ji = 1, _Jh = $_["gf-1"]; _Ji <= _Jh; _Ji += 1) { //#24097
+        $put($_.rslog, $get($_.rsalog, _Ji), _Ji); //#24097
     } //#24097
     $_.rsprod = function() {
-        var _Jl = $k[--$j]; //#24099
         var _Jm = $k[--$j]; //#24099
+        var _Jn = $k[--$j]; //#24099
+        $k[$j++] = _Jn; //#24103
         $k[$j++] = _Jm; //#24103
-        $k[$j++] = _Jl; //#24103
-        if ((_Jl != 0) && (_Jm != 0)) { //#24102
-            var _Jp = $get($_.rslog, $k[--$j]); //#24100
-            var _Jv = $get($_.rsalog, $f(_Jp + $get($_.rslog, $k[--$j])) % $_["gf-1"]); //#24100
-            $k[$j++] = _Jv; //#24100
+        if ((_Jm != 0) && (_Jn != 0)) { //#24102
+            var _Jq = $get($_.rslog, $k[--$j]); //#24100
+            var _Jw = $get($_.rsalog, $f(_Jq + $get($_.rslog, $k[--$j])) % $_["gf-1"]); //#24100
+            $k[$j++] = _Jw; //#24100
         } else { //#24102
             $j -= 2; //#24102
             $k[$j++] = 0; //#24102
@@ -30211,119 +30282,119 @@ function bwipp_codeone() {
     }; //#24102
     $k[$j++] = Infinity; //#24107
     $k[$j++] = 1; //#24107
-    for (var _Jx = 0, _Jy = $_.ecpb; _Jx < _Jy; _Jx++) { //#24107
+    for (var _Jy = 0, _Jz = $_.ecpb; _Jy < _Jz; _Jy++) { //#24107
         $k[$j++] = 0; //#24107
     } //#24107
     $_.coeffs = $a(); //#24107
-    for (var _K2 = 0, _K1 = $_.ecpb - 1; _K2 <= _K1; _K2 += 1) { //#24116
-        $_.i = _K2; //#24109
+    for (var _K3 = 0, _K2 = $_.ecpb - 1; _K3 <= _K2; _K3 += 1) { //#24116
+        $_.i = _K3; //#24109
         $put($_.coeffs, $_.i + 1, $get($_.coeffs, $_.i)); //#24110
-        for (var _K9 = $_.i; _K9 >= 1; _K9 -= 1) { //#24114
-            $_.j = _K9; //#24112
+        for (var _KA = $_.i; _KA >= 1; _KA -= 1) { //#24114
+            $_.j = _KA; //#24112
             $k[$j++] = $_.coeffs; //#24113
             $k[$j++] = $_.j; //#24113
             $k[$j++] = $get($_.coeffs, $_.j - 1); //#24113
             $k[$j++] = $get($_.coeffs, $_.j); //#24113
             $k[$j++] = $get($_.rsalog, $_.i); //#24113
             $_.rsprod(); //#24113
-            var _KL = $k[--$j]; //#24113
             var _KM = $k[--$j]; //#24113
             var _KN = $k[--$j]; //#24113
-            $put($k[--$j], _KN, $xo(_KM, _KL)); //#24113
+            var _KO = $k[--$j]; //#24113
+            $put($k[--$j], _KO, $xo(_KN, _KM)); //#24113
         } //#24113
         $k[$j++] = $_.coeffs; //#24115
         $k[$j++] = 0; //#24115
         $k[$j++] = $get($_.coeffs, 0); //#24115
         $k[$j++] = $get($_.rsalog, $_.i); //#24115
         $_.rsprod(); //#24115
-        var _KV = $k[--$j]; //#24115
         var _KW = $k[--$j]; //#24115
-        $put($k[--$j], _KW, _KV); //#24115
+        var _KX = $k[--$j]; //#24115
+        $put($k[--$j], _KX, _KW); //#24115
     } //#24115
     $_.coeffs = $geti($_.coeffs, 0, $_.coeffs.length - 1); //#24117
-    for (var _Kd = 0, _Kc = $_.cwbs.length - 1; _Kd <= _Kc; _Kd += 1) { //#24132
-        $_.i = _Kd; //#24121
+    for (var _Ke = 0, _Kd = $_.cwbs.length - 1; _Ke <= _Kd; _Ke += 1) { //#24132
+        $_.i = _Ke; //#24121
         $k[$j++] = Infinity; //#24122
         $aload($get($_.cwbs, $_.i)); //#24122
-        for (var _Ki = 0, _Kj = $_.ecpb; _Ki < _Kj; _Ki++) { //#24122
+        for (var _Kj = 0, _Kk = $_.ecpb; _Kj < _Kk; _Kj++) { //#24122
             $k[$j++] = 0; //#24122
         } //#24122
         $_.rscws = $a(); //#24122
-        for (var _Kn = 0, _Km = $_.dcpb - 1; _Kn <= _Km; _Kn += 1) { //#24130
-            $_.m = _Kn; //#24124
+        for (var _Ko = 0, _Kn = $_.dcpb - 1; _Ko <= _Kn; _Ko += 1) { //#24130
+            $_.m = _Ko; //#24124
             $_.k = $get($_.rscws, $_.m); //#24125
-            for (var _Kt = 0, _Ks = $_.ecpb - 1; _Kt <= _Ks; _Kt += 1) { //#24129
-                $_.j = _Kt; //#24127
+            for (var _Ku = 0, _Kt = $_.ecpb - 1; _Ku <= _Kt; _Ku += 1) { //#24129
+                $_.j = _Ku; //#24127
                 $k[$j++] = $_.rscws; //#24128
                 $k[$j++] = ($_.m + $_.j) + 1; //#24128
                 $k[$j++] = $get($_.coeffs, ($_.ecpb - $_.j) - 1); //#24128
                 $k[$j++] = $_.k; //#24128
                 $_.rsprod(); //#24128
-                var _L6 = $k[--$j]; //#24128
                 var _L7 = $k[--$j]; //#24128
-                $put($k[--$j], _L7, $xo(_L6, $get($_.rscws, ($_.m + $_.j) + 1))); //#24128
+                var _L8 = $k[--$j]; //#24128
+                $put($k[--$j], _L8, $xo(_L7, $get($_.rscws, ($_.m + $_.j) + 1))); //#24128
             } //#24128
         } //#24128
         $put($_.ecbs, $_.i, $geti($_.rscws, $_.dcpb, $_.ecpb)); //#24131
     } //#24131
     $k[$j++] = Infinity; //#24135
     $aload($_.cws); //#24135
-    for (var _LH = 0, _LI = $_.rscw; _LH < _LI; _LH++) { //#24135
+    for (var _LI = 0, _LJ = $_.rscw; _LI < _LJ; _LI++) { //#24135
         $k[$j++] = 0; //#24135
     } //#24135
     $_.cws = $a(); //#24135
-    for (var _LM = 0, _LL = $f($_.rscw - 1); _LM <= _LL; _LM += 1) { //#24139
-        $_.i = _LM; //#24137
+    for (var _LN = 0, _LM = $f($_.rscw - 1); _LN <= _LM; _LN += 1) { //#24139
+        $_.i = _LN; //#24137
         $put($_.cws, $f($_.dcws + $_.i), $get($get($_.ecbs, $_.i % $_.rsbl), ~~($_.i / $_.rsbl))); //#24138
     } //#24138
-    var _La = $_.stype ? 5 : 8; //#24142
-    $_.mmat = $a($f($_.dcws + $_.rscw) * _La); //#24142
+    var _Lb = $_.stype ? 5 : 8; //#24142
+    $_.mmat = $a($f($_.dcws + $_.rscw) * _Lb); //#24142
     $_.r = 0; //#24143
     $_.c = 0; //#24143
-    var _Ld = $_.stype ? 2 : 1; //#24144
-    for (var _Lg = 0, _Lh = _Ld, _Lf = $_.cws.length - 1; _Lh < 0 ? _Lg >= _Lf : _Lg <= _Lf; _Lg += _Lh) { //#24165
-        $_.i = _Lg; //#24145
+    var _Le = $_.stype ? 2 : 1; //#24144
+    for (var _Lh = 0, _Li = _Le, _Lg = $_.cws.length - 1; _Li < 0 ? _Lh >= _Lg : _Lh <= _Lg; _Lh += _Li) { //#24165
+        $_.i = _Lh; //#24145
         if (!$_.stype) { //#24159
-            var _Lk = $strcpy($s(8), "00000000"); //#24147
-            var _Lp = $cvrs($s(8), $get($_.cws, $_.i), 2); //#24147
-            $puti(_Lk, 8 - _Lp.length, _Lp); //#24148
-            $k[$j++] = _Lk; //#24148
+            var _Ll = $strcpy($s(8), "00000000"); //#24147
+            var _Lq = $cvrs($s(8), $get($_.cws, $_.i), 2); //#24147
+            $puti(_Ll, 8 - _Lq.length, _Lq); //#24148
+            $k[$j++] = _Ll; //#24148
             $k[$j++] = Infinity; //#24148
-            var _Lq = $k[--$j]; //#24148
             var _Lr = $k[--$j]; //#24148
-            $k[$j++] = _Lq; //#24148
-            $forall(_Lr, function() { //#24148
-                var _Ls = $k[--$j]; //#24148
-                $k[$j++] = $f(_Ls - 48); //#24148
+            var _Ls = $k[--$j]; //#24148
+            $k[$j++] = _Lr; //#24148
+            $forall(_Ls, function() { //#24148
+                var _Lt = $k[--$j]; //#24148
+                $k[$j++] = $f(_Lt - 48); //#24148
             }); //#24148
-            var _Lt = $a(); //#24148
-            $_.top = $geti(_Lt, 0, 4); //#24149
-            $_.bot = $geti(_Lt, 4, 4); //#24150
+            var _Lu = $a(); //#24148
+            $_.top = $geti(_Lu, 0, 4); //#24149
+            $_.bot = $geti(_Lu, 4, 4); //#24150
         } else { //#24159
-            var _Lx = $strcpy($s(5), "00000"); //#24152
-            var _M2 = $cvrs($s(5), $get($_.cws, $_.i), 2); //#24152
-            $puti(_Lx, 5 - _M2.length, _M2); //#24153
-            $k[$j++] = _Lx; //#24153
+            var _Ly = $strcpy($s(5), "00000"); //#24152
+            var _M3 = $cvrs($s(5), $get($_.cws, $_.i), 2); //#24152
+            $puti(_Ly, 5 - _M3.length, _M3); //#24153
+            $k[$j++] = _Ly; //#24153
             $k[$j++] = Infinity; //#24153
-            var _M3 = $k[--$j]; //#24153
             var _M4 = $k[--$j]; //#24153
-            $k[$j++] = _M3; //#24153
-            $forall(_M4, function() { //#24153
-                var _M5 = $k[--$j]; //#24153
-                $k[$j++] = $f(_M5 - 48); //#24153
+            var _M5 = $k[--$j]; //#24153
+            $k[$j++] = _M4; //#24153
+            $forall(_M5, function() { //#24153
+                var _M6 = $k[--$j]; //#24153
+                $k[$j++] = $f(_M6 - 48); //#24153
             }); //#24153
             $_.c1 = $a(); //#24154
-            var _M8 = $strcpy($s(5), "00000"); //#24155
-            var _MD = $cvrs($s(5), $get($_.cws, $_.i + 1), 2); //#24155
-            $puti(_M8, 5 - _MD.length, _MD); //#24156
-            $k[$j++] = _M8; //#24156
+            var _M9 = $strcpy($s(5), "00000"); //#24155
+            var _ME = $cvrs($s(5), $get($_.cws, $_.i + 1), 2); //#24155
+            $puti(_M9, 5 - _ME.length, _ME); //#24156
+            $k[$j++] = _M9; //#24156
             $k[$j++] = Infinity; //#24156
-            var _ME = $k[--$j]; //#24156
             var _MF = $k[--$j]; //#24156
-            $k[$j++] = _ME; //#24156
-            $forall(_MF, function() { //#24156
-                var _MG = $k[--$j]; //#24156
-                $k[$j++] = $f(_MG - 48); //#24156
+            var _MG = $k[--$j]; //#24156
+            $k[$j++] = _MF; //#24156
+            $forall(_MG, function() { //#24156
+                var _MH = $k[--$j]; //#24156
+                $k[$j++] = $f(_MH - 48); //#24156
             }); //#24156
             $_.c2 = $a(); //#24157
             $k[$j++] = Infinity; //#24158
@@ -30344,72 +30415,72 @@ function bwipp_codeone() {
         } //#24164
     } //#24164
     $_.mmv = function() {
-        var _Mi = $k[--$j]; //#24168
         var _Mj = $k[--$j]; //#24168
-        $k[$j++] = $f(_Mj + (_Mi * $_.cols)); //#24168
+        var _Mk = $k[--$j]; //#24168
+        $k[$j++] = $f(_Mk + (_Mj * $_.cols)); //#24168
     }; //#24168
     $k[$j++] = Infinity; //#24169
-    for (var _Mm = 0, _Mn = $_.rows * $_.cols; _Mm < _Mn; _Mm++) { //#24169
+    for (var _Mn = 0, _Mo = $_.rows * $_.cols; _Mn < _Mo; _Mn++) { //#24169
         $k[$j++] = -1; //#24169
     } //#24169
     $_.pixs = $a(); //#24169
-    var _NJ = $a([function() {
-        for (var _Mq = 0, _Mr = $_.cols; _Mq < _Mr; _Mq++) { //#24173
+    var _NK = $a([function() {
+        for (var _Mr = 0, _Ms = $_.cols; _Mr < _Ms; _Mr++) { //#24173
             $k[$j++] = 0; //#24173
         } //#24173
     }, function() {
-        for (var _Mt = 0, _Mu = $_.cols; _Mt < _Mu; _Mt++) { //#24174
+        for (var _Mu = 0, _Mv = $_.cols; _Mu < _Mv; _Mu++) { //#24174
             $k[$j++] = 1; //#24174
         } //#24174
     }, function() {
         $k[$j++] = 0; //#24175
-        for (var _Mw = 0, _Mx = $f($_.cols - 2); _Mw < _Mx; _Mw++) { //#24175
+        for (var _Mx = 0, _My = $f($_.cols - 2); _Mx < _My; _Mx++) { //#24175
             $k[$j++] = 1; //#24175
         } //#24175
         $k[$j++] = 0; //#24175
     }, function() {
         $k[$j++] = 0; //#24176
         $k[$j++] = 1; //#24176
-        for (var _Mz = 0, _N0 = $f($_.cols - 4); _Mz < _N0; _Mz++) { //#24176
+        for (var _N0 = 0, _N1 = $f($_.cols - 4); _N0 < _N1; _N0++) { //#24176
             $k[$j++] = 0; //#24176
         } //#24176
         $k[$j++] = 1; //#24176
         $k[$j++] = 0; //#24176
     }, function() {
-        for (var _N2 = 0, _N3 = ~~($f($_.cols - 1) / 2); _N2 < _N3; _N2++) { //#24177
+        for (var _N3 = 0, _N4 = ~~($f($_.cols - 1) / 2); _N3 < _N4; _N3++) { //#24177
             $k[$j++] = -1; //#24177
         } //#24177
         $k[$j++] = 1; //#24177
-        for (var _N5 = 0, _N6 = ~~($f($_.cols - 1) / 2); _N5 < _N6; _N5++) { //#24177
+        for (var _N6 = 0, _N7 = ~~($f($_.cols - 1) / 2); _N6 < _N7; _N6++) { //#24177
             $k[$j++] = -1; //#24177
         } //#24177
     }, function() {
-        for (var _N8 = 0, _N9 = ~~($f($_.cols - 1) / 2); _N8 < _N9; _N8++) { //#24178
+        for (var _N9 = 0, _NA = ~~($f($_.cols - 1) / 2); _N9 < _NA; _N9++) { //#24178
             $k[$j++] = -1; //#24178
         } //#24178
         $k[$j++] = 0; //#24178
-        for (var _NB = 0, _NC = ~~($f($_.cols - 1) / 2); _NB < _NC; _NB++) { //#24178
+        for (var _NC = 0, _ND = ~~($f($_.cols - 1) / 2); _NC < _ND; _NC++) { //#24178
             $k[$j++] = -1; //#24178
         } //#24178
     }, function() {
         $k[$j++] = 1; //#24179
-        for (var _NE = 0, _NF = $f($_.cols - 2); _NE < _NF; _NE++) { //#24179
+        for (var _NF = 0, _NG = $f($_.cols - 2); _NF < _NG; _NF++) { //#24179
             $k[$j++] = 0; //#24179
         } //#24179
         $k[$j++] = 1; //#24179
     }, function() {
         $k[$j++] = 1; //#24180
         $k[$j++] = 0; //#24180
-        for (var _NH = 0, _NI = $f($_.cols - 4); _NH < _NI; _NH++) { //#24180
+        for (var _NI = 0, _NJ = $f($_.cols - 4); _NI < _NJ; _NI++) { //#24180
             $k[$j++] = 1; //#24180
         } //#24180
         $k[$j++] = 0; //#24180
         $k[$j++] = 1; //#24180
     }]); //#24180
-    $_.artifact = _NJ; //#24181
+    $_.artifact = _NK; //#24181
     if (!bwipp_codeone.__24195__) { //#24195
         $_ = Object.create($_); //#24195
-        var _NK = new Map([
+        var _NL = new Map([
             ["A", "121343"],
             ["B", "12134343"],
             ["C", "12121343"],
@@ -30421,7 +30492,7 @@ function bwipp_codeone() {
             ["S", "56661278"],
             ["T", "5666666666127878"]
         ]); //#24193
-        $_.cpatmap = _NK; //#24194
+        $_.cpatmap = _NL; //#24194
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_codeone.$ctx[id] = $_[id]); //#24194
         bwipp_codeone.__24195__ = 1; //#24194
         $_ = Object.getPrototypeOf($_); //#24194
@@ -30437,32 +30508,34 @@ function bwipp_codeone() {
             return true;
         } //#24198
     }); //#24198
-    var _NX = $a(); //#24198
-    var _NY = $k[--$j]; //#24198
-    $puti($k[--$j], _NY, _NX); //#24198
-    for (var _Nc = 0, _Nb = $f($_.risl - 1); _Nc <= _Nb; _Nc += 1) { //#24213
-        $_.i = _Nc; //#24202
-        for (var _Nh = $_.riso, _Ni = $_.risi, _Ng = $f($_.cols - 1); _Ni < 0 ? _Nh >= _Ng : _Nh <= _Ng; _Nh += _Ni) { //#24212
-            $_.j = _Nh; //#24204
-            var _Nk = (($_.i % 12) == 0) ? 1 : 0; //#24205
-            var _Nl = $a([1, _Nk]); //#24205
-            $k[$j++] = _Nl; //#24206
-            $k[$j++] = _Nl; //#24206
+    var _NY = $a(); //#24198
+    var _NZ = $k[--$j]; //#24198
+    $puti($k[--$j], _NZ, _NY); //#24198
+    for (var _Nd = 0, _Nc = $f($_.risl - 1); _Nd <= _Nc; _Nd += 1) { //#24213
+        $_.i = _Nd; //#24202
+        for (var _Ni = $_.riso, _Nj = $_.risi, _Nh = $f($_.cols - 1); _Nj < 0 ? _Ni >= _Nh : _Ni <= _Nh; _Ni += _Nj) { //#24212
+            $_.j = _Ni; //#24204
+            var _Nl = (($_.i % 12) == 0) ? 1 : 0; //#24205
+            var _Nm = $a([1, _Nl]); //#24205
+            $k[$j++] = _Nm; //#24206
+            $k[$j++] = _Nm; //#24206
             $k[$j++] = $_.pixs; //#24206
             $k[$j++] = $_.j; //#24206
             $k[$j++] = $_.i; //#24206
             $_.mmv(); //#24206
-            var _Np = $k[--$j]; //#24207
+            $r(3, -1); //#24207
             var _Nq = $k[--$j]; //#24207
-            $puti(_Nq, _Np, $k[--$j]); //#24207
+            var _Nr = $k[--$j]; //#24207
+            $puti($k[--$j], _Nr, _Nq); //#24207
             if ($_.i != $f($_.risl - 1)) { //#24211
                 $k[$j++] = $_.pixs; //#24209
                 $k[$j++] = $f($f($_.cols - $_.j) - 2); //#24209
                 $k[$j++] = $f($f($_.rows - $_.i) - 1); //#24209
                 $_.mmv(); //#24209
-                var _Nz = $k[--$j]; //#24210
+                $r(3, -1); //#24210
                 var _O0 = $k[--$j]; //#24210
-                $puti(_O0, _Nz, $k[--$j]); //#24210
+                var _O1 = $k[--$j]; //#24210
+                $puti($k[--$j], _O1, _O0); //#24210
             } else { //#24211
                 $j--; //#24211
             } //#24211
@@ -30470,7 +30543,7 @@ function bwipp_codeone() {
     } //#24211
     if (!bwipp_codeone.__24233__) { //#24233
         $_ = Object.create($_); //#24233
-        var _Of = new Map([
+        var _Og = new Map([
             ["A", $a([$a([12, 5])])],
             ["B", $a([$a([16, 7])])],
             ["C", $a([$a([26, 12])])],
@@ -30486,22 +30559,22 @@ function bwipp_codeone() {
             ["T-32", $a([$a([16, 10]), $a([16, 12])])],
             ["T-48", $a([$a([24, 10]), $a([24, 12]), $a([24, 14])])]
         ]); //#24231
-        $_.blackdotmap = _Of; //#24232
+        $_.blackdotmap = _Og; //#24232
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_codeone.$ctx[id] = $_[id]); //#24232
         bwipp_codeone.__24233__ = 1; //#24232
         $_ = Object.getPrototypeOf($_); //#24232
     } //#24232
     $forall($get($_.blackdotmap, $_.vers), function() { //#24234
-        var _Ol = $k[--$j]; //#24234
-        $k[$j++] = $_.pixs; //#24234
-        $aload(_Ol); //#24234
-        $_.mmv(); //#24234
         var _Om = $k[--$j]; //#24234
-        $put($k[--$j], _Om, 1); //#24234
+        $k[$j++] = $_.pixs; //#24234
+        $aload(_Om); //#24234
+        $_.mmv(); //#24234
+        var _On = $k[--$j]; //#24234
+        $put($k[--$j], _On, 1); //#24234
     }); //#24234
     $_.j = 0; //#24237
-    for (var _Oq = 0, _Op = $_.pixs.length - 1; _Oq <= _Op; _Oq += 1) { //#24244
-        $_.i = _Oq; //#24239
+    for (var _Or = 0, _Oq = $_.pixs.length - 1; _Or <= _Oq; _Or += 1) { //#24244
+        $_.i = _Or; //#24239
         if ($get($_.pixs, $_.i) == -1) { //#24243
             $put($_.pixs, $_.i, $get($_.mmat, $_.j)); //#24241
             $_.j = $_.j + 1; //#24242
@@ -30532,8 +30605,8 @@ function bwipp_codeone() {
     } //#24258
     $k[$j++] = 'opt'; //#24260
     $k[$j++] = $_.options; //#24260
-    var _P8 = $d(); //#24260
-    $k[$j++] = _P8; //#24263
+    var _P9 = $d(); //#24260
+    $k[$j++] = _P9; //#24263
     if (!$_.dontdraw) { //#24263
         bwipp_renmatrix(); //#24263
     } //#24263
@@ -30609,7 +30682,7 @@ function bwipp_hanxin() {
             bwipp_raiseerror(); //#24338
         } //#24338
     } //#24338
-    bwipp_loadctx(bwipp_hanxin) //#24342
+    bwipp_loadctx(bwipp_hanxin); //#24342
     var _S = new Map([
         ["parse", $_.parse],
         ["parsefnc", $_.parsefnc]
@@ -30631,9 +30704,13 @@ function bwipp_hanxin() {
             $k[$j++] = _c; //#24354
         } //#24354
         var _d = $k[--$j]; //#24355
-        var _g = $cvrs($s(_d.length), $k[--$j], 2); //#24355
-        $puti(_d, _d.length - _g.length, _g); //#24356
-        $k[$j++] = _d; //#24356
+        $k[$j++] = _d; //#24355
+        $k[$j++] = _d; //#24355
+        $r(3, -1); //#24355
+        var _e = $k[--$j]; //#24355
+        var _f = $k[--$j]; //#24355
+        var _h = $cvrs($s(_f.length), _e, 2); //#24355
+        $puti(_f, _f.length - _h.length, _h); //#24356
     }; //#24356
     $_.bits = $s((4 + 13) + ($_.msglen * 8)); //#24360
     $puti($_.bits, 0, "0011"); //#24361
@@ -30642,32 +30719,32 @@ function bwipp_hanxin() {
     $k[$j++] = $_.msglen; //#24362
     $k[$j++] = 13; //#24362
     $_.tobin(); //#24362
-    var _m = $k[--$j]; //#24362
     var _n = $k[--$j]; //#24362
-    $puti($k[--$j], _n, _m); //#24362
-    for (var _r = 0, _q = $_.msglen - 1; _r <= _q; _r += 1) { //#24366
-        $_.i = _r; //#24364
+    var _o = $k[--$j]; //#24362
+    $puti($k[--$j], _o, _n); //#24362
+    for (var _s = 0, _r = $_.msglen - 1; _s <= _r; _s += 1) { //#24366
+        $_.i = _s; //#24364
         $k[$j++] = $_.bits; //#24365
         $k[$j++] = 17 + ($_.i * 8); //#24365
         $k[$j++] = $get($_.msg, $_.i); //#24365
         $k[$j++] = 8; //#24365
         $_.tobin(); //#24365
-        var _x = $k[--$j]; //#24365
         var _y = $k[--$j]; //#24365
-        $puti($k[--$j], _y, _x); //#24365
+        var _z = $k[--$j]; //#24365
+        $puti($k[--$j], _z, _y); //#24365
     } //#24365
     if (!bwipp_hanxin.__24709__) { //#24709
         $_ = Object.create($_); //#24709
-        var _24 = $a([0, -1, -1]); //#24392
-        $_.metrics = $a([$a(["1", 23, -1, 0, 205, $a([1, 21, 4]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 17, 8]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 13, 12]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 9, 16]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["2", 25, -1, 0, 301, $a([1, 31, 6]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 25, 12]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 19, 18]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 15, 22]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["3", 27, -1, 0, 405, $a([1, 42, 8]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 34, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 26, 24]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 20, 30]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["4", 29, 14, 1, 439, $a([1, 46, 8]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 38, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 30, 24]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 22, 32]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["5", 31, 16, 1, 555, $a([1, 57, 12]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 49, 20]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 37, 32]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 14, 20]), $a([1, 13, 22]), $a([0, -1, -1])]), $a(["6", 33, 16, 1, 675, $a([1, 70, 14]), _24, $a([0, -1, -1]), $a([1, 58, 26]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 24, 20]), $a([1, 22, 18]), $a([0, -1, -1]), $a([1, 16, 24]), $a([1, 18, 26]), $a([0, -1, -1])]), $a(["7", 35, 17, 1, 805, $a([1, 84, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 70, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 26, 22]), $a([1, 28, 24]), $a([0, -1, -1]), $a([2, 14, 20]), $a([1, 12, 20]), $a([0, -1, -1])]), $a(["8", 37, 18, 1, 943, $a([1, 99, 18]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 40, 18]), $a([1, 41, 18]), $a([0, -1, -1]), $a([1, 31, 26]), $a([1, 32, 28]), $a([0, -1, -1]), $a([2, 16, 24]), $a([1, 15, 22]), $a([0, -1, -1])]), $a(["9", 39, 19, 1, 1089, $a([1, 114, 22]), $a([0, -1, -1]), $a([0, -1, -1]), $a([2, 48, 20]), $a([0, -1, -1]), $a([0, -1, -1]), $a([2, 24, 20]), $a([1, 26, 22]), $a([0, -1, -1]), $a([2, 18, 28]), $a([1, 18, 26]), $a([0, -1, -1])]), $a(["10", 41, 20, 1, 1243, $a([1, 131, 24]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 52, 22]), $a([1, 57, 24]), $a([0, -1, -1]), $a([2, 27, 24]), $a([1, 29, 24]), $a([0, -1, -1]), $a([2, 21, 32]), $a([1, 19, 30]), $a([0, -1, -1])]), $a(["11", 43, 14, 2, 1289, $a([1, 135, 26]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 56, 24]), $a([1, 57, 24]), $a([0, -1, -1]), $a([2, 28, 24]), $a([1, 31, 26]), $a([0, -1, -1]), $a([2, 22, 32]), $a([1, 21, 32]), $a([0, -1, -1])]), $a(["12", 45, 15, 2, 1455, $a([1, 153, 28]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 62, 26]), $a([1, 65, 28]), $a([0, -1, -1]), $a([2, 32, 28]), $a([1, 33, 28]), $a([0, -1, -1]), $a([3, 17, 26]), $a([1, 22, 30]), $a([0, -1, -1])]), $a(["13", 47, 16, 2, 1629, $a([1, 86, 16]), $a([1, 85, 16]), $a([0, -1, -1]), $a([1, 71, 30]), $a([1, 72, 30]), $a([0, -1, -1]), $a([2, 37, 32]), $a([1, 35, 30]), $a([0, -1, -1]), $a([3, 20, 30]), $a([1, 21, 32]), $a([0, -1, -1])]), $a(["14", 49, 16, 2, 1805, $a([1, 94, 18]), $a([1, 95, 18]), $a([0, -1, -1]), $a([2, 51, 22]), $a([1, 55, 24]), $a([0, -1, -1]), $a([3, 30, 26]), $a([1, 31, 26]), $a([0, -1, -1]), $a([4, 18, 28]), $a([1, 17, 24]), $a([0, -1, -1])]), $a(["15", 51, 17, 2, 1995, $a([1, 104, 20]), $a([1, 105, 20]), $a([0, -1, -1]), $a([2, 57, 24]), $a([1, 61, 26]), $a([0, -1, -1]), $a([3, 33, 28]), $a([1, 36, 30]), $a([0, -1, -1]), $a([4, 20, 30]), $a([1, 19, 30]), $a([0, -1, -1])]), $a(["16", 53, 17, 2, 2187, $a([1, 115, 22]), $a([1, 114, 22]), $a([0, -1, -1]), $a([2, 65, 28]), $a([1, 61, 26]), $a([0, -1, -1]), $a([3, 38, 32]), $a([1, 33, 30]), $a([0, -1, -1]), $a([5, 19, 28]), $a([1, 14, 24]), $a([0, -1, -1])]), $a(["17", 55, 18, 2, 2393, $a([1, 126, 24]), $a([1, 125, 24]), $a([0, -1, -1]), $a([2, 70, 30]), $a([1, 69, 30]), $a([0, -1, -1]), $a([4, 33, 28]), $a([1, 29, 26]), $a([0, -1, -1]), $a([5, 20, 30]), $a([1, 19, 30]), $a([0, -1, -1])]), $a(["18", 57, 19, 2, 2607, $a([1, 136, 26]), $a([1, 137, 26]), $a([0, -1, -1]), $a([3, 56, 24]), $a([1, 59, 26]), $a([0, -1, -1]), $a([5, 35, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([6, 18, 28]), $a([1, 21, 28]), $a([0, -1, -1])]), $a(["19", 59, 20, 2, 2829, $a([1, 148, 28]), $a([1, 149, 28]), $a([0, -1, -1]), $a([3, 61, 26]), $a([1, 64, 28]), $a([0, -1, -1]), $a([7, 24, 20]), $a([1, 23, 22]), $a([0, -1, -1]), $a([6, 20, 30]), $a([1, 21, 32]), $a([0, -1, -1])]), $a(["20", 61, 20, 2, 3053, $a([3, 107, 20]), $a([0, -1, -1]), $a([0, -1, -1]), $a([3, 65, 28]), $a([1, 72, 30]), $a([0, -1, -1]), $a([7, 26, 22]), $a([1, 23, 22]), $a([0, -1, -1]), $a([7, 19, 28]), $a([1, 20, 32]), $a([0, -1, -1])]), $a(["21", 63, 21, 2, 3291, $a([3, 115, 22]), $a([0, -1, -1]), $a([0, -1, -1]), $a([4, 56, 24]), $a([1, 63, 28]), $a([0, -1, -1]), $a([7, 28, 24]), $a([1, 25, 22]), $a([0, -1, -1]), $a([8, 18, 28]), $a([1, 21, 22]), $a([0, -1, -1])]), $a(["22", 65, 16, 3, 3383, $a([2, 116, 22]), $a([1, 122, 24]), $a([0, -1, -1]), $a([4, 56, 24]), $a([1, 72, 30]), $a([0, -1, -1]), $a([7, 28, 24]), $a([1, 32, 26]), $a([0, -1, -1]), $a([8, 18, 28]), $a([1, 24, 30]), $a([0, -1, -1])]), $a(["23", 67, 17, 3, 3631, $a([3, 127, 24]), $a([0, -1, -1]), $a([0, -1, -1]), $a([5, 51, 22]), $a([1, 62, 26]), $a([0, -1, -1]), $a([7, 30, 26]), $a([1, 35, 26]), $a([0, -1, -1]), $a([8, 20, 30]), $a([1, 21, 32]), $a([0, -1, -1])]), $a(["24", 69, 17, 3, 3887, $a([2, 135, 26]), $a([1, 137, 26]), $a([0, -1, -1]), $a([5, 56, 24]), $a([1, 59, 26]), $a([0, -1, -1]), $a([7, 33, 28]), $a([1, 30, 28]), $a([0, -1, -1]), $a([11, 16, 24]), $a([1, 19, 26]), $a([0, -1, -1])]), $a(["25", 71, 18, 3, 4151, $a([3, 105, 20]), $a([1, 121, 22]), $a([0, -1, -1]), $a([5, 61, 26]), $a([1, 57, 26]), $a([0, -1, -1]), $a([9, 28, 24]), $a([1, 28, 22]), $a([0, -1, -1]), $a([10, 19, 28]), $a([1, 18, 30]), $a([0, -1, -1])]), $a(["26", 73, 18, 3, 4423, $a([2, 157, 30]), $a([1, 150, 28]), $a([0, -1, -1]), $a([5, 65, 28]), $a([1, 61, 26]), $a([0, -1, -1]), $a([8, 33, 28]), $a([1, 34, 30]), $a([0, -1, -1]), $a([10, 19, 28]), $a([2, 15, 26]), $a([0, -1, -1])]), $a(["27", 75, 19, 3, 4703, $a([3, 126, 24]), $a([1, 115, 22]), $a([0, -1, -1]), $a([7, 51, 22]), $a([1, 54, 22]), $a([0, -1, -1]), $a([8, 35, 30]), $a([1, 37, 30]), $a([0, -1, -1]), $a([15, 15, 22]), $a([1, 10, 22]), $a([0, -1, -1])]), $a(["28", 77, 19, 3, 4991, $a([4, 105, 20]), $a([1, 103, 20]), $a([0, -1, -1]), $a([7, 56, 24]), $a([1, 45, 18]), $a([0, -1, -1]), $a([10, 31, 26]), $a([1, 27, 26]), $a([0, -1, -1]), $a([10, 17, 26]), $a([3, 20, 28]), $a([1, 21, 28])]), $a(["29", 79, 20, 3, 5287, $a([3, 139, 26]), $a([1, 137, 28]), $a([0, -1, -1]), $a([6, 66, 28]), $a([1, 66, 30]), $a([0, -1, -1]), $a([9, 36, 30]), $a([1, 34, 32]), $a([0, -1, -1]), $a([13, 19, 28]), $a([1, 17, 32]), $a([0, -1, -1])]), $a(["30", 81, 20, 3, 5591, $a([6, 84, 16]), $a([1, 82, 16]), $a([0, -1, -1]), $a([6, 70, 30]), $a([1, 68, 30]), $a([0, -1, -1]), $a([7, 35, 30]), $a([3, 33, 28]), $a([1, 32, 28]), $a([13, 20, 30]), $a([1, 20, 28]), $a([0, -1, -1])]), $a(["31", 83, 21, 3, 5903, $a([5, 105, 20]), $a([1, 94, 18]), $a([0, -1, -1]), $a([6, 74, 32]), $a([1, 71, 30]), $a([0, -1, -1]), $a([11, 33, 28]), $a([1, 34, 32]), $a([0, -1, -1]), $a([13, 19, 28]), $a([3, 16, 26]), $a([0, -1, -1])]), $a(["32", 85, 17, 4, 6033, $a([4, 127, 24]), $a([1, 126, 24]), $a([0, -1, -1]), $a([7, 66, 28]), $a([1, 66, 30]), $a([0, -1, -1]), $a([12, 30, 24]), $a([1, 24, 28]), $a([1, 24, 30]), $a([15, 19, 28]), $a([1, 17, 32]), $a([0, -1, -1])]), $a(["33", 87, 17, 4, 6353, $a([7, 84, 16]), $a([1, 78, 16]), $a([0, -1, -1]), $a([7, 70, 30]), $a([1, 66, 28]), $a([0, -1, -1]), $a([12, 33, 28]), $a([1, 32, 30]), $a([0, -1, -1]), $a([14, 21, 32]), $a([1, 24, 28]), $a([0, -1, -1])]), $a(["34", 89, 18, 4, 6689, $a([5, 117, 22]), $a([1, 117, 24]), $a([0, -1, -1]), $a([8, 66, 28]), $a([1, 58, 26]), $a([0, -1, -1]), $a([11, 38, 32]), $a([1, 34, 32]), $a([0, -1, -1]), $a([15, 20, 30]), $a([2, 17, 26]), $a([0, -1, -1])]), $a(["35", 91, 18, 4, 7025, $a([4, 148, 28]), $a([1, 146, 28]), $a([0, -1, -1]), $a([8, 68, 30]), $a([1, 70, 24]), $a([0, -1, -1]), $a([10, 36, 32]), $a([3, 38, 28]), $a([0, -1, -1]), $a([16, 19, 28]), $a([3, 16, 26]), $a([0, -1, -1])]), $a(["36", 93, 19, 4, 7377, $a([4, 126, 24]), $a([2, 135, 26]), $a([0, -1, -1]), $a([8, 70, 28]), $a([2, 43, 26]), $a([0, -1, -1]), $a([13, 32, 28]), $a([2, 41, 30]), $a([0, -1, -1]), $a([17, 19, 28]), $a([3, 15, 26]), $a([0, -1, -1])]), $a(["37", 95, 19, 4, 7729, $a([5, 136, 26]), $a([1, 132, 24]), $a([0, -1, -1]), $a([5, 67, 30]), $a([4, 68, 28]), $a([1, 69, 28]), $a([14, 35, 30]), $a([1, 32, 24]), $a([0, -1, -1]), $a([18, 18, 26]), $a([3, 16, 28]), $a([1, 14, 28])]), $a(["38", 97, 19, 4, 8089, $a([3, 142, 26]), $a([3, 141, 28]), $a([0, -1, -1]), $a([8, 70, 30]), $a([1, 73, 32]), $a([1, 74, 32]), $a([12, 34, 30]), $a([3, 34, 26]), $a([1, 35, 28]), $a([18, 21, 32]), $a([1, 27, 30]), $a([0, -1, -1])]), $a(["39", 99, 20, 4, 8465, $a([5, 116, 22]), $a([2, 103, 20]), $a([1, 102, 20]), $a([9, 74, 32]), $a([1, 74, 30]), $a([0, -1, -1]), $a([14, 34, 28]), $a([2, 32, 32]), $a([1, 32, 30]), $a([19, 21, 32]), $a([1, 25, 26]), $a([0, -1, -1])]), $a(["40", 101, 20, 4, 8841, $a([7, 116, 22]), $a([1, 117, 22]), $a([0, -1, -1]), $a([11, 65, 28]), $a([1, 58, 24]), $a([0, -1, -1]), $a([15, 38, 32]), $a([1, 27, 28]), $a([0, -1, -1]), $a([20, 20, 30]), $a([1, 20, 32]), $a([1, 21, 32])]), $a(["41", 103, 17, 5, 9009, $a([6, 136, 26]), $a([1, 130, 24]), $a([0, -1, -1]), $a([11, 66, 28]), $a([1, 62, 30]), $a([0, -1, -1]), $a([14, 34, 28]), $a([3, 34, 32]), $a([1, 30, 30]), $a([18, 20, 30]), $a([3, 20, 28]), $a([2, 15, 26])]), $a(["42", 105, 17, 5, 9401, $a([5, 105, 20]), $a([2, 115, 22]), $a([2, 116, 22]), $a([10, 75, 32]), $a([1, 73, 32]), $a([0, -1, -1]), $a([16, 38, 32]), $a([1, 27, 28]), $a([0, -1, -1]), $a([22, 19, 28]), $a([2, 16, 30]), $a([1, 19, 30])]), $a(["43", 107, 18, 5, 9799, $a([6, 147, 28]), $a([1, 146, 28]), $a([0, -1, -1]), $a([11, 66, 28]), $a([2, 65, 30]), $a([0, -1, -1]), $a([18, 33, 28]), $a([2, 33, 30]), $a([0, -1, -1]), $a([22, 21, 32]), $a([1, 28, 30]), $a([0, -1, -1])]), $a(["44", 109, 18, 5, 10207, $a([6, 116, 22]), $a([3, 125, 24]), $a([0, -1, -1]), $a([11, 75, 32]), $a([1, 68, 30]), $a([0, -1, -1]), $a([13, 35, 28]), $a([6, 34, 32]), $a([1, 30, 30]), $a([23, 21, 32]), $a([1, 26, 30]), $a([0, -1, -1])]), $a(["45", 111, 18, 5, 10623, $a([7, 105, 20]), $a([4, 95, 18]), $a([0, -1, -1]), $a([12, 67, 28]), $a([1, 63, 30]), $a([1, 62, 32]), $a([21, 31, 26]), $a([2, 33, 32]), $a([0, -1, -1]), $a([23, 21, 32]), $a([2, 24, 30]), $a([0, -1, -1])]), $a(["46", 113, 19, 5, 11045, $a([10, 116, 22]), $a([0, -1, -1]), $a([0, -1, -1]), $a([12, 74, 32]), $a([1, 78, 30]), $a([0, -1, -1]), $a([18, 37, 32]), $a([1, 39, 30]), $a([1, 41, 28]), $a([25, 21, 32]), $a([1, 27, 28]), $a([0, -1, -1])]), $a(["47", 115, 19, 5, 11477, $a([5, 126, 24]), $a([4, 115, 22]), $a([1, 114, 22]), $a([12, 67, 28]), $a([2, 66, 32]), $a([1, 68, 30]), $a([21, 35, 30]), $a([1, 39, 30]), $a([0, -1, -1]), $a([26, 21, 32]), $a([1, 28, 28]), $a([0, -1, -1])]), $a(["48", 117, 19, 5, 11917, $a([9, 126, 24]), $a([1, 117, 22]), $a([0, -1, -1]), $a([13, 75, 32]), $a([1, 68, 30]), $a([0, -1, -1]), $a([20, 35, 30]), $a([3, 35, 28]), $a([0, -1, -1]), $a([27, 21, 32]), $a([1, 28, 30]), $a([0, -1, -1])]), $a(["49", 119, 17, 6, 12111, $a([9, 126, 24]), $a([1, 137, 26]), $a([0, -1, -1]), $a([13, 71, 30]), $a([2, 68, 32]), $a([0, -1, -1]), $a([20, 37, 32]), $a([1, 39, 28]), $a([1, 38, 28]), $a([24, 20, 32]), $a([5, 25, 28]), $a([0, -1, -1])]), $a(["50", 121, 17, 6, 12559, $a([8, 147, 28]), $a([1, 141, 28]), $a([0, -1, -1]), $a([10, 73, 32]), $a([4, 74, 30]), $a([1, 73, 30]), $a([16, 36, 32]), $a([6, 39, 30]), $a([1, 37, 30]), $a([27, 21, 32]), $a([3, 20, 26]), $a([0, -1, -1])]), $a(["51", 123, 18, 6, 13025, $a([9, 137, 26]), $a([1, 135, 26]), $a([0, -1, -1]), $a([12, 70, 30]), $a([4, 75, 32]), $a([0, -1, -1]), $a([24, 35, 30]), $a([1, 40, 28]), $a([0, -1, -1]), $a([23, 20, 32]), $a([8, 24, 30]), $a([0, -1, -1])]), $a(["52", 125, 18, 6, 13489, $a([14, 95, 18]), $a([1, 86, 18]), $a([0, -1, -1]), $a([13, 73, 32]), $a([3, 77, 30]), $a([0, -1, -1]), $a([24, 35, 30]), $a([2, 35, 28]), $a([0, -1, -1]), $a([26, 21, 32]), $a([5, 21, 30]), $a([1, 23, 30])]), $a(["53", 127, 18, 6, 13961, $a([9, 147, 28]), $a([1, 142, 28]), $a([0, -1, -1]), $a([10, 73, 30]), $a([6, 70, 32]), $a([1, 71, 32]), $a([25, 35, 30]), $a([2, 34, 26]), $a([0, -1, -1]), $a([29, 21, 32]), $a([4, 22, 30]), $a([0, -1, -1])]), $a(["54", 129, 18, 6, 14441, $a([11, 126, 24]), $a([1, 131, 24]), $a([0, -1, -1]), $a([16, 74, 32]), $a([1, 79, 30]), $a([0, -1, -1]), $a([25, 38, 32]), $a([1, 25, 30]), $a([0, -1, -1]), $a([33, 21, 32]), $a([1, 28, 28]), $a([0, -1, -1])]), $a(["55", 131, 19, 6, 14939, $a([14, 105, 20]), $a([1, 99, 18]), $a([0, -1, -1]), $a([19, 65, 28]), $a([1, 72, 28]), $a([0, -1, -1]), $a([24, 37, 32]), $a([2, 40, 30]), $a([1, 41, 30]), $a([31, 21, 32]), $a([4, 24, 32]), $a([0, -1, -1])]), $a(["56", 133, 19, 6, 15435, $a([10, 147, 28]), $a([1, 151, 28]), $a([0, -1, -1]), $a([15, 71, 30]), $a([3, 71, 32]), $a([1, 73, 32]), $a([24, 37, 32]), $a([3, 38, 30]), $a([1, 39, 30]), $a([36, 19, 30]), $a([3, 29, 26]), $a([0, -1, -1])]), $a(["57", 135, 19, 6, 15939, $a([15, 105, 20]), $a([1, 99, 18]), $a([0, -1, -1]), $a([19, 70, 30]), $a([1, 64, 28]), $a([0, -1, -1]), $a([27, 38, 32]), $a([2, 25, 26]), $a([0, -1, -1]), $a([38, 20, 30]), $a([2, 18, 28]), $a([0, -1, -1])]), $a(["58", 137, 17, 7, 16171, $a([14, 105, 20]), $a([1, 113, 22]), $a([1, 114, 22]), $a([17, 67, 30]), $a([3, 92, 32]), $a([0, -1, -1]), $a([30, 35, 30]), $a([1, 41, 30]), $a([0, -1, -1]), $a([36, 21, 32]), $a([1, 26, 30]), $a([1, 27, 30])]), $a(["59", 139, 17, 7, 16691, $a([11, 146, 28]), $a([1, 146, 26]), $a([0, -1, -1]), $a([20, 70, 30]), $a([1, 60, 26]), $a([0, -1, -1]), $a([29, 38, 32]), $a([1, 24, 32]), $a([0, -1, -1]), $a([40, 20, 30]), $a([2, 17, 26]), $a([0, -1, -1])]), $a(["60", 141, 18, 7, 17215, $a([3, 137, 26]), $a([1, 136, 26]), $a([10, 126, 24]), $a([22, 65, 28]), $a([1, 75, 30]), $a([0, -1, -1]), $a([30, 37, 32]), $a([1, 51, 30]), $a([0, -1, -1]), $a([42, 20, 30]), $a([1, 21, 30]), $a([0, -1, -1])]), $a(["61", 143, 18, 7, 17751, $a([12, 126, 24]), $a([2, 118, 22]), $a([1, 116, 22]), $a([19, 74, 32]), $a([1, 74, 30]), $a([1, 72, 28]), $a([30, 38, 32]), $a([2, 29, 30]), $a([0, -1, -1]), $a([39, 20, 32]), $a([2, 37, 26]), $a([1, 38, 26])]), $a(["62", 145, 18, 7, 18295, $a([12, 126, 24]), $a([3, 136, 26]), $a([0, -1, -1]), $a([21, 70, 30]), $a([2, 65, 28]), $a([0, -1, -1]), $a([34, 35, 30]), $a([1, 44, 32]), $a([0, -1, -1]), $a([42, 20, 30]), $a([2, 19, 28]), $a([2, 18, 28])]), $a(["63", 147, 18, 7, 18847, $a([12, 126, 24]), $a([3, 117, 22]), $a([1, 116, 22]), $a([25, 61, 26]), $a([2, 62, 28]), $a([0, -1, -1]), $a([34, 35, 30]), $a([1, 40, 32]), $a([1, 41, 32]), $a([45, 20, 30]), $a([1, 20, 32]), $a([1, 21, 32])]), $a(["64", 149, 19, 7, 19403, $a([15, 105, 20]), $a([2, 115, 22]), $a([2, 116, 22]), $a([25, 65, 28]), $a([1, 72, 28]), $a([0, -1, -1]), $a([18, 35, 30]), $a([17, 37, 32]), $a([1, 50, 32]), $a([42, 20, 30]), $a([6, 19, 28]), $a([1, 15, 28])]), $a(["65", 151, 19, 7, 19971, $a([19, 105, 20]), $a([1, 101, 20]), $a([0, -1, -1]), $a([33, 51, 22]), $a([1, 65, 22]), $a([0, -1, -1]), $a([40, 33, 28]), $a([1, 28, 28]), $a([0, -1, -1]), $a([49, 20, 30]), $a([1, 18, 28]), $a([0, -1, -1])]), $a(["66", 153, 17, 8, 20229, $a([18, 105, 20]), $a([2, 117, 22]), $a([0, -1, -1]), $a([26, 65, 28]), $a([1, 80, 30]), $a([0, -1, -1]), $a([35, 35, 30]), $a([3, 35, 28]), $a([1, 36, 28]), $a([52, 18, 28]), $a([2, 38, 30]), $a([0, -1, -1])]), $a(["67", 155, 17, 8, 20805, $a([26, 84, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([26, 70, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([45, 31, 26]), $a([1, 9, 26]), $a([0, -1, -1]), $a([52, 20, 30]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["68", 157, 17, 8, 21389, $a([16, 126, 24]), $a([1, 114, 22]), $a([1, 115, 22]), $a([23, 70, 30]), $a([3, 65, 28]), $a([1, 66, 28]), $a([40, 35, 30]), $a([1, 43, 30]), $a([0, -1, -1]), $a([46, 20, 30]), $a([7, 19, 28]), $a([1, 16, 28])]), $a(["69", 159, 18, 8, 21993, $a([19, 116, 22]), $a([1, 105, 22]), $a([0, -1, -1]), $a([20, 70, 30]), $a([7, 66, 28]), $a([1, 63, 28]), $a([40, 35, 30]), $a([1, 42, 32]), $a([1, 43, 32]), $a([54, 20, 30]), $a([1, 19, 30]), $a([0, -1, -1])]), $a(["70", 161, 18, 8, 22593, $a([17, 126, 24]), $a([2, 115, 22]), $a([0, -1, -1]), $a([24, 70, 30]), $a([4, 74, 32]), $a([0, -1, -1]), $a([48, 31, 26]), $a([2, 18, 26]), $a([0, -1, -1]), $a([54, 19, 28]), $a([6, 15, 26]), $a([1, 14, 26])]), $a(["71", 163, 18, 8, 23201, $a([29, 84, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([29, 70, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([6, 34, 30]), $a([3, 36, 30]), $a([38, 33, 28]), $a([58, 20, 30]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["72", 165, 18, 8, 23817, $a([16, 147, 28]), $a([1, 149, 28]), $a([0, -1, -1]), $a([31, 66, 28]), $a([1, 37, 26]), $a([0, -1, -1]), $a([48, 33, 28]), $a([1, 23, 26]), $a([0, -1, -1]), $a([53, 20, 30]), $a([6, 19, 28]), $a([1, 17, 28])]), $a(["73", 167, 19, 8, 24453, $a([20, 115, 22]), $a([2, 134, 24]), $a([0, -1, -1]), $a([29, 66, 28]), $a([2, 56, 26]), $a([2, 57, 26]), $a([45, 36, 30]), $a([2, 15, 28]), $a([0, -1, -1]), $a([59, 20, 30]), $a([2, 21, 32]), $a([0, -1, -1])]), $a(["74", 169, 19, 8, 25085, $a([17, 147, 28]), $a([1, 134, 26]), $a([0, -1, -1]), $a([26, 70, 30]), $a([5, 75, 32]), $a([0, -1, -1]), $a([47, 35, 30]), $a([1, 48, 32]), $a([0, -1, -1]), $a([64, 18, 28]), $a([2, 33, 30]), $a([1, 35, 30])]), $a(["75", 171, 17, 9, 25373, $a([22, 115, 22]), $a([1, 133, 24]), $a([0, -1, -1]), $a([33, 65, 28]), $a([1, 74, 28]), $a([0, -1, -1]), $a([43, 36, 30]), $a([5, 27, 28]), $a([1, 30, 28]), $a([57, 20, 30]), $a([5, 21, 32]), $a([1, 24, 32])]), $a(["76", 173, 17, 9, 26021, $a([18, 136, 26]), $a([2, 142, 26]), $a([0, -1, -1]), $a([33, 66, 28]), $a([2, 49, 26]), $a([0, -1, -1]), $a([48, 35, 30]), $a([2, 38, 28]), $a([0, -1, -1]), $a([64, 20, 30]), $a([1, 20, 32]), $a([0, -1, -1])]), $a(["77", 175, 17, 9, 26677, $a([19, 126, 24]), $a([2, 135, 26]), $a([1, 136, 26]), $a([32, 66, 28]), $a([2, 55, 26]), $a([2, 56, 26]), $a([49, 36, 30]), $a([2, 18, 32]), $a([0, -1, -1]), $a([65, 18, 28]), $a([5, 27, 30]), $a([1, 29, 30])]), $a(["78", 177, 18, 9, 27335, $a([20, 137, 26]), $a([1, 130, 26]), $a([0, -1, -1]), $a([30, 75, 32]), $a([2, 71, 32]), $a([0, -1, -1]), $a([46, 35, 30]), $a([6, 39, 32]), $a([0, -1, -1]), $a([3, 12, 30]), $a([70, 19, 28]), $a([0, -1, -1])]), $a(["79", 179, 18, 9, 28007, $a([20, 147, 28]), $a([0, -1, -1]), $a([0, -1, -1]), $a([35, 70, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([49, 35, 30]), $a([5, 35, 28]), $a([0, -1, -1]), $a([70, 20, 30]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["80", 181, 18, 9, 28687, $a([21, 136, 26]), $a([1, 155, 28]), $a([0, -1, -1]), $a([34, 70, 30]), $a([1, 64, 28]), $a([1, 65, 28]), $a([54, 35, 30]), $a([1, 45, 30]), $a([0, -1, -1]), $a([68, 20, 30]), $a([3, 18, 28]), $a([1, 19, 28])]), $a(["81", 183, 18, 9, 29375, $a([19, 126, 24]), $a([5, 115, 22]), $a([1, 114, 22]), $a([33, 70, 30]), $a([3, 65, 28]), $a([1, 64, 28]), $a([52, 35, 30]), $a([3, 41, 32]), $a([1, 40, 32]), $a([67, 20, 30]), $a([5, 21, 32]), $a([1, 24, 32])]), $a(["82", 185, 18, 9, 30071, $a([2, 150, 28]), $a([21, 136, 26]), $a([0, -1, -1]), $a([32, 70, 30]), $a([6, 65, 28]), $a([0, -1, -1]), $a([52, 38, 32]), $a([2, 27, 32]), $a([0, -1, -1]), $a([73, 20, 30]), $a([2, 22, 32]), $a([0, -1, -1])]), $a(["83", 187, 17, 10, 30387, $a([21, 126, 24]), $a([4, 136, 26]), $a([0, -1, -1]), $a([30, 74, 32]), $a([6, 73, 30]), $a([0, -1, -1]), $a([54, 35, 30]), $a([4, 40, 32]), $a([0, -1, -1]), $a([75, 20, 30]), $a([1, 20, 28]), $a([0, -1, -1])]), $a(["84", 189, 17, 10, 31091, $a([30, 105, 20]), $a([1, 114, 22]), $a([0, -1, -1]), $a([3, 45, 22]), $a([55, 47, 20]), $a([0, -1, -1]), $a([2, 26, 26]), $a([62, 33, 28]), $a([0, -1, -1]), $a([79, 18, 28]), $a([4, 33, 30]), $a([0, -1, -1])])]); //#24708
+        var _24 = $a([1, 70, 14]); //#24392
+        $_.metrics = $a([$a(["1", 23, -1, 0, 205, $a([1, 21, 4]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 17, 8]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 13, 12]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 9, 16]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["2", 25, -1, 0, 301, $a([1, 31, 6]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 25, 12]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 19, 18]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 15, 22]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["3", 27, -1, 0, 405, $a([1, 42, 8]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 34, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 26, 24]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 20, 30]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["4", 29, 14, 1, 439, $a([1, 46, 8]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 38, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 30, 24]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 22, 32]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["5", 31, 16, 1, 555, $a([1, 57, 12]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 49, 20]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 37, 32]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 14, 20]), $a([1, 13, 22]), $a([0, -1, -1])]), $a(["6", 33, 16, 1, 675, _24, $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 58, 26]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 24, 20]), $a([1, 22, 18]), $a([0, -1, -1]), $a([1, 16, 24]), $a([1, 18, 26]), $a([0, -1, -1])]), $a(["7", 35, 17, 1, 805, $a([1, 84, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 70, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 26, 22]), $a([1, 28, 24]), $a([0, -1, -1]), $a([2, 14, 20]), $a([1, 12, 20]), $a([0, -1, -1])]), $a(["8", 37, 18, 1, 943, $a([1, 99, 18]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 40, 18]), $a([1, 41, 18]), $a([0, -1, -1]), $a([1, 31, 26]), $a([1, 32, 28]), $a([0, -1, -1]), $a([2, 16, 24]), $a([1, 15, 22]), $a([0, -1, -1])]), $a(["9", 39, 19, 1, 1089, $a([1, 114, 22]), $a([0, -1, -1]), $a([0, -1, -1]), $a([2, 48, 20]), $a([0, -1, -1]), $a([0, -1, -1]), $a([2, 24, 20]), $a([1, 26, 22]), $a([0, -1, -1]), $a([2, 18, 28]), $a([1, 18, 26]), $a([0, -1, -1])]), $a(["10", 41, 20, 1, 1243, $a([1, 131, 24]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 52, 22]), $a([1, 57, 24]), $a([0, -1, -1]), $a([2, 27, 24]), $a([1, 29, 24]), $a([0, -1, -1]), $a([2, 21, 32]), $a([1, 19, 30]), $a([0, -1, -1])]), $a(["11", 43, 14, 2, 1289, $a([1, 135, 26]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 56, 24]), $a([1, 57, 24]), $a([0, -1, -1]), $a([2, 28, 24]), $a([1, 31, 26]), $a([0, -1, -1]), $a([2, 22, 32]), $a([1, 21, 32]), $a([0, -1, -1])]), $a(["12", 45, 15, 2, 1455, $a([1, 153, 28]), $a([0, -1, -1]), $a([0, -1, -1]), $a([1, 62, 26]), $a([1, 65, 28]), $a([0, -1, -1]), $a([2, 32, 28]), $a([1, 33, 28]), $a([0, -1, -1]), $a([3, 17, 26]), $a([1, 22, 30]), $a([0, -1, -1])]), $a(["13", 47, 16, 2, 1629, $a([1, 86, 16]), $a([1, 85, 16]), $a([0, -1, -1]), $a([1, 71, 30]), $a([1, 72, 30]), $a([0, -1, -1]), $a([2, 37, 32]), $a([1, 35, 30]), $a([0, -1, -1]), $a([3, 20, 30]), $a([1, 21, 32]), $a([0, -1, -1])]), $a(["14", 49, 16, 2, 1805, $a([1, 94, 18]), $a([1, 95, 18]), $a([0, -1, -1]), $a([2, 51, 22]), $a([1, 55, 24]), $a([0, -1, -1]), $a([3, 30, 26]), $a([1, 31, 26]), $a([0, -1, -1]), $a([4, 18, 28]), $a([1, 17, 24]), $a([0, -1, -1])]), $a(["15", 51, 17, 2, 1995, $a([1, 104, 20]), $a([1, 105, 20]), $a([0, -1, -1]), $a([2, 57, 24]), $a([1, 61, 26]), $a([0, -1, -1]), $a([3, 33, 28]), $a([1, 36, 30]), $a([0, -1, -1]), $a([4, 20, 30]), $a([1, 19, 30]), $a([0, -1, -1])]), $a(["16", 53, 17, 2, 2187, $a([1, 115, 22]), $a([1, 114, 22]), $a([0, -1, -1]), $a([2, 65, 28]), $a([1, 61, 26]), $a([0, -1, -1]), $a([3, 38, 32]), $a([1, 33, 30]), $a([0, -1, -1]), $a([5, 19, 28]), $a([1, 14, 24]), $a([0, -1, -1])]), $a(["17", 55, 18, 2, 2393, $a([1, 126, 24]), $a([1, 125, 24]), $a([0, -1, -1]), $a([2, 70, 30]), $a([1, 69, 30]), $a([0, -1, -1]), $a([4, 33, 28]), $a([1, 29, 26]), $a([0, -1, -1]), $a([5, 20, 30]), $a([1, 19, 30]), $a([0, -1, -1])]), $a(["18", 57, 19, 2, 2607, $a([1, 136, 26]), $a([1, 137, 26]), $a([0, -1, -1]), $a([3, 56, 24]), $a([1, 59, 26]), $a([0, -1, -1]), $a([5, 35, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([6, 18, 28]), $a([1, 21, 28]), $a([0, -1, -1])]), $a(["19", 59, 20, 2, 2829, $a([1, 148, 28]), $a([1, 149, 28]), $a([0, -1, -1]), $a([3, 61, 26]), $a([1, 64, 28]), $a([0, -1, -1]), $a([7, 24, 20]), $a([1, 23, 22]), $a([0, -1, -1]), $a([6, 20, 30]), $a([1, 21, 32]), $a([0, -1, -1])]), $a(["20", 61, 20, 2, 3053, $a([3, 107, 20]), $a([0, -1, -1]), $a([0, -1, -1]), $a([3, 65, 28]), $a([1, 72, 30]), $a([0, -1, -1]), $a([7, 26, 22]), $a([1, 23, 22]), $a([0, -1, -1]), $a([7, 19, 28]), $a([1, 20, 32]), $a([0, -1, -1])]), $a(["21", 63, 21, 2, 3291, $a([3, 115, 22]), $a([0, -1, -1]), $a([0, -1, -1]), $a([4, 56, 24]), $a([1, 63, 28]), $a([0, -1, -1]), $a([7, 28, 24]), $a([1, 25, 22]), $a([0, -1, -1]), $a([8, 18, 28]), $a([1, 21, 22]), $a([0, -1, -1])]), $a(["22", 65, 16, 3, 3383, $a([2, 116, 22]), $a([1, 122, 24]), $a([0, -1, -1]), $a([4, 56, 24]), $a([1, 72, 30]), $a([0, -1, -1]), $a([7, 28, 24]), $a([1, 32, 26]), $a([0, -1, -1]), $a([8, 18, 28]), $a([1, 24, 30]), $a([0, -1, -1])]), $a(["23", 67, 17, 3, 3631, $a([3, 127, 24]), $a([0, -1, -1]), $a([0, -1, -1]), $a([5, 51, 22]), $a([1, 62, 26]), $a([0, -1, -1]), $a([7, 30, 26]), $a([1, 35, 26]), $a([0, -1, -1]), $a([8, 20, 30]), $a([1, 21, 32]), $a([0, -1, -1])]), $a(["24", 69, 17, 3, 3887, $a([2, 135, 26]), $a([1, 137, 26]), $a([0, -1, -1]), $a([5, 56, 24]), $a([1, 59, 26]), $a([0, -1, -1]), $a([7, 33, 28]), $a([1, 30, 28]), $a([0, -1, -1]), $a([11, 16, 24]), $a([1, 19, 26]), $a([0, -1, -1])]), $a(["25", 71, 18, 3, 4151, $a([3, 105, 20]), $a([1, 121, 22]), $a([0, -1, -1]), $a([5, 61, 26]), $a([1, 57, 26]), $a([0, -1, -1]), $a([9, 28, 24]), $a([1, 28, 22]), $a([0, -1, -1]), $a([10, 19, 28]), $a([1, 18, 30]), $a([0, -1, -1])]), $a(["26", 73, 18, 3, 4423, $a([2, 157, 30]), $a([1, 150, 28]), $a([0, -1, -1]), $a([5, 65, 28]), $a([1, 61, 26]), $a([0, -1, -1]), $a([8, 33, 28]), $a([1, 34, 30]), $a([0, -1, -1]), $a([10, 19, 28]), $a([2, 15, 26]), $a([0, -1, -1])]), $a(["27", 75, 19, 3, 4703, $a([3, 126, 24]), $a([1, 115, 22]), $a([0, -1, -1]), $a([7, 51, 22]), $a([1, 54, 22]), $a([0, -1, -1]), $a([8, 35, 30]), $a([1, 37, 30]), $a([0, -1, -1]), $a([15, 15, 22]), $a([1, 10, 22]), $a([0, -1, -1])]), $a(["28", 77, 19, 3, 4991, $a([4, 105, 20]), $a([1, 103, 20]), $a([0, -1, -1]), $a([7, 56, 24]), $a([1, 45, 18]), $a([0, -1, -1]), $a([10, 31, 26]), $a([1, 27, 26]), $a([0, -1, -1]), $a([10, 17, 26]), $a([3, 20, 28]), $a([1, 21, 28])]), $a(["29", 79, 20, 3, 5287, $a([3, 139, 26]), $a([1, 137, 28]), $a([0, -1, -1]), $a([6, 66, 28]), $a([1, 66, 30]), $a([0, -1, -1]), $a([9, 36, 30]), $a([1, 34, 32]), $a([0, -1, -1]), $a([13, 19, 28]), $a([1, 17, 32]), $a([0, -1, -1])]), $a(["30", 81, 20, 3, 5591, $a([6, 84, 16]), $a([1, 82, 16]), $a([0, -1, -1]), $a([6, 70, 30]), $a([1, 68, 30]), $a([0, -1, -1]), $a([7, 35, 30]), $a([3, 33, 28]), $a([1, 32, 28]), $a([13, 20, 30]), $a([1, 20, 28]), $a([0, -1, -1])]), $a(["31", 83, 21, 3, 5903, $a([5, 105, 20]), $a([1, 94, 18]), $a([0, -1, -1]), $a([6, 74, 32]), $a([1, 71, 30]), $a([0, -1, -1]), $a([11, 33, 28]), $a([1, 34, 32]), $a([0, -1, -1]), $a([13, 19, 28]), $a([3, 16, 26]), $a([0, -1, -1])]), $a(["32", 85, 17, 4, 6033, $a([4, 127, 24]), $a([1, 126, 24]), $a([0, -1, -1]), $a([7, 66, 28]), $a([1, 66, 30]), $a([0, -1, -1]), $a([12, 30, 24]), $a([1, 24, 28]), $a([1, 24, 30]), $a([15, 19, 28]), $a([1, 17, 32]), $a([0, -1, -1])]), $a(["33", 87, 17, 4, 6353, $a([7, 84, 16]), $a([1, 78, 16]), $a([0, -1, -1]), $a([7, 70, 30]), $a([1, 66, 28]), $a([0, -1, -1]), $a([12, 33, 28]), $a([1, 32, 30]), $a([0, -1, -1]), $a([14, 21, 32]), $a([1, 24, 28]), $a([0, -1, -1])]), $a(["34", 89, 18, 4, 6689, $a([5, 117, 22]), $a([1, 117, 24]), $a([0, -1, -1]), $a([8, 66, 28]), $a([1, 58, 26]), $a([0, -1, -1]), $a([11, 38, 32]), $a([1, 34, 32]), $a([0, -1, -1]), $a([15, 20, 30]), $a([2, 17, 26]), $a([0, -1, -1])]), $a(["35", 91, 18, 4, 7025, $a([4, 148, 28]), $a([1, 146, 28]), $a([0, -1, -1]), $a([8, 68, 30]), $a([1, 70, 24]), $a([0, -1, -1]), $a([10, 36, 32]), $a([3, 38, 28]), $a([0, -1, -1]), $a([16, 19, 28]), $a([3, 16, 26]), $a([0, -1, -1])]), $a(["36", 93, 19, 4, 7377, $a([4, 126, 24]), $a([2, 135, 26]), $a([0, -1, -1]), $a([8, 70, 28]), $a([2, 43, 26]), $a([0, -1, -1]), $a([13, 32, 28]), $a([2, 41, 30]), $a([0, -1, -1]), $a([17, 19, 28]), $a([3, 15, 26]), $a([0, -1, -1])]), $a(["37", 95, 19, 4, 7729, $a([5, 136, 26]), $a([1, 132, 24]), $a([0, -1, -1]), $a([5, 67, 30]), $a([4, 68, 28]), $a([1, 69, 28]), $a([14, 35, 30]), $a([1, 32, 24]), $a([0, -1, -1]), $a([18, 18, 26]), $a([3, 16, 28]), $a([1, 14, 28])]), $a(["38", 97, 19, 4, 8089, $a([3, 142, 26]), $a([3, 141, 28]), $a([0, -1, -1]), $a([8, 70, 30]), $a([1, 73, 32]), $a([1, 74, 32]), $a([12, 34, 30]), $a([3, 34, 26]), $a([1, 35, 28]), $a([18, 21, 32]), $a([1, 27, 30]), $a([0, -1, -1])]), $a(["39", 99, 20, 4, 8465, $a([5, 116, 22]), $a([2, 103, 20]), $a([1, 102, 20]), $a([9, 74, 32]), $a([1, 74, 30]), $a([0, -1, -1]), $a([14, 34, 28]), $a([2, 32, 32]), $a([1, 32, 30]), $a([19, 21, 32]), $a([1, 25, 26]), $a([0, -1, -1])]), $a(["40", 101, 20, 4, 8841, $a([7, 116, 22]), $a([1, 117, 22]), $a([0, -1, -1]), $a([11, 65, 28]), $a([1, 58, 24]), $a([0, -1, -1]), $a([15, 38, 32]), $a([1, 27, 28]), $a([0, -1, -1]), $a([20, 20, 30]), $a([1, 20, 32]), $a([1, 21, 32])]), $a(["41", 103, 17, 5, 9009, $a([6, 136, 26]), $a([1, 130, 24]), $a([0, -1, -1]), $a([11, 66, 28]), $a([1, 62, 30]), $a([0, -1, -1]), $a([14, 34, 28]), $a([3, 34, 32]), $a([1, 30, 30]), $a([18, 20, 30]), $a([3, 20, 28]), $a([2, 15, 26])]), $a(["42", 105, 17, 5, 9401, $a([5, 105, 20]), $a([2, 115, 22]), $a([2, 116, 22]), $a([10, 75, 32]), $a([1, 73, 32]), $a([0, -1, -1]), $a([16, 38, 32]), $a([1, 27, 28]), $a([0, -1, -1]), $a([22, 19, 28]), $a([2, 16, 30]), $a([1, 19, 30])]), $a(["43", 107, 18, 5, 9799, $a([6, 147, 28]), $a([1, 146, 28]), $a([0, -1, -1]), $a([11, 66, 28]), $a([2, 65, 30]), $a([0, -1, -1]), $a([18, 33, 28]), $a([2, 33, 30]), $a([0, -1, -1]), $a([22, 21, 32]), $a([1, 28, 30]), $a([0, -1, -1])]), $a(["44", 109, 18, 5, 10207, $a([6, 116, 22]), $a([3, 125, 24]), $a([0, -1, -1]), $a([11, 75, 32]), $a([1, 68, 30]), $a([0, -1, -1]), $a([13, 35, 28]), $a([6, 34, 32]), $a([1, 30, 30]), $a([23, 21, 32]), $a([1, 26, 30]), $a([0, -1, -1])]), $a(["45", 111, 18, 5, 10623, $a([7, 105, 20]), $a([4, 95, 18]), $a([0, -1, -1]), $a([12, 67, 28]), $a([1, 63, 30]), $a([1, 62, 32]), $a([21, 31, 26]), $a([2, 33, 32]), $a([0, -1, -1]), $a([23, 21, 32]), $a([2, 24, 30]), $a([0, -1, -1])]), $a(["46", 113, 19, 5, 11045, $a([10, 116, 22]), $a([0, -1, -1]), $a([0, -1, -1]), $a([12, 74, 32]), $a([1, 78, 30]), $a([0, -1, -1]), $a([18, 37, 32]), $a([1, 39, 30]), $a([1, 41, 28]), $a([25, 21, 32]), $a([1, 27, 28]), $a([0, -1, -1])]), $a(["47", 115, 19, 5, 11477, $a([5, 126, 24]), $a([4, 115, 22]), $a([1, 114, 22]), $a([12, 67, 28]), $a([2, 66, 32]), $a([1, 68, 30]), $a([21, 35, 30]), $a([1, 39, 30]), $a([0, -1, -1]), $a([26, 21, 32]), $a([1, 28, 28]), $a([0, -1, -1])]), $a(["48", 117, 19, 5, 11917, $a([9, 126, 24]), $a([1, 117, 22]), $a([0, -1, -1]), $a([13, 75, 32]), $a([1, 68, 30]), $a([0, -1, -1]), $a([20, 35, 30]), $a([3, 35, 28]), $a([0, -1, -1]), $a([27, 21, 32]), $a([1, 28, 30]), $a([0, -1, -1])]), $a(["49", 119, 17, 6, 12111, $a([9, 126, 24]), $a([1, 137, 26]), $a([0, -1, -1]), $a([13, 71, 30]), $a([2, 68, 32]), $a([0, -1, -1]), $a([20, 37, 32]), $a([1, 39, 28]), $a([1, 38, 28]), $a([24, 20, 32]), $a([5, 25, 28]), $a([0, -1, -1])]), $a(["50", 121, 17, 6, 12559, $a([8, 147, 28]), $a([1, 141, 28]), $a([0, -1, -1]), $a([10, 73, 32]), $a([4, 74, 30]), $a([1, 73, 30]), $a([16, 36, 32]), $a([6, 39, 30]), $a([1, 37, 30]), $a([27, 21, 32]), $a([3, 20, 26]), $a([0, -1, -1])]), $a(["51", 123, 18, 6, 13025, $a([9, 137, 26]), $a([1, 135, 26]), $a([0, -1, -1]), $a([12, 70, 30]), $a([4, 75, 32]), $a([0, -1, -1]), $a([24, 35, 30]), $a([1, 40, 28]), $a([0, -1, -1]), $a([23, 20, 32]), $a([8, 24, 30]), $a([0, -1, -1])]), $a(["52", 125, 18, 6, 13489, $a([14, 95, 18]), $a([1, 86, 18]), $a([0, -1, -1]), $a([13, 73, 32]), $a([3, 77, 30]), $a([0, -1, -1]), $a([24, 35, 30]), $a([2, 35, 28]), $a([0, -1, -1]), $a([26, 21, 32]), $a([5, 21, 30]), $a([1, 23, 30])]), $a(["53", 127, 18, 6, 13961, $a([9, 147, 28]), $a([1, 142, 28]), $a([0, -1, -1]), $a([10, 73, 30]), $a([6, 70, 32]), $a([1, 71, 32]), $a([25, 35, 30]), $a([2, 34, 26]), $a([0, -1, -1]), $a([29, 21, 32]), $a([4, 22, 30]), $a([0, -1, -1])]), $a(["54", 129, 18, 6, 14441, $a([11, 126, 24]), $a([1, 131, 24]), $a([0, -1, -1]), $a([16, 74, 32]), $a([1, 79, 30]), $a([0, -1, -1]), $a([25, 38, 32]), $a([1, 25, 30]), $a([0, -1, -1]), $a([33, 21, 32]), $a([1, 28, 28]), $a([0, -1, -1])]), $a(["55", 131, 19, 6, 14939, $a([14, 105, 20]), $a([1, 99, 18]), $a([0, -1, -1]), $a([19, 65, 28]), $a([1, 72, 28]), $a([0, -1, -1]), $a([24, 37, 32]), $a([2, 40, 30]), $a([1, 41, 30]), $a([31, 21, 32]), $a([4, 24, 32]), $a([0, -1, -1])]), $a(["56", 133, 19, 6, 15435, $a([10, 147, 28]), $a([1, 151, 28]), $a([0, -1, -1]), $a([15, 71, 30]), $a([3, 71, 32]), $a([1, 73, 32]), $a([24, 37, 32]), $a([3, 38, 30]), $a([1, 39, 30]), $a([36, 19, 30]), $a([3, 29, 26]), $a([0, -1, -1])]), $a(["57", 135, 19, 6, 15939, $a([15, 105, 20]), $a([1, 99, 18]), $a([0, -1, -1]), $a([19, 70, 30]), $a([1, 64, 28]), $a([0, -1, -1]), $a([27, 38, 32]), $a([2, 25, 26]), $a([0, -1, -1]), $a([38, 20, 30]), $a([2, 18, 28]), $a([0, -1, -1])]), $a(["58", 137, 17, 7, 16171, $a([14, 105, 20]), $a([1, 113, 22]), $a([1, 114, 22]), $a([17, 67, 30]), $a([3, 92, 32]), $a([0, -1, -1]), $a([30, 35, 30]), $a([1, 41, 30]), $a([0, -1, -1]), $a([36, 21, 32]), $a([1, 26, 30]), $a([1, 27, 30])]), $a(["59", 139, 17, 7, 16691, $a([11, 146, 28]), $a([1, 146, 26]), $a([0, -1, -1]), $a([20, 70, 30]), $a([1, 60, 26]), $a([0, -1, -1]), $a([29, 38, 32]), $a([1, 24, 32]), $a([0, -1, -1]), $a([40, 20, 30]), $a([2, 17, 26]), $a([0, -1, -1])]), $a(["60", 141, 18, 7, 17215, $a([3, 137, 26]), $a([1, 136, 26]), $a([10, 126, 24]), $a([22, 65, 28]), $a([1, 75, 30]), $a([0, -1, -1]), $a([30, 37, 32]), $a([1, 51, 30]), $a([0, -1, -1]), $a([42, 20, 30]), $a([1, 21, 30]), $a([0, -1, -1])]), $a(["61", 143, 18, 7, 17751, $a([12, 126, 24]), $a([2, 118, 22]), $a([1, 116, 22]), $a([19, 74, 32]), $a([1, 74, 30]), $a([1, 72, 28]), $a([30, 38, 32]), $a([2, 29, 30]), $a([0, -1, -1]), $a([39, 20, 32]), $a([2, 37, 26]), $a([1, 38, 26])]), $a(["62", 145, 18, 7, 18295, $a([12, 126, 24]), $a([3, 136, 26]), $a([0, -1, -1]), $a([21, 70, 30]), $a([2, 65, 28]), $a([0, -1, -1]), $a([34, 35, 30]), $a([1, 44, 32]), $a([0, -1, -1]), $a([42, 20, 30]), $a([2, 19, 28]), $a([2, 18, 28])]), $a(["63", 147, 18, 7, 18847, $a([12, 126, 24]), $a([3, 117, 22]), $a([1, 116, 22]), $a([25, 61, 26]), $a([2, 62, 28]), $a([0, -1, -1]), $a([34, 35, 30]), $a([1, 40, 32]), $a([1, 41, 32]), $a([45, 20, 30]), $a([1, 20, 32]), $a([1, 21, 32])]), $a(["64", 149, 19, 7, 19403, $a([15, 105, 20]), $a([2, 115, 22]), $a([2, 116, 22]), $a([25, 65, 28]), $a([1, 72, 28]), $a([0, -1, -1]), $a([18, 35, 30]), $a([17, 37, 32]), $a([1, 50, 32]), $a([42, 20, 30]), $a([6, 19, 28]), $a([1, 15, 28])]), $a(["65", 151, 19, 7, 19971, $a([19, 105, 20]), $a([1, 101, 20]), $a([0, -1, -1]), $a([33, 51, 22]), $a([1, 65, 22]), $a([0, -1, -1]), $a([40, 33, 28]), $a([1, 28, 28]), $a([0, -1, -1]), $a([49, 20, 30]), $a([1, 18, 28]), $a([0, -1, -1])]), $a(["66", 153, 17, 8, 20229, $a([18, 105, 20]), $a([2, 117, 22]), $a([0, -1, -1]), $a([26, 65, 28]), $a([1, 80, 30]), $a([0, -1, -1]), $a([35, 35, 30]), $a([3, 35, 28]), $a([1, 36, 28]), $a([52, 18, 28]), $a([2, 38, 30]), $a([0, -1, -1])]), $a(["67", 155, 17, 8, 20805, $a([26, 84, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([26, 70, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([45, 31, 26]), $a([1, 9, 26]), $a([0, -1, -1]), $a([52, 20, 30]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["68", 157, 17, 8, 21389, $a([16, 126, 24]), $a([1, 114, 22]), $a([1, 115, 22]), $a([23, 70, 30]), $a([3, 65, 28]), $a([1, 66, 28]), $a([40, 35, 30]), $a([1, 43, 30]), $a([0, -1, -1]), $a([46, 20, 30]), $a([7, 19, 28]), $a([1, 16, 28])]), $a(["69", 159, 18, 8, 21993, $a([19, 116, 22]), $a([1, 105, 22]), $a([0, -1, -1]), $a([20, 70, 30]), $a([7, 66, 28]), $a([1, 63, 28]), $a([40, 35, 30]), $a([1, 42, 32]), $a([1, 43, 32]), $a([54, 20, 30]), $a([1, 19, 30]), $a([0, -1, -1])]), $a(["70", 161, 18, 8, 22593, $a([17, 126, 24]), $a([2, 115, 22]), $a([0, -1, -1]), $a([24, 70, 30]), $a([4, 74, 32]), $a([0, -1, -1]), $a([48, 31, 26]), $a([2, 18, 26]), $a([0, -1, -1]), $a([54, 19, 28]), $a([6, 15, 26]), $a([1, 14, 26])]), $a(["71", 163, 18, 8, 23201, $a([29, 84, 16]), $a([0, -1, -1]), $a([0, -1, -1]), $a([29, 70, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([6, 34, 30]), $a([3, 36, 30]), $a([38, 33, 28]), $a([58, 20, 30]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["72", 165, 18, 8, 23817, $a([16, 147, 28]), $a([1, 149, 28]), $a([0, -1, -1]), $a([31, 66, 28]), $a([1, 37, 26]), $a([0, -1, -1]), $a([48, 33, 28]), $a([1, 23, 26]), $a([0, -1, -1]), $a([53, 20, 30]), $a([6, 19, 28]), $a([1, 17, 28])]), $a(["73", 167, 19, 8, 24453, $a([20, 115, 22]), $a([2, 134, 24]), $a([0, -1, -1]), $a([29, 66, 28]), $a([2, 56, 26]), $a([2, 57, 26]), $a([45, 36, 30]), $a([2, 15, 28]), $a([0, -1, -1]), $a([59, 20, 30]), $a([2, 21, 32]), $a([0, -1, -1])]), $a(["74", 169, 19, 8, 25085, $a([17, 147, 28]), $a([1, 134, 26]), $a([0, -1, -1]), $a([26, 70, 30]), $a([5, 75, 32]), $a([0, -1, -1]), $a([47, 35, 30]), $a([1, 48, 32]), $a([0, -1, -1]), $a([64, 18, 28]), $a([2, 33, 30]), $a([1, 35, 30])]), $a(["75", 171, 17, 9, 25373, $a([22, 115, 22]), $a([1, 133, 24]), $a([0, -1, -1]), $a([33, 65, 28]), $a([1, 74, 28]), $a([0, -1, -1]), $a([43, 36, 30]), $a([5, 27, 28]), $a([1, 30, 28]), $a([57, 20, 30]), $a([5, 21, 32]), $a([1, 24, 32])]), $a(["76", 173, 17, 9, 26021, $a([18, 136, 26]), $a([2, 142, 26]), $a([0, -1, -1]), $a([33, 66, 28]), $a([2, 49, 26]), $a([0, -1, -1]), $a([48, 35, 30]), $a([2, 38, 28]), $a([0, -1, -1]), $a([64, 20, 30]), $a([1, 20, 32]), $a([0, -1, -1])]), $a(["77", 175, 17, 9, 26677, $a([19, 126, 24]), $a([2, 135, 26]), $a([1, 136, 26]), $a([32, 66, 28]), $a([2, 55, 26]), $a([2, 56, 26]), $a([49, 36, 30]), $a([2, 18, 32]), $a([0, -1, -1]), $a([65, 18, 28]), $a([5, 27, 30]), $a([1, 29, 30])]), $a(["78", 177, 18, 9, 27335, $a([20, 137, 26]), $a([1, 130, 26]), $a([0, -1, -1]), $a([30, 75, 32]), $a([2, 71, 32]), $a([0, -1, -1]), $a([46, 35, 30]), $a([6, 39, 32]), $a([0, -1, -1]), $a([3, 12, 30]), $a([70, 19, 28]), $a([0, -1, -1])]), $a(["79", 179, 18, 9, 28007, $a([20, 147, 28]), $a([0, -1, -1]), $a([0, -1, -1]), $a([35, 70, 30]), $a([0, -1, -1]), $a([0, -1, -1]), $a([49, 35, 30]), $a([5, 35, 28]), $a([0, -1, -1]), $a([70, 20, 30]), $a([0, -1, -1]), $a([0, -1, -1])]), $a(["80", 181, 18, 9, 28687, $a([21, 136, 26]), $a([1, 155, 28]), $a([0, -1, -1]), $a([34, 70, 30]), $a([1, 64, 28]), $a([1, 65, 28]), $a([54, 35, 30]), $a([1, 45, 30]), $a([0, -1, -1]), $a([68, 20, 30]), $a([3, 18, 28]), $a([1, 19, 28])]), $a(["81", 183, 18, 9, 29375, $a([19, 126, 24]), $a([5, 115, 22]), $a([1, 114, 22]), $a([33, 70, 30]), $a([3, 65, 28]), $a([1, 64, 28]), $a([52, 35, 30]), $a([3, 41, 32]), $a([1, 40, 32]), $a([67, 20, 30]), $a([5, 21, 32]), $a([1, 24, 32])]), $a(["82", 185, 18, 9, 30071, $a([2, 150, 28]), $a([21, 136, 26]), $a([0, -1, -1]), $a([32, 70, 30]), $a([6, 65, 28]), $a([0, -1, -1]), $a([52, 38, 32]), $a([2, 27, 32]), $a([0, -1, -1]), $a([73, 20, 30]), $a([2, 22, 32]), $a([0, -1, -1])]), $a(["83", 187, 17, 10, 30387, $a([21, 126, 24]), $a([4, 136, 26]), $a([0, -1, -1]), $a([30, 74, 32]), $a([6, 73, 30]), $a([0, -1, -1]), $a([54, 35, 30]), $a([4, 40, 32]), $a([0, -1, -1]), $a([75, 20, 30]), $a([1, 20, 28]), $a([0, -1, -1])]), $a(["84", 189, 17, 10, 31091, $a([30, 105, 20]), $a([1, 114, 22]), $a([0, -1, -1]), $a([3, 45, 22]), $a([55, 47, 20]), $a([0, -1, -1]), $a([2, 26, 26]), $a([62, 33, 28]), $a([0, -1, -1]), $a([79, 18, 28]), $a([4, 33, 30]), $a([0, -1, -1])])]); //#24708
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_hanxin.$ctx[id] = $_[id]); //#24708
         bwipp_hanxin.__24709__ = 1; //#24708
         $_ = Object.getPrototypeOf($_); //#24708
     } //#24708
     $_.eclval = $get($_.eclevel, 1) - 49; //#24711
-    var _Ig = $_.metrics; //#24712
-    for (var _Ih = 0, _Ii = _Ig.length; _Ih < _Ii; _Ih++) { //#24730
-        $_.m = $get(_Ig, _Ih); //#24713
+    var _Ih = $_.metrics; //#24712
+    for (var _Ii = 0, _Ij = _Ih.length; _Ii < _Ij; _Ii++) { //#24730
+        $_.m = $get(_Ih, _Ii); //#24713
         $_.vers = $get($_.m, 0); //#24714
         $_.size = $get($_.m, 1); //#24715
         $_.alnk = $get($_.m, 2); //#24716
@@ -30677,16 +30754,16 @@ function bwipp_hanxin() {
         $_.ncws = ~~($_.nmod / 8); //#24720
         $_.rbit = $_.nmod % 8; //#24721
         $_.ecbs = $geti($_.m, 5 + ($_.eclval * 3), 3); //#24722
-        var _J2 = $_.ecbs; //#24723
+        var _J3 = $_.ecbs; //#24723
         $k[$j++] = 'ecws'; //#24723
         $k[$j++] = 0; //#24723
-        for (var _J3 = 0, _J4 = _J2.length; _J3 < _J4; _J3++) { //#24723
-            var _J5 = $get(_J2, _J3); //#24723
-            var _J8 = $k[--$j]; //#24723
-            $k[$j++] = $f(_J8 + ($get(_J5, 0) * $get(_J5, 2))); //#24723
+        for (var _J4 = 0, _J5 = _J3.length; _J4 < _J5; _J4++) { //#24723
+            var _J6 = $get(_J3, _J4); //#24723
+            var _J9 = $k[--$j]; //#24723
+            $k[$j++] = $f(_J9 + ($get(_J6, 0) * $get(_J6, 2))); //#24723
         } //#24723
-        var _J9 = $k[--$j]; //#24723
-        $_[$k[--$j]] = _J9; //#24723
+        var _JA = $k[--$j]; //#24723
+        $_[$k[--$j]] = _JA; //#24723
         $_.dcws = $f($_.ncws - $_.ecws); //#24724
         $_.dmod = $_.dcws * 8; //#24725
         $_.okay = true; //#24726
@@ -30717,17 +30794,17 @@ function bwipp_hanxin() {
     $_.e2ecws = $get($get($_.ecbs, 1), 2); //#24740
     $_.e3ecws = $get($get($_.ecbs, 2), 2); //#24740
     $_.pad = $s($_.dmod); //#24743
-    for (var _Js = 0, _Jr = $_.pad.length - 1; _Js <= _Jr; _Js += 1) { //#24744
-        $put($_.pad, _Js, 48); //#24744
+    for (var _Jt = 0, _Js = $_.pad.length - 1; _Jt <= _Js; _Jt += 1) { //#24744
+        $put($_.pad, _Jt, 48); //#24744
     } //#24744
     $puti($_.pad, 0, $_.msgbits); //#24745
     $_.cws = $a($_.dcws); //#24748
-    for (var _K0 = 0, _Jz = $_.cws.length - 1; _K0 <= _Jz; _K0 += 1) { //#24758
-        $_.c = _K0; //#24750
+    for (var _K1 = 0, _K0 = $_.cws.length - 1; _K1 <= _K0; _K1 += 1) { //#24758
+        $_.c = _K1; //#24750
         $_.cwb = $geti($_.pad, $_.c * 8, 8); //#24751
         $_.cw = 0; //#24752
-        for (var _K4 = 0; _K4 <= 7; _K4 += 1) { //#24756
-            $_.i = _K4; //#24754
+        for (var _K5 = 0; _K5 <= 7; _K5 += 1) { //#24756
+            $_.i = _K5; //#24754
             $_.cw = $f($_.cw + ((~~(Math.pow(2, (8 - $_.i) - 1))) * $f($get($_.cwb, $_.i) - 48))); //#24755
         } //#24755
         $put($_.cws, $_.c, $_.cw); //#24757
@@ -30739,30 +30816,30 @@ function bwipp_hanxin() {
         $_.rscws = $k[--$j]; //#24765
         $k[$j++] = Infinity; //#24768
         $k[$j++] = 1; //#24768
-        for (var _KI = 0, _KJ = $f($_.rsgf - 1); _KI < _KJ; _KI++) { //#24768
-            var _KK = $k[--$j]; //#24768
-            var _KL = _KK * 2; //#24768
-            $k[$j++] = _KK; //#24768
+        for (var _KJ = 0, _KK = $f($_.rsgf - 1); _KJ < _KK; _KJ++) { //#24768
+            var _KL = $k[--$j]; //#24768
+            var _KM = _KL * 2; //#24768
             $k[$j++] = _KL; //#24768
-            if (_KL >= $_.rsgf) { //#24768
-                var _KO = $k[--$j]; //#24768
-                $k[$j++] = $xo(_KO, $_.rspm); //#24768
+            $k[$j++] = _KM; //#24768
+            if (_KM >= $_.rsgf) { //#24768
+                var _KP = $k[--$j]; //#24768
+                $k[$j++] = $xo(_KP, $_.rspm); //#24768
             } //#24768
         } //#24768
         $_.rsalog = $a(); //#24768
         $_.rslog = $a($_.rsgf); //#24769
-        for (var _KU = 1, _KT = $f($_.rsgf - 1); _KU <= _KT; _KU += 1) { //#24770
-            $put($_.rslog, $get($_.rsalog, _KU), _KU); //#24770
+        for (var _KV = 1, _KU = $f($_.rsgf - 1); _KV <= _KU; _KV += 1) { //#24770
+            $put($_.rslog, $get($_.rsalog, _KV), _KV); //#24770
         } //#24770
         $_.rsprod = function() {
-            var _KY = $k[--$j]; //#24774
             var _KZ = $k[--$j]; //#24774
+            var _Ka = $k[--$j]; //#24774
+            $k[$j++] = _Ka; //#24778
             $k[$j++] = _KZ; //#24778
-            $k[$j++] = _KY; //#24778
-            if ((_KY != 0) && (_KZ != 0)) { //#24777
-                var _Kc = $get($_.rslog, $k[--$j]); //#24775
-                var _Ki = $get($_.rsalog, $f(_Kc + $get($_.rslog, $k[--$j])) % $f($_.rsgf - 1)); //#24775
-                $k[$j++] = _Ki; //#24775
+            if ((_KZ != 0) && (_Ka != 0)) { //#24777
+                var _Kd = $get($_.rslog, $k[--$j]); //#24775
+                var _Kj = $get($_.rsalog, $f(_Kd + $get($_.rslog, $k[--$j])) % $f($_.rsgf - 1)); //#24775
+                $k[$j++] = _Kj; //#24775
             } else { //#24777
                 $j -= 2; //#24777
                 $k[$j++] = 0; //#24777
@@ -30770,57 +30847,57 @@ function bwipp_hanxin() {
         }; //#24777
         $k[$j++] = Infinity; //#24782
         $k[$j++] = 1; //#24782
-        for (var _Kk = 0, _Kl = $_.rsnc; _Kk < _Kl; _Kk++) { //#24782
+        for (var _Kl = 0, _Km = $_.rsnc; _Kl < _Km; _Kl++) { //#24782
             $k[$j++] = 0; //#24782
         } //#24782
         $_.coeffs = $a(); //#24782
-        for (var _Kp = 1, _Ko = $_.rsnc; _Kp <= _Ko; _Kp += 1) { //#24791
-            $_.i = _Kp; //#24784
+        for (var _Kq = 1, _Kp = $_.rsnc; _Kq <= _Kp; _Kq += 1) { //#24791
+            $_.i = _Kq; //#24784
             $put($_.coeffs, $_.i, $get($_.coeffs, $_.i - 1)); //#24785
-            for (var _Kw = $_.i - 1; _Kw >= 1; _Kw -= 1) { //#24789
-                $_.j = _Kw; //#24787
+            for (var _Kx = $_.i - 1; _Kx >= 1; _Kx -= 1) { //#24789
+                $_.j = _Kx; //#24787
                 $k[$j++] = $_.coeffs; //#24788
                 $k[$j++] = $_.j; //#24788
                 $k[$j++] = $get($_.coeffs, $_.j - 1); //#24788
                 $k[$j++] = $get($_.coeffs, $_.j); //#24788
                 $k[$j++] = $get($_.rsalog, $_.i); //#24788
                 $_.rsprod(); //#24788
-                var _L8 = $k[--$j]; //#24788
                 var _L9 = $k[--$j]; //#24788
                 var _LA = $k[--$j]; //#24788
-                $put($k[--$j], _LA, $xo(_L9, _L8)); //#24788
+                var _LB = $k[--$j]; //#24788
+                $put($k[--$j], _LB, $xo(_LA, _L9)); //#24788
             } //#24788
             $k[$j++] = $_.coeffs; //#24790
             $k[$j++] = 0; //#24790
             $k[$j++] = $get($_.coeffs, 0); //#24790
             $k[$j++] = $get($_.rsalog, $_.i); //#24790
             $_.rsprod(); //#24790
-            var _LI = $k[--$j]; //#24790
             var _LJ = $k[--$j]; //#24790
-            $put($k[--$j], _LJ, _LI); //#24790
+            var _LK = $k[--$j]; //#24790
+            $put($k[--$j], _LK, _LJ); //#24790
         } //#24790
         $_.nd = $_.rscws.length; //#24794
         $k[$j++] = Infinity; //#24795
         $forall($_.rscws); //#24795
-        for (var _LO = 0, _LP = $_.rsnc; _LO < _LP; _LO++) { //#24795
+        for (var _LP = 0, _LQ = $_.rsnc; _LP < _LQ; _LP++) { //#24795
             $k[$j++] = 0; //#24795
         } //#24795
         $k[$j++] = 0; //#24795
         $_.rscws = $a(); //#24795
-        for (var _LT = 0, _LS = $_.nd - 1; _LT <= _LS; _LT += 1) { //#24802
-            $_.k = $xo($get($_.rscws, _LT), $get($_.rscws, $_.nd)); //#24797
-            for (var _Lb = 0, _La = $f($_.rsnc - 1); _Lb <= _La; _Lb += 1) { //#24801
-                $_.j = _Lb; //#24799
+        for (var _LU = 0, _LT = $_.nd - 1; _LU <= _LT; _LU += 1) { //#24802
+            $_.k = $xo($get($_.rscws, _LU), $get($_.rscws, $_.nd)); //#24797
+            for (var _Lc = 0, _Lb = $f($_.rsnc - 1); _Lc <= _Lb; _Lc += 1) { //#24801
+                $_.j = _Lc; //#24799
                 $k[$j++] = $_.rscws; //#24800
                 $k[$j++] = $_.nd + $_.j; //#24800
                 $k[$j++] = $get($_.rscws, ($_.nd + $_.j) + 1); //#24800
                 $k[$j++] = $_.k; //#24800
                 $k[$j++] = $get($_.coeffs, $f($f($_.rsnc - $_.j) - 1)); //#24800
                 $_.rsprod(); //#24800
-                var _Lo = $k[--$j]; //#24800
                 var _Lp = $k[--$j]; //#24800
                 var _Lq = $k[--$j]; //#24800
-                $put($k[--$j], _Lq, $xo(_Lp, _Lo)); //#24800
+                var _Lr = $k[--$j]; //#24800
+                $put($k[--$j], _Lr, $xo(_Lq, _Lp)); //#24800
             } //#24800
         } //#24800
         $k[$j++] = $geti($_.rscws, 0, $_.rscws.length - 1); //#24805
@@ -30829,68 +30906,68 @@ function bwipp_hanxin() {
     $_.ecwsb = $a($_.dcwsb.length); //#24811
     $_.in = 0; //#24812
     $_.out = 0; //#24812
-    for (var _M2 = 0, _M3 = $_.e1nb; _M2 < _M3; _M2++) { //#24818
+    for (var _M3 = 0, _M4 = $_.e1nb; _M3 < _M4; _M3++) { //#24818
         $k[$j++] = $geti($_.cws, $_.in, $_.e1dcws); //#24814
         $k[$j++] = $_.e1ecws; //#24814
         $k[$j++] = 256; //#24814
         $k[$j++] = 355; //#24814
         $_.rscodes(); //#24814
-        var _M9 = $k[--$j]; //#24815
-        $put($_.dcwsb, $_.out, $geti(_M9, 0, $_.e1dcws)); //#24815
-        $put($_.ecwsb, $_.out, $geti(_M9, $_.e1dcws, $_.e1ecws)); //#24816
+        var _MA = $k[--$j]; //#24815
+        $put($_.dcwsb, $_.out, $geti(_MA, 0, $_.e1dcws)); //#24815
+        $put($_.ecwsb, $_.out, $geti(_MA, $_.e1dcws, $_.e1ecws)); //#24816
         $_.in = $f($_.in + $_.e1dcws); //#24817
         $_.out = $_.out + 1; //#24817
     } //#24817
-    for (var _MN = 0, _MO = $_.e2nb; _MN < _MO; _MN++) { //#24824
+    for (var _MO = 0, _MP = $_.e2nb; _MO < _MP; _MO++) { //#24824
         $k[$j++] = $geti($_.cws, $_.in, $_.e2dcws); //#24820
         $k[$j++] = $_.e2ecws; //#24820
         $k[$j++] = 256; //#24820
         $k[$j++] = 355; //#24820
         $_.rscodes(); //#24820
-        var _MU = $k[--$j]; //#24821
-        $put($_.dcwsb, $_.out, $geti(_MU, 0, $_.e2dcws)); //#24821
-        $put($_.ecwsb, $_.out, $geti(_MU, $_.e2dcws, $_.e2ecws)); //#24822
+        var _MV = $k[--$j]; //#24821
+        $put($_.dcwsb, $_.out, $geti(_MV, 0, $_.e2dcws)); //#24821
+        $put($_.ecwsb, $_.out, $geti(_MV, $_.e2dcws, $_.e2ecws)); //#24822
         $_.in = $f($_.in + $_.e2dcws); //#24823
         $_.out = $_.out + 1; //#24823
     } //#24823
-    for (var _Mi = 0, _Mj = $_.e3nb; _Mi < _Mj; _Mi++) { //#24830
+    for (var _Mj = 0, _Mk = $_.e3nb; _Mj < _Mk; _Mj++) { //#24830
         $k[$j++] = $geti($_.cws, $_.in, $_.e3dcws); //#24826
         $k[$j++] = $_.e3ecws; //#24826
         $k[$j++] = 256; //#24826
         $k[$j++] = 355; //#24826
         $_.rscodes(); //#24826
-        var _Mp = $k[--$j]; //#24827
-        $put($_.dcwsb, $_.out, $geti(_Mp, 0, $_.e3dcws)); //#24827
-        $put($_.ecwsb, $_.out, $geti(_Mp, $_.e3dcws, $_.e3ecws)); //#24828
+        var _Mq = $k[--$j]; //#24827
+        $put($_.dcwsb, $_.out, $geti(_Mq, 0, $_.e3dcws)); //#24827
+        $put($_.ecwsb, $_.out, $geti(_Mq, $_.e3dcws, $_.e3ecws)); //#24828
         $_.in = $f($_.in + $_.e3dcws); //#24829
         $_.out = $_.out + 1; //#24829
     } //#24829
     $_.cws = $a($_.ncws); //#24833
     $_.cw = 0; //#24834
-    for (var _N6 = 0, _N5 = $_.dcwsb.length - 1; _N6 <= _N5; _N6 += 1) { //#24839
-        $_.i = _N6; //#24836
-        var _N9 = $get($_.dcwsb, $_.i); //#24837
-        $puti($_.cws, $_.cw, _N9); //#24837
-        $_.cw = _N9.length + $_.cw; //#24837
-        var _NF = $get($_.ecwsb, $_.i); //#24838
-        $puti($_.cws, $_.cw, _NF); //#24838
-        $_.cw = _NF.length + $_.cw; //#24838
+    for (var _N7 = 0, _N6 = $_.dcwsb.length - 1; _N7 <= _N6; _N7 += 1) { //#24839
+        $_.i = _N7; //#24836
+        var _NA = $get($_.dcwsb, $_.i); //#24837
+        $puti($_.cws, $_.cw, _NA); //#24837
+        $_.cw = _NA.length + $_.cw; //#24837
+        var _NG = $get($_.ecwsb, $_.i); //#24838
+        $puti($_.cws, $_.cw, _NG); //#24838
+        $_.cw = _NG.length + $_.cw; //#24838
     } //#24838
     $k[$j++] = Infinity; //#24842
-    var _NJ = $_.ncws; //#24843
-    var _NK = 12; //#24843
-    var _NL = _NJ - 1; //#24843
-    if ((_NJ - 1) > 12) { //#24843
-        var _ = _NK; //#24843
-        _NK = _NL; //#24843
-        _NL = _; //#24843
+    var _NK = $_.ncws; //#24843
+    var _NL = 12; //#24843
+    var _NM = _NK - 1; //#24843
+    if ((_NK - 1) > 12) { //#24843
+        var _ = _NL; //#24843
+        _NL = _NM; //#24843
+        _NM = _; //#24843
     } //#24843
-    for (var _NN = 0, _NM = _NL; _NN <= _NM; _NN += 1) { //#24845
-        for (var _NQ = _NN, _NP = $_.ncws - 1; _NQ <= _NP; _NQ += 13) { //#24844
-            $k[$j++] = _NQ; //#24844
-            if (_NQ < $_.ncws) { //#24844
-                var _NU = $get($_.cws, $k[--$j]); //#24844
-                $k[$j++] = _NU; //#24844
+    for (var _NO = 0, _NN = _NM; _NO <= _NN; _NO += 1) { //#24845
+        for (var _NR = _NO, _NQ = $_.ncws - 1; _NR <= _NQ; _NR += 13) { //#24844
+            $k[$j++] = _NR; //#24844
+            if (_NR < $_.ncws) { //#24844
+                var _NV = $get($_.cws, $k[--$j]); //#24844
+                $k[$j++] = _NV; //#24844
             } else { //#24844
                 $j--; //#24844
             } //#24844
@@ -30904,37 +30981,48 @@ function bwipp_hanxin() {
         $_.cws = $_.pad; //#24853
     } //#24853
     $k[$j++] = Infinity; //#24857
-    for (var _Ng = 0, _Nh = $_.size * $_.size; _Ng < _Nh; _Ng++) { //#24857
+    for (var _Nh = 0, _Ni = $_.size * $_.size; _Nh < _Ni; _Nh++) { //#24857
         $k[$j++] = -1; //#24857
     } //#24857
     $_.pixs = $a(); //#24857
     $_.qmv = function() {
-        var _Nk = $k[--$j]; //#24858
         var _Nl = $k[--$j]; //#24858
-        $k[$j++] = $f(_Nl + (_Nk * $_.size)); //#24858
+        var _Nm = $k[--$j]; //#24858
+        $k[$j++] = $f(_Nm + (_Nl * $_.size)); //#24858
     }; //#24858
     if ($_.alnn != 0) { //#24917
         $_.trmv = function() {
-            var _No = $k[--$j]; //#24862
-            var _Nq = $k[--$j]; //#24862
-            $k[$j++] = $f(($f(($f((_No * $_.size) + $_.size)) - 1)) - _Nq); //#24862
+            var _Np = $k[--$j]; //#24862
+            var _Nr = $k[--$j]; //#24862
+            $k[$j++] = $f(($f(($f((_Np * $_.size) + $_.size)) - 1)) - _Nr); //#24862
         }; //#24862
         $_.aplot = function() {
-            var _Nr = $k[--$j]; //#24864
+            $r(3, 1); //#24864
             var _Ns = $k[--$j]; //#24864
             var _Nt = $k[--$j]; //#24864
-            $k[$j++] = _Nr; //#24864
+            var _Nu = $k[--$j]; //#24864
+            $k[$j++] = _Nu; //#24864
             $k[$j++] = _Nt; //#24864
             $k[$j++] = _Ns; //#24864
-            $k[$j++] = _Nr; //#24864
+            $k[$j++] = _Nu; //#24864
             $k[$j++] = _Ns; //#24864
             $k[$j++] = _Nt; //#24864
             $_.trmv(); //#24864
-            var _Nv = $k[--$j]; //#24864
-            $put($_.pixs, _Nv, $k[--$j]); //#24864
+            var _Nw = $k[--$j]; //#24864
+            $k[$j++] = $_.pixs; //#24864
+            $k[$j++] = _Nw; //#24864
+            $r(3, -1); //#24864
+            var _Nx = $k[--$j]; //#24864
+            var _Ny = $k[--$j]; //#24864
+            $put($k[--$j], _Ny, _Nx); //#24864
             $_.trmv(); //#24865
-            var _Ny = $k[--$j]; //#24865
-            $put($_.pixs, _Ny, $k[--$j]); //#24865
+            var _O1 = $k[--$j]; //#24865
+            $k[$j++] = $_.pixs; //#24865
+            $k[$j++] = _O1; //#24865
+            $r(3, -1); //#24865
+            var _O2 = $k[--$j]; //#24865
+            var _O3 = $k[--$j]; //#24865
+            $put($k[--$j], _O3, _O2); //#24865
         }; //#24865
         $_.i = 0; //#24867
         $_.stag = 0; //#24867
@@ -30942,8 +31030,8 @@ function bwipp_hanxin() {
             if ($_.i >= $_.size) { //#24868
                 break; //#24868
             } //#24868
-            for (var _O4 = 0, _O3 = $f($_.size - 1); _O4 <= _O3; _O4 += 1) { //#24882
-                $_.j = _O4; //#24870
+            for (var _O9 = 0, _O8 = $f($_.size - 1); _O9 <= _O8; _O9 += 1) { //#24882
+                $_.j = _O9; //#24870
                 if ($f($_.j + $_.alnr) < $_.size) { //#24876
                     $k[$j++] = (((((~~($_.j / $_.alnk)) + $_.stag) % 2) == 0) && (!(($_.i == 0) && ($_.j < $_.alnk)))) || (($_.j % $_.alnk) == 0); //#24874
                 } else { //#24876
@@ -30954,11 +31042,11 @@ function bwipp_hanxin() {
                     $k[$j++] = $_.i; //#24879
                     $k[$j++] = 1; //#24879
                     $_.aplot(); //#24879
-                    var _OL = $_.j; //#24880
-                    var _OM = $_.i; //#24880
-                    $k[$j++] = _OL + 1; //#24880
-                    $k[$j++] = _OM + 1; //#24880
-                    if (((_OM + 1) < $_.size) && ((_OL + 1) < $_.size)) { //#24880
+                    var _OQ = $_.j; //#24880
+                    var _OR = $_.i; //#24880
+                    $k[$j++] = _OQ + 1; //#24880
+                    $k[$j++] = _OR + 1; //#24880
+                    if (((_OR + 1) < $_.size) && ((_OQ + 1) < $_.size)) { //#24880
                         $k[$j++] = 0; //#24880
                         $_.aplot(); //#24880
                     } else { //#24880
@@ -30973,136 +31061,136 @@ function bwipp_hanxin() {
             } //#24886
             $_.stag = 1 - $_.stag; //#24888
         } //#24888
-        for (var _Ob = $_.alnk, _Oc = $_.alnk, _Oa = $f($_.size - 2); _Oc < 0 ? _Ob >= _Oa : _Ob <= _Oa; _Ob += _Oc) { //#24916
-            $_.i = _Ob; //#24891
+        for (var _Og = $_.alnk, _Oh = $_.alnk, _Of = $f($_.size - 2); _Oh < 0 ? _Og >= _Of : _Og <= _Of; _Og += _Oh) { //#24916
+            $_.i = _Og; //#24891
             if (((~~($_.i / $_.alnk)) % 2) != 0) { //#24903
                 $k[$j++] = $_.pixs; //#24893
                 $k[$j++] = 0; //#24893
                 $k[$j++] = $_.i - 1; //#24893
                 $_.trmv(); //#24893
-                var _Oh = $k[--$j]; //#24893
-                $put($k[--$j], _Oh, 0); //#24893
+                var _Om = $k[--$j]; //#24893
+                $put($k[--$j], _Om, 0); //#24893
                 $k[$j++] = $_.pixs; //#24894
                 $k[$j++] = 0; //#24894
                 $k[$j++] = $_.i + 1; //#24894
                 $_.trmv(); //#24894
-                var _Ol = $k[--$j]; //#24894
-                $put($k[--$j], _Ol, 0); //#24894
+                var _Oq = $k[--$j]; //#24894
+                $put($k[--$j], _Oq, 0); //#24894
                 $k[$j++] = $_.pixs; //#24895
                 $k[$j++] = 1; //#24895
                 $k[$j++] = $_.i - 1; //#24895
                 $_.trmv(); //#24895
-                var _Op = $k[--$j]; //#24895
-                $put($k[--$j], _Op, 0); //#24895
+                var _Ou = $k[--$j]; //#24895
+                $put($k[--$j], _Ou, 0); //#24895
                 $k[$j++] = $_.pixs; //#24896
                 $k[$j++] = 1; //#24896
                 $k[$j++] = $_.i; //#24896
                 $_.trmv(); //#24896
-                var _Ot = $k[--$j]; //#24896
-                $put($k[--$j], _Ot, 0); //#24896
+                var _Oy = $k[--$j]; //#24896
+                $put($k[--$j], _Oy, 0); //#24896
                 $k[$j++] = $_.pixs; //#24897
                 $k[$j++] = 1; //#24897
                 $k[$j++] = $_.i + 1; //#24897
                 $_.trmv(); //#24897
-                var _Ox = $k[--$j]; //#24897
-                $put($k[--$j], _Ox, 0); //#24897
+                var _P2 = $k[--$j]; //#24897
+                $put($k[--$j], _P2, 0); //#24897
                 $k[$j++] = $_.pixs; //#24898
                 $k[$j++] = $_.i - 1; //#24898
                 $k[$j++] = 0; //#24898
                 $_.trmv(); //#24898
-                var _P1 = $k[--$j]; //#24898
-                $put($k[--$j], _P1, 0); //#24898
+                var _P6 = $k[--$j]; //#24898
+                $put($k[--$j], _P6, 0); //#24898
                 $k[$j++] = $_.pixs; //#24899
                 $k[$j++] = $_.i + 1; //#24899
                 $k[$j++] = 0; //#24899
                 $_.trmv(); //#24899
-                var _P5 = $k[--$j]; //#24899
-                $put($k[--$j], _P5, 0); //#24899
+                var _PA = $k[--$j]; //#24899
+                $put($k[--$j], _PA, 0); //#24899
                 $k[$j++] = $_.pixs; //#24900
                 $k[$j++] = $_.i - 1; //#24900
                 $k[$j++] = 1; //#24900
                 $_.trmv(); //#24900
-                var _P9 = $k[--$j]; //#24900
-                $put($k[--$j], _P9, 0); //#24900
+                var _PE = $k[--$j]; //#24900
+                $put($k[--$j], _PE, 0); //#24900
                 $k[$j++] = $_.pixs; //#24901
                 $k[$j++] = $_.i; //#24901
                 $k[$j++] = 1; //#24901
                 $_.trmv(); //#24901
-                var _PD = $k[--$j]; //#24901
-                $put($k[--$j], _PD, 0); //#24901
+                var _PI = $k[--$j]; //#24901
+                $put($k[--$j], _PI, 0); //#24901
                 $k[$j++] = $_.pixs; //#24902
                 $k[$j++] = $_.i + 1; //#24902
                 $k[$j++] = 1; //#24902
                 $_.trmv(); //#24902
-                var _PH = $k[--$j]; //#24902
-                $put($k[--$j], _PH, 0); //#24902
+                var _PM = $k[--$j]; //#24902
+                $put($k[--$j], _PM, 0); //#24902
             } //#24902
             $k[$j++] = $_.pixs; //#24904
             $k[$j++] = $f($_.size - 1); //#24904
             $k[$j++] = $_.i - 1; //#24904
             $_.trmv(); //#24904
-            var _PM = $k[--$j]; //#24904
-            if ($get($k[--$j], _PM) != 1) { //#24915
+            var _PR = $k[--$j]; //#24904
+            if ($get($k[--$j], _PR) != 1) { //#24915
                 $k[$j++] = $_.pixs; //#24905
                 $k[$j++] = $f($_.size - 1); //#24905
                 $k[$j++] = $_.i - 1; //#24905
                 $_.trmv(); //#24905
-                var _PS = $k[--$j]; //#24905
-                $put($k[--$j], _PS, 0); //#24905
+                var _PX = $k[--$j]; //#24905
+                $put($k[--$j], _PX, 0); //#24905
                 $k[$j++] = $_.pixs; //#24906
                 $k[$j++] = $f($_.size - 2); //#24906
                 $k[$j++] = $_.i - 1; //#24906
                 $_.trmv(); //#24906
-                var _PX = $k[--$j]; //#24906
-                $put($k[--$j], _PX, 0); //#24906
+                var _Pc = $k[--$j]; //#24906
+                $put($k[--$j], _Pc, 0); //#24906
                 $k[$j++] = $_.pixs; //#24907
                 $k[$j++] = $f($_.size - 2); //#24907
                 $k[$j++] = $_.i; //#24907
                 $_.trmv(); //#24907
-                var _Pc = $k[--$j]; //#24907
-                $put($k[--$j], _Pc, 0); //#24907
+                var _Ph = $k[--$j]; //#24907
+                $put($k[--$j], _Ph, 0); //#24907
                 $k[$j++] = $_.pixs; //#24908
                 $k[$j++] = $f($_.size - 2); //#24908
                 $k[$j++] = $_.i + 1; //#24908
                 $_.trmv(); //#24908
-                var _Ph = $k[--$j]; //#24908
-                $put($k[--$j], _Ph, 0); //#24908
+                var _Pm = $k[--$j]; //#24908
+                $put($k[--$j], _Pm, 0); //#24908
                 $k[$j++] = $_.pixs; //#24909
                 $k[$j++] = $f($_.size - 1); //#24909
                 $k[$j++] = $_.i + 1; //#24909
                 $_.trmv(); //#24909
-                var _Pm = $k[--$j]; //#24909
-                $put($k[--$j], _Pm, 0); //#24909
+                var _Pr = $k[--$j]; //#24909
+                $put($k[--$j], _Pr, 0); //#24909
                 $k[$j++] = $_.pixs; //#24910
                 $k[$j++] = $_.i - 1; //#24910
                 $k[$j++] = $f($_.size - 1); //#24910
                 $_.trmv(); //#24910
-                var _Pr = $k[--$j]; //#24910
-                $put($k[--$j], _Pr, 0); //#24910
+                var _Pw = $k[--$j]; //#24910
+                $put($k[--$j], _Pw, 0); //#24910
                 $k[$j++] = $_.pixs; //#24911
                 $k[$j++] = $_.i - 1; //#24911
                 $k[$j++] = $f($_.size - 2); //#24911
                 $_.trmv(); //#24911
-                var _Pw = $k[--$j]; //#24911
-                $put($k[--$j], _Pw, 0); //#24911
+                var _Q1 = $k[--$j]; //#24911
+                $put($k[--$j], _Q1, 0); //#24911
                 $k[$j++] = $_.pixs; //#24912
                 $k[$j++] = $_.i; //#24912
                 $k[$j++] = $f($_.size - 2); //#24912
                 $_.trmv(); //#24912
-                var _Q1 = $k[--$j]; //#24912
-                $put($k[--$j], _Q1, 0); //#24912
+                var _Q6 = $k[--$j]; //#24912
+                $put($k[--$j], _Q6, 0); //#24912
                 $k[$j++] = $_.pixs; //#24913
                 $k[$j++] = $_.i + 1; //#24913
                 $k[$j++] = $f($_.size - 2); //#24913
                 $_.trmv(); //#24913
-                var _Q6 = $k[--$j]; //#24913
-                $put($k[--$j], _Q6, 0); //#24913
+                var _QB = $k[--$j]; //#24913
+                $put($k[--$j], _QB, 0); //#24913
                 $k[$j++] = $_.pixs; //#24914
                 $k[$j++] = $_.i + 1; //#24914
                 $k[$j++] = $f($_.size - 1); //#24914
                 $_.trmv(); //#24914
-                var _QB = $k[--$j]; //#24914
-                $put($k[--$j], _QB, 0); //#24914
+                var _QG = $k[--$j]; //#24914
+                $put($k[--$j], _QG, 0); //#24914
             } //#24914
         } //#24914
     } //#24914
@@ -31114,99 +31202,100 @@ function bwipp_hanxin() {
         bwipp_hanxin.__24941__ = 1; //#24940
         $_ = Object.getPrototypeOf($_); //#24940
     } //#24940
-    for (var _QY = 0, _QX = $_.fpat.length - 1; _QY <= _QX; _QY += 1) { //#24953
-        $_.y = _QY; //#24943
-        for (var _Qc = 0, _Qb = $get($_.fpat, 0).length - 1; _Qc <= _Qb; _Qc += 1) { //#24952
-            $_.x = _Qc; //#24945
+    for (var _Qd = 0, _Qc = $_.fpat.length - 1; _Qd <= _Qc; _Qd += 1) { //#24953
+        $_.y = _Qd; //#24943
+        for (var _Qh = 0, _Qg = $get($_.fpat, 0).length - 1; _Qh <= _Qg; _Qh += 1) { //#24952
+            $_.x = _Qh; //#24945
             $_.fpb = $get($get($_.fpat, $_.y), $_.x); //#24946
             $_.fpb2 = $get($get($_.fpat2, $_.y), $_.x); //#24947
             $k[$j++] = $_.pixs; //#24948
             $k[$j++] = $_.x; //#24948
             $k[$j++] = $_.y; //#24948
             $_.qmv(); //#24948
-            var _Qr = $k[--$j]; //#24948
-            $put($k[--$j], _Qr, $_.fpb); //#24948
+            var _Qw = $k[--$j]; //#24948
+            $put($k[--$j], _Qw, $_.fpb); //#24948
             $k[$j++] = $_.pixs; //#24949
             $k[$j++] = $f($f($_.size - $_.x) - 1); //#24949
             $k[$j++] = $_.y; //#24949
             $_.qmv(); //#24949
-            var _Qy = $k[--$j]; //#24949
-            $put($k[--$j], _Qy, $_.fpb); //#24949
+            var _R3 = $k[--$j]; //#24949
+            $put($k[--$j], _R3, $_.fpb); //#24949
             $k[$j++] = $_.pixs; //#24950
             $k[$j++] = $f($f($_.size - $_.x) - 1); //#24950
             $k[$j++] = $f($f($_.size - $_.y) - 1); //#24950
             $_.qmv(); //#24950
-            var _R6 = $k[--$j]; //#24950
-            $put($k[--$j], _R6, $_.fpb); //#24950
+            var _RB = $k[--$j]; //#24950
+            $put($k[--$j], _RB, $_.fpb); //#24950
             $k[$j++] = $_.pixs; //#24951
             $k[$j++] = $_.x; //#24951
             $k[$j++] = $f($f($_.size - $_.y) - 1); //#24951
             $_.qmv(); //#24951
-            var _RD = $k[--$j]; //#24951
-            $put($k[--$j], _RD, $_.fpb2); //#24951
+            var _RI = $k[--$j]; //#24951
+            $put($k[--$j], _RI, $_.fpb2); //#24951
         } //#24951
     } //#24951
     $_.functionmap = $a([$a([$a([0, 8]), $a([$f($_.size - 1), $f($_.size - 9)])]), $a([$a([1, 8]), $a([$f($_.size - 2), $f($_.size - 9)])]), $a([$a([2, 8]), $a([$f($_.size - 3), $f($_.size - 9)])]), $a([$a([3, 8]), $a([$f($_.size - 4), $f($_.size - 9)])]), $a([$a([4, 8]), $a([$f($_.size - 5), $f($_.size - 9)])]), $a([$a([5, 8]), $a([$f($_.size - 6), $f($_.size - 9)])]), $a([$a([6, 8]), $a([$f($_.size - 7), $f($_.size - 9)])]), $a([$a([7, 8]), $a([$f($_.size - 8), $f($_.size - 9)])]), $a([$a([8, 8]), $a([$f($_.size - 9), $f($_.size - 9)])]), $a([$a([8, 7]), $a([$f($_.size - 9), $f($_.size - 8)])]), $a([$a([8, 6]), $a([$f($_.size - 9), $f($_.size - 7)])]), $a([$a([8, 5]), $a([$f($_.size - 9), $f($_.size - 6)])]), $a([$a([8, 4]), $a([$f($_.size - 9), $f($_.size - 5)])]), $a([$a([8, 3]), $a([$f($_.size - 9), $f($_.size - 4)])]), $a([$a([8, 2]), $a([$f($_.size - 9), $f($_.size - 3)])]), $a([$a([8, 1]), $a([$f($_.size - 9), $f($_.size - 2)])]), $a([$a([8, 0]), $a([$f($_.size - 9), $f($_.size - 1)])]), $a([$a([$f($_.size - 9), 0]), $a([8, $f($_.size - 1)])]), $a([$a([$f($_.size - 9), 1]), $a([8, $f($_.size - 2)])]), $a([$a([$f($_.size - 9), 2]), $a([8, $f($_.size - 3)])]), $a([$a([$f($_.size - 9), 3]), $a([8, $f($_.size - 4)])]), $a([$a([$f($_.size - 9), 4]), $a([8, $f($_.size - 5)])]), $a([$a([$f($_.size - 9), 5]), $a([8, $f($_.size - 6)])]), $a([$a([$f($_.size - 9), 6]), $a([8, $f($_.size - 7)])]), $a([$a([$f($_.size - 9), 7]), $a([8, $f($_.size - 8)])]), $a([$a([$f($_.size - 9), 8]), $a([8, $f($_.size - 9)])]), $a([$a([$f($_.size - 8), 8]), $a([7, $f($_.size - 9)])]), $a([$a([$f($_.size - 7), 8]), $a([6, $f($_.size - 9)])]), $a([$a([$f($_.size - 6), 8]), $a([5, $f($_.size - 9)])]), $a([$a([$f($_.size - 5), 8]), $a([4, $f($_.size - 9)])]), $a([$a([$f($_.size - 4), 8]), $a([3, $f($_.size - 9)])]), $a([$a([$f($_.size - 3), 8]), $a([2, $f($_.size - 9)])]), $a([$a([$f($_.size - 2), 8]), $a([1, $f($_.size - 9)])]), $a([$a([$f($_.size - 1), 8]), $a([0, $f($_.size - 9)])])]); //#24975
-    var _U0 = $_.functionmap; //#24976
-    for (var _U1 = 0, _U2 = _U0.length; _U1 < _U2; _U1++) { //#24978
-        $forall($get(_U0, _U1), function() { //#24977
+    var _U5 = $_.functionmap; //#24976
+    for (var _U6 = 0, _U7 = _U5.length; _U6 < _U7; _U6++) { //#24978
+        $forall($get(_U5, _U6), function() { //#24977
             $forall($k[--$j]); //#24977
             $_.qmv(); //#24977
             $put($_.pixs, $k[--$j], 0); //#24977
         }); //#24977
     } //#24977
-    var _UD = $a([function() {
+    var _UI = $a([function() {
         $j -= 2; //#24981
         $k[$j++] = 1; //#24981
     }, function() {
-        var _U7 = $k[--$j]; //#24982
-        var _U8 = $k[--$j]; //#24982
-        $k[$j++] = $f(_U8 + _U7) % 2; //#24982
+        var _UC = $k[--$j]; //#24982
+        var _UD = $k[--$j]; //#24982
+        $k[$j++] = $f(_UD + _UC) % 2; //#24982
     }, function() {
-        var _U9 = $k[--$j]; //#24983
-        var _UA = $k[--$j]; //#24983
-        $k[$j++] = ($f(($f(_U9 + _UA) % 3) + (_UA % 3))) % 2; //#24983
+        var _UE = $k[--$j]; //#24983
+        var _UF = $k[--$j]; //#24983
+        $k[$j++] = ($f(($f(_UE + _UF) % 3) + (_UF % 3))) % 2; //#24983
     }, function() {
-        var _UB = $k[--$j]; //#24984
-        var _UC = $k[--$j]; //#24984
-        $k[$j++] = ($f((_UC % _UB) + ($f((_UB % _UC) + ($f((_UB % 3) + (_UC % 3))))))) % 2; //#24985
+        var _UG = $k[--$j]; //#24984
+        var _UH = $k[--$j]; //#24984
+        $k[$j++] = ($f((_UH % _UG) + ($f((_UG % _UH) + ($f((_UG % 3) + (_UH % 3))))))) % 2; //#24985
     }]); //#24985
-    $_.maskfuncs = _UD; //#24986
+    $_.maskfuncs = _UI; //#24986
     if ($_.mask != -1) { //#24990
         $_.maskfuncs = $a([$get($_.maskfuncs, $_.mask - 1)]); //#24988
         $_.bestmaskval = $_.mask - 1; //#24989
     } //#24989
     $_.masks = $a($_.maskfuncs.length); //#24991
-    for (var _UO = 0, _UN = $_.masks.length - 1; _UO <= _UN; _UO += 1) { //#25005
-        $_.m = _UO; //#24993
+    for (var _UT = 0, _US = $_.masks.length - 1; _UT <= _US; _UT += 1) { //#25005
+        $_.m = _UT; //#24993
         $_.mask = $a($_.size * $_.size); //#24994
-        for (var _UU = 0, _UT = $f($_.size - 1); _UU <= _UT; _UU += 1) { //#25003
-            $_.j = _UU; //#24996
-            for (var _UX = 0, _UW = $f($_.size - 1); _UX <= _UW; _UX += 1) { //#25002
-                $_.i = _UX; //#24998
+        for (var _UZ = 0, _UY = $f($_.size - 1); _UZ <= _UY; _UZ += 1) { //#25003
+            $_.j = _UZ; //#24996
+            for (var _Uc = 0, _Ub = $f($_.size - 1); _Uc <= _Ub; _Uc += 1) { //#25002
+                $_.i = _Uc; //#24998
                 $k[$j++] = $_.i + 1; //#24999
                 $k[$j++] = $_.j + 1; //#24999
                 if ($get($_.maskfuncs, $_.m)() === true) {
                     break;
                 } //#24999
-                var _Ud = $k[--$j]; //#24999
-                $k[$j++] = _Ud == 0; //#25000
+                var _Ui = $k[--$j]; //#24999
+                $k[$j++] = _Ui == 0; //#25000
                 $k[$j++] = $_.pixs; //#25000
                 $k[$j++] = $_.i; //#25000
                 $k[$j++] = $_.j; //#25000
                 $_.qmv(); //#25000
-                var _Uh = $k[--$j]; //#25000
-                var _Uj = $get($k[--$j], _Uh); //#25000
-                var _Uk = $k[--$j]; //#25000
-                var _Ul = (_Uk && (_Uj == -1)) ? 1 : 0; //#25000
-                $k[$j++] = _Ul; //#25001
+                var _Um = $k[--$j]; //#25000
+                var _Uo = $get($k[--$j], _Um); //#25000
+                var _Up = $k[--$j]; //#25000
+                var _Uq = (_Up && (_Uo == -1)) ? 1 : 0; //#25000
+                $k[$j++] = _Uq; //#25001
                 $k[$j++] = $_.mask; //#25001
                 $k[$j++] = $_.i; //#25001
                 $k[$j++] = $_.j; //#25001
                 $_.qmv(); //#25001
-                var _Up = $k[--$j]; //#25001
-                var _Uq = $k[--$j]; //#25001
-                $put(_Uq, _Up, $k[--$j]); //#25001
+                $r(3, -1); //#25001
+                var _Uu = $k[--$j]; //#25001
+                var _Uv = $k[--$j]; //#25001
+                $put($k[--$j], _Uv, _Uu); //#25001
             } //#25001
         } //#25001
         $put($_.masks, $_.m, $_.mask); //#25004
@@ -31222,18 +31311,19 @@ function bwipp_hanxin() {
         $k[$j++] = $_.posx; //#25013
         $k[$j++] = $_.posy; //#25013
         $_.qmv(); //#25013
-        var _V0 = $k[--$j]; //#25013
-        if ($get($k[--$j], _V0) == -1) { //#25017
-            var _V5 = $get($_.cws, ~~($_.num / 8)); //#25014
-            var _V7 = -(7 - ($_.num % 8)); //#25014
-            $k[$j++] = ((_V7 < 0 ? _V5 >>> -_V7 : _V5 << _V7)) & 1; //#25015
+        var _V5 = $k[--$j]; //#25013
+        if ($get($k[--$j], _V5) == -1) { //#25017
+            var _VA = $get($_.cws, ~~($_.num / 8)); //#25014
+            var _VC = -(7 - ($_.num % 8)); //#25014
+            $k[$j++] = ((_VC < 0 ? _VA >>> -_VC : _VA << _VC)) & 1; //#25015
             $k[$j++] = $_.pixs; //#25015
             $k[$j++] = $_.posx; //#25015
             $k[$j++] = $_.posy; //#25015
             $_.qmv(); //#25015
-            var _VB = $k[--$j]; //#25015
-            var _VC = $k[--$j]; //#25015
-            $put(_VC, _VB, $k[--$j]); //#25015
+            $r(3, -1); //#25015
+            var _VG = $k[--$j]; //#25015
+            var _VH = $k[--$j]; //#25015
+            $put($k[--$j], _VH, _VG); //#25015
             $_.num = $_.num + 1; //#25016
         } //#25016
         $_.posx = $_.posx + 1; //#25018
@@ -31247,32 +31337,32 @@ function bwipp_hanxin() {
         $k[$j++] = 'scr1'; //#25026
         $k[$j++] = 0; //#25026
         $forall($_.scrle, function() { //#25026
-            var _VL = $k[--$j]; //#25026
-            $k[$j++] = _VL; //#25026
-            if (_VL >= 3) { //#25026
-                var _VM = $k[--$j]; //#25026
-                var _VO = $f($k[--$j] + (_VM * 4)); //#25026
-                $k[$j++] = _VO; //#25026
-                $k[$j++] = _VO; //#25026
+            var _VQ = $k[--$j]; //#25026
+            $k[$j++] = _VQ; //#25026
+            if (_VQ >= 3) { //#25026
+                var _VR = $k[--$j]; //#25026
+                var _VT = $f($k[--$j] + (_VR * 4)); //#25026
+                $k[$j++] = _VT; //#25026
+                $k[$j++] = _VT; //#25026
             } //#25026
             $j--; //#25026
         }); //#25026
-        var _VP = $k[--$j]; //#25026
-        $_[$k[--$j]] = _VP; //#25026
+        var _VU = $k[--$j]; //#25026
+        $_[$k[--$j]] = _VU; //#25026
         $_.scr3 = 0; //#25027
-        for (var _VT = 5, _VS = $_.scrle.length - 1; _VT <= _VS; _VT += 2) { //#25043
-            $_.j = _VT; //#25030
+        for (var _VY = 5, _VX = $_.scrle.length - 1; _VY <= _VX; _VY += 2) { //#25043
+            $_.j = _VY; //#25030
             if (($get($_.scrle, $_.j) % 3) == 0) { //#25042
                 $_.fact = ~~($get($_.scrle, $_.j) / 3); //#25032
-                var _Vc = $geti($_.scrle, $_.j - 4, 4); //#25033
-                for (var _Vd = 0, _Ve = _Vc.length; _Vd < _Ve; _Vd++) { //#25033
-                    $k[$j++] = $get(_Vc, _Vd) == $_.fact; //#25033
+                var _Vh = $geti($_.scrle, $_.j - 4, 4); //#25033
+                for (var _Vi = 0, _Vj = _Vh.length; _Vi < _Vj; _Vi++) { //#25033
+                    $k[$j++] = $get(_Vh, _Vi) == $_.fact; //#25033
                 } //#25033
-                var _Vh = $k[--$j]; //#25033
-                var _Vi = $k[--$j]; //#25033
-                var _Vj = $k[--$j]; //#25033
-                var _Vk = $k[--$j]; //#25033
-                if (_Vk && (_Vj && (_Vi && _Vh))) { //#25041
+                var _Vm = $k[--$j]; //#25033
+                var _Vn = $k[--$j]; //#25033
+                var _Vo = $k[--$j]; //#25033
+                var _Vp = $k[--$j]; //#25033
+                if (_Vp && (_Vo && (_Vn && _Vm))) { //#25041
                     if (($_.j == 5) || (($_.j + 2) >= $_.scrle.length)) { //#25038
                         $_.scr3 = $_.scr3 + 50; //#25035
                     } else { //#25038
@@ -31283,19 +31373,19 @@ function bwipp_hanxin() {
                 } //#25038
             } //#25038
         } //#25038
-        for (var _Vy = 1, _Vx = $_.scrle.length - 5; _Vy <= _Vx; _Vy += 2) { //#25059
-            $_.j = _Vy; //#25046
+        for (var _W3 = 1, _W2 = $_.scrle.length - 5; _W3 <= _W2; _W3 += 2) { //#25059
+            $_.j = _W3; //#25046
             if (($get($_.scrle, $_.j) % 3) == 0) { //#25058
                 $_.fact = ~~($get($_.scrle, $_.j) / 3); //#25048
-                var _W7 = $geti($_.scrle, $_.j + 1, 4); //#25049
-                for (var _W8 = 0, _W9 = _W7.length; _W8 < _W9; _W8++) { //#25049
-                    $k[$j++] = $get(_W7, _W8) == $_.fact; //#25049
+                var _WC = $geti($_.scrle, $_.j + 1, 4); //#25049
+                for (var _WD = 0, _WE = _WC.length; _WD < _WE; _WD++) { //#25049
+                    $k[$j++] = $get(_WC, _WD) == $_.fact; //#25049
                 } //#25049
-                var _WC = $k[--$j]; //#25049
-                var _WD = $k[--$j]; //#25049
-                var _WE = $k[--$j]; //#25049
-                var _WF = $k[--$j]; //#25049
-                if (_WF && (_WE && (_WD && _WC))) { //#25057
+                var _WH = $k[--$j]; //#25049
+                var _WI = $k[--$j]; //#25049
+                var _WJ = $k[--$j]; //#25049
+                var _WK = $k[--$j]; //#25049
+                if (_WK && (_WJ && (_WI && _WH))) { //#25057
                     if (($_.j == 1) || (($_.j + 6) >= $_.scrle.length)) { //#25054
                         $_.scr3 = $_.scr3 + 50; //#25051
                     } else { //#25054
@@ -31317,57 +31407,57 @@ function bwipp_hanxin() {
         $_.lastpairs = $a($_.size); //#25069
         $_.thispairs = $a($_.size); //#25070
         $_.sizeadd1 = $f($_.size + 1); //#25071
-        for (var _Wd = 0, _Wc = $f($_.size - 1); _Wd <= _Wc; _Wd += 1) { //#25096
-            $_.i = _Wd; //#25073
+        for (var _Wi = 0, _Wh = $f($_.size - 1); _Wi <= _Wh; _Wi += 1) { //#25096
+            $_.i = _Wi; //#25073
             $k[$j++] = Infinity; //#25076
-            var _Wf = $_.size; //#25077
+            var _Wk = $_.size; //#25077
             $k[$j++] = 0; //#25079
             $k[$j++] = 0; //#25079
-            for (var _Wh = $_.i, _Wi = _Wf, _Wg = $f((_Wf * _Wf) - 1); _Wi < 0 ? _Wh >= _Wg : _Wh <= _Wg; _Wh += _Wi) { //#25079
-                var _Wk = $get($_.sym, _Wh); //#25078
-                var _Wl = $k[--$j]; //#25078
-                $k[$j++] = _Wk; //#25078
-                if ($eq(_Wl, _Wk)) { //#25078
-                    var _Wm = $k[--$j]; //#25078
-                    var _Wn = $k[--$j]; //#25078
-                    $k[$j++] = $f(_Wn + 1); //#25078
-                    $k[$j++] = _Wm; //#25078
+            for (var _Wm = $_.i, _Wn = _Wk, _Wl = $f((_Wk * _Wk) - 1); _Wn < 0 ? _Wm >= _Wl : _Wm <= _Wl; _Wm += _Wn) { //#25079
+                var _Wp = $get($_.sym, _Wm); //#25078
+                var _Wq = $k[--$j]; //#25078
+                $k[$j++] = _Wp; //#25078
+                if ($eq(_Wq, _Wp)) { //#25078
+                    var _Wr = $k[--$j]; //#25078
+                    var _Ws = $k[--$j]; //#25078
+                    $k[$j++] = $f(_Ws + 1); //#25078
+                    $k[$j++] = _Wr; //#25078
                 } else { //#25078
-                    var _Wo = $k[--$j]; //#25078
+                    var _Wt = $k[--$j]; //#25078
                     $k[$j++] = 1; //#25078
-                    $k[$j++] = _Wo; //#25078
+                    $k[$j++] = _Wt; //#25078
                 } //#25078
             } //#25078
             $j--; //#25080
-            var _Wq = $counttomark() + 2; //#25081
-            $astore($geti($_.rle, 0, _Wq - 2)); //#25081
+            var _Wv = $counttomark() + 2; //#25081
+            $astore($geti($_.rle, 0, _Wv - 2)); //#25081
             $_.evalfulln1n3(); //#25082
             $_.n3 = $f($k[--$j] + $_.n3); //#25082
             $_.n1 = $f($k[--$j] + $_.n1); //#25082
             $j--; //#25083
             $_.symrow = $geti($_.sym, $_.i * $_.size, $_.size); //#25086
             $k[$j++] = Infinity; //#25087
-            var _X1 = $_.symrow; //#25088
+            var _X6 = $_.symrow; //#25088
             $k[$j++] = 0; //#25090
             $k[$j++] = 0; //#25090
-            for (var _X2 = 0, _X3 = _X1.length; _X2 < _X3; _X2++) { //#25090
-                var _X4 = $get(_X1, _X2); //#25090
-                var _X5 = $k[--$j]; //#25089
-                $k[$j++] = _X4; //#25089
-                if ($eq(_X5, _X4)) { //#25089
-                    var _X6 = $k[--$j]; //#25089
-                    var _X7 = $k[--$j]; //#25089
-                    $k[$j++] = $f(_X7 + 1); //#25089
-                    $k[$j++] = _X6; //#25089
+            for (var _X7 = 0, _X8 = _X6.length; _X7 < _X8; _X7++) { //#25090
+                var _X9 = $get(_X6, _X7); //#25090
+                var _XA = $k[--$j]; //#25089
+                $k[$j++] = _X9; //#25089
+                if ($eq(_XA, _X9)) { //#25089
+                    var _XB = $k[--$j]; //#25089
+                    var _XC = $k[--$j]; //#25089
+                    $k[$j++] = $f(_XC + 1); //#25089
+                    $k[$j++] = _XB; //#25089
                 } else { //#25089
-                    var _X8 = $k[--$j]; //#25089
+                    var _XD = $k[--$j]; //#25089
                     $k[$j++] = 1; //#25089
-                    $k[$j++] = _X8; //#25089
+                    $k[$j++] = _XD; //#25089
                 } //#25089
             } //#25089
             $j--; //#25091
-            var _XA = $counttomark() + 2; //#25092
-            $astore($geti($_.rle, 0, _XA - 2)); //#25092
+            var _XF = $counttomark() + 2; //#25092
+            $astore($geti($_.rle, 0, _XF - 2)); //#25092
             $_.evalfulln1n3(); //#25093
             $_.n3 = $f($k[--$j] + $_.n3); //#25093
             $_.n1 = $f($k[--$j] + $_.n1); //#25093
@@ -31376,11 +31466,11 @@ function bwipp_hanxin() {
         $k[$j++] = $f($_.n1 + $_.n3); //#25098
     }; //#25098
     $_.bestscore = 999999999; //#25102
-    for (var _XK = 0, _XJ = $_.masks.length - 1; _XK <= _XJ; _XK += 1) { //#25120
-        $_.m = _XK; //#25104
+    for (var _XP = 0, _XO = $_.masks.length - 1; _XP <= _XO; _XP += 1) { //#25120
+        $_.m = _XP; //#25104
         $_.masksym = $a($_.size * $_.size); //#25105
-        for (var _XR = 0, _XQ = $f(($_.size * $_.size) - 1); _XR <= _XQ; _XR += 1) { //#25109
-            $_.i = _XR; //#25107
+        for (var _XW = 0, _XV = $f(($_.size * $_.size) - 1); _XW <= _XV; _XW += 1) { //#25109
+            $_.i = _XW; //#25107
             $put($_.masksym, $_.i, $xo($get($_.pixs, $_.i), $get($get($_.masks, $_.m), $_.i))); //#25108
         } //#25108
         if ($_.masks.length != 1) { //#25118
@@ -31409,8 +31499,8 @@ function bwipp_hanxin() {
         $k[$j++] = 4; //#25131
         $_.tobin(); //#25131
         $forall($k[--$j], function() { //#25131
-            var _Xw = $k[--$j]; //#25131
-            $k[$j++] = $f(_Xw - 48); //#25131
+            var _Y1 = $k[--$j]; //#25131
+            $k[$j++] = $f(_Y1 - 48); //#25131
         }); //#25131
     }); //#25131
     $k[$j++] = 0; //#25133
@@ -31420,18 +31510,18 @@ function bwipp_hanxin() {
     $k[$j++] = 0; //#25133
     $k[$j++] = 1; //#25133
     $_.funbits = $a(); //#25133
-    for (var _Y0 = 0, _Xz = $_.functionmap.length - 1; _Y0 <= _Xz; _Y0 += 1) { //#25140
-        $_.i = _Y0; //#25136
+    for (var _Y5 = 0, _Y4 = $_.functionmap.length - 1; _Y5 <= _Y4; _Y5 += 1) { //#25140
+        $_.i = _Y5; //#25136
         $forall($get($_.functionmap, $_.i), function() { //#25139
-            var _Y5 = $k[--$j]; //#25138
+            var _YA = $k[--$j]; //#25138
             $k[$j++] = $_.pixs; //#25138
-            $aload(_Y5); //#25138
+            $aload(_YA); //#25138
             $_.qmv(); //#25138
-            var _Y9 = $k[--$j]; //#25138
-            $put($k[--$j], _Y9, $get($_.funbits, $_.i)); //#25138
+            var _YE = $k[--$j]; //#25138
+            $put($k[--$j], _YE, $get($_.funbits, $_.i)); //#25138
         }); //#25138
     } //#25138
-    var _YH = new Map([
+    var _YM = new Map([
         ["ren", 'renmatrix'],
         ["pixs", $_.pixs],
         ["pixx", $_.size],
@@ -31444,7 +31534,7 @@ function bwipp_hanxin() {
         ["borderbottom", 3],
         ["opt", $_.options]
     ]); //#25154
-    $k[$j++] = _YH; //#25157
+    $k[$j++] = _YM; //#25157
     if (!$_.dontdraw) { //#25157
         bwipp_renmatrix(); //#25157
     } //#25157
@@ -31502,7 +31592,7 @@ function bwipp_dotcode() {
             bwipp_raiseerror(); //#25236
         } //#25236
     } //#25236
-    bwipp_loadctx(bwipp_dotcode) //#25240
+    bwipp_loadctx(bwipp_dotcode); //#25240
     if (!bwipp_dotcode.__25253__) { //#25253
         $_ = Object.create($_); //#25253
         $_.laa = -1; //#25244
@@ -31748,7 +31838,12 @@ function bwipp_dotcode() {
                 } //#25391
                 $k[$j++] = true; //#25392
             } //#25392
-            $put($_.SeventeenTen, $_.i, $k[--$j]); //#25394
+            $k[$j++] = $_.SeventeenTen; //#25394
+            $k[$j++] = $_.i; //#25394
+            $r(3, -1); //#25394
+            var _65 = $k[--$j]; //#25394
+            var _66 = $k[--$j]; //#25394
+            $put($k[--$j], _66, _65); //#25394
             $cleartomark(); //#25395
         } //#25395
         if (($get($_.nDigits, $_.i + 1) >= 6) && ($get($_.msg, $_.i) == $_.fn2)) { //#25399
@@ -31775,28 +31870,28 @@ function bwipp_dotcode() {
             $k[$j++] = $_.AheadB; //#25416
             $k[$j++] = $_.i + 1; //#25416
             if ($_.CRLF) { //#25416
-                var _7B = $k[--$j]; //#25416
-                $k[$j++] = $f(_7B + 1); //#25416
+                var _7D = $k[--$j]; //#25416
+                $k[$j++] = $f(_7D + 1); //#25416
             } //#25416
-            var _7C = $k[--$j]; //#25416
-            var _7E = $get($k[--$j], _7C); //#25416
-            var _7F = $k[--$j]; //#25416
-            $put($k[--$j], _7F, $f(_7E + 1)); //#25416
+            var _7E = $k[--$j]; //#25416
+            var _7G = $get($k[--$j], _7E); //#25416
+            var _7H = $k[--$j]; //#25416
+            $put($k[--$j], _7H, $f(_7G + 1)); //#25416
         } //#25416
         if ($_.barchar != $_.fn3) { //#25420
             $put($_.UntilEndSeg, $_.i, $f($get($_.UntilEndSeg, $_.i + 1) + 1)); //#25419
         } //#25419
     } //#25419
     $_.addtocws = function() {
-        var _7O = $k[--$j]; //#25424
-        $puti($_.cws, $_.j, _7O); //#25424
-        $_.j = _7O.length + $_.j; //#25425
+        var _7Q = $k[--$j]; //#25424
+        $puti($_.cws, $_.j, _7Q); //#25424
+        $_.j = _7Q.length + $_.j; //#25425
     }; //#25425
     $_.base259to103 = function() {
         $_.in = $k[--$j]; //#25430
         $_.inlen = $_.in.length; //#25431
         $k[$j++] = Infinity; //#25432
-        for (var _7V = 0, _7W = 5 - $_.inlen; _7V < _7W; _7V++) { //#25432
+        for (var _7X = 0, _7Y = 5 - $_.inlen; _7X < _7Y; _7X++) { //#25432
             $k[$j++] = 0; //#25432
         } //#25432
         $aload($_.in); //#25432
@@ -31807,13 +31902,13 @@ function bwipp_dotcode() {
         $_.msbs = $a(); //#25434
         $k[$j++] = Infinity; //#25435
         $aload($_.msbs); //#25436
-        var _7e = $k[--$j]; //#25436
-        var _7f = $k[--$j]; //#25436
-        $k[$j++] = $f(_7e + (_7f * 259)); //#25437
-        for (var _7g = 0, _7h = 2; _7g < _7h; _7g++) { //#25437
-            var _7i = $k[--$j]; //#25437
-            $k[$j++] = _7i % 103; //#25437
-            $k[$j++] = ~~(_7i / 103); //#25437
+        var _7g = $k[--$j]; //#25436
+        var _7h = $k[--$j]; //#25436
+        $k[$j++] = $f(_7g + (_7h * 259)); //#25437
+        for (var _7i = 0, _7j = 2; _7i < _7j; _7i++) { //#25437
+            var _7k = $k[--$j]; //#25437
+            $k[$j++] = _7k % 103; //#25437
+            $k[$j++] = ~~(_7k / 103); //#25437
         } //#25437
         $_.mscs = $a(); //#25437
         $k[$j++] = Infinity; //#25439
@@ -31821,37 +31916,37 @@ function bwipp_dotcode() {
         $_.lsbs = $a(); //#25439
         $k[$j++] = Infinity; //#25440
         $aload($_.lsbs); //#25441
-        var _7o = $k[--$j]; //#25441
-        var _7p = $k[--$j]; //#25441
         var _7q = $k[--$j]; //#25441
-        $k[$j++] = $f(($f(_7o + (_7p * 259))) + (_7q * 67081)); //#25442
-        for (var _7r = 0, _7s = 3; _7r < _7s; _7r++) { //#25442
-            var _7t = $k[--$j]; //#25442
-            $k[$j++] = _7t % 103; //#25442
-            $k[$j++] = ~~(_7t / 103); //#25442
+        var _7r = $k[--$j]; //#25441
+        var _7s = $k[--$j]; //#25441
+        $k[$j++] = $f(($f(_7q + (_7r * 259))) + (_7s * 67081)); //#25442
+        for (var _7t = 0, _7u = 3; _7t < _7u; _7t++) { //#25442
+            var _7v = $k[--$j]; //#25442
+            $k[$j++] = _7v % 103; //#25442
+            $k[$j++] = ~~(_7v / 103); //#25442
         } //#25442
         $_.lscs = $a(); //#25442
-        var _7w = $get($_.lscs, 0); //#25444
-        var _7y = $get($_.mscs, 0); //#25444
-        $put($_.out, 5, ($f(_7w + (_7y * 42))) % 103); //#25445
-        var _81 = $get($_.lscs, 1); //#25446
-        var _83 = $get($_.mscs, 0); //#25446
-        var _85 = $get($_.mscs, 1); //#25446
-        $put($_.out, 4, ($f(($f(($f((~~(($f(_7w + (_7y * 42))) / 103)) + _81)) + (_83 * 68))) + (_85 * 42))) % 103); //#25447
-        var _88 = $get($_.lscs, 2); //#25448
-        var _8A = $get($_.mscs, 0); //#25448
-        var _8C = $get($_.mscs, 1); //#25448
-        var _8E = $get($_.mscs, 2); //#25448
-        $put($_.out, 3, ($f(($f(($f(($f((~~(($f(($f(($f((~~(($f(_7w + (_7y * 42))) / 103)) + _81)) + (_83 * 68))) + (_85 * 42))) / 103)) + _88)) + (_8A * 92))) + (_8C * 68))) + (_8E * 42))) % 103); //#25449
-        var _8H = $get($_.lscs, 3); //#25450
-        var _8J = $get($_.mscs, 0); //#25450
-        var _8L = $get($_.mscs, 1); //#25450
-        var _8N = $get($_.mscs, 2); //#25450
-        $put($_.out, 2, ($f(($f(($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f((~~(($f(_7w + (_7y * 42))) / 103)) + _81)) + (_83 * 68))) + (_85 * 42))) / 103)) + _88)) + (_8A * 92))) + (_8C * 68))) + (_8E * 42))) / 103)) + _8H)) + (_8J * 15))) + (_8L * 92))) + (_8N * 68))) % 103); //#25451
-        var _8Q = $get($_.mscs, 1); //#25452
-        var _8S = $get($_.mscs, 2); //#25452
-        $put($_.out, 1, ($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f((~~(($f(_7w + (_7y * 42))) / 103)) + _81)) + (_83 * 68))) + (_85 * 42))) / 103)) + _88)) + (_8A * 92))) + (_8C * 68))) + (_8E * 42))) / 103)) + _8H)) + (_8J * 15))) + (_8L * 92))) + (_8N * 68))) / 103)) + (_8Q * 15))) + (_8S * 92))) % 103); //#25453
-        $put($_.out, 0, ($f((~~(($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f((~~(($f(_7w + (_7y * 42))) / 103)) + _81)) + (_83 * 68))) + (_85 * 42))) / 103)) + _88)) + (_8A * 92))) + (_8C * 68))) + (_8E * 42))) / 103)) + _8H)) + (_8J * 15))) + (_8L * 92))) + (_8N * 68))) / 103)) + (_8Q * 15))) + (_8S * 92))) / 103)) + ($get($_.mscs, 2) * 15))) % 103); //#25455
+        var _7y = $get($_.lscs, 0); //#25444
+        var _80 = $get($_.mscs, 0); //#25444
+        $put($_.out, 5, ($f(_7y + (_80 * 42))) % 103); //#25445
+        var _83 = $get($_.lscs, 1); //#25446
+        var _85 = $get($_.mscs, 0); //#25446
+        var _87 = $get($_.mscs, 1); //#25446
+        $put($_.out, 4, ($f(($f(($f((~~(($f(_7y + (_80 * 42))) / 103)) + _83)) + (_85 * 68))) + (_87 * 42))) % 103); //#25447
+        var _8A = $get($_.lscs, 2); //#25448
+        var _8C = $get($_.mscs, 0); //#25448
+        var _8E = $get($_.mscs, 1); //#25448
+        var _8G = $get($_.mscs, 2); //#25448
+        $put($_.out, 3, ($f(($f(($f(($f((~~(($f(($f(($f((~~(($f(_7y + (_80 * 42))) / 103)) + _83)) + (_85 * 68))) + (_87 * 42))) / 103)) + _8A)) + (_8C * 92))) + (_8E * 68))) + (_8G * 42))) % 103); //#25449
+        var _8J = $get($_.lscs, 3); //#25450
+        var _8L = $get($_.mscs, 0); //#25450
+        var _8N = $get($_.mscs, 1); //#25450
+        var _8P = $get($_.mscs, 2); //#25450
+        $put($_.out, 2, ($f(($f(($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f((~~(($f(_7y + (_80 * 42))) / 103)) + _83)) + (_85 * 68))) + (_87 * 42))) / 103)) + _8A)) + (_8C * 92))) + (_8E * 68))) + (_8G * 42))) / 103)) + _8J)) + (_8L * 15))) + (_8N * 92))) + (_8P * 68))) % 103); //#25451
+        var _8S = $get($_.mscs, 1); //#25452
+        var _8U = $get($_.mscs, 2); //#25452
+        $put($_.out, 1, ($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f((~~(($f(_7y + (_80 * 42))) / 103)) + _83)) + (_85 * 68))) + (_87 * 42))) / 103)) + _8A)) + (_8C * 92))) + (_8E * 68))) + (_8G * 42))) / 103)) + _8J)) + (_8L * 15))) + (_8N * 92))) + (_8P * 68))) / 103)) + (_8S * 15))) + (_8U * 92))) % 103); //#25453
+        $put($_.out, 0, ($f((~~(($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f(($f((~~(($f(($f(($f((~~(($f(_7y + (_80 * 42))) / 103)) + _83)) + (_85 * 68))) + (_87 * 42))) / 103)) + _8A)) + (_8C * 92))) + (_8E * 68))) + (_8G * 42))) / 103)) + _8J)) + (_8L * 15))) + (_8N * 92))) + (_8P * 68))) / 103)) + (_8S * 15))) + (_8U * 92))) / 103)) + ($get($_.mscs, 2) * 15))) % 103); //#25455
         $k[$j++] = $geti($_.out, (6 - $_.inlen) - 1, $_.inlen + 1); //#25456
     }; //#25456
     $_.finaliseBIN = function() {
@@ -31870,63 +31965,63 @@ function bwipp_dotcode() {
         } //#25469
     }; //#25469
     $_.ECIabc = function() {
-        var _8n = $geti($_.msg, $_.i + 1, 6); //#25473
+        var _8p = $geti($_.msg, $_.i + 1, 6); //#25473
         $k[$j++] = 0; //#25473
-        for (var _8o = 0, _8p = _8n.length; _8o < _8p; _8o++) { //#25473
-            var _8r = $k[--$j]; //#25473
-            $k[$j++] = ($f(_8r + $f($get(_8n, _8o) - 48))) * 10; //#25473
+        for (var _8q = 0, _8r = _8p.length; _8q < _8r; _8q++) { //#25473
+            var _8t = $k[--$j]; //#25473
+            $k[$j++] = ($f(_8t + $f($get(_8p, _8q) - 48))) * 10; //#25473
         } //#25473
-        var _8t = ~~($k[--$j] / 10); //#25474
-        $k[$j++] = _8t; //#25478
-        if (_8t >= 40) { //#25478
-            var _8v = $f($k[--$j] - 40); //#25476
-            var _8w = _8v % 12769; //#25477
-            $k[$j++] = (~~(_8v / 12769)) + 40; //#25477
-            $k[$j++] = ~~(_8w / 113); //#25477
-            $k[$j++] = _8w % 113; //#25477
+        var _8v = ~~($k[--$j] / 10); //#25474
+        $k[$j++] = _8v; //#25478
+        if (_8v >= 40) { //#25478
+            var _8x = $f($k[--$j] - 40); //#25476
+            var _8y = _8x % 12769; //#25477
+            $k[$j++] = (~~(_8x / 12769)) + 40; //#25477
+            $k[$j++] = ~~(_8y / 113); //#25477
+            $k[$j++] = _8y % 113; //#25477
         } //#25477
     }; //#25477
     $_.ECIbin = function() {
         $k[$j++] = Infinity; //#25482
-        var _8z = $geti($_.msg, $_.i + 1, 6); //#25483
+        var _91 = $geti($_.msg, $_.i + 1, 6); //#25483
         $k[$j++] = 0; //#25483
-        for (var _90 = 0, _91 = _8z.length; _90 < _91; _90++) { //#25483
-            var _93 = $k[--$j]; //#25483
-            $k[$j++] = ($f(_93 + $f($get(_8z, _90) - 48))) * 10; //#25483
+        for (var _92 = 0, _93 = _91.length; _92 < _93; _92++) { //#25483
+            var _95 = $k[--$j]; //#25483
+            $k[$j++] = ($f(_95 + $f($get(_91, _92) - 48))) * 10; //#25483
         } //#25483
-        var _95 = ~~($k[--$j] / 10); //#25484
-        $k[$j++] = _95; //#25492
-        if (_95 >= 65536) { //#25490
-            var _96 = $k[--$j]; //#25485
-            var _97 = _96 % 65536; //#25485
+        var _97 = ~~($k[--$j] / 10); //#25484
+        $k[$j++] = _97; //#25492
+        if (_97 >= 65536) { //#25490
+            var _98 = $k[--$j]; //#25485
+            var _99 = _98 % 65536; //#25485
             $k[$j++] = 258; //#25485
-            $k[$j++] = ~~(_96 / 65536); //#25485
-            $k[$j++] = ~~(_97 / 256); //#25485
-            $k[$j++] = _97 % 256; //#25485
+            $k[$j++] = ~~(_98 / 65536); //#25485
+            $k[$j++] = ~~(_99 / 256); //#25485
+            $k[$j++] = _99 % 256; //#25485
         } else { //#25490
-            var _98 = $k[--$j]; //#25487
-            $k[$j++] = _98; //#25491
-            if (_98 >= 256) { //#25490
-                var _99 = $k[--$j]; //#25488
+            var _9A = $k[--$j]; //#25487
+            $k[$j++] = _9A; //#25491
+            if (_9A >= 256) { //#25490
+                var _9B = $k[--$j]; //#25488
                 $k[$j++] = 257; //#25488
-                $k[$j++] = ~~(_99 / 256); //#25488
-                $k[$j++] = _99 % 256; //#25488
+                $k[$j++] = ~~(_9B / 256); //#25488
+                $k[$j++] = _9B % 256; //#25488
             } else { //#25490
-                var _9A = $k[--$j]; //#25490
+                var _9C = $k[--$j]; //#25490
                 $k[$j++] = 256; //#25490
-                $k[$j++] = _9A; //#25490
+                $k[$j++] = _9C; //#25490
             } //#25490
         } //#25490
-        var _9B = $a(); //#25490
-        for (var _9C = 0, _9D = _9B.length; _9C < _9D; _9C++) { //#25495
-            $k[$j++] = $get(_9B, _9C); //#25494
+        var _9D = $a(); //#25490
+        for (var _9E = 0, _9F = _9D.length; _9E < _9F; _9E++) { //#25495
+            $k[$j++] = $get(_9D, _9E); //#25494
             $_.addtobin(); //#25494
         } //#25494
     }; //#25494
     $_.encC = function() {
-        for (var _9F = 0, _9G = 1; _9F < _9G; _9F++) { //#25619
+        for (var _9H = 0, _9I = 1; _9H < _9I; _9H++) { //#25619
             if ($_.i == $_.segstart) { //#25532
-                for (var _9J = 0, _9K = 1; _9J < _9K; _9J++) { //#25517
+                for (var _9L = 0, _9M = 1; _9L < _9M; _9L++) { //#25517
                     if ($_.i > $f($_.segend - 7)) { //#25502
                         $k[$j++] = 0; //#25502
                         break; //#25502
@@ -31947,13 +32042,13 @@ function bwipp_dotcode() {
                         $k[$j++] = 0; //#25506
                         break; //#25506
                     } //#25506
-                    var _9b = $get($_.msg, $_.segstart + 4); //#25507
-                    if ((_9b < 48) || (_9b > 57)) { //#25507
+                    var _9d = $get($_.msg, $_.segstart + 4); //#25507
+                    if ((_9d < 48) || (_9d > 57)) { //#25507
                         $k[$j++] = 0; //#25507
                         break; //#25507
                     } //#25507
-                    var _9e = $get($_.msg, $_.segstart + 5); //#25508
-                    if ((_9e < 48) || (_9e > 57)) { //#25508
+                    var _9g = $get($_.msg, $_.segstart + 5); //#25508
+                    if ((_9g < 48) || (_9g > 57)) { //#25508
                         $k[$j++] = 0; //#25508
                         break; //#25508
                     } //#25508
@@ -31961,9 +32056,9 @@ function bwipp_dotcode() {
                         $k[$j++] = 0; //#25509
                         break; //#25509
                     } //#25509
-                    var _9o = $f(($f($get($_.msg, $_.segstart + 4) - 48) * 10) + $f($get($_.msg, $_.segstart + 5) - 48)); //#25511
-                    $k[$j++] = _9o; //#25511
-                    if ((_9o != 5) && ((_9o != 6) && (_9o != 12))) { //#25511
+                    var _9q = $f(($f($get($_.msg, $_.segstart + 4) - 48) * 10) + $f($get($_.msg, $_.segstart + 5) - 48)); //#25511
+                    $k[$j++] = _9q; //#25511
+                    if ((_9q != 5) && ((_9q != 6) && (_9q != 12))) { //#25511
                         $j--; //#25511
                         $k[$j++] = $_.mac; //#25511
                         break; //#25511
@@ -31978,9 +32073,9 @@ function bwipp_dotcode() {
                         $k[$j++] = 0; //#25513
                         break; //#25513
                     } //#25513
-                    var _9w = $k[--$j]; //#25514
-                    $k[$j++] = _9w; //#25514
-                    if (_9w == 5) { //#25514
+                    var _9y = $k[--$j]; //#25514
+                    $k[$j++] = _9y; //#25514
+                    if (_9y == 5) { //#25514
                         $j--; //#25514
                         $k[$j++] = $_.m05; //#25514
                         break; //#25514
@@ -32027,15 +32122,15 @@ function bwipp_dotcode() {
                 break; //#25552
             } //#25552
             if ($get($_.DatumC, $_.i)) { //#25575
-                var _BE = $get($_.msg, $_.i); //#25555
-                if ((_BE == $_.fn1) || ((_BE == $_.fn2) || (_BE == $_.fn3))) { //#25571
+                var _BG = $get($_.msg, $_.i); //#25555
+                if ((_BG == $_.fn1) || ((_BG == $_.fn2) || (_BG == $_.fn3))) { //#25571
                     $k[$j++] = $a([$get($_.Cvals, $get($_.msg, $_.i))]); //#25556
                     $_.addtocws(); //#25556
                     if ($get($_.ECI, $_.i)) { //#25561
                         $k[$j++] = Infinity; //#25558
                         $_.ECIabc(); //#25558
-                        var _BR = $a(); //#25558
-                        $k[$j++] = _BR; //#25558
+                        var _BT = $a(); //#25558
+                        $k[$j++] = _BT; //#25558
                         $_.addtocws(); //#25558
                         $_.i = $_.i + 7; //#25559
                         break; //#25560
@@ -32081,8 +32176,8 @@ function bwipp_dotcode() {
                 break; //#25594
             } //#25594
             if ($_.i == $_.segstart) { //#25602
-                var _Cc = $get($_.msg, $_.i); //#25597
-                if ((_Cc == 9) || ((_Cc == 28) || ((_Cc == 29) || (_Cc == 30)))) { //#25601
+                var _Ce = $get($_.msg, $_.i); //#25597
+                if ((_Ce == 9) || ((_Ce == 28) || ((_Ce == 29) || (_Ce == 30)))) { //#25601
                     $k[$j++] = $a([$get($_.Cvals, $_.laa)]); //#25598
                     $_.addtocws(); //#25598
                     $_.mode = $_.A; //#25599
@@ -32097,7 +32192,7 @@ function bwipp_dotcode() {
             } //#25606
             $k[$j++] = $a([$get($_.Cvals, $get($a([$_.sfb, $_.sb2, $_.sb3, $_.sb4]), $f($_.n - 1)))]); //#25608
             $_.addtocws(); //#25608
-            for (var _Cz = 0, _D0 = $_.n; _Cz < _D0; _Cz++) { //#25617
+            for (var _D1 = 0, _D2 = $_.n; _D1 < _D2; _D1++) { //#25617
                 if ($get($_.msg, $_.i) == 13) { //#25615
                     $k[$j++] = $a([$get($_.Bvals, $_.crl)]); //#25611
                     $_.addtocws(); //#25611
@@ -32112,7 +32207,7 @@ function bwipp_dotcode() {
         } //#25618
     }; //#25618
     $_.encB = function() {
-        for (var _DG = 0, _DH = 1; _DG < _DH; _DG++) { //#25695
+        for (var _DI = 0, _DJ = 1; _DI < _DJ; _DI++) { //#25695
             $_.n = $get($_.TryC, $_.i); //#25624
             if ($_.n >= 2) { //#25642
                 if ($_.n > 4) { //#25630
@@ -32123,7 +32218,7 @@ function bwipp_dotcode() {
                 } //#25629
                 $k[$j++] = $a([$get($_.Bvals, $get($a([$_.sfc, $_.sc2, $_.sc3, $_.sc4]), $f($_.n - 1)))]); //#25631
                 $_.addtocws(); //#25631
-                for (var _Dd = 0, _De = $_.n; _Dd < _De; _Dd++) { //#25640
+                for (var _Df = 0, _Dg = $_.n; _Df < _Dg; _Df++) { //#25640
                     if ($get($_.msg, $_.i) < 0) { //#25638
                         $k[$j++] = $a([$get($_.Cvals, $get($_.msg, $_.i))]); //#25634
                         $_.addtocws(); //#25634
@@ -32137,15 +32232,15 @@ function bwipp_dotcode() {
                 break; //#25641
             } //#25641
             if ($get($_.DatumB, $_.i)) { //#25672
-                var _E2 = $get($_.msg, $_.i); //#25644
-                if ((_E2 == $_.fn1) || ((_E2 == $_.fn2) || (_E2 == $_.fn3))) { //#25661
+                var _E4 = $get($_.msg, $_.i); //#25644
+                if ((_E4 == $_.fn1) || ((_E4 == $_.fn2) || (_E4 == $_.fn3))) { //#25661
                     $k[$j++] = $a([$get($_.Bvals, $get($_.msg, $_.i))]); //#25645
                     $_.addtocws(); //#25645
                     if ($get($_.ECI, $_.i)) { //#25650
                         $k[$j++] = Infinity; //#25647
                         $_.ECIabc(); //#25647
-                        var _EF = $a(); //#25647
-                        $k[$j++] = _EF; //#25647
+                        var _EH = $a(); //#25647
+                        $k[$j++] = _EH; //#25647
                         $_.addtocws(); //#25647
                         $_.i = $_.i + 7; //#25648
                         break; //#25649
@@ -32204,7 +32299,7 @@ function bwipp_dotcode() {
         } //#25694
     }; //#25694
     $_.encA = function() {
-        for (var _Fe = 0, _Ff = 1; _Fe < _Ff; _Fe++) { //#25773
+        for (var _Fg = 0, _Fh = 1; _Fg < _Fh; _Fg++) { //#25773
             $_.n = $get($_.TryC, $_.i); //#25700
             if ($_.n >= 2) { //#25718
                 if ($_.n > 4) { //#25706
@@ -32215,7 +32310,7 @@ function bwipp_dotcode() {
                 } //#25705
                 $k[$j++] = $a([$get($_.Avals, $get($a([$_.sfc, $_.sc2, $_.sc3, $_.sc4]), $f($_.n - 1)))]); //#25707
                 $_.addtocws(); //#25707
-                for (var _G1 = 0, _G2 = $_.n; _G1 < _G2; _G1++) { //#25716
+                for (var _G3 = 0, _G4 = $_.n; _G3 < _G4; _G3++) { //#25716
                     if ($get($_.msg, $_.i) < 0) { //#25714
                         $k[$j++] = $a([$get($_.Cvals, $get($_.msg, $_.i))]); //#25710
                         $_.addtocws(); //#25710
@@ -32229,15 +32324,15 @@ function bwipp_dotcode() {
                 break; //#25717
             } //#25717
             if ($get($_.DatumA, $_.i)) { //#25741
-                var _GQ = $get($_.msg, $_.i); //#25720
-                if ((_GQ == $_.fn1) || ((_GQ == $_.fn2) || (_GQ == $_.fn3))) { //#25737
+                var _GS = $get($_.msg, $_.i); //#25720
+                if ((_GS == $_.fn1) || ((_GS == $_.fn2) || (_GS == $_.fn3))) { //#25737
                     $k[$j++] = $a([$get($_.Avals, $get($_.msg, $_.i))]); //#25721
                     $_.addtocws(); //#25721
                     if ($get($_.ECI, $_.i)) { //#25726
                         $k[$j++] = Infinity; //#25723
                         $_.ECIabc(); //#25723
-                        var _Gd = $a(); //#25723
-                        $k[$j++] = _Gd; //#25723
+                        var _Gf = $a(); //#25723
+                        $k[$j++] = _Gf; //#25723
                         $_.addtocws(); //#25723
                         $_.i = $_.i + 7; //#25724
                         break; //#25725
@@ -32284,7 +32379,7 @@ function bwipp_dotcode() {
             } //#25760
             $k[$j++] = $a([$get($_.Avals, $get($a([$_.sfb, $_.sb2, $_.sb3, $_.sb4, $_.sb5, $_.sb6]), $f($_.n - 1)))]); //#25762
             $_.addtocws(); //#25762
-            for (var _Ht = 0, _Hu = $_.n; _Ht < _Hu; _Ht++) { //#25771
+            for (var _Hv = 0, _Hw = $_.n; _Hv < _Hw; _Hv++) { //#25771
                 if ($get($_.msg, $_.i) == 13) { //#25769
                     $k[$j++] = $a([$get($_.Bvals, $_.crl)]); //#25765
                     $_.addtocws(); //#25765
@@ -32299,13 +32394,13 @@ function bwipp_dotcode() {
         } //#25772
     }; //#25772
     $_.encBIN = function() {
-        for (var _IA = 0, _IB = 1; _IA < _IB; _IA++) { //#25835
+        for (var _IC = 0, _ID = 1; _IC < _ID; _IC++) { //#25835
             $_.n = $get($_.TryC, $_.i); //#25778
             if ($_.n >= 2) { //#25797
                 $k[$j++] = Infinity; //#25780
                 $_.finaliseBIN(); //#25780
-                var _IG = $a(); //#25780
-                $k[$j++] = _IG; //#25780
+                var _II = $a(); //#25780
+                $k[$j++] = _II; //#25780
                 $_.addtocws(); //#25780
                 if ($_.n > 7) { //#25785
                     $k[$j++] = $a([$get($_.BINvals, $_.tmc)]); //#25782
@@ -32315,7 +32410,7 @@ function bwipp_dotcode() {
                 } //#25784
                 $k[$j++] = $a([$get($_.BINvals, $get($a([$_.sc2, $_.sc3, $_.sc4, $_.sc5, $_.sc6, $_.sc7]), $f($_.n - 2)))]); //#25786
                 $_.addtocws(); //#25786
-                for (var _Ia = 0, _Ib = $_.n; _Ia < _Ib; _Ia++) { //#25795
+                for (var _Ic = 0, _Id = $_.n; _Ic < _Id; _Ic++) { //#25795
                     if ($get($_.msg, $_.i) < 0) { //#25793
                         $k[$j++] = $a([$get($_.Cvals, $get($_.msg, $_.i))]); //#25789
                         $_.addtocws(); //#25789
@@ -32331,15 +32426,15 @@ function bwipp_dotcode() {
             if (($get($_.ECI, $_.i) && $get($_.Binary, $_.i + 7))) { //#25803
                 $k[$j++] = Infinity; //#25799
                 $_.ECIbin(); //#25799
-                var _J0 = $a(); //#25799
-                $k[$j++] = _J0; //#25799
+                var _J2 = $a(); //#25799
+                $k[$j++] = _J2; //#25799
                 $_.addtocws(); //#25799
                 $_.i = $_.i + 7; //#25800
                 if ($_.i == $_.msglen) { //#25801
                     $k[$j++] = Infinity; //#25801
                     $_.finaliseBIN(); //#25801
-                    var _J4 = $a(); //#25801
-                    $k[$j++] = _J4; //#25801
+                    var _J6 = $a(); //#25801
+                    $k[$j++] = _J6; //#25801
                     $_.addtocws(); //#25801
                 } //#25801
                 break; //#25802
@@ -32349,15 +32444,15 @@ function bwipp_dotcode() {
                     $k[$j++] = Infinity; //#25808
                     $k[$j++] = $get($_.msg, $_.i); //#25808
                     $_.addtobin(); //#25808
-                    var _JT = $a(); //#25808
-                    $k[$j++] = _JT; //#25808
+                    var _JV = $a(); //#25808
+                    $k[$j++] = _JV; //#25808
                     $_.addtocws(); //#25808
                     $_.i = $_.i + 1; //#25809
                     if ($_.i == $_.msglen) { //#25810
                         $k[$j++] = Infinity; //#25810
                         $_.finaliseBIN(); //#25810
-                        var _JX = $a(); //#25810
-                        $k[$j++] = _JX; //#25810
+                        var _JZ = $a(); //#25810
+                        $k[$j++] = _JZ; //#25810
                         $_.addtocws(); //#25810
                     } //#25810
                     break; //#25811
@@ -32365,8 +32460,8 @@ function bwipp_dotcode() {
             } //#25811
             $k[$j++] = Infinity; //#25814
             $_.finaliseBIN(); //#25814
-            var _JY = $a(); //#25814
-            $k[$j++] = _JY; //#25814
+            var _Ja = $a(); //#25814
+            $k[$j++] = _Ja; //#25814
             $_.addtocws(); //#25814
             if ($_.i != ($_.msglen - 1)) { //#25833
                 if (($get($_.msg, $_.i) == $_.fn3) && ($_.i != $_.segstart)) { //#25824
@@ -32462,32 +32557,32 @@ function bwipp_dotcode() {
         $_.columns = $_.w; //#25882
     } else { //#25888
         if ($_.columns == -1) { //#25886
-            var _LN = ~~((($_.minarea + $_.rows) - 1) / $_.rows); //#25885
+            var _LP = ~~((($_.minarea + $_.rows) - 1) / $_.rows); //#25885
             $k[$j++] = 'columns'; //#25885
-            $k[$j++] = _LN; //#25885
-            if (((_LN + $_.rows) % 2) == 0) { //#25885
-                var _LP = $k[--$j]; //#25885
-                $k[$j++] = $f(_LP + 1); //#25885
+            $k[$j++] = _LP; //#25885
+            if (((_LP + $_.rows) % 2) == 0) { //#25885
+                var _LR = $k[--$j]; //#25885
+                $k[$j++] = $f(_LR + 1); //#25885
             } //#25885
-            var _LQ = $k[--$j]; //#25885
-            $_[$k[--$j]] = _LQ; //#25885
+            var _LS = $k[--$j]; //#25885
+            $_[$k[--$j]] = _LS; //#25885
         } //#25885
         if ($_.rows == -1) { //#25889
-            var _LW = ~~((($_.minarea + $_.columns) - 1) / $_.columns); //#25888
+            var _LY = ~~((($_.minarea + $_.columns) - 1) / $_.columns); //#25888
             $k[$j++] = 'rows'; //#25888
-            $k[$j++] = _LW; //#25888
-            if (((_LW + $_.columns) % 2) == 0) { //#25888
-                var _LY = $k[--$j]; //#25888
-                $k[$j++] = $f(_LY + 1); //#25888
+            $k[$j++] = _LY; //#25888
+            if (((_LY + $_.columns) % 2) == 0) { //#25888
+                var _La = $k[--$j]; //#25888
+                $k[$j++] = $f(_La + 1); //#25888
             } //#25888
-            var _LZ = $k[--$j]; //#25888
-            $_[$k[--$j]] = _LZ; //#25888
+            var _Lb = $k[--$j]; //#25888
+            $_[$k[--$j]] = _Lb; //#25888
         } //#25888
     } //#25888
     $_.ndots = ~~(($_.rows * $_.columns) / 2); //#25893
     for (;;) { //#25897
-        var _Le = $_.nd + 1; //#25895
-        if ((((_Le + ((~~(_Le / 2)) + 3)) * 9) + 2) > $_.ndots) { //#25895
+        var _Lg = $_.nd + 1; //#25895
+        if ((((_Lg + ((~~(_Lg / 2)) + 3)) * 9) + 2) > $_.ndots) { //#25895
             break; //#25895
         } //#25895
         $_.nd = $_.nd + 1; //#25896
@@ -32498,15 +32593,15 @@ function bwipp_dotcode() {
     if ($_.nd > $_.cws.length) { //#25907
         $k[$j++] = Infinity; //#25902
         $aload($_.cws); //#25903
-        var _Lr = ($_.mode == $_.BIN) ? 109 : 106; //#25904
-        $k[$j++] = _Lr; //#25905
-        for (var _Lu = 0, _Lv = ($_.nd - $_.cws.length) - 1; _Lu < _Lv; _Lu++) { //#25905
+        var _Lt = ($_.mode == $_.BIN) ? 109 : 106; //#25904
+        $k[$j++] = _Lt; //#25905
+        for (var _Lw = 0, _Lx = ($_.nd - $_.cws.length) - 1; _Lw < _Lx; _Lw++) { //#25905
             $k[$j++] = 106; //#25905
         } //#25905
         $_.cws = $a(); //#25905
     } //#25906
-    var _Ly = $get($_.options, 'debugcws') !== undefined; //#25909
-    if (_Ly) { //#25909
+    var _M0 = $get($_.options, 'debugcws') !== undefined; //#25909
+    if (_M0) { //#25909
         $k[$j++] = 'bwipp.debugcws#25909'; //#25909
         $k[$j++] = $_.cws; //#25909
         bwipp_raiseerror(); //#25909
@@ -32529,37 +32624,37 @@ function bwipp_dotcode() {
         $_.sixedges = $a([$a([$_.columns - 2, 0]), $a([$_.columns - 2, $_.rows - 1]), $a([$_.columns - 1, 1]), $a([$_.columns - 1, $_.rows - 2]), $a([0, 0]), $a([0, $_.rows - 1])]); //#25963
     } //#25963
     $_.dmv = function() {
-        var _MY = $k[--$j]; //#25966
-        var _MZ = $k[--$j]; //#25966
-        $k[$j++] = $f(_MZ + (_MY * $_.columns)); //#25966
+        var _Ma = $k[--$j]; //#25966
+        var _Mb = $k[--$j]; //#25966
+        $k[$j++] = $f(_Mb + (_Ma * $_.columns)); //#25966
     }; //#25966
     $_.outline = $a($_.rows * $_.columns); //#25969
-    for (var _Mf = 0, _Me = $_.rows - 1; _Mf <= _Me; _Mf += 1) { //#25976
-        $_.y = _Mf; //#25971
-        for (var _Mi = 0, _Mh = $_.columns - 1; _Mi <= _Mh; _Mi += 1) { //#25975
-            $_.x = _Mi; //#25973
+    for (var _Mh = 0, _Mg = $_.rows - 1; _Mh <= _Mg; _Mh += 1) { //#25976
+        $_.y = _Mh; //#25971
+        for (var _Mk = 0, _Mj = $_.columns - 1; _Mk <= _Mj; _Mk += 1) { //#25975
+            $_.x = _Mk; //#25973
             $k[$j++] = $_.outline; //#25974
             $k[$j++] = $_.x; //#25974
             $k[$j++] = $_.y; //#25974
             $_.dmv(); //#25974
-            var _Mo = $k[--$j]; //#25974
-            $put($k[--$j], _Mo, (($_.x + $_.y) % 2) - 1); //#25974
+            var _Mq = $k[--$j]; //#25974
+            $put($k[--$j], _Mq, (($_.x + $_.y) % 2) - 1); //#25974
         } //#25974
     } //#25974
-    var _Mq = $_.sixedges; //#25977
-    for (var _Mr = 0, _Ms = _Mq.length; _Mr < _Ms; _Mr++) { //#25979
+    var _Ms = $_.sixedges; //#25977
+    for (var _Mt = 0, _Mu = _Ms.length; _Mt < _Mu; _Mt++) { //#25979
         $k[$j++] = $_.outline; //#25978
-        $aload($get(_Mq, _Mr)); //#25978
+        $aload($get(_Ms, _Mt)); //#25978
         $_.dmv(); //#25978
-        var _Mv = $k[--$j]; //#25978
-        $put($k[--$j], _Mv, 1); //#25978
+        var _Mx = $k[--$j]; //#25978
+        $put($k[--$j], _Mx, 1); //#25978
     } //#25978
     $_.clearcol = function() {
         $_.x = $k[--$j]; //#25982
         $k[$j++] = true; //#25986
-        for (var _N1 = $_.x & 1, _N0 = $_.rows - 1; _N1 <= _N0; _N1 += 2) { //#25986
+        for (var _N3 = $_.x & 1, _N2 = $_.rows - 1; _N3 <= _N2; _N3 += 2) { //#25986
             $k[$j++] = $_.x; //#25985
-            $k[$j++] = _N1; //#25985
+            $k[$j++] = _N3; //#25985
             $_.dmv(); //#25985
             if ($get($_.sym, $k[--$j]) == 1) { //#25985
                 $j--; //#25985
@@ -32571,8 +32666,8 @@ function bwipp_dotcode() {
     $_.clearrow = function() {
         $_.y = $k[--$j]; //#25990
         $k[$j++] = true; //#25994
-        for (var _NA = $_.y & 1, _N9 = $_.columns - 1; _NA <= _N9; _NA += 2) { //#25994
-            $k[$j++] = _NA; //#25993
+        for (var _NC = $_.y & 1, _NB = $_.columns - 1; _NC <= _NB; _NC += 2) { //#25994
+            $k[$j++] = _NC; //#25993
             $k[$j++] = $_.y; //#25993
             $_.dmv(); //#25993
             if ($get($_.sym, $k[--$j]) == 1) { //#25993
@@ -32585,32 +32680,32 @@ function bwipp_dotcode() {
     $_.evalsymbol = function() {
         $_.sym = $k[--$j]; //#25999
         $_.worst = 9999999; //#26002
-        var _NK = $a([$a(['x', 0]), $a(['x', 1]), $a(['y', 0]), $a(['y', 1])]); //#26003
-        for (var _NL = 0, _NM = _NK.length; _NL < _NM; _NL++) { //#26021
-            $aload($get(_NK, _NL)); //#26004
+        var _NM = $a([$a(['x', 0]), $a(['x', 1]), $a(['y', 0]), $a(['y', 1])]); //#26003
+        for (var _NN = 0, _NO = _NM.length; _NN < _NO; _NN++) { //#26021
+            $aload($get(_NM, _NN)); //#26004
             $_.fl = $k[--$j]; //#26004
             $_.dir = $k[--$j]; //#26004
             $_.sum = 0; //#26005
             $_.first = -1; //#26005
             $_.last = -1; //#26005
-            var _NR = $eq($_.dir, 'x') ? $_.columns : $_.rows; //#26006
-            for (var _NT = 0, _NS = _NR - 1; _NT <= _NS; _NT += 1) { //#26017
-                $_[$_.dir] = _NT; //#26007
-                var _NV = $_.sym; //#26008
-                var _NX = $_[$_.dir]; //#26009
-                var _NZ = $eq($_.dir, 'x') ? $_.rows : $_.columns; //#26010
-                var _Nc = (_NZ - 1) * $_.fl; //#26011
+            var _NT = $eq($_.dir, 'x') ? $_.columns : $_.rows; //#26006
+            for (var _NV = 0, _NU = _NT - 1; _NV <= _NU; _NV += 1) { //#26017
+                $_[$_.dir] = _NV; //#26007
+                var _NX = $_.sym; //#26008
+                var _NZ = $_[$_.dir]; //#26009
+                var _Nb = $eq($_.dir, 'x') ? $_.rows : $_.columns; //#26010
+                var _Ne = (_Nb - 1) * $_.fl; //#26011
                 if ($eq($_.dir, 'y')) { //#26011
-                    var _ = _Nc; //#26011
-                    _Nc = _NX; //#26011
-                    _NX = _; //#26011
+                    var _ = _Ne; //#26011
+                    _Ne = _NZ; //#26011
+                    _NZ = _; //#26011
                 } //#26011
-                $k[$j++] = _NV; //#26012
                 $k[$j++] = _NX; //#26012
-                $k[$j++] = _Nc; //#26012
+                $k[$j++] = _NZ; //#26012
+                $k[$j++] = _Ne; //#26012
                 $_.dmv(); //#26012
-                var _Nd = $k[--$j]; //#26012
-                if ($get($k[--$j], _Nd) == 1) { //#26016
+                var _Nf = $k[--$j]; //#26012
+                if ($get($k[--$j], _Nf) == 1) { //#26016
                     if ($_.first == -1) { //#26013
                         $_.first = $_[$_.dir]; //#26013
                     } //#26013
@@ -32618,10 +32713,10 @@ function bwipp_dotcode() {
                     $_.sum = $_.sum + 1; //#26015
                 } //#26015
             } //#26015
-            var _Nq = $eq($_.dir, 'x') ? $_.rows : $_.columns; //#26019
-            var _Nr = ($f($f($_.sum + $_.last) - $_.first)) * _Nq; //#26020
-            $k[$j++] = _Nr; //#26020
-            if (_Nr < $_.worst) { //#26020
+            var _Ns = $eq($_.dir, 'x') ? $_.rows : $_.columns; //#26019
+            var _Nt = ($f($f($_.sum + $_.last) - $_.first)) * _Ns; //#26020
+            $k[$j++] = _Nt; //#26020
+            if (_Nt < $_.worst) { //#26020
                 $_.worst = $k[--$j]; //#26020
             } else { //#26020
                 $j--; //#26020
@@ -32631,8 +32726,8 @@ function bwipp_dotcode() {
         if ((($_.rows % 2) == 1) || ($_.rows <= 12)) { //#26041
             $_.sum = 0; //#26029
             $_.p = 0; //#26029
-            for (var _Ny = 1, _Nx = $_.columns - 2; _Ny <= _Nx; _Ny += 1) { //#26039
-                $k[$j++] = _Ny; //#26031
+            for (var _O0 = 1, _Nz = $_.columns - 2; _O0 <= _Nz; _O0 += 1) { //#26039
+                $k[$j++] = _O0; //#26031
                 $_.clearcol(); //#26031
                 if ($k[--$j]) { //#26037
                     $_.sum = $_.sum + 1; //#26032
@@ -32642,8 +32737,8 @@ function bwipp_dotcode() {
                     } else { //#26033
                         $k[$j++] = $_.p * $_.rows; //#26033
                     } //#26033
-                    var _O5 = $k[--$j]; //#26033
-                    $_[$k[--$j]] = _O5; //#26033
+                    var _O7 = $k[--$j]; //#26033
+                    $_[$k[--$j]] = _O7; //#26033
                 } else { //#26037
                     $_.sum = 0; //#26035
                     $_.pen = $_.pen + $_.p; //#26036
@@ -32655,8 +32750,8 @@ function bwipp_dotcode() {
         if ((($_.rows % 2) == 0) || ($_.columns <= 12)) { //#26059
             $_.sum = 0; //#26047
             $_.p = 0; //#26047
-            for (var _OF = 1, _OE = $_.rows - 2; _OF <= _OE; _OF += 1) { //#26057
-                $k[$j++] = _OF; //#26049
+            for (var _OH = 1, _OG = $_.rows - 2; _OH <= _OG; _OH += 1) { //#26057
+                $k[$j++] = _OH; //#26049
                 $_.clearrow(); //#26049
                 if ($k[--$j]) { //#26055
                     $_.sum = $_.sum + 1; //#26050
@@ -32666,8 +32761,8 @@ function bwipp_dotcode() {
                     } else { //#26051
                         $k[$j++] = $_.p * $_.columns; //#26051
                     } //#26051
-                    var _OM = $k[--$j]; //#26051
-                    $_[$k[--$j]] = _OM; //#26051
+                    var _OO = $k[--$j]; //#26051
+                    $_[$k[--$j]] = _OO; //#26051
                 } else { //#26055
                     $_.sum = 0; //#26053
                     $_.pen = $_.pen + $_.p; //#26054
@@ -32677,66 +32772,66 @@ function bwipp_dotcode() {
             $_.pen = $_.pen + $_.p; //#26058
         } //#26058
         $k[$j++] = Infinity; //#26062
-        for (var _OT = 0, _OU = ($_.columns + 4) * 2; _OT < _OU; _OT++) { //#26063
+        for (var _OV = 0, _OW = ($_.columns + 4) * 2; _OV < _OW; _OV++) { //#26063
             $k[$j++] = 0; //#26063
         } //#26063
-        for (var _OY = 0, _OZ = $_.columns, _OX = $_.sym.length - 1; _OZ < 0 ? _OY >= _OX : _OY <= _OX; _OY += _OZ) { //#26068
+        for (var _Oa = 0, _Ob = $_.columns, _OZ = $_.sym.length - 1; _Ob < 0 ? _Oa >= _OZ : _Oa <= _OZ; _Oa += _Ob) { //#26068
             $k[$j++] = 0; //#26066
             $k[$j++] = 0; //#26066
-            $aload($geti($_.sym, _OY, $_.columns)); //#26066
+            $aload($geti($_.sym, _Oa, $_.columns)); //#26066
             $k[$j++] = 0; //#26067
             $k[$j++] = 0; //#26067
         } //#26067
-        for (var _Oe = 0, _Of = ($_.columns + 4) * 2; _Oe < _Of; _Oe++) { //#26069
+        for (var _Og = 0, _Oh = ($_.columns + 4) * 2; _Og < _Oh; _Og++) { //#26069
             $k[$j++] = 0; //#26069
         } //#26069
         $_.symp = $a(); //#26069
         $_.columns = $_.columns + 4; //#26073
         $_.rows = $_.rows + 4; //#26074
         $_.sum = 0; //#26075
-        for (var _Ol = 2, _Ok = $_.rows - 3; _Ol <= _Ok; _Ol += 1) { //#26093
-            $_.y = _Ol; //#26077
-            for (var _Op = ($_.y & 1) + 2, _Oo = $_.columns - 3; _Op <= _Oo; _Op += 2) { //#26092
-                $_.x = _Op; //#26079
-                for (var _Oq = 0, _Or = 1; _Oq < _Or; _Oq++) { //#26091
+        for (var _On = 2, _Om = $_.rows - 3; _On <= _Om; _On += 1) { //#26093
+            $_.y = _On; //#26077
+            for (var _Or = ($_.y & 1) + 2, _Oq = $_.columns - 3; _Or <= _Oq; _Or += 2) { //#26092
+                $_.x = _Or; //#26079
+                for (var _Os = 0, _Ot = 1; _Os < _Ot; _Os++) { //#26091
                     $k[$j++] = $_.symp; //#26081
                     $k[$j++] = $_.x - 1; //#26081
                     $k[$j++] = $_.y - 1; //#26081
                     $_.dmv(); //#26081
-                    var _Ov = $k[--$j]; //#26081
-                    if ($get($k[--$j], _Ov) == 1) { //#26081
+                    var _Ox = $k[--$j]; //#26081
+                    if ($get($k[--$j], _Ox) == 1) { //#26081
                         break; //#26081
                     } //#26081
                     $k[$j++] = $_.symp; //#26082
                     $k[$j++] = $_.x + 1; //#26082
                     $k[$j++] = $_.y - 1; //#26082
                     $_.dmv(); //#26082
-                    var _P1 = $k[--$j]; //#26082
-                    if ($get($k[--$j], _P1) == 1) { //#26082
+                    var _P3 = $k[--$j]; //#26082
+                    if ($get($k[--$j], _P3) == 1) { //#26082
                         break; //#26082
                     } //#26082
                     $k[$j++] = $_.symp; //#26083
                     $k[$j++] = $_.x - 1; //#26083
                     $k[$j++] = $_.y + 1; //#26083
                     $_.dmv(); //#26083
-                    var _P7 = $k[--$j]; //#26083
-                    if ($get($k[--$j], _P7) == 1) { //#26083
+                    var _P9 = $k[--$j]; //#26083
+                    if ($get($k[--$j], _P9) == 1) { //#26083
                         break; //#26083
                     } //#26083
                     $k[$j++] = $_.symp; //#26084
                     $k[$j++] = $_.x + 1; //#26084
                     $k[$j++] = $_.y + 1; //#26084
                     $_.dmv(); //#26084
-                    var _PD = $k[--$j]; //#26084
-                    if ($get($k[--$j], _PD) == 1) { //#26084
+                    var _PF = $k[--$j]; //#26084
+                    if ($get($k[--$j], _PF) == 1) { //#26084
                         break; //#26084
                     } //#26084
                     $k[$j++] = $_.symp; //#26085
                     $k[$j++] = $_.x; //#26085
                     $k[$j++] = $_.y; //#26085
                     $_.dmv(); //#26085
-                    var _PJ = $k[--$j]; //#26085
-                    if ($get($k[--$j], _PJ) == 0) { //#26085
+                    var _PL = $k[--$j]; //#26085
+                    if ($get($k[--$j], _PL) == 0) { //#26085
                         $_.sum = $_.sum + 1; //#26085
                         break; //#26085
                     } //#26085
@@ -32744,32 +32839,32 @@ function bwipp_dotcode() {
                     $k[$j++] = $_.x - 2; //#26086
                     $k[$j++] = $_.y; //#26086
                     $_.dmv(); //#26086
-                    var _PQ = $k[--$j]; //#26086
-                    if ($get($k[--$j], _PQ) == 1) { //#26086
+                    var _PS = $k[--$j]; //#26086
+                    if ($get($k[--$j], _PS) == 1) { //#26086
                         break; //#26086
                     } //#26086
                     $k[$j++] = $_.symp; //#26087
                     $k[$j++] = $_.x; //#26087
                     $k[$j++] = $_.y - 2; //#26087
                     $_.dmv(); //#26087
-                    var _PW = $k[--$j]; //#26087
-                    if ($get($k[--$j], _PW) == 1) { //#26087
+                    var _PY = $k[--$j]; //#26087
+                    if ($get($k[--$j], _PY) == 1) { //#26087
                         break; //#26087
                     } //#26087
                     $k[$j++] = $_.symp; //#26088
                     $k[$j++] = $_.x + 2; //#26088
                     $k[$j++] = $_.y; //#26088
                     $_.dmv(); //#26088
-                    var _Pc = $k[--$j]; //#26088
-                    if ($get($k[--$j], _Pc) == 1) { //#26088
+                    var _Pe = $k[--$j]; //#26088
+                    if ($get($k[--$j], _Pe) == 1) { //#26088
                         break; //#26088
                     } //#26088
                     $k[$j++] = $_.symp; //#26089
                     $k[$j++] = $_.x; //#26089
                     $k[$j++] = $_.y + 2; //#26089
                     $_.dmv(); //#26089
-                    var _Pi = $k[--$j]; //#26089
-                    if ($get($k[--$j], _Pi) == 1) { //#26089
+                    var _Pk = $k[--$j]; //#26089
+                    if ($get($k[--$j], _Pk) == 1) { //#26089
                         break; //#26089
                     } //#26089
                     $_.sum = $_.sum + 1; //#26090
@@ -32788,10 +32883,10 @@ function bwipp_dotcode() {
         $_ = Object.create($_); //#26108
         $k[$j++] = Infinity; //#26107
         $k[$j++] = 1; //#26107
-        for (var _Pt = 0, _Pu = 112; _Pt < _Pu; _Pt++) { //#26107
-            var _Pv = $k[--$j]; //#26107
-            $k[$j++] = _Pv; //#26107
-            $k[$j++] = (_Pv * 3) % 113; //#26107
+        for (var _Pv = 0, _Pw = 112; _Pv < _Pw; _Pv++) { //#26107
+            var _Px = $k[--$j]; //#26107
+            $k[$j++] = _Px; //#26107
+            $k[$j++] = (_Px * 3) % 113; //#26107
         } //#26107
         $_.rsalog = $a(); //#26107
         for (var id in $_) $_.hasOwnProperty(id) && (bwipp_dotcode.$ctx[id] = $_[id]); //#26107
@@ -32800,8 +32895,8 @@ function bwipp_dotcode() {
     } //#26107
     $_.step = (~~($_.nw / 112)) + 1; //#26109
     $_.offset = function() {
-        var _Q0 = $k[--$j]; //#26110
-        $k[$j++] = $f((_Q0 * $_.step) + $_.start); //#26110
+        var _Q2 = $k[--$j]; //#26110
+        $k[$j++] = $f((_Q2 * $_.step) + $_.start); //#26110
     }; //#26110
     $_.bestscore = -99999999; //#26118
     $k[$j++] = 'masks'; //#26123
@@ -32814,112 +32909,107 @@ function bwipp_dotcode() {
             $k[$j++] = $a([0, 1, 2, 3]); //#26122
         } //#26122
     } //#26122
-    var _Q8 = $k[--$j]; //#26123
-    $_[$k[--$j]] = _Q8; //#26123
+    var _QA = $k[--$j]; //#26123
+    $_[$k[--$j]] = _QA; //#26123
     $_.litmasks = $a(4); //#26124
     $forall($_.masks, function() { //#26226
         $_.mask = $k[--$j]; //#26127
         $k[$j++] = Infinity; //#26130
-        var _QH = $_.cws; //#26132
+        var _QJ = $_.cws; //#26132
         $k[$j++] = $_.mask; //#26132
         $k[$j++] = $get($a([0, 3, 7, 17]), $_.mask); //#26132
         $k[$j++] = 0; //#26132
-        for (var _QI = 0, _QJ = _QH.length; _QI < _QJ; _QI++) { //#26132
-            var _QL = $k[--$j]; //#26132
-            var _QM = $k[--$j]; //#26132
-            $k[$j++] = $f($get(_QH, _QI) + _QL) % 113; //#26132
-            $k[$j++] = _QM; //#26132
-            $k[$j++] = $f(_QL + _QM); //#26132
+        for (var _QK = 0, _QL = _QJ.length; _QK < _QL; _QK++) { //#26132
+            var _QN = $k[--$j]; //#26132
+            var _QO = $k[--$j]; //#26132
+            $k[$j++] = $f($get(_QJ, _QK) + _QN) % 113; //#26132
+            $k[$j++] = _QO; //#26132
+            $k[$j++] = $f(_QN + _QO); //#26132
         } //#26132
         $j -= 2; //#26132
-        for (var _QO = 0, _QP = $_.nc; _QO < _QP; _QO++) { //#26133
+        for (var _QQ = 0, _QR = $_.nc; _QQ < _QR; _QQ++) { //#26133
             $k[$j++] = 0; //#26133
         } //#26133
         $_.rscws = $a(); //#26133
-        for (var _QT = 0, _QS = $_.step - 1; _QT <= _QS; _QT += 1) { //#26157
-            $_.start = _QT; //#26136
+        for (var _QV = 0, _QU = $_.step - 1; _QV <= _QU; _QV += 1) { //#26157
+            $_.start = _QV; //#26136
             $_.ND = ~~((((($_.nd + 1) - $_.start) + $_.step) - 1) / $_.step); //#26137
             $_.NW = ~~((((($_.nw + 1) - $_.start) + $_.step) - 1) / $_.step); //#26138
             $_.NC = $_.NW - $_.ND; //#26139
             $k[$j++] = Infinity; //#26140
             $k[$j++] = 1; //#26140
-            for (var _Qf = 0, _Qg = $_.NC; _Qf < _Qg; _Qf++) { //#26140
+            for (var _Qh = 0, _Qi = $_.NC; _Qh < _Qi; _Qh++) { //#26140
                 $k[$j++] = 0; //#26140
             } //#26140
             $_.coeffs = $a(); //#26140
-            for (var _Qk = 1, _Qj = $_.NC; _Qk <= _Qj; _Qk += 1) { //#26147
-                $_.i = _Qk; //#26142
-                for (var _Qm = $_.NC; _Qm >= 1; _Qm -= 1) { //#26146
-                    $_.j = _Qm; //#26144
+            for (var _Qm = 1, _Ql = $_.NC; _Qm <= _Ql; _Qm += 1) { //#26147
+                $_.i = _Qm; //#26142
+                for (var _Qo = $_.NC; _Qo >= 1; _Qo -= 1) { //#26146
+                    $_.j = _Qo; //#26144
                     $put($_.coeffs, $_.j, ($f($f($get($_.coeffs, $_.j) + 113) - (($get($_.rsalog, $_.i) * $get($_.coeffs, $_.j - 1)) % 113))) % 113); //#26145
                 } //#26145
             } //#26145
-            for (var _R0 = 0, _Qz = $_.ND - 1; _R0 <= _Qz; _R0 += 1) { //#26155
+            for (var _R2 = 0, _R1 = $_.ND - 1; _R2 <= _R1; _R2 += 1) { //#26155
                 $k[$j++] = 't'; //#26149
                 $k[$j++] = $_.rscws; //#26149
-                $k[$j++] = _R0; //#26149
+                $k[$j++] = _R2; //#26149
                 $_.offset(); //#26149
-                var _R2 = $k[--$j]; //#26149
-                var _R4 = $get($k[--$j], _R2); //#26149
-                $k[$j++] = _R4; //#26149
+                var _R4 = $k[--$j]; //#26149
+                var _R6 = $get($k[--$j], _R4); //#26149
+                $k[$j++] = _R6; //#26149
                 $k[$j++] = $_.rscws; //#26149
                 $k[$j++] = $_.ND; //#26149
                 $_.offset(); //#26149
-                var _R7 = $k[--$j]; //#26149
-                var _R9 = $get($k[--$j], _R7); //#26149
-                var _RA = $k[--$j]; //#26149
-                $_[$k[--$j]] = $f(_RA + _R9) % 113; //#26149
-                for (var _RE = 0, _RD = $_.NC - 2; _RE <= _RD; _RE += 1) { //#26153
-                    $_.j = _RE; //#26151
+                var _R9 = $k[--$j]; //#26149
+                var _RB = $get($k[--$j], _R9); //#26149
+                var _RC = $k[--$j]; //#26149
+                $_[$k[--$j]] = $f(_RC + _RB) % 113; //#26149
+                for (var _RG = 0, _RF = $_.NC - 2; _RG <= _RF; _RG += 1) { //#26153
+                    $_.j = _RG; //#26151
                     $k[$j++] = $_.rscws; //#26152
                     $k[$j++] = $_.ND + $_.j; //#26152
                     $_.offset(); //#26152
                     $k[$j++] = $_.rscws; //#26152
                     $k[$j++] = ($_.ND + $_.j) + 1; //#26152
                     $_.offset(); //#26152
-                    var _RL = $k[--$j]; //#26152
-                    var _RN = $get($k[--$j], _RL); //#26152
-                    var _RS = $k[--$j]; //#26152
-                    $put($k[--$j], _RS, ($f($f(_RN + 113) - (($_.t * $get($_.coeffs, $_.j + 1)) % 113))) % 113); //#26152
+                    var _RN = $k[--$j]; //#26152
+                    var _RP = $get($k[--$j], _RN); //#26152
+                    var _RU = $k[--$j]; //#26152
+                    $put($k[--$j], _RU, ($f($f(_RP + 113) - (($_.t * $get($_.coeffs, $_.j + 1)) % 113))) % 113); //#26152
                 } //#26152
                 $k[$j++] = $_.rscws; //#26154
                 $k[$j++] = ($_.ND + $_.NC) - 1; //#26154
                 $_.offset(); //#26154
-                var _Rb = $k[--$j]; //#26154
-                $put($k[--$j], _Rb, ($f(113 - (($_.t * $get($_.coeffs, $_.NC)) % 113))) % 113); //#26154
+                var _Rd = $k[--$j]; //#26154
+                $put($k[--$j], _Rd, ($f(113 - (($_.t * $get($_.coeffs, $_.NC)) % 113))) % 113); //#26154
             } //#26154
-            for (var _Rg = $_.ND, _Rf = $_.NW - 1; _Rg <= _Rf; _Rg += 1) { //#26156
-                $k[$j++] = _Rg; //#26156
+            for (var _Ri = $_.ND, _Rh = $_.NW - 1; _Ri <= _Rh; _Ri += 1) { //#26156
+                $k[$j++] = _Ri; //#26156
                 $k[$j++] = $_.rscws; //#26156
-                $k[$j++] = _Rg; //#26156
+                $k[$j++] = _Ri; //#26156
                 $_.offset(); //#26156
-                var _Rj = $k[--$j]; //#26156
-                var _Rk = $k[--$j]; //#26156
-                var _Rl = $k[--$j]; //#26156
-                $k[$j++] = _Rk; //#26156
-                $k[$j++] = _Rj; //#26156
                 $k[$j++] = 113; //#26156
                 $k[$j++] = $_.rscws; //#26156
-                $k[$j++] = _Rl; //#26156
+                $r(5, -1); //#26156
                 $_.offset(); //#26156
-                var _Rm = $k[--$j]; //#26156
-                var _Ro = $get($k[--$j], _Rm); //#26156
+                var _Rl = $k[--$j]; //#26156
+                var _Rn = $get($k[--$j], _Rl); //#26156
+                var _Ro = $k[--$j]; //#26156
                 var _Rp = $k[--$j]; //#26156
-                var _Rq = $k[--$j]; //#26156
-                $put($k[--$j], _Rq, $f(_Rp - _Ro) % 113); //#26156
+                $put($k[--$j], _Rp, $f(_Ro - _Rn) % 113); //#26156
             } //#26156
         } //#26156
         $_.bits = $s($_.ndots); //#26160
         $puti($_.bits, 0, $get($a(["00", "01", "10", "11"]), $_.mask)); //#26161
-        for (var _S0 = 1, _Rz = $_.nw; _S0 <= _Rz; _S0 += 1) { //#26165
-            $_.i = _S0; //#26163
+        for (var _Rz = 1, _Ry = $_.nw; _Rz <= _Ry; _Rz += 1) { //#26165
+            $_.i = _Rz; //#26163
             $puti($_.bits, (($_.i - 1) * 9) + 2, $get($_.encs, $get($_.rscws, $_.i))); //#26164
         } //#26164
         if ($_.rembits > 0) { //#26168
             $puti($_.bits, ($_.nw * 9) + 2, $geti("11111111111111111", 0, $_.rembits)); //#26167
         } //#26167
-        var _SD = $_.outline; //#26171
-        $_.pixs = $arrcpy($a(_SD.length), _SD); //#26171
+        var _SC = $_.outline; //#26171
+        $_.pixs = $arrcpy($a(_SC.length), _SC); //#26171
         $_.posx = 0; //#26172
         $k[$j++] = 'posy'; //#26173
         if (($_.rows % 2) == 0) { //#26173
@@ -32927,18 +33017,18 @@ function bwipp_dotcode() {
         } else { //#26173
             $k[$j++] = $_.rows - 1; //#26173
         } //#26173
-        var _SI = $k[--$j]; //#26173
-        $_[$k[--$j]] = _SI; //#26173
-        var _SM = $geti($_.bits, 0, $_.bits.length - 6); //#26174
-        for (var _SN = 0, _SO = _SM.length; _SN < _SO; _SN++) { //#26192
-            $k[$j++] = $get(_SM, _SN); //#26190
+        var _SH = $k[--$j]; //#26173
+        $_[$k[--$j]] = _SH; //#26173
+        var _SL = $geti($_.bits, 0, $_.bits.length - 6); //#26174
+        for (var _SM = 0, _SN = _SL.length; _SM < _SN; _SM++) { //#26192
+            $k[$j++] = $get(_SL, _SM); //#26190
             for (;;) { //#26190
                 $k[$j++] = $_.pixs; //#26176
                 $k[$j++] = $_.posx; //#26176
                 $k[$j++] = $_.posy; //#26176
                 $_.dmv(); //#26176
-                var _ST = $k[--$j]; //#26176
-                if ($get($k[--$j], _ST) == -1) { //#26176
+                var _SS = $k[--$j]; //#26176
+                if ($get($k[--$j], _SS) == -1) { //#26176
                     break; //#26176
                 } //#26176
                 if (($_.rows % 2) == 0) { //#26187
@@ -32959,23 +33049,24 @@ function bwipp_dotcode() {
             $k[$j++] = $_.posx; //#26191
             $k[$j++] = $_.posy; //#26191
             $_.dmv(); //#26191
+            $r(3, -1); //#26191
+            var _Sh = $k[--$j]; //#26191
             var _Si = $k[--$j]; //#26191
-            var _Sj = $k[--$j]; //#26191
-            $put(_Sj, _Si, $f($k[--$j] - 48)); //#26191
+            $put($k[--$j], _Si, $f(_Sh - 48)); //#26191
         } //#26191
-        for (var _Sl = 0; _Sl <= 5; _Sl += 1) { //#26197
-            $_.i = _Sl; //#26194
+        for (var _Sk = 0; _Sk <= 5; _Sk += 1) { //#26197
+            $_.i = _Sk; //#26194
             $k[$j++] = $_.pixs; //#26195
             $aload($get($_.sixedges, $_.i)); //#26195
             $_.dmv(); //#26195
-            var _Su = $k[--$j]; //#26196
-            $put($k[--$j], _Su, $get($_.bits, ($_.bits.length - 6) + $_.i) - 48); //#26196
+            var _St = $k[--$j]; //#26196
+            $put($k[--$j], _St, $get($_.bits, ($_.bits.length - 6) + $_.i) - 48); //#26196
         } //#26196
         $k[$j++] = 'score'; //#26200
         $k[$j++] = $_.pixs; //#26200
         $_.evalsymbol(); //#26200
-        var _Sx = $k[--$j]; //#26200
-        $_[$k[--$j]] = _Sx; //#26200
+        var _Sw = $k[--$j]; //#26200
+        $_[$k[--$j]] = _Sw; //#26200
         if ($_.score > $_.bestscore) { //#26205
             $_.bestsym = $_.pixs; //#26202
             $_.bestscore = $_.score; //#26203
@@ -32983,23 +33074,23 @@ function bwipp_dotcode() {
                 return true; //#26204
             } //#26204
         } //#26204
-        var _T7 = $_.pixs; //#26208
-        $_.litmask = $arrcpy($a(_T7.length), _T7); //#26208
-        for (var _TA = 0; _TA <= 5; _TA += 1) { //#26213
-            $_.i = _TA; //#26210
+        var _T6 = $_.pixs; //#26208
+        $_.litmask = $arrcpy($a(_T6.length), _T6); //#26208
+        for (var _T9 = 0; _T9 <= 5; _T9 += 1) { //#26213
+            $_.i = _T9; //#26210
             $k[$j++] = $_.litmask; //#26211
             $aload($get($_.sixedges, $_.i)); //#26211
             $_.dmv(); //#26211
-            var _TF = $k[--$j]; //#26212
-            $put($k[--$j], _TF, 1); //#26212
+            var _TE = $k[--$j]; //#26212
+            $put($k[--$j], _TE, 1); //#26212
         } //#26212
         $put($_.litmasks, $_.mask, $_.litmask); //#26214
         if ($_.fast) { //#26224
             $k[$j++] = 'score'; //#26218
             $k[$j++] = $_.litmask; //#26218
             $_.evalsymbol(); //#26218
-            var _TM = $k[--$j]; //#26218
-            $_[$k[--$j]] = _TM; //#26218
+            var _TL = $k[--$j]; //#26218
+            $_[$k[--$j]] = _TL; //#26218
             if ($gt($_.score, $_.bestscore)) { //#26223
                 $_.bestsym = $_.litmask; //#26220
                 $_.bestscore = $_.score; //#26221
@@ -33017,8 +33108,8 @@ function bwipp_dotcode() {
             $k[$j++] = 'score'; //#26234
             $k[$j++] = $_.litmask; //#26234
             $_.evalsymbol(); //#26234
-            var _Tf = $k[--$j]; //#26234
-            $_[$k[--$j]] = _Tf; //#26234
+            var _Te = $k[--$j]; //#26234
+            $_[$k[--$j]] = _Te; //#26234
             if ($_.score > $_.bestscore) { //#26238
                 $_.bestsym = $_.litmask; //#26236
                 $_.bestscore = $_.score; //#26237
@@ -33026,7 +33117,7 @@ function bwipp_dotcode() {
         }); //#26237
         $_.pixs = $_.bestsym; //#26240
     } //#26240
-    var _Ts = new Map([
+    var _Tr = new Map([
         ["ren", 'renmatrix'],
         ["dotty", true],
         ["pixs", $_.pixs],
@@ -33040,7 +33131,7 @@ function bwipp_dotcode() {
         ["borderbottom", 3],
         ["opt", $_.options]
     ]); //#26256
-    $k[$j++] = _Ts; //#26259
+    $k[$j++] = _Tr; //#26259
     if (!$_.dontdraw) { //#26259
         bwipp_renmatrix(); //#26259
     } //#26259
@@ -33084,7 +33175,7 @@ function bwipp_ultracode() {
         $k[$j++] = "Valid error correction levels are EC1 to EC5, and EC0 for legacy revision 1"; //#26319
         bwipp_raiseerror(); //#26319
     } //#26319
-    bwipp_loadctx(bwipp_ultracode) //#26322
+    bwipp_loadctx(bwipp_ultracode); //#26322
     if ($_.raw) { //#26359
         $_.dcws = $a($_.barcode.length); //#26326
         $_.i = 0; //#26327
@@ -33440,9 +33531,10 @@ function bwipp_ultracode() {
         $k[$j++] = 2; //#26568
         $k[$j++] = $_.i; //#26568
         $_.qmv(); //#26568
+        $r(3, -1); //#26568
         var _5L = $k[--$j]; //#26568
         var _5M = $k[--$j]; //#26568
-        $put(_5M, _5L, $k[--$j]); //#26568
+        $put($k[--$j], _5M, _5L); //#26568
         $_.i = $_.i + 1; //#26569
     } //#26569
     $k[$j++] = Infinity; //#26573
@@ -33469,9 +33561,10 @@ function bwipp_ultracode() {
             $k[$j++] = $_.x; //#26588
             $k[$j++] = $_.y; //#26588
             $_.qmv(); //#26588
+            $r(3, -1); //#26588
             var _5o = $k[--$j]; //#26588
             var _5p = $k[--$j]; //#26588
-            $put(_5p, _5o, $f($k[--$j] - 48)); //#26588
+            $put($k[--$j], _5p, $f(_5o - 48)); //#26588
             $_.y = $_.y + 1; //#26589
         } //#26589
         if ($_.y != $f($_.rows - 1)) { //#26596
@@ -33572,13 +33665,18 @@ function bwipp_jabcode() {
     }; //#26711
     $_.tofixedbits = function() {
         var _K = $strcpy($s(13), "0000000000000"); //#26715
-        var _L = $k[--$j]; //#26715
-        var _O = $cvrs($s(13), $k[--$j], 2); //#26715
-        $puti(_K, $f(_L - _O.length), _O); //#26716
-        $k[$j++] = $geti(_K, 0, _L); //#26717
+        $k[$j++] = _K; //#26715
+        $k[$j++] = _K; //#26715
+        $r(4, -1); //#26715
+        var _N = $cvrs($s(13), $k[--$j], 2); //#26715
+        var _O = $k[--$j]; //#26716
+        var _P = $k[--$j]; //#26716
+        var _Q = $k[--$j]; //#26716
+        $puti(_O, $f(_Q - _N.length), _N); //#26716
+        $k[$j++] = $geti(_P, 0, _Q); //#26717
     }; //#26717
-    var _R = ($_.msglen <= 15) ? 4 : 17; //#26721
-    $_.bits = $s(((7 + _R) + ($_.msglen * 8)) + 12); //#26721
+    var _T = ($_.msglen <= 15) ? 4 : 17; //#26721
+    $_.bits = $s(((7 + _T) + ($_.msglen * 8)) + 12); //#26721
     $_.j = 0; //#26722
     $k[$j++] = 31; //#26723
     $k[$j++] = 5; //#26723
@@ -33599,8 +33697,8 @@ function bwipp_jabcode() {
         $_.tofixedbits(); //#26729
         $_.addtobits(); //#26729
     } //#26729
-    for (var _Z = 0, _Y = $_.msglen - 1; _Z <= _Y; _Z += 1) { //#26733
-        $k[$j++] = $get($_.msg, _Z); //#26732
+    for (var _b = 0, _a = $_.msglen - 1; _b <= _a; _b += 1) { //#26733
+        $k[$j++] = $get($_.msg, _b); //#26732
         $k[$j++] = 8; //#26732
         $_.tofixedbits(); //#26732
         $_.addtobits(); //#26732
@@ -33622,101 +33720,101 @@ function bwipp_jabcode() {
     $_.metrics = function() {
         $_.mc = $k[--$j]; //#26746
         $_.mr = $k[--$j]; //#26746
-        var _e = $_.mc; //#26747
-        var _f = $_.mr; //#26747
-        var _g = $_.mc; //#26748
-        var _h = $_.mr; //#26748
-        var _i = $_.colors; //#26750
-        var _j = 64; //#26750
-        if (64 > _i) { //#26750
-            var _ = _i; //#26750
-            _i = _j; //#26750
-            _j = _; //#26750
+        var _g = $_.mc; //#26747
+        var _h = $_.mr; //#26747
+        var _i = $_.mc; //#26748
+        var _j = $_.mr; //#26748
+        var _k = $_.colors; //#26750
+        var _l = 64; //#26750
+        if (64 > _k) { //#26750
+            var _ = _k; //#26750
+            _k = _l; //#26750
+            _l = _; //#26750
         } //#26750
-        var _l = $_.slave ? 7 : 17; //#26751
-        $k[$j++] = _e * _f; //#26779
-        $k[$j++] = ((((~~($f(_g - 25) / 16)) + 2) * ((~~($f(_h - 25) / 16)) + 2)) - 4) * 7; //#26779
-        $k[$j++] = _j * 2; //#26779
-        $k[$j++] = _l * 4; //#26779
+        var _n = $_.slave ? 7 : 17; //#26751
+        $k[$j++] = _g * _h; //#26779
+        $k[$j++] = ((((~~($f(_i - 25) / 16)) + 2) * ((~~($f(_j - 25) / 16)) + 2)) - 4) * 7; //#26779
+        $k[$j++] = _l * 2; //#26779
+        $k[$j++] = _n * 4; //#26779
         if (!$_.slave) { //#26778
-            var _p = $eq($_.mr, $_.mc) ? 0 : 1; //#26755
-            $_.metass = _p; //#26755
-            var _q = $_.mr; //#26756
-            var _r = $_.mc; //#26756
-            if ($lt(_q, _r)) { //#26756
-                var _ = _r; //#26756
-                _r = _q; //#26756
-                _q = _; //#26756
+            var _r = $eq($_.mr, $_.mc) ? 0 : 1; //#26755
+            $_.metass = _r; //#26755
+            var _s = $_.mr; //#26756
+            var _t = $_.mc; //#26756
+            if ($lt(_s, _t)) { //#26756
+                var _ = _t; //#26756
+                _t = _s; //#26756
+                _s = _; //#26756
             } //#26756
-            $_.metavf = $get($a([0, 1, 2, 2, 3, 3, 3, 3]), ~~($f(_q - 21) / 16)); //#26757
+            $_.metavf = $get($a([0, 1, 2, 2, 3, 3, 3, 3]), ~~($f(_s - 21) / 16)); //#26757
             $k[$j++] = 'metavlen'; //#26758
             if ($_.metass == 0) { //#26758
                 $k[$j++] = $a([2, 2, 3, 4]); //#26758
             } else { //#26758
                 $k[$j++] = $a([4, 6, 8, 10]); //#26758
             } //#26758
-            var _z = $get($k[--$j], $_.metavf); //#26758
-            $_[$k[--$j]] = _z; //#26758
+            var _11 = $get($k[--$j], $_.metavf); //#26758
+            $_[$k[--$j]] = _11; //#26758
             $_.metaelen = $f(($_.metavf * 2) + 10); //#26759
             $k[$j++] = $f($f(7 + $_.metavlen) + $_.metaelen); //#26762
             if ($_.hasslaves) { //#26762
-                var _15 = $k[--$j]; //#26762
-                $k[$j++] = $f(_15 + 4); //#26762
+                var _17 = $k[--$j]; //#26762
+                $k[$j++] = $f(_17 + 4); //#26762
             } //#26762
-            var _18 = ~~(Math.ceil(($k[--$j] * 2) / $_.metabpm)); //#26765
-            $_.nummetabits = $f((_18 * $_.metabpm) + 6); //#26765
-            $k[$j++] = _18 + 6; //#26766
+            var _1A = ~~(Math.ceil(($k[--$j] * 2) / $_.metabpm)); //#26765
+            $_.nummetabits = $f((_1A * $_.metabpm) + 6); //#26765
+            $k[$j++] = _1A + 6; //#26766
         } else { //#26778
             $k[$j++] = 3; //#26769
             if (!$_.sameshape) { //#26769
-                var _1B = $k[--$j]; //#26769
-                $k[$j++] = $f(_1B + 5); //#26769
+                var _1D = $k[--$j]; //#26769
+                $k[$j++] = $f(_1D + 5); //#26769
             } //#26769
             if ($_.hasslaves) { //#26770
-                var _1D = $k[--$j]; //#26770
-                $k[$j++] = $f(_1D + 3); //#26770
+                var _1F = $k[--$j]; //#26770
+                $k[$j++] = $f(_1F + 3); //#26770
             } //#26770
             if (!$_.sameecc) { //#26775
-                var _1F = $_.mr; //#26772
-                var _1G = $_.mc; //#26772
-                if ($lt(_1F, _1G)) { //#26772
-                    var _ = _1G; //#26772
-                    _1G = _1F; //#26772
-                    _1F = _; //#26772
+                var _1H = $_.mr; //#26772
+                var _1I = $_.mc; //#26772
+                if ($lt(_1H, _1I)) { //#26772
+                    var _ = _1I; //#26772
+                    _1I = _1H; //#26772
+                    _1H = _; //#26772
                 } //#26772
-                var _1J = $k[--$j]; //#26774
-                $k[$j++] = $f(_1J + $get($a([10, 12, 14, 14, 16, 16, 16, 16]), ~~($f(_1F - 21) / 16))); //#26774
+                var _1L = $k[--$j]; //#26774
+                $k[$j++] = $f(_1L + $get($a([10, 12, 14, 14, 16, 16, 16, 16]), ~~($f(_1H - 21) / 16))); //#26774
             } //#26774
-            var _1M = ~~(Math.ceil(($k[--$j] * 2) / $_.metabpm)); //#26778
-            $_.nummetabits = _1M * $_.metabpm; //#26778
-            $k[$j++] = _1M; //#26778
+            var _1O = ~~(Math.ceil(($k[--$j] * 2) / $_.metabpm)); //#26778
+            $_.nummetabits = _1O * $_.metabpm; //#26778
+            $k[$j++] = _1O; //#26778
         } //#26778
-        var _1O = $k[--$j]; //#26781
-        $_.nummetamodules = _1O; //#26781
-        var _1P = $k[--$j]; //#26782
-        var _1Q = $k[--$j]; //#26782
+        var _1Q = $k[--$j]; //#26781
+        $_.nummetamodules = _1Q; //#26781
         var _1R = $k[--$j]; //#26782
-        $_.numdatamodules = $f($k[--$j] - ($f(_1R + ($f(_1Q + $f(_1P + _1O)))))); //#26782
+        var _1S = $k[--$j]; //#26782
+        var _1T = $k[--$j]; //#26782
+        $_.numdatamodules = $f($k[--$j] - ($f(_1T + ($f(_1S + $f(_1R + _1Q)))))); //#26782
         $_.numdatabits = $_.numdatamodules * $_.databpm; //#26783
     }; //#26783
     $_.coderate = $get($a([0.67, 0.63, 0.57, 0.55, 0.5, 0.43, 0.34, 0.25, 0.2, 0.17, 0.14]), $_.eclevel); //#26787
     $_.grosslen = ~~Math.ceil($_.bits.length / $_.coderate); //#26788
     $_.snapsize = function() {
-        var _1b = (~~Math.ceil($k[--$j])) - 18; //#26789
-        $k[$j++] = _1b; //#26789
-        if (_1b < 0) { //#26789
+        var _1d = (~~Math.ceil($k[--$j])) - 18; //#26789
+        $k[$j++] = _1d; //#26789
+        if (_1d < 0) { //#26789
             $j--; //#26789
             $k[$j++] = 0; //#26789
         } //#26789
-        var _1c = $k[--$j]; //#26789
-        $k[$j++] = ((~~(_1c / 4)) * 4) + 21; //#26789
+        var _1e = $k[--$j]; //#26789
+        $k[$j++] = ((~~(_1e / 4)) * 4) + 21; //#26789
     }; //#26789
     if (($_.rows == -1) && ($_.columns == -1)) { //#26818
         $k[$j++] = 'size'; //#26792
         $k[$j++] = Math.sqrt($_.grosslen); //#26792
         $_.snapsize(); //#26792
-        var _1g = $k[--$j]; //#26792
-        $_[$k[--$j]] = _1g; //#26792
+        var _1i = $k[--$j]; //#26792
+        $_[$k[--$j]] = _1i; //#26792
         for (;;) { //#26797
             $k[$j++] = $_.size; //#26794
             $k[$j++] = $_.size; //#26794
@@ -33733,8 +33831,8 @@ function bwipp_jabcode() {
             $k[$j++] = 'columns'; //#26802
             $k[$j++] = $_.grosslen / $_.rows; //#26802
             $_.snapsize(); //#26802
-            var _1t = $k[--$j]; //#26802
-            $_[$k[--$j]] = _1t; //#26802
+            var _1v = $k[--$j]; //#26802
+            $_[$k[--$j]] = _1v; //#26802
             for (;;) { //#26807
                 $k[$j++] = $_.rows; //#26804
                 $k[$j++] = $_.columns; //#26804
@@ -33749,8 +33847,8 @@ function bwipp_jabcode() {
             $k[$j++] = 'rows'; //#26810
             $k[$j++] = $_.grosslen / $_.columns; //#26810
             $_.snapsize(); //#26810
-            var _24 = $k[--$j]; //#26810
-            $_[$k[--$j]] = _24; //#26810
+            var _26 = $k[--$j]; //#26810
+            $_[$k[--$j]] = _26; //#26810
             for (;;) { //#26815
                 $k[$j++] = $_.rows; //#26812
                 $k[$j++] = $_.columns; //#26812
@@ -33775,10 +33873,10 @@ function bwipp_jabcode() {
         bwipp_raiseerror(); //#26826
     } //#26826
     $_.min = $_.C; //#26830
-    for (var _2K = 3; _2K <= 8; _2K += 1) { //#26842
-        $_.i = _2K; //#26832
-        for (var _2M = $_.i + 1; _2M <= 9; _2M += 1) { //#26841
-            $_.j = _2M; //#26834
+    for (var _2M = 3; _2M <= 8; _2M += 1) { //#26842
+        $_.i = _2M; //#26832
+        for (var _2O = $_.i + 1; _2O <= 9; _2O += 1) { //#26841
+            $_.j = _2O; //#26834
             $_.dist = (((~~($_.C / $_.j)) * $_.j) - ((~~($_.C / $_.j)) * $_.i)) - $_.bits.length; //#26835
             if (($_.dist < $_.min) && ($_.dist >= 0)) { //#26840
                 $_.datawc = $_.i; //#26837
@@ -33789,19 +33887,22 @@ function bwipp_jabcode() {
     } //#26839
     $_.tmpbits = $s(((~~($_.C / $_.datawr)) * $_.datawr) - ((~~($_.C / $_.datawr)) * $_.datawc)); //#26845
     $puti($_.tmpbits, 0, $_.bits); //#26846
-    for (var _2m = $_.bits.length, _2l = $_.tmpbits.length - 1; _2m <= _2l; _2m += 1) { //#26850
-        var _2o = $get($_.tmpbits, _2m - 1); //#26848
-        $k[$j++] = _2m; //#26848
+    for (var _2o = $_.bits.length, _2n = $_.tmpbits.length - 1; _2o <= _2n; _2o += 1) { //#26850
+        var _2q = $get($_.tmpbits, _2o - 1); //#26848
         $k[$j++] = _2o; //#26848
-        if ((_2o % 2) == 0) { //#26848
-            var _2p = $k[--$j]; //#26848
-            $k[$j++] = $f(_2p + 1); //#26848
+        $k[$j++] = _2q; //#26848
+        if ((_2q % 2) == 0) { //#26848
+            var _2r = $k[--$j]; //#26848
+            $k[$j++] = $f(_2r + 1); //#26848
         } else { //#26848
-            var _2q = $k[--$j]; //#26848
-            $k[$j++] = $f(_2q - 1); //#26848
+            var _2s = $k[--$j]; //#26848
+            $k[$j++] = $f(_2s - 1); //#26848
         } //#26848
-        var _2s = $k[--$j]; //#26849
-        $put($_.tmpbits, $k[--$j], _2s); //#26849
+        $k[$j++] = $_.tmpbits; //#26849
+        $r(3, 1); //#26849
+        var _2u = $k[--$j]; //#26849
+        var _2v = $k[--$j]; //#26849
+        $put($k[--$j], _2v, _2u); //#26849
     } //#26849
     $_.bits = $_.tmpbits; //#26851
     $_.m0 = 22609 + 1; //#26855
@@ -33840,11 +33941,11 @@ function bwipp_jabcode() {
         $_.s0 = (~~($_.s1 / 65536)) + $_.s0; //#26886
         $_.s1 = $_.s1 % 65536; //#26886
         $_.s0 = $_.s0 % 65536; //#26887
-        var _3x = (((($_.s0 - 32768) * 65536) + $_.s1) ^ 2147483648) & 4294967295; //#26892
-        var _3y = _3x ^ (_3x >>> 11); //#26893
-        var _3z = _3y ^ ((_3y << 7) & -1658038656); //#26894
-        var _40 = (_3z ^ ((_3z << 15) & -272236544)) & 4294967295; //#26896
-        $k[$j++] = _40 ^ (_40 >>> 18); //#26896
+        var _40 = (((($_.s0 - 32768) * 65536) + $_.s1) ^ 2147483648) & 4294967295; //#26892
+        var _41 = _40 ^ (_40 >>> 11); //#26893
+        var _42 = _41 ^ ((_41 << 7) & -1658038656); //#26894
+        var _43 = (_42 ^ ((_42 << 15) & -272236544)) & 4294967295; //#26896
+        $k[$j++] = _43 ^ (_43 >>> 18); //#26896
     }; //#26896
     $_.createMatrixA = function() {
         $k[$j++] = 'nb_pcb'; //#26902
@@ -33853,65 +33954,65 @@ function bwipp_jabcode() {
         } else { //#26902
             $k[$j++] = (~~($_.Pg_sub_block / $_.wr)) * $_.wc; //#26902
         } //#26902
-        var _46 = $k[--$j]; //#26902
-        $_[$k[--$j]] = _46; //#26902
+        var _49 = $k[--$j]; //#26902
+        $_[$k[--$j]] = _49; //#26902
         $_.offset = ~~Math.ceil($_.Pg_sub_block / 32); //#26903
         $_.effwidth = $_.offset * 32; //#26904
         $_.matrixA = $a($_.offset * $_.nb_pcb); //#26905
-        for (var _4G = 0, _4F = ($_.offset * $_.nb_pcb) - 1; _4G <= _4F; _4G += 1) { //#26906
-            $put($_.matrixA, _4G, 0); //#26906
+        for (var _4J = 0, _4I = ($_.offset * $_.nb_pcb) - 1; _4J <= _4I; _4J += 1) { //#26906
+            $put($_.matrixA, _4J, 0); //#26906
         } //#26906
         $_.permutation = $a($_.Pg_sub_block); //#26907
-        for (var _4M = 0, _4L = $_.Pg_sub_block - 1; _4M <= _4L; _4M += 1) { //#26908
-            $put($_.permutation, _4M, _4M); //#26908
+        for (var _4P = 0, _4O = $_.Pg_sub_block - 1; _4P <= _4O; _4P += 1) { //#26908
+            $put($_.permutation, _4P, _4P); //#26908
         } //#26908
-        for (var _4R = 0, _4Q = (~~($_.Pg_sub_block / $_.wr)) - 1; _4R <= _4Q; _4R += 1) { //#26917
-            $_.i = _4R; //#26911
-            for (var _4U = 0, _4T = $f($_.wr - 1); _4U <= _4T; _4U += 1) { //#26916
-                $_.j = _4U; //#26913
-                var _4V = $_.matrixA; //#26914
-                var _4W = $_.i; //#26914
-                var _4X = $_.effwidth; //#26914
-                var _4Y = $_.wr; //#26914
-                var _4Z = $_.j; //#26914
-                var _4f = $f(31 - (($f(($_.i * $f($_.effwidth + $_.wr)) + $_.j)) % 32)); //#26915
-                $put(_4V, ~~(($f((_4W * $f(_4X + _4Y)) + _4Z)) / 32), $get(_4V, ~~(($f((_4W * $f(_4X + _4Y)) + _4Z)) / 32)) | ((_4f < 0 ? 1 >>> -_4f : 1 << _4f))); //#26915
+        for (var _4U = 0, _4T = (~~($_.Pg_sub_block / $_.wr)) - 1; _4U <= _4T; _4U += 1) { //#26917
+            $_.i = _4U; //#26911
+            for (var _4X = 0, _4W = $f($_.wr - 1); _4X <= _4W; _4X += 1) { //#26916
+                $_.j = _4X; //#26913
+                var _4Y = $_.matrixA; //#26914
+                var _4Z = $_.i; //#26914
+                var _4a = $_.effwidth; //#26914
+                var _4b = $_.wr; //#26914
+                var _4c = $_.j; //#26914
+                var _4i = $f(31 - (($f(($_.i * $f($_.effwidth + $_.wr)) + $_.j)) % 32)); //#26915
+                $put(_4Y, ~~(($f((_4Z * $f(_4a + _4b)) + _4c)) / 32), $get(_4Y, ~~(($f((_4Z * $f(_4a + _4b)) + _4c)) / 32)) | ((_4i < 0 ? 1 >>> -_4i : 1 << _4i))); //#26915
             } //#26915
         } //#26915
         $_.s0 = 0; //#26920
         $_.s1 = 0; //#26920
         $_.s2 = 11; //#26920
         $_.s3 = 64569; //#26920
-        for (var _4i = 1, _4h = $f($_.wc - 1); _4i <= _4h; _4i += 1) { //#26943
-            $_.i = _4i; //#26922
+        for (var _4l = 1, _4k = $f($_.wc - 1); _4l <= _4k; _4l += 1) { //#26943
+            $_.i = _4l; //#26922
             $_.off_index = (~~($_.Pg_sub_block / $_.wr)) * $_.i; //#26923
-            for (var _4o = 0, _4n = $_.Pg_sub_block - 1; _4o <= _4n; _4o += 1) { //#26942
-                $_.j = _4o; //#26925
+            for (var _4r = 0, _4q = $_.Pg_sub_block - 1; _4r <= _4q; _4r += 1) { //#26942
+                $_.j = _4r; //#26925
                 $_.lcg64_temper(); //#26926
-                var _4p = $k[--$j]; //#26927
-                $k[$j++] = _4p; //#26927
-                if (_4p < 0) { //#26927
-                    var _4q = $k[--$j]; //#26927
-                    $k[$j++] = $f((_4q ^ 2147483648) + 2147483648); //#26927
+                var _4s = $k[--$j]; //#26927
+                $k[$j++] = _4s; //#26927
+                if (_4s < 0) { //#26927
+                    var _4t = $k[--$j]; //#26927
+                    $k[$j++] = $f((_4t ^ 2147483648) + 2147483648); //#26927
                 } //#26927
                 $_.pos = ~~(($k[--$j] / 4294967296) * ($_.Pg_sub_block - $_.j)); //#26929
-                for (var _4x = 0, _4w = (~~($_.Pg_sub_block / $_.wr)) - 1; _4x <= _4w; _4x += 1) { //#26938
-                    $_.k = _4x; //#26931
-                    var _4y = $_.matrixA; //#26932
-                    var _4z = $_.off_index; //#26932
-                    var _50 = $_.k; //#26932
-                    var _51 = $_.offset; //#26932
-                    var _52 = $_.j; //#26932
-                    var _5A = $get($_.matrixA, (~~($get($_.permutation, $_.pos) / 32)) + ($_.k * $_.offset)); //#26934
-                    var _5E = -($f(31 - ($get($_.permutation, $_.pos) % 32))); //#26935
-                    var _5G = 31 - ($_.j % 32); //#26936
-                    $put(_4y, ((_4z + _50) * _51) + (~~(_52 / 32)), $get(_4y, ((_4z + _50) * _51) + (~~(_52 / 32))) | ((_5G < 0 ? (((_5E < 0 ? _5A >>> -_5E : _5A << _5E)) & 1) >>> -_5G : (((_5E < 0 ? _5A >>> -_5E : _5A << _5E)) & 1) << _5G))); //#26937
+                for (var _50 = 0, _4z = (~~($_.Pg_sub_block / $_.wr)) - 1; _50 <= _4z; _50 += 1) { //#26938
+                    $_.k = _50; //#26931
+                    var _51 = $_.matrixA; //#26932
+                    var _52 = $_.off_index; //#26932
+                    var _53 = $_.k; //#26932
+                    var _54 = $_.offset; //#26932
+                    var _55 = $_.j; //#26932
+                    var _5D = $get($_.matrixA, (~~($get($_.permutation, $_.pos) / 32)) + ($_.k * $_.offset)); //#26934
+                    var _5H = -($f(31 - ($get($_.permutation, $_.pos) % 32))); //#26935
+                    var _5J = 31 - ($_.j % 32); //#26936
+                    $put(_51, ((_52 + _53) * _54) + (~~(_55 / 32)), $get(_51, ((_52 + _53) * _54) + (~~(_55 / 32))) | ((_5J < 0 ? (((_5H < 0 ? _5D >>> -_5H : _5D << _5H)) & 1) >>> -_5J : (((_5H < 0 ? _5D >>> -_5H : _5D << _5H)) & 1) << _5J))); //#26937
                 } //#26937
-                var _5J = $_.permutation; //#26939
-                var _5K = $_.Pg_sub_block; //#26939
-                var _5L = $_.j; //#26939
-                $put(_5J, (_5K - 1) - _5L, $get($_.permutation, $_.pos)); //#26941
-                $put($_.permutation, $_.pos, $get(_5J, (_5K - 1) - _5L)); //#26941
+                var _5M = $_.permutation; //#26939
+                var _5N = $_.Pg_sub_block; //#26939
+                var _5O = $_.j; //#26939
+                $put(_5M, (_5N - 1) - _5O, $get($_.permutation, $_.pos)); //#26941
+                $put($_.permutation, $_.pos, $get(_5M, (_5N - 1) - _5O)); //#26941
             } //#26941
         } //#26941
     }; //#26941
@@ -33919,41 +34020,41 @@ function bwipp_jabcode() {
         $_.nb_pcb = ~~($_.Pg_sub_block / 2); //#26949
         $_.offset = ~~Math.ceil($_.Pg_sub_block / 32); //#26950
         $_.matrixA = $a($_.offset * $_.nb_pcb); //#26951
-        for (var _5Y = 0, _5X = ($_.offset * $_.nb_pcb) - 1; _5Y <= _5X; _5Y += 1) { //#26952
-            $put($_.matrixA, _5Y, 0); //#26952
+        for (var _5b = 0, _5a = ($_.offset * $_.nb_pcb) - 1; _5b <= _5a; _5b += 1) { //#26952
+            $put($_.matrixA, _5b, 0); //#26952
         } //#26952
         $_.permutation = $a($_.Pg_sub_block); //#26953
-        for (var _5e = 0, _5d = $_.Pg_sub_block - 1; _5e <= _5d; _5e += 1) { //#26954
-            $put($_.permutation, _5e, _5e); //#26954
+        for (var _5h = 0, _5g = $_.Pg_sub_block - 1; _5h <= _5g; _5h += 1) { //#26954
+            $put($_.permutation, _5h, _5h); //#26954
         } //#26954
         $_.s0 = 0; //#26957
         $_.s1 = 0; //#26957
         $_.s2 = 0; //#26957
         $_.s3 = 38545; //#26957
         $_.nb_once = ~~((~~($f((($_.nb_pcb / $_.wc) * $_.Pg_sub_block) + 3))) / $_.nb_pcb); //#26958
-        for (var _5m = 0, _5l = $_.nb_pcb - 1; _5m <= _5l; _5m += 1) { //#26973
-            $_.i = _5m; //#26960
-            for (var _5p = 0, _5o = $_.nb_once - 1; _5p <= _5o; _5p += 1) { //#26972
-                $_.j = _5p; //#26962
+        for (var _5p = 0, _5o = $_.nb_pcb - 1; _5p <= _5o; _5p += 1) { //#26973
+            $_.i = _5p; //#26960
+            for (var _5s = 0, _5r = $_.nb_once - 1; _5s <= _5r; _5s += 1) { //#26972
+                $_.j = _5s; //#26962
                 $_.lcg64_temper(); //#26963
-                var _5q = $k[--$j]; //#26964
-                $k[$j++] = _5q; //#26964
-                if (_5q < 0) { //#26964
-                    var _5r = $k[--$j]; //#26964
-                    $k[$j++] = $f((_5r ^ 2147483648) + 2147483648); //#26964
+                var _5t = $k[--$j]; //#26964
+                $k[$j++] = _5t; //#26964
+                if (_5t < 0) { //#26964
+                    var _5u = $k[--$j]; //#26964
+                    $k[$j++] = $f((_5u ^ 2147483648) + 2147483648); //#26964
                 } //#26964
                 $_.pos = ~~(($k[--$j] / 4294967296) * ($_.Pg_sub_block - $_.j)); //#26966
-                var _5v = $_.matrixA; //#26967
-                var _5w = $_.i; //#26967
-                var _5x = $_.offset; //#26967
-                var _60 = $get($_.permutation, $_.pos); //#26967
-                var _65 = $f(31 - ($get($_.permutation, $_.pos) % 32)); //#26968
-                $put(_5v, (_5w * _5x) + (~~(_60 / 32)), $get(_5v, (_5w * _5x) + (~~(_60 / 32))) | ((_65 < 0 ? 1 >>> -_65 : 1 << _65))); //#26968
-                var _68 = $_.permutation; //#26969
-                var _69 = $_.Pg_sub_block; //#26969
-                var _6A = $_.j; //#26969
-                $put(_68, (_69 - 1) - _6A, $get($_.permutation, $_.pos)); //#26971
-                $put($_.permutation, $_.pos, $get(_68, (_69 - 1) - _6A)); //#26971
+                var _5y = $_.matrixA; //#26967
+                var _5z = $_.i; //#26967
+                var _60 = $_.offset; //#26967
+                var _63 = $get($_.permutation, $_.pos); //#26967
+                var _68 = $f(31 - ($get($_.permutation, $_.pos) % 32)); //#26968
+                $put(_5y, (_5z * _60) + (~~(_63 / 32)), $get(_5y, (_5z * _60) + (~~(_63 / 32))) | ((_68 < 0 ? 1 >>> -_68 : 1 << _68))); //#26968
+                var _6B = $_.permutation; //#26969
+                var _6C = $_.Pg_sub_block; //#26969
+                var _6D = $_.j; //#26969
+                $put(_6B, (_6C - 1) - _6D, $get($_.permutation, $_.pos)); //#26971
+                $put($_.permutation, $_.pos, $get(_6B, (_6C - 1) - _6D)); //#26971
             } //#26971
         } //#26971
     }; //#26971
@@ -33964,41 +34065,41 @@ function bwipp_jabcode() {
         } else { //#26979
             $k[$j++] = (~~($_.Pg_sub_block / $_.wr)) * $_.wc; //#26979
         } //#26979
-        var _6K = $k[--$j]; //#26979
-        $_[$k[--$j]] = _6K; //#26979
+        var _6N = $k[--$j]; //#26979
+        $_[$k[--$j]] = _6N; //#26979
         $_.offset = ~~Math.ceil($_.Pg_sub_block / 32); //#26980
-        var _6N = $_.matrixA; //#26981
-        $_.matrixH = $arrcpy($a(_6N.length), _6N); //#26981
+        var _6Q = $_.matrixA; //#26981
+        $_.matrixH = $arrcpy($a(_6Q.length), _6Q); //#26981
         $k[$j++] = Infinity; //#26982
-        for (var _6R = 0, _6S = $_.Pg_sub_block; _6R < _6S; _6R++) { //#26982
+        for (var _6U = 0, _6V = $_.Pg_sub_block; _6U < _6V; _6U++) { //#26982
             $k[$j++] = 0; //#26982
         } //#26982
         $_.column_arrangement = $a(); //#26982
         $k[$j++] = Infinity; //#26983
-        for (var _6V = 0, _6W = $_.Pg_sub_block; _6V < _6W; _6V++) { //#26983
+        for (var _6Y = 0, _6Z = $_.Pg_sub_block; _6Y < _6Z; _6Y++) { //#26983
             $k[$j++] = false; //#26983
         } //#26983
         $_.processed_column = $a(); //#26983
         $k[$j++] = Infinity; //#26984
-        for (var _6Z = 0, _6a = $_.nb_pcb; _6Z < _6a; _6Z++) { //#26984
+        for (var _6c = 0, _6d = $_.nb_pcb; _6c < _6d; _6c++) { //#26984
             $k[$j++] = 0; //#26984
         } //#26984
         $_.zero_lines_nb = $a(); //#26984
         $k[$j++] = Infinity; //#26985
-        for (var _6d = 0, _6e = $_.Pg_sub_block * 2; _6d < _6e; _6d++) { //#26985
+        for (var _6g = 0, _6h = $_.Pg_sub_block * 2; _6g < _6h; _6g++) { //#26985
             $k[$j++] = 0; //#26985
         } //#26985
         $_.swap_col = $a(); //#26985
         $_.zero_lines = 0; //#26986
         $_.loop0 = 0; //#26988
-        for (var _6i = 0, _6h = $_.nb_pcb - 1; _6i <= _6h; _6i += 1) { //#27026
-            $_.i = _6i; //#26990
+        for (var _6l = 0, _6k = $_.nb_pcb - 1; _6l <= _6k; _6l += 1) { //#27026
+            $_.i = _6l; //#26990
             $_.pivot_column = $_.Pg_sub_block + 1; //#26991
-            for (var _6m = 0, _6l = $_.Pg_sub_block - 1; _6m <= _6l; _6m += 1) { //#26999
-                $_.j = _6m; //#26993
-                var _6r = $get($_.matrixH, ~~(((($_.offset * 32) * $_.i) + $_.j) / 32)); //#26994
-                var _6v = -(31 - (((($_.offset * 32) * $_.i) + $_.j) % 32)); //#26995
-                if ((((_6v < 0 ? _6r >>> -_6v : _6r << _6v)) & 1) == 1) { //#26998
+            for (var _6p = 0, _6o = $_.Pg_sub_block - 1; _6p <= _6o; _6p += 1) { //#26999
+                $_.j = _6p; //#26993
+                var _6u = $get($_.matrixH, ~~(((($_.offset * 32) * $_.i) + $_.j) / 32)); //#26994
+                var _6y = -(31 - (((($_.offset * 32) * $_.i) + $_.j) % 32)); //#26995
+                if ((((_6y < 0 ? _6u >>> -_6y : _6u << _6y)) & 1) == 1) { //#26998
                     $_.pivot_column = $_.j; //#26996
                     break; //#26997
                 } //#26997
@@ -34012,19 +34113,19 @@ function bwipp_jabcode() {
                 } //#27005
                 $_.off_index = ~~($_.pivot_column / 32); //#27007
                 $_.off_index1 = $_.pivot_column % 32; //#27008
-                for (var _7E = 0, _7D = $_.nb_pcb - 1; _7E <= _7D; _7E += 1) { //#27021
-                    $_.j = _7E; //#27010
+                for (var _7H = 0, _7G = $_.nb_pcb - 1; _7H <= _7G; _7H += 1) { //#27021
+                    $_.j = _7H; //#27010
                     if ($_.i != $_.j) { //#27020
-                        var _7L = $get($_.matrixH, $_.off_index + ($_.j * $_.offset)); //#27012
-                        var _7N = -(31 - $_.off_index1); //#27013
-                        if ((((_7N < 0 ? _7L >>> -_7N : _7L << _7N)) & 1) == 1) { //#27019
-                            for (var _7Q = 0, _7P = $_.offset - 1; _7Q <= _7P; _7Q += 1) { //#27018
-                                $_.k = _7Q; //#27015
-                                var _7R = $_.matrixH; //#27016
-                                var _7S = $_.offset; //#27016
-                                var _7T = $_.j; //#27016
-                                var _7U = $_.k; //#27016
-                                $put(_7R, (_7S * _7T) + _7U, $xo($get(_7R, (_7S * _7T) + _7U), $get($_.matrixH, ($_.offset * $_.i) + $_.k))); //#27017
+                        var _7O = $get($_.matrixH, $_.off_index + ($_.j * $_.offset)); //#27012
+                        var _7Q = -(31 - $_.off_index1); //#27013
+                        if ((((_7Q < 0 ? _7O >>> -_7Q : _7O << _7Q)) & 1) == 1) { //#27019
+                            for (var _7T = 0, _7S = $_.offset - 1; _7T <= _7S; _7T += 1) { //#27018
+                                $_.k = _7T; //#27015
+                                var _7U = $_.matrixH; //#27016
+                                var _7V = $_.offset; //#27016
+                                var _7W = $_.j; //#27016
+                                var _7X = $_.k; //#27016
+                                $put(_7U, (_7V * _7W) + _7X, $xo($get(_7U, (_7V * _7W) + _7X), $get($_.matrixH, ($_.offset * $_.i) + $_.k))); //#27017
                             } //#27017
                         } //#27017
                     } //#27017
@@ -34036,11 +34137,11 @@ function bwipp_jabcode() {
         } //#27024
         $_.matrix_rank = $_.nb_pcb - $_.zero_lines; //#27028
         $_.loop2 = 0; //#27029
-        for (var _7k = $_.matrix_rank, _7j = $_.nb_pcb - 1; _7k <= _7j; _7k += 1) { //#27049
-            $_.i = _7k; //#27031
+        for (var _7n = $_.matrix_rank, _7m = $_.nb_pcb - 1; _7n <= _7m; _7n += 1) { //#27049
+            $_.i = _7n; //#27031
             if ($get($_.column_arrangement, $_.i) > 0) { //#27048
-                for (var _7q = 0, _7p = $_.nb_pcb - 1; _7q <= _7p; _7q += 1) { //#27047
-                    $_.j = _7q; //#27034
+                for (var _7t = 0, _7s = $_.nb_pcb - 1; _7t <= _7s; _7t += 1) { //#27047
+                    $_.j = _7t; //#27034
                     if ($nt($get($_.processed_column, $_.j))) { //#27046
                         $put($_.column_arrangement, $_.j, $get($_.column_arrangement, $_.i)); //#27036
                         $put($_.column_arrangement, $_.i, 0); //#27037
@@ -34057,8 +34158,8 @@ function bwipp_jabcode() {
             } //#27045
         } //#27045
         $_.loop1 = 0; //#27051
-        for (var _8I = 0, _8H = $_.nb_pcb - 1; _8I <= _8H; _8I += 1) { //#27060
-            $_.kl = _8I; //#27053
+        for (var _8L = 0, _8K = $_.nb_pcb - 1; _8L <= _8K; _8L += 1) { //#27060
+            $_.kl = _8L; //#27053
             if ($nt($get($_.processed_column, $_.kl)) && ($_.loop1 < ($_.loop0 - $_.loop2))) { //#27059
                 $put($_.column_arrangement, $_.kl, $get($_.column_arrangement, $get($_.swap_col, $_.loop1 * 2))); //#27055
                 $put($_.processed_column, $_.kl, true); //#27056
@@ -34067,42 +34168,42 @@ function bwipp_jabcode() {
             } //#27058
         } //#27058
         $_.loop1 = 0; //#27062
-        for (var _8e = 0, _8d = $_.nb_pcb - 1; _8e <= _8d; _8e += 1) { //#27069
-            $_.kl = _8e; //#27064
+        for (var _8h = 0, _8g = $_.nb_pcb - 1; _8h <= _8g; _8h += 1) { //#27069
+            $_.kl = _8h; //#27064
             if ($nt($get($_.processed_column, $_.kl))) { //#27068
                 $put($_.column_arrangement, $_.kl, $get($_.zero_lines_nb, $_.loop1)); //#27066
                 $_.loop1 = $_.loop1 + 1; //#27067
             } //#27067
         } //#27067
-        for (var _8q = 0, _8p = $_.nb_pcb - 1; _8q <= _8p; _8q += 1) { //#27078
-            $_.i = _8q; //#27072
-            for (var _8t = 0, _8s = $_.offset - 1; _8t <= _8s; _8t += 1) { //#27077
-                $_.j = _8t; //#27074
+        for (var _8t = 0, _8s = $_.nb_pcb - 1; _8t <= _8s; _8t += 1) { //#27078
+            $_.i = _8t; //#27072
+            for (var _8w = 0, _8v = $_.offset - 1; _8w <= _8v; _8w += 1) { //#27077
+                $_.j = _8w; //#27074
                 $put($_.matrixA, ($_.i * $_.offset) + $_.j, $get($_.matrixH, $f(($get($_.column_arrangement, $_.i) * $_.offset) + $_.j))); //#27076
             } //#27076
         } //#27076
         $_.tmp = 0; //#27080
-        for (var _97 = 0, _96 = $_.loop0 - 1; _97 <= _96; _97 += 1) { //#27102
-            $_.i = _97; //#27082
-            for (var _9A = 0, _99 = $_.nb_pcb - 1; _9A <= _99; _9A += 1) { //#27101
-                $_.j = _9A; //#27084
-                var _9H = $get($_.matrixA, (~~($get($_.swap_col, $_.i * 2) / 32)) + ($_.j * $_.offset)); //#27085
-                var _9L = -($f(31 - ($get($_.swap_col, $_.i * 2) % 32))); //#27086
-                $_.tmp = (((-(((_9L < 0 ? _9H >>> -_9L : _9H << _9L)) & 1)) ^ $_.tmp) & 1) ^ $_.tmp; //#27087
-                var _9O = $_.matrixA; //#27088
-                var _9R = $get($_.swap_col, $_.i * 2); //#27088
-                var _9S = $_.j; //#27088
-                var _9T = $_.offset; //#27088
-                var _9b = $get($_.matrixA, (~~($get($_.swap_col, ($_.i * 2) + 1) / 32)) + ($_.j * $_.offset)); //#27090
-                var _9f = -($f(31 - ($get($_.swap_col, ($_.i * 2) + 1) % 32))); //#27091
-                var _9q = $f(31 - ($get($_.swap_col, $_.i * 2) % 32)); //#27093
-                $put(_9O, (~~(_9R / 32)) + (_9S * _9T), $get(_9O, (~~(_9R / 32)) + (_9S * _9T)) ^ (((-(((_9f < 0 ? _9b >>> -_9f : _9b << _9f)) & 1)) ^ $get($_.matrixA, (~~($get($_.swap_col, $_.i * 2) / 32)) + ($_.j * $_.offset))) & ((_9q < 0 ? 1 >>> -_9q : 1 << _9q)))); //#27094
-                var _9r = $_.matrixA; //#27095
-                var _9u = $get($_.swap_col, ($_.i * 2) + 1); //#27095
-                var _9v = $_.j; //#27095
-                var _9w = $_.offset; //#27095
-                var _A9 = $f(31 - ($get($_.swap_col, ($_.i * 2) + 1) % 32)); //#27099
-                $put(_9r, (~~(_9u / 32)) + (_9v * _9w), $get(_9r, (~~(_9u / 32)) + (_9v * _9w)) ^ (((-($_.tmp & 1)) ^ $get($_.matrixA, (~~($get($_.swap_col, ($_.i * 2) + 1) / 32)) + ($_.j * $_.offset))) & ((_A9 < 0 ? 1 >>> -_A9 : 1 << _A9)))); //#27100
+        for (var _9A = 0, _99 = $_.loop0 - 1; _9A <= _99; _9A += 1) { //#27102
+            $_.i = _9A; //#27082
+            for (var _9D = 0, _9C = $_.nb_pcb - 1; _9D <= _9C; _9D += 1) { //#27101
+                $_.j = _9D; //#27084
+                var _9K = $get($_.matrixA, (~~($get($_.swap_col, $_.i * 2) / 32)) + ($_.j * $_.offset)); //#27085
+                var _9O = -($f(31 - ($get($_.swap_col, $_.i * 2) % 32))); //#27086
+                $_.tmp = (((-(((_9O < 0 ? _9K >>> -_9O : _9K << _9O)) & 1)) ^ $_.tmp) & 1) ^ $_.tmp; //#27087
+                var _9R = $_.matrixA; //#27088
+                var _9U = $get($_.swap_col, $_.i * 2); //#27088
+                var _9V = $_.j; //#27088
+                var _9W = $_.offset; //#27088
+                var _9e = $get($_.matrixA, (~~($get($_.swap_col, ($_.i * 2) + 1) / 32)) + ($_.j * $_.offset)); //#27090
+                var _9i = -($f(31 - ($get($_.swap_col, ($_.i * 2) + 1) % 32))); //#27091
+                var _9t = $f(31 - ($get($_.swap_col, $_.i * 2) % 32)); //#27093
+                $put(_9R, (~~(_9U / 32)) + (_9V * _9W), $get(_9R, (~~(_9U / 32)) + (_9V * _9W)) ^ (((-(((_9i < 0 ? _9e >>> -_9i : _9e << _9i)) & 1)) ^ $get($_.matrixA, (~~($get($_.swap_col, $_.i * 2) / 32)) + ($_.j * $_.offset))) & ((_9t < 0 ? 1 >>> -_9t : 1 << _9t)))); //#27094
+                var _9u = $_.matrixA; //#27095
+                var _9x = $get($_.swap_col, ($_.i * 2) + 1); //#27095
+                var _9y = $_.j; //#27095
+                var _9z = $_.offset; //#27095
+                var _AC = $f(31 - ($get($_.swap_col, ($_.i * 2) + 1) % 32)); //#27099
+                $put(_9u, (~~(_9x / 32)) + (_9y * _9z), $get(_9u, (~~(_9x / 32)) + (_9y * _9z)) ^ (((-($_.tmp & 1)) ^ $get($_.matrixA, (~~($get($_.swap_col, ($_.i * 2) + 1) / 32)) + ($_.j * $_.offset))) & ((_AC < 0 ? 1 >>> -_AC : 1 << _AC)))); //#27100
             } //#27100
         } //#27100
     }; //#27100
@@ -34112,35 +34213,35 @@ function bwipp_jabcode() {
         $_.effwidth = $_.offset * 32; //#27110
         $_.offset_cap = ~~Math.ceil($_.Pg_sub_block / 32); //#27111
         $_.G = $a($_.offset * $_.Pg_sub_block); //#27112
-        for (var _AL = 0, _AK = ($_.offset * $_.Pg_sub_block) - 1; _AL <= _AK; _AL += 1) { //#27115
-            $put($_.G, _AL, 0); //#27114
+        for (var _AO = 0, _AN = ($_.offset * $_.Pg_sub_block) - 1; _AO <= _AN; _AO += 1) { //#27115
+            $put($_.G, _AO, 0); //#27114
         } //#27114
-        for (var _AP = 0, _AO = $_.pn - 1; _AP <= _AO; _AP += 1) { //#27120
-            $_.i = _AP; //#27117
-            var _AQ = $_.G; //#27118
-            var _AR = $_.Pg_sub_block; //#27118
-            var _AS = $_.pn; //#27118
-            var _AT = $_.i; //#27118
-            var _AU = $_.offset; //#27118
-            var _AV = $_.i; //#27118
-            var _AY = 31 - ($_.i % 32); //#27119
-            $put(_AQ, (((_AR - _AS) + _AT) * _AU) + (~~(_AV / 32)), $get(_AQ, (((_AR - _AS) + _AT) * _AU) + (~~(_AV / 32))) | ((_AY < 0 ? 1 >>> -_AY : 1 << _AY))); //#27119
+        for (var _AS = 0, _AR = $_.pn - 1; _AS <= _AR; _AS += 1) { //#27120
+            $_.i = _AS; //#27117
+            var _AT = $_.G; //#27118
+            var _AU = $_.Pg_sub_block; //#27118
+            var _AV = $_.pn; //#27118
+            var _AW = $_.i; //#27118
+            var _AX = $_.offset; //#27118
+            var _AY = $_.i; //#27118
+            var _Ab = 31 - ($_.i % 32); //#27119
+            $put(_AT, (((_AU - _AV) + _AW) * _AX) + (~~(_AY / 32)), $get(_AT, (((_AU - _AV) + _AW) * _AX) + (~~(_AY / 32))) | ((_Ab < 0 ? 1 >>> -_Ab : 1 << _Ab))); //#27119
         } //#27119
         $_.matrix_index = $_.Pg_sub_block - $_.pn; //#27121
         $_.loop0 = 0; //#27122
-        for (var _Af = 0, _Ae = (($_.Pg_sub_block - $_.pn) * $_.effwidth) - 1; _Af <= _Ae; _Af += 1) { //#27139
-            $_.i = _Af; //#27124
+        for (var _Ai = 0, _Ah = (($_.Pg_sub_block - $_.pn) * $_.effwidth) - 1; _Ai <= _Ah; _Ai += 1) { //#27139
+            $_.i = _Ai; //#27124
             if ($_.matrix_index >= $_.Pg_sub_block) { //#27128
                 $_.loop0 = $_.loop0 + 1; //#27126
                 $_.matrix_index = $_.Pg_sub_block - $_.pn; //#27127
             } //#27127
             if (($_.i % $_.effwidth) < $_.pn) { //#27138
-                var _Ao = $_.G; //#27130
-                var _Ap = $_.i; //#27130
-                var _Av = $get($_.matrixA, (~~($_.matrix_index / 32)) + ($_.offset_cap * $_.loop0)); //#27132
-                var _Ax = -(31 - ($_.matrix_index % 32)); //#27133
-                var _B2 = 31 - ($_.i % 32); //#27135
-                $put(_Ao, ~~(_Ap / 32), $get(_Ao, ~~(_Ap / 32)) ^ (((-(((_Ax < 0 ? _Av >>> -_Ax : _Av << _Ax)) & 1)) ^ $get($_.G, ~~($_.i / 32))) & ((_B2 < 0 ? 1 >>> -_B2 : 1 << _B2)))); //#27136
+                var _Ar = $_.G; //#27130
+                var _As = $_.i; //#27130
+                var _Ay = $get($_.matrixA, (~~($_.matrix_index / 32)) + ($_.offset_cap * $_.loop0)); //#27132
+                var _B0 = -(31 - ($_.matrix_index % 32)); //#27133
+                var _B5 = 31 - ($_.i % 32); //#27135
+                $put(_Ar, ~~(_As / 32), $get(_Ar, ~~(_As / 32)) ^ (((-(((_B0 < 0 ? _Ay >>> -_B0 : _Ay << _B0)) & 1)) ^ $get($_.G, ~~($_.i / 32))) & ((_B5 < 0 ? 1 >>> -_B5 : 1 << _B5)))); //#27136
                 $_.matrix_index = $_.matrix_index + 1; //#27137
             } //#27137
         } //#27137
@@ -34149,12 +34250,12 @@ function bwipp_jabcode() {
         $_.wr = $k[--$j]; //#27145
         $_.wc = $k[--$j]; //#27146
         $k[$j++] = Infinity; //#27147
-        var _B6 = $k[--$j]; //#27147
-        var _B7 = $k[--$j]; //#27147
-        $k[$j++] = _B6; //#27147
-        $forall(_B7, function() { //#27147
-            var _B8 = $k[--$j]; //#27147
-            $k[$j++] = $f(_B8 - 48); //#27147
+        var _B9 = $k[--$j]; //#27147
+        var _BA = $k[--$j]; //#27147
+        $k[$j++] = _B9; //#27147
+        $forall(_BA, function() { //#27147
+            var _BB = $k[--$j]; //#27147
+            $k[$j++] = $f(_BB - 48); //#27147
         }); //#27147
         $_.data = $a(); //#27147
         $_.Pn = $_.data.length; //#27149
@@ -34167,11 +34268,11 @@ function bwipp_jabcode() {
             $k[$j++] = 'encoding_iterations'; //#27156
             $k[$j++] = ~~($_.Pg / $_.Pg_sub_block); //#27156
             if (($_.Pn_sub_block * $_.nb_sub_blocks) < $_.Pn) { //#27156
-                var _BY = $k[--$j]; //#27156
-                $k[$j++] = $f(_BY - 1); //#27156
+                var _Bb = $k[--$j]; //#27156
+                $k[$j++] = $f(_Bb - 1); //#27156
             } //#27156
-            var _BZ = $k[--$j]; //#27156
-            $_[$k[--$j]] = _BZ; //#27156
+            var _Bc = $k[--$j]; //#27156
+            $_[$k[--$j]] = _Bc; //#27156
             $_.createMatrixA(); //#27157
         } else { //#27164
             $_.Pg = $_.Pn * 2; //#27159
@@ -34185,17 +34286,17 @@ function bwipp_jabcode() {
         $_.createGeneratorMatrix(); //#27167
         $_.ecc_encoded_data = $a($_.Pg); //#27169
         $_.offset = ~~(Math.ceil(($_.Pg_sub_block - $_.matrix_rank) / 32)); //#27171
-        for (var _Bk = 0, _Bj = $_.encoding_iterations - 1; _Bk <= _Bj; _Bk += 1) { //#27187
-            $_.iter = _Bk; //#27173
-            for (var _Bn = 0, _Bm = $_.Pg_sub_block - 1; _Bn <= _Bm; _Bn += 1) { //#27186
-                $_.i = _Bn; //#27175
+        for (var _Bn = 0, _Bm = $_.encoding_iterations - 1; _Bn <= _Bm; _Bn += 1) { //#27187
+            $_.iter = _Bn; //#27173
+            for (var _Bq = 0, _Bp = $_.Pg_sub_block - 1; _Bq <= _Bp; _Bq += 1) { //#27186
+                $_.i = _Bq; //#27175
                 $_.temp = 0; //#27176
                 $_.loop0 = 0; //#27177
                 $_.offset_index = $_.offset * $_.i; //#27178
-                for (var _Bv = $_.iter * $_.Pn_sub_block, _Bu = (($_.iter + 1) * $_.Pn_sub_block) - 1; _Bv <= _Bu; _Bv += 1) { //#27184
-                    var _C1 = $get($_.G, $_.offset_index + (~~($_.loop0 / 32))); //#27181
-                    var _C3 = -(31 - ($_.loop0 % 32)); //#27181
-                    $_.temp = ($get($_.data, _Bv) & (((_C3 < 0 ? _C1 >>> -_C3 : _C1 << _C3)) & 1)) ^ $_.temp; //#27182
+                for (var _By = $_.iter * $_.Pn_sub_block, _Bx = (($_.iter + 1) * $_.Pn_sub_block) - 1; _By <= _Bx; _By += 1) { //#27184
+                    var _C4 = $get($_.G, $_.offset_index + (~~($_.loop0 / 32))); //#27181
+                    var _C6 = -(31 - ($_.loop0 % 32)); //#27181
+                    $_.temp = ($get($_.data, _By) & (((_C6 < 0 ? _C4 >>> -_C6 : _C4 << _C6)) & 1)) ^ $_.temp; //#27182
                     $_.loop0 = $_.loop0 + 1; //#27183
                 } //#27183
                 $put($_.ecc_encoded_data, $_.i + ($_.iter * $_.Pg_sub_block), $_.temp); //#27185
@@ -34210,23 +34311,23 @@ function bwipp_jabcode() {
             $_.GaussJordan(); //#27195
             $_.createGeneratorMatrix(); //#27196
             $_.offset = ~~(Math.ceil(($_.Pg_sub_block - $_.matrix_rank) / 32)); //#27197
-            for (var _CS = 0, _CR = $_.Pg_sub_block - 1; _CS <= _CR; _CS += 1) { //#27210
-                $_.i = _CS; //#27199
+            for (var _CV = 0, _CU = $_.Pg_sub_block - 1; _CV <= _CU; _CV += 1) { //#27210
+                $_.i = _CV; //#27199
                 $_.temp = 0; //#27200
                 $_.loop0 = 0; //#27201
                 $_.offset_index = $_.offset * $_.i; //#27202
-                for (var _CY = $_.start, _CX = $_.Pn - 1; _CY <= _CX; _CY += 1) { //#27208
-                    var _Ce = $get($_.G, $_.offset_index + (~~($_.loop0 / 32))); //#27205
-                    var _Cg = -(31 - ($_.loop0 % 32)); //#27205
-                    $_.temp = ($get($_.data, _CY) & (((_Cg < 0 ? _Ce >>> -_Cg : _Ce << _Cg)) & 1)) ^ $_.temp; //#27206
+                for (var _Cb = $_.start, _Ca = $_.Pn - 1; _Cb <= _Ca; _Cb += 1) { //#27208
+                    var _Ch = $get($_.G, $_.offset_index + (~~($_.loop0 / 32))); //#27205
+                    var _Cj = -(31 - ($_.loop0 % 32)); //#27205
+                    $_.temp = ($get($_.data, _Cb) & (((_Cj < 0 ? _Ch >>> -_Cj : _Ch << _Cj)) & 1)) ^ $_.temp; //#27206
                     $_.loop0 = $_.loop0 + 1; //#27207
                 } //#27207
                 $put($_.ecc_encoded_data, $_.i + $_.last_index, $_.temp); //#27209
             } //#27209
         } //#27209
         $_.out = $s($_.Pg); //#27213
-        for (var _Cr = 0, _Cq = $_.Pg - 1; _Cr <= _Cq; _Cr += 1) { //#27217
-            $put($_.out, _Cr, $f($get($_.ecc_encoded_data, _Cr) + 48)); //#27216
+        for (var _Cu = 0, _Ct = $_.Pg - 1; _Cu <= _Ct; _Cu += 1) { //#27217
+            $put($_.out, _Cu, $f($get($_.ecc_encoded_data, _Cu) + 48)); //#27216
         } //#27216
         $k[$j++] = $_.out; //#27218
     }; //#27218
@@ -34235,20 +34336,20 @@ function bwipp_jabcode() {
     $k[$j++] = $_.datawc; //#27223
     $k[$j++] = $_.datawr; //#27223
     $_.ldpc(); //#27223
-    var _Cz = $k[--$j]; //#27223
-    $_[$k[--$j]] = _Cz; //#27223
+    var _D2 = $k[--$j]; //#27223
+    $_[$k[--$j]] = _D2; //#27223
     $_.s0 = 0; //#27226
     $_.s1 = 0; //#27226
     $_.s2 = 3; //#27226
     $_.s3 = 30151; //#27226
-    for (var _D2 = $_.bits.length - 1; _D2 >= 1; _D2 -= 1) { //#27236
-        $_.l = _D2; //#27228
+    for (var _D5 = $_.bits.length - 1; _D5 >= 1; _D5 -= 1) { //#27236
+        $_.l = _D5; //#27228
         $_.lcg64_temper(); //#27229
-        var _D3 = $k[--$j]; //#27230
-        $k[$j++] = _D3; //#27230
-        if (_D3 < 0) { //#27230
-            var _D4 = $k[--$j]; //#27230
-            $k[$j++] = $f((_D4 ^ 2147483648) + 2147483648); //#27230
+        var _D6 = $k[--$j]; //#27230
+        $k[$j++] = _D6; //#27230
+        if (_D6 < 0) { //#27230
+            var _D7 = $k[--$j]; //#27230
+            $k[$j++] = $f((_D7 ^ 2147483648) + 2147483648); //#27230
         } //#27230
         $_.r = ~~(($k[--$j] / 4294967296) * ($_.l + 1)); //#27232
         $put($_.bits, $_.l, $get($_.bits, $_.r)); //#27234
@@ -34257,7 +34358,7 @@ function bwipp_jabcode() {
     $_.tmpbits = $s($_.C); //#27239
     $puti($_.tmpbits, 0, $_.bits); //#27240
     $_.j = $_.bits.length; //#27241
-    for (var _DO = 0, _DP = ~~(($f($f($_.C - $_.j) + 1)) / 2); _DO < _DP; _DO++) { //#27246
+    for (var _DR = 0, _DS = ~~(($f($f($_.C - $_.j) + 1)) / 2); _DR < _DS; _DR++) { //#27246
         $put($_.tmpbits, $_.j, 48); //#27243
         if (($_.j + 1) < $_.C) { //#27244
             $put($_.tmpbits, $_.j + 1, 49); //#27244
@@ -34289,7 +34390,7 @@ function bwipp_jabcode() {
         $_.metacolorindex = $a([$_.bi, $_.gi, $_.mi, $_.yi]); //#27257
         $_.palettelayout = $a([$_.bi, $_.gi, $_.mi, $_.yi]); //#27258
     } else { //#27312
-        var _Dw = new Map([
+        var _Dz = new Map([
             [8, $a([2, 2, 2])],
             [16, $a([4, 2, 2])],
             [32, $a([4, 4, 2])],
@@ -34297,62 +34398,62 @@ function bwipp_jabcode() {
             [128, $a([8, 4, 4])],
             [256, $a([8, 8, 4])]
         ]); //#27267
-        $_.rgbres = $get(_Dw, $_.colors); //#27268
+        $_.rgbres = $get(_Dz, $_.colors); //#27268
         $k[$j++] = 'rvals'; //#27270
         $k[$j++] = $get($_.rgbres, 0); //#27270
         $k[$j++] = Infinity; //#27270
-        var _E1 = $k[--$j]; //#27270
-        var _E3 = $f($k[--$j] - 1); //#27270
-        $k[$j++] = _E1; //#27270
-        $k[$j++] = _E3; //#27270
-        for (var _E5 = 0, _E4 = _E3; _E5 <= _E4; _E5 += 1) { //#27270
-            var _E6 = $k[--$j]; //#27270
-            $k[$j++] = ~~(Math.round(_E5 * (255 / _E6))); //#27270
-            $k[$j++] = _E6; //#27270
+        var _E4 = $k[--$j]; //#27270
+        var _E6 = $f($k[--$j] - 1); //#27270
+        $k[$j++] = _E4; //#27270
+        $k[$j++] = _E6; //#27270
+        for (var _E8 = 0, _E7 = _E6; _E8 <= _E7; _E8 += 1) { //#27270
+            var _E9 = $k[--$j]; //#27270
+            $k[$j++] = ~~(Math.round(_E8 * (255 / _E9))); //#27270
+            $k[$j++] = _E9; //#27270
         } //#27270
         $j--; //#27270
-        var _E7 = $a(); //#27270
-        $_[$k[--$j]] = _E7; //#27270
+        var _EA = $a(); //#27270
+        $_[$k[--$j]] = _EA; //#27270
         $k[$j++] = 'gvals'; //#27271
         $k[$j++] = $get($_.rgbres, 1); //#27271
         $k[$j++] = Infinity; //#27271
-        var _EB = $k[--$j]; //#27271
-        var _ED = $f($k[--$j] - 1); //#27271
-        $k[$j++] = _EB; //#27271
-        $k[$j++] = _ED; //#27271
-        for (var _EF = 0, _EE = _ED; _EF <= _EE; _EF += 1) { //#27271
-            var _EG = $k[--$j]; //#27271
-            $k[$j++] = ~~(Math.round(_EF * (255 / _EG))); //#27271
-            $k[$j++] = _EG; //#27271
+        var _EE = $k[--$j]; //#27271
+        var _EG = $f($k[--$j] - 1); //#27271
+        $k[$j++] = _EE; //#27271
+        $k[$j++] = _EG; //#27271
+        for (var _EI = 0, _EH = _EG; _EI <= _EH; _EI += 1) { //#27271
+            var _EJ = $k[--$j]; //#27271
+            $k[$j++] = ~~(Math.round(_EI * (255 / _EJ))); //#27271
+            $k[$j++] = _EJ; //#27271
         } //#27271
         $j--; //#27271
-        var _EH = $a(); //#27271
-        $_[$k[--$j]] = _EH; //#27271
+        var _EK = $a(); //#27271
+        $_[$k[--$j]] = _EK; //#27271
         $k[$j++] = 'bvals'; //#27272
         $k[$j++] = $get($_.rgbres, 2); //#27272
         $k[$j++] = Infinity; //#27272
-        var _EL = $k[--$j]; //#27272
-        var _EN = $f($k[--$j] - 1); //#27272
-        $k[$j++] = _EL; //#27272
-        $k[$j++] = _EN; //#27272
-        for (var _EP = 0, _EO = _EN; _EP <= _EO; _EP += 1) { //#27272
-            var _EQ = $k[--$j]; //#27272
-            $k[$j++] = ~~(Math.round(_EP * (255 / _EQ))); //#27272
-            $k[$j++] = _EQ; //#27272
+        var _EO = $k[--$j]; //#27272
+        var _EQ = $f($k[--$j] - 1); //#27272
+        $k[$j++] = _EO; //#27272
+        $k[$j++] = _EQ; //#27272
+        for (var _ES = 0, _ER = _EQ; _ES <= _ER; _ES += 1) { //#27272
+            var _ET = $k[--$j]; //#27272
+            $k[$j++] = ~~(Math.round(_ES * (255 / _ET))); //#27272
+            $k[$j++] = _ET; //#27272
         } //#27272
         $j--; //#27272
-        var _ER = $a(); //#27272
-        $_[$k[--$j]] = _ER; //#27272
-        var _ET = $_.colors; //#27274
+        var _EU = $a(); //#27272
+        $_[$k[--$j]] = _EU; //#27272
+        var _EW = $_.colors; //#27274
         $_.palette = new Map; //#27274
-        var _EU = $_.colors; //#27275
-        var _EV = 64; //#27275
-        if (64 > _EU) { //#27275
-            var _ = _EU; //#27275
-            _EU = _EV; //#27275
-            _EV = _; //#27275
+        var _EX = $_.colors; //#27275
+        var _EY = 64; //#27275
+        if (64 > _EX) { //#27275
+            var _ = _EX; //#27275
+            _EX = _EY; //#27275
+            _EY = _; //#27275
         } //#27275
-        $_.palettelayout = $a(_EV); //#27275
+        $_.palettelayout = $a(_EY); //#27275
         $_.i = 0; //#27276
         $_.j = 8; //#27276
         $forall($_.rvals, function() { //#27310
@@ -34361,75 +34462,75 @@ function bwipp_jabcode() {
                 $_.g = $k[--$j]; //#27280
                 $forall($_.bvals, function() { //#27308
                     $_.b = $k[--$j]; //#27282
-                    var _Eh = $strcpy($s(6), "000000"); //#27284
-                    var _Ej = $cvrs($s(6), (($_.r << 16) | ($_.g << 8)) | $_.b, 16); //#27284
-                    $puti(_Eh, 6 - _Ej.length, _Ej); //#27284
-                    $k[$j++] = _Eh; //#27286
+                    var _Ek = $strcpy($s(6), "000000"); //#27284
+                    var _Em = $cvrs($s(6), (($_.r << 16) | ($_.g << 8)) | $_.b, 16); //#27284
+                    $puti(_Ek, 6 - _Em.length, _Em); //#27284
+                    $k[$j++] = _Ek; //#27286
                     $k[$j++] = false; //#27286
-                    if ($eq(_Eh, "000000")) { //#27286
+                    if ($eq(_Ek, "000000")) { //#27286
                         $_.ki = $_.i; //#27286
                         $j--; //#27286
                         $k[$j++] = true; //#27286
                     } //#27286
-                    var _El = $k[--$j]; //#27287
-                    var _Em = $k[--$j]; //#27287
-                    $k[$j++] = _Em; //#27287
-                    $k[$j++] = _El; //#27287
-                    if ($eq(_Em, "0000FF")) { //#27287
+                    var _Eo = $k[--$j]; //#27287
+                    var _Ep = $k[--$j]; //#27287
+                    $k[$j++] = _Ep; //#27287
+                    $k[$j++] = _Eo; //#27287
+                    if ($eq(_Ep, "0000FF")) { //#27287
                         $_.bi = $_.i; //#27287
                         $j--; //#27287
                         $k[$j++] = true; //#27287
                     } //#27287
-                    var _Eo = $k[--$j]; //#27288
-                    var _Ep = $k[--$j]; //#27288
-                    $k[$j++] = _Ep; //#27288
-                    $k[$j++] = _Eo; //#27288
-                    if ($eq(_Ep, "00FF00")) { //#27288
+                    var _Er = $k[--$j]; //#27288
+                    var _Es = $k[--$j]; //#27288
+                    $k[$j++] = _Es; //#27288
+                    $k[$j++] = _Er; //#27288
+                    if ($eq(_Es, "00FF00")) { //#27288
                         $_.gi = $_.i; //#27288
                         $j--; //#27288
                         $k[$j++] = true; //#27288
                     } //#27288
-                    var _Er = $k[--$j]; //#27289
-                    var _Es = $k[--$j]; //#27289
-                    $k[$j++] = _Es; //#27289
-                    $k[$j++] = _Er; //#27289
-                    if ($eq(_Es, "00FFFF")) { //#27289
+                    var _Eu = $k[--$j]; //#27289
+                    var _Ev = $k[--$j]; //#27289
+                    $k[$j++] = _Ev; //#27289
+                    $k[$j++] = _Eu; //#27289
+                    if ($eq(_Ev, "00FFFF")) { //#27289
                         $_.ci = $_.i; //#27289
                         $j--; //#27289
                         $k[$j++] = true; //#27289
                     } //#27289
-                    var _Eu = $k[--$j]; //#27290
-                    var _Ev = $k[--$j]; //#27290
-                    $k[$j++] = _Ev; //#27290
-                    $k[$j++] = _Eu; //#27290
-                    if ($eq(_Ev, "FF0000")) { //#27290
+                    var _Ex = $k[--$j]; //#27290
+                    var _Ey = $k[--$j]; //#27290
+                    $k[$j++] = _Ey; //#27290
+                    $k[$j++] = _Ex; //#27290
+                    if ($eq(_Ey, "FF0000")) { //#27290
                         $_.ri = $_.i; //#27290
                         $j--; //#27290
                         $k[$j++] = true; //#27290
                     } //#27290
-                    var _Ex = $k[--$j]; //#27291
-                    var _Ey = $k[--$j]; //#27291
-                    $k[$j++] = _Ey; //#27291
-                    $k[$j++] = _Ex; //#27291
-                    if ($eq(_Ey, "FF00FF")) { //#27291
+                    var _F0 = $k[--$j]; //#27291
+                    var _F1 = $k[--$j]; //#27291
+                    $k[$j++] = _F1; //#27291
+                    $k[$j++] = _F0; //#27291
+                    if ($eq(_F1, "FF00FF")) { //#27291
                         $_.mi = $_.i; //#27291
                         $j--; //#27291
                         $k[$j++] = true; //#27291
                     } //#27291
-                    var _F0 = $k[--$j]; //#27292
-                    var _F1 = $k[--$j]; //#27292
-                    $k[$j++] = _F1; //#27292
-                    $k[$j++] = _F0; //#27292
-                    if ($eq(_F1, "FFFF00")) { //#27292
+                    var _F3 = $k[--$j]; //#27292
+                    var _F4 = $k[--$j]; //#27292
+                    $k[$j++] = _F4; //#27292
+                    $k[$j++] = _F3; //#27292
+                    if ($eq(_F4, "FFFF00")) { //#27292
                         $_.yi = $_.i; //#27292
                         $j--; //#27292
                         $k[$j++] = true; //#27292
                     } //#27292
-                    var _F3 = $k[--$j]; //#27293
-                    var _F4 = $k[--$j]; //#27293
-                    $k[$j++] = _F4; //#27293
-                    $k[$j++] = _F3; //#27293
-                    if ($eq(_F4, "FFFFFF")) { //#27293
+                    var _F6 = $k[--$j]; //#27293
+                    var _F7 = $k[--$j]; //#27293
+                    $k[$j++] = _F7; //#27293
+                    $k[$j++] = _F6; //#27293
+                    if ($eq(_F7, "FFFFFF")) { //#27293
                         $_.wi = $_.i; //#27293
                         $j--; //#27293
                         $k[$j++] = true; //#27293
@@ -34449,14 +34550,14 @@ function bwipp_jabcode() {
         $_.metacolorindex = $a([$_.ki, $_.bi, $_.gi, $_.ci, $_.ri, $_.mi, $_.yi, $_.wi]); //#27312
     } //#27312
     $k[$j++] = Infinity; //#27316
-    for (var _Fp = 0, _Fq = $_.rows * $_.cols; _Fp < _Fq; _Fp++) { //#27316
+    for (var _Fs = 0, _Ft = $_.rows * $_.cols; _Fs < _Ft; _Fs++) { //#27316
         $k[$j++] = -1; //#27316
     } //#27316
     $_.pixs = $a(); //#27316
     $_.jmv = function() {
-        var _Ft = $k[--$j]; //#27317
-        var _Fu = $k[--$j]; //#27317
-        $k[$j++] = $f(_Fu + (_Ft * $_.cols)); //#27317
+        var _Fw = $k[--$j]; //#27317
+        var _Fx = $k[--$j]; //#27317
+        $k[$j++] = $f(_Fx + (_Fw * $_.cols)); //#27317
     }; //#27317
     if (!$_.slave) { //#27347
         $_.fpat = $a([$a([1, 1, 1, 0, 0]), $a([1, 2, 2, 0, 0]), $a([1, 2, 1, 2, 1]), $a([0, 0, 2, 2, 1]), $a([0, 0, 1, 1, 1])]); //#27327
@@ -34465,35 +34566,35 @@ function bwipp_jabcode() {
         $_.fpat = $a([$a([0, 0, 0, 0, 0]), $a([0, 2, 2, 0, 0]), $a([0, 2, 1, 2, 0]), $a([0, 0, 2, 2, 0]), $a([0, 0, 0, 0, 0])]); //#27341
         $_.fmap = $a([$a([-1, $_.ki, $_.wi]), $a([-1, $_.ki, $_.wi]), $a([-1, $_.ki, $_.wi]), $a([-1, $_.ki, $_.wi])]); //#27347
     } //#27347
-    for (var _GY = 0; _GY <= 4; _GY += 1) { //#27359
-        $_.y = _GY; //#27350
-        for (var _GZ = 0; _GZ <= 4; _GZ += 1) { //#27358
-            $_.x = _GZ; //#27352
+    for (var _Gb = 0; _Gb <= 4; _Gb += 1) { //#27359
+        $_.y = _Gb; //#27350
+        for (var _Gc = 0; _Gc <= 4; _Gc += 1) { //#27358
+            $_.x = _Gc; //#27352
             $_.fpb = $get($get($_.fpat, $_.y), $_.x); //#27353
             $k[$j++] = $_.pixs; //#27354
             $k[$j++] = $_.x + 1; //#27354
             $k[$j++] = $_.y + 1; //#27354
             $_.jmv(); //#27354
-            var _Gm = $k[--$j]; //#27354
-            $put($k[--$j], _Gm, $get($get($_.fmap, 0), $_.fpb)); //#27354
+            var _Gp = $k[--$j]; //#27354
+            $put($k[--$j], _Gp, $get($get($_.fmap, 0), $_.fpb)); //#27354
             $k[$j++] = $_.pixs; //#27355
             $k[$j++] = $_.x + 1; //#27355
             $k[$j++] = $f($f($_.rows - $_.y) - 2); //#27355
             $_.jmv(); //#27355
-            var _Gw = $k[--$j]; //#27355
-            $put($k[--$j], _Gw, $get($get($_.fmap, 1), $_.fpb)); //#27355
+            var _Gz = $k[--$j]; //#27355
+            $put($k[--$j], _Gz, $get($get($_.fmap, 1), $_.fpb)); //#27355
             $k[$j++] = $_.pixs; //#27356
             $k[$j++] = $f($f($_.x + $_.cols) - 6); //#27356
             $k[$j++] = $_.y + 1; //#27356
             $_.jmv(); //#27356
-            var _H6 = $k[--$j]; //#27356
-            $put($k[--$j], _H6, $get($get($_.fmap, 2), $_.fpb)); //#27356
+            var _H9 = $k[--$j]; //#27356
+            $put($k[--$j], _H9, $get($get($_.fmap, 2), $_.fpb)); //#27356
             $k[$j++] = $_.pixs; //#27357
             $k[$j++] = $f($f($_.x + $_.cols) - 6); //#27357
             $k[$j++] = $f($f($_.rows - $_.y) - 2); //#27357
             $_.jmv(); //#27357
-            var _HH = $k[--$j]; //#27357
-            $put($k[--$j], _HH, $get($get($_.fmap, 3), $_.fpb)); //#27357
+            var _HK = $k[--$j]; //#27357
+            $put($k[--$j], _HK, $get($get($_.fmap, 3), $_.fpb)); //#27357
         } //#27357
     } //#27357
     $_.algnpat0 = $a([$a([$_.ki, $_.ki, -1]), $a([$_.ki, $_.wi, $_.ki]), $a([-1, $_.ki, $_.ki])]); //#27366
@@ -34502,8 +34603,8 @@ function bwipp_jabcode() {
     $_.algnrpos = $a([3, 17]); //#27373
     if ($_.num > 0) { //#27376
         $k[$j++] = Infinity; //#27375
-        for (var _Hk = 0, _Hj = $_.num; _Hk <= _Hj; _Hk += 1) { //#27375
-            $k[$j++] = (~~(_Hk * ($f($_.cols - 7) / $_.num))) + 3; //#27375
+        for (var _Hn = 0, _Hm = $_.num; _Hn <= _Hm; _Hn += 1) { //#27375
+            $k[$j++] = (~~(_Hn * ($f($_.cols - 7) / $_.num))) + 3; //#27375
         } //#27375
         $_.algnrpos = $a(); //#27375
     } //#27375
@@ -34511,8 +34612,8 @@ function bwipp_jabcode() {
     $_.algncpos = $a([3, 17]); //#27378
     if ($_.num > 0) { //#27381
         $k[$j++] = Infinity; //#27380
-        for (var _Ht = 0, _Hs = $_.num; _Ht <= _Hs; _Ht += 1) { //#27380
-            $k[$j++] = (~~(_Ht * ($f($_.rows - 7) / $_.num))) + 3; //#27380
+        for (var _Hw = 0, _Hv = $_.num; _Hw <= _Hv; _Hw += 1) { //#27380
+            $k[$j++] = (~~(_Hw * ($f($_.rows - 7) / $_.num))) + 3; //#27380
         } //#27380
         $_.algncpos = $a(); //#27380
     } //#27380
@@ -34520,31 +34621,31 @@ function bwipp_jabcode() {
         $_.pp = $k[--$j]; //#27383
         $_.py = $k[--$j]; //#27384
         $_.px = $k[--$j]; //#27385
-        for (var _I0 = 0; _I0 <= 2; _I0 += 1) { //#27392
-            $_.pb = _I0; //#27387
-            for (var _I1 = 0; _I1 <= 2; _I1 += 1) { //#27391
-                $_.pa = _I1; //#27389
+        for (var _I3 = 0; _I3 <= 2; _I3 += 1) { //#27392
+            $_.pb = _I3; //#27387
+            for (var _I4 = 0; _I4 <= 2; _I4 += 1) { //#27391
+                $_.pa = _I4; //#27389
                 $k[$j++] = $_.pixs; //#27390
                 $k[$j++] = $f($_.px + $_.pa); //#27390
                 $k[$j++] = $f($_.py + $_.pb); //#27390
                 $_.jmv(); //#27390
-                var _IC = $k[--$j]; //#27390
-                $put($k[--$j], _IC, $get($get($_.pp, $_.pb), $_.pa)); //#27390
+                var _IF = $k[--$j]; //#27390
+                $put($k[--$j], _IF, $get($get($_.pp, $_.pb), $_.pa)); //#27390
             } //#27390
         } //#27390
     }; //#27390
-    for (var _IG = 0, _IF = $_.algncpos.length - 1; _IG <= _IF; _IG += 1) { //#27404
-        $_.j = _IG; //#27395
+    for (var _IJ = 0, _II = $_.algncpos.length - 1; _IJ <= _II; _IJ += 1) { //#27404
+        $_.j = _IJ; //#27395
         $_.y = $get($_.algncpos, $_.j); //#27396
-        for (var _IM = 0, _IL = $_.algnrpos.length - 1; _IM <= _IL; _IM += 1) { //#27403
-            $_.i = _IM; //#27398
+        for (var _IP = 0, _IO = $_.algnrpos.length - 1; _IP <= _IO; _IP += 1) { //#27403
+            $_.i = _IP; //#27398
             $_.x = $get($_.algnrpos, $_.i); //#27399
             $k[$j++] = $_.pixs; //#27400
             $k[$j++] = $_.x; //#27400
             $k[$j++] = $_.y; //#27400
             $_.jmv(); //#27400
-            var _IT = $k[--$j]; //#27400
-            if ($get($k[--$j], _IT) == -1) { //#27402
+            var _IW = $k[--$j]; //#27400
+            if ($get($k[--$j], _IW) == -1) { //#27402
                 $k[$j++] = $f($_.x - 1); //#27401
                 $k[$j++] = $f($_.y - 1); //#27401
                 if ((($_.i + $_.j) % 2) == 0) { //#27401
@@ -34557,9 +34658,9 @@ function bwipp_jabcode() {
         } //#27401
     } //#27401
     if (!$_.slave) { //#27456
-        var _JL = $a([$a([6, 1]), $a([6, 2]), $a([6, 3]), $a([6, 4]), $a([6, 5]), $a([6, 6]), $a([5, 6]), $a([4, 6]), $a([3, 6]), $a([2, 6]), $a([1, 6]), $a([7, 1]), $a([7, 2]), $a([7, 3]), $a([7, 4]), $a([7, 5]), $a([7, 6]), $a([7, 7]), $a([6, 7]), $a([5, 7]), $a([4, 7]), $a([3, 7]), $a([2, 7]), $a([1, 7]), $a([8, 1]), $a([8, 2]), $a([8, 3]), $a([8, 4]), $a([8, 5]), $a([8, 6]), $a([8, 7]), $a([8, 8]), $a([7, 8]), $a([6, 8]), $a([5, 8]), $a([4, 8]), $a([3, 8]), $a([2, 8]), $a([1, 8]), $a([9, 1]), $a([9, 2]), $a([9, 3]), $a([9, 4]), $a([9, 5])]); //#27415
-        for (var _JM = 0, _JN = _JL.length; _JM < _JN; _JM++) { //#27419
-            $aload($get(_JL, _JM)); //#27417
+        var _JO = $a([$a([6, 1]), $a([6, 2]), $a([6, 3]), $a([6, 4]), $a([6, 5]), $a([6, 6]), $a([5, 6]), $a([4, 6]), $a([3, 6]), $a([2, 6]), $a([1, 6]), $a([7, 1]), $a([7, 2]), $a([7, 3]), $a([7, 4]), $a([7, 5]), $a([7, 6]), $a([7, 7]), $a([6, 7]), $a([5, 7]), $a([4, 7]), $a([3, 7]), $a([2, 7]), $a([1, 7]), $a([8, 1]), $a([8, 2]), $a([8, 3]), $a([8, 4]), $a([8, 5]), $a([8, 6]), $a([8, 7]), $a([8, 8]), $a([7, 8]), $a([6, 8]), $a([5, 8]), $a([4, 8]), $a([3, 8]), $a([2, 8]), $a([1, 8]), $a([9, 1]), $a([9, 2]), $a([9, 3]), $a([9, 4]), $a([9, 5])]); //#27415
+        for (var _JP = 0, _JQ = _JO.length; _JP < _JQ; _JP++) { //#27419
+            $aload($get(_JO, _JP)); //#27417
             $_.y = $k[--$j]; //#27417
             $_.x = $k[--$j]; //#27417
             $k[$j++] = $a([$_.x, $_.y]); //#27418
@@ -34573,299 +34674,299 @@ function bwipp_jabcode() {
         $_.palettemap2 = $a([$a([-4, -5]), $a([-4, -4]), $a([-5, -5]), $a([-5, -4]), $a([-2, -2]), $a([-2, -1]), $a([-1, -2]), $a([-1, -1]), $a([2, -5]), $a([2, -4]), $a([1, -5]), $a([1, -4]), $a([4, -2]), $a([4, -1]), $a([5, -2]), $a([5, -1])]); //#27430
     } else { //#27456
         $k[$j++] = Infinity; //#27436
-        for (var _KD = 1; _KD <= 19; _KD += 1) { //#27440
-            $_.i = _KD; //#27438
+        for (var _KG = 1; _KG <= 19; _KG += 1) { //#27440
+            $_.i = _KG; //#27438
             $k[$j++] = $a([0, $_.i]); //#27439
             $k[$j++] = $a([1, $_.i]); //#27439
         } //#27439
-        for (var _KI = 5; _KI <= 12; _KI += 1) { //#27444
-            $_.i = _KI; //#27442
+        for (var _KL = 5; _KL <= 12; _KL += 1) { //#27444
+            $_.i = _KL; //#27442
             $k[$j++] = $a([2, $_.i]); //#27443
             $k[$j++] = $a([3, $_.i]); //#27443
         } //#27443
         $_.metadatamap = $a(); //#27443
         $k[$j++] = Infinity; //#27447
-        for (var _KO = 5; _KO <= 12; _KO += 1) { //#27448
-            $k[$j++] = _KO; //#27448
-            $k[$j++] = Infinity; //#27448
-            var _KP = $k[--$j]; //#27448
-            var _KQ = $k[--$j]; //#27448
-            $k[$j++] = _KP; //#27448
-            $k[$j++] = 4; //#27448
-            $k[$j++] = _KQ; //#27448
-            var _KR = $a(); //#27448
+        for (var _KR = 5; _KR <= 12; _KR += 1) { //#27448
             $k[$j++] = _KR; //#27448
+            $k[$j++] = Infinity; //#27448
+            var _KS = $k[--$j]; //#27448
+            var _KT = $k[--$j]; //#27448
+            $k[$j++] = _KS; //#27448
+            $k[$j++] = 4; //#27448
+            $k[$j++] = _KT; //#27448
+            var _KU = $a(); //#27448
+            $k[$j++] = _KU; //#27448
         } //#27448
-        for (var _KS = 12; _KS >= 5; _KS -= 1) { //#27449
-            $k[$j++] = _KS; //#27449
-            $k[$j++] = Infinity; //#27449
-            var _KT = $k[--$j]; //#27449
-            var _KU = $k[--$j]; //#27449
-            $k[$j++] = _KT; //#27449
-            $k[$j++] = 5; //#27449
-            $k[$j++] = _KU; //#27449
-            var _KV = $a(); //#27449
+        for (var _KV = 12; _KV >= 5; _KV -= 1) { //#27449
             $k[$j++] = _KV; //#27449
+            $k[$j++] = Infinity; //#27449
+            var _KW = $k[--$j]; //#27449
+            var _KX = $k[--$j]; //#27449
+            $k[$j++] = _KW; //#27449
+            $k[$j++] = 5; //#27449
+            $k[$j++] = _KX; //#27449
+            var _KY = $a(); //#27449
+            $k[$j++] = _KY; //#27449
         } //#27449
-        for (var _KW = 5; _KW <= 12; _KW += 1) { //#27450
-            $k[$j++] = _KW; //#27450
-            $k[$j++] = Infinity; //#27450
-            var _KX = $k[--$j]; //#27450
-            var _KY = $k[--$j]; //#27450
-            $k[$j++] = _KX; //#27450
-            $k[$j++] = 6; //#27450
-            $k[$j++] = _KY; //#27450
-            var _KZ = $a(); //#27450
+        for (var _KZ = 5; _KZ <= 12; _KZ += 1) { //#27450
             $k[$j++] = _KZ; //#27450
+            $k[$j++] = Infinity; //#27450
+            var _Ka = $k[--$j]; //#27450
+            var _Kb = $k[--$j]; //#27450
+            $k[$j++] = _Ka; //#27450
+            $k[$j++] = 6; //#27450
+            $k[$j++] = _Kb; //#27450
+            var _Kc = $a(); //#27450
+            $k[$j++] = _Kc; //#27450
         } //#27450
-        for (var _Ka = 12; _Ka >= 5; _Ka -= 1) { //#27451
-            $k[$j++] = _Ka; //#27451
-            $k[$j++] = Infinity; //#27451
-            var _Kb = $k[--$j]; //#27451
-            var _Kc = $k[--$j]; //#27451
-            $k[$j++] = _Kb; //#27451
-            $k[$j++] = 7; //#27451
-            $k[$j++] = _Kc; //#27451
-            var _Kd = $a(); //#27451
+        for (var _Kd = 12; _Kd >= 5; _Kd -= 1) { //#27451
             $k[$j++] = _Kd; //#27451
+            $k[$j++] = Infinity; //#27451
+            var _Ke = $k[--$j]; //#27451
+            var _Kf = $k[--$j]; //#27451
+            $k[$j++] = _Ke; //#27451
+            $k[$j++] = 7; //#27451
+            $k[$j++] = _Kf; //#27451
+            var _Kg = $a(); //#27451
+            $k[$j++] = _Kg; //#27451
         } //#27451
         $_.palettemap1 = $a(); //#27451
         $k[$j++] = Infinity; //#27454
-        var _Kf = $_.palettemap1; //#27455
-        for (var _Kg = 0, _Kh = _Kf.length; _Kg < _Kh; _Kg++) { //#27455
-            $k[$j++] = $get(_Kf, _Kg); //#27455
+        var _Ki = $_.palettemap1; //#27455
+        for (var _Kj = 0, _Kk = _Ki.length; _Kj < _Kk; _Kj++) { //#27455
+            $k[$j++] = $get(_Ki, _Kj); //#27455
             $k[$j++] = Infinity; //#27455
-            var _Kj = $k[--$j]; //#27455
-            var _Kk = $k[--$j]; //#27455
-            $k[$j++] = _Kj; //#27455
-            $aload(_Kk); //#27455
-            var _Kl = $k[--$j]; //#27455
             var _Km = $k[--$j]; //#27455
-            $k[$j++] = -_Km; //#27455
-            $k[$j++] = -_Kl; //#27455
-            var _Kn = $a(); //#27455
-            $k[$j++] = _Kn; //#27455
+            var _Kn = $k[--$j]; //#27455
+            $k[$j++] = _Km; //#27455
+            $aload(_Kn); //#27455
+            var _Ko = $k[--$j]; //#27455
+            var _Kp = $k[--$j]; //#27455
+            $k[$j++] = -_Kp; //#27455
+            $k[$j++] = -_Ko; //#27455
+            var _Kq = $a(); //#27455
+            $k[$j++] = _Kq; //#27455
         } //#27455
         $_.palettemap2 = $a(); //#27455
     } //#27456
-    var _Kp = $_.metadatamap; //#27461
-    for (var _Kq = 0, _Kr = _Kp.length; _Kq < _Kr; _Kq++) { //#27465
-        var _Ks = $get(_Kp, _Kq); //#27465
-        var _Kt = $get(_Ks, 0); //#27462
-        $k[$j++] = _Ks; //#27462
-        $k[$j++] = _Kt; //#27462
-        if (_Kt < 0) { //#27462
-            var _Kv = $k[--$j]; //#27462
-            var _Kw = $k[--$j]; //#27462
-            $put(_Kw, 0, $f($f(_Kv + $_.cols) - 1)); //#27462
-            $k[$j++] = _Kw; //#27462
+    var _Ks = $_.metadatamap; //#27461
+    for (var _Kt = 0, _Ku = _Ks.length; _Kt < _Ku; _Kt++) { //#27465
+        var _Kv = $get(_Ks, _Kt); //#27465
+        var _Kw = $get(_Kv, 0); //#27462
+        $k[$j++] = _Kv; //#27462
+        $k[$j++] = _Kw; //#27462
+        if (_Kw < 0) { //#27462
+            var _Ky = $k[--$j]; //#27462
+            var _Kz = $k[--$j]; //#27462
+            $put(_Kz, 0, $f($f(_Ky + $_.cols) - 1)); //#27462
+            $k[$j++] = _Kz; //#27462
         } else { //#27462
             $j--; //#27462
         } //#27462
-        var _Kx = $k[--$j]; //#27463
-        var _Ky = $get(_Kx, 1); //#27463
-        $k[$j++] = _Kx; //#27463
-        $k[$j++] = _Ky; //#27463
-        if (_Ky < 0) { //#27463
-            var _L0 = $k[--$j]; //#27463
-            var _L1 = $k[--$j]; //#27463
-            $put(_L1, 1, $f($f(_L0 + $_.rows) - 1)); //#27463
-            $k[$j++] = _L1; //#27463
+        var _L0 = $k[--$j]; //#27463
+        var _L1 = $get(_L0, 1); //#27463
+        $k[$j++] = _L0; //#27463
+        $k[$j++] = _L1; //#27463
+        if (_L1 < 0) { //#27463
+            var _L3 = $k[--$j]; //#27463
+            var _L4 = $k[--$j]; //#27463
+            $put(_L4, 1, $f($f(_L3 + $_.rows) - 1)); //#27463
+            $k[$j++] = _L4; //#27463
         } else { //#27463
             $j--; //#27463
         } //#27463
         $j--; //#27464
     } //#27464
-    var _L2 = $_.palettemap1; //#27466
-    for (var _L3 = 0, _L4 = _L2.length; _L3 < _L4; _L3++) { //#27470
-        var _L5 = $get(_L2, _L3); //#27470
-        var _L6 = $get(_L5, 0); //#27467
-        $k[$j++] = _L5; //#27467
-        $k[$j++] = _L6; //#27467
-        if (_L6 < 0) { //#27467
-            var _L8 = $k[--$j]; //#27467
-            var _L9 = $k[--$j]; //#27467
-            $put(_L9, 0, $f($f(_L8 + $_.cols) - 1)); //#27467
-            $k[$j++] = _L9; //#27467
+    var _L5 = $_.palettemap1; //#27466
+    for (var _L6 = 0, _L7 = _L5.length; _L6 < _L7; _L6++) { //#27470
+        var _L8 = $get(_L5, _L6); //#27470
+        var _L9 = $get(_L8, 0); //#27467
+        $k[$j++] = _L8; //#27467
+        $k[$j++] = _L9; //#27467
+        if (_L9 < 0) { //#27467
+            var _LB = $k[--$j]; //#27467
+            var _LC = $k[--$j]; //#27467
+            $put(_LC, 0, $f($f(_LB + $_.cols) - 1)); //#27467
+            $k[$j++] = _LC; //#27467
         } else { //#27467
             $j--; //#27467
         } //#27467
-        var _LA = $k[--$j]; //#27468
-        var _LB = $get(_LA, 1); //#27468
-        $k[$j++] = _LA; //#27468
-        $k[$j++] = _LB; //#27468
-        if (_LB < 0) { //#27468
-            var _LD = $k[--$j]; //#27468
-            var _LE = $k[--$j]; //#27468
-            $put(_LE, 1, $f($f(_LD + $_.rows) - 1)); //#27468
-            $k[$j++] = _LE; //#27468
+        var _LD = $k[--$j]; //#27468
+        var _LE = $get(_LD, 1); //#27468
+        $k[$j++] = _LD; //#27468
+        $k[$j++] = _LE; //#27468
+        if (_LE < 0) { //#27468
+            var _LG = $k[--$j]; //#27468
+            var _LH = $k[--$j]; //#27468
+            $put(_LH, 1, $f($f(_LG + $_.rows) - 1)); //#27468
+            $k[$j++] = _LH; //#27468
         } else { //#27468
             $j--; //#27468
         } //#27468
         $j--; //#27469
     } //#27469
-    var _LF = $_.palettemap2; //#27471
-    for (var _LG = 0, _LH = _LF.length; _LG < _LH; _LG++) { //#27475
-        var _LI = $get(_LF, _LG); //#27475
-        var _LJ = $get(_LI, 0); //#27472
-        $k[$j++] = _LI; //#27472
-        $k[$j++] = _LJ; //#27472
-        if (_LJ < 0) { //#27472
-            var _LL = $k[--$j]; //#27472
-            var _LM = $k[--$j]; //#27472
-            $put(_LM, 0, $f($f(_LL + $_.cols) - 1)); //#27472
-            $k[$j++] = _LM; //#27472
+    var _LI = $_.palettemap2; //#27471
+    for (var _LJ = 0, _LK = _LI.length; _LJ < _LK; _LJ++) { //#27475
+        var _LL = $get(_LI, _LJ); //#27475
+        var _LM = $get(_LL, 0); //#27472
+        $k[$j++] = _LL; //#27472
+        $k[$j++] = _LM; //#27472
+        if (_LM < 0) { //#27472
+            var _LO = $k[--$j]; //#27472
+            var _LP = $k[--$j]; //#27472
+            $put(_LP, 0, $f($f(_LO + $_.cols) - 1)); //#27472
+            $k[$j++] = _LP; //#27472
         } else { //#27472
             $j--; //#27472
         } //#27472
-        var _LN = $k[--$j]; //#27473
-        var _LO = $get(_LN, 1); //#27473
-        $k[$j++] = _LN; //#27473
-        $k[$j++] = _LO; //#27473
-        if (_LO < 0) { //#27473
-            var _LQ = $k[--$j]; //#27473
-            var _LR = $k[--$j]; //#27473
-            $put(_LR, 1, $f($f(_LQ + $_.rows) - 1)); //#27473
-            $k[$j++] = _LR; //#27473
+        var _LQ = $k[--$j]; //#27473
+        var _LR = $get(_LQ, 1); //#27473
+        $k[$j++] = _LQ; //#27473
+        $k[$j++] = _LR; //#27473
+        if (_LR < 0) { //#27473
+            var _LT = $k[--$j]; //#27473
+            var _LU = $k[--$j]; //#27473
+            $put(_LU, 1, $f($f(_LT + $_.rows) - 1)); //#27473
+            $k[$j++] = _LU; //#27473
         } else { //#27473
             $j--; //#27473
         } //#27473
         $j--; //#27474
     } //#27474
-    for (var _LU = 0, _LT = $f($_.nummetamodules - 1); _LU <= _LT; _LU += 1) { //#27480
+    for (var _LX = 0, _LW = $f($_.nummetamodules - 1); _LX <= _LW; _LX += 1) { //#27480
         $k[$j++] = $_.pixs; //#27479
-        $aload($get($_.metadatamap, _LU)); //#27479
+        $aload($get($_.metadatamap, _LX)); //#27479
         $_.jmv(); //#27479
-        var _LY = $k[--$j]; //#27479
-        $put($k[--$j], _LY, 0); //#27479
+        var _Lb = $k[--$j]; //#27479
+        $put($k[--$j], _Lb, 0); //#27479
     } //#27479
     if (!$_.slave) { //#27493
-        var _Lb = $_.colors; //#27485
-        var _Lc = 16; //#27485
-        if (16 > _Lb) { //#27485
-            var _ = _Lb; //#27485
-            _Lb = _Lc; //#27485
-            _Lc = _; //#27485
+        var _Le = $_.colors; //#27485
+        var _Lf = 16; //#27485
+        if (16 > _Le) { //#27485
+            var _ = _Le; //#27485
+            _Le = _Lf; //#27485
+            _Lf = _; //#27485
         } //#27485
-        for (var _Le = 0, _Ld = _Lc - 1; _Le <= _Ld; _Le += 1) { //#27490
-            $_.i = _Le; //#27486
-            var _Lh = $get($_.palettelayout, $_.i); //#27487
-            $k[$j++] = _Lh; //#27488
+        for (var _Lh = 0, _Lg = _Lf - 1; _Lh <= _Lg; _Lh += 1) { //#27490
+            $_.i = _Lh; //#27486
+            var _Lk = $get($_.palettelayout, $_.i); //#27487
+            $k[$j++] = _Lk; //#27488
             $k[$j++] = $_.pixs; //#27488
-            $k[$j++] = _Lh; //#27488
+            $k[$j++] = _Lk; //#27488
             $aload($get($_.palettemap1, $_.i)); //#27488
             $_.jmv(); //#27488
-            var _Lm = $k[--$j]; //#27488
-            var _Ln = $k[--$j]; //#27488
-            $put($k[--$j], _Lm, _Ln); //#27488
-            var _Lq = $k[--$j]; //#27489
+            var _Lp = $k[--$j]; //#27488
+            var _Lq = $k[--$j]; //#27488
+            $put($k[--$j], _Lp, _Lq); //#27488
+            var _Lt = $k[--$j]; //#27489
             $k[$j++] = $_.pixs; //#27489
-            $k[$j++] = _Lq; //#27489
+            $k[$j++] = _Lt; //#27489
             $aload($get($_.palettemap2, $_.i)); //#27489
             $_.jmv(); //#27489
-            var _Lu = $k[--$j]; //#27489
-            var _Lv = $k[--$j]; //#27489
-            $put($k[--$j], _Lu, _Lv); //#27489
+            var _Lx = $k[--$j]; //#27489
+            var _Ly = $k[--$j]; //#27489
+            $put($k[--$j], _Lx, _Ly); //#27489
         } //#27489
         $_.i = 16; //#27491
     } else { //#27493
         $_.i = 0; //#27493
     } //#27493
     $_.j = $_.nummetamodules; //#27497
-    for (var _M1 = $_.i, _M0 = $_.palettelayout.length - 1; _M1 <= _M0; _M1 += 2) { //#27507
-        $_.i = _M1; //#27499
-        var _M4 = $get($_.palettelayout, $_.i); //#27500
-        $k[$j++] = _M4; //#27501
+    for (var _M4 = $_.i, _M3 = $_.palettelayout.length - 1; _M4 <= _M3; _M4 += 2) { //#27507
+        $_.i = _M4; //#27499
+        var _M7 = $get($_.palettelayout, $_.i); //#27500
+        $k[$j++] = _M7; //#27501
         $k[$j++] = $_.pixs; //#27501
-        $k[$j++] = _M4; //#27501
+        $k[$j++] = _M7; //#27501
         $aload($get($_.metadatamap, $_.j)); //#27501
         $_.jmv(); //#27501
-        var _M9 = $k[--$j]; //#27501
-        var _MA = $k[--$j]; //#27501
-        $put($k[--$j], _M9, _MA); //#27501
-        var _MD = $k[--$j]; //#27502
+        var _MC = $k[--$j]; //#27501
+        var _MD = $k[--$j]; //#27501
+        $put($k[--$j], _MC, _MD); //#27501
+        var _MG = $k[--$j]; //#27502
         $k[$j++] = $_.pixs; //#27502
-        $k[$j++] = _MD; //#27502
+        $k[$j++] = _MG; //#27502
         $aload($get($_.metadatamap, $f($_.j + 2))); //#27502
         $_.jmv(); //#27502
-        var _MH = $k[--$j]; //#27502
-        var _MI = $k[--$j]; //#27502
-        $put($k[--$j], _MH, _MI); //#27502
-        var _MM = $get($_.palettelayout, $_.i + 1); //#27503
-        $k[$j++] = _MM; //#27504
+        var _MK = $k[--$j]; //#27502
+        var _ML = $k[--$j]; //#27502
+        $put($k[--$j], _MK, _ML); //#27502
+        var _MP = $get($_.palettelayout, $_.i + 1); //#27503
+        $k[$j++] = _MP; //#27504
         $k[$j++] = $_.pixs; //#27504
-        $k[$j++] = _MM; //#27504
+        $k[$j++] = _MP; //#27504
         $aload($get($_.metadatamap, $f($_.j + 1))); //#27504
         $_.jmv(); //#27504
-        var _MR = $k[--$j]; //#27504
-        var _MS = $k[--$j]; //#27504
-        $put($k[--$j], _MR, _MS); //#27504
-        var _MV = $k[--$j]; //#27505
+        var _MU = $k[--$j]; //#27504
+        var _MV = $k[--$j]; //#27504
+        $put($k[--$j], _MU, _MV); //#27504
+        var _MY = $k[--$j]; //#27505
         $k[$j++] = $_.pixs; //#27505
-        $k[$j++] = _MV; //#27505
+        $k[$j++] = _MY; //#27505
         $aload($get($_.metadatamap, $f($_.j + 3))); //#27505
         $_.jmv(); //#27505
-        var _MZ = $k[--$j]; //#27505
-        var _Ma = $k[--$j]; //#27505
-        $put($k[--$j], _MZ, _Ma); //#27505
+        var _Mc = $k[--$j]; //#27505
+        var _Md = $k[--$j]; //#27505
+        $put($k[--$j], _Mc, _Md); //#27505
         $_.j = $f($_.j + 4); //#27506
     } //#27506
-    var _N2 = $a([function() {
-        var _Md = $k[--$j]; //#27511
-        var _Me = $k[--$j]; //#27511
-        $k[$j++] = $f(_Me + _Md) % $_.colors; //#27511
+    var _N5 = $a([function() {
+        var _Mg = $k[--$j]; //#27511
+        var _Mh = $k[--$j]; //#27511
+        $k[$j++] = $f(_Mh + _Mg) % $_.colors; //#27511
     }, function() {
         $j--; //#27512
-        var _Mh = $k[--$j]; //#27512
-        $k[$j++] = _Mh % $_.colors; //#27512
+        var _Mk = $k[--$j]; //#27512
+        $k[$j++] = _Mk % $_.colors; //#27512
     }, function() {
-        var _Mi = $k[--$j]; //#27513
-        var _Mj = $k[--$j]; //#27513
-        $k[$j++] = _Mi; //#27513
-        $k[$j++] = _Mj; //#27513
-        $j--; //#27513
         var _Ml = $k[--$j]; //#27513
-        $k[$j++] = _Ml % $_.colors; //#27513
+        var _Mm = $k[--$j]; //#27513
+        $k[$j++] = _Ml; //#27513
+        $k[$j++] = _Mm; //#27513
+        $j--; //#27513
+        var _Mo = $k[--$j]; //#27513
+        $k[$j++] = _Mo % $_.colors; //#27513
     }, function() {
-        var _Mm = $k[--$j]; //#27514
-        var _Mn = $k[--$j]; //#27514
-        $k[$j++] = ((~~(_Mm / 3)) + (~~(_Mn / 2))) % $_.colors; //#27514
+        var _Mp = $k[--$j]; //#27514
+        var _Mq = $k[--$j]; //#27514
+        $k[$j++] = ((~~(_Mp / 3)) + (~~(_Mq / 2))) % $_.colors; //#27514
     }, function() {
-        var _Mp = $k[--$j]; //#27515
-        var _Mq = $k[--$j]; //#27515
-        $k[$j++] = ((~~(_Mp / 2)) + (~~(_Mq / 3))) % $_.colors; //#27515
+        var _Ms = $k[--$j]; //#27515
+        var _Mt = $k[--$j]; //#27515
+        $k[$j++] = ((~~(_Ms / 2)) + (~~(_Mt / 3))) % $_.colors; //#27515
     }, function() {
-        var _Ms = $k[--$j]; //#27516
-        var _Mu = $f($k[--$j] + _Ms); //#27516
-        $k[$j++] = ((~~(_Mu / 2)) + (~~(_Mu / 3))) % $_.colors; //#27516
+        var _Mv = $k[--$j]; //#27516
+        var _Mx = $f($k[--$j] + _Mv); //#27516
+        $k[$j++] = ((~~(_Mx / 2)) + (~~(_Mx / 3))) % $_.colors; //#27516
     }, function() {
-        var _Mw = $k[--$j]; //#27517
-        var _Mx = $k[--$j]; //#27517
-        $k[$j++] = ($f(((_Mw * (_Mx * _Mx)) % 7) + ((($f(_Mw + (_Mx * _Mx))) * 2) % 19))) % $_.colors; //#27517
+        var _Mz = $k[--$j]; //#27517
+        var _N0 = $k[--$j]; //#27517
+        $k[$j++] = ($f(((_Mz * (_N0 * _N0)) % 7) + ((($f(_Mz + (_N0 * _N0))) * 2) % 19))) % $_.colors; //#27517
     }, function() {
-        var _Mz = $k[--$j]; //#27518
-        var _N0 = $k[--$j]; //#27518
-        $k[$j++] = ($f(((_N0 * (_Mz * _Mz)) % 5) + (($f((_Mz * _Mz) + (_N0 * 2))) % 13))) % $_.colors; //#27518
+        var _N2 = $k[--$j]; //#27518
+        var _N3 = $k[--$j]; //#27518
+        $k[$j++] = ($f(((_N3 * (_N2 * _N2)) % 5) + (($f((_N2 * _N2) + (_N3 * 2))) % 13))) % $_.colors; //#27518
     }]); //#27518
-    $_.maskfuncs = _N2; //#27519
+    $_.maskfuncs = _N5; //#27519
     if ($_.mask != -1) { //#27523
         $_.maskfuncs = $a([$get($_.maskfuncs, $_.mask)]); //#27521
         $_.bestmaskval = $_.mask; //#27522
     } //#27522
     $_.masks = $a($_.maskfuncs.length); //#27524
-    for (var _ND = 0, _NC = $_.masks.length - 1; _ND <= _NC; _ND += 1) { //#27537
-        $_.m = _ND; //#27526
+    for (var _NG = 0, _NF = $_.masks.length - 1; _NG <= _NF; _NG += 1) { //#27537
+        $_.m = _NG; //#27526
         $_.mask = $a($_.rows * $_.cols); //#27527
-        for (var _NJ = 0, _NI = $f($_.rows - 1); _NJ <= _NI; _NJ += 1) { //#27535
-            $_.j = _NJ; //#27529
-            for (var _NM = 0, _NL = $f($_.cols - 1); _NM <= _NL; _NM += 1) { //#27534
-                $_.i = _NM; //#27531
+        for (var _NM = 0, _NL = $f($_.rows - 1); _NM <= _NL; _NM += 1) { //#27535
+            $_.j = _NM; //#27529
+            for (var _NP = 0, _NO = $f($_.cols - 1); _NP <= _NO; _NP += 1) { //#27534
+                $_.i = _NP; //#27531
                 $k[$j++] = $_.pixs; //#27532
                 $k[$j++] = $_.i; //#27532
                 $k[$j++] = $_.j; //#27532
                 $_.jmv(); //#27532
-                var _NQ = $k[--$j]; //#27532
-                if ($get($k[--$j], _NQ) == -1) { //#27532
+                var _NT = $k[--$j]; //#27532
+                if ($get($k[--$j], _NT) == -1) { //#27532
                     $k[$j++] = $_.i; //#27532
                     $k[$j++] = $_.j; //#27532
                     if ($get($_.maskfuncs, $_.m)() === true) {
@@ -34878,9 +34979,10 @@ function bwipp_jabcode() {
                 $k[$j++] = $_.i; //#27533
                 $k[$j++] = $_.j; //#27533
                 $_.jmv(); //#27533
-                var _Nb = $k[--$j]; //#27533
-                var _Nc = $k[--$j]; //#27533
-                $put(_Nc, _Nb, $k[--$j]); //#27533
+                $r(3, -1); //#27533
+                var _Ne = $k[--$j]; //#27533
+                var _Nf = $k[--$j]; //#27533
+                $put($k[--$j], _Nf, _Ne); //#27533
             } //#27533
         } //#27533
         $put($_.masks, $_.m, $_.mask); //#27536
@@ -34896,23 +34998,24 @@ function bwipp_jabcode() {
         $k[$j++] = $_.posx; //#27544
         $k[$j++] = $_.posy; //#27544
         $_.jmv(); //#27544
-        var _Nm = $k[--$j]; //#27544
-        if ($get($k[--$j], _Nm) == -1) { //#27548
-            var _Ns = $geti($_.bits, $_.i, $_.databpm); //#27545
+        var _Np = $k[--$j]; //#27544
+        if ($get($k[--$j], _Np) == -1) { //#27548
+            var _Nv = $geti($_.bits, $_.i, $_.databpm); //#27545
             $k[$j++] = 0; //#27545
-            for (var _Nt = 0, _Nu = _Ns.length; _Nt < _Nu; _Nt++) { //#27545
-                var _Nw = $k[--$j]; //#27545
-                $k[$j++] = ($f(_Nw + $f($get(_Ns, _Nt) - 48))) * 2; //#27545
+            for (var _Nw = 0, _Nx = _Nv.length; _Nw < _Nx; _Nw++) { //#27545
+                var _Nz = $k[--$j]; //#27545
+                $k[$j++] = ($f(_Nz + $f($get(_Nv, _Nw) - 48))) * 2; //#27545
             } //#27545
-            var _Nx = $k[--$j]; //#27545
-            $k[$j++] = ~~(_Nx / 2); //#27546
+            var _O0 = $k[--$j]; //#27545
+            $k[$j++] = ~~(_O0 / 2); //#27546
             $k[$j++] = $_.pixs; //#27546
             $k[$j++] = $_.posx; //#27546
             $k[$j++] = $_.posy; //#27546
             $_.jmv(); //#27546
-            var _O1 = $k[--$j]; //#27546
-            var _O2 = $k[--$j]; //#27546
-            $put(_O2, _O1, $k[--$j]); //#27546
+            $r(3, -1); //#27546
+            var _O4 = $k[--$j]; //#27546
+            var _O5 = $k[--$j]; //#27546
+            $put($k[--$j], _O5, _O4); //#27546
             $_.i = $_.i + $_.databpm; //#27547
         } //#27547
         $_.posy = $_.posy + 1; //#27549
@@ -34925,65 +35028,65 @@ function bwipp_jabcode() {
         $_.scrle = $k[--$j]; //#27555
         $_.scr1 = 0; //#27556
         $_.scr3 = 0; //#27556
-        for (var _OD = 0, _OC = $_.scrle.length - 2; _OD <= _OC; _OD += 2) { //#27578
-            $_.j = _OD; //#27558
+        for (var _OG = 0, _OF = $_.scrle.length - 2; _OG <= _OF; _OG += 2) { //#27578
+            $_.j = _OG; //#27558
             if ($get($_.scrle, $_.j + 1) != -1) { //#27577
-                var _OJ = $get($_.scrle, $_.j); //#27561
-                $k[$j++] = _OJ; //#27561
-                if (_OJ >= 5) { //#27561
+                var _OM = $get($_.scrle, $_.j); //#27561
+                $k[$j++] = _OM; //#27561
+                if (_OM >= 5) { //#27561
                     $_.scr1 = $f($f($k[--$j] - 2) + $_.scr1); //#27561
                 } else { //#27561
                     $j--; //#27561
                 } //#27561
                 if (($_.j >= 4) && ($_.j <= ($_.scrle.length - 5))) { //#27576
-                    var _OR = $geti($_.scrle, $_.j - 4, 10); //#27564
-                    $k[$j++] = _OR; //#27565
-                    for (var _OS = 0, _OT = _OR.length; _OS < _OT; _OS++) { //#27565
-                        $k[$j++] = $get(_OR, _OS) == 1; //#27565
+                    var _OU = $geti($_.scrle, $_.j - 4, 10); //#27564
+                    $k[$j++] = _OU; //#27565
+                    for (var _OV = 0, _OW = _OU.length; _OV < _OW; _OV++) { //#27565
+                        $k[$j++] = $get(_OU, _OV) == 1; //#27565
                     } //#27565
                     $j--; //#27565
-                    for (var _OV = 0, _OW = 4; _OV < _OW; _OV++) { //#27565
-                        var _OX = $k[--$j]; //#27565
-                        var _OY = $k[--$j]; //#27565
-                        $k[$j++] = _OX; //#27565
-                        $k[$j++] = _OY; //#27565
-                        $j--; //#27565
-                        var _OZ = $k[--$j]; //#27565
+                    for (var _OY = 0, _OZ = 4; _OY < _OZ; _OY++) { //#27565
                         var _Oa = $k[--$j]; //#27565
-                        $k[$j++] = $an(_Oa, _OZ); //#27565
+                        var _Ob = $k[--$j]; //#27565
+                        $k[$j++] = _Oa; //#27565
+                        $k[$j++] = _Ob; //#27565
+                        $j--; //#27565
+                        var _Oc = $k[--$j]; //#27565
+                        var _Od = $k[--$j]; //#27565
+                        $k[$j++] = $an(_Od, _Oc); //#27565
                     } //#27565
                     if ($k[--$j]) { //#27575
                         $k[$j++] = Infinity; //#27566
-                        var _Oc = $k[--$j]; //#27566
-                        var _Od = $k[--$j]; //#27566
-                        $k[$j++] = _Oc; //#27566
-                        $aload(_Od); //#27566
-                        var _Oe = $k[--$j]; //#27567
-                        var _Of = $k[--$j]; //#27567
-                        var _Og = $k[--$j]; //#27567
+                        var _Of = $k[--$j]; //#27566
+                        var _Og = $k[--$j]; //#27566
+                        $k[$j++] = _Of; //#27566
+                        $aload(_Og); //#27566
                         var _Oh = $k[--$j]; //#27567
                         var _Oi = $k[--$j]; //#27567
                         var _Oj = $k[--$j]; //#27567
                         var _Ok = $k[--$j]; //#27567
                         var _Ol = $k[--$j]; //#27567
                         var _Om = $k[--$j]; //#27567
+                        var _On = $k[--$j]; //#27567
+                        var _Oo = $k[--$j]; //#27567
+                        var _Op = $k[--$j]; //#27567
+                        $k[$j++] = _Op; //#27573
+                        $k[$j++] = _Oo; //#27573
+                        $k[$j++] = _On; //#27573
                         $k[$j++] = _Om; //#27573
                         $k[$j++] = _Ol; //#27573
                         $k[$j++] = _Ok; //#27573
                         $k[$j++] = _Oj; //#27573
                         $k[$j++] = _Oi; //#27573
                         $k[$j++] = _Oh; //#27573
-                        $k[$j++] = _Og; //#27573
-                        $k[$j++] = _Of; //#27573
-                        $k[$j++] = _Oe; //#27573
-                        if (($eq(_Om, _Oi) && $eq(_Om, _Oe)) && $eq(_Ok, _Og)) { //#27573
-                            var _On = $k[--$j]; //#27569
-                            var _Oo = $k[--$j]; //#27569
-                            var _Op = $k[--$j]; //#27569
-                            $_.c4 = _Op; //#27569
-                            $_.c5 = _On; //#27569
-                            $k[$j++] = _Op; //#27572
-                            $k[$j++] = _Oo; //#27572
+                        if (($eq(_Op, _Ol) && $eq(_Op, _Oh)) && $eq(_On, _Oj)) { //#27573
+                            var _Oq = $k[--$j]; //#27569
+                            var _Or = $k[--$j]; //#27569
+                            var _Os = $k[--$j]; //#27569
+                            $_.c4 = _Os; //#27569
+                            $_.c5 = _Oq; //#27569
+                            $k[$j++] = _Os; //#27572
+                            $k[$j++] = _Or; //#27572
                             if ((($_.c4 == $_.bi) && ($_.c5 == $_.yi)) || ((($_.c4 == $_.yi) && ($_.c5 == $_.bi)) || ((($_.c4 == $_.gi) && ($_.c5 == $_.mi)) || (($_.c4 == $_.mi) && ($_.c5 == $_.gi))))) { //#27572
                                 $_.scr3 = $_.scr3 + 100; //#27572
                             } //#27572
@@ -35003,90 +35106,90 @@ function bwipp_jabcode() {
         $_.n1 = 0; //#27585
         $_.n2 = 0; //#27585
         $_.n3 = 0; //#27585
-        var _PA = $_.rows; //#27586
-        var _PB = $_.cols; //#27586
-        if (_PA < _PB) { //#27586
-            var _ = _PB; //#27586
-            _PB = _PA; //#27586
-            _PA = _; //#27586
+        var _PD = $_.rows; //#27586
+        var _PE = $_.cols; //#27586
+        if (_PD < _PE) { //#27586
+            var _ = _PE; //#27586
+            _PE = _PD; //#27586
+            _PD = _; //#27586
         } //#27586
-        $_.rle = $a($f((_PA * 2) + 2)); //#27586
+        $_.rle = $a($f((_PD * 2) + 2)); //#27586
         $_.lastpairs = $a($_.cols); //#27587
         $_.thispairs = $a($_.cols); //#27588
-        for (var _PJ = 0, _PI = $f($_.cols - 1); _PJ <= _PI; _PJ += 1) { //#27600
-            $_.i = _PJ; //#27592
+        for (var _PM = 0, _PL = $f($_.cols - 1); _PM <= _PL; _PM += 1) { //#27600
+            $_.i = _PM; //#27592
             $k[$j++] = Infinity; //#27593
             $k[$j++] = 0; //#27596
             $k[$j++] = -1; //#27596
-            for (var _PP = $_.i, _PQ = $_.cols, _PO = $f(($_.rows * $_.cols) - 1); _PQ < 0 ? _PP >= _PO : _PP <= _PO; _PP += _PQ) { //#27596
-                var _PS = $get($_.sym, _PP); //#27595
-                var _PT = $k[--$j]; //#27595
-                $k[$j++] = _PT; //#27595
-                $k[$j++] = _PS; //#27595
-                if ($eq(_PT, _PS)) { //#27595
+            for (var _PS = $_.i, _PT = $_.cols, _PR = $f(($_.rows * $_.cols) - 1); _PT < 0 ? _PS >= _PR : _PS <= _PR; _PS += _PT) { //#27596
+                var _PV = $get($_.sym, _PS); //#27595
+                var _PW = $k[--$j]; //#27595
+                $k[$j++] = _PW; //#27595
+                $k[$j++] = _PV; //#27595
+                if ($eq(_PW, _PV)) { //#27595
                     $j--; //#27595
-                    var _PU = $k[--$j]; //#27595
-                    var _PV = $k[--$j]; //#27595
-                    $k[$j++] = $f(_PV + 1); //#27595
-                    $k[$j++] = _PU; //#27595
+                    var _PX = $k[--$j]; //#27595
+                    var _PY = $k[--$j]; //#27595
+                    $k[$j++] = $f(_PY + 1); //#27595
+                    $k[$j++] = _PX; //#27595
                 } else { //#27595
-                    var _PW = $k[--$j]; //#27595
+                    var _PZ = $k[--$j]; //#27595
                     $k[$j++] = 1; //#27595
-                    $k[$j++] = _PW; //#27595
+                    $k[$j++] = _PZ; //#27595
                 } //#27595
             } //#27595
-            var _PY = $counttomark() + 2; //#27597
-            $astore($geti($_.rle, 0, _PY - 2)); //#27597
+            var _Pb = $counttomark() + 2; //#27597
+            $astore($geti($_.rle, 0, _Pb - 2)); //#27597
             $_.evalrle(); //#27598
             $_.n3 = $f($k[--$j] + $_.n3); //#27598
             $_.n1 = $f($k[--$j] + $_.n1); //#27598
             $j--; //#27599
         } //#27599
-        for (var _Pg = 0, _Pf = $f($_.rows - 1); _Pg <= _Pf; _Pg += 1) { //#27627
-            $_.i = _Pg; //#27603
+        for (var _Pj = 0, _Pi = $f($_.rows - 1); _Pj <= _Pi; _Pj += 1) { //#27627
+            $_.i = _Pj; //#27603
             $_.symrow = $geti($_.sym, $_.i * $_.cols, $_.cols); //#27606
             $k[$j++] = Infinity; //#27607
-            var _Pm = $_.symrow; //#27608
+            var _Pp = $_.symrow; //#27608
             $k[$j++] = 0; //#27610
             $k[$j++] = -1; //#27610
-            for (var _Pn = 0, _Po = _Pm.length; _Pn < _Po; _Pn++) { //#27610
-                var _Pp = $get(_Pm, _Pn); //#27610
-                var _Pq = $k[--$j]; //#27609
-                $k[$j++] = _Pq; //#27609
-                $k[$j++] = _Pp; //#27609
-                if ($eq(_Pq, _Pp)) { //#27609
+            for (var _Pq = 0, _Pr = _Pp.length; _Pq < _Pr; _Pq++) { //#27610
+                var _Ps = $get(_Pp, _Pq); //#27610
+                var _Pt = $k[--$j]; //#27609
+                $k[$j++] = _Pt; //#27609
+                $k[$j++] = _Ps; //#27609
+                if ($eq(_Pt, _Ps)) { //#27609
                     $j--; //#27609
-                    var _Pr = $k[--$j]; //#27609
-                    var _Ps = $k[--$j]; //#27609
-                    $k[$j++] = $f(_Ps + 1); //#27609
-                    $k[$j++] = _Pr; //#27609
+                    var _Pu = $k[--$j]; //#27609
+                    var _Pv = $k[--$j]; //#27609
+                    $k[$j++] = $f(_Pv + 1); //#27609
+                    $k[$j++] = _Pu; //#27609
                 } else { //#27609
-                    var _Pt = $k[--$j]; //#27609
+                    var _Pw = $k[--$j]; //#27609
                     $k[$j++] = 1; //#27609
-                    $k[$j++] = _Pt; //#27609
+                    $k[$j++] = _Pw; //#27609
                 } //#27609
             } //#27609
-            var _Pv = $counttomark() + 2; //#27611
-            $astore($geti($_.rle, 0, _Pv - 2)); //#27611
+            var _Py = $counttomark() + 2; //#27611
+            $astore($geti($_.rle, 0, _Py - 2)); //#27611
             $_.evalrle(); //#27612
             $_.n3 = $f($k[--$j] + $_.n3); //#27612
             $_.n1 = $f($k[--$j] + $_.n1); //#27612
             $j--; //#27613
-            var _Q1 = $_.thispairs; //#27616
+            var _Q4 = $_.thispairs; //#27616
             $_.thispairs = $_.lastpairs; //#27616
-            $_.lastpairs = _Q1; //#27616
-            var _Q3 = $_.symrow; //#27617
+            $_.lastpairs = _Q4; //#27616
+            var _Q6 = $_.symrow; //#27617
             $k[$j++] = -1; //#27617
-            for (var _Q4 = 0, _Q5 = _Q3.length; _Q4 < _Q5; _Q4++) { //#27617
-                var _Q6 = $get(_Q3, _Q4); //#27617
-                var _Q7 = $k[--$j]; //#27617
-                $k[$j++] = _Q6; //#27617
-                $k[$j++] = _Q7; //#27617
-                if ($ne(_Q6, _Q7)) { //#27617
+            for (var _Q7 = 0, _Q8 = _Q6.length; _Q7 < _Q8; _Q7++) { //#27617
+                var _Q9 = $get(_Q6, _Q7); //#27617
+                var _QA = $k[--$j]; //#27617
+                $k[$j++] = _Q9; //#27617
+                $k[$j++] = _QA; //#27617
+                if ($ne(_Q9, _QA)) { //#27617
                     $j--; //#27617
-                    var _Q8 = $k[--$j]; //#27617
+                    var _QB = $k[--$j]; //#27617
                     $k[$j++] = -1; //#27617
-                    $k[$j++] = _Q8; //#27617
+                    $k[$j++] = _QB; //#27617
                 } //#27617
             } //#27617
             $j--; //#27618
@@ -35097,16 +35200,16 @@ function bwipp_jabcode() {
                 $aload($_.lastpairs); //#27622
                 $aload($_.thispairs); //#27622
                 $k[$j++] = $_.n2; //#27623
-                for (var _QF = 0, _QG = $_.cols; _QF < _QG; _QF++) { //#27623
-                    var _QH = $k[--$j]; //#27623
-                    var _QI = $k[--$j]; //#27623
-                    $k[$j++] = _QH; //#27623
-                    $k[$j++] = _QI; //#27623
-                    if (_QI != -1) { //#27623
-                        var _QK = $k[$j - 1 - $f($_.cols + 1)]; //#27623
-                        if ($eq($k[--$j], _QK)) { //#27623
-                            var _QM = $k[--$j]; //#27623
-                            $k[$j++] = $f(_QM + 3); //#27623
+                for (var _QI = 0, _QJ = $_.cols; _QI < _QJ; _QI++) { //#27623
+                    var _QK = $k[--$j]; //#27623
+                    var _QL = $k[--$j]; //#27623
+                    $k[$j++] = _QK; //#27623
+                    $k[$j++] = _QL; //#27623
+                    if (_QL != -1) { //#27623
+                        var _QN = $k[$j - 1 - $f($_.cols + 1)]; //#27623
+                        if ($eq($k[--$j], _QN)) { //#27623
+                            var _QP = $k[--$j]; //#27623
+                            $k[$j++] = $f(_QP + 3); //#27623
                         } //#27623
                     } else { //#27623
                         $j--; //#27623
@@ -35119,11 +35222,11 @@ function bwipp_jabcode() {
         $k[$j++] = $f($f($_.n1 + $_.n2) + $_.n3); //#27629
     }; //#27629
     $_.bestscore = 999999999; //#27633
-    for (var _QT = 0, _QS = $_.masks.length - 1; _QT <= _QS; _QT += 1) { //#27651
-        $_.m = _QT; //#27635
+    for (var _QW = 0, _QV = $_.masks.length - 1; _QW <= _QV; _QW += 1) { //#27651
+        $_.m = _QW; //#27635
         $_.masksym = $a($_.rows * $_.cols); //#27636
-        for (var _Qa = 0, _QZ = $f(($_.rows * $_.cols) - 1); _Qa <= _QZ; _Qa += 1) { //#27640
-            $_.i = _Qa; //#27638
+        for (var _Qd = 0, _Qc = $f(($_.rows * $_.cols) - 1); _Qd <= _Qc; _Qd += 1) { //#27640
+            $_.i = _Qd; //#27638
             $put($_.masksym, $_.i, $xo($get($_.pixs, $_.i), $get($get($_.masks, $_.m), $_.i))); //#27639
         } //#27639
         if ($_.masks.length != 1) { //#27649
@@ -35142,14 +35245,14 @@ function bwipp_jabcode() {
     $_.pixs = $_.bestsym; //#27652
     $_.metamask = $_.bestmaskval; //#27653
     $_.addtometapart = function() {
-        var _Qw = $k[--$j]; //#27657
-        $puti($_.metapart, $_.p, _Qw); //#27657
-        $_.p = _Qw.length + $_.p; //#27658
+        var _Qz = $k[--$j]; //#27657
+        $puti($_.metapart, $_.p, _Qz); //#27657
+        $_.p = _Qz.length + $_.p; //#27658
     }; //#27658
     $_.addtometabits = function() {
-        var _R0 = $k[--$j]; //#27662
-        $puti($_.metabits, $_.q, _R0); //#27662
-        $_.q = _R0.length + $_.q; //#27663
+        var _R3 = $k[--$j]; //#27662
+        $puti($_.metabits, $_.q, _R3); //#27662
+        $_.q = _R3.length + $_.q; //#27663
     }; //#27663
     $_.metapart = $s(40); //#27666
     $_.metabits = $s($_.nummetabits); //#27667
@@ -35226,18 +35329,18 @@ function bwipp_jabcode() {
         $_.addtometabits(); //#27698
         $_.p = 0; //#27698
     } else { //#27723
-        var _Rc = $_.sameshape ? 0 : 1; //#27703
-        $k[$j++] = _Rc; //#27703
+        var _Rf = $_.sameshape ? 0 : 1; //#27703
+        $k[$j++] = _Rf; //#27703
         $k[$j++] = 1; //#27703
         $_.tofixedbits(); //#27703
         $_.addtometapart(); //#27703
-        var _Re = $_.sameecc ? 0 : 1; //#27704
-        $k[$j++] = _Re; //#27704
+        var _Rh = $_.sameecc ? 0 : 1; //#27704
+        $k[$j++] = _Rh; //#27704
         $k[$j++] = 1; //#27704
         $_.tofixedbits(); //#27704
         $_.addtometapart(); //#27704
-        var _Rg = $_.hasslaves ? 1 : 0; //#27705
-        $k[$j++] = _Rg; //#27705
+        var _Rj = $_.hasslaves ? 1 : 0; //#27705
+        $k[$j++] = _Rj; //#27705
         $k[$j++] = 1; //#27705
         $_.tofixedbits(); //#27705
         $_.addtometapart(); //#27705
@@ -35282,52 +35385,54 @@ function bwipp_jabcode() {
         $_.addtometabits(); //#27723
         $_.p = 0; //#27723
     } //#27723
-    for (var _S1 = $_.q, _S0 = $f($_.nummetabits - 1); _S1 <= _S0; _S1 += 1) { //#27728
-        $put($_.metabits, _S1, 48); //#27727
+    for (var _S4 = $_.q, _S3 = $f($_.nummetabits - 1); _S4 <= _S3; _S4 += 1) { //#27728
+        $put($_.metabits, _S4, 48); //#27727
     } //#27727
     $_.i = 0; //#27731
     $_.j = 0; //#27731
     if (!$_.slave) { //#27739
-        var _S6 = $geti($_.metabits, $_.i, 6); //#27733
-        for (var _S7 = 0, _S8 = _S6.length; _S7 < _S8; _S7++) { //#27737
-            $k[$j++] = $get(_S6, _S7); //#27734
+        var _S9 = $geti($_.metabits, $_.i, 6); //#27733
+        for (var _SA = 0, _SB = _S9.length; _SA < _SB; _SA++) { //#27737
+            $k[$j++] = $get(_S9, _SA); //#27734
             if ($_.colors == 4) { //#27734
                 $k[$j++] = $a([$_.bi, $_.yi]); //#27734
             } else { //#27734
                 $k[$j++] = $a([$_.ki, $_.wi]); //#27734
             } //#27734
-            var _SH = $k[--$j]; //#27734
-            var _SJ = $get(_SH, $f($k[--$j] - 48)); //#27734
-            $k[$j++] = _SJ; //#27735
+            var _SK = $k[--$j]; //#27734
+            var _SM = $get(_SK, $f($k[--$j] - 48)); //#27734
+            $k[$j++] = _SM; //#27735
             $k[$j++] = $_.pixs; //#27735
             $aload($get($_.metadatamap, $_.j)); //#27735
             $_.jmv(); //#27735
-            var _SO = $k[--$j]; //#27735
-            var _SP = $k[--$j]; //#27735
-            $put(_SP, _SO, $k[--$j]); //#27735
+            $r(3, -1); //#27735
+            var _SR = $k[--$j]; //#27735
+            var _SS = $k[--$j]; //#27735
+            $put($k[--$j], _SS, _SR); //#27735
             $_.j = $_.j + 1; //#27736
         } //#27736
         $_.i = $_.i + 6; //#27738
     } //#27738
-    for (var _SW = 0, _SX = ~~($f($_.nummetabits - $_.i) / $_.metabpm); _SW < _SX; _SW++) { //#27746
-        var _Sb = $geti($_.metabits, $_.i, $_.metabpm); //#27741
+    for (var _SZ = 0, _Sa = ~~($f($_.nummetabits - $_.i) / $_.metabpm); _SZ < _Sa; _SZ++) { //#27746
+        var _Se = $geti($_.metabits, $_.i, $_.metabpm); //#27741
         $k[$j++] = 0; //#27741
-        for (var _Sc = 0, _Sd = _Sb.length; _Sc < _Sd; _Sc++) { //#27741
-            var _Sf = $k[--$j]; //#27741
-            $k[$j++] = ($f(_Sf + $f($get(_Sb, _Sc) - 48))) * 2; //#27741
+        for (var _Sf = 0, _Sg = _Se.length; _Sf < _Sg; _Sf++) { //#27741
+            var _Si = $k[--$j]; //#27741
+            $k[$j++] = ($f(_Si + $f($get(_Se, _Sf) - 48))) * 2; //#27741
         } //#27741
-        var _Si = $get($_.metacolorindex, ~~($k[--$j] / 2)); //#27742
-        $k[$j++] = _Si; //#27743
+        var _Sl = $get($_.metacolorindex, ~~($k[--$j] / 2)); //#27742
+        $k[$j++] = _Sl; //#27743
         $k[$j++] = $_.pixs; //#27743
         $aload($get($_.metadatamap, $_.j)); //#27743
         $_.jmv(); //#27743
-        var _Sn = $k[--$j]; //#27743
-        var _So = $k[--$j]; //#27743
-        $put(_So, _Sn, $k[--$j]); //#27743
+        $r(3, -1); //#27743
+        var _Sq = $k[--$j]; //#27743
+        var _Sr = $k[--$j]; //#27743
+        $put($k[--$j], _Sr, _Sq); //#27743
         $_.i = $f($_.i + $_.metabpm); //#27744
         $_.j = $_.j + 1; //#27745
     } //#27745
-    var _T0 = new Map([
+    var _T3 = new Map([
         ["ren", 'renmatrix'],
         ["pixs", $_.pixs],
         ["pixx", $_.cols],
@@ -35341,7 +35446,7 @@ function bwipp_jabcode() {
         ["borderbottom", 0],
         ["opt", $_.options]
     ]); //#27760
-    $k[$j++] = _T0; //#27763
+    $k[$j++] = _T3; //#27763
     if (!$_.dontdraw) { //#27763
         bwipp_renmatrix(); //#27763
     } //#27763
@@ -35361,7 +35466,7 @@ function bwipp_gs1_cc() {
     bwipp_processoptions(); //#27810
     $_.options = $k[--$j]; //#27810
     $_.barcode = $k[--$j]; //#27811
-    bwipp_loadctx(bwipp_gs1_cc) //#27813
+    bwipp_loadctx(bwipp_gs1_cc); //#27813
     if (($ne($_.ccversion, "a") && $ne($_.ccversion, "b")) && $ne($_.ccversion, "c")) { //#27817
         $k[$j++] = 'bwipp.gs1ccBadCCversion#27816'; //#27816
         $k[$j++] = "ccversion must be a, b or c"; //#27816
@@ -35536,9 +35641,13 @@ function bwipp_gs1_cc() {
             $k[$j++] = _1O; //#27921
         } //#27921
         var _1P = $k[--$j]; //#27922
-        var _1S = $cvrs($s(_1P.length), $k[--$j], 2); //#27922
-        $puti(_1P, _1P.length - _1S.length, _1S); //#27922
         $k[$j++] = _1P; //#27922
+        $k[$j++] = _1P; //#27922
+        $r(3, -1); //#27922
+        var _1Q = $k[--$j]; //#27922
+        var _1R = $k[--$j]; //#27922
+        var _1T = $cvrs($s(_1R.length), _1Q, 2); //#27922
+        $puti(_1R, _1R.length - _1T.length, _1T); //#27922
     }; //#27922
     if (!bwipp_gs1_cc.__27973__) { //#27973
         $_ = Object.create($_); //#27973
@@ -35547,15 +35656,15 @@ function bwipp_gs1_cc() {
         $_.lalphanumeric = -3; //#27927
         $_.liso646 = -4; //#27927
         $k[$j++] = Infinity; //#27929
-        for (var _1T = 65; _1T <= 90; _1T += 1) { //#27930
-            $k[$j++] = _1T; //#27930
-            $k[$j++] = _1T - 65; //#27930
+        for (var _1U = 65; _1U <= 90; _1U += 1) { //#27930
+            $k[$j++] = _1U; //#27930
+            $k[$j++] = _1U - 65; //#27930
             $k[$j++] = 5; //#27930
             $_.tobin(); //#27930
         } //#27930
-        for (var _1U = 48; _1U <= 57; _1U += 1) { //#27931
-            $k[$j++] = _1U; //#27931
-            $k[$j++] = _1U + 4; //#27931
+        for (var _1V = 48; _1V <= 57; _1V += 1) { //#27931
+            $k[$j++] = _1V; //#27931
+            $k[$j++] = _1V + 4; //#27931
             $k[$j++] = 6; //#27931
             $_.tobin(); //#27931
         } //#27931
@@ -35563,54 +35672,54 @@ function bwipp_gs1_cc() {
         $k[$j++] = "11111"; //#27932
         $_.alpha = $d(); //#27933
         $k[$j++] = Infinity; //#27935
-        for (var _1X = 0; _1X <= 119; _1X += 1) { //#27944
-            var _1Z = $strcpy($s(2), "00"); //#27937
-            var _1b = $cvrs($s(2), _1X, 11); //#27937
-            $puti(_1Z, 2 - _1b.length, _1b); //#27938
-            $k[$j++] = _1X; //#27939
-            $k[$j++] = _1Z; //#27939
-            if ($get(_1Z, 0) == 65) { //#27939
-                var _1d = $k[--$j]; //#27939
-                $put(_1d, 0, 94); //#27939
-                $k[$j++] = _1d; //#27939
+        for (var _1Y = 0; _1Y <= 119; _1Y += 1) { //#27944
+            var _1a = $strcpy($s(2), "00"); //#27937
+            var _1c = $cvrs($s(2), _1Y, 11); //#27937
+            $puti(_1a, 2 - _1c.length, _1c); //#27938
+            $k[$j++] = _1Y; //#27939
+            $k[$j++] = _1a; //#27939
+            if ($get(_1a, 0) == 65) { //#27939
+                var _1e = $k[--$j]; //#27939
+                $put(_1e, 0, 94); //#27939
+                $k[$j++] = _1e; //#27939
             } //#27939
-            var _1e = $k[--$j]; //#27940
-            $k[$j++] = _1e; //#27940
-            if ($get(_1e, 1) == 65) { //#27940
-                var _1g = $k[--$j]; //#27940
-                $put(_1g, 1, 94); //#27940
-                $k[$j++] = _1g; //#27940
+            var _1f = $k[--$j]; //#27940
+            $k[$j++] = _1f; //#27940
+            if ($get(_1f, 1) == 65) { //#27940
+                var _1h = $k[--$j]; //#27940
+                $put(_1h, 1, 94); //#27940
+                $k[$j++] = _1h; //#27940
             } //#27940
-            var _1h = $k[--$j]; //#27941
-            var _1k = $strcpy($s(7), "0000000"); //#27942
-            var _1m = $cvrs($s(7), $f($k[--$j] + 8), 2); //#27942
-            $puti(_1k, 7 - _1m.length, _1m); //#27943
-            $k[$j++] = _1h; //#27943
-            $k[$j++] = _1k; //#27943
+            var _1i = $k[--$j]; //#27941
+            var _1l = $strcpy($s(7), "0000000"); //#27942
+            var _1n = $cvrs($s(7), $f($k[--$j] + 8), 2); //#27942
+            $puti(_1l, 7 - _1n.length, _1n); //#27943
+            $k[$j++] = _1i; //#27943
+            $k[$j++] = _1l; //#27943
         } //#27943
         $k[$j++] = $_.lalphanumeric; //#27945
         $k[$j++] = "0000"; //#27945
         $_.numeric = $d(); //#27946
         $k[$j++] = Infinity; //#27948
-        for (var _1p = 48; _1p <= 57; _1p += 1) { //#27949
-            $k[$j++] = _1p; //#27949
-            $k[$j++] = _1p - 43; //#27949
+        for (var _1q = 48; _1q <= 57; _1q += 1) { //#27949
+            $k[$j++] = _1q; //#27949
+            $k[$j++] = _1q - 43; //#27949
             $k[$j++] = 5; //#27949
             $_.tobin(); //#27949
         } //#27949
         $k[$j++] = $_.fnc1; //#27951
         $k[$j++] = "01111"; //#27951
-        for (var _1r = 65; _1r <= 90; _1r += 1) { //#27951
-            $k[$j++] = _1r; //#27951
-            $k[$j++] = _1r - 33; //#27951
+        for (var _1s = 65; _1s <= 90; _1s += 1) { //#27951
+            $k[$j++] = _1s; //#27951
+            $k[$j++] = _1s - 33; //#27951
             $k[$j++] = 6; //#27951
             $_.tobin(); //#27951
         } //#27951
         $k[$j++] = 42; //#27953
         $k[$j++] = "111010"; //#27953
-        for (var _1s = 44; _1s <= 47; _1s += 1) { //#27953
-            $k[$j++] = _1s; //#27953
-            $k[$j++] = _1s + 15; //#27953
+        for (var _1t = 44; _1t <= 47; _1t += 1) { //#27953
+            $k[$j++] = _1t; //#27953
+            $k[$j++] = _1t + 15; //#27953
             $k[$j++] = 6; //#27953
             $_.tobin(); //#27953
         } //#27953
@@ -35620,23 +35729,23 @@ function bwipp_gs1_cc() {
         $k[$j++] = "00100"; //#27955
         $_.alphanumeric = $d(); //#27956
         $k[$j++] = Infinity; //#27958
-        for (var _1w = 48; _1w <= 57; _1w += 1) { //#27959
-            $k[$j++] = _1w; //#27959
-            $k[$j++] = _1w - 43; //#27959
+        for (var _1x = 48; _1x <= 57; _1x += 1) { //#27959
+            $k[$j++] = _1x; //#27959
+            $k[$j++] = _1x - 43; //#27959
             $k[$j++] = 5; //#27959
             $_.tobin(); //#27959
         } //#27959
         $k[$j++] = $_.fnc1; //#27961
         $k[$j++] = "01111"; //#27961
-        for (var _1y = 65; _1y <= 90; _1y += 1) { //#27961
-            $k[$j++] = _1y; //#27961
-            $k[$j++] = _1y - 1; //#27961
+        for (var _1z = 65; _1z <= 90; _1z += 1) { //#27961
+            $k[$j++] = _1z; //#27961
+            $k[$j++] = _1z - 1; //#27961
             $k[$j++] = 7; //#27961
             $_.tobin(); //#27961
         } //#27961
-        for (var _1z = 97; _1z <= 122; _1z += 1) { //#27962
-            $k[$j++] = _1z; //#27962
-            $k[$j++] = _1z - 7; //#27962
+        for (var _20 = 97; _20 <= 122; _20 += 1) { //#27962
+            $k[$j++] = _20; //#27962
+            $k[$j++] = _20 - 7; //#27962
             $k[$j++] = 7; //#27962
             $_.tobin(); //#27962
         } //#27962
@@ -35644,15 +35753,15 @@ function bwipp_gs1_cc() {
         $k[$j++] = "11101000"; //#27965
         $k[$j++] = 34; //#27965
         $k[$j++] = "11101001"; //#27965
-        for (var _20 = 37; _20 <= 47; _20 += 1) { //#27965
-            $k[$j++] = _20; //#27965
-            $k[$j++] = _20 + 197; //#27965
+        for (var _21 = 37; _21 <= 47; _21 += 1) { //#27965
+            $k[$j++] = _21; //#27965
+            $k[$j++] = _21 + 197; //#27965
             $k[$j++] = 8; //#27965
             $_.tobin(); //#27965
         } //#27965
-        for (var _21 = 58; _21 <= 63; _21 += 1) { //#27966
-            $k[$j++] = _21; //#27966
-            $k[$j++] = _21 + 187; //#27966
+        for (var _22 = 58; _22 <= 63; _22 += 1) { //#27966
+            $k[$j++] = _22; //#27966
+            $k[$j++] = _22 + 187; //#27966
             $k[$j++] = 8; //#27966
             $_.tobin(); //#27966
         } //#27966
@@ -35671,18 +35780,16 @@ function bwipp_gs1_cc() {
     } //#27971
     if ($eq($_.method, "10")) { //#28008
         if ($eq($get($_.ais, 0), "11") || $eq($get($_.ais, 0), "17")) { //#27991
-            var _2C = $get($_.vals, 0); //#27977
-            var _2H = $strcpy($s(16), "0000000000000000"); //#27981
-            var _2J = $cvrs($s(16), ($cvi($geti(_2C, 0, 2)) * 384) + ((($cvi($geti(_2C, 2, 2)) - 1) * 32) + $cvi($geti(_2C, 4, 2))), 2); //#27981
-            $puti(_2H, 16 - _2J.length, _2J); //#27982
-            $k[$j++] = _2H; //#27985
+            var _2D = $get($_.vals, 0); //#27977
+            var _2I = $strcpy($s(16), "0000000000000000"); //#27981
+            var _2K = $cvrs($s(16), ($cvi($geti(_2D, 0, 2)) * 384) + ((($cvi($geti(_2D, 2, 2)) - 1) * 32) + $cvi($geti(_2D, 4, 2))), 2); //#27981
+            $puti(_2I, 16 - _2K.length, _2K); //#27982
+            $k[$j++] = _2I; //#27985
             $k[$j++] = Infinity; //#27983
-            var _2K = $k[--$j]; //#27984
-            var _2L = $k[--$j]; //#27984
-            $k[$j++] = _2K; //#27984
             $k[$j++] = 1; //#27984
             $k[$j++] = 0; //#27984
-            $forall(_2L, function() { //#27984
+            $r(4, -1); //#27984
+            $forall($k[--$j], function() { //#27984
                 var _2M = $k[--$j]; //#27984
                 $k[$j++] = $f(_2M - 48); //#27984
             }); //#27984
@@ -39378,7 +39485,7 @@ function bwipp_hibccode39() {
         $k[$j++] = "The data must not be empty"; //#30866
         bwipp_raiseerror(); //#30866
     } //#30866
-    bwipp_loadctx(bwipp_hibccode39) //#30869
+    bwipp_loadctx(bwipp_hibccode39); //#30869
     if (!bwipp_hibccode39.__30876__) { //#30876
         $_ = Object.create($_); //#30876
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#30873
@@ -39475,7 +39582,7 @@ function bwipp_hibccode128() {
         $k[$j++] = "The data must not be empty"; //#30970
         bwipp_raiseerror(); //#30970
     } //#30970
-    bwipp_loadctx(bwipp_hibccode128) //#30973
+    bwipp_loadctx(bwipp_hibccode128); //#30973
     if (!bwipp_hibccode128.__30980__) { //#30980
         $_ = Object.create($_); //#30980
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#30977
@@ -39567,7 +39674,7 @@ function bwipp_hibcdatamatrix() {
         $k[$j++] = "The data must not be empty"; //#31069
         bwipp_raiseerror(); //#31069
     } //#31069
-    bwipp_loadctx(bwipp_hibcdatamatrix) //#31072
+    bwipp_loadctx(bwipp_hibcdatamatrix); //#31072
     if (!bwipp_hibcdatamatrix.__31079__) { //#31079
         $_ = Object.create($_); //#31079
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#31076
@@ -39644,7 +39751,7 @@ function bwipp_hibcdatamatrixrectangular() {
         $k[$j++] = "The data must not be empty"; //#31160
         bwipp_raiseerror(); //#31160
     } //#31160
-    bwipp_loadctx(bwipp_hibcdatamatrixrectangular) //#31163
+    bwipp_loadctx(bwipp_hibcdatamatrixrectangular); //#31163
     if (!bwipp_hibcdatamatrixrectangular.__31170__) { //#31170
         $_ = Object.create($_); //#31170
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#31167
@@ -39722,7 +39829,7 @@ function bwipp_hibcpdf417() {
         $k[$j++] = "The data must not be empty"; //#31253
         bwipp_raiseerror(); //#31253
     } //#31253
-    bwipp_loadctx(bwipp_hibcpdf417) //#31256
+    bwipp_loadctx(bwipp_hibcpdf417); //#31256
     if (!bwipp_hibcpdf417.__31263__) { //#31263
         $_ = Object.create($_); //#31263
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#31260
@@ -39801,7 +39908,7 @@ function bwipp_hibcmicropdf417() {
         $k[$j++] = "The data must not be empty"; //#31346
         bwipp_raiseerror(); //#31346
     } //#31346
-    bwipp_loadctx(bwipp_hibcmicropdf417) //#31349
+    bwipp_loadctx(bwipp_hibcmicropdf417); //#31349
     if (!bwipp_hibcmicropdf417.__31356__) { //#31356
         $_ = Object.create($_); //#31356
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#31353
@@ -39879,7 +39986,7 @@ function bwipp_hibcqrcode() {
         $k[$j++] = "The data must not be empty"; //#31438
         bwipp_raiseerror(); //#31438
     } //#31438
-    bwipp_loadctx(bwipp_hibcqrcode) //#31441
+    bwipp_loadctx(bwipp_hibcqrcode); //#31441
     if (!bwipp_hibcqrcode.__31448__) { //#31448
         $_ = Object.create($_); //#31448
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#31445
@@ -39955,7 +40062,7 @@ function bwipp_hibccodablockf() {
         $k[$j++] = "The data must not be empty"; //#31529
         bwipp_raiseerror(); //#31529
     } //#31529
-    bwipp_loadctx(bwipp_hibccodablockf) //#31532
+    bwipp_loadctx(bwipp_hibccodablockf); //#31532
     if (!bwipp_hibccodablockf.__31539__) { //#31539
         $_ = Object.create($_); //#31539
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#31536
@@ -40031,7 +40138,7 @@ function bwipp_hibcazteccode() {
         $k[$j++] = "The data must not be empty"; //#31620
         bwipp_raiseerror(); //#31620
     } //#31620
-    bwipp_loadctx(bwipp_hibcazteccode) //#31623
+    bwipp_loadctx(bwipp_hibcazteccode); //#31623
     if (!bwipp_hibcazteccode.__31630__) { //#31630
         $_ = Object.create($_); //#31630
         $_.barchars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%"; //#31627
@@ -40319,263 +40426,313 @@ function bwipp_renlinear() {
     $_.textyoffset = 0; //#31879
     $_.textgaps = 0; //#31880
     $_.alttext = ""; //#31881
-    $_.bordercolor = "unset"; //#31882
-    $_.backgroundcolor = "unset"; //#31883
-    $_.inkspread = 0; //#31884
-    $_.width = 0; //#31885
-    $_.barratio = 1; //#31886
-    $_.spaceratio = 1; //#31887
-    $_.showborder = false; //#31888
-    $_.showbearer = false; //#31889
-    $_.borderleft = 10; //#31890
-    $_.borderright = 10; //#31891
-    $_.bordertop = 1; //#31892
-    $_.borderbottom = 1; //#31893
-    $_.borderwidth = 0.5; //#31894
-    $_.guardwhitespace = false; //#31895
-    $_.guardleftpos = 0; //#31896
-    $_.guardleftypos = 0; //#31897
-    $_.guardrightpos = 0; //#31898
-    $_.guardrightypos = 0; //#31899
-    $_.guardwidth = 7; //#31900
-    $_.guardheight = 7; //#31901
-    $forall($k[--$j], function() { //#31903
-        var _6 = $k[--$j]; //#31903
-        $_[$k[--$j]] = _6; //#31903
-    }); //#31903
-    $k[$j++] = $_.opt; //#31904
-    delete $_['opt']; //#31904
-    $k[$j++] = $_; //#31904
-    bwipp_processoptions(); //#31904
-    $j--; //#31904
-    if ($_.textsize <= 0) { //#31908
-        $k[$j++] = 'bwipp.renlinearBadTextsize#31907'; //#31907
-        $k[$j++] = "The font size must be greater than zero"; //#31907
-        bwipp_raiseerror(); //#31907
-    } //#31907
-    $_.bars = $a(~~(($_.sbs.length + 1) / 2)); //#31911
-    $_.pixx = 0; //#31912
-    $_.pixy = 0; //#31912
-    for (var _E = 0, _D = ((~~(($_.sbs.length + 1) / 2)) * 2) - 2; _E <= _D; _E += 1) { //#31931
-        $_.i = _E; //#31914
-        if (($_.i % 2) == 0) { //#31928
-            $_.d = $f(($f(($get($_.sbs, $_.i) * $_.barratio) - $_.barratio)) + 1); //#31916
-            if ($get($_.sbs, $_.i) != 0) { //#31925
-                $_.h = $get($_.bhs, ~~($_.i / 2)) * 72; //#31918
-                $_.c = $f(($_.d / 2) + $_.pixx); //#31919
-                $_.y = $get($_.bbs, ~~($_.i / 2)) * 72; //#31920
-                $_.w = $f($_.d - $_.inkspread); //#31921
-                $put($_.bars, ~~($_.i / 2), $a([$_.h, $_.c, $_.y, $_.w])); //#31922
-                if ($f($_.h + $_.y) > $_.pixy) { //#31923
-                    $_.pixy = $f($_.h + $_.y); //#31923
-                } //#31923
-            } else { //#31925
-                $put($_.bars, ~~($_.i / 2), -1); //#31925
-            } //#31925
-        } else { //#31928
-            $_.d = $f(($f(($get($_.sbs, $_.i) * $_.spaceratio) - $_.spaceratio)) + 1); //#31928
-        } //#31928
-        $_.pixx = $f($_.pixx + $_.d); //#31930
-    } //#31930
-    $$.save(); //#31933
-    var _t = $$.currpos(); //#31935
-    $$.translate(_t.x, _t.y); //#31935
-    if ($_.width != 0) { //#31940
-        $$.scale(($_.width * 72) / $_.pixx, 1); //#31939
+    $_.extratext = ""; //#31882
+    $_.extratextcolor = "unset"; //#31883
+    $_.extratextxalign = "left"; //#31884
+    $_.extratextyalign = "above"; //#31885
+    $_.extratextfont = "OCR-B"; //#31886
+    $_.extratextsize = 10; //#31887
+    $_.extratextxoffset = 0; //#31888
+    $_.extratextyoffset = 0; //#31889
+    $_.extratextgaps = 0; //#31890
+    $_.bordercolor = "unset"; //#31891
+    $_.backgroundcolor = "unset"; //#31892
+    $_.inkspread = 0; //#31893
+    $_.width = 0; //#31894
+    $_.barratio = 1; //#31895
+    $_.spaceratio = 1; //#31896
+    $_.showborder = false; //#31897
+    $_.showbearer = false; //#31898
+    $_.borderleft = 10; //#31899
+    $_.borderright = 10; //#31900
+    $_.bordertop = 1; //#31901
+    $_.borderbottom = 1; //#31902
+    $_.borderwidth = 0.5; //#31903
+    $_.guardwhitespace = false; //#31904
+    $_.guardleftpos = 0; //#31905
+    $_.guardleftypos = 0; //#31906
+    $_.guardrightpos = 0; //#31907
+    $_.guardrightypos = 0; //#31908
+    $_.guardwidth = 7; //#31909
+    $_.guardheight = 7; //#31910
+    $forall($k[--$j], function() { //#31912
+        var _6 = $k[--$j]; //#31912
+        $_[$k[--$j]] = _6; //#31912
+    }); //#31912
+    $k[$j++] = $_.opt; //#31913
+    delete $_['opt']; //#31913
+    $k[$j++] = $_; //#31913
+    bwipp_processoptions(); //#31913
+    $j--; //#31913
+    if ($_.textsize <= 0) { //#31917
+        $k[$j++] = 'bwipp.renlinearBadTextsize#31916'; //#31916
+        $k[$j++] = "The font size must be greater than zero"; //#31916
+        bwipp_raiseerror(); //#31916
+    } //#31916
+    $_.bars = $a(~~(($_.sbs.length + 1) / 2)); //#31920
+    $_.pixx = 0; //#31921
+    $_.pixy = 0; //#31921
+    for (var _E = 0, _D = ((~~(($_.sbs.length + 1) / 2)) * 2) - 2; _E <= _D; _E += 1) { //#31940
+        $_.i = _E; //#31923
+        if (($_.i % 2) == 0) { //#31937
+            $_.d = $f(($f(($get($_.sbs, $_.i) * $_.barratio) - $_.barratio)) + 1); //#31925
+            if ($get($_.sbs, $_.i) != 0) { //#31934
+                $_.h = $get($_.bhs, ~~($_.i / 2)) * 72; //#31927
+                $_.c = $f(($_.d / 2) + $_.pixx); //#31928
+                $_.y = $get($_.bbs, ~~($_.i / 2)) * 72; //#31929
+                $_.w = $f($_.d - $_.inkspread); //#31930
+                $put($_.bars, ~~($_.i / 2), $a([$_.h, $_.c, $_.y, $_.w])); //#31931
+                if ($f($_.h + $_.y) > $_.pixy) { //#31932
+                    $_.pixy = $f($_.h + $_.y); //#31932
+                } //#31932
+            } else { //#31934
+                $put($_.bars, ~~($_.i / 2), -1); //#31934
+            } //#31934
+        } else { //#31937
+            $_.d = $f(($f(($get($_.sbs, $_.i) * $_.spaceratio) - $_.spaceratio)) + 1); //#31937
+        } //#31937
+        $_.pixx = $f($_.pixx + $_.d); //#31939
     } //#31939
-    $_.tl = $a([-($f($_.borderleft + ($_.borderwidth / 2))), $f($f($_.pixy + $_.bordertop) + ($_.borderwidth / 2))]); //#31950
-    $_.tr = $a([$f($f($_.pixx + $_.borderright) + ($_.borderwidth / 2)), $f($f($_.pixy + $_.bordertop) + ($_.borderwidth / 2))]); //#31951
-    $_.bl = $a([-($f($_.borderleft + ($_.borderwidth / 2))), -($f($_.borderbottom + ($_.borderwidth / 2)))]); //#31952
-    $_.br = $a([$f($f($_.pixx + $_.borderright) + ($_.borderwidth / 2)), -($f($_.borderbottom + ($_.borderwidth / 2)))]); //#31953
-    if ($_.showbearer) { //#31978
-        $$.save(); //#31955
-        $$.newpath(); //#31956
-        $aload($_.bl); //#31957
-        var _1N = $k[--$j]; //#31957
-        $$.moveto($k[--$j], _1N); //#31957
-        $aload($_.br); //#31957
-        var _1Q = $k[--$j]; //#31957
-        $$.lineto($k[--$j], _1Q); //#31957
-        $aload($_.tl); //#31958
-        var _1T = $k[--$j]; //#31958
-        $$.moveto($k[--$j], _1T); //#31958
-        $aload($_.tr); //#31958
-        var _1W = $k[--$j]; //#31958
-        $$.lineto($k[--$j], _1W); //#31958
-        if ($ne($_.bordercolor, "unset")) { //#31959
-            $$.setcolor($_.bordercolor); //#31959
-        } //#31959
-        $$.setlinewidth($f($_.borderwidth - ($_.inkspread * 2))); //#31960
-        $$.stroke(); //#31960
-        $$.restore(); //#31961
-    } else { //#31978
-        if ($_.showborder) { //#31979
-            $$.save(); //#31974
-            $$.newpath(); //#31975
-            $aload($_.bl); //#31975
-            var _1e = $k[--$j]; //#31975
-            $$.moveto($k[--$j], _1e); //#31975
-            var _1j = $a([$_.br, $_.tr, $_.tl]); //#31975
-            for (var _1k = 0, _1l = _1j.length; _1k < _1l; _1k++) { //#31975
-                $aload($get(_1j, _1k)); //#31975
-                var _1n = $k[--$j]; //#31975
-                $$.lineto($k[--$j], _1n); //#31975
-            } //#31975
-            $$.closepath(); //#31975
-            if ($ne($_.bordercolor, "unset")) { //#31976
-                $$.setcolor($_.bordercolor); //#31976
-            } //#31976
-            $$.setlinewidth($_.borderwidth); //#31977
-            $$.stroke(); //#31977
-            $$.restore(); //#31978
-        } //#31978
-    } //#31978
-    $$.save(); //#31982
-    if ($ne($_.barcolor, "unset")) { //#31984
-        $$.setcolor($_.barcolor); //#31984
-    } //#31984
-    var _1u = $_.bars; //#31985
-    for (var _1v = 0, _1w = _1u.length; _1v < _1w; _1v++) { //#31991
-        var _1x = $get(_1u, _1v); //#31991
-        $k[$j++] = _1x; //#31990
-        if (_1x != -1) { //#31989
-            $aload($k[--$j]); //#31987
-            $$.newpath(); //#31987
-            $$.setlinewidth($k[--$j]); //#31987
-            var _20 = $k[--$j]; //#31987
-            $$.moveto($k[--$j], _20); //#31987
-            $$.rlineto(0, $k[--$j]); //#31987
-            $$.stroke(); //#31987
-        } else { //#31989
-            $j--; //#31989
-        } //#31989
-    } //#31989
-    $$.restore(); //#31992
-    if ($ne($_.textcolor, "unset")) { //#31995
-        $$.setcolor($_.textcolor); //#31995
-    } //#31995
-    if ($_.includetext) { //#32052
-        if (($eq($_.textxalign, "unset") && $eq($_.textyalign, "unset")) && $eq($_.alttext, "")) { //#32050
-            $_.s = 0; //#31998
-            $_.fn = ""; //#31998
-            var _29 = $_.txt; //#31999
-            for (var _2A = 0, _2B = _29.length; _2A < _2B; _2A++) { //#32008
-                $forall($get(_29, _2A)); //#32000
-                var _2D = $k[--$j]; //#32001
-                var _2E = $k[--$j]; //#32001
-                $k[$j++] = _2E; //#32006
-                $k[$j++] = _2D; //#32006
-                if ((_2D != $_.s) || $ne(_2E, $_.fn)) { //#32005
-                    var _2H = $k[--$j]; //#32002
-                    var _2I = $k[--$j]; //#32002
-                    $_.s = _2H; //#32002
-                    $_.fn = _2I; //#32002
-                    $$.selectfont(_2I, _2H); //#32003
-                } else { //#32005
-                    $j -= 2; //#32005
-                } //#32005
-                var _2J = $k[--$j]; //#32007
-                $$.moveto($k[--$j], _2J); //#32007
-                $$.show($k[--$j], 0, 0); //#32007
-            } //#32007
-        } else { //#32050
-            $$.selectfont($_.textfont, $_.textsize); //#32010
-            if ($eq($_.alttext, "")) { //#32016
-                $k[$j++] = Infinity; //#32012
-                var _2P = $_.txt; //#32012
-                for (var _2Q = 0, _2R = _2P.length; _2Q < _2R; _2Q++) { //#32012
-                    $forall($get($get(_2P, _2Q), 0)); //#32012
-                } //#32012
-                $_.txt = $a(); //#32012
-                $_.tstr = $s($_.txt.length); //#32013
-                for (var _2Z = 0, _2Y = $_.txt.length - 1; _2Z <= _2Y; _2Z += 1) { //#32014
-                    $put($_.tstr, _2Z, $get($_.txt, _2Z)); //#32014
+    $$.save(); //#31942
+    var _t = $$.currpos(); //#31944
+    $$.translate(_t.x, _t.y); //#31944
+    if ($_.width != 0) { //#31949
+        $$.scale(($_.width * 72) / $_.pixx, 1); //#31948
+    } //#31948
+    $_.tl = $a([-($f($_.borderleft + ($_.borderwidth / 2))), $f($f($_.pixy + $_.bordertop) + ($_.borderwidth / 2))]); //#31959
+    $_.tr = $a([$f($f($_.pixx + $_.borderright) + ($_.borderwidth / 2)), $f($f($_.pixy + $_.bordertop) + ($_.borderwidth / 2))]); //#31960
+    $_.bl = $a([-($f($_.borderleft + ($_.borderwidth / 2))), -($f($_.borderbottom + ($_.borderwidth / 2)))]); //#31961
+    $_.br = $a([$f($f($_.pixx + $_.borderright) + ($_.borderwidth / 2)), -($f($_.borderbottom + ($_.borderwidth / 2)))]); //#31962
+    if ($_.showbearer) { //#31987
+        $$.save(); //#31964
+        $$.newpath(); //#31965
+        $aload($_.bl); //#31966
+        var _1N = $k[--$j]; //#31966
+        $$.moveto($k[--$j], _1N); //#31966
+        $aload($_.br); //#31966
+        var _1Q = $k[--$j]; //#31966
+        $$.lineto($k[--$j], _1Q); //#31966
+        $aload($_.tl); //#31967
+        var _1T = $k[--$j]; //#31967
+        $$.moveto($k[--$j], _1T); //#31967
+        $aload($_.tr); //#31967
+        var _1W = $k[--$j]; //#31967
+        $$.lineto($k[--$j], _1W); //#31967
+        if ($ne($_.bordercolor, "unset")) { //#31968
+            $$.setcolor($_.bordercolor); //#31968
+        } //#31968
+        $$.setlinewidth($f($_.borderwidth - ($_.inkspread * 2))); //#31969
+        $$.stroke(); //#31969
+        $$.restore(); //#31970
+    } else { //#31987
+        if ($_.showborder) { //#31988
+            $$.save(); //#31983
+            $$.newpath(); //#31984
+            $aload($_.bl); //#31984
+            var _1e = $k[--$j]; //#31984
+            $$.moveto($k[--$j], _1e); //#31984
+            var _1j = $a([$_.br, $_.tr, $_.tl]); //#31984
+            for (var _1k = 0, _1l = _1j.length; _1k < _1l; _1k++) { //#31984
+                $aload($get(_1j, _1k)); //#31984
+                var _1n = $k[--$j]; //#31984
+                $$.lineto($k[--$j], _1n); //#31984
+            } //#31984
+            $$.closepath(); //#31984
+            if ($ne($_.bordercolor, "unset")) { //#31985
+                $$.setcolor($_.bordercolor); //#31985
+            } //#31985
+            $$.setlinewidth($_.borderwidth); //#31986
+            $$.stroke(); //#31986
+            $$.restore(); //#31987
+        } //#31987
+    } //#31987
+    $$.save(); //#31991
+    if ($ne($_.barcolor, "unset")) { //#31993
+        $$.setcolor($_.barcolor); //#31993
+    } //#31993
+    var _1u = $_.bars; //#31994
+    for (var _1v = 0, _1w = _1u.length; _1v < _1w; _1v++) { //#32000
+        var _1x = $get(_1u, _1v); //#32000
+        $k[$j++] = _1x; //#31999
+        if (_1x != -1) { //#31998
+            $aload($k[--$j]); //#31996
+            $$.newpath(); //#31996
+            $$.setlinewidth($k[--$j]); //#31996
+            var _20 = $k[--$j]; //#31996
+            $$.moveto($k[--$j], _20); //#31996
+            $$.rlineto(0, $k[--$j]); //#31996
+            $$.stroke(); //#31996
+        } else { //#31998
+            $j--; //#31998
+        } //#31998
+    } //#31998
+    $$.restore(); //#32001
+    if ($ne($_.textcolor, "unset")) { //#32004
+        $$.setcolor($_.textcolor); //#32004
+    } //#32004
+    if ($_.includetext) { //#32061
+        if (($eq($_.textxalign, "unset") && $eq($_.textyalign, "unset")) && $eq($_.alttext, "")) { //#32059
+            $_.s = 0; //#32007
+            $_.fn = ""; //#32007
+            var _29 = $_.txt; //#32008
+            for (var _2A = 0, _2B = _29.length; _2A < _2B; _2A++) { //#32017
+                $forall($get(_29, _2A)); //#32009
+                var _2D = $k[--$j]; //#32010
+                var _2E = $k[--$j]; //#32010
+                $k[$j++] = _2E; //#32015
+                $k[$j++] = _2D; //#32015
+                if ((_2D != $_.s) || $ne(_2E, $_.fn)) { //#32014
+                    var _2H = $k[--$j]; //#32011
+                    var _2I = $k[--$j]; //#32011
+                    $_.s = _2H; //#32011
+                    $_.fn = _2I; //#32011
+                    $$.selectfont(_2I, _2H); //#32012
+                } else { //#32014
+                    $j -= 2; //#32014
                 } //#32014
-            } else { //#32016
-                $_.tstr = $_.alttext; //#32016
+                var _2J = $k[--$j]; //#32016
+                $$.moveto($k[--$j], _2J); //#32016
+                $$.show($k[--$j], 0, 0); //#32016
             } //#32016
-            if ($_.tstr.length == 0) { //#32026
-                $k[$j++] = 0; //#32021
-            } else { //#32026
-                $$.save(); //#32023
-                $$.newpath(); //#32024
-                $$.moveto(0, 0); //#32024
-                $$.charpath("0", false); //#32024
-                var _2f = $$.pathbbox(); //#32024
-                $$.restore(); //#32026
-                $k[$j++] = _2f.ury; //#32026
-            } //#32026
-            $_.textascent = $k[--$j]; //#32035
-            var _2i = $$.stringwidth($_.tstr); //#32036
-            $_.textwidth = $f(_2i.w + (($_.tstr.length - 1) * $_.textgaps)); //#32036
-            $_.textxpos = $f($_.textxoffset + ($f($_.pixx - $_.textwidth) / 2)); //#32038
-            if ($eq($_.textxalign, "left")) { //#32039
-                $_.textxpos = $_.textxoffset; //#32039
-            } //#32039
-            if ($eq($_.textxalign, "right")) { //#32040
-                $_.textxpos = $f($f($_.pixx - $_.textxoffset) - $_.textwidth); //#32040
-            } //#32040
-            if ($eq($_.textxalign, "offleft")) { //#32041
-                $_.textxpos = -$f($_.textwidth + $_.textxoffset); //#32041
-            } //#32041
-            if ($eq($_.textxalign, "offright")) { //#32042
-                $_.textxpos = $f($_.pixx + $_.textxoffset); //#32042
-            } //#32042
-            if ($eq($_.textxalign, "justify") && ($_.textwidth < $_.pixx)) { //#32046
-                $_.textxpos = 0; //#32044
-                $_.textgaps = $f($_.pixx - $_.textwidth) / ($_.tstr.length - 1); //#32045
-            } //#32045
-            $_.textypos = -($f($f($_.textyoffset + $_.textascent) + 1)); //#32047
-            if ($eq($_.textyalign, "above")) { //#32048
-                $_.textypos = $f($f($_.textyoffset + $_.pixy) + 1); //#32048
+        } else { //#32059
+            $$.selectfont($_.textfont, $_.textsize); //#32019
+            if ($eq($_.alttext, "")) { //#32025
+                $k[$j++] = Infinity; //#32021
+                var _2P = $_.txt; //#32021
+                for (var _2Q = 0, _2R = _2P.length; _2Q < _2R; _2Q++) { //#32021
+                    $forall($get($get(_2P, _2Q), 0)); //#32021
+                } //#32021
+                $_.txt = $a(); //#32021
+                $_.tstr = $s($_.txt.length); //#32022
+                for (var _2Z = 0, _2Y = $_.txt.length - 1; _2Z <= _2Y; _2Z += 1) { //#32023
+                    $put($_.tstr, _2Z, $get($_.txt, _2Z)); //#32023
+                } //#32023
+            } else { //#32025
+                $_.tstr = $_.alttext; //#32025
+            } //#32025
+            if ($_.tstr.length == 0) { //#32035
+                $k[$j++] = 0; //#32030
+            } else { //#32035
+                $$.save(); //#32032
+                $$.newpath(); //#32033
+                $$.moveto(0, 0); //#32033
+                $$.charpath("0", false); //#32033
+                var _2f = $$.pathbbox(); //#32033
+                $$.restore(); //#32035
+                $k[$j++] = _2f.ury; //#32035
+            } //#32035
+            $_.textascent = $k[--$j]; //#32044
+            var _2i = $$.stringwidth($_.tstr); //#32045
+            $_.textwidth = $f(_2i.w + (($_.tstr.length - 1) * $_.textgaps)); //#32045
+            $_.textxpos = $f($_.textxoffset + ($f($_.pixx - $_.textwidth) / 2)); //#32047
+            if ($eq($_.textxalign, "left")) { //#32048
+                $_.textxpos = $_.textxoffset; //#32048
             } //#32048
-            if ($eq($_.textyalign, "center")) { //#32049
-                $_.textypos = $f($_.textyoffset + ($f($_.pixy - $_.textascent) / 2)); //#32049
+            if ($eq($_.textxalign, "right")) { //#32049
+                $_.textxpos = $f($f($_.pixx - $_.textxoffset) - $_.textwidth); //#32049
             } //#32049
-            $$.moveto($_.textxpos, $_.textypos); //#32050
-            $$.show($_.tstr, $_.textgaps, 0); //#32050
-        } //#32050
-    } //#32050
-    if ($_.guardwhitespace) { //#32065
-        $$.selectfont("OCR-B", $_.guardheight * 2); //#32056
-        if ($_.guardleftpos != 0) { //#32060
-            $$.moveto((-$_.guardleftpos) - 2, $f(($f($_.guardleftypos - ($_.guardheight / 2))) - 1.25)); //#32058
-            $$.show("<", 0, 0); //#32059
+            if ($eq($_.textxalign, "offleft")) { //#32050
+                $_.textxpos = -$f($_.textwidth + $_.textxoffset); //#32050
+            } //#32050
+            if ($eq($_.textxalign, "offright")) { //#32051
+                $_.textxpos = $f($_.pixx + $_.textxoffset); //#32051
+            } //#32051
+            if ($eq($_.textxalign, "justify") && ($_.textwidth < $_.pixx)) { //#32055
+                $_.textxpos = 0; //#32053
+                $_.textgaps = $f($_.pixx - $_.textwidth) / ($_.tstr.length - 1); //#32054
+            } //#32054
+            $_.textypos = -($f($f($_.textyoffset + $_.textascent) + 1)); //#32056
+            if ($eq($_.textyalign, "above")) { //#32057
+                $_.textypos = $f($f($_.textyoffset + $_.pixy) + 1); //#32057
+            } //#32057
+            if ($eq($_.textyalign, "center")) { //#32058
+                $_.textypos = $f($_.textyoffset + ($f($_.pixy - $_.textascent) / 2)); //#32058
+            } //#32058
+            $$.moveto($_.textxpos, $_.textypos); //#32059
+            $$.show($_.tstr, $_.textgaps, 0); //#32059
         } //#32059
-        if ($_.guardrightpos != 0) { //#32064
-            $$.moveto($f(($f($f($_.guardrightpos + $_.pixx) - $_.guardwidth)) + 1), $f(($f($_.guardrightypos - ($_.guardheight / 2))) - 1.25)); //#32062
-            $$.show(">", 0, 0); //#32063
-        } //#32063
-    } //#32063
-    $$.restore(); //#32067
-    $_ = Object.getPrototypeOf($_); //#32069
+    } //#32059
+    if ($_.guardwhitespace) { //#32074
+        $$.selectfont("OCR-B", $_.guardheight * 2); //#32065
+        if ($_.guardleftpos != 0) { //#32069
+            $$.moveto((-$_.guardleftpos) - 2, $f(($f($_.guardleftypos - ($_.guardheight / 2))) - 1.25)); //#32067
+            $$.show("<", 0, 0); //#32068
+        } //#32068
+        if ($_.guardrightpos != 0) { //#32073
+            $$.moveto($f(($f($f($_.guardrightpos + $_.pixx) - $_.guardwidth)) + 1), $f(($f($_.guardrightypos - ($_.guardheight / 2))) - 1.25)); //#32071
+            $$.show(">", 0, 0); //#32072
+        } //#32072
+    } //#32072
+    if ($ne($_.extratext, "")) { //#32109
+        if ($ne($_.extratextcolor, "unset")) { //#32078
+            $$.setcolor($_.extratextcolor); //#32078
+        } //#32078
+        $$.selectfont($_.extratextfont, $_.extratextsize); //#32079
+        $$.save(); //#32082
+        $$.newpath(); //#32083
+        $$.moveto(0, 0); //#32083
+        $$.charpath("0", false); //#32083
+        var _3a = $$.pathbbox(); //#32083
+        $$.restore(); //#32085
+        $_.textascent = _3a.ury; //#32093
+        var _3c = $$.stringwidth($_.extratext); //#32094
+        $_.textwidth = $f(_3c.w + (($_.extratext.length - 1) * $_.extratextgaps)); //#32094
+        $_.extratextxpos = $f($_.extratextxoffset + ($f($_.pixx - $_.textwidth) / 2)); //#32096
+        if ($eq($_.extratextxalign, "left")) { //#32097
+            $_.textxpos = $_.extratextxoffset; //#32097
+        } //#32097
+        if ($eq($_.extratextxalign, "right")) { //#32098
+            $_.textxpos = $f($f($_.pixx - $_.extratextxoffset) - $_.textwidth); //#32098
+        } //#32098
+        if ($eq($_.extratextxalign, "offleft")) { //#32099
+            $_.textxpos = -$f($_.textwidth + $_.extratextxoffset); //#32099
+        } //#32099
+        if ($eq($_.extratextxalign, "offright")) { //#32100
+            $_.textxpos = $f($_.pixx + $_.extratextxoffset); //#32100
+        } //#32100
+        if ($eq($_.extratextxalign, "justify") && ($_.textwidth < $_.pixx)) { //#32104
+            $_.textxpos = 0; //#32102
+            $_.extratextgaps = $f($_.pixx - $_.textwidth) / ($_.extratext.length - 1); //#32103
+        } //#32103
+        $_.textypos = -($f($f($_.extratextyoffset + $_.textascent) + 1)); //#32105
+        if ($eq($_.extratextyalign, "above")) { //#32106
+            $_.textypos = $f($f($_.extratextyoffset + $_.pixy) + 1); //#32106
+        } //#32106
+        if ($eq($_.extratextyalign, "center")) { //#32107
+            $_.textypos = $f($_.extratextyoffset + ($f($_.pixy - $_.textascent) / 2)); //#32107
+        } //#32107
+        $$.moveto($_.textxpos, $_.textypos); //#32108
+        $$.show($_.extratext, $_.extratextgaps, 0); //#32108
+    } //#32108
+    $$.restore(); //#32111
+    $_ = Object.getPrototypeOf($_); //#32113
 } //bwipp_renlinear
 function bwipp_renmaximatrix() {
-    if ($_.bwipjs_dontdraw) { //#32087
-        return; //#32087
-    } //#32087
-    $_ = Object.create($_); //#32089
-    $_.args = $k[--$j]; //#32091
-    $_.barcolor = "unset"; //#32094
-    $_.backgroundcolor = "unset"; //#32095
-    $forall($_.args, function() { //#32098
-        var _3 = $k[--$j]; //#32098
-        $_[$k[--$j]] = _3; //#32098
-    }); //#32098
-    var _5 = $_.opt; //#32099
-    for (var _A = _5.size, _9 = _5.keys(), _8 = 0; _8 < _A; _8++) { //#32099
-        var _6 = _9.next().value; //#32099
-        $_[_6] = _5.get(_6); //#32099
-    } //#32099
-    $_.barcolor = "" + $_.barcolor; //#32101
-    $_.backgroundcolor = "" + $_.backgroundcolor; //#32102
-    $$.save(); //#32104
-    if ($ne($_.barcolor, "unset")) { //#32106
-        $$.setcolor($_.barcolor); //#32106
-    } //#32106
-    $$.maxicode($_.pixs); //#32107
-    $$.restore(); //#32109
-    $_ = Object.getPrototypeOf($_); //#32111
+    if ($_.bwipjs_dontdraw) { //#32131
+        return; //#32131
+    } //#32131
+    $_ = Object.create($_); //#32133
+    $_.args = $k[--$j]; //#32135
+    $_.barcolor = "unset"; //#32138
+    $_.backgroundcolor = "unset"; //#32139
+    $forall($_.args, function() { //#32142
+        var _3 = $k[--$j]; //#32142
+        $_[$k[--$j]] = _3; //#32142
+    }); //#32142
+    var _5 = $_.opt; //#32143
+    for (var _A = _5.size, _9 = _5.keys(), _8 = 0; _8 < _A; _8++) { //#32143
+        var _6 = _9.next().value; //#32143
+        $_[_6] = _5.get(_6); //#32143
+    } //#32143
+    $_.barcolor = "" + $_.barcolor; //#32145
+    $_.backgroundcolor = "" + $_.backgroundcolor; //#32146
+    $$.save(); //#32148
+    if ($ne($_.barcolor, "unset")) { //#32150
+        $$.setcolor($_.barcolor); //#32150
+    } //#32150
+    $$.showmaxicode($_.pixs); //#32151
+    $$.restore(); //#32153
+    $_ = Object.getPrototypeOf($_); //#32155
 } //bwipp_renmaximatrix
 // bwip-js/barcode-ftr.js
 //
