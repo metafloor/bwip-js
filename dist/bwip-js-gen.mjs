@@ -33,7 +33,7 @@
 import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_jabcode,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
 
 // exports.js
-const BWIPJS_VERSION = '4.5.3 (2025-03-20)';
+const BWIPJS_VERSION = '4.5.4 (2025-04-16)';
 
 
 // bwipjs.toSVG(options)
@@ -694,17 +694,20 @@ BWIPJS.prototype.stroke = function() {
 
                 // Top and left edges are "inside" the polygon.
                 // Bottom and right edges are outside.
+
+                // counter-clockwise
                 self.drawing.polygon([
                         [ x0-bigw2, y0-bigh2 ],
                         [ x0-bigw2, y1+bigh2+1 ],
                         [ x1+bigw2+1, y1+bigh2+1 ],
-                        [ x1+bigw2+1, y0-bigh2 ]
+                        [ x1+bigw2+1, y0-bigh2 ],
                     ]);
+                // clockwise
                 self.drawing.polygon([
                         [ x0+remw2, y0+remh2 ],
-                        [ x0+remw2, y1-remh2+1 ],
-                        [ x1-remw2+1, y1-remh2+1 ],
                         [ x1-remw2+1, y0+remh2 ],
+                        [ x1-remw2+1, y1-remh2+1 ],
+                        [ x0+remw2, y1-remh2+1 ],
                     ]);
                 self.drawing.fill(rgb);
             }
@@ -786,7 +789,7 @@ BWIPJS.prototype.clip = function() {
 };
 
 // The pix array is in standard (not y-inverted postscript) orientation.
-BWIPJS.prototype.maxicode = function(pix) {
+BWIPJS.prototype.showmaxicode = function(pix) {
     var tsx = this.g_tsx;
     var tsy = this.g_tsy;
     var rgb = this.getRGB();
