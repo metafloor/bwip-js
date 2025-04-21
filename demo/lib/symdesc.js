@@ -1,7 +1,7 @@
 // file: bwip-js/lib/symdesc.js
 //
 // This code was automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2024-06-18
+// Barcode Writer in Pure PostScript - Version 2025-04-19
 //
 // Copyright (c) 2011-2025 Mark Warren
 // Copyright (c) 2004-2024 Terry Burton
@@ -21,7 +21,7 @@ var symdesc = {
     "mands":{ sym:"mands",desc:"Marks & Spencer",text:"0642118",opts:"includetext" },
     "code128":{ sym:"code128",desc:"Code 128",text:"Count01234567!",opts:"includetext" },
     "gs1-128":{ sym:"gs1-128",desc:"GS1-128",text:"(01)09521234543213(3103)000123",opts:"includetext" },
-    "ean14":{ sym:"ean14",desc:"GS1-14",text:"(01) 0 952 8765 43210 8",opts:"includetext" },
+    "ean14":{ sym:"ean14",desc:"EAN-14",text:"(01) 0 952 8765 43210 8",opts:"includetext" },
     "sscc18":{ sym:"sscc18",desc:"SSCC-18",text:"(00) 0 9528765 432101234 6",opts:"includetext" },
     "code39":{ sym:"code39",desc:"Code 39",text:"THIS IS CODE 39",opts:"includetext includecheck includecheckintext" },
     "code39ext":{ sym:"code39ext",desc:"Code 39 Extended",text:"Code39 Ext!",opts:"includetext includecheck includecheckintext" },
@@ -106,9 +106,9 @@ var symdesc = {
     "gs1-128composite":{ sym:"gs1-128composite",desc:"GS1-128 Composite",text:"(00)095287654321012346|(02)09521234543213(37)24(10)1234567ABCDEFG",opts:"ccversion=c" },
     "gs1datamatrix":{ sym:"gs1datamatrix",desc:"GS1 Data Matrix",text:"(01)09521234543213(17)120508(10)ABCD1234(410)9501101020917",opts:"" },
     "gs1datamatrixrectangular":{ sym:"gs1datamatrixrectangular",desc:"GS1 Data Matrix Rectangular",text:"(01)09521234543213(17)120508(10)ABCD1234(410)9501101020917",opts:"" },
-    "gs1dldatamatrix":{ sym:"gs1dldatamatrix",desc:"GS1 Digital Link Data Matrix",text:"https://id.gs1.org/01/09521234543213/22/ABC%2D123?99=XYZ-987",opts:"" },
+    "gs1dldatamatrix":{ sym:"gs1dldatamatrix",desc:"GS1 Digital Link Data Matrix",text:"https://id.gs1.org/01/09521234543213/22/ABC%2D123?99=XYZ-987",opts:"includetext" },
     "gs1qrcode":{ sym:"gs1qrcode",desc:"GS1 QR Code",text:"(01)09521234543213(8200)http://www.abc.net(10)ABCD1234(410)9501101020917",opts:"" },
-    "gs1dlqrcode":{ sym:"gs1dlqrcode",desc:"GS1 Digital Link QR Code",text:"HTTPS://ID.GS1.ORG/01/09521234543213/22/ABC%2D123?99=XYZ-987",opts:"" },
+    "gs1dlqrcode":{ sym:"gs1dlqrcode",desc:"GS1 Digital Link QR Code",text:"HTTPS://ID.GS1.ORG/01/09521234543213/22/ABC%2D123?99=XYZ-987",opts:"includetext" },
     "gs1dotcode":{ sym:"gs1dotcode",desc:"GS1 DotCode",text:"(235)5vBZIF%!<B;?oa%(01)09521234543213(8008)19052001",opts:"rows=16" },
     "hibccode39":{ sym:"hibccode39",desc:"HIBC Code 39",text:"A999BJC5D6E71",opts:"includetext" },
     "hibccode128":{ sym:"hibccode128",desc:"HIBC Code 128",text:"A999BJC5D6E71",opts:"includetext" },
