@@ -14,8 +14,8 @@ or to a canvas (browser) or as SVG (all platforms).
 
 ## Status 
 
-* Current bwip-js version is 4.5.4 (2025-04-16)
-* Current BWIPP version is 2024-06-18
+* Current bwip-js version is 4.6.0 (2025-04-20)
+* Current BWIPP version is 2025-04-19
 * Node.js compatibility: 6.0
 * Browser compatibility: Edge, Firefox, Chrome
 
@@ -667,7 +667,7 @@ for more details.
  * dotcode &#x2022; DotCode
  * ean13 &#x2022; EAN-13
  * ean13composite &#x2022; EAN-13 Composite
- * ean14 &#x2022; GS1-14
+ * ean14 &#x2022; EAN-14
  * ean2 &#x2022; EAN-2 (2 digit addon)
  * ean5 &#x2022; EAN-5 (5 digit addon)
  * ean8 &#x2022; EAN-8
