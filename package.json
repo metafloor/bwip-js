@@ -1,6 +1,6 @@
 {
   "name": "@bwip-js/react-native",
-  "version": "4.5.4",
+  "version": "4.6.0",
   "description": "JavaScript barcode generator supporting over 100 types and standards.",
   "type": "module",
   "exports": {
