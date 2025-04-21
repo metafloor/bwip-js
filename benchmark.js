@@ -131,7 +131,8 @@ function genround() {
     a.push({ bcid:'upce',   text:'0' + numeric(6),  _t:1 });
 
     a.push({ bcid:'ean13',  text:numeric(12) + ' ' + numeric(5),    _t:1 });
-    a.push({ bcid:'ean8',   text:numeric(7) + ' ' + numeric(2),     _t:1 });
+    //a.push({ bcid:'ean8',   text:numeric(7) + ' ' + numeric(2),     _t:1 });
+    a.push({ bcid:'ean8',   text:numeric(7),     _t:1 });
     a.push({ bcid:'upca',   text:numeric(11) + ' ' + numeric(5),    _t:1 });
     a.push({ bcid:'upce',   text:'0' + numeric(6) + ' ' + numeric(2),   _t:1 });
 

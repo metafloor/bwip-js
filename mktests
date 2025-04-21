@@ -5,7 +5,7 @@ grep -E '% --BEGIN (ENCODER|RENDERER|RESOURCE)' barcode.ps | sed -e 's,% --BEGIN
 rm -f ps_tests/* 2>/dev/null
 for path in ../postscriptbarcode/tests/ps_tests/*.ps.test ; do
     name=$(basename $path .ps.test)
-    if [ $name = codeone -o $name = gs1process -o $name = gs1processdl ] ; then
+    if [ $name = codeone ] ; then
         echo "skipping $name..."
         continue
     fi
@@ -50,6 +50,17 @@ for path in ../postscriptbarcode/tests/ps_tests/*.ps.test ; do
     ##      exch { 0 (dontdraw semi) bc412 /sbs get } dup 3 -1 roll 0 exch put
     ##      exch isEqual
     ##  } def
+    ## The gs1process and gs1processdl use different one slot patching:
+    ##  /good_tmpl {
+    ##      { 0 /dl gs1process null } exch  %% /ai for gs1process
+    ##      1 index 0 3 -1 roll put
+    ##      null isEqual
+    ##  } def
+    ##  /er_tmpl {
+    ##      exch { 0 /ai gs1process pop pop pop null } exch  %% /dl for gs1processdl
+    ##      1 index 0 3 -1 roll put
+    ##      exch isError
+    ##  } def
     node <<@EOF
     const fs = require('fs');
     let text = fs.readFileSync('ps_tests/$name.ps', 'utf-8')
@@ -82,7 +93,24 @@ for path in ../postscriptbarcode/tests/ps_tests/*.ps.test ; do
                         '    /t exch def\n' +
                         '    { t ' + _2 + ' ' + _3 + ' ' + _4 + ' get } e ' + _5 + '\n' +
                         '}';
-                });
+                })
+        // gs1process/gs1processdl
+        .replace(/(\n\/good_tmpl)\s*\{[^{}]+{ 0 (\/(?:ai|dl)) ([a-zA-Z0-9_-]+[^}]*) null }[^}]+null isEqual\s*\}/g,
+                (_0, _1, _2, _3, _4, _5) => {
+                    return _1 + ' {\n' +
+                        '    /t exch def\n' +
+                        '    { t ' + _2 + ' ' + _3 + ' null } null isEqual\n' +
+                        '}';
+                })
+        .replace(/(\n\/er_tmpl)\s*\{[^{}]+{ 0 (\/(?:ai|dl)) ([a-zA-Z0-9_-]+[^}]*) null }[^}]+isError\s*\}/g,
+                (_0, _1, _2, _3, _4, _5) => {
+                    return _1 + ' {\n' +
+                        '    /e exch def\n' +
+                        '    /t exch def\n' +
+                        '    { t ' + _2 + ' ' + _3 + ' null } e isError\n' +
+                        '}';
+                })
+        ;
     fs.writeFileSync('ps_tests/$name.ps', text);
 @EOF
 
@@ -187,16 +215,18 @@ function compare(result,expect) {
         if (result.length != expect.length) {
             console.log('\nFAIL: array lengths differ');
         } else {
-            for (let i = 0, l = expect.length; i < l; i++) {
-                if (rb[i] != eb[i]) {
+            // The expect array is always offset-0.
+            // The result array can be a live view.
+            for (let e = 0, r = result.o, l = expect.length; e < l; e++) {
+                if (rb[r+e] != eb[e]) {
                     console.log('\nFAIL: arrays differ');
                     showCode();
                     console.log('');
                     if (l > 40) {
-                        console.log('> [' + rb.slice(0, 40) + ', ...]');
+                        console.log('> [' + rb.slice(result.o, result.o+40) + ', ...]');
                         console.log('> [' + eb.slice(0, 40) + ', ...]');
                     } else {
-                        console.log('> [' + rb.slice(0, l) + ']');
+                        console.log('> [' + rb.slice(result.o, result.o+l) + ']');
                         console.log('> [' + eb + ']');
                     }
                     return false;
@@ -240,9 +270,10 @@ function showCode() {
                     first--;
                 }
                 console.log('FAILED AT: ps_tests/' + sym + '.ps:' + (lnbr+1));
-                for (let i = first; i <= lnbr ; i++) {
+                for (let i = first; i < lnbr ; i++) {
                     console.log('  ' + lines[i]);
                 }
+                console.log('> ' + lines[lnbr]);
                 lines[lnbr+1].trim() && console.log('  ' + lines[lnbr+1]);
             }
         }

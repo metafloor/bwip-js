@@ -1,0 +1,1004 @@
+/runtest_gs1process {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+%%/gs1process dup /uk.co.terryburton.bwipp findresource cvx def
+
+/good_tmpl {
+    /t exch def
+    { t /ai gs1process pop pop pop null } null isEqual
+} def
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t /ai gs1process pop pop pop null } e isError
+} def
+
+
+/ctx null def
+/parse false def
+/dontlint false def
+/lintreqs true def
+
+
+% N18,csum,key
+((00)123456789012345675) good_tmpl
+((00)) /bwipp.GS1valueTooShort er_tmpl
+((00)12345678901234567) /bwipp.GS1valueTooShort er_tmpl
+((00)1234567890123456750) /bwipp.GS1valueTooLong er_tmpl
+((00)123456789012345670) /bwipp.GS1badChecksum er_tmpl
+
+% ... X..20
+((01)12312312312319(10)) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(10)1) good_tmpl
+((01)12312312312319(10)12345678901234567890) good_tmpl
+((01)12312312312319(10)123456789012345678901) /bwipp.GS1valueTooLong er_tmpl
+((01)12312312312319(10)!"%&'*+,-/012345) good_tmpl
+((01)12312312312319(10)6789:;<=>?ABCDEFGHIJ) good_tmpl
+((01)12312312312319(10)KLMNOPQRSTUVWXYZ_abc) good_tmpl
+((01)12312312312319(10)defghijklmnopqrstuvw) good_tmpl
+((01)12312312312319(10)xyz) good_tmpl
+((01)12312312312319(10) ) /bwipp.GS1badCSET82character er_tmpl
+
+% ... X2 X..28
+((01)12312312312319(7230)121234567890123456789012345678) good_tmpl
+((01)12312312312319(7230)1212345678901234567890123456789) /bwipp.GS1valueTooLong er_tmpl
+((01)12312312312319(7230)123) good_tmpl
+((01)12312312312319(7230)12) /bwipp.GS1valueTooShort er_tmpl
+
+% ... Z..90
+((01)12312312312319(21)ABC123(8030)ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_) good_tmpl
+((01)12312312312319(21)ABC123(8030)ABC:123) /bwipp.GS1badCSET64character er_tmpl
+((01)12312312312319(21)ABC123(8030)12345=) good_tmpl
+((01)12312312312319(21)ABC123(8030)1234==) good_tmpl
+% TODO There should fail
+% ((01)12312312312319(21)ABC123(8030)ABC=123)
+% ((01)12312312312319(21)ABC123(8030)123=)
+% ((01)12312312312319(21)ABC123(8030)123==)
+% ((01)12312312312319(21)ABC123(8030)123===)
+% ((01)12312312312319(21)ABC123(8030)1234=)
+% ((01)12312312312319(21)ABC123(8030)1234===)
+% ((01)12312312312319(21)ABC123(8030)12345==)
+% ((01)12312312312319(21)ABC123(8030)12345===)
+
+% N1,zero N13,csum,key [X..16]
+((8003)01234567890128) good_tmpl
+((8003)012345678901281) good_tmpl
+((8003)012345678901281234567890123456) good_tmpl
+((8003)0123456789012812345678901234567) /bwipp.GS1valueTooLong er_tmpl
+((8003)112345678901281234567890123456) /bwipp.GS1zeroRequired er_tmpl
+
+% ... N8,yyyymmdd
+((8018)123123123123123121(7250)20000606) good_tmpl
+((8018)123123123123123121(7250)20250606) good_tmpl
+((8018)123123123123123121(7250)20500606) good_tmpl
+((8018)123123123123123121(7250)19750606) good_tmpl
+((8018)123123123123123121(7250)19990606) good_tmpl
+((8018)123123123123123121(7250)20200131) good_tmpl
+((8018)123123123123123121(7250)20200010) /bwipp.GS1badMonth er_tmpl
+((8018)123123123123123121(7250)20201310) /bwipp.GS1badMonth er_tmpl
+((8018)123123123123123121(7250)20209910) /bwipp.GS1badMonth er_tmpl
+((8018)123123123123123121(7250)20200131) good_tmpl
+((8018)123123123123123121(7250)20200132) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20200229) good_tmpl
+((8018)123123123123123121(7250)20000229) good_tmpl
+((8018)123123123123123121(7250)20040229) good_tmpl
+((8018)123123123123123121(7250)19960229) good_tmpl
+((8018)123123123123123121(7250)20200230) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20200331) good_tmpl
+((8018)123123123123123121(7250)20200332) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20200430) good_tmpl
+((8018)123123123123123121(7250)20200431) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20200531) good_tmpl
+((8018)123123123123123121(7250)20200532) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20200630) good_tmpl
+((8018)123123123123123121(7250)20200631) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20200731) good_tmpl
+((8018)123123123123123121(7250)20200732) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20200831) good_tmpl
+((8018)123123123123123121(7250)20200832) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20200930) good_tmpl
+((8018)123123123123123121(7250)20200931) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20201031) good_tmpl
+((8018)123123123123123121(7250)20201032) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20201130) good_tmpl
+((8018)123123123123123121(7250)20201131) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20201231) good_tmpl
+((8018)123123123123123121(7250)20201232) /bwipp.GS1badDay er_tmpl
+((8018)123123123123123121(7250)20210229) /bwipp.GS1badDay er_tmpl  % Not leap year
+
+% ... N6,yymmd0
+((01)12312312312319(11)000606) good_tmpl
+((01)12312312312319(11)250606) good_tmpl
+((01)12312312312319(11)500606) good_tmpl
+((01)12312312312319(11)750606) good_tmpl
+((01)12312312312319(11)990606) good_tmpl
+((01)12312312312319(11)200131) good_tmpl
+((01)12312312312319(11)200010) /bwipp.GS1badMonth er_tmpl
+((01)12312312312319(11)201310) /bwipp.GS1badMonth er_tmpl
+((01)12312312312319(11)209910) /bwipp.GS1badMonth er_tmpl
+((01)12312312312319(11)200131) good_tmpl
+((01)12312312312319(11)200132) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)200229) good_tmpl
+((01)12312312312319(11)000229) good_tmpl
+((01)12312312312319(11)040229) good_tmpl
+((01)12312312312319(11)960229) good_tmpl
+((01)12312312312319(11)200230) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)200331) good_tmpl
+((01)12312312312319(11)200332) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)200430) good_tmpl
+((01)12312312312319(11)200431) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)200531) good_tmpl
+((01)12312312312319(11)200532) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)200630) good_tmpl
+((01)12312312312319(11)200631) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)200731) good_tmpl
+((01)12312312312319(11)200732) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)200831) good_tmpl
+((01)12312312312319(11)200832) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)200930) good_tmpl
+((01)12312312312319(11)200931) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)201031) good_tmpl
+((01)12312312312319(11)201032) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)201130) good_tmpl
+((01)12312312312319(11)201131) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)201231) good_tmpl
+((01)12312312312319(11)201232) /bwipp.GS1badDay er_tmpl
+((01)12312312312319(11)210229) /bwipp.GS1badDay er_tmpl  % Not leap year
+((01)12312312312319(11)200600) good_tmpl                 % dd=00 permitted
+
+% ... N6,yymmdd
+((00)123456789012345675(4326)000606) good_tmpl
+((00)123456789012345675(4326)250606) good_tmpl
+((00)123456789012345675(4326)500606) good_tmpl
+((00)123456789012345675(4326)750606) good_tmpl
+((00)123456789012345675(4326)990606) good_tmpl
+((00)123456789012345675(4326)200131) good_tmpl
+((00)123456789012345675(4326)200010) /bwipp.GS1badMonth er_tmpl
+((00)123456789012345675(4326)201310) /bwipp.GS1badMonth er_tmpl
+((00)123456789012345675(4326)209910) /bwipp.GS1badMonth er_tmpl
+((00)123456789012345675(4326)200131) good_tmpl
+((00)123456789012345675(4326)200132) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)200229) good_tmpl
+((00)123456789012345675(4326)000229) good_tmpl
+((00)123456789012345675(4326)040229) good_tmpl
+((00)123456789012345675(4326)960229) good_tmpl
+((00)123456789012345675(4326)200230) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)200331) good_tmpl
+((00)123456789012345675(4326)200332) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)200430) good_tmpl
+((00)123456789012345675(4326)200431) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)200531) good_tmpl
+((00)123456789012345675(4326)200532) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)200630) good_tmpl
+((00)123456789012345675(4326)200631) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)200731) good_tmpl
+((00)123456789012345675(4326)200732) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)200831) good_tmpl
+((00)123456789012345675(4326)200832) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)200930) good_tmpl
+((00)123456789012345675(4326)200931) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)201031) good_tmpl
+((00)123456789012345675(4326)201032) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)201130) good_tmpl
+((00)123456789012345675(4326)201131) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)201231) good_tmpl
+((00)123456789012345675(4326)201232) /bwipp.GS1badDay er_tmpl
+((00)123456789012345675(4326)210229) /bwipp.GS1badDay er_tmpl  % Not leap year
+((00)123456789012345675(4326)200600) /bwipp.GS1badDay er_tmpl  % dd=00 forbidden
+
+% ... N2
+((01)12312312312319(20)12) good_tmpl
+((01)12312312312319(20)A2) /bwipp.GS1notNumeric er_tmpl
+((01)12312312312319(20)1A) /bwipp.GS1notNumeric er_tmpl
+((01)12312312312319(20)-2) /bwipp.GS1notNumeric er_tmpl
+((01)12312312312319(20)1-) /bwipp.GS1notNumeric er_tmpl
+((01)12312312312319(20)1) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(20)123) /bwipp.GS1valueTooLong er_tmpl
+
+% N13,csum,key [X..17]
+((253)1234567890128) good_tmpl
+((253)1234567890128A) good_tmpl
+((253)1234567890128ABCDEFGHIJKLMNOPQ) good_tmpl
+((253)1234567890128ABCDEFGHIJKLMNOPQR) /bwipp.GS1valueTooLong er_tmpl
+((253)1234567890120) /bwipp.GS1badChecksum er_tmpl
+
+% ... N3,iso4217 N..15
+((415)1231231231232(8020)A(3919)0501) good_tmpl
+((415)1231231231232(8020)A(3910)050123456789012345) good_tmpl
+((415)1231231231232(8020)A(3910)053123456789012345) /bwipp.GS1UnknownCurrency er_tmpl
+((415)1231231231232(8020)A(3910)050) /bwipp.GS1valueTooShort er_tmpl
+((415)1231231231232(8020)A(3910)0501234567890123456) /bwipp.GS1valueTooLong er_tmpl
+
+% ... X2,iso3166alpha2
+((00)123456789012345675(4307)GB) good_tmpl
+((00)123456789012345675(4307)ZZ) /bwipp.GS1UnknownCountryAlpha er_tmpl
+((00)123456789012345675(4307)G) /bwipp.GS1valueTooShort er_tmpl
+((00)123456789012345675(4307)GBZ) /bwipp.GS1valueTooLong er_tmpl
+
+% N3,iso3166 X..9
+((421)8501) good_tmpl
+((421)850123456789) good_tmpl
+((421)851123456789) /bwipp.GS1UnknownCountry er_tmpl
+((421)850) /bwipp.GS1valueTooShort er_tmpl
+((421)8501234567890) /bwipp.GS1valueTooLong er_tmpl
+
+% ... N3,iso3166999 X..27
+((01)12312312312319(7030)8501) good_tmpl
+((01)12312312312319(7030)9991) good_tmpl
+((01)12312312312319(7030)8511) /bwipp.GS1UnknownCountryOr999 er_tmpl
+((01)12312312312319(7030)850) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(7030)8501234567890123456789012345678) /bwipp.GS1valueTooLong er_tmpl
+
+% ... N..15,iso3166list
+((01)12312312312319(423)850) good_tmpl
+((01)12312312312319(423)004100400850894) good_tmpl
+((01)12312312312319(423)8501) /bwipp.GS1BadCountryListLength er_tmpl
+((01)12312312312319(423)85012) /bwipp.GS1BadCountryListLength er_tmpl
+((01)12312312312319(423)) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(423)1) /bwipp.GS1BadCountryListLength er_tmpl
+((01)12312312312319(423)12) /bwipp.GS1BadCountryListLength er_tmpl
+
+
+% Note: In reality, almost all GCPs are six or more numeric digits so the
+% restriction for "key" could be tightened
+%
+% X..30,key
+((401)12) good_tmpl
+((401)1) /bwipp.GS1keyTooShort er_tmpl
+((401)) /bwipp.GS1valueTooShort er_tmpl
+((401)A1) /bwipp.GS1badGCP er_tmpl
+((401)1A) /bwipp.GS1badGCP er_tmpl
+
+% ... X..35,pcenc
+((00)123456789012345675(4300)A) good_tmpl
+((00)123456789012345675(4300)ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHI) good_tmpl
+((00)123456789012345675(4300)%20) good_tmpl
+((00)123456789012345675(4300)%00) good_tmpl
+((00)123456789012345675(4300)%FF) good_tmpl
+((00)123456789012345675(4300)%ff) good_tmpl
+((00)123456789012345675(4300)%fg) /bwipp.GS1badPercentChars er_tmpl
+((00)123456789012345675(4300)%gf) /bwipp.GS1badPercentChars er_tmpl
+((00)123456789012345675(4300)%g) /bwipp.GS1badPercentEscape er_tmpl
+((00)123456789012345675(4300)ABC%20) good_tmpl
+((00)123456789012345675(4300)ABC%00) good_tmpl
+((00)123456789012345675(4300)ABC%FF) good_tmpl
+((00)123456789012345675(4300)ABC%ff) good_tmpl
+((00)123456789012345675(4300)ABC%fg) /bwipp.GS1badPercentChars er_tmpl
+((00)123456789012345675(4300)ABC%gf) /bwipp.GS1badPercentChars er_tmpl
+((00)123456789012345675(4300)ABC%g) /bwipp.GS1badPercentEscape er_tmpl
+((00)123456789012345675(4300)ABC%20XYZ) good_tmpl
+((00)123456789012345675(4300)ABC%00XYZ) good_tmpl
+((00)123456789012345675(4300)ABC%FFXYZ) good_tmpl
+((00)123456789012345675(4300)ABC%ffXYZ) good_tmpl
+((00)123456789012345675(4300)ABC%fgXYZ) /bwipp.GS1badPercentChars er_tmpl
+((00)123456789012345675(4300)ABC%gfXYZ) /bwipp.GS1badPercentChars er_tmpl
+((00)123456789012345675(4300)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+12345) good_tmpl
+((00)123456789012345675(4300)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+123456) /bwipp.GS1valueTooLong er_tmpl
+((00)123456789012345675(4301)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+12345) good_tmpl
+((00)123456789012345675(4301)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+123456) /bwipp.GS1valueTooLong er_tmpl
+((00)123456789012345675(4310)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+12345) good_tmpl
+((00)123456789012345675(4310)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+123456) /bwipp.GS1valueTooLong er_tmpl
+((00)123456789012345675(4311)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+12345) good_tmpl
+((00)123456789012345675(4311)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+123456) /bwipp.GS1valueTooLong er_tmpl
+((00)123456789012345675(4320)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+12345) good_tmpl
+((00)123456789012345675(4320)ABCDEFGHIJKLMNOPQRSTUVWXYZ%00+123456) /bwipp.GS1valueTooLong er_tmpl
+
+% ... X..30 (no pcenc)
+((00)123456789012345675(4308)ABCDEFGHIJKLMNOPQRSTUVWXYZ%+12) good_tmpl
+((00)123456789012345675(4308)ABCDEFGHIJKLMNOPQRSTUVWXYZ%+123) /bwipp.GS1valueTooLong er_tmpl
+
+% ... N1,yesno
+((00)123456789012345675(4321)0) good_tmpl
+((00)123456789012345675(4321)1) good_tmpl
+((00)123456789012345675(4321)2) /bwipp.GS1badBoolean er_tmpl
+((00)123456789012345675(4321)3) /bwipp.GS1badBoolean er_tmpl
+((00)123456789012345675(4321)4) /bwipp.GS1badBoolean er_tmpl
+((00)123456789012345675(4321)5) /bwipp.GS1badBoolean er_tmpl
+((00)123456789012345675(4321)6) /bwipp.GS1badBoolean er_tmpl
+((00)123456789012345675(4321)7) /bwipp.GS1badBoolean er_tmpl
+((00)123456789012345675(4321)8) /bwipp.GS1badBoolean er_tmpl
+((00)123456789012345675(4321)9) /bwipp.GS1badBoolean er_tmpl
+
+% ... N6,yymmd0 N4,hhmm
+((00)123456789012345675(4324)2006150015) good_tmpl
+((00)123456789012345675(4324)2006152359) good_tmpl
+((00)123456789012345675(4324)2006152400) /bwipp.GS1badHour er_tmpl
+((00)123456789012345675(4324)2006151260) /bwipp.GS1badMinute er_tmpl
+
+% ... N6,yymmdd [N6],yymmdd
+((01)12312312312319(7007)200615) good_tmpl
+((01)12312312312319(7007)200615200615) good_tmpl
+((01)12312312312319(7007)2006151) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(7007)20061512) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(7007)200615121) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(7007)2006151212) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(7007)20061512121) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(7007)200615121212) good_tmpl
+((01)12312312312319(7007)2006151212129) /bwipp.GS1valueTooLong er_tmpl
+
+% N1 X1 X1 X1,importeridx
+((7040)1ABC) good_tmpl
+((7040)1AB/) /bwipp.GS1badImporterIndex er_tmpl
+((7040)1AB) /bwipp.GS1valueTooShort er_tmpl
+((7040)1ABCD) /bwipp.GS1valueTooLong er_tmpl
+
+% ... N4,nonzero N5,nonzero N3,nonzero N1,winding N1
+((01)12312312312319(8001)00010000100109) good_tmpl
+((01)12312312312319(8001)99999999999999) good_tmpl
+((01)12312312312319(8001)00000000100109) /bwipp.GS1zeroNotPermitted er_tmpl
+((01)12312312312319(8001)00010000000109) /bwipp.GS1zeroNotPermitted er_tmpl
+((01)12312312312319(8001)00010000100009) /bwipp.GS1zeroNotPermitted er_tmpl
+((01)12312312312319(8001)00010000100109) good_tmpl
+((01)12312312312319(8001)00010000100119) good_tmpl
+((01)12312312312319(8001)00010000100129) /bwipp.GS1badWinding er_tmpl
+((01)12312312312319(8001)00010000100139) /bwipp.GS1badWinding er_tmpl
+((01)12312312312319(8001)00010000100149) /bwipp.GS1badWinding er_tmpl
+((01)12312312312319(8001)00010000100159) /bwipp.GS1badWinding er_tmpl
+((01)12312312312319(8001)00010000100169) /bwipp.GS1badWinding er_tmpl
+((01)12312312312319(8001)00010000100179) /bwipp.GS1badWinding er_tmpl
+((01)12312312312319(8001)00010000100189) /bwipp.GS1badWinding er_tmpl
+((01)12312312312319(8001)00010000100199) good_tmpl
+
+% N14,csum N4,pieceoftotal
+((8006)123456789012310203) good_tmpl
+((8006)123456789012310303) good_tmpl
+((8006)123456789012310003) /bwipp.GS1badPieceNumber er_tmpl
+((8006)123456789012310200) /bwipp.GS1badPieceTotal er_tmpl
+((8006)123456789012310302) /bwipp.GS1pieceExceedsTotal er_tmpl
+
+% ... X..34,iban
+((415)1231231231232(8020)A(8007)FR7630006000011234567890189) good_tmpl
+((415)1231231231232(8020)A(8007)DE91100000000123456789) good_tmpl
+((415)1231231231232(8020)A(8007)GR9608100010000001234567890) good_tmpl
+((415)1231231231232(8020)A(8007)MU43BOMM0101123456789101000MUR) good_tmpl
+((415)1231231231232(8020)A(8007)PK70BANK0000123456789000) good_tmpl
+((415)1231231231232(8020)A(8007)PL10105000997603123456789123) good_tmpl
+((415)1231231231232(8020)A(8007)RO09BCYP0000001234567890) good_tmpl
+((415)1231231231232(8020)A(8007)SA4420000001234567891234) good_tmpl
+((415)1231231231232(8020)A(8007)ES7921000813610123456789) good_tmpl
+((415)1231231231232(8020)A(8007)CH5604835012345678009) good_tmpl
+((415)1231231231232(8020)A(8007)GB98MIDL07009312345678) good_tmpl
+((415)1231231231232(8020)A(8007)BE71096123456769) good_tmpl
+((415)1231231231232(8020)A(8007)BE71096123456760) /bwipp.GS1badIBANchecksum er_tmpl
+((415)1231231231232(8020)A(8007)LC14BOSL123456789012345678901234) good_tmpl
+((415)1231231231232(8020)A(8007)LC14BOSL123456789012345678901230) /bwipp.GS1badIBANchecksum er_tmpl
+((415)1231231231232(8020)A(8007)LC14BOSLxx3456789012345678901230) /bwipp.GS1badIBANcharacter er_tmpl
+((415)1231231231232(8020)A(8007)XX361234567890) /bwipp.GS1UnknownCountryAlpha er_tmpl
+
+% ... N8,yymmddhh [N..4],optmmss
+((01)12312312312319(8008)200615121530) good_tmpl
+((01)12312312312319(8008)2006151215) good_tmpl
+((01)12312312312319(8008)20061512) good_tmpl
+((01)12312312312319(8008)200615241530) /bwipp.GS1badHour er_tmpl
+((01)12312312312319(8008)200615126030) /bwipp.GS1badMinute er_tmpl
+((01)12312312312319(8008)200615125960) /bwipp.GS1badSecond er_tmpl
+((01)12312312312319(8008)2006151) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(8008)200615123) /bwipp.GS1badTimeLength er_tmpl
+((01)12312312312319(8008)20061512345) /bwipp.GS1badTimeLength er_tmpl
+
+% C..30,key
+((8010)12345ABC) good_tmpl
+((8010)12#-/0123456789ABCDEFGHIJK) good_tmpl  % "#" is acceptable in CSET32
+((8010)12CDEFGHIJKLMNOPQRSTUVWXYZ) good_tmpl
+((8010)12345AB_) /bwipp.GS1badCSET39character er_tmpl
+
+% N..12,nozeroprefix
+((8010)12345ABC(8011)12345) good_tmpl
+((8010)12345ABC(8011)0) good_tmpl
+((8010)12345ABC(8011)01) /bwipp.GS1badZeroPrefix er_tmpl
+
+% X..25,csumalpha,key
+((8013)1987654Ad4X4bL5ttr2310c2K) good_tmpl
+((8013)12345678901234567890123NT) good_tmpl
+((8013)12345_ABCDEFGHIJKLMCP) good_tmpl
+((8013)12345_NOPQRSTUVWXYZDN) good_tmpl
+((8013)12345_abcdefghijklmN3) good_tmpl
+((8013)12345_nopqrstuvwxyzP2) good_tmpl
+%((8013)12345_!"%&'()*+,-./LC) good_tmpl   % TODO require version that doesn't parse
+((8013)12345_0123456789:;<=>?62) good_tmpl
+((8013)7907665Bm8v2AB) good_tmpl
+((8013)97850l6KZm0yCD) good_tmpl
+((8013)225803106GSpEF) good_tmpl
+((8013)149512464PM+GH) good_tmpl
+((8013)62577B8fRG7HJK) good_tmpl
+((8013)515942070CYxLM) good_tmpl
+((8013)390800494sP6NP) good_tmpl
+((8013)386830132uO+QR) good_tmpl
+((8013)53395376X1:nST) good_tmpl
+((8013)957813138Sb6UV) good_tmpl
+((8013)530790no0qOgWX) good_tmpl
+((8013)62185314IvwmYZ) good_tmpl
+((8013)23956qk1&dB!23) good_tmpl
+((8013)794394895ic045) good_tmpl
+((8013)57453Uq3qA<H67) good_tmpl
+((8013)62185314IvwmYZ) good_tmpl
+((8013)0881063PhHvY89) good_tmpl
+((8013)00000!HV) good_tmpl
+((8013)99999zzzzzzzzzzzzzzzzzzT2) good_tmpl
+((8013)1987654Ad4X4bL5ttr2310cXK) /bwipp.GS1badAlphaCheckCharacters er_tmpl
+((8013)1987654Ad4X4bL5ttr2310c2X) /bwipp.GS1badAlphaCheckCharacters er_tmpl
+((8013)198765#Ad4X4bL5ttr2310c2K) /bwipp.GS1badCSET82character er_tmpl
+((8013)1987654Ad4X4bL5ttr2310#2K) /bwipp.GS1badCSET82character er_tmpl
+((8013)1987654Ad4X4bL5ttr2310cxK) /bwipp.GS1UnknownCSET32Character er_tmpl
+((8013)1987654Ad4X4bL5ttr2310c2x) /bwipp.GS1UnknownCSET32Character er_tmpl
+((8013)12345678901234567890123NTX) /bwipp.GS1valueTooLong er_tmpl
+
+% X..70,couponcode
+((8110)012345612345611110123) good_tmpl
+((8110)a12345612345611110123) /bwipp.GS1couponNotNumeric er_tmpl
+((8110)01234561234561111012a) /bwipp.GS1couponNotNumeric er_tmpl
+((8110)01) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)012) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)0123) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)01234) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)012345) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)0123456) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)1123456) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)11234567) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)21234567) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)212345678) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)312345678) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)3123456789) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)4123456789) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)41234567890) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)51234567890) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)512345678901) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)612345678901) /bwipp.GS1couponTooShortGCP er_tmpl
+((8110)6123456789012) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)71234567890123) /bwipp.GS1couponBadGCPVLI er_tmpl
+((8110)812345678901234) /bwipp.GS1couponBadGCPVLI er_tmpl
+((8110)9123456789012345) /bwipp.GS1couponBadGCPVLI er_tmpl
+((8110)01234561) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)012345612) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)0123456123) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)01234561234) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)012345612345) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8110)0123456123456) /bwipp.GS1couponTooShortSaveValueVLI er_tmpl
+((8110)01234561234560) /bwipp.GS1couponBadSaveValueVLI er_tmpl
+((8110)01234561234561) /bwipp.GS1couponTooShortSaveValue er_tmpl
+((8110)012345612345611) /bwipp.GS1couponTooShort1stPurchaseRequirementVLI er_tmpl
+((8110)012345612345621) /bwipp.GS1couponTooShortSaveValue er_tmpl
+((8110)0123456123456212) /bwipp.GS1couponTooShort1stPurchaseRequirementVLI er_tmpl
+((8110)0123456123456312) /bwipp.GS1couponTooShortSaveValue er_tmpl
+((8110)01234561234563123) /bwipp.GS1couponTooShort1stPurchaseRequirementVLI er_tmpl
+((8110)01234561234564123) /bwipp.GS1couponTooShortSaveValue er_tmpl
+((8110)012345612345641234) /bwipp.GS1couponTooShort1stPurchaseRequirementVLI er_tmpl
+((8110)012345612345651234) /bwipp.GS1couponTooShortSaveValue er_tmpl
+((8110)0123456123456512345) /bwipp.GS1couponTooShort1stPurchaseRequirementVLI er_tmpl
+((8110)01234561234566123456) /bwipp.GS1couponBadSaveValueVLI er_tmpl
+((8110)012345612345671234567) /bwipp.GS1couponBadSaveValueVLI er_tmpl
+((8110)0123456123456812345678) /bwipp.GS1couponBadSaveValueVLI er_tmpl
+((8110)01234561234569123456789) /bwipp.GS1couponBadSaveValueVLI er_tmpl
+((8110)0123456123456110) /bwipp.GS1couponBad1stPurchaseRequirementVLI er_tmpl
+((8110)0123456123456111) /bwipp.GS1couponTooShort1stPurchaseRequirement er_tmpl
+((8110)01234561234561111) /bwipp.GS1couponTooShort1stPurchaseRequirementCode er_tmpl
+((8110)01234561234561121) /bwipp.GS1couponTooShort1stPurchaseRequirement er_tmpl
+((8110)012345612345611212) /bwipp.GS1couponTooShort1stPurchaseRequirementCode er_tmpl
+((8110)012345612345611312) /bwipp.GS1couponTooShort1stPurchaseRequirement er_tmpl
+((8110)0123456123456113123) /bwipp.GS1couponTooShort1stPurchaseRequirementCode er_tmpl
+((8110)0123456123456114123) /bwipp.GS1couponTooShort1stPurchaseRequirement er_tmpl
+((8110)01234561234561141234) /bwipp.GS1couponTooShort1stPurchaseRequirementCode er_tmpl
+((8110)01234561234561151234) /bwipp.GS1couponTooShort1stPurchaseRequirement er_tmpl
+((8110)012345612345611512345) /bwipp.GS1couponTooShort1stPurchaseRequirementCode er_tmpl
+((8110)0123456123456116123456) /bwipp.GS1couponBad1stPurchaseRequirementVLI er_tmpl
+((8110)01234561234561171234567) /bwipp.GS1couponBad1stPurchaseRequirementVLI er_tmpl
+((8110)012345612345611812345678) /bwipp.GS1couponBad1stPurchaseRequirementVLI er_tmpl
+((8110)0123456123456119123456789) /bwipp.GS1couponBad1stPurchaseRequirementVLI er_tmpl
+((8110)012345612345611110) /bwipp.GS1couponTooShort1stPurchaseFamilyCode er_tmpl
+((8110)012345612345611111) /bwipp.GS1couponTooShort1stPurchaseFamilyCode er_tmpl
+((8110)012345612345611112) /bwipp.GS1couponTooShort1stPurchaseFamilyCode er_tmpl
+((8110)012345612345611113) /bwipp.GS1couponTooShort1stPurchaseFamilyCode er_tmpl
+((8110)012345612345611114) /bwipp.GS1couponTooShort1stPurchaseFamilyCode er_tmpl
+((8110)012345612345611115) /bwipp.GS1couponBad1stPurchaseRequirementCode er_tmpl
+((8110)012345612345611116) /bwipp.GS1couponBad1stPurchaseRequirementCode er_tmpl
+((8110)012345612345611117) /bwipp.GS1couponBad1stPurchaseRequirementCode er_tmpl
+((8110)012345612345611118) /bwipp.GS1couponBad1stPurchaseRequirementCode er_tmpl
+((8110)012345612345611119) /bwipp.GS1couponTooShort1stPurchaseFamilyCode er_tmpl
+((8110)0123456123456111101) /bwipp.GS1couponTooShort1stPurchaseFamilyCode er_tmpl
+((8110)01234561234561111012) /bwipp.GS1couponTooShort1stPurchaseFamilyCode er_tmpl
+((8110)012345612345611110123) good_tmpl
+
+% Invalid optional fields
+((8110)0123456123456111101230) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+((8110)0123456123456111101237) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+((8110)0123456123456111101238) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+
+% Optional field 1
+((8110)0123456123456111101231) /bwipp.GS1couponTooShortAdditionalPurchaseRulesCode er_tmpl
+((8110)01234561234561111012310) /bwipp.GS1couponTooShort2ndPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012311) /bwipp.GS1couponTooShort2ndPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012312) /bwipp.GS1couponTooShort2ndPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012313) /bwipp.GS1couponTooShort2ndPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012314) /bwipp.GS1couponBadAdditionalPurchaseRulesCode er_tmpl
+((8110)01234561234561111012315) /bwipp.GS1couponBadAdditionalPurchaseRulesCode er_tmpl
+((8110)01234561234561111012316) /bwipp.GS1couponBadAdditionalPurchaseRulesCode er_tmpl
+((8110)01234561234561111012317) /bwipp.GS1couponBadAdditionalPurchaseRulesCode er_tmpl
+((8110)01234561234561111012318) /bwipp.GS1couponBadAdditionalPurchaseRulesCode er_tmpl
+((8110)01234561234561111012319) /bwipp.GS1couponBadAdditionalPurchaseRulesCode er_tmpl
+((8110)012345612345611110123100) /bwipp.GS1couponBad2ndPurchaseRequirementVLI er_tmpl
+((8110)012345612345611110123101) /bwipp.GS1couponTooShort2ndPurchaseRequirement er_tmpl
+((8110)0123456123456111101231011) /bwipp.GS1couponTooShort2ndPurchaseRequirementCode er_tmpl
+((8110)0123456123456111101231021) /bwipp.GS1couponTooShort2ndPurchaseRequirement er_tmpl
+((8110)01234561234561111012310212) /bwipp.GS1couponTooShort2ndPurchaseRequirementCode er_tmpl
+((8110)01234561234561111012310312) /bwipp.GS1couponTooShort2ndPurchaseRequirement er_tmpl
+((8110)012345612345611110123103123) /bwipp.GS1couponTooShort2ndPurchaseRequirementCode er_tmpl
+((8110)012345612345611110123104123) /bwipp.GS1couponTooShort2ndPurchaseRequirement er_tmpl
+((8110)0123456123456111101231041234) /bwipp.GS1couponTooShort2ndPurchaseRequirementCode er_tmpl
+((8110)0123456123456111101231051234) /bwipp.GS1couponTooShort2ndPurchaseRequirement er_tmpl
+((8110)01234561234561111012310512345) /bwipp.GS1couponTooShort2ndPurchaseRequirementCode er_tmpl
+((8110)012345612345611110123106123456) /bwipp.GS1couponBad2ndPurchaseRequirementVLI er_tmpl
+((8110)0123456123456111101231071234567) /bwipp.GS1couponBad2ndPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012310812345678) /bwipp.GS1couponBad2ndPurchaseRequirementVLI er_tmpl
+((8110)012345612345611110123109123456789) /bwipp.GS1couponBad2ndPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012310110) /bwipp.GS1couponTooShort2ndPurchaseFamilyCode er_tmpl
+((8110)01234561234561111012310111) /bwipp.GS1couponTooShort2ndPurchaseFamilyCode er_tmpl
+((8110)01234561234561111012310112) /bwipp.GS1couponTooShort2ndPurchaseFamilyCode er_tmpl
+((8110)01234561234561111012310113) /bwipp.GS1couponTooShort2ndPurchaseFamilyCode er_tmpl
+((8110)01234561234561111012310114) /bwipp.GS1couponTooShort2ndPurchaseFamilyCode er_tmpl
+((8110)01234561234561111012310115) /bwipp.GS1couponBad2ndPurchaseRequirementCode er_tmpl
+((8110)01234561234561111012310116) /bwipp.GS1couponBad2ndPurchaseRequirementCode er_tmpl
+((8110)01234561234561111012310117) /bwipp.GS1couponBad2ndPurchaseRequirementCode er_tmpl
+((8110)01234561234561111012310118) /bwipp.GS1couponBad2ndPurchaseRequirementCode er_tmpl
+((8110)01234561234561111012310119) /bwipp.GS1couponTooShort2ndPurchaseFamilyCode er_tmpl
+((8110)012345612345611110123101101) /bwipp.GS1couponTooShort2ndPurchaseFamilyCode er_tmpl
+((8110)0123456123456111101231011012) /bwipp.GS1couponTooShort2ndPurchaseFamilyCode er_tmpl
+((8110)01234561234561111012310110123) /bwipp.GS1couponTooShort2ndPurchaseGCPVLI er_tmpl
+((8110)012345612345611110123101101230) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)0123456123456111101231011012301) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)01234561234561111012310110123012) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)012345612345611110123101101230123) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)0123456123456111101231011012301234) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)01234561234561111012310110123012345) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)012345612345611110123101101230123456) good_tmpl
+((8110)012345612345611110123101101231123456) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)0123456123456111101231011012311234567) good_tmpl
+((8110)0123456123456111101231011012321234567) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)01234561234561111012310110123212345678) good_tmpl
+((8110)01234561234561111012310110123312345678) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)012345612345611110123101101233123456789) good_tmpl
+((8110)012345612345611110123101101234123456789) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)0123456123456111101231011012341234567890) good_tmpl
+((8110)0123456123456111101231011012351234567890) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)01234561234561111012310110123512345678901) good_tmpl
+((8110)01234561234561111012310110123612345678901) /bwipp.GS1couponTooShort2ndPurchaseGCP er_tmpl
+((8110)012345612345611110123101101236123456789012) good_tmpl
+((8110)0123456123456111101231011012371234567890123) /bwipp.GS1couponBad2ndPurchaseGCPVLI er_tmpl
+((8110)01234561234561111012310110123812345678901234) /bwipp.GS1couponBad2ndPurchaseGCPVLI er_tmpl
+((8110)012345612345611110123101101239) good_tmpl
+((8110)0123456123456111101231011012391) /bwipp.GS1couponUnrecognisedOptionalField
+((8110)0123456123456111101231011012301234560) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+
+% Optional field 2
+((8110)0123456123456111101232) /bwipp.GS1couponTooShort3rdPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012320) /bwipp.GS1couponBad3rdPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012321) /bwipp.GS1couponTooShort3rdPurchaseRequirement er_tmpl
+((8110)012345612345611110123211) /bwipp.GS1couponTooShort3rdPurchaseRequirementCode er_tmpl
+((8110)012345612345611110123221) /bwipp.GS1couponTooShort3rdPurchaseRequirement er_tmpl
+((8110)0123456123456111101232212) /bwipp.GS1couponTooShort3rdPurchaseRequirementCode er_tmpl
+((8110)0123456123456111101232312) /bwipp.GS1couponTooShort3rdPurchaseRequirement er_tmpl
+((8110)01234561234561111012323123) /bwipp.GS1couponTooShort3rdPurchaseRequirementCode er_tmpl
+((8110)01234561234561111012324123) /bwipp.GS1couponTooShort3rdPurchaseRequirement er_tmpl
+((8110)012345612345611110123241234) /bwipp.GS1couponTooShort3rdPurchaseRequirementCode er_tmpl
+((8110)012345612345611110123251234) /bwipp.GS1couponTooShort3rdPurchaseRequirement er_tmpl
+((8110)0123456123456111101232512345) /bwipp.GS1couponTooShort3rdPurchaseRequirementCode er_tmpl
+((8110)01234561234561111012326123456) /bwipp.GS1couponBad3rdPurchaseRequirementVLI er_tmpl
+((8110)012345612345611110123271234567) /bwipp.GS1couponBad3rdPurchaseRequirementVLI er_tmpl
+((8110)0123456123456111101232812345678) /bwipp.GS1couponBad3rdPurchaseRequirementVLI er_tmpl
+((8110)01234561234561111012329123456789) /bwipp.GS1couponBad3rdPurchaseRequirementVLI er_tmpl
+((8110)0123456123456111101232110) /bwipp.GS1couponTooShort3rdPurchaseFamilyCode er_tmpl
+((8110)0123456123456111101232111) /bwipp.GS1couponTooShort3rdPurchaseFamilyCode er_tmpl
+((8110)0123456123456111101232112) /bwipp.GS1couponTooShort3rdPurchaseFamilyCode er_tmpl
+((8110)0123456123456111101232113) /bwipp.GS1couponTooShort3rdPurchaseFamilyCode er_tmpl
+((8110)0123456123456111101232114) /bwipp.GS1couponTooShort3rdPurchaseFamilyCode er_tmpl
+((8110)0123456123456111101232115) /bwipp.GS1couponBad3rdPurchaseRequirementCode er_tmpl
+((8110)0123456123456111101232116) /bwipp.GS1couponBad3rdPurchaseRequirementCode er_tmpl
+((8110)0123456123456111101232117) /bwipp.GS1couponBad3rdPurchaseRequirementCode er_tmpl
+((8110)0123456123456111101232118) /bwipp.GS1couponBad3rdPurchaseRequirementCode er_tmpl
+((8110)0123456123456111101232119) /bwipp.GS1couponTooShort3rdPurchaseFamilyCode er_tmpl
+((8110)01234561234561111012321101) /bwipp.GS1couponTooShort3rdPurchaseFamilyCode er_tmpl
+((8110)012345612345611110123211012) /bwipp.GS1couponTooShort3rdPurchaseFamilyCode er_tmpl
+((8110)0123456123456111101232110123) /bwipp.GS1couponTooShort3rdPurchaseGCPVLI er_tmpl
+((8110)01234561234561111012321101230) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)012345612345611110123211012301) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)0123456123456111101232110123012) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)01234561234561111012321101230123) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)012345612345611110123211012301234) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)0123456123456111101232110123012345) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)01234561234561111012321101230123456) good_tmpl
+((8110)01234561234561111012321101231123456) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)012345612345611110123211012311234567) good_tmpl
+((8110)012345612345611110123211012321234567) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)0123456123456111101232110123212345678) good_tmpl
+((8110)0123456123456111101232110123312345678) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)01234561234561111012321101233123456789) good_tmpl
+((8110)01234561234561111012321101234123456789) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)012345612345611110123211012341234567890) good_tmpl
+((8110)012345612345611110123211012351234567890) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)0123456123456111101232110123512345678901) good_tmpl
+((8110)0123456123456111101232110123612345678901) /bwipp.GS1couponTooShort3rdPurchaseGCP er_tmpl
+((8110)01234561234561111012321101236123456789012) good_tmpl
+((8110)012345612345611110123211012371234567890123) /bwipp.GS1couponBad3rdPurchaseGCPVLI er_tmpl
+((8110)0123456123456111101232110123812345678901234) /bwipp.GS1couponBad3rdPurchaseGCPVLI er_tmpl
+((8110)01234561234561111012321101239) good_tmpl
+((8110)012345612345611110123211012391) /bwipp.GS1couponUnrecognisedOptionalField
+((8110)012345612345611110123211012301234560) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+
+% Optional field 3
+((8110)0123456123456111101233) /bwipp.GS1couponTooShortExpirationDate er_tmpl
+((8110)01234561234561111012331) /bwipp.GS1couponTooShortExpirationDate er_tmpl
+((8110)012345612345611110123312) /bwipp.GS1couponTooShortExpirationDate er_tmpl
+((8110)0123456123456111101233123) /bwipp.GS1couponTooShortExpirationDate er_tmpl
+((8110)01234561234561111012331234) /bwipp.GS1couponTooShortExpirationDate er_tmpl
+((8110)012345612345611110123312345) /bwipp.GS1couponTooShortExpirationDate er_tmpl
+((8110)0123456123456111101233200229) good_tmpl
+((8110)0123456123456111101233000606) good_tmpl
+((8110)0123456123456111101233250606) good_tmpl
+((8110)0123456123456111101233500606) good_tmpl
+((8110)0123456123456111101233750606) good_tmpl
+((8110)0123456123456111101233990606) good_tmpl
+((8110)0123456123456111101233200131) good_tmpl
+((8110)0123456123456111101233200010) /bwipp.GS1couponExpirationDateBadMonth er_tmpl
+((8110)0123456123456111101233201310) /bwipp.GS1couponExpirationDateBadMonth er_tmpl
+((8110)0123456123456111101233209910) /bwipp.GS1couponExpirationDateBadMonth er_tmpl
+((8110)0123456123456111101233200131) good_tmpl
+((8110)0123456123456111101233200132) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233200229) good_tmpl
+((8110)0123456123456111101233000229) good_tmpl
+((8110)0123456123456111101233040229) good_tmpl
+((8110)0123456123456111101233960229) good_tmpl
+((8110)0123456123456111101233200230) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233200331) good_tmpl
+((8110)0123456123456111101233200332) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233200430) good_tmpl
+((8110)0123456123456111101233200431) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233200531) good_tmpl
+((8110)0123456123456111101233200532) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233200630) good_tmpl
+((8110)0123456123456111101233200631) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233200731) good_tmpl
+((8110)0123456123456111101233200732) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233200831) good_tmpl
+((8110)0123456123456111101233200832) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233200930) good_tmpl
+((8110)0123456123456111101233200931) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233201031) good_tmpl
+((8110)0123456123456111101233201032) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233201130) good_tmpl
+((8110)0123456123456111101233201131) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233201231) good_tmpl
+((8110)0123456123456111101233201232) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)0123456123456111101233210229) /bwipp.GS1couponExpirationDateBadDay er_tmpl  % Not leap year
+((8110)0123456123456111101233200600) /bwipp.GS1couponExpirationDateBadDay er_tmpl
+((8110)01234561234561111012332002290) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+
+% Optional field 4
+((8110)0123456123456111101234) /bwipp.GS1couponTooShortStartDate er_tmpl
+((8110)01234561234561111012341) /bwipp.GS1couponTooShortStartDate er_tmpl
+((8110)012345612345611110123412) /bwipp.GS1couponTooShortStartDate er_tmpl
+((8110)0123456123456111101234123) /bwipp.GS1couponTooShortStartDate er_tmpl
+((8110)01234561234561111012341234) /bwipp.GS1couponTooShortStartDate er_tmpl
+((8110)012345612345611110123412345) /bwipp.GS1couponTooShortStartDate er_tmpl
+((8110)0123456123456111101234200229) good_tmpl
+((8110)0123456123456111101234000606) good_tmpl
+((8110)0123456123456111101234250606) good_tmpl
+((8110)0123456123456111101234500606) good_tmpl
+((8110)0123456123456111101234750606) good_tmpl
+((8110)0123456123456111101234990606) good_tmpl
+((8110)0123456123456111101234200131) good_tmpl
+((8110)0123456123456111101234200010) /bwipp.GS1couponStartDateBadMonth er_tmpl
+((8110)0123456123456111101234201310) /bwipp.GS1couponStartDateBadMonth er_tmpl
+((8110)0123456123456111101234209910) /bwipp.GS1couponStartDateBadMonth er_tmpl
+((8110)0123456123456111101234200131) good_tmpl
+((8110)0123456123456111101234200132) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234200229) good_tmpl
+((8110)0123456123456111101234000229) good_tmpl
+((8110)0123456123456111101234040229) good_tmpl
+((8110)0123456123456111101234960229) good_tmpl
+((8110)0123456123456111101234200230) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234200331) good_tmpl
+((8110)0123456123456111101234200332) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234200430) good_tmpl
+((8110)0123456123456111101234200431) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234200531) good_tmpl
+((8110)0123456123456111101234200532) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234200630) good_tmpl
+((8110)0123456123456111101234200631) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234200731) good_tmpl
+((8110)0123456123456111101234200732) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234200831) good_tmpl
+((8110)0123456123456111101234200832) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234200930) good_tmpl
+((8110)0123456123456111101234200931) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234201031) good_tmpl
+((8110)0123456123456111101234201032) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234201130) good_tmpl
+((8110)0123456123456111101234201131) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234201231) good_tmpl
+((8110)0123456123456111101234201232) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)0123456123456111101234210229) /bwipp.GS1couponStartDateBadDay er_tmpl  % Not leap year
+((8110)0123456123456111101234200600) /bwipp.GS1couponStartDateBadDay er_tmpl
+((8110)01234561234561111012335006064500606) good_tmpl
+((8110)01234561234561111012335006064500607) /bwipp.GS1couponExpireDateBeforeStartDate er_tmpl
+((8110)01234561234561111012342002290) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+
+% Optional field 5
+((8110)0123456123456111101235) /bwipp.GS1couponTooShortSerialNumberVLI er_tmpl
+((8110)01234561234561111012350) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)012345612345611110123501) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)0123456123456111101235012) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)01234561234561111012350123) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)012345612345611110123501234) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)0123456123456111101235012345) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)01234561234561111012350123456) good_tmpl
+((8110)01234561234561111012351123456) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)012345612345611110123511234567) good_tmpl
+((8110)012345612345611110123521234567) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)0123456123456111101235212345678) good_tmpl
+((8110)0123456123456111101235312345678) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)01234561234561111012353123456789) good_tmpl
+((8110)01234561234561111012354123456789) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)012345612345611110123541234567890) good_tmpl
+((8110)012345612345611110123551234567890) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)0123456123456111101235512345678901) good_tmpl
+((8110)0123456123456111101235612345678901) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)01234561234561111012356123456789012) good_tmpl
+((8110)01234561234561111012357123456789012) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)012345612345611110123571234567890123) good_tmpl
+((8110)012345612345611110123581234567890123) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)0123456123456111101235812345678901234) good_tmpl
+((8110)0123456123456111101235912345678901234) /bwipp.GS1couponTooShortSerialNumber er_tmpl
+((8110)01234561234561111012359123456789012345) good_tmpl
+((8110)012345612345611110123501234560) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+
+% Optional field 6
+((8110)0123456123456111101236) /bwipp.GS1couponTooShortRetailerGCPGLNVLI er_tmpl
+((8110)01234561234561111012360) /bwipp.GS1couponBadRetailerGCPGLNVLI er_tmpl
+((8110)01234561234561111012361) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)012345612345611110123611) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)0123456123456111101236112) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)01234561234561111012361123) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)012345612345611110123611234) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)0123456123456111101236112345) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)01234561234561111012361123456) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)012345612345611110123611234567) good_tmpl
+((8110)012345612345611110123621234567) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)0123456123456111101236212345678) good_tmpl
+((8110)0123456123456111101236312345678) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)01234561234561111012363123456789) good_tmpl
+((8110)01234561234561111012364123456789) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)012345612345611110123641234567890) good_tmpl
+((8110)012345612345611110123651234567890) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)0123456123456111101236512345678901) good_tmpl
+((8110)0123456123456111101236612345678901) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)01234561234561111012366123456789012) good_tmpl
+((8110)01234561234561111012367123456789012) /bwipp.GS1couponTooShortRetailerGCPGLN er_tmpl
+((8110)012345612345611110123671234567890123) good_tmpl
+((8110)0123456123456111101236812345678901234) /bwipp.GS1couponBadRetailerGCPGLNVLI er_tmpl
+((8110)01234561234561111012369123456789012345) /bwipp.GS1couponBadRetailerGCPGLNVLI er_tmpl
+((8110)0123456123456111101236112345670) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+
+% Optional field 9
+((8110)0123456123456111101239) /bwipp.GS1couponTooShortSaveValueCode er_tmpl
+((8110)01234561234561111012390) /bwipp.GS1couponTooShortSaveValueAppliesToItem er_tmpl
+((8110)01234561234561111012391) /bwipp.GS1couponTooShortSaveValueAppliesToItem er_tmpl
+((8110)01234561234561111012392) /bwipp.GS1couponTooShortSaveValueAppliesToItem er_tmpl
+((8110)01234561234561111012393) /bwipp.GS1couponBadSaveValueCode er_tmpl
+((8110)01234561234561111012394) /bwipp.GS1couponBadSaveValueCode er_tmpl
+((8110)01234561234561111012395) /bwipp.GS1couponTooShortSaveValueAppliesToItem er_tmpl
+((8110)01234561234561111012396) /bwipp.GS1couponTooShortSaveValueAppliesToItem er_tmpl
+((8110)01234561234561111012397) /bwipp.GS1couponBadSaveValueCode er_tmpl
+((8110)01234561234561111012398) /bwipp.GS1couponBadSaveValueCode er_tmpl
+((8110)01234561234561111012399) /bwipp.GS1couponBadSaveValueCode er_tmpl
+((8110)012345612345611110123900) /bwipp.GS1couponTooShortStoreCouponFlag er_tmpl
+((8110)012345612345611110123901) /bwipp.GS1couponTooShortStoreCouponFlag er_tmpl
+((8110)012345612345611110123902) /bwipp.GS1couponTooShortStoreCouponFlag er_tmpl
+((8110)012345612345611110123903) /bwipp.GS1couponBadSaveValueAppliesToItem er_tmpl
+((8110)012345612345611110123904) /bwipp.GS1couponBadSaveValueAppliesToItem er_tmpl
+((8110)012345612345611110123905) /bwipp.GS1couponBadSaveValueAppliesToItem er_tmpl
+((8110)012345612345611110123906) /bwipp.GS1couponBadSaveValueAppliesToItem er_tmpl
+((8110)012345612345611110123907) /bwipp.GS1couponBadSaveValueAppliesToItem er_tmpl
+((8110)012345612345611110123908) /bwipp.GS1couponBadSaveValueAppliesToItem er_tmpl
+((8110)012345612345611110123909) /bwipp.GS1couponBadSaveValueAppliesToItem er_tmpl
+((8110)0123456123456111101239000) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239001) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239002) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239003) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239004) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239005) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239006) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239007) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239008) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)0123456123456111101239009) /bwipp.GS1couponTooShortDontMultiplyFlag er_tmpl
+((8110)01234561234561111012390000) good_tmpl
+((8110)01234561234561111012390001) good_tmpl
+((8110)01234561234561111012390002) /bwipp.GS1couponBadDontMultiplyFlag er_tmpl
+((8110)01234561234561111012390003) /bwipp.GS1couponBadDontMultiplyFlag er_tmpl
+((8110)01234561234561111012390004) /bwipp.GS1couponBadDontMultiplyFlag er_tmpl
+((8110)01234561234561111012390005) /bwipp.GS1couponBadDontMultiplyFlag er_tmpl
+((8110)01234561234561111012390006) /bwipp.GS1couponBadDontMultiplyFlag er_tmpl
+((8110)01234561234561111012390007) /bwipp.GS1couponBadDontMultiplyFlag er_tmpl
+((8110)01234561234561111012390008) /bwipp.GS1couponBadDontMultiplyFlag er_tmpl
+((8110)01234561234561111012390009) /bwipp.GS1couponBadDontMultiplyFlag er_tmpl
+((8110)012345612345611110123900000) /bwipp.GS1couponUnrecognisedOptionalField er_tmpl
+
+% North American Coupon Application Guideline Using GS1 DataBar Expanded Symbols R2.0
+((8110)10614141011111275110111) good_tmpl                                             % Figure 3
+((8110)106141410222223100110222111101231023456721104561045678991201) good_tmpl        % Figure 4
+((8110)1061414165432131501101201211014092110256100126663101231) good_tmpl             % Example 1
+((8110)106141410012342501106501013085093101231) good_tmpl                             % Example 2
+((8110)106141410012471011076011110850921108609310123191000) good_tmpl                 % Example 3
+((8110)106141411234562891101201212085010048000214025610048000310123191000) good_tmpl  % Example 4
+((8110)1061414154321031501101201211014092110256100126663101231) good_tmpl             % Example 5
+((8110)106141416543213500110000310123196000) good_tmpl                                % Example 6
+
+% X..70,couponposoffer
+((8112)001234561234560123456) good_tmpl
+((8112)a01234561234560123456) /bwipp.GS1couponNotNumeric er_tmpl
+((8112)00123456123456012345a) /bwipp.GS1couponNotNumeric er_tmpl
+((8112)101234561234560123456) good_tmpl
+((8112)201234561234560123456) /bwipp.GS1couponBadFormatCode er_tmpl
+((8112)301234561234560123456) /bwipp.GS1couponBadFormatCode er_tmpl
+((8112)401234561234560123456) /bwipp.GS1couponBadFormatCode er_tmpl
+((8112)501234561234560123456) /bwipp.GS1couponBadFormatCode er_tmpl
+((8112)601234561234560123456) /bwipp.GS1couponBadFormatCode er_tmpl
+((8112)701234561234560123456) /bwipp.GS1couponBadFormatCode er_tmpl
+((8112)801234561234560123456) /bwipp.GS1couponBadFormatCode er_tmpl
+((8112)901234561234560123456) /bwipp.GS1couponBadFormatCode er_tmpl
+((8112)0) /bwipp.GS1couponTooShortFunderVLI er_tmpl
+((8112)00) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)001) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)0012) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)00123) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)001234) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)0012345) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)00123456) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)01123456) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)011234567) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)021234567) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)0212345678) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)0312345678) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)03123456789) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)04123456789) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)041234567890) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)051234567890) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)0512345678901) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)0612345678901) /bwipp.GS1couponTooShortFunder er_tmpl
+((8112)06123456789012) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)07) /bwipp.GS1couponBadFunderVLI er_tmpl
+((8112)08) /bwipp.GS1couponBadFunderVLI er_tmpl
+((8112)09) /bwipp.GS1couponBadFunderVLI er_tmpl
+((8112)001234561) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)0012345612) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)00123456123) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)001234561234) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)0012345612345) /bwipp.GS1couponTooShortOfferCode er_tmpl
+((8112)00123456123456) /bwipp.GS1couponTooShortSnVLI er_tmpl
+((8112)001234561234560) /bwipp.GS1couponTooShortSn er_tmpl
+((8112)0012345612345601) /bwipp.GS1couponTooShortSn er_tmpl
+((8112)00123456123456012) /bwipp.GS1couponTooShortSn er_tmpl
+((8112)001234561234560123) /bwipp.GS1couponTooShortSn er_tmpl
+((8112)0012345612345601234) /bwipp.GS1couponTooShortSn er_tmpl
+((8112)00123456123456012345) /bwipp.GS1couponTooShortSn er_tmpl
+((8112)001234561234560123456) good_tmpl
+((8112)001234561234561123456) /bwipp.GS1couponTooShortSn
+((8112)0012345612345611234567) good_tmpl
+((8112)0012345612345621234567) /bwipp.GS1couponTooShortSn
+((8112)00123456123456212345678) good_tmpl
+((8112)00123456123456312345678) /bwipp.GS1couponTooShortSn
+((8112)001234561234563123456789) good_tmpl
+((8112)001234561234564123456789) /bwipp.GS1couponTooShortSn
+((8112)0012345612345641234567890) good_tmpl
+((8112)0012345612345651234567890) /bwipp.GS1couponTooShortSn
+((8112)00123456123456512345678901) good_tmpl
+((8112)00123456123456612345678901) /bwipp.GS1couponTooShortSn
+((8112)001234561234566123456789012) good_tmpl
+((8112)001234561234567123456789012) /bwipp.GS1couponTooShortSn
+((8112)0012345612345671234567890123) good_tmpl
+((8112)0012345612345681234567890123) /bwipp.GS1couponTooShortSn
+((8112)00123456123456812345678901234) good_tmpl
+((8112)00123456123456912345678901234) /bwipp.GS1couponTooShortSn
+((8112)001234561234569123456789012345) good_tmpl
+((8112)0012345612345601234567) /bwipp.GS1couponTooLong er_tmpl
+((8112)06123456789012123456912345678901234) /bwipp.GS1couponTooShortSn
+((8112)061234567890121234569123456789012345) good_tmpl
+((8112)0612345678901212345691234567890123456) /bwipp.GS1couponTooLong
+
+% N10,latitude N10,longitude
+((00)123456789012345675(4309)02790858483015297971) good_tmpl
+((00)123456789012345675(4309)00000000000000000000) good_tmpl
+((00)123456789012345675(4309)18000000003600000000) good_tmpl
+((00)123456789012345675(4309)0279085848301529797) /bwipp.GS1valueTooShort er_tmpl
+((00)123456789012345675(4309)027908584830152979711) /bwipp.GS1valueTooLong er_tmpl
+((00)123456789012345675(4309)18000000010000000000) /bwipp.GS1badLatitude er_tmpl
+((00)123456789012345675(4309)00000000003600000001) /bwipp.GS1badLongitude er_tmpl
+
+% X3,posinseqslash
+((8018)123123123123123121(7259)NAME(7258)1/1) good_tmpl
+((8018)123123123123123121(7259)NAME(7258)1/3) good_tmpl
+((8018)123123123123123121(7259)NAME(7258)2/3) good_tmpl
+((8018)123123123123123121(7259)NAME(7258)3/3) good_tmpl
+((8018)123123123123123121(7259)NAME(7258)8/9) good_tmpl
+((8018)123123123123123121(7259)NAME(7258)9/9) good_tmpl
+((8018)123123123123123121(7259)NAME(7258)//1) /bwipp.invalidPosInSeqFormat er_tmpl
+((8018)123123123123123121(7259)NAME(7258)1//) /bwipp.endNotNumeric er_tmpl
+((8018)123123123123123121(7259)NAME(7258)1/x) /bwipp.endNotNumeric er_tmpl
+((8018)123123123123123121(7259)NAME(7258)x/1) /bwipp.positionNotNumeric er_tmpl
+((8018)123123123123123121(7259)NAME(7258)x/y) /bwipp.positionNotNumeric er_tmpl
+((8018)123123123123123121(7259)NAME(7258)0/0) /bwipp.positionZeroPrefix er_tmpl
+((8018)123123123123123121(7259)NAME(7258)0/1) /bwipp.positionZeroPrefix er_tmpl
+((8018)123123123123123121(7259)NAME(7258)1/0) /bwipp.endZeroPrefix er_tmpl
+((8018)123123123123123121(7259)NAME(7258)2/1) /bwipp.positionExceedsEnd er_tmpl
+((8018)123123123123123121(7259)NAME(7258)9/8) /bwipp.positionExceedsEnd er_tmpl
+
+% Unknown
+((89)ABC) /bwipp.GS1unknownAI er_tmpl
+((AB)ABC) /bwipp.GS1unknownAI er_tmpl
+(()ABC) /bwipp.GS1unknownAI er_tmpl
+(()(10)ABC) /bwipp.GS1unknownAI er_tmpl
+(()A(10)ABC) /bwipp.GS1unknownAI er_tmpl
+
+% Repeated AIs
+((400)ABC(400)ABC) good_tmpl
+((400)ABC(99)DEF(400)ABC) good_tmpl
+((99)ABC(400)XYZ(400)XYZ) good_tmpl
+((400)ABC(400)AB) /bwipp.GS1repeatedDifferingAIs er_tmpl
+((400)ABC(400)ABCD) /bwipp.GS1repeatedDifferingAIs er_tmpl
+((400)ABC(400)ABC(400)XYZ) /bwipp.GS1repeatedDifferingAIs er_tmpl
+((400)ABC(400)XYZ(400)ABC) /bwipp.GS1repeatedDifferingAIs er_tmpl
+((400)ABC(400)XYZ(400)XYZ) /bwipp.GS1repeatedDifferingAIs er_tmpl
+((400)ABC(99)DEF(400)XYZ) /bwipp.GS1repeatedDifferingAIs er_tmpl
+((99)ABC(400)ABC(400)XYZ) /bwipp.GS1repeatedDifferingAIs er_tmpl
+
+% Exclusive AIs
+((01)12345678901231(02)12345678901231) /bwipp.GS1exclusiveAIs er_tmpl
+((99)ABC123(01)12345678901231(02)12345678901231) /bwipp.GS1exclusiveAIs er_tmpl
+((01)12345678901231(99)ABC123(02)12345678901231) /bwipp.GS1exclusiveAIs er_tmpl
+((01)12345678901231(02)12345678901231(99)ABC123) /bwipp.GS1exclusiveAIs er_tmpl
+((01)12345678901231(255)5412345000150) /bwipp.GS1exclusiveAIs er_tmpl
+((01)12345678901231(37)123) /bwipp.GS1exclusiveAIs er_tmpl
+((21)ABC123(235)XYZ) /bwipp.GS1exclusiveAIs er_tmpl
+((3940)1234(8111)9999) /bwipp.GS1exclusiveAIs er_tmpl
+((3940)1234(3941)9999) /bwipp.GS1exclusiveAIs er_tmpl
+((3955)123456(3929)123) /bwipp.GS1exclusiveAIs er_tmpl
+
+% Requisite AIs: (02) req=37; (37) req=02,8026
+((02)12345678901231) /bwipp.GS1missingAIs er_tmpl
+((02)12345678901231(37)123) /bwipp.GS1missingAIs er_tmpl
+((99)AAA(02)12345678901231(37)123) /bwipp.GS1missingAIs er_tmpl
+((02)12345678901231(99)AAA(37)123) /bwipp.GS1missingAIs er_tmpl
+((02)12345678901231(37)123(99)AAA) /bwipp.GS1missingAIs er_tmpl
+((02)12345678901231(37)123(00)123456789012345675) good_tmpl
+((91)XXX(02)12345678901231(92)YYY(37)123(93)ZZZ(00)123456789012345675) good_tmpl
+
+% Requisite AIs: (21) req=01,8006
+((21)ABC123) /bwipp.GS1missingAIs er_tmpl
+((21)ABC123(01)12345678901231) good_tmpl
+((21)ABC123(8006)123456789012310510) good_tmpl
+
+% Requisite AIs: (250) req=01,8006 req=21
+((01)12345678901231(250)ABC123) /bwipp.GS1missingAIs er_tmpl
+((01)12345678901231(21)XYZ999(250)ABC123) good_tmpl
+
+% Requisite AIs: (392n) req=01 req=30,31nn,32nn,35nn,36nn
+((01)12345678901231(3925)12599) /bwipp.GS1missingAIs er_tmpl
+((01)12345678901231(3925)12599(30)123) good_tmpl
+((01)12345678901231(3925)12599(3100)654321) good_tmpl
+((01)12345678901231(3925)12599(3105)654321) good_tmpl
+((01)12345678901231(3925)12599(3160)654321) good_tmpl
+((01)12345678901231(3925)12599(3165)654321) good_tmpl
+((01)12345678901231(3925)12599(3295)654321) good_tmpl
+((01)12345678901231(3925)12599(3500)654321) good_tmpl
+((01)12345678901231(3925)12599(3575)654321) good_tmpl
+((01)12345678901231(3925)12599(3600)654321) good_tmpl
+((01)12345678901231(3925)12599(3695)654321) good_tmpl
+
+% Requisite linting disabled
+/lintreqs false def
+((02)12345678901231) good_tmpl
+end
+} bind def

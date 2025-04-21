@@ -1504,16 +1504,24 @@ function PSC(str, flags) {
         need(2);
         if ((st[sp-1].type & TYPE_NUMTYP) || (st[sp-2].type & TYPE_NUMTYP)) {
             binarith('&');
-        } else {
+        } else if ((st[sp-1].type & TYPE_BOOLEAN) || (st[sp-2].type & TYPE_BOOLEAN)) {
             binbool('&&', '$an');
+        } else {
+            st[sp-2].expr = '$an(' + st[sp-2].expr + ',' + st[sp-1].expr + ')';
+            st[sp-2].type = TYPE_UNKNOWN;   // boolean or number
+            sp-=1;
         }
     }
     $.or = function() {
         need(2);
         if ((st[sp-1].type & TYPE_NUMTYP) || (st[sp-2].type & TYPE_NUMTYP)) {
             binarith('|');
-        } else {
+        } else if ((st[sp-1].type & TYPE_BOOLEAN) || (st[sp-2].type & TYPE_BOOLEAN)) {
             binbool('||', '$or');
+        } else {
+            st[sp-2].expr = '$or(' + st[sp-2].expr + ',' + st[sp-1].expr + ')';
+            st[sp-2].type = TYPE_UNKNOWN;   // boolean or number
+            sp-=1;
         }
     }
     $.xor = function() {
@@ -1553,7 +1561,7 @@ function PSC(str, flags) {
     // The compiler emits these functions when types are unknown, but when
     // seen in an if(), we know they are booleans.
     function unanorxo(expr) {
-        return expr.replace(/\$(an|or|xo)\(([\w$]+),([\w$]+)\)/g,
+        return expr.replace(/^\$(an|or|xo)\(([\w$]+),([\w$]+)\)$/g,
                     function($0,$1,$2,$3) {
                         if ($1 == 'an') {
                             return '(' + $2 + '&&' + $3 + ')';

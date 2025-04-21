@@ -1,0 +1,126 @@
+/runtest_gs1processdl {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+%%/gs1process dup /uk.co.terryburton.bwipp findresource cvx def
+
+/good_tmpl {
+    /t exch def
+    { t /dl gs1process null } null isEqual
+} def
+
+
+/er_tmpl {
+    /e exch def
+    /t exch def
+    { t /dl gs1process null } e isError
+} def
+
+
+/ctx null def
+/dontlint false def
+/lintreqs true def
+
+() /bwipp.GS1dlURIbadScheme er_tmpl
+(ftp://) /bwipp.GS1dlURIbadScheme er_tmpl
+(http://) /bwipp.GS1dlMissingDomainOrPathInfo er_tmpl
+(http://example.com) /bwipp.GS1dlMissingDomainOrPathInfo er_tmpl
+(http://example.com/) /bwipp.GS1dlNoAIinfo er_tmpl
+
+(http://example.com/00/006141411234567890) good_tmpl
+(HTTP://example.com/00/006141411234567890) good_tmpl
+(https://example.com/00/006141411234567890) good_tmpl
+(HTTPS://example.com/00/006141411234567890) good_tmpl
+
+(https://00/006141411234567890) /bwipp.GS1dlNoAIinfo er_tmpl  % Missing domain
+
+(https://example.com/stem/00/006141411234567890) good_tmpl
+(https://example.com/more/stem/00/006141411234567890) good_tmpl
+(https://example.com/even/more/stem/00/006141411234567890) good_tmpl
+(https://example.com/00/faux/00/006141411234567890)  good_tmpl   %  Fake AI in stem, stop at rightmost key
+
+(https://example.com/01/12312312312333) good_tmpl  % GTIN-13 -> GTIN-14
+(https://example.com/01/2112345678900) good_tmpl   % GTIN-12 -> GTIN-14
+(https://example.com/01/02345673) good_tmpl        % GTIN-8  -> GTIN-14
+
+(https://example.com/01/12312312312333/22/TEST/10/ABC/21/XYZ) good_tmpl
+(https://example.com/01/12312312312333/235/TEST) good_tmpl
+(https://example.com/253/1231231231232) good_tmpl
+(https://example.com/253/1231231231232TEST5678901234567) good_tmpl
+
+(https://example.com/253/1231231231232TEST56789012345678) /bwipp.GS1valueTooLong er_tmpl
+(https://example.com/8018/123456789012345675/8019/123) good_tmpl
+
+(https://example.com/00/006141411234567890/) /bwipp.GS1dlNoAIinfo er_tmpl  % Trailing slash not permitted
+(https://example.com/00/006141411234567890?) good_tmpl
+
+(https://example.com/00/006141411234567890?99=ABC) good_tmpl
+(https://example.com/401/12345678?99=ABC) good_tmpl
+(https://example.com/01/12312312312333?99=ABC&98=XYZ) good_tmpl
+(https://example.com/01/12312312312333?&&&99=ABC&&&&&&98=XYZ&&&) good_tmpl    % Ignore extraneous separators
+(https://example.com/01/12312312312333?99=ABC&unknown=666&98=XYZ) good_tmpl   % Ignore non-numeric params
+(https://example.com/01/12312312312333?99=ABC&singleton&98=XYZ) good_tmpl     % Ignore singlton params
+(https://example.com/01/12312312312333?singleton&99=ABC&98=XYZ) good_tmpl
+(https://example.com/01/12312312312333?99=ABC&98=XYZ&singleton) good_tmpl
+
+(https://example.com/01/12312312312333/22/ABC%2d123?99=ABC&98=XYZ%2f987) good_tmpl
+(https://example.com/01/12312312312333/22/test/10/abc/21/xyz#) good_tmpl
+(https://example.com/01/12312312312333/22/test/10/abc/21/xyz#fragment) good_tmpl
+(https://example.com/stem/00/006141411234567890?99=ABC#) good_tmpl
+(https://example.com/stem/00/006141411234567890?99=ABC#fragment) good_tmpl
+
+(https://id.gs1.org/01/12312312312333/22/ABC%2f123?99=XYZ%2f987) good_tmpl
+(https://id.gs1.org/01/12312312312333/22/ABC%2x123?99=XYZ%2f987) /bwipp.GS1dlBadHexCharacter er_tmpl
+(https://id.gs1.org/01/12312312312333/22/ABC%2d123?99=XYZ%2x987) /bwipp.GS1dlBadHexCharacter er_tmpl
+
+% Based on examples from the DL URI specification
+(https://id.gs1.org/01/09520123456788) good_tmpl
+(https://brand.example.com/01/9520123456788) good_tmpl
+(https://brand.example.com/some-extra/pathinfo/01/9520123456788) good_tmpl
+(https://id.gs1.org/01/09520123456788/22/2A) good_tmpl
+(https://id.gs1.org/01/09520123456788/10/ABC123) good_tmpl
+(https://id.gs1.org/01/09520123456788/21/12345) good_tmpl
+(https://id.gs1.org/01/09520123456788/10/ABC1/21/12345?17=180426) good_tmpl
+(https://id.gs1.org/01/09520123456788?3103=000195) good_tmpl
+(https://example.com/01/9520123456788?3103=000195&3922=0299&17=201225) good_tmpl
+(https://example.com/01/9520123456788?3103=000195&3922=0299&17=201225) good_tmpl
+(https://id.gs1.org/01/9520123456788?3103=000195&3922=0299&17=201225) good_tmpl
+(https://id.gs1.org/01/9520123456788?17=201225&3103=000195&3922=0299) good_tmpl
+(https://id.gs1.org/00/952012345678912345) good_tmpl
+(https://id.gs1.org/00/952012345678912345?02=09520123456788&37=25&10=ABC123) good_tmpl
+(https://id.gs1.org/414/9520123456788) good_tmpl
+(https://id.gs1.org/414/9520123456788/254/32a%2Fb) good_tmpl
+(https://example.com/8004/9520614141234567?01=9520123456788) good_tmpl
+
+% Path info key-qualifier sequences
+(https://example.com/01/09520123456788/22/2A/10/ABC123/21/12345) good_tmpl
+(https://example.com/01/09520123456788/22/2A/10/ABC123) good_tmpl
+(https://example.com/01/09520123456788/22/2A/21/12345) good_tmpl
+(https://example.com/01/09520123456788/22/2A) good_tmpl
+(https://example.com/01/09520123456788/10/ABC123/21/12345) good_tmpl
+(https://example.com/01/09520123456788/10/ABC123) good_tmpl
+(https://example.com/01/09520123456788/21/12345) good_tmpl
+(https://example.com/01/09520123456788) good_tmpl
+(https://example.com/01/09520123456788/235/QWERTY) good_tmpl
+(https://example.com/01/09520123456788/22/2A/21/12345/10/ABC123) /bwipp.GS1dlBadPathInfo er_tmpl  % Order
+(https://example.com/01/09520123456788/10/ABC123/22/2A/21/12345) /bwipp.GS1dlBadPathInfo er_tmpl  % Order
+(https://example.com/01/09520123456788/21/12345/22/2A/10/ABC123) /bwipp.GS1dlBadPathInfo er_tmpl  % Order
+(https://example.com/01/09520123456788/21/12345/10/ABC123/22/2A) /bwipp.GS1dlBadPathInfo er_tmpl  % Order
+(https://example.com/01/09520123456788/22/2A/10/ABC123/21/12345/99/XYZ) /bwipp.GS1dlBadPathInfo er_tmpl  % Extra
+(https://example.com/01/09520123456788/22/2A/10/ABC123/99/XYZ/21/12345) /bwipp.GS1dlBadPathInfo er_tmpl  % Extra
+(https://example.com/01/09520123456788/22/2A/99/XYZ/10/ABC123/21/12345) /bwipp.GS1dlBadPathInfo er_tmpl  % Extra
+(https://example.com/01/09520123456788/99/XYZ/22/2A/10/ABC123/21/12345) /bwipp.GS1dlBadPathInfo er_tmpl  % Extra
+
+% TODO Invalid data attributes
+%(https://example.com/01/09520123456788?99=ABC&999=faux) /bwipp.GS1dlInvalidDataAttribute er_tmpl
+%(https://example.com/01/09520123456788?22=2A) /bwipp.GS1dlInvalidDataAttribute er_tmpl
+%(https://example.com/01/09520123456788?21=12345) /bwipp.GS1dlInvalidDataAttribute er_tmpl
+%(https://example.com/01/09520123456788?235=XYZ) /bwipp.GS1dlInvalidDataAttribute er_tmpl
+
+% Attributes that must be promoted to key-qualifiers
+(https://example.com/01/09520123456788/22/2A/21/12345?10=ABC123) /bwipp.GS1dlAttributeMustBeQualifier er_tmpl
+end
+} bind def

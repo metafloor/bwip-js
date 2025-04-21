@@ -528,8 +528,35 @@ function bwipp_raiseerror() {
     if (typeof info == 'string' || info instanceof Uint8Array) {
         throw new Error($z(name) + ": " + $z(info));
     } else {
-        $k[$j++] = info;
-        throw new Error($z(name));
+        $k[$j++] = info;  // see mktests debugEqual
+        // Match ghostscript output
+        throw $z(name) + '\nAdditional information: ' + tostring(info);
+    }
+
+    function tostring(v) {
+        if (v instanceof Array) {
+            let s = '';
+            for (let i = v.o, l = v.o + v.length; i < l; i++) {
+                s += ' ' + tostring(v.b[i]);
+            }
+            return '[' + s.substr(1) + ']';
+        } else if (v instanceof Uint8Array) {
+            return String.fromCharCode.apply(String, v);
+        } else if (v instanceof Map) {
+            let s = '';
+            for (const [key, val] of v) {
+                s += ' ' + tostring(key) + ' ' + tostring(val);
+            }
+            return '<<' + s.substr(1) + '>>';
+        } else if (v && typeof v == 'object') {
+            let s = '';
+            for (let id in v) {
+                s += ' ' + tostring(id) + ' ' + tostring(v[id]);
+            }
+            return '<<' + s.substr(1) + '>>';
+        } else {
+            return '' + v;
+        }
     }
 }
 

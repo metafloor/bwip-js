@@ -35,15 +35,8 @@ JSOUT=tests/$tid.jsout
 cat tests/barcode.ps - > tests/runtest.ps <<@EOF
 0 0 moveto
 ($pstext) ($(echo "$opts" | sed -e 's/ !\w\w*//')) /$sym /uk.co.terryburton.bwipp findresource exec
-count {
-    % Order of printing must match the nodejs code.
-    dup { exch (pixs) eq { == } { pop } ifelse } forall
-    dup { exch (sbs) eq { == } { pop } ifelse } forall
-    dup { exch (bbs) eq { == } { pop } ifelse } forall
-    dup { exch (bhs) eq { == } { pop } ifelse } forall
-    pop
-} repeat
 @EOF
+cp tests/runtest.ps tests/$tid.ps
 
 ## Ghostscript prints integer floats as e.g. "1.0" whereas javascript prints
 ## them as simply "1".

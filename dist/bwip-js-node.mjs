@@ -5,7 +5,7 @@
 // Copyright (c) 2011-2025 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2024-06-18
+// Barcode Writer in Pure PostScript - Version 2025-04-19
 // Copyright (c) 2004-2024 Terry Burton
 //
 // The MIT License
@@ -785,14 +785,14 @@ BWIPJS.prototype.stroke = function() {
                 // Top and left edges are "inside" the polygon.
                 // Bottom and right edges are outside.
 
-                // counter-clockwise
+                // outside, counter-clockwise
                 self.drawing.polygon([
                         [ x0-bigw2, y0-bigh2 ],
                         [ x0-bigw2, y1+bigh2+1 ],
                         [ x1+bigw2+1, y1+bigh2+1 ],
                         [ x1+bigw2+1, y0-bigh2 ],
                     ]);
-                // clockwise
+                // inside, clockwise
                 self.drawing.polygon([
                         [ x0+remw2, y0+remh2 ],
                         [ x1-remw2+1, y0+remh2 ],

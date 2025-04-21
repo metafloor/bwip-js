@@ -1,5 +1,5 @@
 ## This code was automatically generated from:
-## Barcode Writer in Pure PostScript - Version 2024-06-18
+## Barcode Writer in Pure PostScript - Version 2025-04-19
 run 0 "ean5" "90200" "includetext guardwhitespace"
 run 0 "ean2" "05" "includetext guardwhitespace"
 run 0 "ean13" "9520123456788" "includetext guardwhitespace"
@@ -97,9 +97,9 @@ run 0 "databarexpandedstackedcomposite" "(01)09521234543213(10)ABCDEF|(21)123456
 run 0 "gs1-128composite" "(00)095287654321012346|(02)09521234543213(37)24(10)1234567ABCDEFG" "ccversion=c"
 run 0 "gs1datamatrix" "(01)09521234543213(17)120508(10)ABCD1234(410)9501101020917" ""
 run 0 "gs1datamatrixrectangular" "(01)09521234543213(17)120508(10)ABCD1234(410)9501101020917" ""
-run 0 "gs1dldatamatrix" "https://id.gs1.org/01/09521234543213/22/ABC%2D123?99=XYZ-987" ""
+run 0 "gs1dldatamatrix" "https://id.gs1.org/01/09521234543213/22/ABC%2D123?99=XYZ-987" "includetext"
 run 0 "gs1qrcode" "(01)09521234543213(8200)http://www.abc.net(10)ABCD1234(410)9501101020917" ""
-run 0 "gs1dlqrcode" "HTTPS://ID.GS1.ORG/01/09521234543213/22/ABC%2D123?99=XYZ-987" ""
+run 0 "gs1dlqrcode" "HTTPS://ID.GS1.ORG/01/09521234543213/22/ABC%2D123?99=XYZ-987" "includetext"
 run 0 "gs1dotcode" "(235)5vBZIF%!<B;?oa%(01)09521234543213(8008)19052001" "rows=16"
 run 0 "hibccode39" "A999BJC5D6E71" "includetext"
 run 0 "hibccode128" "A999BJC5D6E71" "includetext"

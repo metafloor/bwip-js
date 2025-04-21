@@ -30,9 +30,27 @@ rm -f tests/*.gsout tests/*.jsout 2>/dev/null
 ##rm -f coverage/* 2>/dev/null
 
 ##
-## Create a special barcode.ps that has empty renderers for ghostscript
+## Create a special barcode.ps that emits the renderer values
 ##
 sed -e '/\/ren\w* {\s*$/,/^}/s/^\s/% /' barcode.ps > tests/barcode.ps
+node <<@EOF
+const fs = require('node:fs');
+const text = fs.readFileSync('tests/barcode.ps', 'utf-8')
+    .replace(/\n\/renlinear {.*/, ()=>{
+        return (
+        '\n/renlinear {\n' +
+        '    dup (sbs) get ==\n' +
+        '    dup (bbs) get ==\n' +
+        '    dup (bhs) get ==\n' +
+        '    pop');
+    }).replace(/\n\/ren(maxi)?matrix {.*/g, (_0,_1)=>{
+        return (
+        '\n/ren'+ (_1||'') + 'matrix {\n' +
+        '    dup (pixs) get ==\n' +
+        '    pop');
+    });
+fs.writeFileSync('tests/barcode.ps', text, 'utf-8');
+@EOF
 
 ## Tests stats
 let NTESTS=0
