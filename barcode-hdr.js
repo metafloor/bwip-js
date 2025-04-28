@@ -8,6 +8,14 @@ var $j = 0;     // stack pointer
 var $k = [];    // operand stack
 var $_ = {};    // base of the dictionary stack
 
+// Aliases from Math ops
+const $abs = Math.abs;
+const $ceil = Math.ceil;
+const $log = Math.log;
+const $pow = Math.pow
+const $round = Math.round;
+const $sqrt = Math.sqrt;
+
 // Array ctor
 //  $a()    : Build a new array up to the Infinity-marker on the stack.
 //  $a(arr) : Convert native array to a "view" of the array.
@@ -200,10 +208,14 @@ function $get(s,k) {
     if (s instanceof Array) {
         return s.b[s.o+k];
     }
+    // Map or Object - need a string key
     if (k instanceof Uint8Array) {
-        return s.get($z(k));
+        k = $z(k);
     }
-    return s.get(k);
+    if (s instanceof Map) {
+        return s.get(k);
+    }
+    return s[k];
 }
 
 // put operator
@@ -509,15 +521,17 @@ function $or(a, b) {    // or
     return (typeof a === 'boolean') ? a || b : a | b;
 }
 function $xo(a, b) {    // xor
-    return (typeof a === 'boolean') ? !a && b || a && !b : a ^ b;
+    return (typeof a === 'boolean') ? a != b : a ^ b;
 }
 function $nt(a) {
     return typeof a == 'boolean' ? !a : ~a;
 }
-// emulate single-precision floating-point (pseudo-polyfill for Math.fround)
+// emulate single-precision floating-point.  This is not Math.fround().
+// More like ffloor()...
 var $f = (function (fa) {
-    return function(v) {
-        return Number.isInteger(v) ? v : (fa[0] = v, fa[0]);
+    return (v)=>{
+        //return Number.isInteger(v) ? v : (fa[0] = v, fa[0]);
+        return (v|0) == v ? v : (fa[0] = v, fa[0]);
     };
 })(new Float32Array(1));
 
@@ -570,6 +584,9 @@ function bwipp_raiseerror() {
 function bwipp_processoptions() {
     var dict = $k[--$j];
     var opts = $k[$j-1];
+    if (opts instanceof Uint8Array) {
+        opts = $z(opts);
+    }
     if (typeof opts == 'string') {
         let vals = opts.trim().split(/ +/g)
         $k[$j-1] = opts = new Map();
@@ -631,16 +648,4 @@ function bwipp_processoptions() {
         // Set the option into the dictionary
         dict[id] = val;
     }
-}
-
-// Replacement for loadctx which contains complex postscript operations
-// that we don't implement correctly.
-// f is a reference to the enclosing function.
-function bwipp_loadctx(f) {
-    if (!f.$ctx) {
-        f.$ctx = {};
-    }
-    var next = Object.getPrototypeOf($_);
-    Object.setPrototypeOf(f.$ctx, next);
-    Object.setPrototypeOf($_, f.$ctx);
 }
