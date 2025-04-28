@@ -186,6 +186,7 @@ function PSC(str, flags) {
     var cfg = {
         devar:      true,   // run devar() optimization
         coverage:   false,  // no branch coverage instrumentation
+        perf:       false,  // no performance instrumentation
     };
 
     for (var i = 0; i < flags.length; i++) {
@@ -194,6 +195,8 @@ function PSC(str, flags) {
         case '--with-devar':    cfg.devar = true;       break;
         case '--no-coverage':   cfg.coverage = false;   break;
         case '--with-coverage': cfg.coverage = true;    break;
+        case '--no-perf':       cfg.perf = false;       break;
+        case '--with-perf':     cfg.perf = true;        break;
         default:
             if (flags[i]) {
                 console.log('Unknown flag "' + flags[i] + '" ignored.');
@@ -240,6 +243,9 @@ function PSC(str, flags) {
 
     // Branch coverage seed
     var branchno = -1;      // -1 == disabled
+
+    // Performance codegen enable/disable
+    var perfflag = false;
 
     // Current code block
     var block = [];
@@ -570,6 +576,12 @@ function PSC(str, flags) {
             emit('$bwipjs_coverage[' + (branchno++) + ']=1;');
         }
     }
+    // Emits a performance metrics tracker
+    function newperf(lnbr) {
+        if (perfflag) {
+            emit('$bwipjs_perf[' + lnbr + ']=0;');
+        }
+    }
 
     // Binary arithmetic operator
     function binarith(op) {
@@ -586,12 +598,15 @@ function PSC(str, flags) {
                             parens(st[sp-1].expr);
         } else if (op == '+' || op == '-') {
             st[sp-2].type = TYPE_NUMVAL;
-            st[sp-2].expr = '$f(' + parens(st[sp-2].expr) + op +
-                                    parens(st[sp-1].expr) + ')';
+            // If adding an integer, don't need f32 conversion
+            if (/^\d+$/.test(st[sp-1].expr) || /^\d+$/.test(st[sp-2].expr)) {
+                st[sp-2].expr = parens(st[sp-2].expr) + op + parens(st[sp-1].expr);
+            } else {
+                st[sp-2].expr = '$f(' + parens(st[sp-2].expr) + op + parens(st[sp-1].expr) + ')';
+            }
         } else {
             st[sp-2].type = TYPE_NUMVAL;
-            st[sp-2].expr = parens(st[sp-2].expr) + op +
-                            parens(st[sp-1].expr);
+            st[sp-2].expr = parens(st[sp-2].expr) + op + parens(st[sp-1].expr);
         }
         st[sp-2].seq = ++seq;
         sp--;
@@ -616,7 +631,12 @@ function PSC(str, flags) {
         var t2 = st[sp-2].type;
 
         // Arithmetic
-        if ((t1&TYPE_NUMTYP) || (t2&TYPE_NUMTYP) || (t1&TYPE_BOOLEAN) ||
+        if ((ariop == '==' || ariop == '!=') &&
+                (st[sp-1].expr == '""' || st[sp-1].expr == "''")) {
+            st[sp-2].expr = st[sp-2].expr + '.length' + ariop + '0';
+            st[sp-2].type = TYPE_BOOLEAN;
+        } else if (((ariop == '==' || ariop == '!=') && (t2&TYPE_NULL)) ||
+                (t1&TYPE_NUMTYP) || (t2&TYPE_NUMTYP) || (t1&TYPE_BOOLEAN) ||
                 (t2&TYPE_BOOLEAN)) {
             st[sp-2].expr = parens(st[sp-2].expr) + ariop +
                             parens(st[sp-1].expr);
@@ -962,25 +982,27 @@ function PSC(str, flags) {
             throw 'ctxdef: expected exec block';
         }
         var lnbr = lex.lnbr;
-        emit('if (!@FUNCTION@.__' + lnbr + '__) ' + LC);
-        emit('$_ = Object.create($_);');
+        //ctxdef emit('if (!@FUNCTION@.__' + lnbr + '__) ' + LC);
+        //ctxdef emit('$_ = Object.create($_);');
         ctxprep(exec);
         var lines = ctxexec(exec);
         for (var i = 0; i < lines.length; i++) {
             block.push({ code:lines[i].code, lnbr:lines[i].lnbr, seq:++seq });
         }
         var t = tvar();
-        emit('for (var id in $_) $_.hasOwnProperty(id) && (@FUNCTION@.$ctx[id] = $_[id]);');
-        emit('@FUNCTION@.__' + lnbr + '__ = 1;');
-        emit('$_ = Object.getPrototypeOf($_);');
-        emit(RC);
+        //ctxdef emit('for (var id in $_) $_.hasOwnProperty(id) && (@FUNCTION@.$ctx[id] = $_[id]);');
+        //ctxdef emit('@FUNCTION@.__' + lnbr + '__ = 1;');
+        //ctxdef emit('$_ = Object.getPrototypeOf($_);');
+        //ctxdef emit(RC);
     };
 
     // Push the current dictionary.  We use this operator to create the
     // function-scoped $_ dictionary.
     $.begin = function() {
         need(1);
-        emit('$_ = Object.create($_);');
+        //ctxdef emit('$_ = Object.create($_);');
+        emit('var $__ = $_;');
+        emit('$_ = Object.assign({}, $_);');
         sp--;
         dlvl++;
     }
@@ -988,7 +1010,8 @@ function PSC(str, flags) {
     // Pop the current dictionary
     $.end = function() {
         ctxflush();
-        emit('$_ = Object.getPrototypeOf($_);');
+        //ctxdef emit('$_ = Object.getPrototypeOf($_);');
+        emit('$_ = $__;');
         dlvl--;
     }
 
@@ -996,15 +1019,15 @@ function PSC(str, flags) {
     $.currentdict = function() {
         st[sp++] = { type:TYPE_DICT, expr:'$_', seq:++seq };
     };
+    $.systemdict = function() {
+        st[sp++] = { type:TYPE_DICT, expr:'$_', seq:++seq };
+    }
 
     // Create an dictionary on the stack.  Used both for the dictionary
     // stack (a no-op) and for runtime created objects.
     $.dict = function() {
         // Ignore the size parameter.
         st[sp-1] = { type:TYPE_DICT, expr:'new Map', seq:++seq };
-    }
-    $.systemdict = function() {
-        st[sp-1] = { type:TYPE_DICT, expr:'$_', seq:++seq };
     }
 
     $.known = function() {
@@ -1046,14 +1069,14 @@ function PSC(str, flags) {
             if (expr == 'bwipp_loadctx') {
                 // The function takes a single stack value, which we don't need
                 sp--;
-                emit('bwipp_loadctx(@FUNCTION@);');
+                //ctxdef emit('bwipp_loadctx(@FUNCTION@);');
             } else if (expr == 'bwipp_unloadctx') {
                 // unloadctx always occurs immediately before end, so we can cheat
                 // and save some code by not needing to manipulate the prototype chain.
                 // This dereference sets $_ to the context object
                 // $.end then repeats this code and restores it to the original $_.
                 ctxflush();
-                emit('$_ = Object.getPrototypeOf($_);');
+                //ctxdef emit('$_ = Object.getPrototypeOf($_);');
             } else {
                 ctxflush();
                 emit(expr + '();');
@@ -1314,7 +1337,8 @@ function PSC(str, flags) {
             tvarno       = 0;
             seq          = 0;
             dict         = { ...bwippdefs };
-            branchno     = -1;  // Disable for the first pass
+            branchno     = -1;      // eisable for first pass
+            perfflag     = false;   // eisable for first pass
             loopstate    = [];
 
             // bwipjs special symbols
@@ -1331,6 +1355,9 @@ function PSC(str, flags) {
 
             if (cfg.coverage) {
                 branchno = 0;           // enable for the 2nd pass
+            }
+            if (cfg.perf) {
+                perfflag = true;
             }
         }
 
@@ -1368,9 +1395,7 @@ function PSC(str, flags) {
             code += lines[i].code + '//#' + lines[i].lnbr + '\n';
         }
         if (dlvl == 0 && cfg.coverage && fname) {
-            code += '}catch(e){\n' +
-                    'throw e;\n' +
-                    '}finally{\n' +
+            code += '}finally{\n' +
                     'typeof require==="function"&&' +
                     'require("fs").appendFileSync("coverage/' +
                     fname.substr(1, fname.length-2) + '",' +
@@ -1457,16 +1482,25 @@ function PSC(str, flags) {
     $.get = function() {
         need(2);
         var tid = tvar();
-        var id = st[sp-1].expr;
+        var key = st[sp-1].expr;
         var ty = st[sp-2].type;
         // Arrays may be views of arrays.
         // Strings may by uint8-strings or strings.
-        emit('var ' + tid + '=$get(' + st[sp-2].expr + ',' + id + ');');
-        if (st[sp-2].type & TYPE_STRTYP) {
-            st[sp-2] = { type:TYPE_INTVAL, expr:tid, seq:++seq };
-        } else {
+        /*
+        // If the key is a string literal, it must be a Map
+        if (st[sp-1].type & TYPE_STRLIT) {
+            emit('var ' + tid + '=' + st[sp-2].expr + '.get(' + key + ');');
+            console.log(key);
             st[sp-2] = { type:TYPE_UNKNOWN, expr:tid, seq:++seq };
-        }
+        } else {
+        */
+            emit('var ' + tid + '=$get(' + st[sp-2].expr + ',' + key + ');');
+            if (st[sp-2].type & TYPE_STRTYP) {
+                st[sp-2] = { type:TYPE_INTVAL, expr:tid, seq:++seq };
+            } else {
+                st[sp-2] = { type:TYPE_UNKNOWN, expr:tid, seq:++seq };
+            }
+        //}
         sp--;
     }
 
@@ -1528,14 +1562,13 @@ function PSC(str, flags) {
         need(2);
         if ((st[sp-1].type & TYPE_NUMTYP) || (st[sp-2].type & TYPE_NUMTYP)) {
             binarith('^');
+        } else if ((st[sp-1].type & TYPE_BOOLEAN) || (st[sp-2].type & TYPE_BOOLEAN)) {
+            // logical xor is simply a != b
+            binbool('!=', '$xo');
         } else {
             // JavaScript does not have logical xor
             st[sp-2].expr = '$xo(' + st[sp-2].expr + ',' + st[sp-1].expr + ')';
-            if ((st[sp-1].type&TYPE_BOOLEAN) || (st[sp-2].type&TYPE_BOOLEAN)) {
-                st[sp-2].type = TYPE_BOOLEAN;
-            } else {
-                st[sp-2].type = TYPE_UNKNOWN;   // boolean or number
-            }
+            st[sp-2].type = TYPE_UNKNOWN;   // boolean or number
             sp-=1;
         }
     }
@@ -1557,26 +1590,9 @@ function PSC(str, flags) {
         st[sp-1].seq = ++seq;
     }
 
-    // Convert $an(a,b), $or(a,b) and $xo(a,b) to their logical equivalents
-    // The compiler emits these functions when types are unknown, but when
-    // seen in an if(), we know they are booleans.
-    function unanorxo(expr) {
-        return expr.replace(/^\$(an|or|xo)\(([\w$]+),([\w$]+)\)$/g,
-                    function($0,$1,$2,$3) {
-                        if ($1 == 'an') {
-                            return '(' + $2 + '&&' + $3 + ')';
-                        }
-                        if ($1 == 'or') {
-                            return '(' + $2 + '||' + $3 + ')';
-                        }
-                        return '(!' +$2+ '&&' +$3 + '||' + $2 +'&&!' +$3+ ')';
-                    })
-    }
-
-
     $.if = function() {
         need(2);
-        var expr = unanorxo(st[sp-2].expr);
+        var expr = st[sp-2].expr;
         var exec = st[sp-1];
         sp-=2;
 
@@ -1616,7 +1632,7 @@ function PSC(str, flags) {
 
     $.ifelse = function() {
         need(3);
-        var expr  = unanorxo(st[sp-3].expr);
+        var expr  = st[sp-3].expr;
         var texec = st[sp-2];   // true-branch exec
         var fexec = st[sp-1];   // false-branch exec
         sp-=3;
@@ -1822,11 +1838,7 @@ function PSC(str, flags) {
             ctxflush();
 
             // If the limit is constant, we don't need an extra limit variable.
-            if (tlim != TYPE_INTLIT) {
-                var vlim = tvar();
-            } else {
-                var vlim = elim;
-            }
+            var vlim = tlim != TYPE_INTLIT ? tvar() : elim;
         }
 
         // internal loop variable
@@ -1860,15 +1872,21 @@ function PSC(str, flags) {
     $.repeat = function() {
         need(2);
         var tid = tvar();
-        var lim = tvar();
         var expr = st[sp-2].expr;
+        var tlim = st[sp-2].type;
         var exec = st[sp-1];
         sp-=2;
 
         loopstate.push('loop');
         ctxflush();
-        emit('for(var ' + tid + '=0,' + lim + '=' + expr + ';' +
-                    tid + '<' + lim + ';' + tid + '++)' + LC);
+        if (tlim == TYPE_INTLIT) {
+            emit('for(var ' + tid + '=0;' +
+                        tid + '<' + expr + ';' + tid + '++)' + LC);
+        } else {
+            var lim = tvar();
+            emit('for(var ' + tid + '=0,' + lim + '=' + expr + ';' +
+                        tid + '<' + lim + ';' + tid + '++)' + LC);
+        }
         ctxprep(exec);
         newbranch();
         append(ctxexec(exec));
@@ -1968,19 +1986,19 @@ function PSC(str, flags) {
         var expo = st[--sp].expr;
         var base = st[--sp].expr;
         st[sp++] = { type:TYPE_NUMVAL,
-                     expr:'Math.pow(' + base + ',' + expo + ')',
+                     expr:'$pow(' + base + ',' + expo + ')',
                      seq:++seq };
     }
     $.ln = function() {
         need(1);
         st[sp-1] = { type:TYPE_NUMVAL,
-                     expr:'Math.log(' + st[sp-1].expr + ')',
+                     expr:'$log(' + st[sp-1].expr + ')',
                      seq:++seq };
     }
     $.log = function() {
         need(1);
         st[sp-1] = { type:TYPE_NUMVAL,
-                     expr:'Math.log(' + parens(st[sp-1].expr) + '/Math.LN10)',
+                     expr:'$log(' + parens(st[sp-1].expr) + '/Math.LN10)',
                      seq:++seq };
     }
     $.neg = function() {
@@ -1993,28 +2011,28 @@ function PSC(str, flags) {
     }
     $.abs = function() {
         need(1);
-        st[sp-1].expr = 'Math.abs(' + st[sp-1].expr + ')';
+        st[sp-1].expr = '$abs(' + st[sp-1].expr + ')';
         st[sp-1].type = st[sp-1].type || TYPE_NUMVAL;
         st[sp-1].seq  = ++seq;
     }
     $.round = function() {
         need(1);
-        st[sp-1] = { type:TYPE_INTVAL, expr:'Math.round(' +st[sp-1].expr+ ')',
+        st[sp-1] = { type:TYPE_INTVAL, expr:'$round(' +st[sp-1].expr+ ')',
                     seq:++seq };
     }
     $.floor = function() {
         need(1);
-        st[sp-1] = { type:TYPE_INTVAL, expr:'Math.floor(' +st[sp-1].expr+ ')',
+        st[sp-1] = { type:TYPE_INTVAL, expr:'$floor(' +st[sp-1].expr+ ')',
                     seq:++seq };
     }
     $.ceiling = function() {
         need(1);
-        st[sp-1] = { type:TYPE_INTVAL, expr:'Math.ceil(' +st[sp-1].expr+ ')',
+        st[sp-1] = { type:TYPE_INTVAL, expr:'$ceil(' +st[sp-1].expr+ ')',
                     seq:++seq };
     }
     $.sqrt = function() {
         need(1);
-        st[sp-1] = { type:TYPE_NUMVAL, expr:'Math.sqrt(' +st[sp-1].expr+ ')',
+        st[sp-1] = { type:TYPE_NUMVAL, expr:'$sqrt(' +st[sp-1].expr+ ')',
                     seq:++seq };
     }
     $.bitshift = function() {
