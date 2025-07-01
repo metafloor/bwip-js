@@ -6637,7 +6637,13 @@ begin
         } loop
         /cws cws 0 j getinterval def
         /text () def
-    } if
+    } {
+        /text msglen string def
+        0 1 msglen 1 sub {
+            /i exch def
+            text i msg i get dup 0 lt { pop 32 } if put
+        } for
+    } ifelse
 
     % Character maps for each state, used by the legacy encoder
 {
@@ -6700,12 +6706,6 @@ begin
         /seta charvals 0 get def  seta lka seta swb get put  seta lkc seta swc get put
         /setb charvals 1 get def  setb lka setb swc get put  setb lkc setb swa get put
         /setc charvals 2 get def  setc lka setc swa get put  setc lkc setc swb get put
-
-        /text msglen string def
-        0 1 msglen 1 sub {
-            /i exch def
-            text i msg i get dup 0 lt { pop 32 } if put
-        } for
 
         % Standard and extended ASCII runlength at position
         /numSA [ msglen {0} repeat 0 ] def
@@ -6933,12 +6933,6 @@ begin
         /setb <<fn3 96 fn2 97 fn1 102 stp 106 lka  99 lkc 101>> def
         /setc <<              fn1 102 stp 106 lka 101 lkc 100>> def
 
-        /text msglen string def
-        0 1 msglen 1 sub {
-            /i exch def
-            text i msg i get dup 0 lt { pop 32 } if put
-        } for
-
         % Encoder states are named A0, B0, C0, A1, B1, and C1.
         % A, B, and C are the Code 128 code sets.
         % 0 is for ASCII and 1 is for extended ASCII range.
@@ -7105,7 +7099,7 @@ begin
     } for
     /csum csum 103 mod def
     cws j csum put
-    cws j 1 add seta stp get put
+    cws j 1 add 106 put %stp
 
     options /debugcws known { /bwipp.debugcws cws //raiseerror exec } if
 
@@ -24968,7 +24962,7 @@ begin
     } if
 
     eclevel length 2 eq dup {
-        pop eclevel 0 1 getinterval (L) dup eq {
+        pop eclevel 0 1 getinterval (L) eq dup {
             pop eclevel 1 get 48 sub dup 1 ge exch 4 le and
         } if
     } if
@@ -26956,7 +26950,7 @@ begin
     } if
 
     eclevel length 3 eq dup {
-       pop eclevel 0 2 getinterval (EC) dup eq {
+       pop eclevel 0 2 getinterval (EC) eq dup {
            pop eclevel 2 get 48 sub dup rev 2 eq {1} {0} ifelse ge exch 5 le and
        } if
     } if
