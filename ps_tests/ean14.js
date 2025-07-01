@@ -1,5 +1,6 @@
 function bwipp_runtest_ean14(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#13
 $_.t=$k[--$j];//#14
@@ -45,7 +46,7 @@ $_.er_tmpl();//#34
 $k[$j++]="(02)0952876543210";//#35
 $k[$j++]='bwipp.ean14badAI#35';//#35
 $_.er_tmpl();//#35
-$_ = Object.getPrototypeOf($_);//#36
+$_ = $__;//#36
 }//bwipp_runtest_ean14
 console.log("ean14...")
 bwipp_runtest_ean14();

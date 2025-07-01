@@ -1,5 +1,6 @@
 function bwipp_runtest_code39(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _0=function(){
 $k[$j++]="";//#18
 $k[$j++]="dontdraw";//#18
@@ -88,7 +89,7 @@ var _Q=$get($k[--$j],'sbs');//#54
 $k[$j++]=_Q;//#54
 };//#54
 debugIsEqual(_R,$a([1,3,1,1,3,1,3,1,1,1,1,3,1,3,1,1,1,3,1,1,1,1,3,1,1,1,1,3,3,1,1,1,3,1,1,3,3,1,1,1,1,3,1,1,3,1,3,1,1,1]));//#54
-$_ = Object.getPrototypeOf($_);//#56
+$_ = $__;//#56
 }//bwipp_runtest_code39
 console.log("code39...")
 bwipp_runtest_code39();

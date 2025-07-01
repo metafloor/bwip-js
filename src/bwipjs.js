@@ -536,6 +536,24 @@ BWIPJS.prototype.clip = function() {
     });
 };
 
+// Our replacement for the renmatrix drawlayer functionality.
+BWIPJS.prototype.drawlayer = function(pix, width, height) {
+    // The pix array is in y-inverted postscript orientation.
+    let paths = tracepaths(pix, width, height);
+
+    this.newpath();
+    for (let i = 0, il = paths.length; i < il; i++) {
+        let path = paths[i];
+        this.moveto(path[0][0], path[0][1]);
+        for (let j = 1, jl = path.length; j < jl; j++) {
+            let pt = path[j];
+            this.lineto(pt[0], pt[1]);
+        }
+        this.closepath();
+    }
+    this.fill();
+};
+
 // The pix array is in standard (not y-inverted postscript) orientation.
 BWIPJS.prototype.showmaxicode = function(pix) {
     var tsx = this.g_tsx;

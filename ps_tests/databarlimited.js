@@ -1,5 +1,6 @@
 function bwipp_runtest_databarlimited(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#15
 $_.t=$k[--$j];//#16
@@ -51,7 +52,7 @@ $_.er_tmpl();//#41
 $k[$j++]="(02)15012345678907";//#42
 $k[$j++]='bwipp.databarlimitedBadAI#42';//#42
 $_.er_tmpl();//#42
-$_ = Object.getPrototypeOf($_);//#43
+$_ = $__;//#43
 }//bwipp_runtest_databarlimited
 console.log("databarlimited...")
 bwipp_runtest_databarlimited();

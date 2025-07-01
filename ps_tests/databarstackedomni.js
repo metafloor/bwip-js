@@ -1,5 +1,6 @@
 function bwipp_runtest_databarstackedomni(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#15
 $_.t=$k[--$j];//#16
@@ -42,7 +43,7 @@ $_.er_tmpl();//#104
 $k[$j++]="(02)0003456789012";//#105
 $k[$j++]='bwipp.databarstackedomniBadAI#105';//#105
 $_.er_tmpl();//#105
-$_ = Object.getPrototypeOf($_);//#106
+$_ = $__;//#106
 }//bwipp_runtest_databarstackedomni
 console.log("databarstackedomni...")
 bwipp_runtest_databarstackedomni();

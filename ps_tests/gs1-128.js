@@ -1,5 +1,6 @@
 function bwipp_runtest_gs1_128(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#15
 var _1=$k[--$j];//#16
@@ -22,7 +23,7 @@ $k[$j++]="debugcws";//#26
 bwipp_gs1_128();//#26
 };//#26
 debugIsEqual(_9,$a([105,102,90,11,100,17,102,25,17,18,102,25,18,19,40,106]));//#26
-$_ = Object.getPrototypeOf($_);//#28
+$_ = $__;//#28
 }//bwipp_runtest_gs1_128
 console.log("gs1-128...")
 bwipp_runtest_gs1_128();

@@ -1,0 +1,79 @@
+
+30-April-2025
+
+- bwip-js version 4.7 (after rewrite of dictionary handling and new optimizing pass).
+- BWIPP version 2025-04-19
+
+Below is output from a specially instrumented version of benchmark.js
+that looked at the runtimes of the bwipp code.
+
+First number is overall execution time, including all bwip-js overhead.
+Second number is the overall bwipp runtime (includes the ren* functions).
+Third number is the bwipp rendering time (just the ren* functions).
+
+All times where recorded in microseconds (via process.hrtime.bigint() / 1000n).
+
+The 1d symbols are more than fast enough (png zlib deflate is the bottleneck).
+
+Likewise dotcode (which avoids the renmatrix path tracing) and maxicode
+(which uses our custom rendering logic).
+
+Note that the bwip-js overhead (difference between the first two numbers)
+is 10x less than the overall bwipp runtime.
+
+The biggest bottleneck is the renmatrix path tracing.
+
+bwip-js v1.5 and earlier used the bwipp renmatrix version that employed the
+imagemask postscript operator.  That code was nearly as fast as renlinear.
+
+One possible solution (that maintains compatibility with the bwip-js drawing
+context API) is to create a custom renmatrix that draws squares/rectangles
+for each black pixel rather than do the path tracing.  That would be horrid
+for the SVG output.
+
+Another possibility is to create a custom renmatrix that replaces the path
+tracing with the imagemask operator and have bwip-js internally implement the
+path tracing in javascript.  That would be ideal for the SVG drawing.  I 
+suspect the path tracing can be made ~10x faster in pure javascript.
+
+pdf417.......................... 2110,1815,1652
+qrcode.......................... 1742,1568,493
+hanxin.......................... 1406,1220,528
+ultracode....................... 1260,1089,1063
+azteccode....................... 1100,898,479
+datamatrix...................... 871,708,422
+databarexpandedstackedcomposite. 498,454,387
+databarexpandedstacked.......... 377,338,309
+dotcode......................... 366,235,23
+databarstackedomnicomposite..... 309,275,231
+code128......................... 285,32,11
+gs1-128composite................ 217,169,93
+databarexpandedcomposite........ 214,159,94
+ean13composite.................. 196,145,101
+databarstackedomni.............. 191,162,156
+databarstackedcomposite......... 188,162,111
+upcacomposite................... 183,137,96
+ean8composite................... 175,135,92
+code39.......................... 169,12,7
+upcecomposite................... 165,132,92
+databaromnicomposite............ 154,125,82
+databartruncatedcomposite....... 150,123,80
+databarlimitedcomposite......... 142,117,72
+maxicode........................ 136,54,1
+ean13........................... 115,15,8
+upca............................ 96,12,6
+code93.......................... 95,12,5
+databarexpanded................. 87,26,3
+sscc18.......................... 68,11,2
+ean8............................ 64,10,5
+upce............................ 62,13,6
+databarstacked.................. 60,41,35
+itf14........................... 43,6,3
+onecode......................... 31,13,6
+databaromni..................... 26,7,2
+japanpost....................... 24,8,5
+planet.......................... 21,6,4
+databartruncated................ 21,6,2
+royalmail....................... 21,7,4
+databarlimited.................. 20,7,2
+postnet......................... 19,3,2

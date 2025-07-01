@@ -1,0 +1,415 @@
+% --BEGIN RENDERER renmatrix--
+% --REQUIRES preamble raiseerror processoptions--
+%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2025041900 118278 116442
+%%BeginData:        408 ASCII Lines
+/setpacking where {pop currentpacking true setpacking} if
+10 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+begin
+/renmatrix {
+
+    20 dict begin
+
+    % Default options
+    /width 1.0 def
+    /height 1.0 def
+    /barcolor (unset) def
+%%    /backgroundcolor (unset) def
+    /bordercolor (unset) def
+    /colormap (unset) def
+    /dotty false def
+    /inkspread 0 def
+    /inkspreadh null def   % real sentinal
+    /inkspreadv null def   % real sentinal
+    /txt [] def
+    /includetext false def
+    /textcolor (unset) def
+    /textxalign (unset) def
+    /textyalign (unset) def
+    /textfont (Courier) def
+    /textsize 10.0 def
+    /textxoffset 0.0 def
+    /textyoffset 0.0 def
+    /textgaps 0.0 def
+    /alttext () def
+    /extratext () def
+    /extratextcolor (unset) def
+    /extratextxalign (left) def
+    /extratextyalign (above) def
+    /extratextfont (Courier) def
+    /extratextsize 10.0 def
+    /extratextxoffset 0.0 def
+    /extratextyoffset 0.0 def
+    /extratextgaps 0.0 def
+    /showborder false def
+    /borderleft 0.0 def
+    /borderright 0.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.25 def
+
+    {def} forall
+    opt currentdict /opt undef //processoptions exec pop
+
+    inkspreadh null eq {/inkspreadh inkspread def} if
+    inkspreadv null eq {/inkspreadv inkspread def} if
+
+%%    /uk.co.terryburton.bwipp.global_ctx dup where {
+%%        exch get /ctx exch def
+%%        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
+%%        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
+%%        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+%%    } { pop } ifelse
+%%
+%%    textsize 0 le {
+%%        /bwipp.renmatrixBadTextsize (The font size must be greater than zero) //raiseerror exec
+%%    } if
+%%
+%%    /xyget { pixx mul add pixs exch get} def
+%%    /cget { pixx mul add cache exch get and} def
+%%    /cput {  % Optimise by only storing "stem" corners
+%%        dup 4 mod 0 eq { % dir is up or left
+%%            3 1 roll pixx mul add cache exch 2 copy get 4 -1 roll or put
+%%        } {
+%%            pop pop pop
+%%        } ifelse
+%%    } def
+%%
+%%    /abcd {
+%%        4 string 0 [
+%%            5 -2 roll
+%%            pixx mul add dup
+%%            pixs exch 2 getinterval aload pop 3 -1 roll  % A B
+%%            pixs exch pixx add 2 getinterval aload pop   % C D
+%%        ] {3 copy 48 add put pop 1 add} forall pop
+%%    } def
+%%
+%%    /right {dir 1 ne {x y dir cput [x y]} if  /x x 1 add def  /dir 1 def} def
+%%    /down  {dir 2 ne {x y dir cput [x y]} if  /y y 1 add def  /dir 2 def} def
+%%    /left  {dir 4 ne {x y dir cput [x y]} if  /x x 1 sub def  /dir 4 def} def
+%%    /up    {dir 8 ne {x y dir cput [x y]} if  /y y 1 sub def  /dir 8 def} def
+%%
+%%    /trace {
+%%        % Walk the outline of a region emitting edge coordinates of the path
+%%        /y exch def  /x exch def
+%%        % dir 1:right 2:down 4:left 8:up
+%%        /dir x 1 add y 1 add xyget 1 eq {8} {4} ifelse def
+%%        /sx x def  /sy y def  /sdir dir def
+%%
+%%        % A B
+%%        % C D
+%%        mark {
+%%            x y abcd
+%%            1 {  % Common exit
+%%                dup dup (0001) eq exch dup (0011) eq exch (1011) eq or or {pop right exit} if
+%%                dup dup (0010) eq exch dup (1010) eq exch (1110) eq or or {pop down  exit} if
+%%                dup dup (1000) eq exch dup (1100) eq exch (1101) eq or or {pop left  exit} if
+%%                dup dup (0100) eq exch dup (0101) eq exch (0111) eq or or {pop up    exit} if
+%%                dup (1001) eq {
+%%                    dir 2 eq {pop left exit} {pop right exit} ifelse
+%%                } {  % 0110
+%%                    dir 1 eq {pop down exit} {pop up exit} ifelse
+%%                } ifelse
+%%            } repeat
+%%            x sx eq y sy eq and dir sdir eq and {exit} if
+%%        } loop
+%%        counttomark array astore exch pop
+%%
+%%    } def
+%%
+%%    % Set RGB or CMYK color, or some other color by name
+%%    /setanycolor {
+%%        /anycolor exch def
+%%        anycolor length 1 lt {
+%%            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
+%%        } if
+%%        anycolor 0 get 95 ne {  % RGB or CMYK
+%%            anycolor length dup 6 ne exch 8 ne and {
+%%                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
+%%            } if
+%%            mark
+%%            0 2 anycolor length 1 sub {
+%%                anycolor exch 2 getinterval 0 exch {
+%%                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
+%%                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F
+%%                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f
+%%                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
+%%                    } ifelse } ifelse } ifelse
+%%                    exch 16 mul add
+%%                } forall
+%%                255 div
+%%            } for
+%%            counttomark
+%%            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
+%%            exch 2 add -1 roll pop  % clear mark
+%%        } {  % Named color beginning "_..."
+%%            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
+%%            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
+%%            anycolor 2 copy known not {
+%%                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
+%%            } if
+%%            get mark exch aload pop counttomark 1 add -2 roll exch pop
+%%        } ifelse
+%%        { setcolorspace setcolor } stopped {
+%%            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
+%%        } if
+%%    } def
+%%
+%%    % Plot a layer of single colour
+%%    /drawlayer {
+%%
+%%        /pixsorig pixs def
+%%        /pixs exch def
+%%
+%%        % Pad the bitmap on all sides
+%%        /pixs [
+%%            pixx 2 add {0} repeat
+%%            0 pixx pixs length 1 sub {
+%%                0 exch
+%%                pixs exch pixx getinterval aload pop
+%%                0
+%%            } for
+%%            pixx 2 add {0} repeat
+%%        ] def
+%%        /pixx pixx 2 add def
+%%        /pixy pixy 2 add def
+%%
+%%        % Cache of visited corners for each direction
+%%        /cache [ pixs length {0} repeat ] def
+%%
+%%        % Construct paths by tracing regions avoiding duplication by using the cache
+%%        /paths [
+%%            0 1 pixy 2 sub {
+%%                /j exch def
+%%                0 1 pixx 2 sub {
+%%                    /i exch def
+%%                    /k i j abcd def
+%%                    k (0001) eq k (1001) eq or {  % Black region stem corners
+%%                        8 i j cget 0 eq {
+%%                            i j trace
+%%                        } if
+%%                    } if
+%%                    k (1110) eq {  % White region stem corner
+%%                        4 i j cget 0 eq {
+%%                            i j trace
+%%                        } if
+%%                    } if
+%%                } for
+%%            } for
+%%        ] def
+%%
+%%        % Revert the bitmap size
+%%        /pixx pixx 2 sub def
+%%        /pixy pixy 2 sub def
+%%
+%%        % Draw the image
+%%        newpath
+%%        paths {
+%%            /p exch def
+%%            /len p length def
+%%            p len 1 sub get aload pop
+%%            p 0 get aload pop
+%%            0 1 len 1 sub {                                % x1 y1 x2 y2
+%%                /i exch def
+%%                p i 1 add len mod get aload pop 6 -2 roll  % x3 y3 x1 y1 x2 y2
+%%                5 index inkspreadh
+%%                4 index 4 -1 roll lt {add} {sub} ifelse    % y3<y1 ? x2+i : x2-i
+%%                4 1 roll
+%%                4 index inkspreadv
+%%                4 index 4 -1 roll gt {add} {sub} ifelse    % x3>x1 ? y2+i : y2-i
+%%                4 -1 roll exch pixy exch sub
+%%                i 0 eq {moveto} {lineto} ifelse
+%%            } for                                          % x2 y2 x3 y3
+%%            closepath
+%%            pop pop pop pop
+%%        } forall
+%%        fill
+%%
+%%        /pixs pixsorig def
+%%
+%%    } def
+
+    /xyget { pixx mul add pixs exch get} def
+    /drawlayerdots {
+
+        /pixsorig pixs def
+        /pixs exch def
+
+        newpath
+        0 1 pixs length 1 sub {
+            dup pixx mod /x exch def
+            pixx idiv /y exch def
+            x y xyget 1 eq {
+               x 0.5 add pixy y sub 0.5 sub moveto
+               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc
+            } if
+        } for
+        fill
+
+        /pixs pixsorig def
+
+    } def
+
+    gsave
+
+    currentpoint translate
+
+    /inkspread  inkspread  2 div def
+    /inkspreadh inkspreadh 2 div def
+    /inkspreadv inkspreadv 2 div def
+
+    % Force symbol to given width
+    width pixx div 72 mul height pixy div 72 mul scale
+
+    % Display the border and background
+    showborder {
+        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+    } {  % No need to extend background when there is no border
+        /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def
+        /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def
+        /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def
+        /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def
+    } ifelse
+%%    backgroundcolor (unset) ne {
+%%        gsave
+%%        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%%        backgroundcolor setanycolor fill
+%%        grestore
+%%    } if
+    showborder {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } if
+
+    % Display the matrix
+    colormap (unset) eq {
+        /colormap << 1 barcolor >> def
+    } if
+
+    colormap {
+        dup (unset) ne { setanycolor } { pop } ifelse
+        /key exch def
+        [
+            pixs { key eq {1} {0} ifelse } forall
+        ] dotty {drawlayerdots} {drawlayer} ifelse
+    } forall
+
+    % Display the text for elements in the text array
+    includetext {
+        textcolor (unset) ne { textcolor setanycolor } if
+        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
+            /s 0 def /fn () def
+            txt {
+                aload pop
+                2 copy s ne exch fn ne or {
+                    dup 0 le {
+                        pop pop pop pop pop
+                        /bwipp.renmatrixFontTooSmall (The font size is too small) //raiseerror exec
+                    } if
+                    2 copy /s exch def /fn exch def
+                    selectfont
+                } {
+                    pop pop
+                } ifelse
+                moveto show
+            } forall
+        } {
+            textfont textsize selectfont
+            alttext () eq {
+                /txt [ txt { 0 get {} forall } forall ] def
+                /tstr txt length string def
+                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
+            } {
+                /tstr alttext def
+            } ifelse
+
+            % Find true ascent of font
+            tstr length 0 eq {
+                0
+            } {
+                gsave
+                newpath 0 0 moveto (0) false charpath pathbbox
+                4 1 roll pop pop pop
+                grestore
+                currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+                currentfont /StrokeWidth known and {
+                    currentfont /StrokeWidth get 2 div 0 exch
+                    currentfont /FontMatrix get dtransform
+                    dup mul exch dup mul add sqrt
+                    add
+                } if
+            } ifelse
+            /textascent exch def
+            /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
+
+            /textxpos textxoffset pixx textwidth sub 2 div add def
+            textxalign (left)     eq { /textxpos textxoffset def } if
+            textxalign (right)    eq { /textxpos pixx textxoffset sub textwidth sub def } if
+            textxalign (offleft)  eq { /textxpos textwidth textxoffset add neg def } if
+            textxalign (offright) eq { /textxpos pixx textxoffset add def } if
+            textxalign (justify)  eq textwidth pixx lt and {
+                /textxpos 0.0 def
+                /textgaps pixx textwidth sub tstr length 1 sub div def
+            } if
+            /textypos textyoffset textascent add 1 add neg def
+            textyalign (above)  eq { /textypos textyoffset pixy add 1 add def } if
+            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
+            textxpos textypos moveto textgaps 0 tstr ashow
+        } ifelse
+    } if
+
+    % Render any extratext
+    extratext () ne {
+        extratextcolor (unset) ne { extratextcolor setanycolor } if
+        extratextfont extratextsize selectfont
+
+        % Find true ascent of font
+        gsave
+        newpath 0 0 moveto (0) false charpath pathbbox
+        4 1 roll pop pop pop
+        grestore
+        currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+        currentfont /StrokeWidth known and {
+            currentfont /StrokeWidth get 2 div 0 exch
+            currentfont /FontMatrix get dtransform
+            dup mul exch dup mul add sqrt
+            add
+        } if
+        /textascent exch def
+        /textwidth extratext stringwidth pop extratext length 1 sub extratextgaps mul add def
+
+        /extratextxpos extratextxoffset pixx textwidth sub 2 div add def
+        extratextxalign (left)     eq { /textxpos extratextxoffset def } if
+        extratextxalign (right)    eq { /textxpos pixx extratextxoffset sub textwidth sub def } if
+        extratextxalign (offleft)  eq { /textxpos textwidth extratextxoffset add neg def } if
+        extratextxalign (offright) eq { /textxpos pixx extratextxoffset add def } if
+        extratextxalign (justify)  eq textwidth pixx lt and {
+            /textxpos 0.0 def
+            /extratextgaps pixx textwidth sub extratext length 1 sub div def
+        } if
+        /textypos extratextyoffset textascent add 1 add neg def
+        extratextyalign (above)  eq { /textypos extratextyoffset pixy add 1 add def } if
+        extratextyalign (center) eq { /textypos extratextyoffset pixy textascent sub 2 div add def } if
+        textxpos textypos moveto extratextgaps 0 extratext ashow
+    } if
+
+    grestore
+
+    end
+
+}
+[/barcode] {null def} forall
+bind def
+/renmatrix dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RENDERER renmatrix--

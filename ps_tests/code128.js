@@ -1,5 +1,6 @@
 function bwipp_runtest_code128(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _1=function(){
 $k[$j++]="^193^193^193^193^193^19399999999999999^193";//#17
 $k[$j++]="debugcws parse";//#17
@@ -78,7 +79,7 @@ $k[$j++]="debugcws parse parsefnc newencoder";//#68
 bwipp_code128();//#68
 };//#68
 debugIsEqual(_P,$a([104,17,99,23,102,45,67,84,106]));//#68
-$_ = Object.getPrototypeOf($_);//#70
+$_ = $__;//#70
 }//bwipp_runtest_code128
 console.log("code128...")
 bwipp_runtest_code128();

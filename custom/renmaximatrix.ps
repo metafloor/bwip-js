@@ -10,22 +10,51 @@
 
     20 dict begin
 
-    /args exch def   % We are given some arguments
-
     % Default options
     /barcolor (unset) def
-    /backgroundcolor (unset) def
+%%    /backgroundcolor (unset) def
+    /bordercolor (unset) def
+    /inkspread 0 def
+    /showborder false def
+    /borderleft 0.0 def
+    /borderright 0.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.25 def
 
-    % Apply the renderer options and the user options
-    args {def} forall
-    opt {def} forall
-
-    /barcolor barcolor cvlit def
-    /backgroundcolor backgroundcolor cvlit def
+    {def} forall
+    opt currentdict /opt undef //processoptions exec pop
 
     gsave
 
+    % Display the border and background
+    showborder {
+        /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
+        /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
+        /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
+        /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def
+    } {  % No need to extend background when there is no border
+        /tl [ borderleft neg inkspread add              29 bordertop add inkspread sub         ] def
+        /tr [ 30 borderright add inkspread sub          29 bordertop add inkspread sub         ] def
+        /bl [ borderleft neg inkspread add              borderbottom neg inkspread add         ] def
+        /br [ 30 borderright add inkspread sub          borderbottom neg inkspread add         ] def
+    } ifelse
+%%    backgroundcolor (unset) ne {
+%%        gsave
+%%        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%%        backgroundcolor setanycolor fill
+%%        grestore
+%%    } if
+    showborder {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } if
+
     barcolor (unset) ne { barcolor setanycolor } if
+
 	pixs showmaxicode
 
     grestore

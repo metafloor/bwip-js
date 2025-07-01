@@ -1,5 +1,6 @@
 function bwipp_runtest_rectangularmicroqrcode(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#15
 $_.o=$k[--$j];//#16
@@ -66,83 +67,83 @@ $k[$j++]=146;//#59
 $k[$j++]=148;//#59
 $k[$j++]=0;//#59
 $k[$j++]=236;//#59
-for(var _Q=0,_R=71;_Q<_R;_Q++){//#59
+for(var _Q=0;_Q<71;_Q++){//#59
 $k[$j++]=17;//#59
 $k[$j++]=236;//#59
 }//#59
-var _S=$a();//#58
-debugIsEqual($k[--$j],_S);//#59
-var _V=function(){
+var _R=$a();//#58
+debugIsEqual($k[--$j],_R);//#59
+var _U=function(){
 $k[$j++]="0123456789012345";//#63
 $k[$j++]="version=R7x59 fixedeclevel debugcws";//#63
 bwipp_rectangularmicroqrcode();//#63
 };//#63
-debugIsEqual(_V,$a([48,3,21,154,155,133,58,148,0,236,17,236]));//#63
-var _X=function(){
+debugIsEqual(_U,$a([48,3,21,154,155,133,58,148,0,236,17,236]));//#63
+var _W=function(){
 $k[$j++]="AC-42";//#68
 $k[$j++]="version=R7x59 eclevel=H fixedeclevel debugcws";//#68
 bwipp_rectangularmicroqrcode();//#68
 };//#68
-debugIsEqual(_X,$a([69,57,220,228,32,236,17]));//#68
-var _Z=function(){
+debugIsEqual(_W,$a([69,57,220,228,32,236,17]));//#68
+var _Y=function(){
 $k[$j++]="?????";//#73
 $k[$j++]="version=R7x43 eclevel=M fixedeclevel debugcws";//#73
 bwipp_rectangularmicroqrcode();//#73
 };//#73
-debugIsEqual(_Z,$a([116,252,252,252,252,252]));//#73
-var _b=function(){
+debugIsEqual(_Y,$a([116,252,252,252,252,252]));//#73
+var _a=function(){
 $k[$j++]="^147^095^228^170^147^095";//#78
 $k[$j++]="parse version=R7x43 eclevel=M fixedeclevel debugcws";//#78
 bwipp_rectangularmicroqrcode();//#78
 };//#78
-debugIsEqual(_b,$a([155,103,245,84,217,240]));//#78
-var _d=function(){
+debugIsEqual(_a,$a([155,103,245,84,217,240]));//#78
+var _c=function(){
 $k[$j++]="K9^000^000^000^000^000^000^000^000^000^000^000^000";//#83
 $k[$j++]="parse version=R11x59 eclevel=H fixedeclevel debugcws";//#83
 bwipp_rectangularmicroqrcode();//#83
 };//#83
-debugIsEqual(_d,$a([110,75,57,0,0,0,0,0,0,0,0,0,0,0,0]));//#83
-var _f=function(){
+debugIsEqual(_c,$a([110,75,57,0,0,0,0,0,0,0,0,0,0,0,0]));//#83
+var _e=function(){
 $k[$j++]="^000^000^000^000^000^000^000^000^000^000^000^000K9";//#87
 $k[$j++]="parse version=R11x59 eclevel=H fixedeclevel debugcws";//#87
 bwipp_rectangularmicroqrcode();//#87
 };//#87
-debugIsEqual(_f,$a([110,0,0,0,0,0,0,0,0,0,0,0,0,75,57]));//#87
-var _h=function(){
+debugIsEqual(_e,$a([110,0,0,0,0,0,0,0,0,0,0,0,0,75,57]));//#87
+var _g=function(){
 $k[$j++]="K9K9K9K^000^000^000^000^000^000^000^000";//#92
 $k[$j++]="parse version=R11x59 eclevel=H fixedeclevel debugcws";//#92
 bwipp_rectangularmicroqrcode();//#92
 };//#92
-debugIsEqual(_h,$a([67,184,215,26,227,84,104,0,0,0,0,0,0,0,0]));//#92
-var _j=function(){
+debugIsEqual(_g,$a([67,184,215,26,227,84,104,0,0,0,0,0,0,0,0]));//#92
+var _i=function(){
 $k[$j++]="^000^000^000^000^000^000^000^000K9K9K9K";//#96
 $k[$j++]="parse version=R11x59 eclevel=H fixedeclevel debugcws";//#96
 bwipp_rectangularmicroqrcode();//#96
 };//#96
-debugIsEqual(_j,$a([104,0,0,0,0,0,0,0,0,67,184,215,26,227,84]));//#96
-var _l=function(){
+debugIsEqual(_i,$a([104,0,0,0,0,0,0,0,0,67,184,215,26,227,84]));//#96
+var _k=function(){
 $k[$j++]="K9K9K9K9K9^000^000^000^000^000^000";//#101
 $k[$j++]="parse version=R11x59 eclevel=H fixedeclevel debugcws";//#101
 bwipp_rectangularmicroqrcode();//#101
 };//#101
-debugIsEqual(_l,$a([69,56,215,26,227,92,107,141,102,0,0,0,0,0,0]));//#101
+debugIsEqual(_k,$a([69,56,215,26,227,92,107,141,102,0,0,0,0,0,0]));//#101
 $k[$j++]="^000^000^000^000^000^000K9K9K9K9K9";//#104
 $k[$j++]="parse version=R11x59 eclevel=H fixedeclevel dontdraw";//#104
 $k[$j++]='bwipp.qrcodeNoValidSymbol#104';//#104
 $_.er_tmpl();//#104
 if(false){//#110
-var _n=function(){
+var _m=function(){
 $k[$j++]="^000^000^000^000^000^000K9K9K9K9K";//#108
 $k[$j++]="parse version=R11x59 eclevel=H fixedeclevel debugcws";//#108
 bwipp_rectangularmicroqrcode();//#108
 };//#108
-debugIsEqual(_n,$a([103,0,0,0,0,0,0,75,68,26,147,82,106,77,72]));//#108
+debugIsEqual(_m,$a([103,0,0,0,0,0,0,75,68,26,147,82,106,77,72]));//#108
 }//#108
 $k[$j++]="12345678901234567890123456";//#130
 $k[$j++]="dontdraw eclevel=M fixedeclevel version=R13x27";//#130
 $k[$j++]=$a([1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,1,1,0,0,0,1,0,0,1,1,0,0,1,1,0,1,1,1,0,1,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1,0,0,0,1,1,0,1,1,1,0,1,0,0,1,1,0,1,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,1,1,0,1,0,1,1,1,0,1,0,0,1,1,0,1,1,0,1,1,0,0,1,1,1,0,0,0,0,0,1,0,0,0,1,1,1,0,0,0,1,1,0,0,1,0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,1,0,1,0,1,0,0,0,1,1,0,0,1,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,1,0,0,1,0,0,1,1,1,1,1,0,1,1,0,0,1,1,0,1,0,1,0,1,0,1,1,1,1,1,0,0,0,1,0,0,0,1,1,0,0,0,0,0,1,0,0,1,1,1,0,0,0,1,1,1,1,0,1,0,1,0,1,0,1,1,0,0,0,1,1,0,1,0,0,1,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,1,1]);//#130
 $_.eq_tmpl();//#130
-$_ = Object.getPrototypeOf($_);//#131
+$_ = $__;//#131
 }//bwipp_runtest_rectangularmicroqrcode
 console.log("rectangularmicroqrcode...")
 bwipp_runtest_rectangularmicroqrcode();

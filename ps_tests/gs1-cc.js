@@ -1,5 +1,6 @@
 function bwipp_runtest_gs1_cc(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _1=function(){
 $k[$j++]="(20)12";//#20
 $k[$j++]="ccversion=c lintype=gs1-128 linwidth=189 debugcws dontlint";//#20
@@ -66,7 +67,7 @@ $k[$j++]="lintype=gs1-128 ccversion=c linwidth=67";//#45
 bwipp_gs1_cc();//#45
 };//#45
 isError(_E,'bwipp.gs1ccMinimumLinWidth#45');//#45
-$_ = Object.getPrototypeOf($_);//#46
+$_ = $__;//#46
 }//bwipp_runtest_gs1_cc
 console.log("gs1-cc...")
 bwipp_runtest_gs1_cc();

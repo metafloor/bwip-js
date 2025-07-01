@@ -1,5 +1,6 @@
 function bwipp_runtest_rationalizedCodabar(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _0=function(){
 $k[$j++]="A";//#17
 $k[$j++]="dontdraw";//#17
@@ -52,7 +53,7 @@ $k[$j++]="TN";//#53
 $k[$j++]="dontdraw altstartstop";//#53
 bwipp_rationalizedCodabar();//#53
 debugIsEqual($get($k[--$j],'sbs'),$a([1,1,3,3,1,3,1,1,1,3,1,3,1,1,3,1]));//#56
-$_ = Object.getPrototypeOf($_);//#57
+$_ = $__;//#57
 }//bwipp_runtest_rationalizedCodabar
 console.log("rationalizedCodabar...")
 bwipp_runtest_rationalizedCodabar();

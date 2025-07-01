@@ -5,13 +5,13 @@ const os = require('os');
 var all = fs.readdirSync('bench-stats');
 var stats = [];
 for (let i = 0; i < all.length; i++) {
-    let a = /^(\d+)\.(\d+)\.json|(current.json)$/.exec(all[i]);
-    if (a && a[3]) {
+    let a = /^bench-v(\d+)\.(\d+)([a-z]*)\.json|(bench-latest.json)$/.exec(all[i]);
+    if (a && a[4]) {
         stats.push({ vers:'latest', sort:Infinity,
                      syms:JSON.parse(fs.readFileSync('bench-stats/' + all[i]))
             });
     } else if (a) {
-        stats.push({ vers:a[1] + '.' + a[2], sort:a[1]*1000 + +a[2],
+        stats.push({ vers:a[1] + '.' + a[2] + (a[3]||''), sort:a[1]*1000 + +a[2],
                      syms:JSON.parse(fs.readFileSync('bench-stats/' + all[i]))
             });
     }
@@ -76,4 +76,10 @@ for (var j = 0; j < arr.length; j++) {
 }
 md += '\n';
 
+let dt = new Date();
+md += '\* latest compiled on ' + dt.getDate() + '-' +
+    'JanFebMarAprMayJunJulAugSepOctNovDec'.substr(dt.getMonth()*3, 3) + '-' +
+    dt.getFullYear();
+
 fs.writeFileSync('benchmark.md', md, 'binary');
+console.log('wrote: benchmark.md');

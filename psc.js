@@ -186,7 +186,6 @@ function PSC(str, flags) {
     var cfg = {
         devar:      true,   // run devar() optimization
         coverage:   false,  // no branch coverage instrumentation
-        perf:       false,  // no performance instrumentation
     };
 
     for (var i = 0; i < flags.length; i++) {
@@ -613,7 +612,7 @@ function PSC(str, flags) {
     }
 
     // Arithmetic or logical binary operator returning boolean
-    // ariop is the arithmetic operator such as <=, &, etc. and works on
+    // jsop is the javascript operator such as <=, &, etc. and works on
     //  numbers and booleans.  (Admittedly, the `<` operator doesn't work
     //  on booleans but that should not occur in practice).
     // funop is the name of  the function to call to get the same operator
@@ -624,29 +623,27 @@ function PSC(str, flags) {
     //          uint8-string.  There are lots of places where we can use
     //          ==/!= rather than $eq/$ne when both sides of the expression
     //          are js-strings.
-    function binbool(ariop, funop) {
+    function binbool(jsop, funop) {
         need(2);
 
         var t1 = st[sp-1].type;
         var t2 = st[sp-2].type;
 
-        // Arithmetic
-        if ((ariop == '==' || ariop == '!=') &&
+        // Javascript operator
+        if ((jsop == '==' || jsop == '!=') &&
                 (st[sp-1].expr == '""' || st[sp-1].expr == "''")) {
-            st[sp-2].expr = st[sp-2].expr + '.length' + ariop + '0';
-            st[sp-2].type = TYPE_BOOLEAN;
-        } else if (((ariop == '==' || ariop == '!=') && (t2&TYPE_NULL)) ||
-                (t1&TYPE_NUMTYP) || (t2&TYPE_NUMTYP) || (t1&TYPE_BOOLEAN) ||
-                (t2&TYPE_BOOLEAN)) {
-            st[sp-2].expr = parens(st[sp-2].expr) + ariop +
+            st[sp-2].expr = st[sp-2].expr + '.length' + jsop + '0';
+        } else if (((jsop == '==' || jsop == '!=') && (t2&TYPE_NULL)) ||
+                (t1&TYPE_NUMTYP) || (t2&TYPE_NUMTYP) ||
+                (t1&TYPE_BOOLEAN) || (t2&TYPE_BOOLEAN)) {
+            st[sp-2].expr = parens(st[sp-2].expr) + jsop +
                             parens(st[sp-1].expr);
-            st[sp-2].type = TYPE_BOOLEAN;
         } else {
-            // e.g $ne(expr1, expr2)
+            // Function operator e.g $ne(expr1, expr2)
             st[sp-2].expr = funop + '(' + st[sp-2].expr + ',' +
                             st[sp-1].expr + ')';
-            st[sp-2].type = TYPE_BOOLEAN;
         }
+        st[sp-2].type = TYPE_BOOLEAN;
         st[sp-2].seq = ++seq;
         sp--;
     }
@@ -1258,6 +1255,8 @@ function PSC(str, flags) {
     // Currently, BWIPP only uses this to convert runtime created <HH>
     // hex strings to integer.
     $.cvx = function() {
+        throw 'cvx: not implemented';
+        /*
         need(1);
         if (st[sp-1].type != TYPE_STRVAL) {
             dump('cvx');
@@ -1265,6 +1264,7 @@ function PSC(str, flags) {
         }
         var str = st[sp-1].expr;
         st[sp-1] = { type:TYPE_INTVAL, expr:'$cvx(' + str + ')', seq:++seq }; // EMBED
+        */
     }
 
     // Convert to real
@@ -1391,8 +1391,17 @@ function PSC(str, flags) {
         } else if (dlvl && cfg.coverage) {
             code += '$bwipjs_coverage[' + (thisbranchno) + ']=1;\n';
         }
+        if (cfg.metrics) {
+            code += '$metrics.@FUNCTION@_' + lines[0].lnbr + '=($metrics.@FUNCTION@_' + lines[0].lnbr +
+                    '||0)+1;\n';
+            //code += '$metrics.@FUNCTION@_' + lines[0].lnbr + '=($metrics.$FUNCTION@_' + lines[0].lnbr +
+            //      '||0n)-process.hrtime.bigint();\n';
+        }
         for (var i = 0; i < lines.length; i++) {
             code += lines[i].code + '//#' + lines[i].lnbr + '\n';
+        }
+        if (cfg.metrics) {
+            //code += '$metrics.@FUNCTION@_' + lines[0].lnbr + '+=process.hrtime.bigint();\n';
         }
         if (dlvl == 0 && cfg.coverage && fname) {
             code += '}finally{\n' +
@@ -2383,6 +2392,12 @@ function PSC(str, flags) {
         need(1);
         var pix = st[--sp].expr;
         emit(`$$.showmaxicode(${pix});`);
+    }
+    // Replace the BWIPP contour tracing/rendering with our own
+    $.drawlayer = function() {
+        need(1);
+        var pix = st[--sp].expr;
+        emit(`$$.drawlayer(${pix},$_.pixx,$_.pixy,$_.inkspreadh,$_.inkspreadv);`);
     }
     // Used by jabcode - Terry's wide (gt 64k) versions
     $.arrayw = $.array;

@@ -1,5 +1,6 @@
 function bwipp_runtest_datamatrix(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _1=function(){
 $k[$j++]="[\)>^03005^029214^030^004";//#16
 $k[$j++]="debugcws parse";//#16
@@ -70,7 +71,7 @@ $k[$j++]="debugcws parse";//#99
 bwipp_datamatrix();//#99
 };//#99
 debugIsEqual(_P,$a([237,44,48,66,68,78,83,79,142,164,186,48,87,150,139,142,149,138,163,53,129,118]));//#99
-$_ = Object.getPrototypeOf($_);//#101
+$_ = $__;//#101
 }//bwipp_runtest_datamatrix
 console.log("datamatrix...")
 bwipp_runtest_datamatrix();

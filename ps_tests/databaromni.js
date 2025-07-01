@@ -1,5 +1,6 @@
 function bwipp_runtest_databaromni(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#15
 $_.t=$k[--$j];//#16
@@ -48,7 +49,7 @@ $_.er_tmpl();//#40
 $k[$j++]="(02)2001234567890";//#41
 $k[$j++]='bwipp.databaromniBadAI#41';//#41
 $_.er_tmpl();//#41
-$_ = Object.getPrototypeOf($_);//#42
+$_ = $__;//#42
 }//bwipp_runtest_databaromni
 console.log("databaromni...")
 bwipp_runtest_databaromni();

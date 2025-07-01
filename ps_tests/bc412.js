@@ -1,5 +1,6 @@
 function bwipp_runtest_bc412(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl_semi=function(){
 $_.e=$k[--$j];//#15
 $_.t=$k[--$j];//#16
@@ -155,7 +156,7 @@ $_.er_tmpl();//#119
 $k[$j++]="ABCDEFGHIJKLMNO";//#123
 $k[$j++]='bwipp.bc412badCharacter#122';//#123
 $_.er_tmpl_semi();//#123
-$_ = Object.getPrototypeOf($_);//#124
+$_ = $__;//#124
 }//bwipp_runtest_bc412
 console.log("bc412...")
 bwipp_runtest_bc412();

@@ -1,5 +1,6 @@
 function bwipp_runtest_parseinput(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.ctx=null;//#10
 var _2=function(){
 var _1=new Map([["parse",false],["parsefnc",false]]);//#15
@@ -338,7 +339,7 @@ $k[$j++]=_27;//#215
 bwipp_parseinput();//#215
 };//#215
 isEqual(_28,"XX\000XX^FNC1XX^ECI123456XX");//#215
-$_ = Object.getPrototypeOf($_);//#218
+$_ = $__;//#218
 }//bwipp_runtest_parseinput
 console.log("parseinput...")
 bwipp_runtest_parseinput();

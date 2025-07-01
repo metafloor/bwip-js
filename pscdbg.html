@@ -4068,120 +4068,119 @@ div span:hover {
 <code>%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put</code>
 <code>%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put</code>
 <code>%psc begin</code>
-<code>/renmatrix {</code>
-<code>bwipjs_dontdraw { return } if</code>
-<code></code>
-<code>    20 dict begin</code>
-<code></code>
-<code>    % Default options</code>
-<code>    /width 1.0 def</code>
-<code>    /height 1.0 def</code>
-<code>    /barcolor (unset) def</code>
-<code>    /backgroundcolor (unset) def</code>
-<code>    /bordercolor (unset) def</code>
-<code>    /colormap (unset) def</code>
-<code>    /dotty false def</code>
-<code>    /inkspread null def    % real sentinal</code>
-<code>    /inkspreadh null def   % real sentinal</code>
-<code>    /inkspreadv null def   % real sentinal</code>
-<code>    /txt [] def</code>
-<code>    /includetext false def</code>
-<code>    /textcolor (unset) def</code>
-<code>    /textxalign (unset) def</code>
-<code>    /textyalign (unset) def</code>
-<code>    /textfont (OCR-B) def</code>
-<code>    /textsize 10.0 def</code>
-<code>    /textxoffset 0.0 def</code>
-<code>    /textyoffset 0.0 def</code>
-<code>    /textgaps 0.0 def</code>
-<code>    /alttext () def</code>
-<code>    /extratext () def</code>
-<code>    /extratextcolor (unset) def</code>
-<code>    /extratextxalign (left) def</code>
-<code>    /extratextyalign (above) def</code>
-<code>    /extratextfont (OCR-B) def</code>
-<code>    /extratextsize 10.0 def</code>
-<code>    /extratextxoffset 0.0 def</code>
-<code>    /extratextyoffset 0.0 def</code>
-<code>    /extratextgaps 0.0 def</code>
-<code>    /showborder false def</code>
-<code>    /borderleft 0.0 def</code>
-<code>    /borderright 0.0 def</code>
-<code>    /bordertop 0.0 def</code>
-<code>    /borderbottom 0.0 def</code>
-<code>    /borderwidth 0.25 def</code>
-<code></code>
-<code>    {def} forall</code>
-<code>    opt currentdict /opt undef currentdict //processoptions exec pop</code>
-<code></code>
-<code>    inkspread null eq {/inkspread 0 def} if</code>
-<code>    inkspreadh null eq {/inkspreadh inkspread def} if</code>
-<code>    inkspreadv null eq {/inkspreadv inkspread def} if</code>
-<code></code>
+<code>%psc /renmatrix {</code>
+<code>%psc </code>
+<code>%psc     20 dict begin</code>
+<code>%psc </code>
+<code>%psc     % Default options</code>
+<code>%psc     /width 1.0 def</code>
+<code>%psc     /height 1.0 def</code>
+<code>%psc     /barcolor (unset) def</code>
+<code>%psc     /backgroundcolor (unset) def</code>
+<code>%psc     /bordercolor (unset) def</code>
+<code>%psc     /colormap (unset) def</code>
+<code>%psc     /dotty false def</code>
+<code>%psc     /inkspread null def    % real sentinal</code>
+<code>%psc     /inkspreadh null def   % real sentinal</code>
+<code>%psc     /inkspreadv null def   % real sentinal</code>
+<code>%psc     /txt [] def</code>
+<code>%psc     /includetext false def</code>
+<code>%psc     /textcolor (unset) def</code>
+<code>%psc     /textxalign (unset) def</code>
+<code>%psc     /textyalign (unset) def</code>
+<code>%psc     /textfont (OCR-B) def</code>
+<code>%psc     /textsize 10.0 def</code>
+<code>%psc     /textxoffset 0.0 def</code>
+<code>%psc     /textyoffset 0.0 def</code>
+<code>%psc     /textgaps 0.0 def</code>
+<code>%psc     /alttext () def</code>
+<code>%psc     /extratext () def</code>
+<code>%psc     /extratextcolor (unset) def</code>
+<code>%psc     /extratextxalign (left) def</code>
+<code>%psc     /extratextyalign (above) def</code>
+<code>%psc     /extratextfont (OCR-B) def</code>
+<code>%psc     /extratextsize 10.0 def</code>
+<code>%psc     /extratextxoffset 0.0 def</code>
+<code>%psc     /extratextyoffset 0.0 def</code>
+<code>%psc     /extratextgaps 0.0 def</code>
+<code>%psc     /showborder false def</code>
+<code>%psc     /borderleft 0.0 def</code>
+<code>%psc     /borderright 0.0 def</code>
+<code>%psc     /bordertop 0.0 def</code>
+<code>%psc     /borderbottom 0.0 def</code>
+<code>%psc     /borderwidth 0.25 def</code>
+<code>%psc </code>
+<code>%psc     {def} forall</code>
+<code>%psc     opt currentdict /opt undef currentdict //processoptions exec pop</code>
+<code>%psc </code>
+<code>%psc     inkspread null eq {/inkspread 0 def} if</code>
+<code>%psc     inkspreadh null eq {/inkspreadh inkspread def} if</code>
+<code>%psc     inkspreadv null eq {/inkspreadv inkspread def} if</code>
+<code>%psc </code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {</code>
 <code>%psc         exch get /ctx exch def</code>
 <code>%psc         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if</code>
 <code>%psc         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if</code>
 <code>%psc         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if</code>
 <code>%psc     } { pop } ifelse</code>
-<code></code>
-<code>    textsize 0 le {</code>
-<code>        /bwipp.renmatrixBadTextsize (The font size must be greater than zero) //raiseerror exec</code>
-<code>    } if</code>
-<code></code>
-<code>    /xyget { pixx mul add pixs exch get} def</code>
-<code>    /cget { pixx mul add cache exch get and} def</code>
-<code>    /cput {  % Optimise by only storing "stem" corners</code>
-<code>        dup 4 mod 0 eq { % dir is up or left</code>
-<code>            3 1 roll pixx mul add cache exch 2 copy get 4 -1 roll or put</code>
-<code>        } {</code>
-<code>            pop pop pop</code>
-<code>        } ifelse</code>
-<code>    } def</code>
-<code></code>
-<code>    /abcd {</code>
-<code>        4 string 0 [</code>
-<code>            5 -2 roll</code>
-<code>            pixx mul add dup</code>
-<code>            pixs exch 2 getinterval aload pop 3 -1 roll  % A B</code>
-<code>            pixs exch pixx add 2 getinterval aload pop   % C D</code>
-<code>        ] {3 copy 48 add put pop 1 add} forall pop</code>
-<code>    } def</code>
-<code></code>
-<code>    /right {dir 1 ne {x y dir cput [x y]} if  /x x 1 add def  /dir 1 def} def</code>
-<code>    /down  {dir 2 ne {x y dir cput [x y]} if  /y y 1 add def  /dir 2 def} def</code>
-<code>    /left  {dir 4 ne {x y dir cput [x y]} if  /x x 1 sub def  /dir 4 def} def</code>
-<code>    /up    {dir 8 ne {x y dir cput [x y]} if  /y y 1 sub def  /dir 8 def} def</code>
-<code></code>
-<code>    /trace {</code>
-<code>        % Walk the outline of a region emitting edge coordinates of the path</code>
-<code>        /y exch def  /x exch def</code>
-<code>        % dir 1:right 2:down 4:left 8:up</code>
-<code>        /dir x 1 add y 1 add xyget 1 eq {8} {4} ifelse def</code>
-<code>        /sx x def  /sy y def  /sdir dir def</code>
-<code></code>
-<code>        % A B</code>
-<code>        % C D</code>
-<code>        mark {</code>
-<code>            x y abcd</code>
-<code>            1 {  % Common exit</code>
-<code>                dup dup (0001) eq exch dup (0011) eq exch (1011) eq or or {pop right exit} if</code>
-<code>                dup dup (0010) eq exch dup (1010) eq exch (1110) eq or or {pop down  exit} if</code>
-<code>                dup dup (1000) eq exch dup (1100) eq exch (1101) eq or or {pop left  exit} if</code>
-<code>                dup dup (0100) eq exch dup (0101) eq exch (0111) eq or or {pop up    exit} if</code>
-<code>                dup (1001) eq {</code>
-<code>                    dir 2 eq {pop left exit} {pop right exit} ifelse</code>
-<code>                } {  % 0110</code>
-<code>                    dir 1 eq {pop down exit} {pop up exit} ifelse</code>
-<code>                } ifelse</code>
-<code>            } repeat</code>
-<code>            x sx eq y sy eq and dir sdir eq and {exit} if</code>
-<code>        } loop</code>
-<code>        counttomark array astore exch pop</code>
-<code></code>
-<code>    } def</code>
-<code></code>
-<code>    % Set RGB or CMYK color, or some other color by name</code>
+<code>%psc </code>
+<code>%psc     textsize 0 le {</code>
+<code>%psc         /bwipp.renmatrixBadTextsize (The font size must be greater than zero) //raiseerror exec</code>
+<code>%psc     } if</code>
+<code>%psc </code>
+<code>%psc     /xyget { pixx mul add pixs exch get} def</code>
+<code>%psc     /cget { pixx mul add cache exch get and} def</code>
+<code>%psc     /cput {  % Optimise by only storing "stem" corners</code>
+<code>%psc         dup 4 mod 0 eq { % dir is up or left</code>
+<code>%psc             3 1 roll pixx mul add cache exch 2 copy get 4 -1 roll or put</code>
+<code>%psc         } {</code>
+<code>%psc             pop pop pop</code>
+<code>%psc         } ifelse</code>
+<code>%psc     } def</code>
+<code>%psc </code>
+<code>%psc     /abcd {</code>
+<code>%psc         4 string 0 [</code>
+<code>%psc             5 -2 roll</code>
+<code>%psc             pixx mul add dup</code>
+<code>%psc             pixs exch 2 getinterval aload pop 3 -1 roll  % A B</code>
+<code>%psc             pixs exch pixx add 2 getinterval aload pop   % C D</code>
+<code>%psc         ] {3 copy 48 add put pop 1 add} forall pop</code>
+<code>%psc     } def</code>
+<code>%psc </code>
+<code>%psc     /right {dir 1 ne {x y dir cput [x y]} if  /x x 1 add def  /dir 1 def} def</code>
+<code>%psc     /down  {dir 2 ne {x y dir cput [x y]} if  /y y 1 add def  /dir 2 def} def</code>
+<code>%psc     /left  {dir 4 ne {x y dir cput [x y]} if  /x x 1 sub def  /dir 4 def} def</code>
+<code>%psc     /up    {dir 8 ne {x y dir cput [x y]} if  /y y 1 sub def  /dir 8 def} def</code>
+<code>%psc </code>
+<code>%psc     /trace {</code>
+<code>%psc         % Walk the outline of a region emitting edge coordinates of the path</code>
+<code>%psc         /y exch def  /x exch def</code>
+<code>%psc         % dir 1:right 2:down 4:left 8:up</code>
+<code>%psc         /dir x 1 add y 1 add xyget 1 eq {8} {4} ifelse def</code>
+<code>%psc         /sx x def  /sy y def  /sdir dir def</code>
+<code>%psc </code>
+<code>%psc         % A B</code>
+<code>%psc         % C D</code>
+<code>%psc         mark {</code>
+<code>%psc             x y abcd</code>
+<code>%psc             1 {  % Common exit</code>
+<code>%psc                 dup dup (0001) eq exch dup (0011) eq exch (1011) eq or or {pop right exit} if</code>
+<code>%psc                 dup dup (0010) eq exch dup (1010) eq exch (1110) eq or or {pop down  exit} if</code>
+<code>%psc                 dup dup (1000) eq exch dup (1100) eq exch (1101) eq or or {pop left  exit} if</code>
+<code>%psc                 dup dup (0100) eq exch dup (0101) eq exch (0111) eq or or {pop up    exit} if</code>
+<code>%psc                 dup (1001) eq {</code>
+<code>%psc                     dir 2 eq {pop left exit} {pop right exit} ifelse</code>
+<code>%psc                 } {  % 0110</code>
+<code>%psc                     dir 1 eq {pop down exit} {pop up exit} ifelse</code>
+<code>%psc                 } ifelse</code>
+<code>%psc             } repeat</code>
+<code>%psc             x sx eq y sy eq and dir sdir eq and {exit} if</code>
+<code>%psc         } loop</code>
+<code>%psc         counttomark array astore exch pop</code>
+<code>%psc </code>
+<code>%psc     } def</code>
+<code>%psc </code>
+<code>%psc     % Set RGB or CMYK color, or some other color by name</code>
 <code>%psc     /setanycolor {</code>
 <code>%psc         /anycolor exch def</code>
 <code>%psc         anycolor length 1 lt {</code>
@@ -4218,188 +4217,188 @@ div span:hover {
 <code>%psc             /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec</code>
 <code>%psc         } if</code>
 <code>%psc     } def</code>
-<code></code>
-<code>    % Plot a layer of single colour</code>
-<code>    /drawlayer {</code>
-<code></code>
-<code>        /pixsorig pixs def</code>
-<code>        /pixs exch def</code>
-<code></code>
-<code>        % Pad the bitmap on all sides</code>
-<code>        /pixs [</code>
-<code>            pixx 2 add {0} repeat</code>
-<code>            0 pixx pixs length 1 sub {</code>
-<code>                0 exch</code>
-<code>                pixs exch pixx getinterval aload pop</code>
-<code>                0</code>
-<code>            } for</code>
-<code>            pixx 2 add {0} repeat</code>
-<code>        ] def</code>
-<code>        /pixx pixx 2 add def</code>
-<code>        /pixy pixy 2 add def</code>
-<code></code>
-<code>        % Cache of visited corners for each direction</code>
-<code>        /cache [ pixs length {0} repeat ] def</code>
-<code></code>
-<code>        % Construct paths by tracing regions avoiding duplication by using the cache</code>
-<code>        /paths [</code>
-<code>            0 1 pixy 2 sub {</code>
-<code>                /j exch def</code>
-<code>                0 1 pixx 2 sub {</code>
-<code>                    /i exch def</code>
-<code>                    /k i j abcd def</code>
-<code>                    k (0001) eq k (1001) eq or {  % Black region stem corners</code>
-<code>                        8 i j cget 0 eq {</code>
-<code>                            i j trace</code>
-<code>                        } if</code>
-<code>                    } if</code>
-<code>                    k (1110) eq {  % White region stem corner</code>
-<code>                        4 i j cget 0 eq {</code>
-<code>                            i j trace</code>
-<code>                        } if</code>
-<code>                    } if</code>
-<code>                } for</code>
-<code>            } for</code>
-<code>        ] def</code>
-<code></code>
-<code>        % Revert the bitmap size</code>
-<code>        /pixx pixx 2 sub def</code>
-<code>        /pixy pixy 2 sub def</code>
-<code></code>
-<code>        % Draw the image</code>
-<code>        newpath</code>
-<code>        paths {</code>
-<code>            /p exch def</code>
-<code>            /len p length def</code>
-<code>            p len 1 sub get aload pop</code>
-<code>            p 0 get aload pop</code>
-<code>            0 1 len 1 sub {                                % x1 y1 x2 y2</code>
-<code>                /i exch def</code>
-<code>                p i 1 add len mod get aload pop 6 -2 roll  % x3 y3 x1 y1 x2 y2</code>
-<code>                5 index inkspreadh</code>
-<code>                4 index 4 -1 roll lt {add} {sub} ifelse    % y3&lt;y1 ? x2+i : x2-i</code>
-<code>                4 1 roll</code>
-<code>                4 index inkspreadv</code>
-<code>                4 index 4 -1 roll gt {add} {sub} ifelse    % x3&gt;x1 ? y2+i : y2-i</code>
-<code>                4 -1 roll exch pixy exch sub</code>
-<code>                i 0 eq {moveto} {lineto} ifelse</code>
-<code>            } for                                          % x2 y2 x3 y3</code>
-<code>            closepath</code>
-<code>            pop pop pop pop</code>
-<code>        } forall</code>
-<code>        fill</code>
-<code></code>
-<code>        /pixs pixsorig def</code>
-<code></code>
-<code>    } def</code>
-<code></code>
-<code>    /drawlayerdots {</code>
-<code></code>
-<code>        /pixsorig pixs def</code>
-<code>        /pixs exch def</code>
-<code></code>
-<code>        newpath</code>
-<code>        0 1 pixs length 1 sub {</code>
-<code>            dup pixx mod /x exch def</code>
-<code>            pixx idiv /y exch def</code>
-<code>            x y xyget 1 eq {</code>
-<code>               x 0.5 add pixy y sub 0.5 sub moveto</code>
-<code>               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc</code>
-<code>            } if</code>
-<code>        } for</code>
-<code>        fill</code>
-<code></code>
-<code>        /pixs pixsorig def</code>
-<code></code>
-<code>    } def</code>
-<code></code>
-<code>    gsave</code>
-<code></code>
-<code>    currentpoint translate</code>
-<code></code>
-<code>    /inkspread  inkspread  2 div def</code>
-<code>    /inkspreadh inkspreadh 2 div def</code>
-<code>    /inkspreadv inkspreadv 2 div def</code>
-<code></code>
-<code>    % Force symbol to given width</code>
-<code>    width pixx div 72 mul height pixy div 72 mul scale</code>
-<code></code>
-<code>    % Display the border and background</code>
-<code>    showborder {</code>
-<code>        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def</code>
-<code>        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def</code>
-<code>        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def</code>
-<code>        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def</code>
-<code>    } {  % No need to extend background when there is no border</code>
-<code>        /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def</code>
-<code>        /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def</code>
-<code>        /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def</code>
-<code>        /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def</code>
-<code>    } ifelse</code>
-<code>    backgroundcolor (unset) ne {</code>
-<code>        gsave</code>
-<code>        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath</code>
-<code>        backgroundcolor setanycolor fill</code>
-<code>        grestore</code>
-<code>    } if</code>
-<code>    showborder {</code>
-<code>        gsave</code>
-<code>        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath</code>
-<code>        bordercolor (unset) ne { bordercolor setanycolor } if</code>
-<code>        borderwidth inkspread 2 mul sub setlinewidth stroke</code>
-<code>        grestore</code>
-<code>    } if</code>
-<code></code>
-<code>    % Display the matrix</code>
-<code>    colormap (unset) eq {</code>
-<code>        /colormap &lt;&lt; 1 barcolor &gt;&gt; def</code>
-<code>    } if</code>
-<code></code>
-<code>    colormap {</code>
-<code>        dup (unset) ne { setanycolor } { pop } ifelse</code>
-<code>        /key exch def</code>
-<code>        [</code>
-<code>            pixs { key eq {1} {0} ifelse } forall</code>
-<code>        ] dotty {drawlayerdots} {drawlayer} ifelse</code>
-<code>    } forall</code>
-<code></code>
-<code>    % Display the text for elements in the text array</code>
-<code>    includetext {</code>
-<code>        textcolor (unset) ne { textcolor setanycolor } if</code>
-<code>        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {</code>
-<code>            /s 0 def /fn () def</code>
-<code>            txt {</code>
-<code>                aload pop</code>
-<code>                2 copy s ne exch fn ne or {</code>
-<code>                    dup 0 le {</code>
-<code>                        pop pop pop pop pop</code>
-<code>                        /bwipp.renmatrixFontTooSmall (The font size is too small) //raiseerror exec</code>
-<code>                    } if</code>
-<code>                    2 copy /s exch def /fn exch def</code>
-<code>                    selectfont</code>
-<code>                } {</code>
-<code>                    pop pop</code>
-<code>                } ifelse</code>
-<code>                moveto show</code>
-<code>            } forall</code>
-<code>        } {</code>
-<code>            textfont textsize selectfont</code>
-<code>            alttext () eq {</code>
-<code>                /txt [ txt { 0 get {} forall } forall ] def</code>
-<code>                /tstr txt length string def</code>
-<code>                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for</code>
-<code>            } {</code>
-<code>                /tstr alttext def</code>
-<code>            } ifelse</code>
-<code></code>
-<code>            % Find true ascent of font</code>
-<code>            tstr length 0 eq {</code>
-<code>                0</code>
-<code>            } {</code>
-<code>                gsave</code>
-<code>                newpath 0 0 moveto (0) false charpath pathbbox</code>
-<code>                4 1 roll pop pop pop</code>
-<code>                grestore</code>
+<code>%psc </code>
+<code>%psc     % Plot a layer of single colour</code>
+<code>%psc     /drawlayer {</code>
+<code>%psc </code>
+<code>%psc         /pixsorig pixs def</code>
+<code>%psc         /pixs exch def</code>
+<code>%psc </code>
+<code>%psc         % Pad the bitmap on all sides</code>
+<code>%psc         /pixs [</code>
+<code>%psc             pixx 2 add {0} repeat</code>
+<code>%psc             0 pixx pixs length 1 sub {</code>
+<code>%psc                 0 exch</code>
+<code>%psc                 pixs exch pixx getinterval aload pop</code>
+<code>%psc                 0</code>
+<code>%psc             } for</code>
+<code>%psc             pixx 2 add {0} repeat</code>
+<code>%psc         ] def</code>
+<code>%psc         /pixx pixx 2 add def</code>
+<code>%psc         /pixy pixy 2 add def</code>
+<code>%psc </code>
+<code>%psc         % Cache of visited corners for each direction</code>
+<code>%psc         /cache [ pixs length {0} repeat ] def</code>
+<code>%psc </code>
+<code>%psc         % Construct paths by tracing regions avoiding duplication by using the cache</code>
+<code>%psc         /paths [</code>
+<code>%psc             0 1 pixy 2 sub {</code>
+<code>%psc                 /j exch def</code>
+<code>%psc                 0 1 pixx 2 sub {</code>
+<code>%psc                     /i exch def</code>
+<code>%psc                     /k i j abcd def</code>
+<code>%psc                     k (0001) eq k (1001) eq or {  % Black region stem corners</code>
+<code>%psc                         8 i j cget 0 eq {</code>
+<code>%psc                             i j trace</code>
+<code>%psc                         } if</code>
+<code>%psc                     } if</code>
+<code>%psc                     k (1110) eq {  % White region stem corner</code>
+<code>%psc                         4 i j cget 0 eq {</code>
+<code>%psc                             i j trace</code>
+<code>%psc                         } if</code>
+<code>%psc                     } if</code>
+<code>%psc                 } for</code>
+<code>%psc             } for</code>
+<code>%psc         ] def</code>
+<code>%psc </code>
+<code>%psc         % Revert the bitmap size</code>
+<code>%psc         /pixx pixx 2 sub def</code>
+<code>%psc         /pixy pixy 2 sub def</code>
+<code>%psc </code>
+<code>%psc         % Draw the image</code>
+<code>%psc         newpath</code>
+<code>%psc         paths {</code>
+<code>%psc             /p exch def</code>
+<code>%psc             /len p length def</code>
+<code>%psc             p len 1 sub get aload pop</code>
+<code>%psc             p 0 get aload pop</code>
+<code>%psc             0 1 len 1 sub {                                % x1 y1 x2 y2</code>
+<code>%psc                 /i exch def</code>
+<code>%psc                 p i 1 add len mod get aload pop 6 -2 roll  % x3 y3 x1 y1 x2 y2</code>
+<code>%psc                 5 index inkspreadh</code>
+<code>%psc                 4 index 4 -1 roll lt {add} {sub} ifelse    % y3&lt;y1 ? x2+i : x2-i</code>
+<code>%psc                 4 1 roll</code>
+<code>%psc                 4 index inkspreadv</code>
+<code>%psc                 4 index 4 -1 roll gt {add} {sub} ifelse    % x3&gt;x1 ? y2+i : y2-i</code>
+<code>%psc                 4 -1 roll exch pixy exch sub</code>
+<code>%psc                 i 0 eq {moveto} {lineto} ifelse</code>
+<code>%psc             } for                                          % x2 y2 x3 y3</code>
+<code>%psc             closepath</code>
+<code>%psc             pop pop pop pop</code>
+<code>%psc         } forall</code>
+<code>%psc         fill</code>
+<code>%psc </code>
+<code>%psc         /pixs pixsorig def</code>
+<code>%psc </code>
+<code>%psc     } def</code>
+<code>%psc </code>
+<code>%psc     /drawlayerdots {</code>
+<code>%psc </code>
+<code>%psc         /pixsorig pixs def</code>
+<code>%psc         /pixs exch def</code>
+<code>%psc </code>
+<code>%psc         newpath</code>
+<code>%psc         0 1 pixs length 1 sub {</code>
+<code>%psc             dup pixx mod /x exch def</code>
+<code>%psc             pixx idiv /y exch def</code>
+<code>%psc             x y xyget 1 eq {</code>
+<code>%psc                x 0.5 add pixy y sub 0.5 sub moveto</code>
+<code>%psc                x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc</code>
+<code>%psc             } if</code>
+<code>%psc         } for</code>
+<code>%psc         fill</code>
+<code>%psc </code>
+<code>%psc         /pixs pixsorig def</code>
+<code>%psc </code>
+<code>%psc     } def</code>
+<code>%psc </code>
+<code>%psc     gsave</code>
+<code>%psc </code>
+<code>%psc     currentpoint translate</code>
+<code>%psc </code>
+<code>%psc     /inkspread  inkspread  2 div def</code>
+<code>%psc     /inkspreadh inkspreadh 2 div def</code>
+<code>%psc     /inkspreadv inkspreadv 2 div def</code>
+<code>%psc </code>
+<code>%psc     % Force symbol to given width</code>
+<code>%psc     width pixx div 72 mul height pixy div 72 mul scale</code>
+<code>%psc </code>
+<code>%psc     % Display the border and background</code>
+<code>%psc     showborder {</code>
+<code>%psc         /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def</code>
+<code>%psc         /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def</code>
+<code>%psc         /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def</code>
+<code>%psc         /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def</code>
+<code>%psc     } {  % No need to extend background when there is no border</code>
+<code>%psc         /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def</code>
+<code>%psc         /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def</code>
+<code>%psc         /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def</code>
+<code>%psc         /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def</code>
+<code>%psc     } ifelse</code>
+<code>%psc     backgroundcolor (unset) ne {</code>
+<code>%psc         gsave</code>
+<code>%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath</code>
+<code>%psc         backgroundcolor setanycolor fill</code>
+<code>%psc         grestore</code>
+<code>%psc     } if</code>
+<code>%psc     showborder {</code>
+<code>%psc         gsave</code>
+<code>%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath</code>
+<code>%psc         bordercolor (unset) ne { bordercolor setanycolor } if</code>
+<code>%psc         borderwidth inkspread 2 mul sub setlinewidth stroke</code>
+<code>%psc         grestore</code>
+<code>%psc     } if</code>
+<code>%psc </code>
+<code>%psc     % Display the matrix</code>
+<code>%psc     colormap (unset) eq {</code>
+<code>%psc         /colormap &lt;&lt; 1 barcolor &gt;&gt; def</code>
+<code>%psc     } if</code>
+<code>%psc </code>
+<code>%psc     colormap {</code>
+<code>%psc         dup (unset) ne { setanycolor } { pop } ifelse</code>
+<code>%psc         /key exch def</code>
+<code>%psc         [</code>
+<code>%psc             pixs { key eq {1} {0} ifelse } forall</code>
+<code>%psc         ] dotty {drawlayerdots} {drawlayer} ifelse</code>
+<code>%psc     } forall</code>
+<code>%psc </code>
+<code>%psc     % Display the text for elements in the text array</code>
+<code>%psc     includetext {</code>
+<code>%psc         textcolor (unset) ne { textcolor setanycolor } if</code>
+<code>%psc         textxalign (unset) eq textyalign (unset) eq and alttext () eq and {</code>
+<code>%psc             /s 0 def /fn () def</code>
+<code>%psc             txt {</code>
+<code>%psc                 aload pop</code>
+<code>%psc                 2 copy s ne exch fn ne or {</code>
+<code>%psc                     dup 0 le {</code>
+<code>%psc                         pop pop pop pop pop</code>
+<code>%psc                         /bwipp.renmatrixFontTooSmall (The font size is too small) //raiseerror exec</code>
+<code>%psc                     } if</code>
+<code>%psc                     2 copy /s exch def /fn exch def</code>
+<code>%psc                     selectfont</code>
+<code>%psc                 } {</code>
+<code>%psc                     pop pop</code>
+<code>%psc                 } ifelse</code>
+<code>%psc                 moveto show</code>
+<code>%psc             } forall</code>
+<code>%psc         } {</code>
+<code>%psc             textfont textsize selectfont</code>
+<code>%psc             alttext () eq {</code>
+<code>%psc                 /txt [ txt { 0 get {} forall } forall ] def</code>
+<code>%psc                 /tstr txt length string def</code>
+<code>%psc                 0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for</code>
+<code>%psc             } {</code>
+<code>%psc                 /tstr alttext def</code>
+<code>%psc             } ifelse</code>
+<code>%psc </code>
+<code>%psc             % Find true ascent of font</code>
+<code>%psc             tstr length 0 eq {</code>
+<code>%psc                 0</code>
+<code>%psc             } {</code>
+<code>%psc                 gsave</code>
+<code>%psc                 newpath 0 0 moveto (0) false charpath pathbbox</code>
+<code>%psc                 4 1 roll pop pop pop</code>
+<code>%psc                 grestore</code>
 <code>%psc                 currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse</code>
 <code>%psc                 currentfont /StrokeWidth known and {</code>
 <code>%psc                     currentfont /StrokeWidth get 2 div 0 exch</code>
@@ -4407,36 +4406,36 @@ div span:hover {
 <code>%psc                     dup mul exch dup mul add sqrt</code>
 <code>%psc                     add</code>
 <code>%psc                 } if</code>
-<code>            } ifelse</code>
-<code>            /textascent exch def</code>
-<code>            /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def</code>
-<code></code>
-<code>            /textxpos textxoffset pixx textwidth sub 2 div add def</code>
-<code>            textxalign (left)     eq { /textxpos textxoffset def } if</code>
-<code>            textxalign (right)    eq { /textxpos pixx textxoffset sub textwidth sub def } if</code>
-<code>            textxalign (offleft)  eq { /textxpos textwidth textxoffset add neg def } if</code>
-<code>            textxalign (offright) eq { /textxpos pixx textxoffset add def } if</code>
-<code>            textxalign (justify)  eq textwidth pixx lt and {</code>
-<code>                /textxpos 0.0 def</code>
-<code>                /textgaps pixx textwidth sub tstr length 1 sub div def</code>
-<code>            } if</code>
-<code>            /textypos textyoffset textascent add 1 add neg def</code>
-<code>            textyalign (above)  eq { /textypos textyoffset pixy add 1 add def } if</code>
-<code>            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if</code>
-<code>            textxpos textypos moveto textgaps 0 tstr ashow</code>
-<code>        } ifelse</code>
-<code>    } if</code>
-<code></code>
-<code>    % Render any extratext</code>
-<code>    extratext () ne {</code>
-<code>        extratextcolor (unset) ne { extratextcolor setanycolor } if</code>
-<code>        extratextfont extratextsize selectfont</code>
-<code></code>
-<code>        % Find true ascent of font</code>
-<code>        gsave</code>
-<code>        newpath 0 0 moveto (0) false charpath pathbbox</code>
-<code>        4 1 roll pop pop pop</code>
-<code>        grestore</code>
+<code>%psc             } ifelse</code>
+<code>%psc             /textascent exch def</code>
+<code>%psc             /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def</code>
+<code>%psc </code>
+<code>%psc             /textxpos textxoffset pixx textwidth sub 2 div add def</code>
+<code>%psc             textxalign (left)     eq { /textxpos textxoffset def } if</code>
+<code>%psc             textxalign (right)    eq { /textxpos pixx textxoffset sub textwidth sub def } if</code>
+<code>%psc             textxalign (offleft)  eq { /textxpos textwidth textxoffset add neg def } if</code>
+<code>%psc             textxalign (offright) eq { /textxpos pixx textxoffset add def } if</code>
+<code>%psc             textxalign (justify)  eq textwidth pixx lt and {</code>
+<code>%psc                 /textxpos 0.0 def</code>
+<code>%psc                 /textgaps pixx textwidth sub tstr length 1 sub div def</code>
+<code>%psc             } if</code>
+<code>%psc             /textypos textyoffset textascent add 1 add neg def</code>
+<code>%psc             textyalign (above)  eq { /textypos textyoffset pixy add 1 add def } if</code>
+<code>%psc             textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if</code>
+<code>%psc             textxpos textypos moveto textgaps 0 tstr ashow</code>
+<code>%psc         } ifelse</code>
+<code>%psc     } if</code>
+<code>%psc </code>
+<code>%psc     % Render any extratext</code>
+<code>%psc     extratext () ne {</code>
+<code>%psc         extratextcolor (unset) ne { extratextcolor setanycolor } if</code>
+<code>%psc         extratextfont extratextsize selectfont</code>
+<code>%psc </code>
+<code>%psc         % Find true ascent of font</code>
+<code>%psc         gsave</code>
+<code>%psc         newpath 0 0 moveto (0) false charpath pathbbox</code>
+<code>%psc         4 1 roll pop pop pop</code>
+<code>%psc         grestore</code>
 <code>%psc         currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse</code>
 <code>%psc         currentfont /StrokeWidth known and {</code>
 <code>%psc             currentfont /StrokeWidth get 2 div 0 exch</code>
@@ -4444,31 +4443,31 @@ div span:hover {
 <code>%psc             dup mul exch dup mul add sqrt</code>
 <code>%psc             add</code>
 <code>%psc         } if</code>
-<code>        /textascent exch def</code>
-<code>        /textwidth extratext stringwidth pop extratext length 1 sub extratextgaps mul add def</code>
-<code></code>
-<code>        /extratextxpos extratextxoffset pixx textwidth sub 2 div add def</code>
-<code>        extratextxalign (left)     eq { /textxpos extratextxoffset def } if</code>
-<code>        extratextxalign (right)    eq { /textxpos pixx extratextxoffset sub textwidth sub def } if</code>
-<code>        extratextxalign (offleft)  eq { /textxpos textwidth extratextxoffset add neg def } if</code>
-<code>        extratextxalign (offright) eq { /textxpos pixx extratextxoffset add def } if</code>
-<code>        extratextxalign (justify)  eq textwidth pixx lt and {</code>
-<code>            /textxpos 0.0 def</code>
-<code>            /extratextgaps pixx textwidth sub extratext length 1 sub div def</code>
-<code>        } if</code>
-<code>        /textypos extratextyoffset textascent add 1 add neg def</code>
-<code>        extratextyalign (above)  eq { /textypos extratextyoffset pixy add 1 add def } if</code>
-<code>        extratextyalign (center) eq { /textypos extratextyoffset pixy textascent sub 2 div add def } if</code>
-<code>        textxpos textypos moveto extratextgaps 0 extratext ashow</code>
-<code>    } if</code>
-<code></code>
-<code>    grestore</code>
-<code></code>
-<code>    end</code>
-<code></code>
-<code>}</code>
+<code>%psc         /textascent exch def</code>
+<code>%psc         /textwidth extratext stringwidth pop extratext length 1 sub extratextgaps mul add def</code>
+<code>%psc </code>
+<code>%psc         /extratextxpos extratextxoffset pixx textwidth sub 2 div add def</code>
+<code>%psc         extratextxalign (left)     eq { /textxpos extratextxoffset def } if</code>
+<code>%psc         extratextxalign (right)    eq { /textxpos pixx extratextxoffset sub textwidth sub def } if</code>
+<code>%psc         extratextxalign (offleft)  eq { /textxpos textwidth extratextxoffset add neg def } if</code>
+<code>%psc         extratextxalign (offright) eq { /textxpos pixx extratextxoffset add def } if</code>
+<code>%psc         extratextxalign (justify)  eq textwidth pixx lt and {</code>
+<code>%psc             /textxpos 0.0 def</code>
+<code>%psc             /extratextgaps pixx textwidth sub extratext length 1 sub div def</code>
+<code>%psc         } if</code>
+<code>%psc         /textypos extratextyoffset textascent add 1 add neg def</code>
+<code>%psc         extratextyalign (above)  eq { /textypos extratextyoffset pixy add 1 add def } if</code>
+<code>%psc         extratextyalign (center) eq { /textypos extratextyoffset pixy textascent sub 2 div add def } if</code>
+<code>%psc         textxpos textypos moveto extratextgaps 0 extratext ashow</code>
+<code>%psc     } if</code>
+<code>%psc </code>
+<code>%psc     grestore</code>
+<code>%psc </code>
+<code>%psc     end</code>
+<code>%psc </code>
+<code>%psc }</code>
 <code>%psc [/barcode] {null def} forall</code>
-<code>bind def</code>
+<code>%psc bind def</code>
 <code>%psc /renmatrix dup load /uk.co.terryburton.bwipp defineresource pop</code>
 <code>%psc end</code>
 <code>%psc /setpacking where {pop setpacking} if</code>
@@ -6690,7 +6689,13 @@ div span:hover {
 <code>        } loop</code>
 <code>        /cws cws 0 j getinterval def</code>
 <code>        /text () def</code>
-<code>    } if</code>
+<code>    } {</code>
+<code>        /text msglen string def</code>
+<code>        0 1 msglen 1 sub {</code>
+<code>            /i exch def</code>
+<code>            text i msg i get dup 0 lt { pop 32 } if put</code>
+<code>        } for</code>
+<code>    } ifelse</code>
 <code></code>
 <code>    % Character maps for each state, used by the legacy encoder</code>
 <code>{</code>
@@ -6753,12 +6758,6 @@ div span:hover {
 <code>        /seta charvals 0 get def  seta lka seta swb get put  seta lkc seta swc get put</code>
 <code>        /setb charvals 1 get def  setb lka setb swc get put  setb lkc setb swa get put</code>
 <code>        /setc charvals 2 get def  setc lka setc swa get put  setc lkc setc swb get put</code>
-<code></code>
-<code>        /text msglen string def</code>
-<code>        0 1 msglen 1 sub {</code>
-<code>            /i exch def</code>
-<code>            text i msg i get dup 0 lt { pop 32 } if put</code>
-<code>        } for</code>
 <code></code>
 <code>        % Standard and extended ASCII runlength at position</code>
 <code>        /numSA [ msglen {0} repeat 0 ] def</code>
@@ -6986,12 +6985,6 @@ div span:hover {
 <code>        /setb &lt;&lt;fn3 96 fn2 97 fn1 102 stp 106 lka  99 lkc 101&gt;&gt; def</code>
 <code>        /setc &lt;&lt;              fn1 102 stp 106 lka 101 lkc 100&gt;&gt; def</code>
 <code></code>
-<code>        /text msglen string def</code>
-<code>        0 1 msglen 1 sub {</code>
-<code>            /i exch def</code>
-<code>            text i msg i get dup 0 lt { pop 32 } if put</code>
-<code>        } for</code>
-<code></code>
 <code>        % Encoder states are named A0, B0, C0, A1, B1, and C1.</code>
 <code>        % A, B, and C are the Code 128 code sets.</code>
 <code>        % 0 is for ASCII and 1 is for extended ASCII range.</code>
@@ -7158,7 +7151,7 @@ div span:hover {
 <code>    } for</code>
 <code>    /csum csum 103 mod def</code>
 <code>    cws j csum put</code>
-<code>    cws j 1 add seta stp get put</code>
+<code>    cws j 1 add 106 put %stp</code>
 <code></code>
 <code>    options /debugcws known { /bwipp.debugcws cws //raiseerror exec } if</code>
 <code></code>
@@ -25021,7 +25014,7 @@ div span:hover {
 <code>    } if</code>
 <code></code>
 <code>    eclevel length 2 eq dup {</code>
-<code>        pop eclevel 0 1 getinterval (L) dup eq {</code>
+<code>        pop eclevel 0 1 getinterval (L) eq dup {</code>
 <code>            pop eclevel 1 get 48 sub dup 1 ge exch 4 le and</code>
 <code>        } if</code>
 <code>    } if</code>
@@ -27009,7 +27002,7 @@ div span:hover {
 <code>    } if</code>
 <code></code>
 <code>    eclevel length 3 eq dup {</code>
-<code>       pop eclevel 0 2 getinterval (EC) dup eq {</code>
+<code>       pop eclevel 0 2 getinterval (EC) eq dup {</code>
 <code>           pop eclevel 2 get 48 sub dup rev 2 eq {1} {0} ifelse ge exch 5 le and</code>
 <code>       } if</code>
 <code>    } if</code>
@@ -32648,7 +32641,7 @@ div span:hover {
 <code>    /extratextyoffset 0.0 def</code>
 <code>    /extratextgaps 0.0 def</code>
 <code>    /bordercolor (unset) def</code>
-<code>    /backgroundcolor (unset) def</code>
+<code>%%    /backgroundcolor (unset) def</code>
 <code>    /inkspread 0 def      % Was 0.15</code>
 <code>    /width 0.0 def</code>
 <code>    /barratio 1.0 def</code>
@@ -32878,6 +32871,422 @@ div span:hover {
 <code>%%EndData</code>
 <code>%%EndResource</code>
 <code>% --END RENDERER renlinear--</code>
+<code>% --BEGIN RENDERER renmatrix--</code>
+<code>% --REQUIRES preamble raiseerror processoptions--</code>
+<code>%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2025041900 118278 116442</code>
+<code>%%BeginData:        408 ASCII Lines</code>
+<code>%psc /setpacking where {pop currentpacking true setpacking} if</code>
+<code>%psc 10 dict</code>
+<code>%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put</code>
+<code>%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put</code>
+<code>%psc begin</code>
+<code>/renmatrix {</code>
+<code>bwipjs_dontdraw { return } if</code>
+<code></code>
+<code>    20 dict begin</code>
+<code></code>
+<code>    % Default options</code>
+<code>    /width 1.0 def</code>
+<code>    /height 1.0 def</code>
+<code>    /barcolor (unset) def</code>
+<code>%%    /backgroundcolor (unset) def</code>
+<code>    /bordercolor (unset) def</code>
+<code>    /colormap (unset) def</code>
+<code>    /dotty false def</code>
+<code>    /inkspread 0 def</code>
+<code>    /inkspreadh null def   % real sentinal</code>
+<code>    /inkspreadv null def   % real sentinal</code>
+<code>    /txt [] def</code>
+<code>    /includetext false def</code>
+<code>    /textcolor (unset) def</code>
+<code>    /textxalign (unset) def</code>
+<code>    /textyalign (unset) def</code>
+<code>    /textfont (OCR-B) def</code>
+<code>    /textsize 10.0 def</code>
+<code>    /textxoffset 0.0 def</code>
+<code>    /textyoffset 0.0 def</code>
+<code>    /textgaps 0.0 def</code>
+<code>    /alttext () def</code>
+<code>    /extratext () def</code>
+<code>    /extratextcolor (unset) def</code>
+<code>    /extratextxalign (left) def</code>
+<code>    /extratextyalign (above) def</code>
+<code>    /extratextfont (OCR-B) def</code>
+<code>    /extratextsize 10.0 def</code>
+<code>    /extratextxoffset 0.0 def</code>
+<code>    /extratextyoffset 0.0 def</code>
+<code>    /extratextgaps 0.0 def</code>
+<code>    /showborder false def</code>
+<code>    /borderleft 0.0 def</code>
+<code>    /borderright 0.0 def</code>
+<code>    /bordertop 0.0 def</code>
+<code>    /borderbottom 0.0 def</code>
+<code>    /borderwidth 0.25 def</code>
+<code></code>
+<code>    {def} forall</code>
+<code>    opt currentdict /opt undef currentdict //processoptions exec pop</code>
+<code></code>
+<code>    inkspreadh null eq {/inkspreadh inkspread def} if</code>
+<code>    inkspreadv null eq {/inkspreadv inkspread def} if</code>
+<code></code>
+<code>%%    /uk.co.terryburton.bwipp.global_ctx dup where {</code>
+<code>%%        exch get /ctx exch def</code>
+<code>%%        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if</code>
+<code>%%        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if</code>
+<code>%%        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if</code>
+<code>%%    } { pop } ifelse</code>
+<code>%%</code>
+<code>%%    textsize 0 le {</code>
+<code>%%        /bwipp.renmatrixBadTextsize (The font size must be greater than zero) //raiseerror exec</code>
+<code>%%    } if</code>
+<code>%%</code>
+<code>%%    /xyget { pixx mul add pixs exch get} def</code>
+<code>%%    /cget { pixx mul add cache exch get and} def</code>
+<code>%%    /cput {  % Optimise by only storing "stem" corners</code>
+<code>%%        dup 4 mod 0 eq { % dir is up or left</code>
+<code>%%            3 1 roll pixx mul add cache exch 2 copy get 4 -1 roll or put</code>
+<code>%%        } {</code>
+<code>%%            pop pop pop</code>
+<code>%%        } ifelse</code>
+<code>%%    } def</code>
+<code>%%</code>
+<code>%%    /abcd {</code>
+<code>%%        4 string 0 [</code>
+<code>%%            5 -2 roll</code>
+<code>%%            pixx mul add dup</code>
+<code>%%            pixs exch 2 getinterval aload pop 3 -1 roll  % A B</code>
+<code>%%            pixs exch pixx add 2 getinterval aload pop   % C D</code>
+<code>%%        ] {3 copy 48 add put pop 1 add} forall pop</code>
+<code>%%    } def</code>
+<code>%%</code>
+<code>%%    /right {dir 1 ne {x y dir cput [x y]} if  /x x 1 add def  /dir 1 def} def</code>
+<code>%%    /down  {dir 2 ne {x y dir cput [x y]} if  /y y 1 add def  /dir 2 def} def</code>
+<code>%%    /left  {dir 4 ne {x y dir cput [x y]} if  /x x 1 sub def  /dir 4 def} def</code>
+<code>%%    /up    {dir 8 ne {x y dir cput [x y]} if  /y y 1 sub def  /dir 8 def} def</code>
+<code>%%</code>
+<code>%%    /trace {</code>
+<code>%%        % Walk the outline of a region emitting edge coordinates of the path</code>
+<code>%%        /y exch def  /x exch def</code>
+<code>%%        % dir 1:right 2:down 4:left 8:up</code>
+<code>%%        /dir x 1 add y 1 add xyget 1 eq {8} {4} ifelse def</code>
+<code>%%        /sx x def  /sy y def  /sdir dir def</code>
+<code>%%</code>
+<code>%%        % A B</code>
+<code>%%        % C D</code>
+<code>%%        mark {</code>
+<code>%%            x y abcd</code>
+<code>%%            1 {  % Common exit</code>
+<code>%%                dup dup (0001) eq exch dup (0011) eq exch (1011) eq or or {pop right exit} if</code>
+<code>%%                dup dup (0010) eq exch dup (1010) eq exch (1110) eq or or {pop down  exit} if</code>
+<code>%%                dup dup (1000) eq exch dup (1100) eq exch (1101) eq or or {pop left  exit} if</code>
+<code>%%                dup dup (0100) eq exch dup (0101) eq exch (0111) eq or or {pop up    exit} if</code>
+<code>%%                dup (1001) eq {</code>
+<code>%%                    dir 2 eq {pop left exit} {pop right exit} ifelse</code>
+<code>%%                } {  % 0110</code>
+<code>%%                    dir 1 eq {pop down exit} {pop up exit} ifelse</code>
+<code>%%                } ifelse</code>
+<code>%%            } repeat</code>
+<code>%%            x sx eq y sy eq and dir sdir eq and {exit} if</code>
+<code>%%        } loop</code>
+<code>%%        counttomark array astore exch pop</code>
+<code>%%</code>
+<code>%%    } def</code>
+<code>%%</code>
+<code>%%    % Set RGB or CMYK color, or some other color by name</code>
+<code>%%    /setanycolor {</code>
+<code>%%        /anycolor exch def</code>
+<code>%%        anycolor length 1 lt {</code>
+<code>%%            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec</code>
+<code>%%        } if</code>
+<code>%%        anycolor 0 get 95 ne {  % RGB or CMYK</code>
+<code>%%            anycolor length dup 6 ne exch 8 ne and {</code>
+<code>%%                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec</code>
+<code>%%            } if</code>
+<code>%%            mark</code>
+<code>%%            0 2 anycolor length 1 sub {</code>
+<code>%%                anycolor exch 2 getinterval 0 exch {</code>
+<code>%%                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9</code>
+<code>%%                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F</code>
+<code>%%                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f</code>
+<code>%%                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec</code>
+<code>%%                    } ifelse } ifelse } ifelse</code>
+<code>%%                    exch 16 mul add</code>
+<code>%%                } forall</code>
+<code>%%                255 div</code>
+<code>%%            } for</code>
+<code>%%            counttomark</code>
+<code>%%            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse</code>
+<code>%%            exch 2 add -1 roll pop  % clear mark</code>
+<code>%%        } {  % Named color beginning "_..."</code>
+<code>%%            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse</code>
+<code>%%            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse</code>
+<code>%%            anycolor 2 copy known not {</code>
+<code>%%                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec</code>
+<code>%%            } if</code>
+<code>%%            get mark exch aload pop counttomark 1 add -2 roll exch pop</code>
+<code>%%        } ifelse</code>
+<code>%%        { setcolorspace setcolor } stopped {</code>
+<code>%%            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec</code>
+<code>%%        } if</code>
+<code>%%    } def</code>
+<code>%%</code>
+<code>%%    % Plot a layer of single colour</code>
+<code>%%    /drawlayer {</code>
+<code>%%</code>
+<code>%%        /pixsorig pixs def</code>
+<code>%%        /pixs exch def</code>
+<code>%%</code>
+<code>%%        % Pad the bitmap on all sides</code>
+<code>%%        /pixs [</code>
+<code>%%            pixx 2 add {0} repeat</code>
+<code>%%            0 pixx pixs length 1 sub {</code>
+<code>%%                0 exch</code>
+<code>%%                pixs exch pixx getinterval aload pop</code>
+<code>%%                0</code>
+<code>%%            } for</code>
+<code>%%            pixx 2 add {0} repeat</code>
+<code>%%        ] def</code>
+<code>%%        /pixx pixx 2 add def</code>
+<code>%%        /pixy pixy 2 add def</code>
+<code>%%</code>
+<code>%%        % Cache of visited corners for each direction</code>
+<code>%%        /cache [ pixs length {0} repeat ] def</code>
+<code>%%</code>
+<code>%%        % Construct paths by tracing regions avoiding duplication by using the cache</code>
+<code>%%        /paths [</code>
+<code>%%            0 1 pixy 2 sub {</code>
+<code>%%                /j exch def</code>
+<code>%%                0 1 pixx 2 sub {</code>
+<code>%%                    /i exch def</code>
+<code>%%                    /k i j abcd def</code>
+<code>%%                    k (0001) eq k (1001) eq or {  % Black region stem corners</code>
+<code>%%                        8 i j cget 0 eq {</code>
+<code>%%                            i j trace</code>
+<code>%%                        } if</code>
+<code>%%                    } if</code>
+<code>%%                    k (1110) eq {  % White region stem corner</code>
+<code>%%                        4 i j cget 0 eq {</code>
+<code>%%                            i j trace</code>
+<code>%%                        } if</code>
+<code>%%                    } if</code>
+<code>%%                } for</code>
+<code>%%            } for</code>
+<code>%%        ] def</code>
+<code>%%</code>
+<code>%%        % Revert the bitmap size</code>
+<code>%%        /pixx pixx 2 sub def</code>
+<code>%%        /pixy pixy 2 sub def</code>
+<code>%%</code>
+<code>%%        % Draw the image</code>
+<code>%%        newpath</code>
+<code>%%        paths {</code>
+<code>%%            /p exch def</code>
+<code>%%            /len p length def</code>
+<code>%%            p len 1 sub get aload pop</code>
+<code>%%            p 0 get aload pop</code>
+<code>%%            0 1 len 1 sub {                                % x1 y1 x2 y2</code>
+<code>%%                /i exch def</code>
+<code>%%                p i 1 add len mod get aload pop 6 -2 roll  % x3 y3 x1 y1 x2 y2</code>
+<code>%%                5 index inkspreadh</code>
+<code>%%                4 index 4 -1 roll lt {add} {sub} ifelse    % y3&lt;y1 ? x2+i : x2-i</code>
+<code>%%                4 1 roll</code>
+<code>%%                4 index inkspreadv</code>
+<code>%%                4 index 4 -1 roll gt {add} {sub} ifelse    % x3&gt;x1 ? y2+i : y2-i</code>
+<code>%%                4 -1 roll exch pixy exch sub</code>
+<code>%%                i 0 eq {moveto} {lineto} ifelse</code>
+<code>%%            } for                                          % x2 y2 x3 y3</code>
+<code>%%            closepath</code>
+<code>%%            pop pop pop pop</code>
+<code>%%        } forall</code>
+<code>%%        fill</code>
+<code>%%</code>
+<code>%%        /pixs pixsorig def</code>
+<code>%%</code>
+<code>%%    } def</code>
+<code></code>
+<code>    /xyget { pixx mul add pixs exch get} def</code>
+<code>    /drawlayerdots {</code>
+<code></code>
+<code>        /pixsorig pixs def</code>
+<code>        /pixs exch def</code>
+<code></code>
+<code>        newpath</code>
+<code>        0 1 pixs length 1 sub {</code>
+<code>            dup pixx mod /x exch def</code>
+<code>            pixx idiv /y exch def</code>
+<code>            x y xyget 1 eq {</code>
+<code>               x 0.5 add pixy y sub 0.5 sub moveto</code>
+<code>               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc</code>
+<code>            } if</code>
+<code>        } for</code>
+<code>        fill</code>
+<code></code>
+<code>        /pixs pixsorig def</code>
+<code></code>
+<code>    } def</code>
+<code></code>
+<code>    gsave</code>
+<code></code>
+<code>    currentpoint translate</code>
+<code></code>
+<code>    /inkspread  inkspread  2 div def</code>
+<code>    /inkspreadh inkspreadh 2 div def</code>
+<code>    /inkspreadv inkspreadv 2 div def</code>
+<code></code>
+<code>    % Force symbol to given width</code>
+<code>    width pixx div 72 mul height pixy div 72 mul scale</code>
+<code></code>
+<code>    % Display the border and background</code>
+<code>    showborder {</code>
+<code>        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def</code>
+<code>        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def</code>
+<code>        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def</code>
+<code>        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def</code>
+<code>    } {  % No need to extend background when there is no border</code>
+<code>        /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def</code>
+<code>        /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def</code>
+<code>        /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def</code>
+<code>        /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def</code>
+<code>    } ifelse</code>
+<code>%%    backgroundcolor (unset) ne {</code>
+<code>%%        gsave</code>
+<code>%%        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath</code>
+<code>%%        backgroundcolor setanycolor fill</code>
+<code>%%        grestore</code>
+<code>%%    } if</code>
+<code>    showborder {</code>
+<code>        gsave</code>
+<code>        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath</code>
+<code>        bordercolor (unset) ne { bordercolor setanycolor } if</code>
+<code>        borderwidth inkspread 2 mul sub setlinewidth stroke</code>
+<code>        grestore</code>
+<code>    } if</code>
+<code></code>
+<code>    % Display the matrix</code>
+<code>    colormap (unset) eq {</code>
+<code>        /colormap &lt;&lt; 1 barcolor &gt;&gt; def</code>
+<code>    } if</code>
+<code></code>
+<code>    colormap {</code>
+<code>        dup (unset) ne { setanycolor } { pop } ifelse</code>
+<code>        /key exch def</code>
+<code>        [</code>
+<code>            pixs { key eq {1} {0} ifelse } forall</code>
+<code>        ] dotty {drawlayerdots} {drawlayer} ifelse</code>
+<code>    } forall</code>
+<code></code>
+<code>    % Display the text for elements in the text array</code>
+<code>    includetext {</code>
+<code>        textcolor (unset) ne { textcolor setanycolor } if</code>
+<code>        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {</code>
+<code>            /s 0 def /fn () def</code>
+<code>            txt {</code>
+<code>                aload pop</code>
+<code>                2 copy s ne exch fn ne or {</code>
+<code>                    dup 0 le {</code>
+<code>                        pop pop pop pop pop</code>
+<code>                        /bwipp.renmatrixFontTooSmall (The font size is too small) //raiseerror exec</code>
+<code>                    } if</code>
+<code>                    2 copy /s exch def /fn exch def</code>
+<code>                    selectfont</code>
+<code>                } {</code>
+<code>                    pop pop</code>
+<code>                } ifelse</code>
+<code>                moveto show</code>
+<code>            } forall</code>
+<code>        } {</code>
+<code>            textfont textsize selectfont</code>
+<code>            alttext () eq {</code>
+<code>                /txt [ txt { 0 get {} forall } forall ] def</code>
+<code>                /tstr txt length string def</code>
+<code>                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for</code>
+<code>            } {</code>
+<code>                /tstr alttext def</code>
+<code>            } ifelse</code>
+<code></code>
+<code>            % Find true ascent of font</code>
+<code>            tstr length 0 eq {</code>
+<code>                0</code>
+<code>            } {</code>
+<code>                gsave</code>
+<code>                newpath 0 0 moveto (0) false charpath pathbbox</code>
+<code>                4 1 roll pop pop pop</code>
+<code>                grestore</code>
+<code>%psc                 currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse</code>
+<code>%psc                 currentfont /StrokeWidth known and {</code>
+<code>%psc                     currentfont /StrokeWidth get 2 div 0 exch</code>
+<code>%psc                     currentfont /FontMatrix get dtransform</code>
+<code>%psc                     dup mul exch dup mul add sqrt</code>
+<code>%psc                     add</code>
+<code>%psc                 } if</code>
+<code>            } ifelse</code>
+<code>            /textascent exch def</code>
+<code>            /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def</code>
+<code></code>
+<code>            /textxpos textxoffset pixx textwidth sub 2 div add def</code>
+<code>            textxalign (left)     eq { /textxpos textxoffset def } if</code>
+<code>            textxalign (right)    eq { /textxpos pixx textxoffset sub textwidth sub def } if</code>
+<code>            textxalign (offleft)  eq { /textxpos textwidth textxoffset add neg def } if</code>
+<code>            textxalign (offright) eq { /textxpos pixx textxoffset add def } if</code>
+<code>            textxalign (justify)  eq textwidth pixx lt and {</code>
+<code>                /textxpos 0.0 def</code>
+<code>                /textgaps pixx textwidth sub tstr length 1 sub div def</code>
+<code>            } if</code>
+<code>            /textypos textyoffset textascent add 1 add neg def</code>
+<code>            textyalign (above)  eq { /textypos textyoffset pixy add 1 add def } if</code>
+<code>            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if</code>
+<code>            textxpos textypos moveto textgaps 0 tstr ashow</code>
+<code>        } ifelse</code>
+<code>    } if</code>
+<code></code>
+<code>    % Render any extratext</code>
+<code>    extratext () ne {</code>
+<code>        extratextcolor (unset) ne { extratextcolor setanycolor } if</code>
+<code>        extratextfont extratextsize selectfont</code>
+<code></code>
+<code>        % Find true ascent of font</code>
+<code>        gsave</code>
+<code>        newpath 0 0 moveto (0) false charpath pathbbox</code>
+<code>        4 1 roll pop pop pop</code>
+<code>        grestore</code>
+<code>%psc         currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse</code>
+<code>%psc         currentfont /StrokeWidth known and {</code>
+<code>%psc             currentfont /StrokeWidth get 2 div 0 exch</code>
+<code>%psc             currentfont /FontMatrix get dtransform</code>
+<code>%psc             dup mul exch dup mul add sqrt</code>
+<code>%psc             add</code>
+<code>%psc         } if</code>
+<code>        /textascent exch def</code>
+<code>        /textwidth extratext stringwidth pop extratext length 1 sub extratextgaps mul add def</code>
+<code></code>
+<code>        /extratextxpos extratextxoffset pixx textwidth sub 2 div add def</code>
+<code>        extratextxalign (left)     eq { /textxpos extratextxoffset def } if</code>
+<code>        extratextxalign (right)    eq { /textxpos pixx extratextxoffset sub textwidth sub def } if</code>
+<code>        extratextxalign (offleft)  eq { /textxpos textwidth extratextxoffset add neg def } if</code>
+<code>        extratextxalign (offright) eq { /textxpos pixx extratextxoffset add def } if</code>
+<code>        extratextxalign (justify)  eq textwidth pixx lt and {</code>
+<code>            /textxpos 0.0 def</code>
+<code>            /extratextgaps pixx textwidth sub extratext length 1 sub div def</code>
+<code>        } if</code>
+<code>        /textypos extratextyoffset textascent add 1 add neg def</code>
+<code>        extratextyalign (above)  eq { /textypos extratextyoffset pixy add 1 add def } if</code>
+<code>        extratextyalign (center) eq { /textypos extratextyoffset pixy textascent sub 2 div add def } if</code>
+<code>        textxpos textypos moveto extratextgaps 0 extratext ashow</code>
+<code>    } if</code>
+<code></code>
+<code>    grestore</code>
+<code></code>
+<code>    end</code>
+<code></code>
+<code>}</code>
+<code>%psc [/barcode] {null def} forall</code>
+<code>bind def</code>
+<code>%psc /renmatrix dup load /uk.co.terryburton.bwipp defineresource pop</code>
+<code>%psc end</code>
+<code>%psc /setpacking where {pop setpacking} if</code>
+<code>%%EndData</code>
+<code>%%EndResource</code>
+<code>% --END RENDERER renmatrix--</code>
 <code>% --BEGIN RENDERER renmaximatrix--</code>
 <code>% --REQUIRES preamble raiseerror--</code>
 <code>%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2018020400 56037 55803</code>
@@ -32891,22 +33300,51 @@ div span:hover {
 <code></code>
 <code>    20 dict begin</code>
 <code></code>
-<code>    /args exch def   % We are given some arguments</code>
-<code></code>
 <code>    % Default options</code>
 <code>    /barcolor (unset) def</code>
-<code>    /backgroundcolor (unset) def</code>
+<code>%%    /backgroundcolor (unset) def</code>
+<code>    /bordercolor (unset) def</code>
+<code>    /inkspread 0 def</code>
+<code>    /showborder false def</code>
+<code>    /borderleft 0.0 def</code>
+<code>    /borderright 0.0 def</code>
+<code>    /bordertop 0.0 def</code>
+<code>    /borderbottom 0.0 def</code>
+<code>    /borderwidth 0.25 def</code>
 <code></code>
-<code>    % Apply the renderer options and the user options</code>
-<code>    args {def} forall</code>
-<code>    opt {def} forall</code>
-<code></code>
-<code>    /barcolor barcolor cvlit def</code>
-<code>    /backgroundcolor backgroundcolor cvlit def</code>
+<code>    {def} forall</code>
+<code>    opt currentdict /opt undef currentdict //processoptions exec pop</code>
 <code></code>
 <code>    gsave</code>
 <code></code>
+<code>    % Display the border and background</code>
+<code>    showborder {</code>
+<code>        /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def</code>
+<code>        /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def</code>
+<code>        /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def</code>
+<code>        /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def</code>
+<code>    } {  % No need to extend background when there is no border</code>
+<code>        /tl [ borderleft neg inkspread add              29 bordertop add inkspread sub         ] def</code>
+<code>        /tr [ 30 borderright add inkspread sub          29 bordertop add inkspread sub         ] def</code>
+<code>        /bl [ borderleft neg inkspread add              borderbottom neg inkspread add         ] def</code>
+<code>        /br [ 30 borderright add inkspread sub          borderbottom neg inkspread add         ] def</code>
+<code>    } ifelse</code>
+<code>%%    backgroundcolor (unset) ne {</code>
+<code>%%        gsave</code>
+<code>%%        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath</code>
+<code>%%        backgroundcolor setanycolor fill</code>
+<code>%%        grestore</code>
+<code>%%    } if</code>
+<code>    showborder {</code>
+<code>        gsave</code>
+<code>        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath</code>
+<code>        bordercolor (unset) ne { bordercolor setanycolor } if</code>
+<code>        borderwidth inkspread 2 mul sub setlinewidth stroke</code>
+<code>        grestore</code>
+<code>    } if</code>
+<code></code>
 <code>    barcolor (unset) ne { barcolor setanycolor } if</code>
+<code></code>
 <code>	pixs showmaxicode</code>
 <code></code>
 <code>    grestore</code>

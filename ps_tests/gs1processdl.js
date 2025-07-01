@@ -1,5 +1,6 @@
 function bwipp_runtest_gs1processdl(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.good_tmpl=function(){
 $_.t=$k[--$j];//#11
 var _2=function(){
@@ -195,7 +196,7 @@ $_.er_tmpl();//#115
 $k[$j++]="https://example.com/01/09520123456788/22/2A/21/12345?10=ABC123";//#124
 $k[$j++]='bwipp.GS1dlAttributeMustBeQualifier#124';//#124
 $_.er_tmpl();//#124
-$_ = Object.getPrototypeOf($_);//#125
+$_ = $__;//#125
 }//bwipp_runtest_gs1processdl
 console.log("gs1processdl...")
 bwipp_runtest_gs1processdl();

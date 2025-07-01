@@ -1,5 +1,6 @@
 function bwipp_runtest_azteccode(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.aztecrune_eq_tmpl=function(){
 $_.e=$k[--$j];//#16
 $_.o=$k[--$j];//#17
@@ -384,7 +385,7 @@ $k[$j++]="256";//#267
 $k[$j++]="dontdraw";//#267
 $k[$j++]='bwipp.aztecRuneInvalid#267';//#267
 $_.aztecrune_er_tmpl();//#267
-$_ = Object.getPrototypeOf($_);//#268
+$_ = $__;//#268
 }//bwipp_runtest_azteccode
 console.log("azteccode...")
 bwipp_runtest_azteccode();

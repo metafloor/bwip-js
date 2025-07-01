@@ -1,5 +1,6 @@
 function bwipp_runtest_code2of5(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _0=function(){
 $k[$j++]="";//#20
 $k[$j++]="dontdraw";//#20
@@ -133,7 +134,7 @@ var _i=$get($k[--$j],'sbs');//#72
 $k[$j++]=_i;//#72
 };//#72
 debugIsEqual(_j,$a([1,1,1,1,3,1,1,3,1,1,1,1,1,3,3,1,1,3,3,1,1,1,3,1,3,1,1,1,1,1,3,1,3,1,3,3,1,1,1,1,1,3,1,1,3,1,3,1,1,1,3,1,3,1,1]));//#72
-$_ = Object.getPrototypeOf($_);//#74
+$_ = $__;//#74
 }//bwipp_runtest_code2of5
 console.log("code2of5...")
 bwipp_runtest_code2of5();

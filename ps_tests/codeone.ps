@@ -1,0 +1,188 @@
+/runtest_codeone {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2024 Terry Burton
+
+% AIM USS Code One Revision March 3, 2000
+
+% vim: set ts=4 sw=4 et :
+
+%%/codeone dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% EDI
+
+{
+    (^013*>^013*) (debugcws parse) codeone  % 1 EDI triplet + doublet, ASCII mode
+} [14 43 63 14 43 129 129 129 129 129] debugIsEqual
+
+{
+    (^013*>^013*>) (debugcws parse) codeone  % 2 EDI triplets, EDI mode
+} [238 0 43 0 43 255 129 129 129 129] debugIsEqual
+
+{
+    (^013*>^013*>a) (debugcws parse) codeone  % 2 EDI triplets + 1 non-EDI (Steps E1c, E2 and Step Q5)
+} [238 0 43 0 43 255 98 129 129 129] debugIsEqual
+
+{
+    (^013*>^013*>^013a) (debugcws parse) codeone  % 2 EDI triplets + singlet + 1 non-EDI (Steps E1c, E2)
+} [238 0 43 0 43 255 14 98 129 129] debugIsEqual
+
+{
+    (^013*>^013*>^013*a) (debugcws parse) codeone  % 2 EDI triplets + doublet + 1 non-EDI (Steps E1c, E2)
+} [238 0 43 0 43 255 14 43 98 129] debugIsEqual
+
+
+% DECIMAL
+
+{
+    (123456789012345678901) (debugcws) codeone  % 1 remaining codeword and some bits
+} [241 241 201 197 128 213 106 167 225 189] debugIsEqual
+
+{
+    (123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890) (debugcws version=T-48) codeone  % No remaining codewords and no bits
+} [241 241 201 197 128 213 106 167 225 142 184 227 123 31 28 156 88 13 86 170 126 24 235 142 55 177 241 201 197 128 213 106 167 225 142 184 227 123] debugIsEqual
+
+{
+    (1234567890123456789012345678901234567890123) (debugcws) codeone  % Final digit into final codeword as ASCII
+} [241 241 201 197 128 213 106 167 225 142 184 227 123 31 28 156 88 13 52] debugIsEqual
+
+{
+    (12345678901234567890123456789012345678901234) (debugcws) codeone  % Last 2 digits into final codeword as ASCII double-digit
+} [241 241 201 197 128 213 106 167 225 142 184 227 123 31 28 156 88 13 164] debugIsEqual
+
+
+% Figures
+
+{
+    (1234567890123456789012) (debugcws) codeone  % Figure 1, Version A, same
+} [241 241 201 197 128 213 106 167 225 141] debugIsEqual
+
+{
+    (???????????????????????????????????????????????????????????????????????????????????????????) (debugcws) codeone  % Figure 7, Version D, same
+} [64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64 64] debugIsEqual
+
+{
+    (1234567890) (debugcws version=S-20) codeone  % Figure 9 (left) (note S-20 not S-10 as stated), same
+} [0 1 4 25 12 0 22 19] debugIsEqual
+
+{
+    (12345678901234567890) (debugcws version=T-16) codeone  % Figure 9 (right), not the same, BWIPP uses DECIMAL, figure ASCII double-digits, same no. of codewords
+} [241 241 201 197 128 213 106 167 253 220] debugIsEqual
+
+{
+    (^FNC101003123412340141595091530ABC123456) (debugcws version=B parsefnc) codeone  % Figure B1 (note uses non-compliant (30) instead of (10) as BATCH/LOT NO), same
+} [236 2 194 3 172 124 100 154 14 223 148 253 160 66 67 68 142 164 186] debugIsEqual
+
+
+% Table 2 data capacities of each Code One Version
+
+/dcap_tmpl {
+    /ver exch def /str exch def /cnt exch def /opt (dontdraw version=) def
+    % Substituting stack strings into proc so show up in error stack
+    opt length ver length add string dup dup 0 opt putinterval opt length ver putinterval  % Concatenate opt and ver for options
+    cnt string 0 1 cnt 1 sub { exch dup 3 -1 roll str putinterval } for  % Expand string for data
+    % 0 1 are placeholders for data and options
+    /t exch def
+    /o exch def
+    { t o codeone /pixs known }
+} def
+
+6 (1) (S-10) dcap_tmpl true isEqual
+7 (1) (S-10) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+12 (1) (S-20) dcap_tmpl true isEqual
+13 (1) (S-20) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+18 (1) (S-30) dcap_tmpl true isEqual
+19 (1) (S-30) dcap_tmpl /bwipp.codeoneStypeTooLong isError
+
+13 (A) (T-16) dcap_tmpl true isEqual
+14 (A) (T-16) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+22 (1) (T-16) dcap_tmpl true isEqual
+23 (1) (T-16) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+10 <01> (T-16) dcap_tmpl true isEqual
+11 <01> (T-16) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+34 (A) (T-32) dcap_tmpl true isEqual
+35 (A) (T-32) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+56 (1) (T-32) dcap_tmpl true isEqual
+57 (1) (T-32) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+24 <01> (T-32) dcap_tmpl true isEqual
+25 <01> (T-32) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+55 (A) (T-48) dcap_tmpl true isEqual
+56 (A) (T-48) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+90 (1) (T-48) dcap_tmpl true isEqual
+91 (1) (T-48) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+89 (1) (T-48) dcap_tmpl /bwipp.codeoneNoValidSymbol isError  % Quirk of DECIMAL end-of-data encoding when capacity multiple of 3
+38 <01> (T-48) dcap_tmpl true isEqual
+39 <01> (T-48) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+13 (A) (A) dcap_tmpl true isEqual
+14 (A) (A) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+22 (1) (A) dcap_tmpl true isEqual
+23 (1) (A) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+10 <01> (A) dcap_tmpl true isEqual
+11 <01> (A) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+27 (A) (B) dcap_tmpl true isEqual
+28 (A) (B) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+44 (1) (B) dcap_tmpl true isEqual
+45 (1) (B) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+19 <01> (B) dcap_tmpl true isEqual
+20 <01> (B) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+64 (A) (C) dcap_tmpl true isEqual
+65 (A) (C) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+104 (1) (C) dcap_tmpl true isEqual
+105 (1) (C) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+44 <01> (C) dcap_tmpl true isEqual
+45 <01> (C) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+135 (A) (D) dcap_tmpl true isEqual
+136 (A) (D) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+217 (1) (D) dcap_tmpl true isEqual
+218 (1) (D) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+91 <01> (D) dcap_tmpl true isEqual
+92 <01> (D) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+271 (A) (E) dcap_tmpl true isEqual
+272 (A) (E) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+435 (1) (E) dcap_tmpl true isEqual
+436 (1) (E) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+434 (1) (E) dcap_tmpl /bwipp.codeoneNoValidSymbol isError  % Quirk of DECIMAL end-of-data encoding when capacity multiple of 3
+182 <01> (E) dcap_tmpl true isEqual
+183 <01> (E) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+553 (A) (F) dcap_tmpl true isEqual
+554 (A) (F) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+370 <01> (F) dcap_tmpl true isEqual
+371 <01> (F) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+732 <01> (G) dcap_tmpl true isEqual
+733 <01> (G) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+systemdict /STRING_CONTINUE_BUG known not {
+
+886 (1) (F) dcap_tmpl true isEqual
+887 (1) (F) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+
+1096 (A) (G) dcap_tmpl true isEqual
+1097 (A) (G) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+1755 (1) (G) dcap_tmpl true isEqual
+1756 (1) (G) dcap_tmpl /bwipp.codeoneNoValidSymbol isError
+1754 (1) (G) dcap_tmpl /bwipp.codeoneNoValidSymbol isError  % Quirk of DECIMAL end-of-data encoding when capacity multiple of 3
+
+2218 (A) (H) dcap_tmpl true isEqual
+2219 (A) (H) dcap_tmpl /bwipp.codeoneTooLong isError
+3550 (1) (H) dcap_tmpl true isEqual
+3551 (1) (H) dcap_tmpl /bwipp.codeoneTooLong isError
+1480 <01> (H) dcap_tmpl true isEqual
+1481 <01> (H) dcap_tmpl /bwipp.codeoneTooLong isError
+
+} if
+end
+} bind def

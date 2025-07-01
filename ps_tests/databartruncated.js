@@ -1,5 +1,6 @@
 function bwipp_runtest_databartruncated(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#15
 $_.t=$k[--$j];//#16
@@ -45,7 +46,7 @@ $_.er_tmpl();//#35
 $k[$j++]="(02)0001234567890";//#36
 $k[$j++]='bwipp.databartruncatedBadAI#36';//#36
 $_.er_tmpl();//#36
-$_ = Object.getPrototypeOf($_);//#37
+$_ = $__;//#37
 }//bwipp_runtest_databartruncated
 console.log("databartruncated...")
 bwipp_runtest_databartruncated();

@@ -1,5 +1,6 @@
 function bwipp_runtest_ean8(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#11
 $_.t=$k[--$j];//#12
@@ -75,7 +76,7 @@ $_.er_tmpl();//#50
 $k[$j++]="023456731";//#51
 $k[$j++]='bwipp.ean8badLength#51';//#51
 $_.er_tmpl();//#51
-$_ = Object.getPrototypeOf($_);//#53
+$_ = $__;//#53
 }//bwipp_runtest_ean8
 console.log("ean8...")
 bwipp_runtest_ean8();

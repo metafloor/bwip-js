@@ -2,7 +2,7 @@
 //
 // bwipjs benchmarker
 //
-// Usage: node [--expose-gc] benchmark [--verbose] [--use-v#.#]
+// Usage: node benchmark [--verbose] [--use-v#.#]
 var fs = require('fs');
 
 // Keep output to a minimum
@@ -241,26 +241,28 @@ function genround() {
                 console.log(round[i]);
             }
             var id = round[i].bcid;
-            var t0 = process.hrtime();
+            if (!times[id]) {
+                times[id] = { id:id, count:0, msecs:0 };
+            }
+            var t0 = process.hrtime.bigint();
             bwipjs.toBuffer(round[i], (err, png) => {
-                var t1 = process.hrtime(t0);
+                var t1 = process.hrtime.bigint();
                 if (err) {
                     if (!/bwipp.unknownEncoder/.test(err)) {
                         reject(err);
                     }
                 } else {
-                    if (!times[id]) {
-                        times[id] = { id:id, count:0, msecs:0 };
-                    }
-                    var rec = times[id];
-                    rec.count++;
-                    rec.msecs += t1[0] * 1000 + t1[1] / 1000000;
-                    times.msecs += t1[0] * 1000 + t1[1] / 1000000;
+                    var sym = times[id];
+                    sym.count++;
+                    sym.msecs += Number((t1 - t0) / 1000n) / 1000;
+                    //sym.encoding += Number(bwipjs.metrics.encode) / 1000;
+                    //sym.rendering += Number(bwipjs.metrics.render) / 1000;
+
+                    times.msecs += Number((t1 - t0) / 1000n) / 1000;
                     times.count++;
                 }
-                global.gc && global.gc();
                 if (++i == round.length) {
-                    resolve(true);
+                    setTimeout(() => resolve(true), 50);
                 } else{
                     run(i);
                 }
@@ -297,5 +299,21 @@ function genround() {
         console.log('Total accrued time: ' + (times.msecs/1000).toFixed(3) +
                     ' seconds');
 
-        fs.writeFileSync('bench-stats.json', JSON.stringify(times, null, ' '), 'binary');
+        if (version) {
+            fs.writeFileSync('bench-v' + version + '.json', JSON.stringify(times, null, ' '), 'binary');
+            console.log('wrote: bench-v' + version + '.json');
+        } else {
+            fs.writeFileSync('bench-latest.json', JSON.stringify(times, null, ' '), 'binary');
+            console.log('wrote: bench-latest.json');
+        }
+
+        let arr = [];
+        for (let id in bwipjs.times) {
+            arr.push([ id, bwipjs.times[id] ]);
+        }
+        arr.sort((a,b) => b[1] - a[1]);
+        for (let i = 0; i < arr.length; i++) {
+            let elt = arr[i];
+            console.log(elt[0].padEnd(50, '.') + ' ' + elt[1]);
+        }
 })();

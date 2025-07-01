@@ -5,10 +5,10 @@ grep -E '% --BEGIN (ENCODER|RENDERER|RESOURCE)' barcode.ps | sed -e 's,% --BEGIN
 rm -f ps_tests/* 2>/dev/null
 for path in ../postscriptbarcode/tests/ps_tests/*.ps.test ; do
     name=$(basename $path .ps.test)
-    if [ $name = codeone ] ; then
-        echo "skipping $name..."
-        continue
-    fi
+    #if [ $name = codeone ] ; then
+    #    echo "skipping $name..."
+    #    continue
+    #fi
     jsname=$(echo "$name" | tr '-' '_')
 
     (
@@ -61,9 +61,27 @@ for path in ../postscriptbarcode/tests/ps_tests/*.ps.test ; do
     ##      1 index 0 3 -1 roll put
     ##      exch isError
     ##  } def
+    ## The codeone template is especially specific
+    ##  /dcap_tmpl {
+    ##      /ver exch def /str exch def /cnt exch def /opt (dontdraw version=) def
+    ##      % Substituting stack strings into proc so show up in error stack
+    ##      opt length ver length add string dup dup 0 opt putinterval opt length ver putinterval 
+    ##      cnt string 0 1 cnt 1 sub { exch dup 3 -1 roll str putinterval } for  % Expand string for data
+    ##      % 0 1 are placeholders for data and options
+    ##      { 0 1 codeone /pixs known } dup 3 -1 roll 0 exch put  % Substitute data for placeholder 0
+    ##      dup 3 -1 roll 1 exch put  % Substitute options for placeholder 1
+    ##  } def
     node <<@EOF
     const fs = require('fs');
     let text = fs.readFileSync('ps_tests/$name.ps', 'utf-8')
+        // Do codeone first since it is the most specific
+        .replace(/(\n *){ 0 1 codeone \/pixs known }[^}]+} def/, (_0, _1) => {
+                    return  '\n' +
+                            '    /t exch def\n' +
+                            '    /o exch def\n' +
+                            '    { t o codeone /pixs known }\n' +
+                            '} def';
+            })
         // Standard two-slot patching.  The target of the 'get' is either /pixs (renmatrix)
         // or /sbs (renlinear).
         .replace(/(\n\/\w*_tmpl(?:_\w+)?)\s*\{[^{}]+\{ 0 0 ([a-zA-Z0-9_-]+) (\/\w+) get }[^}]+(isEqual|isError)\s*\}/g,
@@ -117,7 +135,7 @@ for path in ../postscriptbarcode/tests/ps_tests/*.ps.test ; do
     ##
     ## Cross-compile 
     ##
-    echo "x-compiling $name..."
+    echo "compiling $name..."
     node <<@EOF
     var fs  = require('fs');
     var psc = require('./psc.js');
@@ -214,6 +232,19 @@ function compare(result,expect) {
         let eb = expect.b;
         if (result.length != expect.length) {
             console.log('\nFAIL: array lengths differ');
+            showCode();
+            console.log('');
+            if (result.length > 40) {
+                console.log('> [' + rb.slice(result.o, result.o+40) + ', ...]');
+            } else {
+                console.log('> [' + rb.slice(result.o, result.o+result.length) + ']');
+            }
+            if (expect.length > 40) {
+                console.log('> [' + eb.slice(0, 40) + ', ...]');
+            } else {
+                console.log('> [' + eb + ']');
+            }
+            return false;
         } else {
             // The expect array is always offset-0.
             // The result array can be a live view.
@@ -286,7 +317,16 @@ function dump() {
     for (let i = \$j-1; i >= 0; i--) {
         let v = \$k[i];
         if (v instanceof Array) {
-            console.log(i, '[' + v.b + ']');
+            console.log(i, '<' + v.length + '>[' + v.b.slice(v.o, v.o+v.length) + ']');
+        } else if (v instanceof Uint8Array) {
+            console.log(i, '<' +v.length + '>"' + String.fromCharCode.apply(String, v)
+                                .replace(/["\\\\\\x00-\\x1f\\x7f-\\xff]/g, (ch) => {
+                                    if (ch == '"' || ch == '\\\\') {
+                                        return '\\\\' + ch;
+                                    }
+                                    return '\\\\x' + ch.charCodeAt(0)
+                                                     .toString(16).padStart(2, '0')
+                                }) + '"');
         } else if (typeof v == 'function') {
             console.log(i, v);
         } else {

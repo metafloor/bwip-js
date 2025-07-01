@@ -1,5 +1,6 @@
 function bwipp_runtest_code93ext(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#16
 $_.t=$k[--$j];//#17
@@ -36,7 +37,7 @@ $_.eq_tmpl();//#37
 $k[$j++]="CODE^01393";//#43
 $k[$j++]=$a([1,1,1,1,4,1,2,1,1,3,1,1,1,2,1,1,2,2,2,2,1,1,1,2,2,2,1,2,1,1,1,2,1,2,2,1,1,1,1,2,2,2,1,4,1,1,1,1,1,1,1,4,1,1,2,2,1,1,1,2,1,3,1,1,2,1,1,1,1,1,4,1,1]);//#43
 $_.eq_tmpl();//#43
-$_ = Object.getPrototypeOf($_);//#44
+$_ = $__;//#44
 }//bwipp_runtest_code93ext
 console.log("code93ext...")
 bwipp_runtest_code93ext();

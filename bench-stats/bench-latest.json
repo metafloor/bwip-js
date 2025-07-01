@@ -1,209 +1,209 @@
 {
- "msecs": 17407.414683999963,
+ "msecs": 7935.773999999992,
  "count": 1900,
  "code128": {
   "id": "code128",
   "count": 75,
-  "msecs": 412.5866259999999
+  "msecs": 386.4870000000002
  },
  "code39": {
   "id": "code39",
   "count": 50,
-  "msecs": 268.283832
+  "msecs": 203.38299999999998
  },
  "code93": {
   "id": "code93",
   "count": 50,
-  "msecs": 141.08505900000003
+  "msecs": 108.83399999999999
  },
  "ean13": {
   "id": "ean13",
   "count": 50,
-  "msecs": 180.46619199999995
+  "msecs": 131.556
  },
  "ean8": {
   "id": "ean8",
   "count": 50,
-  "msecs": 126.228607
+  "msecs": 82.008
  },
  "upca": {
   "id": "upca",
   "count": 50,
-  "msecs": 173.94263399999997
+  "msecs": 124.84
  },
  "upce": {
   "id": "upce",
   "count": 50,
-  "msecs": 96.477973
+  "msecs": 76.49699999999999
  },
  "ean13composite": {
   "id": "ean13composite",
   "count": 25,
-  "msecs": 184.350309
+  "msecs": 107.05799999999999
  },
  "ean8composite": {
   "id": "ean8composite",
   "count": 25,
-  "msecs": 156.664213
+  "msecs": 85.62599999999999
  },
  "upcacomposite": {
   "id": "upcacomposite",
   "count": 25,
-  "msecs": 177.65708700000002
+  "msecs": 90.86100000000002
  },
  "upcecomposite": {
   "id": "upcecomposite",
   "count": 25,
-  "msecs": 143.66712900000002
+  "msecs": 84.341
  },
  "sscc18": {
   "id": "sscc18",
   "count": 25,
-  "msecs": 118.033063
+  "msecs": 73.277
  },
  "itf14": {
   "id": "itf14",
   "count": 25,
-  "msecs": 74.781481
+  "msecs": 48.28
  },
  "onecode": {
   "id": "onecode",
   "count": 25,
-  "msecs": 45.21670900000001
+  "msecs": 33.931
  },
  "planet": {
   "id": "planet",
   "count": 25,
-  "msecs": 29.113310999999996
+  "msecs": 24.926000000000002
  },
  "postnet": {
   "id": "postnet",
   "count": 25,
-  "msecs": 26.976013
+  "msecs": 20.251999999999995
  },
  "royalmail": {
   "id": "royalmail",
   "count": 25,
-  "msecs": 31.297372
+  "msecs": 26.580999999999996
  },
  "japanpost": {
   "id": "japanpost",
   "count": 25,
-  "msecs": 40.522211999999996
+  "msecs": 28.681
  },
  "azteccode": {
   "id": "azteccode",
   "count": 125,
-  "msecs": 1585.9848610000006
+  "msecs": 666.3259999999998
  },
  "datamatrix": {
   "id": "datamatrix",
   "count": 125,
-  "msecs": 1355.716326
+  "msecs": 568.8949999999996
  },
  "pdf417": {
   "id": "pdf417",
   "count": 125,
-  "msecs": 1794.193092000001
+  "msecs": 585.1640000000002
  },
  "qrcode": {
   "id": "qrcode",
   "count": 125,
-  "msecs": 3231.5028850000003
+  "msecs": 1513.7120000000002
  },
  "hanxin": {
   "id": "hanxin",
   "count": 125,
-  "msecs": 1818.69333
+  "msecs": 961.757
  },
  "databarexpanded": {
   "id": "databarexpanded",
   "count": 25,
-  "msecs": 127.108703
+  "msecs": 89.184
  },
  "databarexpandedcomposite": {
   "id": "databarexpandedcomposite",
   "count": 25,
-  "msecs": 224.32710100000006
+  "msecs": 137.87400000000002
  },
  "databarexpandedstacked": {
   "id": "databarexpandedstacked",
   "count": 25,
-  "msecs": 487.49664100000007
+  "msecs": 87.50099999999998
  },
  "databarexpandedstackedcomposite": {
   "id": "databarexpandedstackedcomposite",
   "count": 25,
-  "msecs": 589.9877309999999
+  "msecs": 135.906
  },
  "databarlimited": {
   "id": "databarlimited",
   "count": 25,
-  "msecs": 33.103505
+  "msecs": 22.083999999999996
  },
  "databarlimitedcomposite": {
   "id": "databarlimitedcomposite",
   "count": 25,
-  "msecs": 132.84323500000002
+  "msecs": 78.022
  },
  "databaromni": {
   "id": "databaromni",
   "count": 25,
-  "msecs": 55.062674
+  "msecs": 30.046999999999997
  },
  "databaromnicomposite": {
   "id": "databaromnicomposite",
   "count": 25,
-  "msecs": 166.39610100000002
+  "msecs": 85.62599999999998
  },
  "databarstacked": {
   "id": "databarstacked",
   "count": 25,
-  "msecs": 78.40338200000001
+  "msecs": 25.019
  },
  "databarstackedcomposite": {
   "id": "databarstackedcomposite",
   "count": 25,
-  "msecs": 171.56012
+  "msecs": 83.41
  },
  "databarstackedomni": {
   "id": "databarstackedomni",
   "count": 25,
-  "msecs": 233.288584
+  "msecs": 34.217
  },
  "databarstackedomnicomposite": {
   "id": "databarstackedomnicomposite",
   "count": 25,
-  "msecs": 322.129774
+  "msecs": 83.662
  },
  "databartruncated": {
   "id": "databartruncated",
   "count": 25,
-  "msecs": 30.216767
+  "msecs": 23.922999999999995
  },
  "databartruncatedcomposite": {
   "id": "databartruncatedcomposite",
   "count": 25,
-  "msecs": 134.251904
+  "msecs": 83.69700000000002
  },
  "gs1-128composite": {
   "id": "gs1-128composite",
   "count": 25,
-  "msecs": 201.1803539999999
+  "msecs": 148.01800000000003
  },
  "maxicode": {
   "id": "maxicode",
   "count": 25,
-  "msecs": 205.78230600000003
+  "msecs": 140.31699999999998
  },
  "ultracode": {
   "id": "ultracode",
   "count": 125,
-  "msecs": 1408.7628610000004
+  "msecs": 239.02400000000011
  },
  "dotcode": {
   "id": "dotcode",
   "count": 100,
-  "msecs": 592.0726249999998
+  "msecs": 374.97
  }
 }

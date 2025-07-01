@@ -1,5 +1,6 @@
 function bwipp_runtest_gs1process(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.good_tmpl=function(){
 $_.t=$k[--$j];//#11
 var _2=function(){
@@ -2291,7 +2292,7 @@ $_.good_tmpl();//#998
 $_.lintreqs=false;//#1001
 $k[$j++]="(02)12345678901231";//#1002
 $_.good_tmpl();//#1002
-$_ = Object.getPrototypeOf($_);//#1003
+$_ = $__;//#1003
 }//bwipp_runtest_gs1process
 console.log("gs1process...")
 bwipp_runtest_gs1process();

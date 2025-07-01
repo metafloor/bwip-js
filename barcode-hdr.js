@@ -16,6 +16,9 @@ const $pow = Math.pow
 const $round = Math.round;
 const $sqrt = Math.sqrt;
 
+// Code instrumenting
+const $metrics = {};
+
 // Array ctor
 //  $a()    : Build a new array up to the Infinity-marker on the stack.
 //  $a(arr) : Convert native array to a "view" of the array.
@@ -173,26 +176,6 @@ function $cvi(s) {
 //  r : radix
 function $cvrs(s,n,r) {
     return $strcpy(s,(~~n).toString(r).toUpperCase());
-}
-
-// cvx - convert to executable.
-// This is only used by BWIPP to convert <XX> string literals.
-function $cvx(s) {
-    s = $z(s)
-    var m = /^\s*<((?:[0-9a-fA-F]{2})+)>\s*$/.exec(s);
-    if (!m) {
-        throw new Error('cvx: not a <HH> hex string literal');
-    }
-    var h = m[1];
-    var l = h.length >> 1;
-    var u = new Uint8Array(l);
-    for (var i = 0, j = 0; i < l; i++) {
-        var c0 = h.charCodeAt(j++);
-        var c1 = h.charCodeAt(j++);
-        u[i] = ((c0 < 58 ? c0 - 48 : (c0 & 15) + 9) << 4) +
-                (c1 < 58 ? c1 - 48 : (c1 & 15) + 9);
-    }
-    return u;
 }
 
 // get operator

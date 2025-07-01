@@ -1,5 +1,6 @@
 function bwipp_runtest_msi(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _3=function(){
 $k[$j++]="2211";//#14
 $k[$j++]="dontdraw includecheck checktype=mod11 badmod11";//#14
@@ -66,7 +67,7 @@ var _P=$get($k[--$j],'sbs');//#39
 $k[$j++]=_P;//#39
 };//#39
 debugIsEqual(_Q,$a([2,1,1,2,1,2,1,2,2,1,1,2,1,2,2,1,1,2,1,2,1,2,2,1,2,1,1,2,2,1,1,2,1,2,1,2,2,1,1,2,2,1,1,2,2,1,2,1,1,2,1,2,2,1,2,1,2,1,2,1,1,2,1,2,2,1,1,2,1]));//#39
-$_ = Object.getPrototypeOf($_);//#41
+$_ = $__;//#41
 }//bwipp_runtest_msi
 console.log("msi...")
 bwipp_runtest_msi();

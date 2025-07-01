@@ -1,5 +1,6 @@
 function bwipp_runtest_databarstacked(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#15
 $_.t=$k[--$j];//#16
@@ -45,7 +46,7 @@ $_.er_tmpl();//#49
 $k[$j++]="(02)2001234567890";//#50
 $k[$j++]='bwipp.databarstackedBadAI#50';//#50
 $_.er_tmpl();//#50
-$_ = Object.getPrototypeOf($_);//#51
+$_ = $__;//#51
 }//bwipp_runtest_databarstacked
 console.log("databarstacked...")
 bwipp_runtest_databarstacked();

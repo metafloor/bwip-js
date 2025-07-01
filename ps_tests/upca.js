@@ -1,5 +1,6 @@
 function bwipp_runtest_upca(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.eq_tmpl=function(){
 $_.e=$k[--$j];//#11
 $_.t=$k[--$j];//#12
@@ -81,7 +82,7 @@ $_.eq_tmpl();//#51
 $k[$j++]="00123471";//#52
 $k[$j++]=$a([1,1,1,3,2,1,1,3,2,1,1,2,2,2,1,2,1,2,2,1,4,1,1,1,1,3,2,1,1,1,1,1,3,2,1,1,3,2,1,1,3,2,1,1,3,2,1,1,1,3,1,2,2,2,2,1,1,1,1]);//#52
 $_.eq_tmpl();//#52
-$_ = Object.getPrototypeOf($_);//#54
+$_ = $__;//#54
 }//bwipp_runtest_upca
 console.log("upca...")
 bwipp_runtest_upca();

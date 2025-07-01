@@ -124,6 +124,7 @@ mv pscdbg.tmp pscdbg.html
 ##
 ## Cross-compile barcode.psc into barcode.js.
 ##
+echo "compiling..."
 node <<@EOF
 var fs  = require('fs');
 var psc = require('./psc.js');// Not to be confused with this like-named script
@@ -140,10 +141,11 @@ fi
 ##
 ## Peephole optimize
 ##
+echo "optimizing..."
+cp barcode.js barcode.raw
+node optimize.mjs > optimize.log
 
-## MRW 19-Mar-2021 Way too buggy...
-##node optimize
-
+echo "finalizing..."
 ##
 ## Get the BWIPP version (date)
 ##

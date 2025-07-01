@@ -1,5 +1,6 @@
 function bwipp_runtest_gs1datamatrix(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _1=function(){
 $k[$j++]="(01)00012345678905(17)180401(21)ABCDEFGHIJKL12345678(91)ABCDEFGHI123456789(92)abcdefghi";//#19
 $k[$j++]="debugcws";//#19
@@ -72,7 +73,7 @@ $k[$j++]="debugcws";//#67
 bwipp_gs1datamatrix();//#67
 };//#67
 debugIsEqual(_N,$a([232,131,130,131,153,175,197,219,135,147,134,131,145,129,87,237,133,28]));//#67
-$_ = Object.getPrototypeOf($_);//#69
+$_ = $__;//#69
 }//bwipp_runtest_gs1datamatrix
 console.log("gs1datamatrix...")
 bwipp_runtest_gs1datamatrix();

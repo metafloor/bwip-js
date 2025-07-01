@@ -1,5 +1,6 @@
 function bwipp_runtest_plessey(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 var _0=function(){
 $k[$j++]="";//#15
 $k[$j++]="dontdraw";//#15
@@ -44,7 +45,7 @@ $k[$j++]="00";//#41
 $k[$j++]="dontdraw validatecheck";//#41
 bwipp_plessey();//#41
 debugIsEqual($get($k[--$j],'sbs'),$a([3,2,3,2,1,4,3,2,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,5,4,1,4,1,2,3,2,3]));//#44
-$_ = Object.getPrototypeOf($_);//#45
+$_ = $__;//#45
 }//bwipp_runtest_plessey
 console.log("plessey...")
 bwipp_runtest_plessey();

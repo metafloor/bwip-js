@@ -1,5 +1,6 @@
 function bwipp_runtest_daft(){
-$_ = Object.create($_);//#2
+var $__ = $_;//#2
+$_ = Object.assign({}, $_);//#2
 $_.dump_4state_tmpl=function(){
 $_.ret=$k[--$j];//#13
 $_.bhs=$get($_.ret,'bhs');//#14
@@ -57,7 +58,7 @@ $k[$j++]="dontdraw";//#47
 bwipp_daft();//#47
 $_.dump_4state_tmpl();//#47
 isEqual($k[--$j],$a([0,0,1,0,1,0,0,1,0,1,0,1,0,1,1,0,0,0,1,0,0]));//#52
-$_ = Object.getPrototypeOf($_);//#53
+$_ = $__;//#53
 }//bwipp_runtest_daft
 console.log("daft...")
 bwipp_runtest_daft();
