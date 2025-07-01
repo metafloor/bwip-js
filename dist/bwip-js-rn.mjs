@@ -33,7 +33,7 @@
 import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_jabcode,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
 
 // exports.js
-const BWIPJS_VERSION = '4.6.0 (2025-04-20)';
+const BWIPJS_VERSION = '4.7.0 (2025-07-01)';
 
 import PNG_ZLIB from 'react-zlib-js';
 import Buffer from 'react-zlib-js/buffer.js';
@@ -888,6 +888,24 @@ BWIPJS.prototype.clip = function() {
     });
 };
 
+// Our replacement for the renmatrix drawlayer functionality.
+BWIPJS.prototype.drawlayer = function(pix, width, height) {
+    // The pix array is in y-inverted postscript orientation.
+    let paths = tracepaths(pix, width, height);
+
+    this.newpath();
+    for (let i = 0, il = paths.length; i < il; i++) {
+        let path = paths[i];
+        this.moveto(path[0][0], path[0][1]);
+        for (let j = 1, jl = path.length; j < jl; j++) {
+            let pt = path[j];
+            this.lineto(pt[0], pt[1]);
+        }
+        this.closepath();
+    }
+    this.fill();
+};
+
 // The pix array is in standard (not y-inverted postscript) orientation.
 BWIPJS.prototype.showmaxicode = function(pix) {
     var tsx = this.g_tsx;
@@ -1067,6 +1085,177 @@ BWIPJS.prototype.render = function() {
 
 return BWIPJS;
 })();   // BWIPJS closure
+// 4-connected path tracing
+
+function tracepaths(pixs, width, height, inkspreadh, inkspreadv) {
+    let dx = inkspreadh||0;
+    let dy = inkspreadv||0;
+
+    // The pixs array is in y-inverted postscript orientation.
+    // Convert to an array of arrays.
+    let grid = new Array(height+1);
+    let yoff = 0;
+    for (let y = height-1; y >= 0; y--) {
+        let row = new Uint8Array(width);
+        for (let x = 0; x < width; x++) {
+            row[x] = pixs[yoff + x] ? 1 : 0;
+        }
+        grid[y] = row;
+        yoff += width;
+    }
+    // Add a row before/after so we can blindly access the grid.
+    // We don't need actual zero-padding around the pixels.
+    // All accesses are "cast to integer" with bit-&, so undefined
+    // get converted to zero.
+    grid[-1] = [];
+    grid[height] = [];
+
+    let paths = [];
+    for (let y = 0; y < height; y++) {
+        let last = 0;
+        for (let x = 0; x < width; x++) {
+            // The last&9 verifies the edge was not traced ccw (dir == 8).
+            if ((last&9) == 0 && grid[y][x] == 1) {
+                paths.push(tracecw(x, y, []));  // clockwise for outside
+            // The last&5 verifies the edge was not traced cw (dir == 4).
+            } else if ((last&5) == 1 && grid[y][x] == 0) {
+                paths.push(traceccw(x, y, [])); // counter-clockwise for inside
+            }
+            last = grid[y][x];
+        }
+    }
+    return paths;
+
+    // Trace outside edges clockwise
+    function tracecw(x, y, path) {
+        path.push([ x+dx, y+dy ]);
+
+        // 2 == top edge
+        // 4 == right edge
+        // 2 == top edge
+        // 4 == right edge
+        // 8 == bottom edge
+        // 16 == left edge
+        let dir = 2;
+        for (;;) {
+            if (grid[y][x] & dir) {
+                path.pop();
+                return path;
+            }
+            grid[y][x] |= dir;
+
+            if (dir == 2) { // top edge rightward
+                if (grid[y][x+1] & 1) {
+                    if (grid[y-1][x+1] & 1) {
+                        path.push([ x+1-dx, y+dy, 'H' ]);
+                        dir = 16;
+                    }
+                    x++;
+                } else {
+                    path.push([ x+1-dx, y+dy, 'H' ]);
+                    dir = 4;
+                }
+            } else if (dir == 4) {  // right edge downward
+                if (grid[y+1][x] & 1) {
+                    if (grid[y+1][x+1] & 1) {
+                        path.push([ x+1-dx, y+1-dy, 'V' ]);
+                        dir = 2;
+                    }
+                    y++;
+                } else {
+                    path.push([ x+1-dx, y+1-dy, 'V' ]);
+                    dir = 8;
+                }
+            } else if (dir == 8) { // bottom edge leftward
+                if (grid[y][x-1] & 1) {
+                    if (grid[y+1][x-1] & 1) {
+                        path.push([ x+dx, y+1-dy, 'H' ]);
+                        dir = 4;
+                    }
+                    x--;
+                } else {
+                    path.push([ x+dx, y+1-dy, 'H' ]);
+                    dir = 16;
+                }
+            } else { // left edge upward
+                if (grid[y-1][x] & 1) {
+                    if (grid[y-1][x-1] & 1) {
+                        path.push([ x+dx, y+dy, 'V' ]);
+                        dir = 8;
+                    }
+                    y--;
+                } else {
+                    path.push([ x+dx, y+dy, 'V' ]);
+                    dir = 2;
+                }
+            }
+        }
+    }
+
+    // Trace inside edges counter clockwise
+    function traceccw(x, y, path) {
+        path.push([ x-dx, y-dy ]);
+
+        // 2 == left edge
+        // 4 == bottom edge
+        // 8 == right edge
+        // 16 == top edge
+        let dir = 2;
+        for (;;) {
+            if (grid[y][x] & dir) {
+                path.pop();
+                return path;
+            }
+            grid[y][x] |= dir;
+
+            if (dir == 2) { // left edge downward
+                if ((grid[y+1][x] & 1) == 0) {
+                    if ((grid[y+1][x-1] & 1) == 0) {
+                        path.push([ x-dx, y+1+dy ]);
+                        dir = 16;
+                    }
+                    y++;
+                } else {
+                    path.push([ x-dx, y+1+dy ]);
+                    dir = 4;
+                }
+            } else if (dir == 4) {  // bottom edge rightward
+                if ((grid[y][x+1] & 1) == 0) {
+                    if ((grid[y+1][x+1] & 1) == 0) {
+                        path.push([ x+1+dx, y+1+dy ]);
+                        dir = 2;
+                    }
+                    x++;
+                } else {
+                    path.push([ x+1+dx, y+1+dy ]);
+                    dir = 8;
+                }
+            } else if (dir == 8) { // right edge upward
+                if ((grid[y-1][x] & 1) == 0) {
+                    if ((grid[y-1][x+1] & 1) == 0) {
+                        path.push([ x+1+dx, y-dy ]);
+                        dir = 4;
+                    }
+                    y--;
+                } else {
+                    path.push([ x+1+dx, y-dy ]);
+                    dir = 16;
+                }
+            } else { // top edge leftward
+                if ((grid[y][x-1] & 1) == 0) {
+                    if ((grid[y-1][x-1] & 1) == 0) {
+                        path.push([ x-dx, y-dy ]);
+                        dir = 8;
+                    }
+                    x--;
+                } else {
+                    path.push([ x-dx, y-dy ]);
+                    dir = 2;
+                }
+            }
+        }
+    }
+}
 // drawing-builtin.js
 //
 // The aliased (except the fonts) graphics used by drawing-canvas.js and
