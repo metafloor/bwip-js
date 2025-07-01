@@ -1,4 +1,4 @@
-// Type definitions for bwip-js  4.6.0 (2025-04-20)
+// Type definitions for bwip-js  4.7.0 (2025-07-01)
 //
 // THIS DEFINITION FILE IS MACHINE GENERATED - DO NOT EDIT
 //
