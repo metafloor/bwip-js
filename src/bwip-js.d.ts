@@ -83,6 +83,7 @@ declare namespace BwipJs {
         paddingright?: number | undefined;
         paddingtop?: number | undefined;
         paddingbottom?: number | undefined;
+        padding?: number | undefined;
 
         monochrome?: boolean | undefined;
         sizelimit?: number | undefined;
