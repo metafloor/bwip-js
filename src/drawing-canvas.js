@@ -1,9 +1,13 @@
 // drawing-canvas.js
 //
 // `maybe` maybe the canvas, pre v4.0.
+function IsCanvasElement(obj) {
+    return Object.getPrototypeOf(obj).constructor.name === 'HTMLCanvasElement';
+}
+
 function DrawingCanvas(canvas, maybe) {
     // Pre setops() backward compatibility
-    if (maybe && maybe instanceof HTMLCanvasElement) {
+    if (maybe && IsCanvasElement(maybe)) {
         canvas = maybe;
     }
 

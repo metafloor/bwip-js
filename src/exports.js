@@ -1,4 +1,3 @@
-
 // exports.js
 const BWIPJS_VERSION = '__BWIPJS_VERS__';
 
@@ -105,8 +104,12 @@ function _ToAny(encoder, opts, drawing) {
 // This function is synchronous and throws on error.
 //
 // Returns the HTMLCanvasElement.
+function IsCanvasElement(obj) {
+    return Object.getPrototypeOf(obj).constructor.name === 'HTMLCanvasElement';
+}
+
 function ToCanvas(cvs, opts) {
-    if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
+    if (typeof opts == 'string' || IsCanvasElement(opts)) {
         let tmp = cvs;
         cvs = opts;
         opts = tmp;
@@ -126,22 +129,22 @@ function ToCanvas(cvs, opts) {
 function _ToAny(encoder, opts, drawing) {
     if (typeof opts == 'string') {
         var canvas = document.getElementById(opts) || document.querySelector(opts);
-        if (!(canvas instanceof HTMLCanvasElement)) {
+        if (!IsCanvasElement(canvas)) {
             throw new Error('bwipjs: `' + opts + '`: not a canvas');
         }
         opts = drawing;
         drawing = DrawingCanvas(canvas);
-    } else if (opts instanceof HTMLCanvasElement) {
+    } else if (IsCanvasElement(opts)) {
         var canvas = opts;
         opts = drawing;
         drawing = DrawingCanvas(canvas);
     } else if (typeof drawing == 'string') {
         var canvas = document.getElementById(drawing) || document.querySelector(drawing);
-        if (!(canvas instanceof HTMLCanvasElement)) {
+        if (!IsCanvasElement(canvas)) {
             throw new Error('bwipjs: `' + drawing + '`: not a canvas');
         }
         drawing = DrawingCanvas(canvas);
-    } else if (drawing instanceof HTMLCanvasElement) {
+    } else if (IsCanvasElement(drawing)) {
         drawing = DrawingCanvas(drawing);
     } else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
