@@ -3,7 +3,7 @@
 // `maybe` maybe the canvas, pre v4.0.
 function DrawingCanvas(canvas, maybe) {
     // Pre setops() backward compatibility
-    if (maybe && maybe instanceof HTMLCanvasElement) {
+    if (IsCanvas(maybe)) {    // IsCanvas() defined in exports.js
         canvas = maybe;
     }
 

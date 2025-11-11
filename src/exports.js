@@ -1,4 +1,3 @@
-
 // exports.js
 const BWIPJS_VERSION = '__BWIPJS_VERS__';
 
@@ -94,19 +93,24 @@ function _ToAny(encoder, opts, drawing) {
     }
 }
 //@@BEGIN-BROWSER-EXPORTS@@
+// Context insensitive canvas element test.
+function IsCanvas(elt) {
+    return elt && /HTMLCanvasElement|OffscreenCanvas/.test(Object.getPrototypeOf(elt).constructor.name);
+}
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
 //
 // Uses the built-in canvas drawing.
 //
-// `canvas` can be an HTMLCanvasElement or an ID string or unique selector string.
+// `canvas` can be an HTMLCanvasElement|OffscreenCanvas or
+// an ID string or unique selector string.
 // `options` are a bwip-js/BWIPP options object.
 //
 // This function is synchronous and throws on error.
 //
-// Returns the HTMLCanvasElement.
+// Returns the canvas element.
 function ToCanvas(cvs, opts) {
-    if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
+    if (typeof opts == 'string' || IsCanvas(opts)) {
         let tmp = cvs;
         cvs = opts;
         opts = tmp;
@@ -118,30 +122,31 @@ function ToCanvas(cvs, opts) {
 // Polymorphic internal interface
 // _ToAny(encoder, string, opts) : HTMLCanvasElement
 // _ToAny(encoder, HTMLCanvasElement, opts) : HTMLCanvasElement
+// _ToAny(encoder, OffscreenCanvas, opts) : OffscreenCanvas
 // _ToAny(encoder, opts, string) : HTMLCanvasElement
-// _ToAny(encoder, opts, HTMLCanvasElement) : HTMLCanvasElement
+// _ToAny(encoder, opts, OffscreenCanvas) : OffscreenCanvas
 // _ToAny(encoder, opts, drawing) : any
 //
 // 'string` can be either an `id` or query selector returning a single canvas element.
 function _ToAny(encoder, opts, drawing) {
     if (typeof opts == 'string') {
         var canvas = document.getElementById(opts) || document.querySelector(opts);
-        if (!(canvas instanceof HTMLCanvasElement)) {
+        if (!IsCanvas(canvas)) {
             throw new Error('bwipjs: `' + opts + '`: not a canvas');
         }
         opts = drawing;
         drawing = DrawingCanvas(canvas);
-    } else if (opts instanceof HTMLCanvasElement) {
+    } else if (IsCanvas(opts)) {
         var canvas = opts;
         opts = drawing;
         drawing = DrawingCanvas(canvas);
     } else if (typeof drawing == 'string') {
         var canvas = document.getElementById(drawing) || document.querySelector(drawing);
-        if (!(canvas instanceof HTMLCanvasElement)) {
+        if (!IsCanvas(canvas)) {
             throw new Error('bwipjs: `' + drawing + '`: not a canvas');
         }
         drawing = DrawingCanvas(canvas);
-    } else if (drawing instanceof HTMLCanvasElement) {
+    } else if (IsCanvas(drawing)) {
         drawing = DrawingCanvas(drawing);
     } else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');

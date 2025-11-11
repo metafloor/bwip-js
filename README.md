@@ -10,12 +10,15 @@ ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.  Barcodes are generated as PNG images (node-js and react-native)
 or to a canvas (browser) or as SVG (all platforms).
 
-> As of version 4.5, bwip-js has been partitioned into four platform-specific packages plus the cross-platform main package.  The sub-packages are currently experimental but are the solution to current build chains not properly supporting the `exports` map in `package.json`.  Please use them and report any issues you find.
+> Version 4.8 includes the new text layout features provided in recent releases of BWIPP.  If you use
+> a custom drawing interface and want to take advantage of the new capabilities, see the 
+> [example drawing object](https://github.com/metafloor/bwip-js/wiki/Annotated-Example-Drawing-Object)
+> and look for the `font.rotate` property passed into the `text()` method.
 
 ## Status 
 
-* Current bwip-js version is 4.7.0 (2025-07-01)
-* Current BWIPP version is 2025-04-19
+* Current bwip-js version is 4.8.0 (2025-11-11)
+* Current BWIPP version is 2025-10-24
 * Node.js compatibility: 6.0
 * Browser compatibility: Edge, Firefox, Chrome
 

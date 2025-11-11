@@ -236,10 +236,14 @@ function DrawingSVG() {
             clipid = '';
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
-        // font is an object with properties { name, width, height, dx }
+        // font is an object with properties { name, width, height, rotate, dx }
         // width and height are the font cell size.
+        // rotate is one of 0, 90, 180, 270 (default 0).
         // dx is extra space requested between characters (usually zero).
         text(x, y, str, rgb, font) {
+            x = x|0;
+            y = y|0;
+            var x0 = x, y0 = y;
             var fontid  = FontLib.lookup(font.name);
             var fwidth  = font.width|0;
             var fheight = font.height|0;
@@ -252,11 +256,12 @@ function DrawingSVG() {
                     continue;
                 }
                 if (glyph.length) {
-                    // A glyph is composed of sequence of curve and line segments.
-                    // M is move-to
-                    // L is line-to
-                    // Q is quadratic bezier curve-to
-                    // C is cubic bezier curve-to
+                    // A glyph is composed of a sequence of curve and line segments.
+                    // `type` is one of:
+                    //   M is move-to
+                    //   L is line-to
+                    //   Q is quadratic bezier curve-to
+                    //   C is cubic bezier curve-to
                     for (var i = 0, l = glyph.length; i < l; i++) {
                         let seg = glyph[i];
                         if (seg.type == 'M' || seg.type == 'L') {
@@ -278,7 +283,15 @@ function DrawingSVG() {
                 x += FontLib.getglyph(fontid, ch, fwidth, fheight).advance + dx;
             }
             if (path) {
-                svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
+                if (font.rotate) {
+                    // Note the '-' on the rotate.
+                    // Postscript rotates anti-clockwise for positive values.
+                    // SVG rotates clockwise for positive values.
+                    svg += '<path d="' + path + '" fill="#' + rgb + '" transform="rotate(-' +
+                            font.rotate + ' ' + transform(x0, y0) + ')" />\n';
+                } else {
+                    svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
+                }
             }
         },
         // Called after all drawing is complete.  The return value from this method
