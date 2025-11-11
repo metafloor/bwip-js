@@ -28,12 +28,18 @@ function BWIPJS(drawing) {
 
 // All graphics state that must be saved/restored is given a prefix of g_
 BWIPJS.prototype.reset = function() {
-    // Current Transform Matrix - since we don't do rotation, we can fake
-    // the matrix math
-    this.g_tdx  = 0;        // CTM x-offset
-    this.g_tdy  = 0;        // CTM y-offset
-    this.g_tsx  = 1;        // CTM x-scale factor
-    this.g_tsy  = 1;        // CTM y-scale factor
+    // Current Transform Matrix
+    this.g_m0 = 1;
+    this.g_m1 = 0;
+    this.g_m2 = 0;
+    this.g_m3 = 1;
+    this.g_m4 = 0;
+    this.g_m5 = 0;
+
+    // Keep scale and rotateion distinct for the drawing interface
+    this.g_tsx  = 1;        // x-scale factor
+    this.g_tsy  = 1;        // y-scale factor
+    this.g_rot  = 0;        // text rotation (0, 90, 180 , 270)
 
     this.g_posx = 0;        // current x position
     this.g_posy = 0;        // current y position
@@ -95,18 +101,35 @@ BWIPJS.prototype.restore = function() {
 //  changed, the coordinates returned by currentpoint will be different
 //  from those that were originally specified for the point.
 BWIPJS.prototype.currpos = function() {
-    return { x:(this.g_posx-this.g_tdx)/this.g_tsx,
-             y:(this.g_posy-this.g_tdy)/this.g_tsy
+    return { x:(this.g_posx-this.g_m4)/this.g_tsx,
+             y:(this.g_posy-this.g_m5)/this.g_tsy
         };
 };
 BWIPJS.prototype.currfont = function() {
     return this.g_font;
 };
+// rotate is only used with text/fonts and limited to the angles 0, 90, 180, 270.
+BWIPJS.prototype.rotate = function(rot) {
+    this.g_rot += rot;
+
+    var cos = round(Math.cos(rot * Math.PI / 180));
+    var sin = round(Math.sin(rot * Math.PI / 180));
+    var m0 = this.g_m0 * cos + this.g_m2 * sin;
+    var m1 = this.g_m1 * cos + this.g_m3 * sin;
+    var m2 = this.g_m0 * -sin + this.g_m2 * cos;
+    var m3 = this.g_m1 * -sin + this.g_m3 * cos;
+    this.g_m0 = m0;
+    this.g_m1 = m1;
+    this.g_m2 = m2;
+    this.g_m3 = m3;
+};
 BWIPJS.prototype.translate = function(x, y) {
-    this.g_tdx = this.g_tsx * x;
-    this.g_tdy = this.g_tsy * y;
+    this.g_m4 += this.g_tsx * x;
+    this.g_m5 += this.g_tsy * y;
 };
 BWIPJS.prototype.scale = function(x, y) {
+    var sx = this.g_tsx;
+    var sy = this.g_tsy;
     this.g_tsx *= x;
     this.g_tsy *= y;
     var sxy = this.drawing.scale(this.g_tsx, this.g_tsy);
@@ -114,6 +137,10 @@ BWIPJS.prototype.scale = function(x, y) {
         this.g_tsx = sxy[0];
         this.g_tsy = sxy[1];
     }
+    this.g_m0 *= this.g_tsx / sx;
+    this.g_m1 *= this.g_tsx / sx;
+    this.g_m2 *= this.g_tsy / sy;
+    this.g_m3 *= this.g_tsy / sy;
 };
 BWIPJS.prototype.setlinewidth = function(w) {
     this.g_penw = w;
@@ -225,18 +252,18 @@ BWIPJS.prototype.closepath = function() {
     }
 };
 BWIPJS.prototype.moveto = function(x,y) {
-    this.g_posx = this.g_tdx + this.g_tsx * x;
-    this.g_posy = this.g_tdy + this.g_tsy * y;
+    this.g_posx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
 };
 BWIPJS.prototype.rmoveto = function(x,y) {
-    this.g_posx += this.g_tsx * x;
-    this.g_posy += this.g_tsy * y;
+    this.g_posx += this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy += this.g_m1 * x + this.g_m3 * y + this.g_m5;
 };
 BWIPJS.prototype.lineto = function(x,y) {
     var x0 = round(this.g_posx);
     var y0 = round(this.g_posy);
-    this.g_posx = this.g_tdx + this.g_tsx * x;
-    this.g_posy = this.g_tdy + this.g_tsy * y;
+    this.g_posx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
     var x1 = round(this.g_posx);
     var y1 = round(this.g_posy);
 
@@ -245,8 +272,8 @@ BWIPJS.prototype.lineto = function(x,y) {
 BWIPJS.prototype.rlineto = function(x,y) {
     var x0 = round(this.g_posx);
     var y0 = round(this.g_posy);
-    this.g_posx += this.g_tsx * x;
-    this.g_posy += this.g_tsy * y;
+    this.g_posx += this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy += this.g_m1 * x + this.g_m3 * y + this.g_m5;
     var x1 = round(this.g_posx);
     var y1 = round(this.g_posy);
 
@@ -262,14 +289,14 @@ BWIPJS.prototype.arc = function(x,y,r,sa,ea,ccw) {
         throw new Error('arc: not a full circle (' + sa + ',' + ea + ')');
     }
 
-    x = this.g_tdx + this.g_tsx * x;
-    y = this.g_tdy + this.g_tsy * y;
+    var xx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    var yy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
 
     // e == ellipse
     var rx = r * this.g_tsx;
     var ry = r * this.g_tsy;
-    this.g_path.push({ op:'e', x0:x-rx, y0:y-ry, x1:x+rx, y1:y+ry,
-                                x:x, y:y, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw });
+    this.g_path.push({ op:'e', x0:xx-rx, y0:yy-ry, x1:xx+rx, y1:yy+ry,
+                       x:xx, y:yy, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw });
 };
 BWIPJS.prototype.stringwidth = function(str) {
     var tsx  = this.g_tsx;
@@ -321,10 +348,10 @@ BWIPJS.prototype.pathbbox = function() {
     }
 
     // Convert to user-space coordinates
-    var rv = {  llx:(llx-this.g_tdx)/this.g_tsx,
-                lly:(lly-this.g_tdy)/this.g_tsy,
-                urx:(urx-this.g_tdx)/this.g_tsx,
-                ury:(ury-this.g_tdy)/this.g_tsy };
+    var rv = {  llx:(llx-this.g_m4)/this.g_tsx,
+                lly:(lly-this.g_m5)/this.g_tsy,
+                urx:(urx-this.g_m4)/this.g_tsx,
+                ury:(ury-this.g_m5)/this.g_tsy };
     return rv;
 };
 // Tranforms the pts array to standard (not y-inverted), unscalled values.
@@ -670,8 +697,9 @@ BWIPJS.prototype.show = function(str, dx, dy) {
     }
 
     // Capture current graphics state
-    var tsx  = this.g_tsx;
-    var tsy  = this.g_tsy;
+    var rot  = this.g_rot;
+    var tsx  = rot == 90 || rot == 270 ? this.g_tsy : this.g_tsx;
+    var tsy  = rot == 90 || rot == 270 ? this.g_tsx : this.g_tsy;
     var name = this.g_font.FontName || 'OCR-B';
     var size = (this.g_font.FontSize || 10);
     var szx  = size * tsx;
@@ -680,26 +708,35 @@ BWIPJS.prototype.show = function(str, dx, dy) {
     var posy = this.g_posy;
     var rgb  = this.getRGB();
 
-    // The string can be either a uint8-string or regular string.
-    str = this.toUCS2(this.jsstring(str));
-
     // Convert dx,dy to device space
     dx = tsx * dx || 0;
     dy = tsy * dy || 0;
 
+    // The string can be either a uint8-string or regular string.
+    str = this.toUCS2(this.jsstring(str));
+
     // Bounding box.
-    var base = posy + dy;
+    // BWIPP rotates, then translates to currentpoint, before rendering the text.
+    // Therefore, the bbox values must match the rotation.
     var bbox = this.drawing.measure(str, name, szx, szy);
     var width = bbox.width + (str.length-1) * dx;
-    this.bbox(posx, base-bbox.descent+1, posx+width-1, base+bbox.ascent);
-    this.g_posx += width;
+    if (rot == 90) { // upward
+        this.bbox(posx-dy+bbox.descent-1, posy, posx-dy-bbox.ascent, posy+width-1);
+    } else if (rot == 180) { // backward
+        this.bbox(posx, posy-dy+bbox.descent-1, posx-width+1, posy-dy-bbox.ascent);
+    } else if (rot == 270) { // downward
+        this.bbox(posx+dy-bbox.descent+1, posy, posx+dy+bbox.ascent, posy-width+1);
+    } else {
+        rot = 0;
+        this.bbox(posx, posy+dy-bbox.descent+1, posx+width-1, posy+dy+bbox.ascent);
+        this.g_posx += width;
+    }
 
     var self = this;
     self.cmds.push(function() {
-        // self.transform()
         var x = posx - self.minx;
         var y = self.maxy - posy;
-        self.drawing.text(x, y, str, rgb, { name:name, width:szx, height:szy, dx:dx });
+        self.drawing.text(x, y, str, rgb, { name:name, width:szx, height:szy, rotate:rot, dx:dx });
     });
 };
 // drawing surface bounding box

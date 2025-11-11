@@ -119,6 +119,11 @@ function render() {
     canvas.height = 1;
     canvas.width  = 1;
     canvas.style.visibility = 'hidden';
+    if (window.devicePixelRatio) {
+        canvas.style.zoom = 1 / window.devicePixelRatio;
+    } else {
+        canvas.style.zoom = 1;
+    }
 
     // Convert the options to an object.
     let opts = {};
@@ -157,7 +162,7 @@ function render() {
         // background color) to provide a simplified interface for the
         // drawing code.
         bwipjs.fixupOptions(opts);
-        bwipjs.render(opts, DrawingExample(opts, canvas));
+        bwipjs.render(opts, DrawingExample(canvas, opts));
 
         canvas.style.visibility = 'visible';
     } catch (e) {
