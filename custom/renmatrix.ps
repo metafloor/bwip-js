@@ -28,16 +28,24 @@ begin
     /textxalign (unset) def
     /textyalign (unset) def
     /textfont (Courier) def
+    /textdirection (forward) def
     /textsize 10.0 def
     /textxoffset 0.0 def
     /textyoffset 0.0 def
     /textgaps 0.0 def
+    /textlinegaps 1.2 def
     /alttext () def
+    /alttextsplit () def
+    /alttextsubspace () def
     /extratext () def
+    /extratextsubspace () def
+    /extratextsplit () def
+    /extratextlinegaps 1.2 def
     /extratextcolor (unset) def
     /extratextxalign (left) def
     /extratextyalign (above) def
     /extratextfont (Courier) def
+    /extratextdirection (forward) def
     /extratextsize 10.0 def
     /extratextxoffset 0.0 def
     /extratextyoffset 0.0 def
@@ -54,6 +62,44 @@ begin
 
     inkspreadh null eq {/inkspreadh inkspread def} if
     inkspreadv null eq {/inkspreadv inkspread def} if
+
+    % Input validation
+
+    textxalign (unset) ne {
+        << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
+            /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
+        } if
+    } if
+
+    textyalign (unset) ne {
+        << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
+            /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
+        } if
+    } if
+
+    << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
+        /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
+    } if
+
+    textsize 0 le textsize 25 ge or {
+        /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
+    } if
+
+    << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
+        /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
+    } if
+
+    << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
+        /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
+    } if
+
+    << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
+        /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
+    } if
+
+    extratextsize 0 le extratextsize 25 ge or {
+        /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
+    } if
 
 %%    /uk.co.terryburton.bwipp.global_ctx dup where {
 %%        exch get /ctx exch def
@@ -301,9 +347,54 @@ begin
         ] dotty {drawlayerdots} {drawlayer} ifelse
     } forall
 
+    /positions <<
+    %   direction
+    %       x-align                                y-align
+        (forward) <<
+            (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
+            (left)     {      0                }   (bottom)  {      0                }
+            (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
+            (right)    { pixx tw sub           }   (top)     { pixy th sub           }
+            (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
+        >>
+        (backward) <<
+            (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
+            (left)     {      tw               }   (bottom)  {      th               }
+            (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
+            (right)    { pixx                  }   (top)     { pixy                  }
+            (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
+        >>
+        (upward) <<
+            (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
+            (left)     {      th               }   (bottom)  {      0                }
+            (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
+            (right)    { pixx                  }   (top)     { pixy tw sub           }
+            (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
+        >>
+        (downward) <<
+            (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
+            (left)     {      0                }   (bottom)  {      tw               }
+            (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
+            (right)    { pixx th sub           }   (top)     { pixy                  }
+            (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
+        >>
+    >> def
+
+    % x-align y-align direction text-width text-height
+    /positiontext {
+        /th exch def
+        /tw exch def
+        /nudge 1 def
+        positions exch get dup
+        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+    } def
+
     % Display the text for elements in the text array
     includetext {
+
         textcolor (unset) ne { textcolor setanycolor } if
+
         textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
             /s 0 def /fn () def
             txt {
@@ -321,14 +412,34 @@ begin
                 moveto show
             } forall
         } {
-            textfont textsize selectfont
+
             alttext () eq {
                 /txt [ txt { 0 get {} forall } forall ] def
                 /tstr txt length string def
                 0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
             } {
                 /tstr alttext def
+                0 1 alttext length 1 sub {
+                    dup
+                    alttext exch 1 getinterval alttextsubspace exch search {
+                        alttext 4 index 32 put pop pop
+                    } if
+                    pop pop
+                } for
             } ifelse
+
+            alttext () ne alttextsplit () ne and {
+                alttextsplit length 1 ne {
+                    /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
+                } if
+                /textlines [
+                    tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
+                ] def
+            } {
+                /textlines [ tstr ] def
+            } ifelse
+
+            textfont textsize selectfont
 
             % Find true ascent of font
             tstr length 0 eq {
@@ -347,26 +458,77 @@ begin
                 } if
             } ifelse
             /textascent exch def
-            /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
 
-            /textxpos textxoffset pixx textwidth sub 2 div add def
-            textxalign (left)     eq { /textxpos textxoffset def } if
-            textxalign (right)    eq { /textxpos pixx textxoffset sub textwidth sub def } if
-            textxalign (offleft)  eq { /textxpos textwidth textxoffset add neg def } if
-            textxalign (offright) eq { /textxpos pixx textxoffset add def } if
-            textxalign (justify)  eq textwidth pixx lt and {
-                /textxpos 0.0 def
-                /textgaps pixx textwidth sub tstr length 1 sub div def
+            /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
+            /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
+
+            textxalign (unset) eq { /textxalign (center) def } if
+            textyalign (unset) eq { /textyalign (below)  def } if
+
+            textxalign (justify) eq {
+                textdirection (forward) ne textdirection (backward) ne and {
+                    /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
+                } if
+                textwidth pixx lt {
+                    /textgaps pixx textwidth sub tstr length 1 sub div def
+                    /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
+                } {
+                    /textgaps 0.0 def
+                    /textxalign (center) def
+                } ifelse
             } if
-            /textypos textyoffset textascent add 1 add neg def
-            textyalign (above)  eq { /textypos textyoffset pixy add 1 add def } if
-            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
-            textxpos textypos moveto textgaps 0 tstr ashow
+
+            textyalign (justify) eq {
+                textdirection (upward) ne textdirection (downward) ne and {
+                    /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
+                } if
+                textwidth pixy lt {
+                    /textgaps pixy textwidth sub tstr length 1 sub div def
+                    /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
+                } {
+                    /textgaps 0.0 def
+                    /textyalign (center) def
+                } ifelse
+            } if
+
+            textxalign textyalign textdirection textwidth textheight positiontext moveto
+            textxoffset textyoffset rmoveto
+            gsave
+            << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
+            currentpoint translate
+            0 1 textlines length 1 sub {
+                /i exch def
+                0 0 textascent textlinegaps add i mul add moveto
+                textgaps 0 textlines dup length i sub 1 sub get ashow
+            } for
+            grestore
+
         } ifelse
+
     } if
 
     % Render any extratext
     extratext () ne {
+
+        0 1 extratext length 1 sub {
+            dup
+            extratext exch 1 getinterval extratextsubspace exch search {
+                extratext 4 index 32 put pop pop
+            } if
+            pop pop
+        } for
+
+        extratextsplit () ne {
+            extratextsplit length 1 ne {
+                /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
+            } if
+            /textlines [
+                extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
+            ] def
+        } {
+            /textlines [ extratext ] def
+        } ifelse
+
         extratextcolor (unset) ne { extratextcolor setanycolor } if
         extratextfont extratextsize selectfont
 
@@ -383,21 +545,48 @@ begin
             add
         } if
         /textascent exch def
-        /textwidth extratext stringwidth pop extratext length 1 sub extratextgaps mul add def
 
-        /extratextxpos extratextxoffset pixx textwidth sub 2 div add def
-        extratextxalign (left)     eq { /textxpos extratextxoffset def } if
-        extratextxalign (right)    eq { /textxpos pixx extratextxoffset sub textwidth sub def } if
-        extratextxalign (offleft)  eq { /textxpos textwidth extratextxoffset add neg def } if
-        extratextxalign (offright) eq { /textxpos pixx extratextxoffset add def } if
-        extratextxalign (justify)  eq textwidth pixx lt and {
-            /textxpos 0.0 def
-            /extratextgaps pixx textwidth sub extratext length 1 sub div def
+        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
+        /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
+
+        extratextxalign (justify) eq {
+            extratextdirection (forward) ne extratextdirection (backward) ne and {
+                /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
+            } if
+            textwidth pixx lt {
+                /extratextgaps pixx textwidth sub extratext length 1 sub div def
+                /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
+            } {
+                /extratextgaps 0.0 def
+                /extratextxalign (center) def
+            } ifelse
         } if
-        /textypos extratextyoffset textascent add 1 add neg def
-        extratextyalign (above)  eq { /textypos extratextyoffset pixy add 1 add def } if
-        extratextyalign (center) eq { /textypos extratextyoffset pixy textascent sub 2 div add def } if
-        textxpos textypos moveto extratextgaps 0 extratext ashow
+
+        extratextyalign (justify) eq {
+            extratextdirection (upward) ne extratextdirection (downward) ne and {
+                /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
+            } if
+            textwidth pixy lt {
+                /extratextgaps pixy textwidth sub extratext length 1 sub div def
+                /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
+            } {
+                /extratextgaps 0.0 def
+                /extratextyalign (center) def
+            } ifelse
+        } if
+
+        extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
+        extratextxoffset extratextyoffset rmoveto
+        gsave
+        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
+        currentpoint translate
+        0 1 textlines length 1 sub {
+            /i exch def
+            0 0 textascent extratextlinegaps add i mul add moveto
+            extratextgaps 0 textlines dup length i sub 1 sub get ashow
+        } for
+        grestore
+
     } if
 
     grestore

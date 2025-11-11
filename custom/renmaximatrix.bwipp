@@ -1,0 +1,148 @@
+% --REQUIRES preamble raiseerror processoptions--
+%%BeginData:        144 ASCII Lines
+/setpacking where {pop currentpacking true setpacking} if
+10 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+begin
+/renmaximatrix {
+
+    20 dict begin
+
+    % Default options
+    /barcolor (unset) def
+    /backgroundcolor (unset) def
+    /bordercolor (unset) def
+    /inkspread 0.15 def
+    /showborder false def
+    /borderleft 0.0 def
+    /borderright 0.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.25 def
+
+    {def} forall
+    opt currentdict /opt undef //processoptions exec pop
+
+    /uk.co.terryburton.bwipp.global_ctx dup where {
+        exch get /ctx exch def
+        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
+        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
+        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+    } { pop } ifelse
+
+    % Set RGB or CMYK color, or some other color by name
+    /setanycolor {
+        /anycolor exch def
+        anycolor length 1 lt {
+            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
+        } if
+        anycolor 0 get 95 ne {  % RGB or CMYK
+            anycolor length dup 6 ne exch 8 ne and {
+                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
+            } if
+            mark
+            0 2 anycolor length 1 sub {
+                anycolor exch 2 getinterval 0 exch {
+                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
+                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F
+                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f
+                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
+                    } ifelse } ifelse } ifelse
+                    exch 16 mul add
+                } forall
+                255 div
+            } for
+            counttomark
+            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
+            exch 2 add -1 roll pop  % clear mark
+        } {  % Named color beginning "_..."
+            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
+            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
+            anycolor 2 copy known not {
+                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
+            } if
+            get mark exch aload pop counttomark 1 add -2 roll exch pop
+        } ifelse
+        { setcolorspace setcolor } stopped {
+            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
+        } if
+    } def
+
+    gsave
+
+    currentpoint translate
+
+    2.4945 dup scale  % from 1pt to 0.88mm
+
+    % Display the border and background
+    showborder {
+        /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
+        /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
+        /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
+        /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def
+    } {  % No need to extend background when there is no border
+        /tl [ borderleft neg inkspread add              29 bordertop add inkspread sub         ] def
+        /tr [ 30 borderright add inkspread sub          29 bordertop add inkspread sub         ] def
+        /bl [ borderleft neg inkspread add              borderbottom neg inkspread add         ] def
+        /br [ 30 borderright add inkspread sub          borderbottom neg inkspread add         ] def
+    } ifelse
+    backgroundcolor (unset) ne {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        backgroundcolor setanycolor fill
+        grestore
+    } if
+    showborder {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } if
+
+    barcolor (unset) ne { barcolor setanycolor } if
+
+    /g 0.06 inkspread add def
+
+    0.5 0.5774 translate
+
+    newpath
+    pixs {
+        dup
+        /x exch 30 mod def
+        /y exch 30 idiv def
+        y 2 mod 0 eq {x} {x 0.5 add} ifelse
+        32 y sub 0.8661 mul
+        moveto
+        0              0.5774 g       sub rmoveto
+       -0.5 g add     -0.2887 g 2 div add rlineto
+        0             -0.5774 g       add rlineto
+        0.5 g sub     -0.2887 g 2 div add rlineto
+        0.5 g sub      0.2887 g 2 div sub rlineto
+        0              0.5774 g       sub rlineto
+       -0.5 g add      0.2887 g 2 div sub rlineto
+        closepath
+    } forall
+    fill
+
+    % Plot the locator symbol
+    newpath 14 13.8576 0.5774 inkspread add 0 360 arc closepath
+            14 13.8576 1.3359 inkspread sub 360 0 arcn closepath fill
+    newpath 14 13.8576 2.1058 inkspread add 0 360 arc closepath
+            14 13.8576 2.8644 inkspread sub 360 0 arcn closepath fill
+    newpath 14 13.8576 3.6229 inkspread add 0 360 arc closepath
+            14 13.8576 4.3814 inkspread sub 360 0 arcn closepath fill
+
+    grestore
+
+    end
+
+}
+[/barcode] {null def} forall
+bind def
+/renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource

@@ -367,14 +367,15 @@ echo
 
 function browsertypes {
 cat - <<@EOF
-    export function toCanvas(canvas: string | HTMLCanvasElement, opts: RenderOptions): HTMLCanvasElement;
-    export function drawingCanvas(canvas: string | HTMLCanvasElement): DrawingContext<HTMLCanvasElement>;
+    type CanvasType = HTMLCanvasElement | OffscreenCanvas;
+    export function toCanvas(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
+    export function drawingCanvas(canvas: string | CanvasType): DrawingContext<CanvasType>;
 
 @EOF
 # toCanvas => canvas
 (
 grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
-    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(canvas: string | HTMLCanvasElement, opts: RenderOptions): HTMLCanvasElement;/' -e 's/-/_/g'
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(canvas: string | CanvasType, opts: RenderOptions): CanvasType;/' -e 's/-/_/g'
 drawingtypes
 ) | sort
 }

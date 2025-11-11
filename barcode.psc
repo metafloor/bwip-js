@@ -34,12 +34,12 @@
 % --BEGIN RESOURCE preamble--
 %%BeginResource: Category uk.co.terryburton.bwipp 0.0 2025102400 29733 32838
 %%BeginData:          6 ASCII Lines
-currentglobal
-true setglobal
-/Generic /Category findresource dup length 1 add dict copy dup
-/InstanceType /setpacking where {pop /packedarraytype} {/arraytype} ifelse put
-/uk.co.terryburton.bwipp exch /Category defineresource pop
-setglobal
+%psc currentglobal
+%psc true setglobal
+%psc /Generic /Category findresource dup length 1 add dict copy dup
+%psc /InstanceType /setpacking where {pop /packedarraytype} {/arraytype} ifelse put
+%psc /uk.co.terryburton.bwipp exch /Category defineresource pop
+%psc setglobal
 %%EndData
 %%EndResource
 % --END RESOURCE preamble--
@@ -48,36 +48,36 @@ setglobal
 % --REQUIRES preamble--
 %%BeginResource: uk.co.terryburton.bwipp loadctx 0.0 2025102400 41297 40927
 %%BeginData:         30 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-1 dict
-begin
-/loadctx {
-    % Place a context dictionary just below the current dictionary, which can
-    % be populated with static data on the first run and then carried between
-    % invocations of the encoder
-    /ctxname exch def
-    /uk.co.terryburton.bwipp.global_ctx dup where {exch get /ctx exch def} {pop} ifelse
-    ctx null ne {
-        1 {  % Common exit
-            ctx ctxname known {
-                ctx ctxname get /_FINALIZED known {
-                    /ctxdef {pop} def  % No need to redefine within the existing context
-                    exit
-                } if
-            } if
-            ctx ctxname 10 dict put
-            /ctxdef {ctx ctxname get begin exec end} def
-        } repeat
-        currentdict ctx ctxname get end begin begin
-    } {
-        /ctxdef {exec} def  % No context provided, so define ephemerally
-    } ifelse
-}
-[/barcode] {null def} forall
-bind def
-/loadctx dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 1 dict
+%psc begin
+%psc /loadctx {
+%psc     % Place a context dictionary just below the current dictionary, which can
+%psc     % be populated with static data on the first run and then carried between
+%psc     % invocations of the encoder
+%psc     /ctxname exch def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /ctx exch def} {pop} ifelse
+%psc     ctx null ne {
+%psc         1 {  % Common exit
+%psc             ctx ctxname known {
+%psc                 ctx ctxname get /_FINALIZED known {
+%psc                     /ctxdef {pop} def  % No need to redefine within the existing context
+%psc                     exit
+%psc                 } if
+%psc             } if
+%psc             ctx ctxname 10 dict put
+%psc             /ctxdef {ctx ctxname get begin exec end} def
+%psc         } repeat
+%psc         currentdict ctx ctxname get end begin begin
+%psc     } {
+%psc         /ctxdef {exec} def  % No context provided, so define ephemerally
+%psc     } ifelse
+%psc }
+%psc [/barcode] {null def} forall
+%psc bind def
+%psc /loadctx dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RESOURCE loadctx--
@@ -86,20 +86,20 @@ end
 % --REQUIRES preamble--
 %%BeginResource: uk.co.terryburton.bwipp unloadctx 0.0 2025102400 38938 38741
 %%BeginData:         14 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-1 dict
-begin
-/unloadctx {
-    % Finalize and remove the context, which is expected to be just underneath currentdict
-    ctx null ne {
-        currentdict end /_FINALIZED true def end begin
-    } if
-}
-[/barcode] {null def} forall
-bind def
-/unloadctx dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 1 dict
+%psc begin
+%psc /unloadctx {
+%psc     % Finalize and remove the context, which is expected to be just underneath currentdict
+%psc     ctx null ne {
+%psc         currentdict end /_FINALIZED true def end begin
+%psc     } if
+%psc }
+%psc [/barcode] {null def} forall
+%psc bind def
+%psc /unloadctx dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RESOURCE unloadctx--
@@ -108,21 +108,21 @@ end
 % --REQUIRES preamble--
 %%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2025102400 39029 38860
 %%BeginData:         15 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-begin
-/raiseerror {
-    $error exch /errorinfo exch put
-    $error exch /errorname exch put
-    $error /command null put
-    $error /newerror true put
-    stop
-}
-[/barcode] {null def} forall
-bind def
-/raiseerror dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc begin
+%psc /raiseerror {
+%psc     $error exch /errorinfo exch put
+%psc     $error exch /errorname exch put
+%psc     $error /command null put
+%psc     $error /newerror true put
+%psc     stop
+%psc }
+%psc [/barcode] {null def} forall
+%psc bind def
+%psc /raiseerror dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RESOURCE raiseerror--
@@ -131,56 +131,56 @@ end
 % --REQUIRES preamble raiseerror--
 %%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2025102400 48428 48479
 %%BeginData:         50 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-begin
-/processoptions {
-
-    % Convert string to dict
-    dup type /stringtype eq {
-        << exch
-            {
-                dup () eq {pop exit} if
-                ( ) search not { () exch null exch } if exch pop
-                (=) search not { true exch null exch } if exch pop   % k => k = true
-                exch 3 -1 roll
-            } loop
-        >>
-    } if
-
-    % Apply options that exist in currentdict, converting values to existing types
-    mark exch dup
-    {
-        exch dup currentdict exch known {
-            dup load type 3 -1 roll exch <<
-                /booleantype { false or }                             % Force a type error if not boolean value
-                /stringtype  { dup length string cvs }                % Conversion to string to force a boolean to fail
-                /nametype    1 index                                  % Conversion original nametype to string is fine
-                /realtype    { dup cvr exch pop }
-                /nulltype    1 index                                  % We define "null" as the sentinal value of a realtype
-                /integertype { dup cvr dup cvi ne {dup not} if cvi }  % Force type error when precision is lost or boolean is given
-            >> exch get stopped {
-                pop pop
-                dup length string cvs dup length 24 add string
-                dup 0 (Invalid type for option ) putinterval
-                dup 24 4 -1 roll putinterval
-                counttomark {exch pop} repeat
-                /bwipp.invalidOptionType exch //raiseerror exec
-            } if
-            def
-        } {
-            pop pop  % Ignore unknown options
-        } ifelse
-    } forall
-    exch pop
-
-}
-[/barcode] {null def} forall
-bind def
-/processoptions dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+%psc /processoptions {
+%psc 
+%psc     % Convert string to dict
+%psc     dup type /stringtype eq {
+%psc         << exch
+%psc             {
+%psc                 dup () eq {pop exit} if
+%psc                 ( ) search not { () exch null exch } if exch pop
+%psc                 (=) search not { true exch null exch } if exch pop   % k => k = true
+%psc                 exch 3 -1 roll
+%psc             } loop
+%psc         >>
+%psc     } if
+%psc 
+%psc     % Apply options that exist in currentdict, converting values to existing types
+%psc     mark exch dup
+%psc     {
+%psc         exch dup currentdict exch known {
+%psc             dup load type 3 -1 roll exch <<
+%psc                 /booleantype { false or }                             % Force a type error if not boolean value
+%psc                 /stringtype  { dup length string cvs }                % Conversion to string to force a boolean to fail
+%psc                 /nametype    1 index                                  % Conversion original nametype to string is fine
+%psc                 /realtype    { dup cvr exch pop }
+%psc                 /nulltype    1 index                                  % We define "null" as the sentinal value of a realtype
+%psc                 /integertype { dup cvr dup cvi ne {dup not} if cvi }  % Force type error when precision is lost or boolean is given
+%psc             >> exch get stopped {
+%psc                 pop pop
+%psc                 dup length string cvs dup length 24 add string
+%psc                 dup 0 (Invalid type for option ) putinterval
+%psc                 dup 24 4 -1 roll putinterval
+%psc                 counttomark {exch pop} repeat
+%psc                 /bwipp.invalidOptionType exch //raiseerror exec
+%psc             } if
+%psc             def
+%psc         } {
+%psc             pop pop  % Ignore unknown options
+%psc         } ifelse
+%psc     } forall
+%psc     exch pop
+%psc 
+%psc }
+%psc [/barcode] {null def} forall
+%psc bind def
+%psc /processoptions dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RESOURCE processoptions--
@@ -189,12 +189,12 @@ end
 % --REQUIRES preamble loadctx unloadctx raiseerror--
 %%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2025102400 73998 69831
 %%BeginData:        178 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /parseinput {
 
     20 dict begin
@@ -362,11 +362,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/parseinput dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /parseinput dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RESOURCE parseinput--
@@ -375,13 +375,13 @@ end
 % --REQUIRES preamble loadctx unloadctx parseinput raiseerror--
 %%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2025102400 694613 718381
 %%BeginData:       3307 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1process {
 
     20 dict begin
@@ -3677,11 +3677,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1process dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1process dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RESOURCE gs1process--
@@ -3690,513 +3690,513 @@ end
 % --REQUIRES preamble raiseerror processoptions--
 %%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2025102400 129767 127544
 %%BeginData:        507 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-begin
-/renlinear {
-
-    20 dict begin          % Confine variables to local scope
-
-    % Default options
-    /sbs [] def
-    /bhs [] def
-    /bbs [] def
-    /txt [] def
-    /includetext false def
-    /textcolor (unset) def
-    /textxalign (unset) def
-    /textyalign (unset) def
-    /textdirection (forward) def
-    /textfont (Courier) def
-    /textsize 10.0 def
-    /textxoffset 0.0 def
-    /textyoffset 0.0 def
-    /textgaps 0.0 def
-    /textlinegaps 1.2 def
-    /alttext () def
-    /alttextsplit () def
-    /alttextsubspace () def
-    /extratext () def
-    /extratextsubspace () def
-    /extratextsplit () def
-    /extratextlinegaps 1.2 def
-    /extratextcolor (unset) def
-    /extratextxalign (left) def
-    /extratextyalign (above) def
-    /extratextdirection (forward) def
-    /extratextfont (Courier) def
-    /extratextsize 10.0 def
-    /extratextxoffset 0.0 def
-    /extratextyoffset 0.0 def
-    /extratextgaps 0.0 def
-    /barcolor (unset) def
-    /backgroundcolor (unset) def
-    /bordercolor (unset) def
-    /inkspread 0.15 def
-    /width 0.0 def
-    /barratio 1.0 def
-    /spaceratio 1.0 def
-    /showborder false def
-    /showbearer false def
-    /borderleft 10.0 def
-    /borderright 10.0 def
-    /bordertop 0.0 def
-    /borderbottom 0.0 def
-    /borderwidth 0.5 def
-    /guardwhitespace false def
-    /guardleftpos 0.0 def
-    /guardleftypos 0.0 def
-    /guardrightpos 0.0 def
-    /guardrightypos 0.0 def
-    /guardwidth 5.0 def
-    /guardheight 7.0 def
-
-    {def} forall
-    opt currentdict /opt undef //processoptions exec pop
-
-    /uk.co.terryburton.bwipp.global_ctx dup where {
-        exch get /ctx exch def
-        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-    } { pop } ifelse
-
-    % Input validation
-
-    textxalign (unset) ne {
-        << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
-            /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
-        } if
-    } if
-
-    textyalign (unset) ne {
-        << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
-            /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
-        } if
-    } if
-
-    << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
-        /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
-    } if
-
-    textsize 0 le textsize 25 ge or {
-        /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
-    } if
-
-    << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
-        /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
-    } if
-
-    << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
-        /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
-    } if
-
-    << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
-        /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
-    } if
-
-    extratextsize 0 le extratextsize 25 ge or {
-        /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
-    } if
-
-    % Create bar elements and put them into the bars array
-    /bars sbs length 1 add 2 idiv array def
-    /pixx 0 def /pixy 0 def
-    0 1 sbs length 1 add 2 idiv 2 mul 2 sub {
-        /i exch def
-        i 2 mod 0 eq {           % i is even
-            /d sbs i get barratio mul barratio sub 1 add def  % d = digit*r-r+1
-            sbs i get 0 ne {
-                /h bhs i 2 idiv get 72 mul def  % Height from bhs
-                /c d 2 div pixx add def         % Centre of the bar = pixx + d/2
-                /y bbs i 2 idiv get 72 mul def  % Baseline from bbs
-                /w d inkspread sub def          % bar width = digit - inkspread
-                bars i 2 idiv [h c y w] put     % Add the bar entry
-                h y add pixy gt {/pixy h y add def} if
-            } {
-                bars i 2 idiv -1 put            % Dummy entry
-            } ifelse
-        } {
-            /d sbs i get spaceratio mul spaceratio sub 1 add def  % d = digit*r-r+1
-        } ifelse
-        /pixx pixx d add def  % pixx += d
-    } for
-
-    gsave
-
-    currentpoint translate
-
-    % Force symbol to given width
-    width 0 ne {
-        width 72 mul pixx div 1 scale
-    } if
-
-    % Set RGB or CMYK color, or some other color by name
-    /setanycolor {
-        /anycolor exch def
-        anycolor length 1 lt {
-            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
-        } if
-        anycolor 0 get 95 ne {  % RGB or CMYK
-            anycolor length dup 6 ne exch 8 ne and {
-                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
-            } if
-            mark
-            0 2 anycolor length 1 sub {
-                anycolor exch 2 getinterval 0 exch {
-                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
-                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F
-                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f
-                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
-                    } ifelse } ifelse } ifelse
-                    exch 16 mul add
-                } forall
-                255 div
-            } for
-            counttomark
-            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
-            exch 2 add -1 roll pop  % clear mark
-        } {  % Named color beginning "_..."
-            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
-            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
-            anycolor 2 copy known not {
-                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
-            } if
-            get mark exch aload pop counttomark 1 add -2 roll exch pop
-        } ifelse
-        { setcolorspace setcolor } stopped {
-            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
-        } if
-    } def
-
-    % Display the border and background
-    showborder showbearer or {
-        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
-        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
-        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
-        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
-    } {  % No need to extend background when there is no border or bearer
-        /tl [ borderleft neg inkspread add                pixy bordertop add                       ] def
-        /tr [ pixx borderright add inkspread sub          pixy bordertop add                       ] def
-        /bl [ borderleft neg inkspread add                borderbottom neg                         ] def
-        /br [ pixx borderright add inkspread sub          borderbottom neg                         ] def
-    } ifelse
-    backgroundcolor (unset) ne {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        backgroundcolor setanycolor fill
-        grestore
-    } if
-    showbearer {  % Overrides showborder
-        gsave
-        newpath
-        bl aload pop moveto br aload pop lineto
-        tl aload pop moveto tr aload pop lineto
-        bordercolor (unset) ne { bordercolor setanycolor } if
-        borderwidth inkspread 2 mul sub setlinewidth stroke
-        grestore
-    } {
-    showborder {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        bordercolor (unset) ne { bordercolor setanycolor } if
-        borderwidth inkspread 2 mul sub setlinewidth stroke
-        grestore
-    } if } ifelse
-
-    % Display the bars for elements in the bars array
-    gsave
-    barcolor (unset) ne { barcolor setanycolor } if
-    newpath
-    bars {
-        dup -1 ne {
-            aload pop  % h x y w
-            2 index 1 index 2 div sub 2 index moveto
-            0 4 index rlineto
-            dup 0 rlineto
-            0 4 index neg rlineto
-            closepath
-            pop pop pop pop
-        } {
-            pop
-        } ifelse
-    } forall
-    fill
-    grestore
-
-    /positions <<
-    %   direction
-    %       x-align                                y-align
-        (forward) <<
-            (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
-            (left)     {      0                }   (bottom)  {      0                }
-            (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
-            (right)    { pixx tw sub           }   (top)     { pixy th sub           }
-            (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
-        >>
-        (backward) <<
-            (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
-            (left)     {      tw               }   (bottom)  {      th               }
-            (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
-            (right)    { pixx                  }   (top)     { pixy                  }
-            (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
-        >>
-        (upward) <<
-            (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
-            (left)     {      th               }   (bottom)  {      0                }
-            (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
-            (right)    { pixx                  }   (top)     { pixy tw sub           }
-            (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
-        >>
-        (downward) <<
-            (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
-            (left)     {      0                }   (bottom)  {      tw               }
-            (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
-            (right)    { pixx th sub           }   (top)     { pixy                  }
-            (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
-        >>
-    >> def
-
-    % x-align y-align direction text-width text-height
-    /positiontext {
-        /th exch def
-        /tw exch def
-        /nudge 1 def
-        positions exch get dup
-        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
-        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
-    } def
-
-    % Display the text for elements in the text array
-    includetext {
-
-        textcolor (unset) ne { textcolor setanycolor } if
-
-        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
-            /s 0 def /fn () def
-            txt {
-                aload pop
-                2 copy s ne exch fn ne or {
-                    dup 0 le {
-                        pop pop pop pop pop
-                        /bwipp.renlinearFontTooSmall (The font size is too small) //raiseerror exec
-                    } if
-                    2 copy /s exch def /fn exch def
-                    selectfont
-                } {
-                    pop pop
-                } ifelse
-                moveto show
-            } forall
-        } {
-
-            alttext () eq {
-                /txt [ txt { 0 get {} forall } forall ] def
-                /tstr txt length string def
-                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
-            } {
-                /tstr alttext def
-                0 1 alttext length 1 sub {
-                    dup
-                    alttext exch 1 getinterval alttextsubspace exch search {
-                        alttext 4 index 32 put pop pop
-                    } if
-                    pop pop
-                } for
-            } ifelse
-
-            alttext () ne alttextsplit () ne and {
-                alttextsplit length 1 ne {
-                    /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
-                } if
-                /textlines [
-                    tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
-                ] def
-            } {
-                /textlines [ tstr ] def
-            } ifelse
-
-            textfont textsize selectfont
-
-            % Find true ascent of font
-            tstr length 0 eq {
-                0
-            } {
-                gsave
-                newpath 0 0 moveto (0) false charpath pathbbox
-                4 1 roll pop pop pop
-                grestore
-                currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-                currentfont /StrokeWidth known and {
-                    currentfont /StrokeWidth get 2 div 0 exch
-                    currentfont /FontMatrix get dtransform
-                    dup mul exch dup mul add sqrt
-                    add
-                } if
-            } ifelse
-            /textascent exch def
-
-            /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
-            /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
-
-            textxalign (unset) eq { /textxalign (center) def } if
-            textyalign (unset) eq { /textyalign (below)  def } if
-
-            textxalign (justify) eq {
-                textdirection (forward) ne textdirection (backward) ne and {
-                    /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
-                } if
-                textwidth pixx lt {
-                    /textgaps pixx textwidth sub tstr length 1 sub div def
-                    /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
-                } {
-                    /textgaps 0.0 def
-                    /textxalign (center) def
-                } ifelse
-            } if
-
-            textyalign (justify) eq {
-                textdirection (upward) ne textdirection (downward) ne and {
-                    /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
-                } if
-                textwidth pixy lt {
-                    /textgaps pixy textwidth sub tstr length 1 sub div def
-                    /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
-                } {
-                    /textgaps 0.0 def
-                    /textyalign (center) def
-                } ifelse
-            } if
-
-            textxalign textyalign textdirection textwidth textheight positiontext moveto
-            textxoffset textyoffset rmoveto
-            gsave
-            << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
-            currentpoint translate
-            0 1 textlines length 1 sub {
-                /i exch def
-                0 0 textascent textlinegaps add i mul add moveto
-                textgaps 0 textlines dup length i sub 1 sub get ashow
-            } for
-            grestore
-
-        } ifelse
-
-    } if
-
-    % Display the guard elements
-    guardwhitespace {
-        0.75 setlinewidth
-        guardleftpos 0 ne {
-            newpath
-            guardleftpos neg guardwidth add guardleftypos guardheight 2 div add moveto
-            guardwidth neg guardheight -2 div rlineto
-            guardwidth guardheight -2 div rlineto
-            stroke
-        } if
-        guardrightpos 0 ne {
-            newpath
-            guardrightpos pixx add guardwidth sub guardrightypos guardheight 2 div add moveto
-            guardwidth guardheight -2 div rlineto
-            guardwidth neg guardheight -2 div rlineto
-            stroke
-        } if
-    } if
-
-    % Render any extratext
-    extratext () ne {
-
-        0 1 extratext length 1 sub {
-            dup
-            extratext exch 1 getinterval extratextsubspace exch search {
-                extratext 4 index 32 put pop pop
-            } if
-            pop pop
-        } for
-
-        extratextsplit () ne {
-            extratextsplit length 1 ne {
-                /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
-            } if
-            /textlines [
-                extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
-            ] def
-        } {
-            /textlines [ extratext ] def
-        } ifelse
-
-        extratextcolor (unset) ne { extratextcolor setanycolor } if
-        extratextfont extratextsize selectfont
-
-        % Find true ascent of font
-        gsave
-        newpath 0 0 moveto (0) false charpath pathbbox
-        4 1 roll pop pop pop
-        grestore
-        currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-        currentfont /StrokeWidth known and {
-            currentfont /StrokeWidth get 2 div 0 exch
-            currentfont /FontMatrix get dtransform
-            dup mul exch dup mul add sqrt
-            add
-        } if
-        /textascent exch def
-
-        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
-        /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
-
-        extratextxalign (justify) eq {
-            extratextdirection (forward) ne extratextdirection (backward) ne and {
-                /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
-            } if
-            textwidth pixx lt {
-                /extratextgaps pixx textwidth sub extratext length 1 sub div def
-                /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
-            } {
-                /extratextgaps 0.0 def
-                /extratextxalign (center) def
-            } ifelse
-        } if
-
-        extratextyalign (justify) eq {
-            extratextdirection (upward) ne extratextdirection (downward) ne and {
-                /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
-            } if
-            textwidth pixy lt {
-                /extratextgaps pixy textwidth sub extratext length 1 sub div def
-                /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
-            } {
-                /extratextgaps 0.0 def
-                /extratextyalign (center) def
-            } ifelse
-        } if
-
-        extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
-        extratextxoffset extratextyoffset rmoveto
-        gsave
-        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
-        currentpoint translate
-        0 1 textlines length 1 sub {
-            /i exch def
-            0 0 textascent extratextlinegaps add i mul add moveto
-            extratextgaps 0 textlines dup length i sub 1 sub get ashow
-        } for
-        grestore
-
-    } if
-
-    grestore
-
-    end
-
-}
-[/barcode] {null def} forall
-bind def
-/renlinear dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+%psc /renlinear {
+%psc 
+%psc     20 dict begin          % Confine variables to local scope
+%psc 
+%psc     % Default options
+%psc     /sbs [] def
+%psc     /bhs [] def
+%psc     /bbs [] def
+%psc     /txt [] def
+%psc     /includetext false def
+%psc     /textcolor (unset) def
+%psc     /textxalign (unset) def
+%psc     /textyalign (unset) def
+%psc     /textdirection (forward) def
+%psc     /textfont (OCR-B) def
+%psc     /textsize 10.0 def
+%psc     /textxoffset 0.0 def
+%psc     /textyoffset 0.0 def
+%psc     /textgaps 0.0 def
+%psc     /textlinegaps 1.2 def
+%psc     /alttext () def
+%psc     /alttextsplit () def
+%psc     /alttextsubspace () def
+%psc     /extratext () def
+%psc     /extratextsubspace () def
+%psc     /extratextsplit () def
+%psc     /extratextlinegaps 1.2 def
+%psc     /extratextcolor (unset) def
+%psc     /extratextxalign (left) def
+%psc     /extratextyalign (above) def
+%psc     /extratextdirection (forward) def
+%psc     /extratextfont (OCR-B) def
+%psc     /extratextsize 10.0 def
+%psc     /extratextxoffset 0.0 def
+%psc     /extratextyoffset 0.0 def
+%psc     /extratextgaps 0.0 def
+%psc     /barcolor (unset) def
+%psc     /backgroundcolor (unset) def
+%psc     /bordercolor (unset) def
+%psc     /inkspread 0 def
+%psc     /width 0.0 def
+%psc     /barratio 1.0 def
+%psc     /spaceratio 1.0 def
+%psc     /showborder false def
+%psc     /showbearer false def
+%psc     /borderleft 10.0 def
+%psc     /borderright 10.0 def
+%psc     /bordertop 0.0 def
+%psc     /borderbottom 0.0 def
+%psc     /borderwidth 0.5 def
+%psc     /guardwhitespace false def
+%psc     /guardleftpos 0.0 def
+%psc     /guardleftypos 0.0 def
+%psc     /guardrightpos 0.0 def
+%psc     /guardrightypos 0.0 def
+%psc     /guardwidth 5.0 def
+%psc     /guardheight 7.0 def
+%psc 
+%psc     {def} forall
+%psc     opt currentdict /opt undef currentdict //processoptions exec pop
+%psc 
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /ctx exch def
+%psc         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
+%psc         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
+%psc         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+%psc     } { pop } ifelse
+%psc 
+%psc     % Input validation
+%psc 
+%psc     textxalign (unset) ne {
+%psc         << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
+%psc             /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
+%psc         } if
+%psc     } if
+%psc 
+%psc     textyalign (unset) ne {
+%psc         << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
+%psc             /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
+%psc         } if
+%psc     } if
+%psc 
+%psc     << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
+%psc         /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
+%psc     } if
+%psc 
+%psc     textsize 0 le textsize 25 ge or {
+%psc         /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
+%psc     } if
+%psc 
+%psc     << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
+%psc         /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
+%psc     } if
+%psc 
+%psc     << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
+%psc         /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
+%psc     } if
+%psc 
+%psc     << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
+%psc         /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
+%psc     } if
+%psc 
+%psc     extratextsize 0 le extratextsize 25 ge or {
+%psc         /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
+%psc     } if
+%psc 
+%psc     % Create bar elements and put them into the bars array
+%psc     /bars sbs length 1 add 2 idiv array def
+%psc     /pixx 0 def /pixy 0 def
+%psc     0 1 sbs length 1 add 2 idiv 2 mul 2 sub {
+%psc         /i exch def
+%psc         i 2 mod 0 eq {           % i is even
+%psc             /d sbs i get barratio mul barratio sub 1 add def  % d = digit*r-r+1
+%psc             sbs i get 0 ne {
+%psc                 /h bhs i 2 idiv get 72 mul def  % Height from bhs
+%psc                 /c d 2 div pixx add def         % Centre of the bar = pixx + d/2
+%psc                 /y bbs i 2 idiv get 72 mul def  % Baseline from bbs
+%psc                 /w d inkspread sub def          % bar width = digit - inkspread
+%psc                 bars i 2 idiv [h c y w] put     % Add the bar entry
+%psc                 h y add pixy gt {/pixy h y add def} if
+%psc             } {
+%psc                 bars i 2 idiv -1 put            % Dummy entry
+%psc             } ifelse
+%psc         } {
+%psc             /d sbs i get spaceratio mul spaceratio sub 1 add def  % d = digit*r-r+1
+%psc         } ifelse
+%psc         /pixx pixx d add def  % pixx += d
+%psc     } for
+%psc 
+%psc     gsave
+%psc 
+%psc     currentpoint translate
+%psc 
+%psc     % Force symbol to given width
+%psc     width 0 ne {
+%psc         width 72 mul pixx div 1 scale
+%psc     } if
+%psc 
+%psc     % Set RGB or CMYK color, or some other color by name
+%psc     /setanycolor {
+%psc         /anycolor exch def
+%psc         anycolor length 1 lt {
+%psc             /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
+%psc         } if
+%psc         anycolor 0 get 95 ne {  % RGB or CMYK
+%psc             anycolor length dup 6 ne exch 8 ne and {
+%psc                 /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
+%psc             } if
+%psc             mark
+%psc             0 2 anycolor length 1 sub {
+%psc                 anycolor exch 2 getinterval 0 exch {
+%psc                     dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
+%psc                     dup dup 65 ge exch  70 le and {55 sub} {  % A-F
+%psc                     dup dup 97 ge exch 102 le and {87 sub} {  % a-f
+%psc                         cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
+%psc                     } ifelse } ifelse } ifelse
+%psc                     exch 16 mul add
+%psc                 } forall
+%psc                 255 div
+%psc             } for
+%psc             counttomark
+%psc             dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
+%psc             exch 2 add -1 roll pop  % clear mark
+%psc         } {  % Named color beginning "_..."
+%psc             /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
+%psc             /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
+%psc             anycolor 2 copy known not {
+%psc                 pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
+%psc             } if
+%psc             get mark exch aload pop counttomark 1 add -2 roll exch pop
+%psc         } ifelse
+%psc         { setcolorspace setcolor } stopped {
+%psc             /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
+%psc         } if
+%psc     } def
+%psc 
+%psc     % Display the border and background
+%psc     showborder showbearer or {
+%psc         /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+%psc         /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+%psc         /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+%psc         /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+%psc     } {  % No need to extend background when there is no border or bearer
+%psc         /tl [ borderleft neg inkspread add                pixy bordertop add                       ] def
+%psc         /tr [ pixx borderright add inkspread sub          pixy bordertop add                       ] def
+%psc         /bl [ borderleft neg inkspread add                borderbottom neg                         ] def
+%psc         /br [ pixx borderright add inkspread sub          borderbottom neg                         ] def
+%psc     } ifelse
+%psc     backgroundcolor (unset) ne {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         backgroundcolor setanycolor fill
+%psc         grestore
+%psc     } if
+%psc     showbearer {  % Overrides showborder
+%psc         gsave
+%psc         newpath
+%psc         bl aload pop moveto br aload pop lineto
+%psc         tl aload pop moveto tr aload pop lineto
+%psc         bordercolor (unset) ne { bordercolor setanycolor } if
+%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
+%psc         grestore
+%psc     } {
+%psc     showborder {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         bordercolor (unset) ne { bordercolor setanycolor } if
+%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
+%psc         grestore
+%psc     } if } ifelse
+%psc 
+%psc     % Display the bars for elements in the bars array
+%psc     gsave
+%psc     barcolor (unset) ne { barcolor setanycolor } if
+%psc     newpath
+%psc     bars {
+%psc         dup -1 ne {
+%psc             aload pop  % h x y w
+%psc             2 index 1 index 2 div sub 2 index moveto
+%psc             0 4 index rlineto
+%psc             dup 0 rlineto
+%psc             0 4 index neg rlineto
+%psc             closepath
+%psc             pop pop pop pop
+%psc         } {
+%psc             pop
+%psc         } ifelse
+%psc     } forall
+%psc     fill
+%psc     grestore
+%psc 
+%psc     /positions <<
+%psc     %   direction
+%psc     %       x-align                                y-align
+%psc         (forward) <<
+%psc             (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
+%psc             (left)     {      0                }   (bottom)  {      0                }
+%psc             (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
+%psc             (right)    { pixx tw sub           }   (top)     { pixy th sub           }
+%psc             (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
+%psc         >>
+%psc         (backward) <<
+%psc             (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
+%psc             (left)     {      tw               }   (bottom)  {      th               }
+%psc             (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
+%psc             (right)    { pixx                  }   (top)     { pixy                  }
+%psc             (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
+%psc         >>
+%psc         (upward) <<
+%psc             (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
+%psc             (left)     {      th               }   (bottom)  {      0                }
+%psc             (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
+%psc             (right)    { pixx                  }   (top)     { pixy tw sub           }
+%psc             (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
+%psc         >>
+%psc         (downward) <<
+%psc             (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
+%psc             (left)     {      0                }   (bottom)  {      tw               }
+%psc             (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
+%psc             (right)    { pixx th sub           }   (top)     { pixy                  }
+%psc             (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
+%psc         >>
+%psc     >> def
+%psc 
+%psc     % x-align y-align direction text-width text-height
+%psc     /positiontext {
+%psc         /th exch def
+%psc         /tw exch def
+%psc         /nudge 1 def
+%psc         positions exch get dup
+%psc         4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+%psc         3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+%psc     } def
+%psc 
+%psc     % Display the text for elements in the text array
+%psc     includetext {
+%psc 
+%psc         textcolor (unset) ne { textcolor setanycolor } if
+%psc 
+%psc         textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
+%psc             /s 0 def /fn () def
+%psc             txt {
+%psc                 aload pop
+%psc                 2 copy s ne exch fn ne or {
+%psc                     dup 0 le {
+%psc                         pop pop pop pop pop
+%psc                         /bwipp.renlinearFontTooSmall (The font size is too small) //raiseerror exec
+%psc                     } if
+%psc                     2 copy /s exch def /fn exch def
+%psc                     selectfont
+%psc                 } {
+%psc                     pop pop
+%psc                 } ifelse
+%psc                 moveto show
+%psc             } forall
+%psc         } {
+%psc 
+%psc             alttext () eq {
+%psc                 /txt [ txt { 0 get {} forall } forall ] def
+%psc                 /tstr txt length string def
+%psc                 0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
+%psc             } {
+%psc                 /tstr alttext def
+%psc                 0 1 alttext length 1 sub {
+%psc                     dup
+%psc                     alttext exch 1 getinterval alttextsubspace exch search {
+%psc                         alttext 4 index 32 put pop pop
+%psc                     } if
+%psc                     pop pop
+%psc                 } for
+%psc             } ifelse
+%psc 
+%psc             alttext () ne alttextsplit () ne and {
+%psc                 alttextsplit length 1 ne {
+%psc                     /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
+%psc                 } if
+%psc                 /textlines [
+%psc                     tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
+%psc                 ] def
+%psc             } {
+%psc                 /textlines [ tstr ] def
+%psc             } ifelse
+%psc 
+%psc             textfont textsize selectfont
+%psc 
+%psc             % Find true ascent of font
+%psc             tstr length 0 eq {
+%psc                 0
+%psc             } {
+%psc                 gsave
+%psc                 newpath 0 0 moveto (0) false charpath pathbbox
+%psc                 4 1 roll pop pop pop
+%psc                 grestore
+%psc                 currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%psc                 currentfont /StrokeWidth known and {
+%psc                     currentfont /StrokeWidth get 2 div 0 exch
+%psc                     currentfont /FontMatrix get dtransform
+%psc                     dup mul exch dup mul add sqrt
+%psc                     add
+%psc                 } if
+%psc             } ifelse
+%psc             /textascent exch def
+%psc 
+%psc             /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
+%psc             /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
+%psc 
+%psc             textxalign (unset) eq { /textxalign (center) def } if
+%psc             textyalign (unset) eq { /textyalign (below)  def } if
+%psc 
+%psc             textxalign (justify) eq {
+%psc                 textdirection (forward) ne textdirection (backward) ne and {
+%psc                     /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
+%psc                 } if
+%psc                 textwidth pixx lt {
+%psc                     /textgaps pixx textwidth sub tstr length 1 sub div def
+%psc                     /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
+%psc                 } {
+%psc                     /textgaps 0.0 def
+%psc                     /textxalign (center) def
+%psc                 } ifelse
+%psc             } if
+%psc 
+%psc             textyalign (justify) eq {
+%psc                 textdirection (upward) ne textdirection (downward) ne and {
+%psc                     /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
+%psc                 } if
+%psc                 textwidth pixy lt {
+%psc                     /textgaps pixy textwidth sub tstr length 1 sub div def
+%psc                     /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
+%psc                 } {
+%psc                     /textgaps 0.0 def
+%psc                     /textyalign (center) def
+%psc                 } ifelse
+%psc             } if
+%psc 
+%psc             textxalign textyalign textdirection textwidth textheight positiontext moveto
+%psc             textxoffset textyoffset rmoveto
+%psc             gsave
+%psc             << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
+%psc             currentpoint translate
+%psc             0 1 textlines length 1 sub {
+%psc                 /i exch def
+%psc                 0 0 textascent textlinegaps add i mul add moveto
+%psc                 textgaps 0 textlines dup length i sub 1 sub get ashow
+%psc             } for
+%psc             grestore
+%psc 
+%psc         } ifelse
+%psc 
+%psc     } if
+%psc 
+%psc     % Display the guard elements
+%psc     guardwhitespace {
+%psc         0.75 setlinewidth
+%psc         guardleftpos 0 ne {
+%psc             newpath
+%psc             guardleftpos neg guardwidth add guardleftypos guardheight 2 div add moveto
+%psc             guardwidth neg guardheight -2 div rlineto
+%psc             guardwidth guardheight -2 div rlineto
+%psc             stroke
+%psc         } if
+%psc         guardrightpos 0 ne {
+%psc             newpath
+%psc             guardrightpos pixx add guardwidth sub guardrightypos guardheight 2 div add moveto
+%psc             guardwidth guardheight -2 div rlineto
+%psc             guardwidth neg guardheight -2 div rlineto
+%psc             stroke
+%psc         } if
+%psc     } if
+%psc 
+%psc     % Render any extratext
+%psc     extratext () ne {
+%psc 
+%psc         0 1 extratext length 1 sub {
+%psc             dup
+%psc             extratext exch 1 getinterval extratextsubspace exch search {
+%psc                 extratext 4 index 32 put pop pop
+%psc             } if
+%psc             pop pop
+%psc         } for
+%psc 
+%psc         extratextsplit () ne {
+%psc             extratextsplit length 1 ne {
+%psc                 /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
+%psc             } if
+%psc             /textlines [
+%psc                 extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
+%psc             ] def
+%psc         } {
+%psc             /textlines [ extratext ] def
+%psc         } ifelse
+%psc 
+%psc         extratextcolor (unset) ne { extratextcolor setanycolor } if
+%psc         extratextfont extratextsize selectfont
+%psc 
+%psc         % Find true ascent of font
+%psc         gsave
+%psc         newpath 0 0 moveto (0) false charpath pathbbox
+%psc         4 1 roll pop pop pop
+%psc         grestore
+%psc         currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%psc         currentfont /StrokeWidth known and {
+%psc             currentfont /StrokeWidth get 2 div 0 exch
+%psc             currentfont /FontMatrix get dtransform
+%psc             dup mul exch dup mul add sqrt
+%psc             add
+%psc         } if
+%psc         /textascent exch def
+%psc 
+%psc         /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
+%psc         /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
+%psc 
+%psc         extratextxalign (justify) eq {
+%psc             extratextdirection (forward) ne extratextdirection (backward) ne and {
+%psc                 /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
+%psc             } if
+%psc             textwidth pixx lt {
+%psc                 /extratextgaps pixx textwidth sub extratext length 1 sub div def
+%psc                 /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
+%psc             } {
+%psc                 /extratextgaps 0.0 def
+%psc                 /extratextxalign (center) def
+%psc             } ifelse
+%psc         } if
+%psc 
+%psc         extratextyalign (justify) eq {
+%psc             extratextdirection (upward) ne extratextdirection (downward) ne and {
+%psc                 /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
+%psc             } if
+%psc             textwidth pixy lt {
+%psc                 /extratextgaps pixy textwidth sub extratext length 1 sub div def
+%psc                 /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
+%psc             } {
+%psc                 /extratextgaps 0.0 def
+%psc                 /extratextyalign (center) def
+%psc             } ifelse
+%psc         } if
+%psc 
+%psc         extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
+%psc         extratextxoffset extratextyoffset rmoveto
+%psc         gsave
+%psc         << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
+%psc         currentpoint translate
+%psc         0 1 textlines length 1 sub {
+%psc             /i exch def
+%psc             0 0 textascent extratextlinegaps add i mul add moveto
+%psc             extratextgaps 0 textlines dup length i sub 1 sub get ashow
+%psc         } for
+%psc         grestore
+%psc 
+%psc     } if
+%psc 
+%psc     grestore
+%psc 
+%psc     end
+%psc 
+%psc }
+%psc [/barcode] {null def} forall
+%psc bind def
+%psc /renlinear dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RENDERER renlinear--
@@ -4205,599 +4205,599 @@ end
 % --REQUIRES preamble raiseerror processoptions--
 %%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2025102400 146907 144397
 %%BeginData:        593 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-begin
-/renmatrix {
-
-    20 dict begin
-
-    % Default options
-    /width 1.0 def
-    /height 1.0 def
-    /barcolor (unset) def
-    /backgroundcolor (unset) def
-    /bordercolor (unset) def
-    /colormap (unset) def
-    /dotty false def
-    /inkspread null def    % real sentinal
-    /inkspreadh null def   % real sentinal
-    /inkspreadv null def   % real sentinal
-    /txt [] def
-    /includetext false def
-    /textcolor (unset) def
-    /textxalign (unset) def
-    /textyalign (unset) def
-    /textdirection (forward) def
-    /textfont (Courier) def
-    /textsize 10.0 def
-    /textxoffset 0.0 def
-    /textyoffset 0.0 def
-    /textgaps 0.0 def
-    /textlinegaps 1.2 def
-    /alttext () def
-    /alttextsplit () def
-    /alttextsubspace () def
-    /extratext () def
-    /extratextsubspace () def
-    /extratextsplit () def
-    /extratextlinegaps 1.2 def
-    /extratextcolor (unset) def
-    /extratextxalign (left) def
-    /extratextyalign (above) def
-    /extratextdirection (forward) def
-    /extratextfont (Courier) def
-    /extratextsize 10.0 def
-    /extratextxoffset 0.0 def
-    /extratextyoffset 0.0 def
-    /extratextgaps 0.0 def
-    /showborder false def
-    /borderleft 0.0 def
-    /borderright 0.0 def
-    /bordertop 0.0 def
-    /borderbottom 0.0 def
-    /borderwidth 0.25 def
-
-    {def} forall
-    opt currentdict /opt undef //processoptions exec pop
-
-    inkspread null eq {/inkspread 0.15 def} if
-    inkspreadh null eq {/inkspreadh inkspread def} if
-    inkspreadv null eq {/inkspreadv inkspread def} if
-
-    /uk.co.terryburton.bwipp.global_ctx dup where {
-        exch get /ctx exch def
-        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-    } { pop } ifelse
-
-    % Input validation
-
-    textxalign (unset) ne {
-        << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
-            /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
-        } if
-    } if
-
-    textyalign (unset) ne {
-        << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
-            /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
-        } if
-    } if
-
-    << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
-        /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
-    } if
-
-    textsize 0 le textsize 25 ge or {
-        /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
-    } if
-
-    << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
-        /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
-    } if
-
-    << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
-        /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
-    } if
-
-    << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
-        /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
-    } if
-
-    extratextsize 0 le extratextsize 25 ge or {
-        /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
-    } if
-
-    /xyget { pixx mul add pixs exch get} def
-    /cget { pixx mul add cache exch get and} def
-    /cput {  % Optimise by only storing "stem" corners
-        dup 4 mod 0 eq { % dir is up or left
-            3 1 roll pixx mul add cache exch 2 copy get 4 -1 roll or put
-        } {
-            pop pop pop
-        } ifelse
-    } def
-
-    /abcd {
-        4 string 0 [
-            5 -2 roll
-            pixx mul add dup
-            pixs exch 2 getinterval aload pop 3 -1 roll  % A B
-            pixs exch pixx add 2 getinterval aload pop   % C D
-        ] {3 copy 48 add put pop 1 add} forall pop
-    } def
-
-    /right {dir 1 ne {x y dir cput [x y]} if  /x x 1 add def  /dir 1 def} def
-    /down  {dir 2 ne {x y dir cput [x y]} if  /y y 1 add def  /dir 2 def} def
-    /left  {dir 4 ne {x y dir cput [x y]} if  /x x 1 sub def  /dir 4 def} def
-    /up    {dir 8 ne {x y dir cput [x y]} if  /y y 1 sub def  /dir 8 def} def
-
-    /trace {
-        % Walk the outline of a region emitting edge coordinates of the path
-        /y exch def  /x exch def
-        % dir 1:right 2:down 4:left 8:up
-        /dir x 1 add y 1 add xyget 1 eq {8} {4} ifelse def
-        /sx x def  /sy y def  /sdir dir def
-
-        % A B
-        % C D
-        mark {
-            x y abcd
-            1 {  % Common exit
-                dup dup (0001) eq exch dup (0011) eq exch (1011) eq or or {pop right exit} if
-                dup dup (0010) eq exch dup (1010) eq exch (1110) eq or or {pop down  exit} if
-                dup dup (1000) eq exch dup (1100) eq exch (1101) eq or or {pop left  exit} if
-                dup dup (0100) eq exch dup (0101) eq exch (0111) eq or or {pop up    exit} if
-                dup (1001) eq {
-                    dir 2 eq {pop left exit} {pop right exit} ifelse
-                } {  % 0110
-                    dir 1 eq {pop down exit} {pop up exit} ifelse
-                } ifelse
-            } repeat
-            x sx eq y sy eq and dir sdir eq and {exit} if
-        } loop
-        counttomark array astore exch pop
-
-    } def
-
-    % Set RGB or CMYK color, or some other color by name
-    /setanycolor {
-        /anycolor exch def
-        anycolor length 1 lt {
-            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
-        } if
-        anycolor 0 get 95 ne {  % RGB or CMYK
-            anycolor length dup 6 ne exch 8 ne and {
-                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
-            } if
-            mark
-            0 2 anycolor length 1 sub {
-                anycolor exch 2 getinterval 0 exch {
-                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
-                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F
-                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f
-                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
-                    } ifelse } ifelse } ifelse
-                    exch 16 mul add
-                } forall
-                255 div
-            } for
-            counttomark
-            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
-            exch 2 add -1 roll pop  % clear mark
-        } {  % Named color beginning "_..."
-            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
-            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
-            anycolor 2 copy known not {
-                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
-            } if
-            get mark exch aload pop counttomark 1 add -2 roll exch pop
-        } ifelse
-        { setcolorspace setcolor } stopped {
-            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
-        } if
-    } def
-
-    % Plot a layer of single colour
-    /drawlayer {
-
-        /pixsorig pixs def
-        /pixs exch def
-
-        % Pad the bitmap on all sides
-        /pixs [
-            pixx 2 add {0} repeat
-            0 pixx pixs length 1 sub {
-                0 exch
-                pixs exch pixx getinterval aload pop
-                0
-            } for
-            pixx 2 add {0} repeat
-        ] def
-        /pixx pixx 2 add def
-        /pixy pixy 2 add def
-
-        % Cache of visited corners for each direction
-        /cache [ pixs length {0} repeat ] def
-
-        % Construct paths by tracing regions avoiding duplication by using the cache
-        /paths [
-            0 1 pixy 2 sub {
-                /j exch def
-                0 1 pixx 2 sub {
-                    /i exch def
-                    /k i j abcd def
-                    k (0001) eq k (1001) eq or {  % Black region stem corners
-                        8 i j cget 0 eq {
-                            i j trace
-                        } if
-                    } if
-                    k (1110) eq {  % White region stem corner
-                        4 i j cget 0 eq {
-                            i j trace
-                        } if
-                    } if
-                } for
-            } for
-        ] def
-
-        % Revert the bitmap size
-        /pixx pixx 2 sub def
-        /pixy pixy 2 sub def
-
-        % Draw the image
-        newpath
-        paths {
-            /p exch def
-            /len p length def
-            p len 1 sub get aload pop
-            p 0 get aload pop
-            0 1 len 1 sub {                                % x1 y1 x2 y2
-                /i exch def
-                p i 1 add len mod get aload pop 6 -2 roll  % x3 y3 x1 y1 x2 y2
-                5 index inkspreadh
-                4 index 4 -1 roll lt {add} {sub} ifelse    % y3<y1 ? x2+i : x2-i
-                4 1 roll
-                4 index inkspreadv
-                4 index 4 -1 roll gt {add} {sub} ifelse    % x3>x1 ? y2+i : y2-i
-                4 -1 roll exch pixy exch sub
-                i 0 eq {moveto} {lineto} ifelse
-            } for                                          % x2 y2 x3 y3
-            closepath
-            pop pop pop pop
-        } forall
-        fill
-
-        /pixs pixsorig def
-
-    } def
-
-    /drawlayerdots {
-
-        /pixsorig pixs def
-        /pixs exch def
-
-        newpath
-        0 1 pixs length 1 sub {
-            dup pixx mod /x exch def
-            pixx idiv /y exch def
-            x y xyget 1 eq {
-               x 0.5 add pixy y sub 0.5 sub moveto
-               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc
-            } if
-        } for
-        fill
-
-        /pixs pixsorig def
-
-    } def
-
-    gsave
-
-    currentpoint translate
-
-    /inkspread  inkspread  2 div def
-    /inkspreadh inkspreadh 2 div def
-    /inkspreadv inkspreadv 2 div def
-
-    % Force symbol to given width
-    width pixx div 72 mul height pixy div 72 mul scale
-
-    % Display the border and background
-    showborder {
-        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
-        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
-        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
-        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
-    } {  % No need to extend background when there is no border
-        /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def
-        /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def
-        /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def
-        /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def
-    } ifelse
-    backgroundcolor (unset) ne {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        backgroundcolor setanycolor fill
-        grestore
-    } if
-    showborder {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        bordercolor (unset) ne { bordercolor setanycolor } if
-        borderwidth inkspread 2 mul sub setlinewidth stroke
-        grestore
-    } if
-
-    % Display the matrix
-    colormap (unset) eq {
-        /colormap << 1 barcolor >> def
-    } if
-
-    colormap {
-        dup (unset) ne { setanycolor } { pop } ifelse
-        /key exch def
-        [
-            pixs { key eq {1} {0} ifelse } forall
-        ] dotty {drawlayerdots} {drawlayer} ifelse
-    } forall
-
-    /positions <<
-    %   direction
-    %       x-align                                y-align
-        (forward) <<
-            (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
-            (left)     {      0                }   (bottom)  {      0                }
-            (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
-            (right)    { pixx tw sub           }   (top)     { pixy th sub           }
-            (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
-        >>
-        (backward) <<
-            (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
-            (left)     {      tw               }   (bottom)  {      th               }
-            (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
-            (right)    { pixx                  }   (top)     { pixy                  }
-            (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
-        >>
-        (upward) <<
-            (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
-            (left)     {      th               }   (bottom)  {      0                }
-            (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
-            (right)    { pixx                  }   (top)     { pixy tw sub           }
-            (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
-        >>
-        (downward) <<
-            (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
-            (left)     {      0                }   (bottom)  {      tw               }
-            (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
-            (right)    { pixx th sub           }   (top)     { pixy                  }
-            (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
-        >>
-    >> def
-
-    % x-align y-align direction text-width text-height
-    /positiontext {
-        /th exch def
-        /tw exch def
-        /nudge 1 def
-        positions exch get dup
-        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
-        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
-    } def
-
-    % Display the text for elements in the text array
-    includetext {
-
-        textcolor (unset) ne { textcolor setanycolor } if
-
-        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
-            /s 0 def /fn () def
-            txt {
-                aload pop
-                2 copy s ne exch fn ne or {
-                    dup 0 le {
-                        pop pop pop pop pop
-                        /bwipp.renmatrixFontTooSmall (The font size is too small) //raiseerror exec
-                    } if
-                    2 copy /s exch def /fn exch def
-                    selectfont
-                } {
-                    pop pop
-                } ifelse
-                moveto show
-            } forall
-        } {
-
-            alttext () eq {
-                /txt [ txt { 0 get {} forall } forall ] def
-                /tstr txt length string def
-                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
-            } {
-                /tstr alttext def
-                0 1 alttext length 1 sub {
-                    dup
-                    alttext exch 1 getinterval alttextsubspace exch search {
-                        alttext 4 index 32 put pop pop
-                    } if
-                    pop pop
-                } for
-            } ifelse
-
-            alttext () ne alttextsplit () ne and {
-                alttextsplit length 1 ne {
-                    /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
-                } if
-                /textlines [
-                    tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
-                ] def
-            } {
-                /textlines [ tstr ] def
-            } ifelse
-
-            textfont textsize selectfont
-
-            % Find true ascent of font
-            tstr length 0 eq {
-                0
-            } {
-                gsave
-                newpath 0 0 moveto (0) false charpath pathbbox
-                4 1 roll pop pop pop
-                grestore
-                currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-                currentfont /StrokeWidth known and {
-                    currentfont /StrokeWidth get 2 div 0 exch
-                    currentfont /FontMatrix get dtransform
-                    dup mul exch dup mul add sqrt
-                    add
-                } if
-            } ifelse
-            /textascent exch def
-
-            /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
-            /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
-
-            textxalign (unset) eq { /textxalign (center) def } if
-            textyalign (unset) eq { /textyalign (below)  def } if
-
-            textxalign (justify) eq {
-                textdirection (forward) ne textdirection (backward) ne and {
-                    /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
-                } if
-                textwidth pixx lt {
-                    /textgaps pixx textwidth sub tstr length 1 sub div def
-                    /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
-                } {
-                    /textgaps 0.0 def
-                    /textxalign (center) def
-                } ifelse
-            } if
-
-            textyalign (justify) eq {
-                textdirection (upward) ne textdirection (downward) ne and {
-                    /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
-                } if
-                textwidth pixy lt {
-                    /textgaps pixy textwidth sub tstr length 1 sub div def
-                    /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
-                } {
-                    /textgaps 0.0 def
-                    /textyalign (center) def
-                } ifelse
-            } if
-
-            textxalign textyalign textdirection textwidth textheight positiontext moveto
-            textxoffset textyoffset rmoveto
-            gsave
-            << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
-            currentpoint translate
-            0 1 textlines length 1 sub {
-                /i exch def
-                0 0 textascent textlinegaps add i mul add moveto
-                textgaps 0 textlines dup length i sub 1 sub get ashow
-            } for
-            grestore
-
-        } ifelse
-
-    } if
-
-    % Render any extratext
-    extratext () ne {
-
-        0 1 extratext length 1 sub {
-            dup
-            extratext exch 1 getinterval extratextsubspace exch search {
-                extratext 4 index 32 put pop pop
-            } if
-            pop pop
-        } for
-
-        extratextsplit () ne {
-            extratextsplit length 1 ne {
-                /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
-            } if
-            /textlines [
-                extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
-            ] def
-        } {
-            /textlines [ extratext ] def
-        } ifelse
-
-        extratextcolor (unset) ne { extratextcolor setanycolor } if
-        extratextfont extratextsize selectfont
-
-        % Find true ascent of font
-        gsave
-        newpath 0 0 moveto (0) false charpath pathbbox
-        4 1 roll pop pop pop
-        grestore
-        currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-        currentfont /StrokeWidth known and {
-            currentfont /StrokeWidth get 2 div 0 exch
-            currentfont /FontMatrix get dtransform
-            dup mul exch dup mul add sqrt
-            add
-        } if
-        /textascent exch def
-
-        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
-        /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
-
-        extratextxalign (justify) eq {
-            extratextdirection (forward) ne extratextdirection (backward) ne and {
-                /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
-            } if
-            textwidth pixx lt {
-                /extratextgaps pixx textwidth sub extratext length 1 sub div def
-                /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
-            } {
-                /extratextgaps 0.0 def
-                /extratextxalign (center) def
-            } ifelse
-        } if
-
-        extratextyalign (justify) eq {
-            extratextdirection (upward) ne extratextdirection (downward) ne and {
-                /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
-            } if
-            textwidth pixy lt {
-                /extratextgaps pixy textwidth sub extratext length 1 sub div def
-                /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
-            } {
-                /extratextgaps 0.0 def
-                /extratextyalign (center) def
-            } ifelse
-        } if
-
-        extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
-        extratextxoffset extratextyoffset rmoveto
-        gsave
-        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
-        currentpoint translate
-        0 1 textlines length 1 sub {
-            /i exch def
-            0 0 textascent extratextlinegaps add i mul add moveto
-            extratextgaps 0 textlines dup length i sub 1 sub get ashow
-        } for
-        grestore
-
-    } if
-
-    grestore
-
-    end
-
-}
-[/barcode] {null def} forall
-bind def
-/renmatrix dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+%psc /renmatrix {
+%psc 
+%psc     20 dict begin
+%psc 
+%psc     % Default options
+%psc     /width 1.0 def
+%psc     /height 1.0 def
+%psc     /barcolor (unset) def
+%psc     /backgroundcolor (unset) def
+%psc     /bordercolor (unset) def
+%psc     /colormap (unset) def
+%psc     /dotty false def
+%psc     /inkspread null def    % real sentinal
+%psc     /inkspreadh null def   % real sentinal
+%psc     /inkspreadv null def   % real sentinal
+%psc     /txt [] def
+%psc     /includetext false def
+%psc     /textcolor (unset) def
+%psc     /textxalign (unset) def
+%psc     /textyalign (unset) def
+%psc     /textdirection (forward) def
+%psc     /textfont (OCR-B) def
+%psc     /textsize 10.0 def
+%psc     /textxoffset 0.0 def
+%psc     /textyoffset 0.0 def
+%psc     /textgaps 0.0 def
+%psc     /textlinegaps 1.2 def
+%psc     /alttext () def
+%psc     /alttextsplit () def
+%psc     /alttextsubspace () def
+%psc     /extratext () def
+%psc     /extratextsubspace () def
+%psc     /extratextsplit () def
+%psc     /extratextlinegaps 1.2 def
+%psc     /extratextcolor (unset) def
+%psc     /extratextxalign (left) def
+%psc     /extratextyalign (above) def
+%psc     /extratextdirection (forward) def
+%psc     /extratextfont (OCR-B) def
+%psc     /extratextsize 10.0 def
+%psc     /extratextxoffset 0.0 def
+%psc     /extratextyoffset 0.0 def
+%psc     /extratextgaps 0.0 def
+%psc     /showborder false def
+%psc     /borderleft 0.0 def
+%psc     /borderright 0.0 def
+%psc     /bordertop 0.0 def
+%psc     /borderbottom 0.0 def
+%psc     /borderwidth 0.25 def
+%psc 
+%psc     {def} forall
+%psc     opt currentdict /opt undef currentdict //processoptions exec pop
+%psc 
+%psc     inkspread null eq {/inkspread 0 def} if
+%psc     inkspreadh null eq {/inkspreadh inkspread def} if
+%psc     inkspreadv null eq {/inkspreadv inkspread def} if
+%psc 
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /ctx exch def
+%psc         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
+%psc         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
+%psc         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+%psc     } { pop } ifelse
+%psc 
+%psc     % Input validation
+%psc 
+%psc     textxalign (unset) ne {
+%psc         << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
+%psc             /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
+%psc         } if
+%psc     } if
+%psc 
+%psc     textyalign (unset) ne {
+%psc         << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
+%psc             /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
+%psc         } if
+%psc     } if
+%psc 
+%psc     << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
+%psc         /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
+%psc     } if
+%psc 
+%psc     textsize 0 le textsize 25 ge or {
+%psc         /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
+%psc     } if
+%psc 
+%psc     << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
+%psc         /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
+%psc     } if
+%psc 
+%psc     << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
+%psc         /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
+%psc     } if
+%psc 
+%psc     << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
+%psc         /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
+%psc     } if
+%psc 
+%psc     extratextsize 0 le extratextsize 25 ge or {
+%psc         /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
+%psc     } if
+%psc 
+%psc     /xyget { pixx mul add pixs exch get} def
+%psc     /cget { pixx mul add cache exch get and} def
+%psc     /cput {  % Optimise by only storing "stem" corners
+%psc         dup 4 mod 0 eq { % dir is up or left
+%psc             3 1 roll pixx mul add cache exch 2 copy get 4 -1 roll or put
+%psc         } {
+%psc             pop pop pop
+%psc         } ifelse
+%psc     } def
+%psc 
+%psc     /abcd {
+%psc         4 string 0 [
+%psc             5 -2 roll
+%psc             pixx mul add dup
+%psc             pixs exch 2 getinterval aload pop 3 -1 roll  % A B
+%psc             pixs exch pixx add 2 getinterval aload pop   % C D
+%psc         ] {3 copy 48 add put pop 1 add} forall pop
+%psc     } def
+%psc 
+%psc     /right {dir 1 ne {x y dir cput [x y]} if  /x x 1 add def  /dir 1 def} def
+%psc     /down  {dir 2 ne {x y dir cput [x y]} if  /y y 1 add def  /dir 2 def} def
+%psc     /left  {dir 4 ne {x y dir cput [x y]} if  /x x 1 sub def  /dir 4 def} def
+%psc     /up    {dir 8 ne {x y dir cput [x y]} if  /y y 1 sub def  /dir 8 def} def
+%psc 
+%psc     /trace {
+%psc         % Walk the outline of a region emitting edge coordinates of the path
+%psc         /y exch def  /x exch def
+%psc         % dir 1:right 2:down 4:left 8:up
+%psc         /dir x 1 add y 1 add xyget 1 eq {8} {4} ifelse def
+%psc         /sx x def  /sy y def  /sdir dir def
+%psc 
+%psc         % A B
+%psc         % C D
+%psc         mark {
+%psc             x y abcd
+%psc             1 {  % Common exit
+%psc                 dup dup (0001) eq exch dup (0011) eq exch (1011) eq or or {pop right exit} if
+%psc                 dup dup (0010) eq exch dup (1010) eq exch (1110) eq or or {pop down  exit} if
+%psc                 dup dup (1000) eq exch dup (1100) eq exch (1101) eq or or {pop left  exit} if
+%psc                 dup dup (0100) eq exch dup (0101) eq exch (0111) eq or or {pop up    exit} if
+%psc                 dup (1001) eq {
+%psc                     dir 2 eq {pop left exit} {pop right exit} ifelse
+%psc                 } {  % 0110
+%psc                     dir 1 eq {pop down exit} {pop up exit} ifelse
+%psc                 } ifelse
+%psc             } repeat
+%psc             x sx eq y sy eq and dir sdir eq and {exit} if
+%psc         } loop
+%psc         counttomark array astore exch pop
+%psc 
+%psc     } def
+%psc 
+%psc     % Set RGB or CMYK color, or some other color by name
+%psc     /setanycolor {
+%psc         /anycolor exch def
+%psc         anycolor length 1 lt {
+%psc             /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
+%psc         } if
+%psc         anycolor 0 get 95 ne {  % RGB or CMYK
+%psc             anycolor length dup 6 ne exch 8 ne and {
+%psc                 /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
+%psc             } if
+%psc             mark
+%psc             0 2 anycolor length 1 sub {
+%psc                 anycolor exch 2 getinterval 0 exch {
+%psc                     dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
+%psc                     dup dup 65 ge exch  70 le and {55 sub} {  % A-F
+%psc                     dup dup 97 ge exch 102 le and {87 sub} {  % a-f
+%psc                         cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
+%psc                     } ifelse } ifelse } ifelse
+%psc                     exch 16 mul add
+%psc                 } forall
+%psc                 255 div
+%psc             } for
+%psc             counttomark
+%psc             dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
+%psc             exch 2 add -1 roll pop  % clear mark
+%psc         } {  % Named color beginning "_..."
+%psc             /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
+%psc             /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
+%psc             anycolor 2 copy known not {
+%psc                 pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
+%psc             } if
+%psc             get mark exch aload pop counttomark 1 add -2 roll exch pop
+%psc         } ifelse
+%psc         { setcolorspace setcolor } stopped {
+%psc             /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
+%psc         } if
+%psc     } def
+%psc 
+%psc     % Plot a layer of single colour
+%psc     /drawlayer {
+%psc 
+%psc         /pixsorig pixs def
+%psc         /pixs exch def
+%psc 
+%psc         % Pad the bitmap on all sides
+%psc         /pixs [
+%psc             pixx 2 add {0} repeat
+%psc             0 pixx pixs length 1 sub {
+%psc                 0 exch
+%psc                 pixs exch pixx getinterval aload pop
+%psc                 0
+%psc             } for
+%psc             pixx 2 add {0} repeat
+%psc         ] def
+%psc         /pixx pixx 2 add def
+%psc         /pixy pixy 2 add def
+%psc 
+%psc         % Cache of visited corners for each direction
+%psc         /cache [ pixs length {0} repeat ] def
+%psc 
+%psc         % Construct paths by tracing regions avoiding duplication by using the cache
+%psc         /paths [
+%psc             0 1 pixy 2 sub {
+%psc                 /j exch def
+%psc                 0 1 pixx 2 sub {
+%psc                     /i exch def
+%psc                     /k i j abcd def
+%psc                     k (0001) eq k (1001) eq or {  % Black region stem corners
+%psc                         8 i j cget 0 eq {
+%psc                             i j trace
+%psc                         } if
+%psc                     } if
+%psc                     k (1110) eq {  % White region stem corner
+%psc                         4 i j cget 0 eq {
+%psc                             i j trace
+%psc                         } if
+%psc                     } if
+%psc                 } for
+%psc             } for
+%psc         ] def
+%psc 
+%psc         % Revert the bitmap size
+%psc         /pixx pixx 2 sub def
+%psc         /pixy pixy 2 sub def
+%psc 
+%psc         % Draw the image
+%psc         newpath
+%psc         paths {
+%psc             /p exch def
+%psc             /len p length def
+%psc             p len 1 sub get aload pop
+%psc             p 0 get aload pop
+%psc             0 1 len 1 sub {                                % x1 y1 x2 y2
+%psc                 /i exch def
+%psc                 p i 1 add len mod get aload pop 6 -2 roll  % x3 y3 x1 y1 x2 y2
+%psc                 5 index inkspreadh
+%psc                 4 index 4 -1 roll lt {add} {sub} ifelse    % y3<y1 ? x2+i : x2-i
+%psc                 4 1 roll
+%psc                 4 index inkspreadv
+%psc                 4 index 4 -1 roll gt {add} {sub} ifelse    % x3>x1 ? y2+i : y2-i
+%psc                 4 -1 roll exch pixy exch sub
+%psc                 i 0 eq {moveto} {lineto} ifelse
+%psc             } for                                          % x2 y2 x3 y3
+%psc             closepath
+%psc             pop pop pop pop
+%psc         } forall
+%psc         fill
+%psc 
+%psc         /pixs pixsorig def
+%psc 
+%psc     } def
+%psc 
+%psc     /drawlayerdots {
+%psc 
+%psc         /pixsorig pixs def
+%psc         /pixs exch def
+%psc 
+%psc         newpath
+%psc         0 1 pixs length 1 sub {
+%psc             dup pixx mod /x exch def
+%psc             pixx idiv /y exch def
+%psc             x y xyget 1 eq {
+%psc                x 0.5 add pixy y sub 0.5 sub moveto
+%psc                x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc
+%psc             } if
+%psc         } for
+%psc         fill
+%psc 
+%psc         /pixs pixsorig def
+%psc 
+%psc     } def
+%psc 
+%psc     gsave
+%psc 
+%psc     currentpoint translate
+%psc 
+%psc     /inkspread  inkspread  2 div def
+%psc     /inkspreadh inkspreadh 2 div def
+%psc     /inkspreadv inkspreadv 2 div def
+%psc 
+%psc     % Force symbol to given width
+%psc     width pixx div 72 mul height pixy div 72 mul scale
+%psc 
+%psc     % Display the border and background
+%psc     showborder {
+%psc         /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+%psc         /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+%psc         /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+%psc         /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+%psc     } {  % No need to extend background when there is no border
+%psc         /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def
+%psc         /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def
+%psc         /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def
+%psc         /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def
+%psc     } ifelse
+%psc     backgroundcolor (unset) ne {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         backgroundcolor setanycolor fill
+%psc         grestore
+%psc     } if
+%psc     showborder {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         bordercolor (unset) ne { bordercolor setanycolor } if
+%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
+%psc         grestore
+%psc     } if
+%psc 
+%psc     % Display the matrix
+%psc     colormap (unset) eq {
+%psc         /colormap << 1 barcolor >> def
+%psc     } if
+%psc 
+%psc     colormap {
+%psc         dup (unset) ne { setanycolor } { pop } ifelse
+%psc         /key exch def
+%psc         [
+%psc             pixs { key eq {1} {0} ifelse } forall
+%psc         ] dotty {drawlayerdots} {drawlayer} ifelse
+%psc     } forall
+%psc 
+%psc     /positions <<
+%psc     %   direction
+%psc     %       x-align                                y-align
+%psc         (forward) <<
+%psc             (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
+%psc             (left)     {      0                }   (bottom)  {      0                }
+%psc             (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
+%psc             (right)    { pixx tw sub           }   (top)     { pixy th sub           }
+%psc             (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
+%psc         >>
+%psc         (backward) <<
+%psc             (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
+%psc             (left)     {      tw               }   (bottom)  {      th               }
+%psc             (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
+%psc             (right)    { pixx                  }   (top)     { pixy                  }
+%psc             (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
+%psc         >>
+%psc         (upward) <<
+%psc             (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
+%psc             (left)     {      th               }   (bottom)  {      0                }
+%psc             (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
+%psc             (right)    { pixx                  }   (top)     { pixy tw sub           }
+%psc             (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
+%psc         >>
+%psc         (downward) <<
+%psc             (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
+%psc             (left)     {      0                }   (bottom)  {      tw               }
+%psc             (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
+%psc             (right)    { pixx th sub           }   (top)     { pixy                  }
+%psc             (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
+%psc         >>
+%psc     >> def
+%psc 
+%psc     % x-align y-align direction text-width text-height
+%psc     /positiontext {
+%psc         /th exch def
+%psc         /tw exch def
+%psc         /nudge 1 def
+%psc         positions exch get dup
+%psc         4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+%psc         3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+%psc     } def
+%psc 
+%psc     % Display the text for elements in the text array
+%psc     includetext {
+%psc 
+%psc         textcolor (unset) ne { textcolor setanycolor } if
+%psc 
+%psc         textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
+%psc             /s 0 def /fn () def
+%psc             txt {
+%psc                 aload pop
+%psc                 2 copy s ne exch fn ne or {
+%psc                     dup 0 le {
+%psc                         pop pop pop pop pop
+%psc                         /bwipp.renmatrixFontTooSmall (The font size is too small) //raiseerror exec
+%psc                     } if
+%psc                     2 copy /s exch def /fn exch def
+%psc                     selectfont
+%psc                 } {
+%psc                     pop pop
+%psc                 } ifelse
+%psc                 moveto show
+%psc             } forall
+%psc         } {
+%psc 
+%psc             alttext () eq {
+%psc                 /txt [ txt { 0 get {} forall } forall ] def
+%psc                 /tstr txt length string def
+%psc                 0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
+%psc             } {
+%psc                 /tstr alttext def
+%psc                 0 1 alttext length 1 sub {
+%psc                     dup
+%psc                     alttext exch 1 getinterval alttextsubspace exch search {
+%psc                         alttext 4 index 32 put pop pop
+%psc                     } if
+%psc                     pop pop
+%psc                 } for
+%psc             } ifelse
+%psc 
+%psc             alttext () ne alttextsplit () ne and {
+%psc                 alttextsplit length 1 ne {
+%psc                     /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
+%psc                 } if
+%psc                 /textlines [
+%psc                     tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
+%psc                 ] def
+%psc             } {
+%psc                 /textlines [ tstr ] def
+%psc             } ifelse
+%psc 
+%psc             textfont textsize selectfont
+%psc 
+%psc             % Find true ascent of font
+%psc             tstr length 0 eq {
+%psc                 0
+%psc             } {
+%psc                 gsave
+%psc                 newpath 0 0 moveto (0) false charpath pathbbox
+%psc                 4 1 roll pop pop pop
+%psc                 grestore
+%psc                 currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%psc                 currentfont /StrokeWidth known and {
+%psc                     currentfont /StrokeWidth get 2 div 0 exch
+%psc                     currentfont /FontMatrix get dtransform
+%psc                     dup mul exch dup mul add sqrt
+%psc                     add
+%psc                 } if
+%psc             } ifelse
+%psc             /textascent exch def
+%psc 
+%psc             /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
+%psc             /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
+%psc 
+%psc             textxalign (unset) eq { /textxalign (center) def } if
+%psc             textyalign (unset) eq { /textyalign (below)  def } if
+%psc 
+%psc             textxalign (justify) eq {
+%psc                 textdirection (forward) ne textdirection (backward) ne and {
+%psc                     /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
+%psc                 } if
+%psc                 textwidth pixx lt {
+%psc                     /textgaps pixx textwidth sub tstr length 1 sub div def
+%psc                     /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
+%psc                 } {
+%psc                     /textgaps 0.0 def
+%psc                     /textxalign (center) def
+%psc                 } ifelse
+%psc             } if
+%psc 
+%psc             textyalign (justify) eq {
+%psc                 textdirection (upward) ne textdirection (downward) ne and {
+%psc                     /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
+%psc                 } if
+%psc                 textwidth pixy lt {
+%psc                     /textgaps pixy textwidth sub tstr length 1 sub div def
+%psc                     /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
+%psc                 } {
+%psc                     /textgaps 0.0 def
+%psc                     /textyalign (center) def
+%psc                 } ifelse
+%psc             } if
+%psc 
+%psc             textxalign textyalign textdirection textwidth textheight positiontext moveto
+%psc             textxoffset textyoffset rmoveto
+%psc             gsave
+%psc             << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
+%psc             currentpoint translate
+%psc             0 1 textlines length 1 sub {
+%psc                 /i exch def
+%psc                 0 0 textascent textlinegaps add i mul add moveto
+%psc                 textgaps 0 textlines dup length i sub 1 sub get ashow
+%psc             } for
+%psc             grestore
+%psc 
+%psc         } ifelse
+%psc 
+%psc     } if
+%psc 
+%psc     % Render any extratext
+%psc     extratext () ne {
+%psc 
+%psc         0 1 extratext length 1 sub {
+%psc             dup
+%psc             extratext exch 1 getinterval extratextsubspace exch search {
+%psc                 extratext 4 index 32 put pop pop
+%psc             } if
+%psc             pop pop
+%psc         } for
+%psc 
+%psc         extratextsplit () ne {
+%psc             extratextsplit length 1 ne {
+%psc                 /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
+%psc             } if
+%psc             /textlines [
+%psc                 extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
+%psc             ] def
+%psc         } {
+%psc             /textlines [ extratext ] def
+%psc         } ifelse
+%psc 
+%psc         extratextcolor (unset) ne { extratextcolor setanycolor } if
+%psc         extratextfont extratextsize selectfont
+%psc 
+%psc         % Find true ascent of font
+%psc         gsave
+%psc         newpath 0 0 moveto (0) false charpath pathbbox
+%psc         4 1 roll pop pop pop
+%psc         grestore
+%psc         currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%psc         currentfont /StrokeWidth known and {
+%psc             currentfont /StrokeWidth get 2 div 0 exch
+%psc             currentfont /FontMatrix get dtransform
+%psc             dup mul exch dup mul add sqrt
+%psc             add
+%psc         } if
+%psc         /textascent exch def
+%psc 
+%psc         /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
+%psc         /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
+%psc 
+%psc         extratextxalign (justify) eq {
+%psc             extratextdirection (forward) ne extratextdirection (backward) ne and {
+%psc                 /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
+%psc             } if
+%psc             textwidth pixx lt {
+%psc                 /extratextgaps pixx textwidth sub extratext length 1 sub div def
+%psc                 /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
+%psc             } {
+%psc                 /extratextgaps 0.0 def
+%psc                 /extratextxalign (center) def
+%psc             } ifelse
+%psc         } if
+%psc 
+%psc         extratextyalign (justify) eq {
+%psc             extratextdirection (upward) ne extratextdirection (downward) ne and {
+%psc                 /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
+%psc             } if
+%psc             textwidth pixy lt {
+%psc                 /extratextgaps pixy textwidth sub extratext length 1 sub div def
+%psc                 /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
+%psc             } {
+%psc                 /extratextgaps 0.0 def
+%psc                 /extratextyalign (center) def
+%psc             } ifelse
+%psc         } if
+%psc 
+%psc         extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
+%psc         extratextxoffset extratextyoffset rmoveto
+%psc         gsave
+%psc         << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
+%psc         currentpoint translate
+%psc         0 1 textlines length 1 sub {
+%psc             /i exch def
+%psc             0 0 textascent extratextlinegaps add i mul add moveto
+%psc             extratextgaps 0 textlines dup length i sub 1 sub get ashow
+%psc         } for
+%psc         grestore
+%psc 
+%psc     } if
+%psc 
+%psc     grestore
+%psc 
+%psc     end
+%psc 
+%psc }
+%psc [/barcode] {null def} forall
+%psc bind def
+%psc /renmatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RENDERER renmatrix--
@@ -4806,150 +4806,150 @@ end
 % --REQUIRES preamble raiseerror processoptions--
 %%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2025102400 71333 70630
 %%BeginData:        144 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-begin
-/renmaximatrix {
-
-    20 dict begin
-
-    % Default options
-    /barcolor (unset) def
-    /backgroundcolor (unset) def
-    /bordercolor (unset) def
-    /inkspread 0.15 def
-    /showborder false def
-    /borderleft 0.0 def
-    /borderright 0.0 def
-    /bordertop 0.0 def
-    /borderbottom 0.0 def
-    /borderwidth 0.25 def
-
-    {def} forall
-    opt currentdict /opt undef //processoptions exec pop
-
-    /uk.co.terryburton.bwipp.global_ctx dup where {
-        exch get /ctx exch def
-        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-    } { pop } ifelse
-
-    % Set RGB or CMYK color, or some other color by name
-    /setanycolor {
-        /anycolor exch def
-        anycolor length 1 lt {
-            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
-        } if
-        anycolor 0 get 95 ne {  % RGB or CMYK
-            anycolor length dup 6 ne exch 8 ne and {
-                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
-            } if
-            mark
-            0 2 anycolor length 1 sub {
-                anycolor exch 2 getinterval 0 exch {
-                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
-                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F
-                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f
-                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
-                    } ifelse } ifelse } ifelse
-                    exch 16 mul add
-                } forall
-                255 div
-            } for
-            counttomark
-            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
-            exch 2 add -1 roll pop  % clear mark
-        } {  % Named color beginning "_..."
-            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
-            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
-            anycolor 2 copy known not {
-                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
-            } if
-            get mark exch aload pop counttomark 1 add -2 roll exch pop
-        } ifelse
-        { setcolorspace setcolor } stopped {
-            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
-        } if
-    } def
-
-    gsave
-
-    currentpoint translate
-
-    2.4945 dup scale  % from 1pt to 0.88mm
-
-    % Display the border and background
-    showborder {
-        /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
-        /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
-        /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
-        /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def
-    } {  % No need to extend background when there is no border
-        /tl [ borderleft neg inkspread add              29 bordertop add inkspread sub         ] def
-        /tr [ 30 borderright add inkspread sub          29 bordertop add inkspread sub         ] def
-        /bl [ borderleft neg inkspread add              borderbottom neg inkspread add         ] def
-        /br [ 30 borderright add inkspread sub          borderbottom neg inkspread add         ] def
-    } ifelse
-    backgroundcolor (unset) ne {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        backgroundcolor setanycolor fill
-        grestore
-    } if
-    showborder {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        bordercolor (unset) ne { bordercolor setanycolor } if
-        borderwidth inkspread 2 mul sub setlinewidth stroke
-        grestore
-    } if
-
-    barcolor (unset) ne { barcolor setanycolor } if
-
-    /g 0.06 inkspread add def
-
-    0.5 0.5774 translate
-
-    newpath
-    pixs {
-        dup
-        /x exch 30 mod def
-        /y exch 30 idiv def
-        y 2 mod 0 eq {x} {x 0.5 add} ifelse
-        32 y sub 0.8661 mul
-        moveto
-        0              0.5774 g       sub rmoveto
-       -0.5 g add     -0.2887 g 2 div add rlineto
-        0             -0.5774 g       add rlineto
-        0.5 g sub     -0.2887 g 2 div add rlineto
-        0.5 g sub      0.2887 g 2 div sub rlineto
-        0              0.5774 g       sub rlineto
-       -0.5 g add      0.2887 g 2 div sub rlineto
-        closepath
-    } forall
-    fill
-
-    % Plot the locator symbol
-    newpath 14 13.8576 0.5774 inkspread add 0 360 arc closepath
-            14 13.8576 1.3359 inkspread sub 360 0 arcn closepath fill
-    newpath 14 13.8576 2.1058 inkspread add 0 360 arc closepath
-            14 13.8576 2.8644 inkspread sub 360 0 arcn closepath fill
-    newpath 14 13.8576 3.6229 inkspread add 0 360 arc closepath
-            14 13.8576 4.3814 inkspread sub 360 0 arcn closepath fill
-
-    grestore
-
-    end
-
-}
-[/barcode] {null def} forall
-bind def
-/renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+%psc /renmaximatrix {
+%psc 
+%psc     20 dict begin
+%psc 
+%psc     % Default options
+%psc     /barcolor (unset) def
+%psc     /backgroundcolor (unset) def
+%psc     /bordercolor (unset) def
+%psc     /inkspread 0 def
+%psc     /showborder false def
+%psc     /borderleft 0.0 def
+%psc     /borderright 0.0 def
+%psc     /bordertop 0.0 def
+%psc     /borderbottom 0.0 def
+%psc     /borderwidth 0.25 def
+%psc 
+%psc     {def} forall
+%psc     opt currentdict /opt undef currentdict //processoptions exec pop
+%psc 
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /ctx exch def
+%psc         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
+%psc         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
+%psc         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+%psc     } { pop } ifelse
+%psc 
+%psc     % Set RGB or CMYK color, or some other color by name
+%psc     /setanycolor {
+%psc         /anycolor exch def
+%psc         anycolor length 1 lt {
+%psc             /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
+%psc         } if
+%psc         anycolor 0 get 95 ne {  % RGB or CMYK
+%psc             anycolor length dup 6 ne exch 8 ne and {
+%psc                 /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
+%psc             } if
+%psc             mark
+%psc             0 2 anycolor length 1 sub {
+%psc                 anycolor exch 2 getinterval 0 exch {
+%psc                     dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
+%psc                     dup dup 65 ge exch  70 le and {55 sub} {  % A-F
+%psc                     dup dup 97 ge exch 102 le and {87 sub} {  % a-f
+%psc                         cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
+%psc                     } ifelse } ifelse } ifelse
+%psc                     exch 16 mul add
+%psc                 } forall
+%psc                 255 div
+%psc             } for
+%psc             counttomark
+%psc             dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
+%psc             exch 2 add -1 roll pop  % clear mark
+%psc         } {  % Named color beginning "_..."
+%psc             /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
+%psc             /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
+%psc             anycolor 2 copy known not {
+%psc                 pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
+%psc             } if
+%psc             get mark exch aload pop counttomark 1 add -2 roll exch pop
+%psc         } ifelse
+%psc         { setcolorspace setcolor } stopped {
+%psc             /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
+%psc         } if
+%psc     } def
+%psc 
+%psc     gsave
+%psc 
+%psc     currentpoint translate
+%psc 
+%psc     2.4945 dup scale  % from 1pt to 0.88mm
+%psc 
+%psc     % Display the border and background
+%psc     showborder {
+%psc         /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
+%psc         /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
+%psc         /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
+%psc         /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def
+%psc     } {  % No need to extend background when there is no border
+%psc         /tl [ borderleft neg inkspread add              29 bordertop add inkspread sub         ] def
+%psc         /tr [ 30 borderright add inkspread sub          29 bordertop add inkspread sub         ] def
+%psc         /bl [ borderleft neg inkspread add              borderbottom neg inkspread add         ] def
+%psc         /br [ 30 borderright add inkspread sub          borderbottom neg inkspread add         ] def
+%psc     } ifelse
+%psc     backgroundcolor (unset) ne {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         backgroundcolor setanycolor fill
+%psc         grestore
+%psc     } if
+%psc     showborder {
+%psc         gsave
+%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc         bordercolor (unset) ne { bordercolor setanycolor } if
+%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
+%psc         grestore
+%psc     } if
+%psc 
+%psc     barcolor (unset) ne { barcolor setanycolor } if
+%psc 
+%psc     /g 0.06 inkspread add def
+%psc 
+%psc     0.5 0.5774 translate
+%psc 
+%psc     newpath
+%psc     pixs {
+%psc         dup
+%psc         /x exch 30 mod def
+%psc         /y exch 30 idiv def
+%psc         y 2 mod 0 eq {x} {x 0.5 add} ifelse
+%psc         32 y sub 0.8661 mul
+%psc         moveto
+%psc         0              0.5774 g       sub rmoveto
+%psc        -0.5 g add     -0.2887 g 2 div add rlineto
+%psc         0             -0.5774 g       add rlineto
+%psc         0.5 g sub     -0.2887 g 2 div add rlineto
+%psc         0.5 g sub      0.2887 g 2 div sub rlineto
+%psc         0              0.5774 g       sub rlineto
+%psc        -0.5 g add      0.2887 g 2 div sub rlineto
+%psc         closepath
+%psc     } forall
+%psc     fill
+%psc 
+%psc     % Plot the locator symbol
+%psc     newpath 14 13.8576 0.5774 inkspread add 0 360 arc closepath
+%psc             14 13.8576 1.3359 inkspread sub 360 0 arcn closepath fill
+%psc     newpath 14 13.8576 2.1058 inkspread add 0 360 arc closepath
+%psc             14 13.8576 2.8644 inkspread sub 360 0 arcn closepath fill
+%psc     newpath 14 13.8576 3.6229 inkspread add 0 360 arc closepath
+%psc             14 13.8576 4.3814 inkspread sub 360 0 arcn closepath fill
+%psc 
+%psc     grestore
+%psc 
+%psc     end
+%psc 
+%psc }
+%psc [/barcode] {null def} forall
+%psc bind def
+%psc /renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RENDERER renmaximatrix--
@@ -4962,28 +4962,28 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2025102400 67564 67372
 %%BeginData:        133 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ean5 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
-    /textfont /Helvetica def
+    /textfont (OCR-B) def
     /textsize 12.0 def
     /textxoffset 0.0 def
     /textyoffset null def  % realtype sentinal
     /height 0.7 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     textyoffset null eq {
@@ -5090,11 +5090,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ean5 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ean5 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ean5--
@@ -5107,28 +5107,28 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2025102400 66227 65962
 %%BeginData:        119 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ean2 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
-    /textfont /Helvetica def
+    /textfont (OCR-B) def
     /textsize 12.0 def
     /textxoffset 0.0 def
     /textyoffset null def  % sentinal realtype
     /height 0.7 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     textyoffset null eq {
@@ -5221,11 +5221,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ean2 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ean2 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ean2--
@@ -5238,24 +5238,24 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2025102400 86032 82255
 %%BeginData:        208 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /ean2 dup /uk.co.terryburton.bwipp findresource put
-dup /ean5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean2 dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ean13 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
-    /textfont /Helvetica def
+    /textfont (OCR-B) def
     /textsize 12.0 def
     /textxoffset -11.0 def
     /textyoffset -4.0 def
@@ -5266,7 +5266,7 @@ begin
     /addontextxoffset null def  % realtype sentinal
     /addontextyoffset null def  % realtype sentinal
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /ean13 //loadctx exec
@@ -5441,11 +5441,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ean13 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ean13 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ean13--
@@ -5458,24 +5458,24 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2025102400 83875 80340
 %%BeginData:        193 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /ean2 dup /uk.co.terryburton.bwipp findresource put
-dup /ean5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean2 dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ean8 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def              % Enable/disable text
-    /textfont /Helvetica def
+    /textfont (OCR-B) def
     /textsize 12.0 def
     /textxoffset 4.0 def
     /textyoffset -4.0 def
@@ -5487,7 +5487,7 @@ begin
     /addontextxoffset null def  % realtype sentinal
     /addontextyoffset null def  % realtype sentinal
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /ean8 //loadctx exec
@@ -5646,11 +5646,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ean8 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ean8 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ean8--
@@ -5663,24 +5663,24 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp upca 0.0 2025102400 91001 87086
 %%BeginData:        241 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /ean2 dup /uk.co.terryburton.bwipp findresource put
-dup /ean5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean2 dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /upca {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
-    /textfont /Helvetica def
+    /textfont (OCR-B) def
     /textsize 12.0 def
     /textxoffset -9.0 def
     /textyoffset -4.0 def
@@ -5691,7 +5691,7 @@ begin
     /addontextxoffset null def  % sentinal realtype
     /addontextyoffset null def  % sentinal realtype
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /upca //loadctx exec
@@ -5899,11 +5899,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/upca dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /upca dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER upca--
@@ -5916,24 +5916,24 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp upce 0.0 2025102400 95630 91526
 %%BeginData:        280 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /ean2 dup /uk.co.terryburton.bwipp findresource put
-dup /ean5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean2 dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /upce {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def               % Enable/disable text
-    /textfont /Helvetica def
+    /textfont (OCR-B) def
     /textsize 12.0 def
     /textxoffset -9.0 def
     /textyoffset -4.0 def
@@ -5944,7 +5944,7 @@ begin
     /addontextxoffset null def  % sentinal realtype
     /addontextyoffset null def  % sentinal realtype
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /upce //loadctx exec
@@ -6191,11 +6191,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/upce dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /upce dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER upce--
@@ -6208,29 +6208,29 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2025102400 94582 93749
 %%BeginData:        238 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /ean13 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean13 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /isbn {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def  % Enable/disable ISBN text
-    /isbntextfont /Courier def
-    /isbntextsize 9.0 def
+    /isbntextfont /OCR-A def
+    /isbntextsize 8.0 def
     /isbntextxoffset null def  % sentinal realtype
     /isbntextyoffset null def  % sentinal realtype
     /height 1.0 def
     /addongap 12.0 def
     /legacy false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Split off the addon
@@ -6441,11 +6441,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/isbn dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /isbn dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER isbn--
@@ -6458,29 +6458,29 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2025102400 91154 90158
 %%BeginData:        217 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /ean13 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean13 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ismn {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
-    /ismntextfont /Courier def
-    /ismntextsize 9.0 def
+    /ismntextfont /OCR-A def
+    /ismntextsize 8.0 def
     /ismntextxoffset null def  % sentinal realtype
     /ismntextyoffset null def  % sentinal realtype
     /height 1.0 def
     /addongap 12.0 def
     /legacy false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Split off the addon
@@ -6670,11 +6670,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ismn dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ismn dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ismn--
@@ -6687,28 +6687,28 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp issn 0.0 2025102400 82498 81858
 %%BeginData:        160 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /ean13 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean13 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /issn {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
-    /issntextfont /Courier def
-    /issntextsize 9.0 def
+    /issntextfont /OCR-A def
+    /issntextsize 8.0 def
     /issntextxoffset null def  % sentinal realtype
     /issntextyoffset null def  % sentinal realtype
     /height 1.0 def
     /addongap 12.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /issntxt exch def
 
     % Split off the ISSN
@@ -6842,11 +6842,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/issn dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /issn dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER issn--
@@ -6859,22 +6859,22 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp mands 0.0 2025102400 72631 72278
 %%BeginData:         73 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /ean8 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean8 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /mands {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /barlen barcode length def
@@ -6927,11 +6927,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/mands dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /mands dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER mands--
@@ -6944,26 +6944,26 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp code128 0.0 2025102400 171363 189627
 %%BeginData:        590 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code128 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
     /raw false def
     /newencoder false def
@@ -6972,7 +6972,7 @@ begin
     /suppressc false def          % Suppress code set C
     /unlatchextbeforec false def  % Suppress extended ASCII with code set C
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /code128 //loadctx exec
@@ -7529,11 +7529,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code128 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code128 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code128--
@@ -7546,26 +7546,26 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2025102400 84095 80374
 %%BeginData:        102 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code128 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code128 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1-128 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 0.5 def
     /linkagea false def
     /linkagec false def
@@ -7573,7 +7573,7 @@ begin
     /dontlint false def
     /lintreqs false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     linkagea linkagec and {
@@ -7643,11 +7643,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1-128 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1-128 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1-128--
@@ -7660,27 +7660,27 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2025102400 72518 75766
 %%BeginData:         92 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code128 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code128 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ean14 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Strip spaces from the given data
@@ -7747,11 +7747,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ean14 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ean14 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ean14--
@@ -7764,27 +7764,27 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2025102400 72530 75773
 %%BeginData:         92 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code128 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code128 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /sscc18 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Strip spaces from the given data
@@ -7851,11 +7851,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/sscc18 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /sscc18 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER sscc18--
@@ -7868,31 +7868,31 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp code39 0.0 2025102400 72969 72645
 %%BeginData:        141 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code39 {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def
     /validatecheck false def
     /includetext false def
     /includecheckintext false def
     /hidestars false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -8004,11 +8004,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code39 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code39 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code39--
@@ -8021,26 +8021,26 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2025102400 72240 71996
 %%BeginData:         99 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code39 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code39 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code39ext {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /parse false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /code39ext //loadctx exec
@@ -8115,11 +8115,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code39ext dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code39ext dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code39ext--
@@ -8132,27 +8132,27 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp code32 0.0 2025102400 67769 67754
 %%BeginData:         87 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code39 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code39 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code32 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def  % Enable/disable code32 text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /textxoffset 0.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -8214,11 +8214,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code32 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code32 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code32--
@@ -8231,28 +8231,28 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2025102400 67616 67526
 %%BeginData:         87 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code39 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code39 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /pzn {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def  % Enable/disable code32 text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /textxoffset 0.0 def
     /height 1.0 def
     /pzn8 false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -8313,11 +8313,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/pzn dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /pzn dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER pzn--
@@ -8330,31 +8330,31 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp code93 0.0 2025102400 69311 72665
 %%BeginData:        134 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code93 {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def  % Enable/disable checkdigit
     /includetext false def   % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /code93 //loadctx exec
@@ -8459,11 +8459,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code93 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code93 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code93--
@@ -8476,26 +8476,26 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2025102400 73196 72924
 %%BeginData:        107 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code93 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code93 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code93ext {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /parse false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /code93ext //loadctx exec
@@ -8578,11 +8578,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code93ext dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code93ext dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code93ext--
@@ -8595,29 +8595,29 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2025102400 71021 70698
 %%BeginData:        147 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /interleaved2of5 {
 
     20 dict begin         % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def         % Enable/disable checkdigit
     /includetext false def          % Enable/disable text
     /includecheckintext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /interleaved2of5 //loadctx exec
@@ -8737,11 +8737,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/interleaved2of5 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /interleaved2of5 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER interleaved2of5--
@@ -8754,22 +8754,22 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2025102400 70300 70284
 %%BeginData:         97 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /interleaved2of5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /interleaved2of5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /itf14 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def
     /includecheckintext true def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
     /textyoffset -3.5 def
@@ -8778,10 +8778,10 @@ begin
     /borderwidth 4.0 def
     /borderleft 10.0 def
     /borderright 10.0 def
-    /bordertop -0.2 def     % Ensure border/bearer touches bars with default inkspread
-    /borderbottom -0.2 def
+    /bordertop -0.55 def     % Ensure border/bearer touches bars with default inkspread
+    /borderbottom -0.55 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Strip spaces from the given data
@@ -8846,11 +8846,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/itf14 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /itf14 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER itf14--
@@ -8863,27 +8863,27 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2025102400 66534 66518
 %%BeginData:         78 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /interleaved2of5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /interleaved2of5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /identcode {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -8936,11 +8936,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/identcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /identcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER identcode--
@@ -8953,27 +8953,27 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2025102400 66526 66514
 %%BeginData:         78 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /interleaved2of5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /interleaved2of5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /leitcode {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -9026,11 +9026,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/leitcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /leitcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER leitcode--
@@ -9043,27 +9043,27 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2025102400 117572 126647
 %%BeginData:        455 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-20 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 20 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databaromni {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 33.0 72 div def
     /linkage false def
     /format (omni) def
     /barxmult 33 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode length 17 ne barcode length 18 ne and {
@@ -9493,11 +9493,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databaromni dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databaromni dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databaromni--
@@ -9510,21 +9510,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2025102400 67838 71421
 %%BeginData:         66 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /databaromni dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databaromni dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarstacked {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -9571,11 +9571,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarstacked dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarstacked dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarstacked--
@@ -9588,21 +9588,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2025102400 67986 71445
 %%BeginData:         66 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /databaromni dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databaromni dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarstackedomni {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -9649,11 +9649,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarstackedomni dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarstackedomni dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarstackedomni--
@@ -9666,21 +9666,21 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2025102400 67864 71437
 %%BeginData:         66 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /databaromni dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databaromni dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databartruncated {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -9727,11 +9727,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databartruncated dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databartruncated dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databartruncated--
@@ -9744,24 +9744,24 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2025102400 91664 90939
 %%BeginData:        285 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-20 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 20 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarlimited {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 10.0 72 div def
     /linkage false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /databarlimited //loadctx exec
@@ -10024,11 +10024,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarlimited dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarlimited dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarlimited--
@@ -10041,21 +10041,21 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2025102400 248479 246893
 %%BeginData:        864 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarexpanded {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
@@ -10066,7 +10066,7 @@ begin
     /linkage false def
     /barxmult 34 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /databarexpanded //loadctx exec
@@ -10900,11 +10900,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarexpanded dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarexpanded dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarexpanded--
@@ -10917,21 +10917,21 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2025102400 76411 69377
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /databarexpanded dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databarexpanded dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarexpandedstacked {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with databarexpanded with format=expandedstacked
@@ -10948,11 +10948,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarexpandedstacked dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarexpandedstacked dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarexpandedstacked--
@@ -10965,22 +10965,22 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2025102400 83651 86802
 %%BeginData:         89 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /databarexpandedstacked dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databarexpandedstacked dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1northamericancoupon {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def  % Enable/disable coupon text
-    /coupontextfont /Helvetica def
+    /coupontextfont (OCR-B) def
     /coupontextsize 9.0 def
     /coupontextxoffset null def
     /coupontextyoffset null def
@@ -10988,7 +10988,7 @@ begin
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode /ai //gs1process exec
@@ -11049,11 +11049,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1northamericancoupon dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1northamericancoupon dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1northamericancoupon--
@@ -11066,24 +11066,24 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2025102400 55312 54856
 %%BeginData:         79 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /pharmacode {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 8.0 2.835 mul 72 div def
     /nwidth 0.5 2.835 mul def
     /wwidth 1.5 2.835 mul def
     /swidth 1.0 2.835 mul def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -11140,11 +11140,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/pharmacode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /pharmacode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER pharmacode--
@@ -11157,22 +11157,22 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2025102400 56575 56250
 %%BeginData:         87 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /pharmacode2 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def      % Enable/disable text
     /height 4.0 def             % Height of short bars in millimetres
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate the input
@@ -11239,11 +11239,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/pharmacode2 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /pharmacode2 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER pharmacode2--
@@ -11256,31 +11256,31 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2025102400 73470 73117
 %%BeginData:        154 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code2of5 {
 
     20 dict begin                 % Confine variable to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def
     /validatecheck false def
     /includetext false def   % Enable/disable text
     /includecheckintext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
     /version (industrial) def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -11405,11 +11405,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code2of5 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code2of5 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code2of5--
@@ -11422,21 +11422,21 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2025102400 60390 60356
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /industrial2of5 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with code2of5 with version=industrial
@@ -11453,11 +11453,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/industrial2of5 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /industrial2of5 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER industrial2of5--
@@ -11470,21 +11470,21 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2025102400 60360 60332
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /iata2of5 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with code2of5 with version=iata
@@ -11501,11 +11501,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/iata2of5 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /iata2of5 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER iata2of5--
@@ -11518,21 +11518,21 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2025102400 60370 60340
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /matrix2of5 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with code2of5 with version=matrix
@@ -11549,11 +11549,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/matrix2of5 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /matrix2of5 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER matrix2of5--
@@ -11566,21 +11566,21 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2025102400 60360 60332
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /coop2of5 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with code2of5 with version=coop
@@ -11597,11 +11597,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/coop2of5 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /coop2of5 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER coop2of5--
@@ -11614,21 +11614,21 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2025102400 60385 60352
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code2of5 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /datalogic2of5 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with code2of5 with version=datalogic
@@ -11645,11 +11645,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/datalogic2of5 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /datalogic2of5 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER datalogic2of5--
@@ -11662,30 +11662,30 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp code11 0.0 2025102400 74778 74558
 %%BeginData:        158 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code11 {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def
     /validatecheck false def
     /includetext false def
     /includecheckintext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -11815,11 +11815,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code11 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code11 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code11--
@@ -11832,19 +11832,19 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2025102400 75837 75539
 %%BeginData:        192 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /bc412 {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def
     /validatecheck false def
@@ -11852,12 +11852,12 @@ begin
     /includecheckintext false def
     /includestartstop false def
     /semi false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -12019,11 +12019,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/bc412 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /bc412 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER bc412--
@@ -12036,31 +12036,31 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2025102400 75951 75593
 %%BeginData:        156 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /rationalizedCodabar {
 
     20 dict begin                    % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /altstartstop false def
     /includecheck false def     % Enable/disable checkdigit
     /validatecheck false def
     /includetext false def      % Enable/disable text
     /includecheckintext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode length 2 lt barcode length 3 lt validatecheck and or {
@@ -12187,11 +12187,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/rationalizedCodabar dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /rationalizedCodabar dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER rationalizedCodabar--
@@ -12204,23 +12204,23 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2025102400 110162 110073
 %%BeginData:        347 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /onecode {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 0.15 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /onecode //loadctx exec
@@ -12533,7 +12533,7 @@ begin
     /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
     /txt txt
     /textxalign (left)
-    /textfont /Helvetica
+    /textfont (OCR-B)
     /textyoffset 1.0
     /textxoffset -0.3
     /opt options
@@ -12546,11 +12546,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/onecode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /onecode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER onecode--
@@ -12563,29 +12563,29 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2025102400 70790 70477
 %%BeginData:        136 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /postnet {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /validatecheck false def
     /includecheckintext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 0.125 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /postnet //loadctx exec
@@ -12694,11 +12694,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/postnet dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /postnet dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER postnet--
@@ -12711,29 +12711,29 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp planet 0.0 2025102400 70634 70325
 %%BeginData:        137 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /planet {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /validatecheck false def
     /includecheckintext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 0.125 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /planet //loadctx exec
@@ -12843,11 +12843,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/planet dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /planet dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER planet--
@@ -12860,29 +12860,29 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2025102400 71895 71613
 %%BeginData:        145 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /royalmail {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /validatecheck false def
     /includecheckintext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 0.175 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -13000,11 +13000,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/royalmail dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /royalmail dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER royalmail--
@@ -13017,28 +13017,28 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2025102400 87312 86909
 %%BeginData:        235 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /auspost {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def         % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 0.175 def
     /custinfoenc (character) def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     custinfoenc (character) ne custinfoenc (numeric) ne and {
@@ -13247,11 +13247,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/auspost dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /auspost dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER auspost--
@@ -13264,27 +13264,27 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp kix 0.0 2025102400 67135 66800
 %%BeginData:        111 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /kix {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 0.175 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -13370,11 +13370,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/kix dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /kix dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER kix--
@@ -13387,28 +13387,28 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2025102400 74182 73934
 %%BeginData:        176 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /japanpost {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def          % Enable/disable text
     /includecheckintext false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 0.175 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -13558,11 +13558,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/japanpost dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /japanpost dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER japanpost--
@@ -13575,31 +13575,31 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp msi 0.0 2025102400 79951 79596
 %%BeginData:        168 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /msi {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includecheck false def  % Enable/disable checkdigit
     /includetext false def   % Enable/disable text
     /includecheckintext false def
     /checktype (unset) def
     /badmod11 false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     checktype (unset) ne includecheck not and {
@@ -13738,11 +13738,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/msi dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /msi dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER msi--
@@ -13755,30 +13755,30 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2025102400 73519 73241
 %%BeginData:        146 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /plessey {
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
     /validatecheck false def
     /includecheckintext false def
     /unidirectional false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -13896,11 +13896,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/plessey dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /plessey dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER plessey--
@@ -13913,30 +13913,30 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2025102400 74611 77759
 %%BeginData:        173 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /telepen {
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /numeric false def
     /dontdraw false def
     /includetext false def    % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
     /parse false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /telepen //loadctx exec
@@ -14081,11 +14081,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/telepen dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /telepen dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER telepen--
@@ -14098,21 +14098,21 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2025102400 63223 63165
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /telepen dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /telepen dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /telepennumeric {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with telepen with numeric=true
@@ -14129,11 +14129,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/telepennumeric dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /telepennumeric dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER telepennumeric--
@@ -14146,26 +14146,26 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2025102400 116199 118646
 %%BeginData:        395 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /posicode {
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def    % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 1.0 def
     /encoding (auto) def
     /version (a) def
@@ -14174,7 +14174,7 @@ begin
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /posicode //loadctx exec
@@ -14536,11 +14536,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/posicode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /posicode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER posicode--
@@ -14553,20 +14553,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2025102400 140762 149850
 %%BeginData:        538 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /codablockf {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /rows -1 def
     /columns 8 def
@@ -14575,7 +14575,7 @@ begin
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     columns 4 lt columns 62 gt or {
@@ -15086,11 +15086,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/codablockf dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /codablockf dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER codablockf--
@@ -15103,20 +15103,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2025102400 164035 183083
 %%BeginData:        740 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code16k {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /sam -1 def
     /rows 0 def
@@ -15126,7 +15126,7 @@ begin
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     rows 0 ne rows 2 lt rows 16 gt or and {
@@ -15838,11 +15838,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code16k dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code16k dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code16k--
@@ -15855,20 +15855,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp code49 0.0 2025102400 265853 295280
 %%BeginData:       1096 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /code49 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /sam -1 def
     /append false def
@@ -15878,7 +15878,7 @@ begin
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     rows 0 ne rows 2 lt rows 8 gt or and {
@@ -16946,11 +16946,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/code49 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /code49 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER code49--
@@ -16963,258 +16963,258 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2025102400 133256 132135
 %%BeginData:        252 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
-/channelcode {
-
-    20 dict begin                 % Confine variables to local scope
-
-    /ctx null def
-    /dontdraw false def
-    /shortfinder false def
-    /includetext false def
-    /includecheck false def
-    /height 1.0 def
-
-    //processoptions exec /options exch def
-    /barcode exch def
-
-    /channelcode //loadctx exec
-
-    % Validate the input
-    barcode length 2 lt barcode length 7 gt or {
-        /bwipp.channelcodeBadLength (Channel Code must be 2 to 7 digits) //raiseerror exec
-    } if
-    barcode {
-        dup 48 lt exch 57 gt or {
-            /bwipp.channelcodeBadCharacter (Channel Code must contain only digits) //raiseerror exec
-        } if
-    } forall
-    barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {
-        /bwipp.channelcodeTooBig (The Channel Code value is too big for the number of channels) //raiseerror exec
-    } if
-
-    % Tail-call optimisation FTW!
-    /loops1 { /s2max s1max 1 add s1 sub def  /b1 1 def
-              s1 1 eq {nextb1} {loopb1} ifelse                             } def
-    /loopb1 { /b2max b1max 1 add b1 sub def  /s2 1 def  loops2             } def
-    /loops2 { /s3max s2max 1 add s2 sub def  /b2 1 def
-              s1 b1 add s2 add 3 eq {nextb2} {loopb2} ifelse               } def
-    /loopb2 { /b3max b2max 1 add b2 sub def  /s3 1 def  loops3             } def
-    /loops3 { /s4max s3max 1 add s3 sub def  /b3 1 def
-              b1 s2 add b2 add s3 add 4 eq {nextb3} {loopb3} ifelse        } def
-    /loopb3 { /b4max b3max 1 add b3 sub def  /s4 1 def  loops4             } def
-    /loops4 { /s5max s4max 1 add s4 sub def  /b4 1 def
-              b2 s3 add b3 add s4 add 4 eq {nextb4} {loopb4} ifelse        } def
-    /loopb4 { /b5max b4max 1 add b4 sub def  /s5 1 def  loops5             } def
-    /loops5 { /s6max s5max 1 add s5 sub def  /b5 1 def
-              b3 s4 add b4 add s5 add 4 eq {nextb5} {loopb5} ifelse        } def
-    /loopb5 { /b6max b5max 1 add b5 sub def  /s6 1 def  loops6             } def
-    /loops6 { /s7max s6max 1 add s6 sub def  /b6 1 def
-              b4 s5 add b5 add s6 add 4 eq {nextb6} {loopb6} ifelse        } def
-    /loopb6 { /b7max b6max 1 add b6 sub def  /s7 1 def  loops7             } def
-    /loops7 { /s8 s7max 1 add s7 sub def     /b7 1 def
-              b5 s6 add b6 add s7 add 4 eq {nextb7} {loopb7} ifelse        } def
-    /loopb7 { /b8 b7max 1 add b7 sub def
-              b6 s7 add b7 add s8 add b8 add 5 eq {nextb7} {chkchr} ifelse } def
-    /chkchr {
-        value target eq {
-            [s1 b1 s2 b2 s3 b3 s4 b4 s5 b5 s6 b6 s7 b7 s8 b8] exit
-        } if
-        /value value 1 add def
-        nextb7
-    } def
-    /nextb7 { /b7 b7 1 add def  b7 b7max le {loopb7} {nexts7} ifelse } def
-    /nexts7 { /s7 s7 1 add def  s7 s7max le {loops7} {nextb6} ifelse } def
-    /nextb6 { /b6 b6 1 add def  b6 b6max le {loopb6} {nexts6} ifelse } def
-    /nexts6 { /s6 s6 1 add def  s6 s6max le {loops6} {nextb5} ifelse } def
-    /nextb5 { /b5 b5 1 add def  b5 b5max le {loopb5} {nexts5} ifelse } def
-    /nexts5 { /s5 s5 1 add def  s5 s5max le {loops5} {nextb4} ifelse } def
-    /nextb4 { /b4 b4 1 add def  b4 b4max le {loopb4} {nexts4} ifelse } def
-    /nexts4 { /s4 s4 1 add def  s4 s4max le {loops4} {nextb3} ifelse } def
-    /nextb3 { /b3 b3 1 add def  b3 b3max le {loopb3} {nexts3} ifelse } def
-    /nexts3 { /s3 s3 1 add def  s3 s3max le {loops3} {nextb2} ifelse } def
-    /nextb2 { /b2 b2 1 add def  b2 b2max le {loopb2} {nexts2} ifelse } def
-    /nexts2 { /s2 s2 1 add def  s2 s2max le {loops2} {nextb1} ifelse } def
-    /nextb1 { /b1 b1 1 add def  b1 b1max le {loopb1} {nexts1} ifelse } def
-    /nexts1 { /s1 s1 1 add def  s1 s1max le {loops1} if              } def
-
-{
-    /memo [  % Accelerate generation of bar patterns
-        [  % CH3
-            [       0  [1 1 1 1 1 2 1 2]  [1 1 1 1 1 1 1 3]  [1 1 1 1 1 3 2]  [1 1 1 1 1 3 3] ]
-        ]
-        [  % CH4
-            [       0  [1 1 1 1 2 1 1 3]  [1 1 1 1 1 1 1 4]  [1 1 1 1 4 3 3]  [1 1 1 1 4 4 4] ]
-        ]
-        [  % CH5
-            [       0  [1 1 1 2 1 1 2 3]  [1 1 1 1 1 1 1 5]  [1 1 1 5 4 4 4]  [1 1 1 5 5 5 5] ]
-        ]
-        [  % CH6
-            [       0  [1 1 2 1 1 2 1 4]  [1 1 1 1 1 1 1 6]  [1 1 6 5 5 5 4]  [1 1 6 6 6 6 6] ]
-        ]
-        [  % CH7
-            [       0  [1 2 1 1 2 1 1 5]  [1 1 1 1 1 1 1 7]  [1 7 6 6 6 5 5]  [1 7 7 7 7 7 7] ]
-            [  150000  [1 3 1 1 2 4 1 1]  [1 1 3 1 2 3 2 1]  [1 7 5 5 5 4 1]  [1 7 7 5 5 4 2] ]
-            [  300000  [1 1 4 2 1 1 1 3]  [1 2 4 1 1 1 2 2]  [1 7 7 4 3 3 3]  [1 7 6 3 3 3 3] ]
-            [  450000  [1 1 4 1 1 4 1 1]  [1 3 2 1 2 1 2 2]  [1 7 7 4 4 4 1]  [1 7 5 4 4 3 3] ]
-        ]
-        [  % CH8
-            [       0  [2 1 1 2 1 1 2 5]  [1 1 1 1 1 1 1 8]  [8 7 7 7 6 6 6]  [8 8 8 8 8 8 8] ]
-            [  150000  [2 1 1 2 1 1 5 2]  [1 1 2 1 5 2 1 2]  [8 7 7 7 6 6 6]  [8 8 8 7 7 3 2] ]
-            [  300000  [2 1 1 4 2 2 2 1]  [1 1 4 2 1 2 1 3]  [8 7 7 7 4 3 2]  [8 8 8 5 4 4 3] ]
-            [  450000  [2 2 2 1 1 3 1 3]  [1 1 2 1 1 2 4 3]  [8 7 6 5 5 5 3]  [8 8 8 7 7 7 6] ]
-            [  600000  [2 3 1 1 4 2 1 1]  [1 1 3 1 3 1 2 3]  [8 7 5 5 5 2 1]  [8 8 8 6 6 4 4] ]
-            [  750000  [2 1 3 1 2 3 2 1]  [1 2 1 1 3 4 1 2]  [8 7 7 5 5 4 2]  [8 8 7 7 7 5 2] ]
-            [  900000  [2 2 1 4 1 2 2 1]  [1 2 1 2 1 5 1 2]  [8 7 6 6 3 3 2]  [8 8 7 7 6 6 2] ]
-            [ 1050000  [2 4 1 1 1 2 2 2]  [1 2 1 2 1 3 1 4]  [8 7 4 4 4 4 3]  [8 8 7 7 6 6 4] ]
-            [ 1200000  [2 2 1 5 2 1 1 1]  [1 3 1 3 2 1 1 3]  [8 7 6 6 2 1 1]  [8 8 6 6 4 3 3] ]
-            [ 1350000  [2 2 1 3 3 1 1 2]  [1 4 1 2 1 1 4 1]  [8 7 6 6 4 2 2]  [8 8 5 5 4 4 4] ]
-            [ 1500000  [3 1 2 2 2 1 1 3]  [1 1 1 1 2 2 4 3]  [8 6 6 5 4 3 3]  [8 8 8 8 8 7 6] ]
-            [ 1650000  [3 2 1 2 3 1 2 1]  [1 1 1 1 3 2 4 2]  [8 6 5 5 4 2 2]  [8 8 8 8 8 6 5] ]
-            [ 1800000  [3 1 1 3 2 3 1 1]  [1 2 1 1 3 4 2 1]  [8 6 6 6 4 3 1]  [8 8 7 7 7 5 2] ]
-            [ 1950000  [3 2 1 2 1 2 2 2]  [1 2 4 1 2 2 1 2]  [8 6 5 5 4 4 3]  [8 8 7 4 4 3 2] ]
-            [ 2100000  [3 1 2 1 4 2 1 1]  [1 4 1 2 1 1 2 3]  [8 6 6 5 5 2 1]  [8 8 5 5 4 4 4] ]
-            [ 2250000  [4 1 1 4 1 1 2 1]  [1 1 4 2 1 1 1 4]  [8 5 5 5 2 2 2]  [8 8 8 5 4 4 4] ]
-            [ 2400000  [4 3 1 2 1 2 1 1]  [1 2 4 2 2 2 1 1]  [8 5 3 3 2 2 1]  [8 8 7 4 3 2 1] ]
-            [ 2550000  [5 1 1 1 1 1 3 2]  [1 2 2 4 3 1 1 1]  [8 4 4 4 4 4 4]  [8 8 7 6 3 1 1] ]
-            [ 2700000  [1 1 3 6 1 1 1 1]  [2 1 1 2 1 1 6 1]  [8 8 8 6 1 1 1]  [8 7 7 7 6 6 6] ]
-            [ 2850000  [1 1 1 2 2 3 2 3]  [2 1 3 3 2 1 1 2]  [8 8 8 8 7 6 4]  [8 7 7 5 3 2 2] ]
-            [ 3000000  [1 2 3 3 3 1 1 1]  [2 1 1 1 5 1 2 2]  [8 8 7 5 3 1 1]  [8 7 7 7 7 3 3] ]
-            [ 3150000  [1 3 1 2 2 2 3 1]  [2 1 1 3 2 1 3 2]  [8 8 6 6 5 4 3]  [8 7 7 7 5 4 4] ]
-            [ 3300000  [1 5 1 1 3 1 1 2]  [2 1 1 4 3 2 1 1]  [8 8 4 4 4 2 2]  [8 7 7 7 4 2 1] ]
-            [ 3450000  [1 1 2 2 2 5 1 1]  [2 2 2 2 3 1 1 2]  [8 8 8 7 6 5 1]  [8 7 6 5 4 2 2] ]
-            [ 3600000  [1 2 1 1 3 4 2 1]  [2 2 3 1 1 1 2 3]  [8 8 7 7 7 5 2]  [8 7 6 4 4 4 4] ]
-            [ 3750000  [1 1 2 1 1 5 3 1]  [2 3 1 1 4 1 2 1]  [8 8 8 7 7 7 3]  [8 7 5 5 5 2 2] ]
-            [ 3900000  [1 3 1 2 4 2 1 1]  [2 3 3 1 1 1 2 2]  [8 8 6 6 5 2 1]  [8 7 5 3 3 3 3] ]
-            [ 4050000  [1 3 1 2 3 1 2 2]  [2 6 2 1 1 1 1 1]  [8 8 6 6 5 3 3]  [8 7 2 1 1 1 1] ]
-            [ 4200000  [2 1 1 2 1 2 2 4]  [2 1 3 1 3 3 1 1]  [8 7 7 7 6 6 5]  [8 7 7 5 5 3 1] ]
-            [ 4350000  [2 2 1 4 1 2 2 1]  [2 1 4 1 3 1 2 1]  [8 7 6 6 3 3 2]  [8 7 7 4 4 2 2] ]
-            [ 4500000  [2 1 1 1 2 1 3 4]  [2 2 2 1 2 1 3 2]  [8 7 7 7 7 6 6]  [8 7 6 5 5 4 4] ]
-            [ 4650000  [2 4 2 1 2 2 1 1]  [2 2 2 1 2 1 2 3]  [8 7 4 3 3 2 1]  [8 7 6 5 5 4 4] ]
-            [ 4800000  [2 3 2 1 1 2 2 2]  [2 4 1 2 1 1 3 1]  [8 7 5 4 4 4 3]  [8 7 4 4 3 3 3] ]
-            [ 4950000  [3 2 2 1 2 1 1 3]  [2 1 1 2 1 1 1 6]  [8 6 5 4 4 3 3]  [8 7 7 7 6 6 6] ]
-            [ 5100000  [3 2 1 1 1 3 3 1]  [2 2 3 2 1 1 3 1]  [8 6 5 5 5 5 3]  [8 7 6 4 3 3 3] ]
-            [ 5250000  [4 1 2 1 2 2 1 2]  [2 1 4 1 2 1 1 3]  [8 5 5 4 4 3 2]  [8 7 7 4 4 3 3] ]
-            [ 5400000  [5 1 2 1 2 1 1 2]  [2 2 1 1 4 1 3 1]  [8 4 4 3 3 2 2]  [8 7 6 6 6 3 3] ]
-            [ 5550000  [1 1 4 4 1 2 1 1]  [3 1 2 1 1 3 2 2]  [8 8 8 5 2 2 1]  [8 6 6 5 5 5 3] ]
-            [ 5700000  [1 2 1 1 2 1 3 4]  [3 1 4 1 2 2 1 1]  [8 8 7 7 7 6 6]  [8 6 6 3 3 2 1] ]
-            [ 5850000  [1 1 3 3 2 2 2 1]  [3 2 1 1 2 1 4 1]  [8 8 8 6 4 3 2]  [8 6 5 5 5 4 4] ]
-            [ 6000000  [1 4 3 1 1 2 1 2]  [3 2 2 1 2 2 1 2]  [8 8 5 3 3 3 2]  [8 6 5 4 4 3 2] ]
-            [ 6150000  [2 1 1 4 1 2 1 3]  [3 1 1 2 1 2 1 4]  [8 7 7 7 4 4 3]  [8 6 6 6 5 5 4] ]
-            [ 6300000  [2 2 2 1 3 2 2 1]  [3 1 4 1 3 1 1 1]  [8 7 6 5 5 3 2]  [8 6 6 3 3 1 1] ]
-            [ 6450000  [2 5 1 3 1 1 1 1]  [3 2 1 1 2 3 1 2]  [8 7 3 3 1 1 1]  [8 6 5 5 5 4 2] ]
-            [ 6600000  [3 2 3 1 2 1 2 1]  [3 1 3 2 2 1 1 2]  [8 6 5 3 3 2 2]  [8 6 6 4 3 2 2] ]
-            [ 6750000  [4 1 2 2 1 1 3 1]  [3 2 1 3 1 1 3 1]  [8 5 5 4 3 3 3]  [8 6 5 5 3 3 3] ]
-            [ 6900000  [1 2 1 4 2 2 2 1]  [4 1 1 2 2 2 2 1]  [8 8 7 7 4 3 2]  [8 5 5 5 4 3 2] ]
-            [ 7050000  [1 2 5 2 1 2 1 1]  [4 2 1 3 2 1 1 1]  [8 8 7 3 2 2 1]  [8 5 4 4 2 1 1] ]
-            [ 7200000  [2 2 2 1 3 1 3 1]  [4 1 3 1 3 1 1 1]  [8 7 6 5 5 3 3]  [8 5 5 3 3 1 1] ]
-            [ 7350000  [3 1 4 2 1 1 1 2]  [4 2 2 1 1 1 2 2]  [8 6 6 3 2 2 2]  [8 5 4 3 3 3 3] ]
-            [ 7500000  [1 1 1 4 1 1 3 3]  [5 2 1 2 2 1 1 1]  [8 8 8 8 5 5 5]  [8 4 3 3 2 1 1] ]
-            [ 7650000  [5 2 1 2 1 2 1 1]  [5 2 2 1 1 2 1 1]  [8 4 3 3 2 2 1]  [8 4 3 2 2 2 1] ]
-        ]
-    ] def
-} ctxdef
-
-    /encode {
-        /chan exch def
-        /target exch def
-
-        % Lookup memoized starting value close to the target
-        memo chan 3 sub get {
-            /m exch def
-            m 0 get target gt {exit} if
-            /mv    m 0 get def
-            /mb    m 1 get def
-            /ms    m 2 get def
-            /mbmax m 3 get def
-            /msmax m 4 get def
-        } forall
-        /value mv def
-        mb    aload pop [/b8 /b7 /b6 /b5 /b4 /b3 /b2 /b1] {exch def} forall
-        ms    aload pop [/s8 /s7 /s6 /s5 /s4 /s3 /s2 /s1] {exch def} forall
-        mbmax aload pop [/b7max /b6max /b5max /b4max /b3max /b2max /b1max] {exch def} forall
-        msmax aload pop [/s7max /s6max /s5max /s4max /s3max /s2max /s1max] {exch def} forall
-
-        1 {chkchr} repeat 8 chan sub 2 mul dup 16 exch sub getinterval
-
-    } def
-
-    /barlen barcode length def
-
-    % Determine finder
-    /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
-
-    % Encode the main data
-    /data barcode cvi barlen 1 add encode def
-
-    % Determine check data
-{
-    /mod23map [
-            [] []
-            [ 13 12  4  9  3  1 ]
-            [  8  2 12  3 18 16  4  1 ]
-            [ 11 16 17  8 20  4 10  2  5  1 ]
-            [  1  4 16 18  3 12  2  8  9 13  6  1 ]
-            [ 20 16 22 13 15 12  5  4 17  9 21  3  7  1 ]
-            [  2  6 18  8  1  3  9  4 12 13 16  2  6 18  8  1 ]
-    ] def
-} ctxdef
-    /check [] def
-    includecheck {
-        /mod23 mod23map barlen get def
-        0
-        0 1 data length 1 sub {
-            dup data exch get 1 sub exch mod23 exch get mul add
-        } for
-        23 mod 3 encode /check exch def
-    } if
-
-    % Construct the symbol
-    /sbs [
-        finder aload pop
-        data aload pop
-        check aload pop
-    ] def
-
-    % Create the human readable text
-    /txt barlen array def
-    0 1 barlen 1 sub {
-        /i exch def
-        txt i [barcode i 1 getinterval 0 0 () 0] put
-    } for
-
-    % Return the arguments
-    <<
-    /ren /renlinear
-    /sbs sbs
-    /bhs [sbs length 1 add 2 idiv {height} repeat]
-    /bbs [sbs length 1 add 2 idiv {0} repeat]
-    /txt txt
-    /textxalign (center)
-    /borderleft 1.0
-    /borderright 2.0
-    /opt options
-    >>
-
-    dontdraw not //renlinear if
-
-    //unloadctx exec
-
-    end
-
-}
-[/barcode] {null def} forall
-bind def
-/channelcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+%psc /channelcode {
+%psc 
+%psc     20 dict begin                 % Confine variables to local scope
+%psc 
+%psc     %psc /ctx null def
+%psc     /dontdraw false def
+%psc     /shortfinder false def
+%psc     /includetext false def
+%psc     /includecheck false def
+%psc     /height 1.0 def
+%psc 
+%psc     currentdict //processoptions exec /options exch def
+%psc     /barcode exch def
+%psc 
+%psc     /channelcode //loadctx exec
+%psc 
+%psc     % Validate the input
+%psc     barcode length 2 lt barcode length 7 gt or {
+%psc         /bwipp.channelcodeBadLength (Channel Code must be 2 to 7 digits) //raiseerror exec
+%psc     } if
+%psc     barcode {
+%psc         dup 48 lt exch 57 gt or {
+%psc             /bwipp.channelcodeBadCharacter (Channel Code must contain only digits) //raiseerror exec
+%psc         } if
+%psc     } forall
+%psc     barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {
+%psc         /bwipp.channelcodeTooBig (The Channel Code value is too big for the number of channels) //raiseerror exec
+%psc     } if
+%psc 
+%psc     % Tail-call optimisation FTW!
+%psc     /loops1 { /s2max s1max 1 add s1 sub def  /b1 1 def
+%psc               s1 1 eq {nextb1} {loopb1} ifelse                             } def
+%psc     /loopb1 { /b2max b1max 1 add b1 sub def  /s2 1 def  loops2             } def
+%psc     /loops2 { /s3max s2max 1 add s2 sub def  /b2 1 def
+%psc               s1 b1 add s2 add 3 eq {nextb2} {loopb2} ifelse               } def
+%psc     /loopb2 { /b3max b2max 1 add b2 sub def  /s3 1 def  loops3             } def
+%psc     /loops3 { /s4max s3max 1 add s3 sub def  /b3 1 def
+%psc               b1 s2 add b2 add s3 add 4 eq {nextb3} {loopb3} ifelse        } def
+%psc     /loopb3 { /b4max b3max 1 add b3 sub def  /s4 1 def  loops4             } def
+%psc     /loops4 { /s5max s4max 1 add s4 sub def  /b4 1 def
+%psc               b2 s3 add b3 add s4 add 4 eq {nextb4} {loopb4} ifelse        } def
+%psc     /loopb4 { /b5max b4max 1 add b4 sub def  /s5 1 def  loops5             } def
+%psc     /loops5 { /s6max s5max 1 add s5 sub def  /b5 1 def
+%psc               b3 s4 add b4 add s5 add 4 eq {nextb5} {loopb5} ifelse        } def
+%psc     /loopb5 { /b6max b5max 1 add b5 sub def  /s6 1 def  loops6             } def
+%psc     /loops6 { /s7max s6max 1 add s6 sub def  /b6 1 def
+%psc               b4 s5 add b5 add s6 add 4 eq {nextb6} {loopb6} ifelse        } def
+%psc     /loopb6 { /b7max b6max 1 add b6 sub def  /s7 1 def  loops7             } def
+%psc     /loops7 { /s8 s7max 1 add s7 sub def     /b7 1 def
+%psc               b5 s6 add b6 add s7 add 4 eq {nextb7} {loopb7} ifelse        } def
+%psc     /loopb7 { /b8 b7max 1 add b7 sub def
+%psc               b6 s7 add b7 add s8 add b8 add 5 eq {nextb7} {chkchr} ifelse } def
+%psc     /chkchr {
+%psc         value target eq {
+%psc             [s1 b1 s2 b2 s3 b3 s4 b4 s5 b5 s6 b6 s7 b7 s8 b8] exit
+%psc         } if
+%psc         /value value 1 add def
+%psc         nextb7
+%psc     } def
+%psc     /nextb7 { /b7 b7 1 add def  b7 b7max le {loopb7} {nexts7} ifelse } def
+%psc     /nexts7 { /s7 s7 1 add def  s7 s7max le {loops7} {nextb6} ifelse } def
+%psc     /nextb6 { /b6 b6 1 add def  b6 b6max le {loopb6} {nexts6} ifelse } def
+%psc     /nexts6 { /s6 s6 1 add def  s6 s6max le {loops6} {nextb5} ifelse } def
+%psc     /nextb5 { /b5 b5 1 add def  b5 b5max le {loopb5} {nexts5} ifelse } def
+%psc     /nexts5 { /s5 s5 1 add def  s5 s5max le {loops5} {nextb4} ifelse } def
+%psc     /nextb4 { /b4 b4 1 add def  b4 b4max le {loopb4} {nexts4} ifelse } def
+%psc     /nexts4 { /s4 s4 1 add def  s4 s4max le {loops4} {nextb3} ifelse } def
+%psc     /nextb3 { /b3 b3 1 add def  b3 b3max le {loopb3} {nexts3} ifelse } def
+%psc     /nexts3 { /s3 s3 1 add def  s3 s3max le {loops3} {nextb2} ifelse } def
+%psc     /nextb2 { /b2 b2 1 add def  b2 b2max le {loopb2} {nexts2} ifelse } def
+%psc     /nexts2 { /s2 s2 1 add def  s2 s2max le {loops2} {nextb1} ifelse } def
+%psc     /nextb1 { /b1 b1 1 add def  b1 b1max le {loopb1} {nexts1} ifelse } def
+%psc     /nexts1 { /s1 s1 1 add def  s1 s1max le {loops1} if              } def
+%psc 
+%psc {
+%psc     /memo [  % Accelerate generation of bar patterns
+%psc         [  % CH3
+%psc             [       0  [1 1 1 1 1 2 1 2]  [1 1 1 1 1 1 1 3]  [1 1 1 1 1 3 2]  [1 1 1 1 1 3 3] ]
+%psc         ]
+%psc         [  % CH4
+%psc             [       0  [1 1 1 1 2 1 1 3]  [1 1 1 1 1 1 1 4]  [1 1 1 1 4 3 3]  [1 1 1 1 4 4 4] ]
+%psc         ]
+%psc         [  % CH5
+%psc             [       0  [1 1 1 2 1 1 2 3]  [1 1 1 1 1 1 1 5]  [1 1 1 5 4 4 4]  [1 1 1 5 5 5 5] ]
+%psc         ]
+%psc         [  % CH6
+%psc             [       0  [1 1 2 1 1 2 1 4]  [1 1 1 1 1 1 1 6]  [1 1 6 5 5 5 4]  [1 1 6 6 6 6 6] ]
+%psc         ]
+%psc         [  % CH7
+%psc             [       0  [1 2 1 1 2 1 1 5]  [1 1 1 1 1 1 1 7]  [1 7 6 6 6 5 5]  [1 7 7 7 7 7 7] ]
+%psc             [  150000  [1 3 1 1 2 4 1 1]  [1 1 3 1 2 3 2 1]  [1 7 5 5 5 4 1]  [1 7 7 5 5 4 2] ]
+%psc             [  300000  [1 1 4 2 1 1 1 3]  [1 2 4 1 1 1 2 2]  [1 7 7 4 3 3 3]  [1 7 6 3 3 3 3] ]
+%psc             [  450000  [1 1 4 1 1 4 1 1]  [1 3 2 1 2 1 2 2]  [1 7 7 4 4 4 1]  [1 7 5 4 4 3 3] ]
+%psc         ]
+%psc         [  % CH8
+%psc             [       0  [2 1 1 2 1 1 2 5]  [1 1 1 1 1 1 1 8]  [8 7 7 7 6 6 6]  [8 8 8 8 8 8 8] ]
+%psc             [  150000  [2 1 1 2 1 1 5 2]  [1 1 2 1 5 2 1 2]  [8 7 7 7 6 6 6]  [8 8 8 7 7 3 2] ]
+%psc             [  300000  [2 1 1 4 2 2 2 1]  [1 1 4 2 1 2 1 3]  [8 7 7 7 4 3 2]  [8 8 8 5 4 4 3] ]
+%psc             [  450000  [2 2 2 1 1 3 1 3]  [1 1 2 1 1 2 4 3]  [8 7 6 5 5 5 3]  [8 8 8 7 7 7 6] ]
+%psc             [  600000  [2 3 1 1 4 2 1 1]  [1 1 3 1 3 1 2 3]  [8 7 5 5 5 2 1]  [8 8 8 6 6 4 4] ]
+%psc             [  750000  [2 1 3 1 2 3 2 1]  [1 2 1 1 3 4 1 2]  [8 7 7 5 5 4 2]  [8 8 7 7 7 5 2] ]
+%psc             [  900000  [2 2 1 4 1 2 2 1]  [1 2 1 2 1 5 1 2]  [8 7 6 6 3 3 2]  [8 8 7 7 6 6 2] ]
+%psc             [ 1050000  [2 4 1 1 1 2 2 2]  [1 2 1 2 1 3 1 4]  [8 7 4 4 4 4 3]  [8 8 7 7 6 6 4] ]
+%psc             [ 1200000  [2 2 1 5 2 1 1 1]  [1 3 1 3 2 1 1 3]  [8 7 6 6 2 1 1]  [8 8 6 6 4 3 3] ]
+%psc             [ 1350000  [2 2 1 3 3 1 1 2]  [1 4 1 2 1 1 4 1]  [8 7 6 6 4 2 2]  [8 8 5 5 4 4 4] ]
+%psc             [ 1500000  [3 1 2 2 2 1 1 3]  [1 1 1 1 2 2 4 3]  [8 6 6 5 4 3 3]  [8 8 8 8 8 7 6] ]
+%psc             [ 1650000  [3 2 1 2 3 1 2 1]  [1 1 1 1 3 2 4 2]  [8 6 5 5 4 2 2]  [8 8 8 8 8 6 5] ]
+%psc             [ 1800000  [3 1 1 3 2 3 1 1]  [1 2 1 1 3 4 2 1]  [8 6 6 6 4 3 1]  [8 8 7 7 7 5 2] ]
+%psc             [ 1950000  [3 2 1 2 1 2 2 2]  [1 2 4 1 2 2 1 2]  [8 6 5 5 4 4 3]  [8 8 7 4 4 3 2] ]
+%psc             [ 2100000  [3 1 2 1 4 2 1 1]  [1 4 1 2 1 1 2 3]  [8 6 6 5 5 2 1]  [8 8 5 5 4 4 4] ]
+%psc             [ 2250000  [4 1 1 4 1 1 2 1]  [1 1 4 2 1 1 1 4]  [8 5 5 5 2 2 2]  [8 8 8 5 4 4 4] ]
+%psc             [ 2400000  [4 3 1 2 1 2 1 1]  [1 2 4 2 2 2 1 1]  [8 5 3 3 2 2 1]  [8 8 7 4 3 2 1] ]
+%psc             [ 2550000  [5 1 1 1 1 1 3 2]  [1 2 2 4 3 1 1 1]  [8 4 4 4 4 4 4]  [8 8 7 6 3 1 1] ]
+%psc             [ 2700000  [1 1 3 6 1 1 1 1]  [2 1 1 2 1 1 6 1]  [8 8 8 6 1 1 1]  [8 7 7 7 6 6 6] ]
+%psc             [ 2850000  [1 1 1 2 2 3 2 3]  [2 1 3 3 2 1 1 2]  [8 8 8 8 7 6 4]  [8 7 7 5 3 2 2] ]
+%psc             [ 3000000  [1 2 3 3 3 1 1 1]  [2 1 1 1 5 1 2 2]  [8 8 7 5 3 1 1]  [8 7 7 7 7 3 3] ]
+%psc             [ 3150000  [1 3 1 2 2 2 3 1]  [2 1 1 3 2 1 3 2]  [8 8 6 6 5 4 3]  [8 7 7 7 5 4 4] ]
+%psc             [ 3300000  [1 5 1 1 3 1 1 2]  [2 1 1 4 3 2 1 1]  [8 8 4 4 4 2 2]  [8 7 7 7 4 2 1] ]
+%psc             [ 3450000  [1 1 2 2 2 5 1 1]  [2 2 2 2 3 1 1 2]  [8 8 8 7 6 5 1]  [8 7 6 5 4 2 2] ]
+%psc             [ 3600000  [1 2 1 1 3 4 2 1]  [2 2 3 1 1 1 2 3]  [8 8 7 7 7 5 2]  [8 7 6 4 4 4 4] ]
+%psc             [ 3750000  [1 1 2 1 1 5 3 1]  [2 3 1 1 4 1 2 1]  [8 8 8 7 7 7 3]  [8 7 5 5 5 2 2] ]
+%psc             [ 3900000  [1 3 1 2 4 2 1 1]  [2 3 3 1 1 1 2 2]  [8 8 6 6 5 2 1]  [8 7 5 3 3 3 3] ]
+%psc             [ 4050000  [1 3 1 2 3 1 2 2]  [2 6 2 1 1 1 1 1]  [8 8 6 6 5 3 3]  [8 7 2 1 1 1 1] ]
+%psc             [ 4200000  [2 1 1 2 1 2 2 4]  [2 1 3 1 3 3 1 1]  [8 7 7 7 6 6 5]  [8 7 7 5 5 3 1] ]
+%psc             [ 4350000  [2 2 1 4 1 2 2 1]  [2 1 4 1 3 1 2 1]  [8 7 6 6 3 3 2]  [8 7 7 4 4 2 2] ]
+%psc             [ 4500000  [2 1 1 1 2 1 3 4]  [2 2 2 1 2 1 3 2]  [8 7 7 7 7 6 6]  [8 7 6 5 5 4 4] ]
+%psc             [ 4650000  [2 4 2 1 2 2 1 1]  [2 2 2 1 2 1 2 3]  [8 7 4 3 3 2 1]  [8 7 6 5 5 4 4] ]
+%psc             [ 4800000  [2 3 2 1 1 2 2 2]  [2 4 1 2 1 1 3 1]  [8 7 5 4 4 4 3]  [8 7 4 4 3 3 3] ]
+%psc             [ 4950000  [3 2 2 1 2 1 1 3]  [2 1 1 2 1 1 1 6]  [8 6 5 4 4 3 3]  [8 7 7 7 6 6 6] ]
+%psc             [ 5100000  [3 2 1 1 1 3 3 1]  [2 2 3 2 1 1 3 1]  [8 6 5 5 5 5 3]  [8 7 6 4 3 3 3] ]
+%psc             [ 5250000  [4 1 2 1 2 2 1 2]  [2 1 4 1 2 1 1 3]  [8 5 5 4 4 3 2]  [8 7 7 4 4 3 3] ]
+%psc             [ 5400000  [5 1 2 1 2 1 1 2]  [2 2 1 1 4 1 3 1]  [8 4 4 3 3 2 2]  [8 7 6 6 6 3 3] ]
+%psc             [ 5550000  [1 1 4 4 1 2 1 1]  [3 1 2 1 1 3 2 2]  [8 8 8 5 2 2 1]  [8 6 6 5 5 5 3] ]
+%psc             [ 5700000  [1 2 1 1 2 1 3 4]  [3 1 4 1 2 2 1 1]  [8 8 7 7 7 6 6]  [8 6 6 3 3 2 1] ]
+%psc             [ 5850000  [1 1 3 3 2 2 2 1]  [3 2 1 1 2 1 4 1]  [8 8 8 6 4 3 2]  [8 6 5 5 5 4 4] ]
+%psc             [ 6000000  [1 4 3 1 1 2 1 2]  [3 2 2 1 2 2 1 2]  [8 8 5 3 3 3 2]  [8 6 5 4 4 3 2] ]
+%psc             [ 6150000  [2 1 1 4 1 2 1 3]  [3 1 1 2 1 2 1 4]  [8 7 7 7 4 4 3]  [8 6 6 6 5 5 4] ]
+%psc             [ 6300000  [2 2 2 1 3 2 2 1]  [3 1 4 1 3 1 1 1]  [8 7 6 5 5 3 2]  [8 6 6 3 3 1 1] ]
+%psc             [ 6450000  [2 5 1 3 1 1 1 1]  [3 2 1 1 2 3 1 2]  [8 7 3 3 1 1 1]  [8 6 5 5 5 4 2] ]
+%psc             [ 6600000  [3 2 3 1 2 1 2 1]  [3 1 3 2 2 1 1 2]  [8 6 5 3 3 2 2]  [8 6 6 4 3 2 2] ]
+%psc             [ 6750000  [4 1 2 2 1 1 3 1]  [3 2 1 3 1 1 3 1]  [8 5 5 4 3 3 3]  [8 6 5 5 3 3 3] ]
+%psc             [ 6900000  [1 2 1 4 2 2 2 1]  [4 1 1 2 2 2 2 1]  [8 8 7 7 4 3 2]  [8 5 5 5 4 3 2] ]
+%psc             [ 7050000  [1 2 5 2 1 2 1 1]  [4 2 1 3 2 1 1 1]  [8 8 7 3 2 2 1]  [8 5 4 4 2 1 1] ]
+%psc             [ 7200000  [2 2 2 1 3 1 3 1]  [4 1 3 1 3 1 1 1]  [8 7 6 5 5 3 3]  [8 5 5 3 3 1 1] ]
+%psc             [ 7350000  [3 1 4 2 1 1 1 2]  [4 2 2 1 1 1 2 2]  [8 6 6 3 2 2 2]  [8 5 4 3 3 3 3] ]
+%psc             [ 7500000  [1 1 1 4 1 1 3 3]  [5 2 1 2 2 1 1 1]  [8 8 8 8 5 5 5]  [8 4 3 3 2 1 1] ]
+%psc             [ 7650000  [5 2 1 2 1 2 1 1]  [5 2 2 1 1 2 1 1]  [8 4 3 3 2 2 1]  [8 4 3 2 2 2 1] ]
+%psc         ]
+%psc     ] def
+%psc } ctxdef
+%psc 
+%psc     /encode {
+%psc         /chan exch def
+%psc         /target exch def
+%psc 
+%psc         % Lookup memoized starting value close to the target
+%psc         memo chan 3 sub get {
+%psc             /m exch def
+%psc             m 0 get target gt {exit} if
+%psc             /mv    m 0 get def
+%psc             /mb    m 1 get def
+%psc             /ms    m 2 get def
+%psc             /mbmax m 3 get def
+%psc             /msmax m 4 get def
+%psc         } forall
+%psc         /value mv def
+%psc         mb    aload pop [/b8 /b7 /b6 /b5 /b4 /b3 /b2 /b1] {exch def} forall
+%psc         ms    aload pop [/s8 /s7 /s6 /s5 /s4 /s3 /s2 /s1] {exch def} forall
+%psc         mbmax aload pop [/b7max /b6max /b5max /b4max /b3max /b2max /b1max] {exch def} forall
+%psc         msmax aload pop [/s7max /s6max /s5max /s4max /s3max /s2max /s1max] {exch def} forall
+%psc 
+%psc         1 {chkchr} repeat 8 chan sub 2 mul dup 16 exch sub getinterval
+%psc 
+%psc     } def
+%psc 
+%psc     /barlen barcode length def
+%psc 
+%psc     % Determine finder
+%psc     /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
+%psc 
+%psc     % Encode the main data
+%psc     /data barcode cvi barlen 1 add encode def
+%psc 
+%psc     % Determine check data
+%psc {
+%psc     /mod23map [
+%psc             [] []
+%psc             [ 13 12  4  9  3  1 ]
+%psc             [  8  2 12  3 18 16  4  1 ]
+%psc             [ 11 16 17  8 20  4 10  2  5  1 ]
+%psc             [  1  4 16 18  3 12  2  8  9 13  6  1 ]
+%psc             [ 20 16 22 13 15 12  5  4 17  9 21  3  7  1 ]
+%psc             [  2  6 18  8  1  3  9  4 12 13 16  2  6 18  8  1 ]
+%psc     ] def
+%psc } ctxdef
+%psc     /check [] def
+%psc     includecheck {
+%psc         /mod23 mod23map barlen get def
+%psc         0
+%psc         0 1 data length 1 sub {
+%psc             dup data exch get 1 sub exch mod23 exch get mul add
+%psc         } for
+%psc         23 mod 3 encode /check exch def
+%psc     } if
+%psc 
+%psc     % Construct the symbol
+%psc     /sbs [
+%psc         finder aload pop
+%psc         data aload pop
+%psc         check aload pop
+%psc     ] def
+%psc 
+%psc     % Create the human readable text
+%psc     /txt barlen array def
+%psc     0 1 barlen 1 sub {
+%psc         /i exch def
+%psc         txt i [barcode i 1 getinterval 0 0 () 0] put
+%psc     } for
+%psc 
+%psc     % Return the arguments
+%psc     <<
+%psc     /ren /renlinear
+%psc     /sbs sbs
+%psc     /bhs [sbs length 1 add 2 idiv {height} repeat]
+%psc     /bbs [sbs length 1 add 2 idiv {0} repeat]
+%psc     /txt txt
+%psc     /textxalign (center)
+%psc     /borderleft 1.0
+%psc     /borderright 2.0
+%psc     /opt options
+%psc     >>
+%psc 
+%psc     dontdraw not //renlinear if
+%psc 
+%psc     //unloadctx exec
+%psc 
+%psc     end
+%psc 
+%psc }
+%psc [/barcode] {null def} forall
+%psc bind def
+%psc /channelcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER channelcode--
@@ -17227,27 +17227,27 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2025102400 62535 62340
 %%BeginData:         82 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /flattermarken {
 
     20 dict begin                 % Confine variable to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /includetext false def   % Enable/disable text
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /height 0.3 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /flattermarken //loadctx exec
@@ -17304,11 +17304,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/flattermarken dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /flattermarken dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER flattermarken--
@@ -17321,21 +17321,21 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp raw 0.0 2025102400 50157 49951
 %%BeginData:         43 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /raw {
 
     20 dict begin                  % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 1.0 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Validate input
@@ -17359,11 +17359,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/raw dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /raw dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER raw--
@@ -17376,21 +17376,21 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp daft 0.0 2025102400 53768 53532
 %%BeginData:         71 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /daft {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /height 0.175 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -17442,11 +17442,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/daft dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /daft dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER daft--
@@ -17459,23 +17459,23 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2025102400 72901 72390
 %%BeginData:         87 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /symbol {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /symbol //loadctx exec
@@ -17541,11 +17541,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/symbol dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /symbol dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER symbol--
@@ -17558,20 +17558,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2025102400 212349 234350
 %%BeginData:        981 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /pdf417 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /compact false def
     /eclevel -1 def
@@ -17584,7 +17584,7 @@ begin
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -18534,11 +18534,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/pdf417 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /pdf417 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER pdf417--
@@ -18551,21 +18551,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2025102400 63089 63184
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /pdf417 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /pdf417 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /pdf417compact {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with pdf417 with compact option
@@ -18582,11 +18582,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/pdf417compact dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /pdf417compact dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER pdf417compact--
@@ -18599,20 +18599,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2025102400 230653 259454
 %%BeginData:       1107 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /micropdf417 {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /version (unset) def
     /columns 0 def
@@ -18624,7 +18624,7 @@ begin
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -19701,11 +19701,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/micropdf417 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /micropdf417 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER micropdf417--
@@ -19718,20 +19718,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2025102400 221308 249519
 %%BeginData:        959 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /datamatrix {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /columns 0 def
     /rows 0 def
@@ -19743,7 +19743,7 @@ begin
     /raw false def
     /dmre false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -20094,9 +20094,9 @@ begin
                     } if
                     /char msg i k add get def
                     /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {ceiling 1 add} ifelse} ifelse def
-                    /cc cc isC {2 3 div add} {isEA { 8 3 div add } { 4 3 div add } ifelse} ifelse def
-                    /tc tc isT {2 3 div add} {isEA { 8 3 div add } { 4 3 div add } ifelse} ifelse def
-                    /xc xc isX {2 3 div add} {isEA {13 3 div add } {10 3 div add } ifelse} ifelse def
+                    /cc cc isC { 0.6666667 add} {isEA { 2.6666667 add } { 1.3333334 add } ifelse} ifelse def
+                    /tc tc isT { 0.6666667 add} {isEA { 2.6666667 add } { 1.3333334 add } ifelse} ifelse def
+                    /xc xc isX { 0.6666667 add} {isEA { 4.3333334 add } { 3.3333334 add } ifelse} ifelse def
                     /ec ec isE {3 4 div add} {isEA {17 4 div add } {13 4 div add } ifelse} ifelse def
                     /bc bc isFN {4 add} {1 add} ifelse def
                     k 4 ge {
@@ -20672,11 +20672,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/datamatrix dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /datamatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER datamatrix--
@@ -20689,21 +20689,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2025102400 63145 66536
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /datamatrixrectangular {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with datamatrix with format=rectangle
@@ -20720,11 +20720,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/datamatrixrectangular dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /datamatrixrectangular dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER datamatrixrectangular--
@@ -20737,21 +20737,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2025102400 63554 66936
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-20 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 20 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /datamatrixrectangularextension {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with datamatrix
@@ -20768,11 +20768,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/datamatrixrectangularextension dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /datamatrixrectangularextension dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER datamatrixrectangularextension--
@@ -20785,24 +20785,24 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2025102400 71200 67632
 %%BeginData:         74 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /mailmark {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /type (unset) def  % 7, 9 or 29
     /parse false def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Parse ordinals of the form ^NNN to ASCII
@@ -20854,11 +20854,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/mailmark dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /mailmark dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER mailmark--
@@ -20871,20 +20871,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2025102400 378516 401549
 %%BeginData:       1430 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /qrcode {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /format (unset) def    % full or micro. rMQR symbols are specified using version
     /version (unset) def   % 1-40 or M1-M4 or R7x43, etc
@@ -20893,9 +20893,9 @@ begin
     /parse false def
     /parsefnc false def
     /mask -1 def
-    /suppresskanjimode false def
+    /suppresskanjimode true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /qrcode //loadctx exec
@@ -22296,11 +22296,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/qrcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /qrcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER qrcode--
@@ -22313,23 +22313,23 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2025102400 68877 72208
 %%BeginData:        117 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /qrcode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /swissqrcode {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /parse false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Parse ordinals of the form ^NNN to ASCII
@@ -22425,11 +22425,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/swissqrcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /swissqrcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER swissqrcode--
@@ -22442,21 +22442,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2025102400 63569 63516
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /qrcode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /microqrcode {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with qrcode with format=micro
@@ -22473,11 +22473,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/microqrcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /microqrcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER microqrcode--
@@ -22490,21 +22490,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2025102400 63612 63548
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /qrcode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /rectangularmicroqrcode {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with qrcode with format=micro
@@ -22521,11 +22521,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/rectangularmicroqrcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /rectangularmicroqrcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER rectangularmicroqrcode--
@@ -22538,20 +22538,20 @@ end
 % --RNDR: renmaximatrix
 %%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2025102400 191498 209793
 %%BeginData:        879 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmaximatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmaximatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /maxicode {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /mode -1 def
     /sam -1 def
@@ -22559,7 +22559,7 @@ begin
     /parsefnc false def
     /legacyencoder false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -23412,11 +23412,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/maxicode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /maxicode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER maxicode--
@@ -23429,20 +23429,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2025102400 199592 224858
 %%BeginData:        830 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /azteccode {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /format (full) def    % full, compact or rune
     /readerinit false def
@@ -23453,7 +23453,7 @@ begin
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /azteccode //loadctx exec
@@ -24254,11 +24254,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/azteccode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /azteccode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER azteccode--
@@ -24271,21 +24271,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2025102400 63121 66517
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /azteccode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /azteccode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /azteccodecompact {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with azteccode with format=compact
@@ -24302,11 +24302,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/azteccodecompact dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /azteccodecompact dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER azteccodecompact--
@@ -24319,21 +24319,21 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2025102400 63090 66493
 %%BeginData:         36 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /azteccode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /azteccode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /aztecrune {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Get the result of encoding with azteccode with format=rune
@@ -24350,11 +24350,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/aztecrune dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /aztecrune dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER aztecrune--
@@ -24367,26 +24367,26 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2025102400 209055 241265
 %%BeginData:        921 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /codeone {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /version (unset) def
     /parse false def
     /parsefnc false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     false [ (unset) (T-16) (T-32) (T-48) (S-10) (S-20) (S-30) (A) (B) (C) (D) (E) (F) (G) (H) ]
@@ -24742,9 +24742,9 @@ begin
                     } if
                     /char msg i k add get def
                     /ac ac isD {1 2 div add} {isEA {ceiling 2 add} {ceiling 1 add} ifelse} ifelse def
-                    /cc cc isC {2 3 div add} {isEA { 8 3 div add } { 4 3 div add } ifelse} ifelse def
-                    /tc tc isT {2 3 div add} {isEA { 8 3 div add } { 4 3 div add } ifelse} ifelse def
-                    /xc xc isX {2 3 div add} {isEA {13 3 div add } {10 3 div add } ifelse} ifelse def
+                    /cc cc isC { 0.6666667 add} {isEA { 2.6666667 add } { 1.3333334 add } ifelse} ifelse def
+                    /tc tc isT { 0.6666667 add} {isEA { 2.6666667 add } { 1.3333334 add } ifelse} ifelse def
+                    /xc xc isX { 0.6666667 add} {isEA { 4.3333334 add } { 3.3333334 add } ifelse} ifelse def
                     /bc bc isFN {3 add} {1 add} ifelse def
                     k 3 ge {  % Checking after at least 4 characters (cf. Data Matrix), not 3 as in spec Step Q
                         true [ac cc tc xc   ] {bc 1 add exch ceiling le and} forall {B exit} if
@@ -25283,11 +25283,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/codeone dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /codeone dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER codeone--
@@ -25300,20 +25300,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2025102400 334195 359875
 %%BeginData:        884 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hanxin {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /version (unset) def   % 1-84
     /eclevel (L2) def   % L1, L2, L3 or L4
@@ -25321,7 +25321,7 @@ begin
     /parsefnc false def
     /mask -1 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -26179,11 +26179,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hanxin dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hanxin dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hanxin--
@@ -26196,20 +26196,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2025102400 253273 281667
 %%BeginData:       1090 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /dotcode {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /rows -1 def
     /columns -1 def
@@ -26220,7 +26220,7 @@ begin
     /fast false def
     /mask -1 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     rows -1 ne {
@@ -27281,11 +27281,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/dotcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /dotcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER dotcode--
@@ -27298,20 +27298,20 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2025102400 98066 100510
 %%BeginData:        357 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ultracode {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /eclevel (EC2) def     % EC1-EC5, and EC0 for rev 1
     /parse false def
@@ -27321,7 +27321,7 @@ begin
     /raw false def
     /rev 2 def             % Ultracode specification revision
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     rev dup 1 ne exch 2 ne and {
@@ -27650,11 +27650,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ultracode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ultracode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ultracode--
@@ -27667,18 +27667,18 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2025102400 261846 289558
 %%BeginData:       1121 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /jabcode {
 
     20 dict begin
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /rows -1 def
     /columns -1 def
@@ -27690,7 +27690,7 @@ begin
     /parsefnc false def
     /mask -1 def    % 0-7
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /databpm colors ln 2 ln div round cvi def
@@ -27707,22 +27707,22 @@ begin
     /msglen msg length def
 
     % Wide array support, as needed
-    {65536 array} stopped {
-        pop
-        /arrayw {
-            dup 65535 idiv 1 add dup array exch 0 exch 1 sub {2 copy 65535 array put 1 add} repeat
-            1 index 4 1 roll 3 -1 roll 65535 mod array put
-        } def
-        /getw  {exch 1 index 65535 idiv get exch 65535 mod get} def
-        /putw  {3 1 roll exch 1 index 65535 idiv get exch 65535 mod 3 -1 roll put} def
-        /copyw {exch 0 exch {dup length array copy 3 copy put pop 1 add} forall pop} def
-    } {
-        pop
-        /arrayw {array} def
-        /getw   {get}   def
-        /putw   {put}   def
-        /copyw  {copy}  def
-    } ifelse
+%psc     {65536 array} stopped {
+%psc         pop
+%psc         /arrayw {
+%psc             dup 65535 idiv 1 add dup array exch 0 exch 1 sub {2 copy 65535 array put 1 add} repeat
+%psc             1 index 4 1 roll 3 -1 roll 65535 mod array put
+%psc         } def
+%psc         /getw  {exch 1 index 65535 idiv get exch 65535 mod get} def
+%psc         /putw  {3 1 roll exch 1 index 65535 idiv get exch 65535 mod 3 -1 roll put} def
+%psc         /copyw {exch 0 exch {dup length array copy 3 copy put pop 1 add} forall pop} def
+%psc     } {
+%psc         pop
+%psc         /arrayw {array} def
+%psc         /getw   {get}   def
+%psc         /putw   {put}   def
+%psc         /copyw  {copy}  def
+%psc     } ifelse
 
     /addtobits {
         dup bits j 3 -1 roll putinterval
@@ -28783,11 +28783,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/jabcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /jabcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER jabcode--
@@ -28800,22 +28800,22 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2025102400 209868 212315
 %%BeginData:        654 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /pdf417 dup /uk.co.terryburton.bwipp findresource put
-dup /micropdf417 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /pdf417 dup /uk.co.terryburton.bwipp findresource put
+%psc dup /micropdf417 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1-cc {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs false def
@@ -28825,7 +28825,7 @@ begin
     /lintype () def
     /linwidth -1 def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     /gs1-cc //loadctx exec
@@ -29449,11 +29449,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1-cc dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1-cc dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1-cc--
@@ -29466,28 +29466,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2025102400 105683 108914
 %%BeginData:        151 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /ean13 dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean13 dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ean13composite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -29612,11 +29612,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ean13composite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ean13composite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ean13composite--
@@ -29629,28 +29629,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2025102400 109480 109256
 %%BeginData:        154 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /ean8 dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /ean8 dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /ean8composite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -29778,11 +29778,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/ean8composite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /ean8composite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER ean8composite--
@@ -29795,28 +29795,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2025102400 105677 112341
 %%BeginData:        151 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /upca dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /upca dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /upcacomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -29941,11 +29941,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/upcacomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /upcacomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER upcacomposite--
@@ -29958,28 +29958,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2025102400 109212 108908
 %%BeginData:        151 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /upce dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /upce dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /upcecomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -30104,11 +30104,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/upcecomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /upcecomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER upcecomposite--
@@ -30121,28 +30121,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2025102400 101233 101007
 %%BeginData:        150 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /databaromni dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databaromni dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databaromnicomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -30266,11 +30266,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databaromnicomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databaromnicomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databaromnicomposite--
@@ -30283,27 +30283,27 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2025102400 106525 102238
 %%BeginData:        145 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /databarstacked dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databarstacked dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarstackedcomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -30423,11 +30423,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarstackedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarstackedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarstackedcomposite--
@@ -30440,27 +30440,27 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2025102400 106553 102262
 %%BeginData:        145 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /databarstackedomni dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databarstackedomni dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarstackedomnicomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -30580,11 +30580,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarstackedomnicomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarstackedomnicomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarstackedomnicomposite--
@@ -30597,28 +30597,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2025102400 108299 103996
 %%BeginData:        150 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /databartruncated dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databartruncated dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databartruncatedcomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -30742,11 +30742,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databartruncatedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databartruncatedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databartruncatedcomposite--
@@ -30759,28 +30759,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2025102400 99570 99229
 %%BeginData:        140 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /databarlimited dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databarlimited dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarlimitedcomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -30894,11 +30894,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarlimitedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarlimitedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarlimitedcomposite--
@@ -30911,28 +30911,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2025102400 101754 104919
 %%BeginData:        149 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /databarexpanded dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databarexpanded dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarexpandedcomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -31055,11 +31055,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarexpandedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarexpandedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarexpandedcomposite--
@@ -31072,27 +31072,27 @@ end
 % --RNDR: renmatrix renlinear
 %%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2025102400 107132 102822
 %%BeginData:        140 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /databarexpandedstacked dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /databarexpandedstacked dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /databarexpandedstackedcomposite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -31207,11 +31207,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/databarexpandedstackedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /databarexpandedstackedcomposite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER databarexpandedstackedcomposite--
@@ -31224,28 +31224,28 @@ end
 % --RNDR: renlinear renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2025102400 111986 107646
 %%BeginData:        165 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-128 dup /uk.co.terryburton.bwipp findresource put
-dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-128 dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1-128composite {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     dontdraw { /usematrix true def } if
@@ -31384,11 +31384,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1-128composite dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1-128composite dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1-128composite--
@@ -31401,26 +31401,26 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2025102400 78264 77846
 %%BeginData:         81 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1datamatrix {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /parse false def
     /dontlint false def
     /lintreqs true def
     /gssep false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode /ai //gs1process exec
@@ -31477,11 +31477,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1datamatrix dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1datamatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1datamatrix--
@@ -31494,26 +31494,26 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2025102400 78499 78070
 %%BeginData:         82 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1datamatrixrectangular {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
     /dontdraw false def
     /gssep false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode /ai //gs1process exec
@@ -31571,11 +31571,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1datamatrixrectangular dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1datamatrixrectangular dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1datamatrixrectangular--
@@ -31588,25 +31588,25 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2025102400 73425 69681
 %%BeginData:         61 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1dldatamatrix {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Parse the input
@@ -31635,7 +31635,7 @@ begin
     args (opt) options put
     args (alttext) hri put
     args (textyoffset) -1.0 put
-    args (textfont) /Helvetica put
+    args (textfont) (OCR-B) put
     args (textsize) 5 put
     args
 
@@ -31644,11 +31644,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1dldatamatrix dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1dldatamatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1dldatamatrix--
@@ -31661,24 +31661,24 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2025102400 78014 77602
 %%BeginData:         79 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /qrcode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1qrcode {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode /ai //gs1process exec
@@ -31735,11 +31735,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1qrcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1qrcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1qrcode--
@@ -31752,25 +31752,25 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2025102400 73401 73093
 %%BeginData:         61 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /parseinput dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /qrcode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1dlqrcode {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /parse false def
     /dontlint false def
     /lintreqs true def
     /dontdraw false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     % Parse the input
@@ -31799,7 +31799,7 @@ begin
     args (opt) options put
     args (alttext) hri put
     args (textyoffset) -4.0 put
-    args (textfont) /Helvetica put
+    args (textfont) (OCR-B) put
     args (textsize) 5 put
     args
 
@@ -31808,11 +31808,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1dlqrcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1dlqrcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1dlqrcode--
@@ -31825,25 +31825,25 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2025102400 77989 77575
 %%BeginData:         80 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /dotcode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /dotcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /gs1dotcode {
 
     20 dict begin            % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /parse false def
     /dontlint false def
     /lintreqs true def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode /ai //gs1process exec
@@ -31900,11 +31900,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/gs1dotcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /gs1dotcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER gs1dotcode--
@@ -31917,28 +31917,28 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2025102400 67736 67716
 %%BeginData:         92 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code39 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code39 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibccode39 {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /textxoffset 0.0 def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32004,11 +32004,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibccode39 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibccode39 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibccode39--
@@ -32021,28 +32021,28 @@ end
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2025102400 70379 70172
 %%BeginData:         91 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-dup /code128 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%psc dup /code128 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibccode128 {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
-    /textfont /Courier def
+    /textfont (OCR-B) def
     /textsize 10.0 def
-    /textyoffset -7.0 def
+    /textyoffset -8.0 def
     /textxoffset 0.0 def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32107,11 +32107,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibccode128 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibccode128 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibccode128--
@@ -32124,24 +32124,24 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2025102400 71817 68150
 %%BeginData:         79 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibcdatamatrix {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32198,11 +32198,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibcdatamatrix dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibcdatamatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibcdatamatrix--
@@ -32215,24 +32215,24 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2025102400 72077 68366
 %%BeginData:         80 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibcdatamatrixrectangular {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32290,11 +32290,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibcdatamatrixrectangular dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibcdatamatrixrectangular dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibcdatamatrixrectangular--
@@ -32307,25 +32307,25 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2025102400 68540 71863
 %%BeginData:         81 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /pdf417 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /pdf417 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibcpdf417 {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /columns 2 def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32383,11 +32383,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibcpdf417 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibcpdf417 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibcpdf417--
@@ -32400,25 +32400,25 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2025102400 72107 71794
 %%BeginData:         81 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /micropdf417 dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /micropdf417 dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibcmicropdf417 {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /columns 2 def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32476,11 +32476,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibcmicropdf417 dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibcmicropdf417 dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibcmicropdf417--
@@ -32493,24 +32493,24 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2025102400 69425 72736
 %%BeginData:         79 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /qrcode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibcqrcode {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32567,11 +32567,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibcqrcode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibcqrcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibcqrcode--
@@ -32584,24 +32584,24 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2025102400 68497 68150
 %%BeginData:         79 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /codablockf dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /codablockf dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibccodablockf {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32658,11 +32658,11 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibccodablockf dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibccodablockf dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibccodablockf--
@@ -32675,24 +32675,24 @@ end
 % --RNDR: renmatrix
 %%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2025102400 71790 68143
 %%BeginData:         79 ASCII Lines
-/setpacking where {pop currentpacking true setpacking} if
-10 dict
-dup /loadctx dup /uk.co.terryburton.bwipp findresource put
-dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
-dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-dup /processoptions dup /uk.co.terryburton.bwipp findresource put
-dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-dup /azteccode dup /uk.co.terryburton.bwipp findresource put
-begin
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /loadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /unloadctx dup /uk.co.terryburton.bwipp findresource put
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /azteccode dup /uk.co.terryburton.bwipp findresource put
+%psc begin
 /hibcazteccode {
 
     20 dict begin                 % Confine variables to local scope
 
-    /ctx null def
+    %psc /ctx null def
     /dontdraw false def
     /validatecheck false def
 
-    //processoptions exec /options exch def
+    currentdict //processoptions exec /options exch def
     /barcode exch def
 
     barcode () eq {
@@ -32749,13 +32749,1317 @@ begin
     end
 
 }
-[/barcode] {null def} forall
+%psc [/barcode] {null def} forall
 bind def
-/hibcazteccode dup load /uk.co.terryburton.bwipp defineresource pop
-end
-/setpacking where {pop setpacking} if
+%psc /hibcazteccode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER hibcazteccode--
 
 % --END TEMPLATE--
+% --BEGIN ENCODER channelcode--
+% --REQUIRES preamble raiseerror renlinear--
+% --DESC: Channel Code
+% --EXAM: 3493
+% --EXOP: height=0.5 includetext
+% --RNDR: renlinear
+%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2017071000 68302 68105
+%%BeginData:        149 ASCII Lines
+%%/setpacking where {pop currentpacking true setpacking} if
+%%1 dict
+%%dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%%dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+%%begin
+/channelcode {
+
+    20 dict begin                 % Confine variables to local scope
+
+    /options exch def       % We are given an option string
+    /barcode exch def       % We are given a barcode string
+
+    /dontdraw false def
+    /shortfinder false def
+    /includetext false def
+    /includecheck false def
+    /height 1 def
+
+    % Parse the input options
+%psc     options type /stringtype eq {
+%psc         1 dict begin
+%psc         options {
+%psc             token false eq {exit} if dup length string cvs (=) search
+%psc             true eq {cvlit exch pop exch def} {cvlit true def} ifelse
+%psc         } loop
+%psc         currentdict end /options exch def
+%psc     } if
+    options {def} forall
+
+    /height height cvr def
+
+    % Validate the input
+    barcode length 2 lt barcode length 7 gt or {
+        /bwipp.channelcodeBadLength (Channel Code must be 2 to 7 digits) //raiseerror exec
+    } if
+    barcode {
+        dup 48 lt exch 57 gt or {
+            /bwipp.channelcodeBadCharacter (Channel Code must contain only digits) //raiseerror exec
+        } if
+    } forall
+    barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {
+        /bwipp.channelcodeTooBig (The Channel Code value is too big for the number of channels) //raiseerror exec
+    } if
+
+    /nextb {
+        dup
+        dup s exch get exch
+        dup b exch 1 sub get exch
+        dup s exch 1 sub get exch
+        b exch 2 sub get exch
+        add add add 4 gt {1} {2} ifelse
+        1 index chan 2 add lt {
+            dup 1 4 index {
+                b 3 index 2 index put
+                3 index exch sub 1 add 4 index 3 index 1 add nexts
+            } for
+        } {
+            dup 3 index le {
+                b 2 index 4 index put
+                value target eq {
+                    /out [
+                        3 1 10 {dup s exch get exch b exch get} for
+                    ] 0 chan 2 mul getinterval def
+                } if
+                /value value 1 add def
+            } if
+        } ifelse
+        pop pop pop pop
+    } bind def
+
+    /nexts {
+        dup chan 2 add lt {1} {1 index} ifelse 1 3 index {
+            s 2 index 2 index put
+            2 index exch sub 1 add 3 index 2 index nextb
+        } for
+        pop pop pop
+    } bind def
+
+    /encode {
+        /chan exch def
+        /target exch def
+        /value 0 def
+        /out -1 def
+        /b [ 1 1 1 0 0 0 0 0 0 0 0 ] def
+        /s [ 0 1 1 0 0 0 0 0 0 0 0 ] def
+        chan dup 3 nexts
+        out
+    } bind def
+
+    /barlen barcode length def
+
+    % Determine finder
+    /finder shortfinder { [ 1 1 1 1 1 ] } { [ 1 1 1 1 1 1 1 1 1 ] } ifelse def
+
+    % Encode the main data
+    /data barcode cvi barlen 1 add encode def
+
+    % Determine check data
+    /check [] def
+    includecheck {
+        /mod23 [
+            [] []
+            [ 13 12  4  9  3  1 ]
+            [ 13  2 12  3 18 16  4  1 ]
+            [ 11 16 17  8 20  4 10  2  5  1 ]
+            [  1  4 16 18  3 12  2  8  9 13  6  1 ]
+            [ 20 16 22 13 15 12  5  4  8  9 21  3  7  1 ]
+            [  2  6 18  8  1  3  9  4 12 13 16  2  6 18  8  1 ]
+        ] barlen get def
+        0
+        0 1 data length 1 sub {
+            dup data exch get 1 sub exch mod23 exch get mul add
+        } for
+        23 mod 3 encode /check exch def
+    } if
+
+    % Construct the symbol
+    /sbs [
+        finder aload pop
+        data aload pop
+        check aload pop
+    ] def
+
+    % Create the human readable text
+    /txt barlen array def
+    0 1 barlen 1 sub {
+        /i exch def
+        txt i [barcode i 1 getinterval 0 0 () 0] put
+    } for
+
+    % Return the arguments
+    <<
+    /ren //renlinear
+    /sbs sbs
+    /bhs [sbs length 1 add 2 idiv {height} repeat]
+    /bbs [sbs length 1 add 2 idiv {0} repeat]
+    /txt txt
+    /textxalign (center)
+    /opt options
+    >>
+
+    dontdraw not //renlinear if
+
+    end
+
+} bind def
+%%/channelcode dup load /uk.co.terryburton.bwipp defineresource pop
+%%end
+%%/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END ENCODER channelcode--
+%%
+%% STUB OUT loadctx
+%%
+%%
+%% STUB OUT processoptions
+%%
+%%
+%% STUB OUT raiseerror
+%%
+% --BEGIN RENDERER renlinear--
+% --REQUIRES preamble raiseerror--
+%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2015021800 76908 76502
+%%BeginData:        237 ASCII Lines
+%% /setpacking where {pop currentpacking true setpacking} if
+%% 1 dict
+%% dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%% begin
+/renlinear {
+    20 dict begin          % Confine variables to local scope
+
+    %%/args exch def   % We are given some arguments
+
+    % Default options
+    /sbs [] def
+    /bhs [] def
+    /bbs [] def
+    /txt [] def
+    /barcolor (unset) def
+    /includetext false def
+    /textcolor (unset) def
+    /textxalign (unset) def
+    /textyalign (unset) def
+    /textfont (OCR-B) def
+    /textdirection (forward) def
+    /textsize 10.0 def
+    /textxoffset 0.0 def
+    /textyoffset 0.0 def
+    /textgaps 0.0 def
+    /textlinegaps 1.2 def
+    /alttext () def
+    /alttextsplit () def
+    /alttextsubspace () def
+    /extratext () def
+    /extratextsubspace () def
+    /extratextsplit () def
+    /extratextlinegaps 1.2 def
+    /extratextcolor (unset) def
+    /extratextxalign (left) def
+    /extratextyalign (above) def
+    /extratextfont (OCR-B) def
+    /extratextdirection (forward) def
+    /extratextsize 10.0 def
+    /extratextxoffset 0.0 def
+    /extratextyoffset 0.0 def
+    /extratextgaps 0.0 def
+    /bordercolor (unset) def
+%%    /backgroundcolor (unset) def
+    /inkspread 0 def      % Was 0.15
+    /width 0.0 def
+    /barratio 1.0 def
+    /spaceratio 1.0 def
+    /showborder false def
+    /showbearer false def
+    /borderleft 10.0 def
+    /borderright 10.0 def
+    /bordertop 1.0 def      % Was 0.0
+    /borderbottom 1.0 def   % Was 0.0
+    /borderwidth 0.5 def
+    /guardwhitespace false def
+    /guardleftpos 0.0 def
+    /guardleftypos 0.0 def
+    /guardrightpos 0.0 def
+    /guardrightypos 0.0 def
+    /guardwidth 7.0 def     % Was 5.0
+    /guardheight 7.0 def
+
+    {def} forall
+    opt currentdict /opt undef currentdict //processoptions exec pop
+
+    % Input validation
+
+    textxalign (unset) ne {
+        << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
+            /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
+        } if
+    } if
+
+    textyalign (unset) ne {
+        << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
+            /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
+        } if
+    } if
+
+    << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
+        /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
+    } if
+
+    textsize 0 le textsize 25 ge or {
+        /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
+    } if
+
+    << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
+        /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
+    } if
+
+    << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
+        /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
+    } if
+
+    << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
+        /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
+    } if
+
+    extratextsize 0 le extratextsize 25 ge or {
+        /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
+    } if
+
+    % Create bar elements and put them into the bars array
+    /bars sbs length 1 add 2 idiv array def
+    /pixx 0 def /pixy 0 def
+    0 1 sbs length 1 add 2 idiv 2 mul 2 sub {
+        /i exch def
+        i 2 mod 0 eq {           % i is even
+            /d sbs i get barratio mul barratio sub 1 add def  % d = digit*r-r+1
+            sbs i get 0 ne {
+                /h bhs i 2 idiv get 72 mul def  % Height from bhs
+                /c d 2 div pixx add def         % Centre of the bar = pixx + d/2
+                /y bbs i 2 idiv get 72 mul def  % Baseline from bbs
+                /w d inkspread sub def          % bar width = digit - inkspread
+                bars i 2 idiv [h c y w] put     % Add the bar entry
+                h y add pixy gt {/pixy h y add def} if
+            } {
+                bars i 2 idiv -1 put            % Dummy entry
+            } ifelse
+        } {
+            /d sbs i get spaceratio mul spaceratio sub 1 add def  % d = digit*r-r+1
+        } ifelse
+        /pixx pixx d add def  % pixx += d
+    } for
+
+    gsave
+
+    currentpoint translate
+
+    % Force symbol to given width
+    width 0 ne {
+        width 72 mul pixx div 1 scale
+    } if
+
+    % Display the border and background
+    % background is handled by the bwip-js drawing interface.
+    %backgroundcolor (unset) ne {
+    %    gsave
+    %    newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+    %    backgroundcolor setanycolor fill
+    %    grestore
+    %} if
+    /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+    /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+    /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+    /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+    showbearer {  % Overrides showborder
+        gsave
+        newpath
+        bl aload pop moveto br aload pop lineto
+        tl aload pop moveto tr aload pop lineto
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } {
+    showborder {
+        % This is the original showborder code from the old renlinear.
+        % It better spaces the border around the symbol.
+        %newpath
+        %borderleft neg borderbottom neg moveto
+        %pixx borderleft add borderright add 0 rlineto
+        %0 pixy borderbottom add bordertop add rlineto
+        %pixx borderleft add borderright add neg 0 rlineto
+        %0 pixy borderbottom add bordertop add neg rlineto
+        %closepath
+
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth setlinewidth stroke
+        grestore
+    } if } ifelse
+
+    % Display the bars for elements in the bars array
+    gsave
+    0 setlinecap
+    barcolor (unset) ne { barcolor setanycolor } if
+    bars {
+        dup -1 ne {
+            aload pop newpath setlinewidth moveto 0 exch rlineto stroke
+        } {
+            pop
+        } ifelse
+    } forall
+    grestore
+
+    /positions <<
+    %   direction
+    %       x-align                                y-align
+        (forward) <<
+            (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
+            (left)     {      0                }   (bottom)  {      0                }
+            (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
+            (right)    { pixx tw sub           }   (top)     { pixy th sub           }
+            (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
+        >>
+        (backward) <<
+            (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
+            (left)     {      tw               }   (bottom)  {      th               }
+            (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
+            (right)    { pixx                  }   (top)     { pixy                  }
+            (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
+        >>
+        (upward) <<
+            (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
+            (left)     {      th               }   (bottom)  {      0                }
+            (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
+            (right)    { pixx                  }   (top)     { pixy tw sub           }
+            (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
+        >>
+        (downward) <<
+            (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
+            (left)     {      0                }   (bottom)  {      tw               }
+            (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
+            (right)    { pixx th sub           }   (top)     { pixy                  }
+            (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
+        >>
+    >> def
+
+    % x-align y-align direction text-width text-height
+    /positiontext {
+        /th exch def
+        /tw exch def
+        /nudge 1 def
+        positions exch get dup
+        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+    } def
+
+    % Display the text for elements in the text array
+    includetext {
+
+        textcolor (unset) ne { textcolor setanycolor } if
+
+        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
+            /s 0 def /fn () def
+            txt {
+                aload pop
+                2 copy s ne exch fn ne or {
+                    dup 0 le {
+                        pop pop pop pop pop
+                        /bwipp.renlinearFontTooSmall (The font size is too small) //raiseerror exec
+                    } if
+                    2 copy /s exch def /fn exch def
+                    selectfont
+                } {
+                    pop pop
+                } ifelse
+                moveto show
+            } forall
+        } {
+
+            alttext () eq {
+                /txt [ txt { 0 get {} forall } forall ] def
+                /tstr txt length string def
+                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
+            } {
+                /tstr alttext def
+                0 1 alttext length 1 sub {
+                    dup
+                    alttext exch 1 getinterval alttextsubspace exch search {
+                        alttext 4 index 32 put pop pop
+                    } if
+                    pop pop
+                } for
+            } ifelse
+
+            alttext () ne alttextsplit () ne and {
+                alttextsplit length 1 ne {
+                    /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
+                } if
+                /textlines [
+                    tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
+                ] def
+            } {
+                /textlines [ tstr ] def
+            } ifelse
+
+            textfont textsize selectfont
+
+            % Find true ascent of font
+            tstr length 0 eq {
+                0
+            } {
+                gsave
+                newpath 0 0 moveto (0) false charpath pathbbox
+                4 1 roll pop pop pop
+                grestore
+%psc                 currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%psc                 currentfont /StrokeWidth known and {
+%psc                     currentfont /StrokeWidth get 2 div 0 exch
+%psc                     currentfont /FontMatrix get dtransform
+%psc                     dup mul exch dup mul add sqrt
+%psc                     add
+%psc                 } if
+            } ifelse
+            /textascent exch def
+
+            /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
+            /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
+
+            textxalign (unset) eq { /textxalign (center) def } if
+            textyalign (unset) eq { /textyalign (below)  def } if
+
+            textxalign (justify) eq {
+                textdirection (forward) ne textdirection (backward) ne and {
+                    /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
+                } if
+                textwidth pixx lt {
+                    /textgaps pixx textwidth sub tstr length 1 sub div def
+                    /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
+                } {
+                    /textgaps 0.0 def
+                    /textxalign (center) def
+                } ifelse
+            } if
+
+            textyalign (justify) eq {
+                textdirection (upward) ne textdirection (downward) ne and {
+                    /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
+                } if
+                textwidth pixy lt {
+                    /textgaps pixy textwidth sub tstr length 1 sub div def
+                    /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
+                } {
+                    /textgaps 0.0 def
+                    /textyalign (center) def
+                } ifelse
+            } if
+
+            textxalign textyalign textdirection textwidth textheight positiontext moveto
+            textxoffset textyoffset rmoveto
+            gsave
+            << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
+            currentpoint translate
+            0 1 textlines length 1 sub {
+                /i exch def
+                0 0 textascent textlinegaps add i mul add moveto
+                textgaps 0 textlines dup length i sub 1 sub get ashow
+            } for
+            grestore
+
+        } ifelse
+
+    } if
+
+    % Display the guard elements
+    guardwhitespace {
+		(OCR-B) guardheight 2 mul selectfont
+        guardleftpos 0 ne {
+            guardleftpos neg 2 sub guardleftypos guardheight 2 div sub 1.25 sub moveto
+			(<) show
+        } if
+        guardrightpos 0 ne {
+            guardrightpos pixx add guardwidth sub 1 add guardrightypos guardheight 2 div sub 1.25 sub moveto
+			(>) show
+        } if
+    } if
+
+    % Render any extratext
+    extratext () ne {
+
+        0 1 extratext length 1 sub {
+            dup
+            extratext exch 1 getinterval extratextsubspace exch search {
+                extratext 4 index 32 put pop pop
+            } if
+            pop pop
+        } for
+
+        extratextsplit () ne {
+            extratextsplit length 1 ne {
+                /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
+            } if
+            /textlines [
+                extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
+            ] def
+        } {
+            /textlines [ extratext ] def
+        } ifelse
+
+        extratextcolor (unset) ne { extratextcolor setanycolor } if
+        extratextfont extratextsize selectfont
+
+        % Find true ascent of font
+        gsave
+        newpath 0 0 moveto (0) false charpath pathbbox
+        4 1 roll pop pop pop
+        grestore
+%psc         currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%psc         currentfont /StrokeWidth known and {
+%psc             currentfont /StrokeWidth get 2 div 0 exch
+%psc             currentfont /FontMatrix get dtransform
+%psc             dup mul exch dup mul add sqrt
+%psc             add
+%psc         } if
+        /textascent exch def
+
+        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
+        /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
+
+        extratextxalign (justify) eq {
+            extratextdirection (forward) ne extratextdirection (backward) ne and {
+                /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
+            } if
+            textwidth pixx lt {
+                /extratextgaps pixx textwidth sub extratext length 1 sub div def
+                /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
+            } {
+                /extratextgaps 0.0 def
+                /extratextxalign (center) def
+            } ifelse
+        } if
+
+        extratextyalign (justify) eq {
+            extratextdirection (upward) ne extratextdirection (downward) ne and {
+                /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
+            } if
+            textwidth pixy lt {
+                /extratextgaps pixy textwidth sub extratext length 1 sub div def
+                /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
+            } {
+                /extratextgaps 0.0 def
+                /extratextyalign (center) def
+            } ifelse
+        } if
+
+        extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
+        extratextxoffset extratextyoffset rmoveto
+        gsave
+        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
+        currentpoint translate
+        0 1 textlines length 1 sub {
+            /i exch def
+            0 0 textascent extratextlinegaps add i mul add moveto
+            extratextgaps 0 textlines dup length i sub 1 sub get ashow
+        } for
+        grestore
+
+    } if
+
+    grestore
+
+    end
+
+} bind def
+%% /renlinear dup load /uk.co.terryburton.bwipp defineresource pop
+%% end
+%% /setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RENDERER renlinear--
+% --BEGIN RENDERER renmatrix--
+% --REQUIRES preamble raiseerror processoptions--
+%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2025041900 118278 116442
+%%BeginData:        408 ASCII Lines
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 10 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+/renmatrix {
+
+    20 dict begin
+
+    % Default options
+    /width 1.0 def
+    /height 1.0 def
+    /barcolor (unset) def
+%%    /backgroundcolor (unset) def
+    /bordercolor (unset) def
+    /colormap (unset) def
+    /dotty false def
+    /inkspread 0 def
+    /inkspreadh null def   % real sentinal
+    /inkspreadv null def   % real sentinal
+    /txt [] def
+    /includetext false def
+    /textcolor (unset) def
+    /textxalign (unset) def
+    /textyalign (unset) def
+    /textfont (OCR-B) def
+    /textdirection (forward) def
+    /textsize 10.0 def
+    /textxoffset 0.0 def
+    /textyoffset 0.0 def
+    /textgaps 0.0 def
+    /textlinegaps 1.2 def
+    /alttext () def
+    /alttextsplit () def
+    /alttextsubspace () def
+    /extratext () def
+    /extratextsubspace () def
+    /extratextsplit () def
+    /extratextlinegaps 1.2 def
+    /extratextcolor (unset) def
+    /extratextxalign (left) def
+    /extratextyalign (above) def
+    /extratextfont (OCR-B) def
+    /extratextdirection (forward) def
+    /extratextsize 10.0 def
+    /extratextxoffset 0.0 def
+    /extratextyoffset 0.0 def
+    /extratextgaps 0.0 def
+    /showborder false def
+    /borderleft 0.0 def
+    /borderright 0.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.25 def
+
+    {def} forall
+    opt currentdict /opt undef currentdict //processoptions exec pop
+
+    inkspreadh null eq {/inkspreadh inkspread def} if
+    inkspreadv null eq {/inkspreadv inkspread def} if
+
+    % Input validation
+
+    textxalign (unset) ne {
+        << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
+            /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
+        } if
+    } if
+
+    textyalign (unset) ne {
+        << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
+            /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
+        } if
+    } if
+
+    << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
+        /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
+    } if
+
+    textsize 0 le textsize 25 ge or {
+        /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
+    } if
+
+    << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
+        /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
+    } if
+
+    << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
+        /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
+    } if
+
+    << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
+        /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
+    } if
+
+    extratextsize 0 le extratextsize 25 ge or {
+        /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
+    } if
+
+%%    /uk.co.terryburton.bwipp.global_ctx dup where {
+%%        exch get /ctx exch def
+%%        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
+%%        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
+%%        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+%%    } { pop } ifelse
+%%
+%%    textsize 0 le {
+%%        /bwipp.renmatrixBadTextsize (The font size must be greater than zero) //raiseerror exec
+%%    } if
+%%
+%%    /xyget { pixx mul add pixs exch get} def
+%%    /cget { pixx mul add cache exch get and} def
+%%    /cput {  % Optimise by only storing "stem" corners
+%%        dup 4 mod 0 eq { % dir is up or left
+%%            3 1 roll pixx mul add cache exch 2 copy get 4 -1 roll or put
+%%        } {
+%%            pop pop pop
+%%        } ifelse
+%%    } def
+%%
+%%    /abcd {
+%%        4 string 0 [
+%%            5 -2 roll
+%%            pixx mul add dup
+%%            pixs exch 2 getinterval aload pop 3 -1 roll  % A B
+%%            pixs exch pixx add 2 getinterval aload pop   % C D
+%%        ] {3 copy 48 add put pop 1 add} forall pop
+%%    } def
+%%
+%%    /right {dir 1 ne {x y dir cput [x y]} if  /x x 1 add def  /dir 1 def} def
+%%    /down  {dir 2 ne {x y dir cput [x y]} if  /y y 1 add def  /dir 2 def} def
+%%    /left  {dir 4 ne {x y dir cput [x y]} if  /x x 1 sub def  /dir 4 def} def
+%%    /up    {dir 8 ne {x y dir cput [x y]} if  /y y 1 sub def  /dir 8 def} def
+%%
+%%    /trace {
+%%        % Walk the outline of a region emitting edge coordinates of the path
+%%        /y exch def  /x exch def
+%%        % dir 1:right 2:down 4:left 8:up
+%%        /dir x 1 add y 1 add xyget 1 eq {8} {4} ifelse def
+%%        /sx x def  /sy y def  /sdir dir def
+%%
+%%        % A B
+%%        % C D
+%%        mark {
+%%            x y abcd
+%%            1 {  % Common exit
+%%                dup dup (0001) eq exch dup (0011) eq exch (1011) eq or or {pop right exit} if
+%%                dup dup (0010) eq exch dup (1010) eq exch (1110) eq or or {pop down  exit} if
+%%                dup dup (1000) eq exch dup (1100) eq exch (1101) eq or or {pop left  exit} if
+%%                dup dup (0100) eq exch dup (0101) eq exch (0111) eq or or {pop up    exit} if
+%%                dup (1001) eq {
+%%                    dir 2 eq {pop left exit} {pop right exit} ifelse
+%%                } {  % 0110
+%%                    dir 1 eq {pop down exit} {pop up exit} ifelse
+%%                } ifelse
+%%            } repeat
+%%            x sx eq y sy eq and dir sdir eq and {exit} if
+%%        } loop
+%%        counttomark array astore exch pop
+%%
+%%    } def
+%%
+%%    % Set RGB or CMYK color, or some other color by name
+%%    /setanycolor {
+%%        /anycolor exch def
+%%        anycolor length 1 lt {
+%%            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
+%%        } if
+%%        anycolor 0 get 95 ne {  % RGB or CMYK
+%%            anycolor length dup 6 ne exch 8 ne and {
+%%                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
+%%            } if
+%%            mark
+%%            0 2 anycolor length 1 sub {
+%%                anycolor exch 2 getinterval 0 exch {
+%%                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
+%%                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F
+%%                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f
+%%                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
+%%                    } ifelse } ifelse } ifelse
+%%                    exch 16 mul add
+%%                } forall
+%%                255 div
+%%            } for
+%%            counttomark
+%%            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
+%%            exch 2 add -1 roll pop  % clear mark
+%%        } {  % Named color beginning "_..."
+%%            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
+%%            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
+%%            anycolor 2 copy known not {
+%%                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
+%%            } if
+%%            get mark exch aload pop counttomark 1 add -2 roll exch pop
+%%        } ifelse
+%%        { setcolorspace setcolor } stopped {
+%%            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
+%%        } if
+%%    } def
+%%
+%%    % Plot a layer of single colour
+%%    /drawlayer {
+%%
+%%        /pixsorig pixs def
+%%        /pixs exch def
+%%
+%%        % Pad the bitmap on all sides
+%%        /pixs [
+%%            pixx 2 add {0} repeat
+%%            0 pixx pixs length 1 sub {
+%%                0 exch
+%%                pixs exch pixx getinterval aload pop
+%%                0
+%%            } for
+%%            pixx 2 add {0} repeat
+%%        ] def
+%%        /pixx pixx 2 add def
+%%        /pixy pixy 2 add def
+%%
+%%        % Cache of visited corners for each direction
+%%        /cache [ pixs length {0} repeat ] def
+%%
+%%        % Construct paths by tracing regions avoiding duplication by using the cache
+%%        /paths [
+%%            0 1 pixy 2 sub {
+%%                /j exch def
+%%                0 1 pixx 2 sub {
+%%                    /i exch def
+%%                    /k i j abcd def
+%%                    k (0001) eq k (1001) eq or {  % Black region stem corners
+%%                        8 i j cget 0 eq {
+%%                            i j trace
+%%                        } if
+%%                    } if
+%%                    k (1110) eq {  % White region stem corner
+%%                        4 i j cget 0 eq {
+%%                            i j trace
+%%                        } if
+%%                    } if
+%%                } for
+%%            } for
+%%        ] def
+%%
+%%        % Revert the bitmap size
+%%        /pixx pixx 2 sub def
+%%        /pixy pixy 2 sub def
+%%
+%%        % Draw the image
+%%        newpath
+%%        paths {
+%%            /p exch def
+%%            /len p length def
+%%            p len 1 sub get aload pop
+%%            p 0 get aload pop
+%%            0 1 len 1 sub {                                % x1 y1 x2 y2
+%%                /i exch def
+%%                p i 1 add len mod get aload pop 6 -2 roll  % x3 y3 x1 y1 x2 y2
+%%                5 index inkspreadh
+%%                4 index 4 -1 roll lt {add} {sub} ifelse    % y3<y1 ? x2+i : x2-i
+%%                4 1 roll
+%%                4 index inkspreadv
+%%                4 index 4 -1 roll gt {add} {sub} ifelse    % x3>x1 ? y2+i : y2-i
+%%                4 -1 roll exch pixy exch sub
+%%                i 0 eq {moveto} {lineto} ifelse
+%%            } for                                          % x2 y2 x3 y3
+%%            closepath
+%%            pop pop pop pop
+%%        } forall
+%%        fill
+%%
+%%        /pixs pixsorig def
+%%
+%%    } def
+
+    /xyget { pixx mul add pixs exch get} def
+    /drawlayerdots {
+
+        /pixsorig pixs def
+        /pixs exch def
+
+        newpath
+        0 1 pixs length 1 sub {
+            dup pixx mod /x exch def
+            pixx idiv /y exch def
+            x y xyget 1 eq {
+               x 0.5 add pixy y sub 0.5 sub moveto
+               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc
+            } if
+        } for
+        fill
+
+        /pixs pixsorig def
+
+    } def
+
+    gsave
+
+    currentpoint translate
+
+    /inkspread  inkspread  2 div def
+    /inkspreadh inkspreadh 2 div def
+    /inkspreadv inkspreadv 2 div def
+
+    % Force symbol to given width
+    width pixx div 72 mul height pixy div 72 mul scale
+
+    % Display the border and background
+    showborder {
+        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+    } {  % No need to extend background when there is no border
+        /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def
+        /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def
+        /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def
+        /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def
+    } ifelse
+%%    backgroundcolor (unset) ne {
+%%        gsave
+%%        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%%        backgroundcolor setanycolor fill
+%%        grestore
+%%    } if
+    showborder {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } if
+
+    % Display the matrix
+    colormap (unset) eq {
+        /colormap << 1 barcolor >> def
+    } if
+
+    colormap {
+        dup (unset) ne { setanycolor } { pop } ifelse
+        /key exch def
+        [
+            pixs { key eq {1} {0} ifelse } forall
+        ] dotty {drawlayerdots} {drawlayer} ifelse
+    } forall
+
+    /positions <<
+    %   direction
+    %       x-align                                y-align
+        (forward) <<
+            (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
+            (left)     {      0                }   (bottom)  {      0                }
+            (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
+            (right)    { pixx tw sub           }   (top)     { pixy th sub           }
+            (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
+        >>
+        (backward) <<
+            (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
+            (left)     {      tw               }   (bottom)  {      th               }
+            (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
+            (right)    { pixx                  }   (top)     { pixy                  }
+            (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
+        >>
+        (upward) <<
+            (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
+            (left)     {      th               }   (bottom)  {      0                }
+            (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
+            (right)    { pixx                  }   (top)     { pixy tw sub           }
+            (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
+        >>
+        (downward) <<
+            (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
+            (left)     {      0                }   (bottom)  {      tw               }
+            (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
+            (right)    { pixx th sub           }   (top)     { pixy                  }
+            (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
+        >>
+    >> def
+
+    % x-align y-align direction text-width text-height
+    /positiontext {
+        /th exch def
+        /tw exch def
+        /nudge 1 def
+        positions exch get dup
+        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+    } def
+
+    % Display the text for elements in the text array
+    includetext {
+
+        textcolor (unset) ne { textcolor setanycolor } if
+
+        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
+            /s 0 def /fn () def
+            txt {
+                aload pop
+                2 copy s ne exch fn ne or {
+                    dup 0 le {
+                        pop pop pop pop pop
+                        /bwipp.renmatrixFontTooSmall (The font size is too small) //raiseerror exec
+                    } if
+                    2 copy /s exch def /fn exch def
+                    selectfont
+                } {
+                    pop pop
+                } ifelse
+                moveto show
+            } forall
+        } {
+
+            alttext () eq {
+                /txt [ txt { 0 get {} forall } forall ] def
+                /tstr txt length string def
+                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
+            } {
+                /tstr alttext def
+                0 1 alttext length 1 sub {
+                    dup
+                    alttext exch 1 getinterval alttextsubspace exch search {
+                        alttext 4 index 32 put pop pop
+                    } if
+                    pop pop
+                } for
+            } ifelse
+
+            alttext () ne alttextsplit () ne and {
+                alttextsplit length 1 ne {
+                    /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
+                } if
+                /textlines [
+                    tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
+                ] def
+            } {
+                /textlines [ tstr ] def
+            } ifelse
+
+            textfont textsize selectfont
+
+            % Find true ascent of font
+            tstr length 0 eq {
+                0
+            } {
+                gsave
+                newpath 0 0 moveto (0) false charpath pathbbox
+                4 1 roll pop pop pop
+                grestore
+%psc                 currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%psc                 currentfont /StrokeWidth known and {
+%psc                     currentfont /StrokeWidth get 2 div 0 exch
+%psc                     currentfont /FontMatrix get dtransform
+%psc                     dup mul exch dup mul add sqrt
+%psc                     add
+%psc                 } if
+            } ifelse
+            /textascent exch def
+
+            /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
+            /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
+
+            textxalign (unset) eq { /textxalign (center) def } if
+            textyalign (unset) eq { /textyalign (below)  def } if
+
+            textxalign (justify) eq {
+                textdirection (forward) ne textdirection (backward) ne and {
+                    /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
+                } if
+                textwidth pixx lt {
+                    /textgaps pixx textwidth sub tstr length 1 sub div def
+                    /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
+                } {
+                    /textgaps 0.0 def
+                    /textxalign (center) def
+                } ifelse
+            } if
+
+            textyalign (justify) eq {
+                textdirection (upward) ne textdirection (downward) ne and {
+                    /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
+                } if
+                textwidth pixy lt {
+                    /textgaps pixy textwidth sub tstr length 1 sub div def
+                    /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
+                } {
+                    /textgaps 0.0 def
+                    /textyalign (center) def
+                } ifelse
+            } if
+
+            textxalign textyalign textdirection textwidth textheight positiontext moveto
+            textxoffset textyoffset rmoveto
+            gsave
+            << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
+            currentpoint translate
+            0 1 textlines length 1 sub {
+                /i exch def
+                0 0 textascent textlinegaps add i mul add moveto
+                textgaps 0 textlines dup length i sub 1 sub get ashow
+            } for
+            grestore
+
+        } ifelse
+
+    } if
+
+    % Render any extratext
+    extratext () ne {
+
+        0 1 extratext length 1 sub {
+            dup
+            extratext exch 1 getinterval extratextsubspace exch search {
+                extratext 4 index 32 put pop pop
+            } if
+            pop pop
+        } for
+
+        extratextsplit () ne {
+            extratextsplit length 1 ne {
+                /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
+            } if
+            /textlines [
+                extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
+            ] def
+        } {
+            /textlines [ extratext ] def
+        } ifelse
+
+        extratextcolor (unset) ne { extratextcolor setanycolor } if
+        extratextfont extratextsize selectfont
+
+        % Find true ascent of font
+        gsave
+        newpath 0 0 moveto (0) false charpath pathbbox
+        4 1 roll pop pop pop
+        grestore
+%psc         currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+%psc         currentfont /StrokeWidth known and {
+%psc             currentfont /StrokeWidth get 2 div 0 exch
+%psc             currentfont /FontMatrix get dtransform
+%psc             dup mul exch dup mul add sqrt
+%psc             add
+%psc         } if
+        /textascent exch def
+
+        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
+        /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
+
+        extratextxalign (justify) eq {
+            extratextdirection (forward) ne extratextdirection (backward) ne and {
+                /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
+            } if
+            textwidth pixx lt {
+                /extratextgaps pixx textwidth sub extratext length 1 sub div def
+                /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
+            } {
+                /extratextgaps 0.0 def
+                /extratextxalign (center) def
+            } ifelse
+        } if
+
+        extratextyalign (justify) eq {
+            extratextdirection (upward) ne extratextdirection (downward) ne and {
+                /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
+            } if
+            textwidth pixy lt {
+                /extratextgaps pixy textwidth sub extratext length 1 sub div def
+                /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
+            } {
+                /extratextgaps 0.0 def
+                /extratextyalign (center) def
+            } ifelse
+        } if
+
+        extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
+        extratextxoffset extratextyoffset rmoveto
+        gsave
+        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
+        currentpoint translate
+        0 1 textlines length 1 sub {
+            /i exch def
+            0 0 textascent extratextlinegaps add i mul add moveto
+            extratextgaps 0 textlines dup length i sub 1 sub get ashow
+        } for
+        grestore
+
+    } if
+
+    grestore
+
+    end
+
+}
+%psc [/barcode] {null def} forall
+bind def
+%psc /renmatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RENDERER renmatrix--
+% --BEGIN RENDERER renmaximatrix--
+% --REQUIRES preamble raiseerror--
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2018020400 56037 55803
+%%BeginData:         79 ASCII Lines
+%%/setpacking where {pop currentpacking true setpacking} if
+%%1 dict
+%%dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+%%begin
+/renmaximatrix {
+
+    20 dict begin
+
+    % Default options
+    /barcolor (unset) def
+%%    /backgroundcolor (unset) def
+    /bordercolor (unset) def
+    /inkspread 0 def
+    /showborder false def
+    /borderleft 0.0 def
+    /borderright 0.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.25 def
+
+    {def} forall
+    opt currentdict /opt undef currentdict //processoptions exec pop
+
+    gsave
+
+    % Display the border and background
+    showborder {
+        /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
+        /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
+        /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
+        /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def
+    } {  % No need to extend background when there is no border
+        /tl [ borderleft neg inkspread add              29 bordertop add inkspread sub         ] def
+        /tr [ 30 borderright add inkspread sub          29 bordertop add inkspread sub         ] def
+        /bl [ borderleft neg inkspread add              borderbottom neg inkspread add         ] def
+        /br [ 30 borderright add inkspread sub          borderbottom neg inkspread add         ] def
+    } ifelse
+%%    backgroundcolor (unset) ne {
+%%        gsave
+%%        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%%        backgroundcolor setanycolor fill
+%%        grestore
+%%    } if
+    showborder {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } if
+
+    barcolor (unset) ne { barcolor setanycolor } if
+
+	pixs showmaxicode
+
+    grestore
+
+    end
+
+} bind def
+%%/renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
+%%end
+%%/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RENDERER renmaximatrix--
+%%
+%% STUB OUT unloadctx
+%%

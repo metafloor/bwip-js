@@ -1,0 +1,27 @@
+#!/bin/bash
+## Usage: bwdiff symbol
+##
+## Diffs the symbol's code in ./barcode.ps with master/barcode.ps.
+if [ $# != 1 ] ; then
+    echo "Usage: bwdiff symbol"
+    echo "Example: ./bwdiff gs1-128composite"
+    exit 1
+fi
+
+SYM=$1
+
+
+sed -n "/^\/$SYM {/,/^\}/{//!p}" barcode.ps > /tmp/bwdiff.dev
+sed -n "/^\/$SYM {/,/^\}/{//!p}" /c/bwip-js/master/barcode.ps > /tmp/bwdiff.cur
+if [ ! -s /tmp/bwdiff.dev ] ; then
+    echo "bwdiff: $SYM not found in ./barcode.ps"
+    exit 1
+fi
+if [ ! -s /tmp/bwdiff.cur ] ; then
+    echo "bwdiff: $SYM not found in master/barcode.ps"
+    exit 1
+fi
+diff /tmp/bwdiff.dev /tmp/bwdiff.cur
+rm -f /tmp/bwdiff.*
+exit 0
+

@@ -4,13 +4,18 @@
 ## usage: gsimage symbol text opts
 ##
 ## Use BWIPP with ghostscript to create an image.
+if [ $# = 0 ] ; then
+    echo "Usage: gsimage symbol text [options]"
+    exit 1
+fi
+
 sym="$1"
 text="$2"
 opts="$3"
 
 ## Use node to create the output file name
 outfile=$(node <<@EOF
-console.log(Buffer.from('$sym $text $opts'.trim().replace(/ /g, '-')).toString('binary').replace(/[\x00-\x1f\x7f-\xff]/g, (c) => '%'+('0'+c.charCodeAt(0).toString(16)).slice(-2)) + '.png');
+console.log(Buffer.from('$sym $text $opts'.trim().replace(/ /g, '-').replace(/=/g, '_')).toString('binary').replace(/[\x00-\x1f\x7f-\xff]/g, (c) => '%'+('0'+c.charCodeAt(0).toString(16)).slice(-2)) + '.png');
 @EOF
 )
 
@@ -22,6 +27,10 @@ cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=bbox - 2>&1 |
 ($text) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec showpage
 @EOF
 )
+cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=bbox - 2>&1 
+50 50 moveto 2 2 scale
+($text) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec showpage
+@EOF
 
 ## Rerun to generate the image (rendered to US Letter page size).
 cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=1 -dTextAlphaBits=4 -sOutputFile=/tmp/gsimage.png -

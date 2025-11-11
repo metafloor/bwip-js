@@ -1,6 +1,6 @@
 %!PS
 
-% Barcode Writer in Pure PostScript - Version 2025-04-19
+% Barcode Writer in Pure PostScript - Version 2025-10-24
 % https://bwipp.terryburton.co.uk
 %
 % Copyright (c) 2004-2024 Terry Burton
@@ -32,7 +32,7 @@
 % --BEGIN TEMPLATE--
 
 % --BEGIN RESOURCE preamble--
-%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2025041900 29733 32838
+%%BeginResource: Category uk.co.terryburton.bwipp 0.0 2025102400 29733 32838
 %%BeginData:          6 ASCII Lines
 currentglobal
 true setglobal
@@ -46,7 +46,7 @@ setglobal
 
 % --BEGIN RESOURCE loadctx--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp loadctx 0.0 2025041900 41297 40927
+%%BeginResource: uk.co.terryburton.bwipp loadctx 0.0 2025102400 41297 40927
 %%BeginData:         30 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -84,7 +84,7 @@ end
 
 % --BEGIN RESOURCE unloadctx--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp unloadctx 0.0 2025041900 38938 38741
+%%BeginResource: uk.co.terryburton.bwipp unloadctx 0.0 2025102400 38938 38741
 %%BeginData:         14 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 1 dict
@@ -106,7 +106,7 @@ end
 
 % --BEGIN RESOURCE raiseerror--
 % --REQUIRES preamble--
-%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2025041900 39029 38860
+%%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2025102400 39029 38860
 %%BeginData:         15 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -129,7 +129,7 @@ end
 
 % --BEGIN RESOURCE processoptions--
 % --REQUIRES preamble raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2025041900 48428 48479
+%%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2025102400 48428 48479
 %%BeginData:         50 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -187,7 +187,7 @@ end
 
 % --BEGIN RESOURCE parseinput--
 % --REQUIRES preamble loadctx unloadctx raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2025041900 73998 69831
+%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2025102400 73998 69831
 %%BeginData:        178 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -373,8 +373,8 @@ end
 
 % --BEGIN RESOURCE gs1process--
 % --REQUIRES preamble loadctx unloadctx parseinput raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2025041900 681356 711932
-%%BeginData:       3298 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2025102400 694613 718381
+%%BeginData:       3307 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
 dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -394,7 +394,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 18  /max 18  /opt false  /linters [ /lintcsum /lintkeyoff1 ] >>
+                << /cset /N  /min 18  /max 18  /opt false  /linters [ /lintcsum /lintgcppos2 ] >>
             ]
             /dlpkey [ ]
         >>
@@ -403,7 +403,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintkeyoff1 ] >>
+                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintgcppos2 ] >>
             ]
             /ex     [ (255) (37) ]
             /dlpkey [ [ (22) (10) (21) ] [ (235) ] ]
@@ -413,7 +413,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintkeyoff1 ] >>
+                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintgcppos2 ] >>
             ]
             /ex     [ (01) (03) ]
             /req    [ [ [ (37) ] ] ]
@@ -423,7 +423,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintkeyoff1 ] >>
+                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintgcppos2 ] >>
             ]
             /ex     [ (01) (02) (37) ]
             /dlattr false
@@ -444,7 +444,7 @@ begin
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmd0 ] >>
             ]
-            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (03) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (11) exch dup
         pop
@@ -462,7 +462,7 @@ begin
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmd0 ] >>
             ]
-            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (03) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (13) exch dup
         (15) exch dup
@@ -473,7 +473,7 @@ begin
             /parts [
                 << /cset /N  /min  6  /max  6  /opt false  /linters [ /lintyymmd0 ] >>
             ]
-            /req    [ [ [ (01) ] [ (02) ] [ (255) ] [ (8006) ] [ (8026) ] ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (03) ] [ (255) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (17) exch dup
         pop
@@ -532,7 +532,7 @@ begin
             /parts [
                 << /cset /N  /min  1  /max  6  /opt false  /linters [] >>
             ]
-            /req    [ [ [ (01) ] [ (02) ] [ (03) ] [ (8006) ] [ (8026) ] ] ]
+            /req    [ [ [ (01) ] [ (02) ] [ (8006) ] [ (8026) ] ] ]
         >>
         (242) exch dup
         pop
@@ -566,7 +566,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
                 << /cset /X  /min  1  /max 17  /opt true   /linters [] >>
             ]
             /dlpkey [ ]
@@ -586,7 +586,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
                 << /cset /N  /min  1  /max 12  /opt true   /linters [] >>
             ]
             /ex     [ (01) (02) (415) (8006) (8020) (8026) ]
@@ -1524,7 +1524,7 @@ begin
 
         <<
             /parts [
-                << /cset /X  /min  1  /max 30  /opt false  /linters [ /lintkey ] >>
+                << /cset /X  /min  1  /max 30  /opt false  /linters [ /lintgcppos1 ] >>
             ]
             /dlpkey [ ]
         >>
@@ -1533,7 +1533,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 17  /max 17  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 17  /max 17  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
             ]
             /dlpkey [ ]
         >>
@@ -1551,7 +1551,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
             ]
         >>
         (410) exch dup
@@ -1562,7 +1562,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
             ]
             /dlpkey [ [ (254) ] [ (7040) ] ]
         >>
@@ -1571,7 +1571,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
             ]
             /req    [ [ [ (8020) ] ] ]
             /dlpkey [ [ (8020) ] ]
@@ -1581,7 +1581,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
             ]
         >>
         (416) exch dup
@@ -1589,7 +1589,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
             ]
             /dlpkey [ [ (7040) ] ]
         >>
@@ -2029,7 +2029,7 @@ begin
 
         <<
             /parts [
-                << /cset /X  /min  1  /max 30  /opt false  /linters [ /lintkey ] >>
+                << /cset /X  /min  1  /max 30  /opt false  /linters [ /lintgcppos1 ] >>
             ]
         >>
         (7023) exch dup
@@ -2249,7 +2249,7 @@ begin
         <<
             /parts [
                 << /cset /N  /min  1  /max  1  /opt false  /linters [ /lintzero ] >>
-                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 13  /max 13  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
                 << /cset /X  /min  1  /max 16  /opt true   /linters [] >>
             ]
             /dlpkey [ ]
@@ -2259,7 +2259,7 @@ begin
 
         <<
             /parts [
-                << /cset /X  /min  1  /max 30  /opt false  /linters [ /lintkey ] >>
+                << /cset /X  /min  1  /max 30  /opt false  /linters [ /lintgcppos1 ] >>
             ]
             /dlpkey [ [ (7040) ] ]
         >>
@@ -2277,7 +2277,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum ] >>
+                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintgcppos2 ] >>
                 << /cset /N  /min  4  /max  4  /opt false  /linters [ /lintpieceoftotal ] >>
             ]
             /ex     [ (01) (37) ]
@@ -2318,7 +2318,7 @@ begin
 
         <<
             /parts [
-                << /cset /Y  /min  1  /max 30  /opt false  /linters [ /lintkey ] >>
+                << /cset /Y  /min  1  /max 30  /opt false  /linters [ /lintgcppos1 ] >>
             ]
             /dlpkey [ [ (8011) ] ]
         >>
@@ -2346,7 +2346,7 @@ begin
 
         <<
             /parts [
-                << /cset /X  /min  1  /max 25  /opt false  /linters [ /lintcsumalpha /lintkey ] >>
+                << /cset /X  /min  1  /max 25  /opt false  /linters [ /lintcsumalpha /lintgcppos1 ] >>
             ]
             /dlpkey [ ]
         >>
@@ -2355,7 +2355,7 @@ begin
 
         <<
             /parts [
-                << /cset /X  /min  1  /max 25  /opt false  /linters [ /lintcsumalpha /lintkey /linthasnondigit ] >>
+                << /cset /X  /min  1  /max 25  /opt false  /linters [ /lintcsumalpha /lintgcppos1 /linthasnondigit ] >>
             ]
             /req    [ [ [ (01) ] ] ]
             /dlattr false
@@ -2365,7 +2365,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 18  /max 18  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 18  /max 18  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
             ]
             /ex     [ (8018) ]
             /dlpkey [ [ (8019) ] ]
@@ -2375,7 +2375,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 18  /max 18  /opt false  /linters [ /lintcsum /lintkey ] >>
+                << /cset /N  /min 18  /max 18  /opt false  /linters [ /lintcsum /lintgcppos1 ] >>
             ]
             /ex     [ (8017) ]
             /dlpkey [ [ (8019) ] ]
@@ -2405,7 +2405,7 @@ begin
 
         <<
             /parts [
-                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum ] >>
+                << /cset /N  /min 14  /max 14  /opt false  /linters [ /lintcsum /lintgcppos2 ] >>
                 << /cset /N  /min  4  /max  4  /opt false  /linters [ /lintpieceoftotal ] >>
             ]
             /ex     [ (02) (8006) ]
@@ -2777,26 +2777,35 @@ begin
 
     /lintcset39 {
         true exch { cset39 exch known not { pop false exit } if } forall
-        not { pop /bwipp.GS1badCSET39character  (Invalid CSET 39 character) false exit } if
+        not { pop /bwipp.GS1badCSET39character (Invalid CSET 39 character) false exit } if
     } def
 
     /lintcset64 {
-        % TODO Validate base64 padding rules
-        true exch { dup cset64 exch known not exch 61 ne and { pop false exit } if } forall
-        not { pop /bwipp.GS1badCSET64character  (Invalid CSET 64 character) false exit } if
+        % Trim and validate any padding. Padding is not compulsory.
+        dup (=) search {
+           exch pop dup length 3 mod exch 3 1 roll false
+           1 index 1 eq 3 index (=) eq and {pop true} if
+           1 index 2 eq 3 index ()  eq and {pop true} if
+           not { pop pop pop pop pop /bwipp.GS1badCSET64padding (Invalid CSET 64 padding) false exit } if
+           pop pop exch
+        } if
+        pop
+        % Verify the character set of the remainder
+        true exch { cset64 exch known not { pop false exit } if } forall
+        not { pop /bwipp.GS1badCSET64character (Invalid CSET 64 character) false exit } if
     } def
 
-    /lintkey {
-        dup length 2 lt { pop pop /bwipp.GS1keyTooShort (Key is too short) false exit } if
+    /lintgcppos1 {
+        dup length 2 lt { pop pop /bwipp.GS1gcpTooShort (Value is too short to contain a GS1 Company Prefix) false exit } if
         dup 0 get dup 48 lt exch 57 gt or exch
         1 get dup 48 lt exch 57 gt or or {
-            pop /bwipp.GS1badGCP (Non-numeric company prefix) false exit
+            pop /bwipp.GS1badGCP (Non-numeric GS1 Company Prefix) false exit
         } if
     } def
 
-    /lintkeyoff1 {
-        dup length 1 lt { pop pop /bwipp.GS1valueTooShortForOffsetKey (Value is too short for an offset key) false exit } if
-        dup length 1 sub 1 exch getinterval lintkey
+    /lintgcppos2 {
+        dup length 1 lt { pop pop /bwipp.GS1valueTooShortForOffsetGCP (Value is too short to contain an offset GS1 Company Prefix) false exit } if
+        dup length 1 sub 1 exch getinterval lintgcppos1
     } def
 
     /lintimporteridx {
@@ -2913,7 +2922,7 @@ begin
         /152 /156 /170 /174 /188 /191 /192
         /203 /208 /214 /222 /230 /232 /238 /242 /262 /270 /292
         /320 /324 /328 /332 /340 /344 /348
-        /352 /356 /360 /364 /368 /376 /388 /392 /398
+        /352 /356 /360 /364 /368 /376 /388 /392 /396 /398
         /400 /404 /408 /410 /414 /417 /418
         /422 /426 /430 /434 /446
         /454 /458 /462 /480 /484 /496 /498
@@ -3679,8 +3688,8 @@ end
 
 % --BEGIN RENDERER renlinear--
 % --REQUIRES preamble raiseerror processoptions--
-%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2025041900 101449 99717
-%%BeginData:        322 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2025102400 129767 127544
+%%BeginData:        507 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -3703,16 +3712,24 @@ begin
 %    /textcolor (unset) def
 %    /textxalign (unset) def
 %    /textyalign (unset) def
+%    /textdirection (forward) def
 %    /textfont (Courier) def
 %    /textsize 10.0 def
 %    /textxoffset 0.0 def
 %    /textyoffset 0.0 def
 %    /textgaps 0.0 def
+%    /textlinegaps 1.2 def
 %    /alttext () def
+%    /alttextsplit () def
+%    /alttextsubspace () def
 %    /extratext () def
+%    /extratextsubspace () def
+%    /extratextsplit () def
+%    /extratextlinegaps 1.2 def
 %    /extratextcolor (unset) def
 %    /extratextxalign (left) def
 %    /extratextyalign (above) def
+%    /extratextdirection (forward) def
 %    /extratextfont (Courier) def
 %    /extratextsize 10.0 def
 %    /extratextxoffset 0.0 def
@@ -3743,16 +3760,50 @@ begin
 %    {def} forall
 %    opt currentdict /opt undef //processoptions exec pop
 
-%    textsize 0 le {
-%        /bwipp.renlinearBadTextsize (The font size must be greater than zero) //raiseerror exec
-%    } if
-
 %    /uk.co.terryburton.bwipp.global_ctx dup where {
 %        exch get /ctx exch def
 %        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
 %        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
 %        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
 %    } { pop } ifelse
+
+%    % Input validation
+
+%    textxalign (unset) ne {
+%        << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
+%            /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
+%        } if
+%    } if
+
+%    textyalign (unset) ne {
+%        << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
+%            /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
+%        } if
+%    } if
+
+%    << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
+%        /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
+%    } if
+
+%    textsize 0 le textsize 25 ge or {
+%        /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
+%    } if
+
+%    << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
+%        /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
+%    } if
+
+%    << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
+%        /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
+%    } if
+
+%    << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
+%        /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
+%    } if
+
+%    extratextsize 0 le extratextsize 25 ge or {
+%        /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
+%    } if
 
 %    % Create bar elements and put them into the bars array
 %    /bars sbs length 1 add 2 idiv array def
@@ -3879,9 +3930,54 @@ begin
 %    fill
 %    grestore
 
+%    /positions <<
+%    %   direction
+%    %       x-align                                y-align
+%        (forward) <<
+%            (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
+%            (left)     {      0                }   (bottom)  {      0                }
+%            (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
+%            (right)    { pixx tw sub           }   (top)     { pixy th sub           }
+%            (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
+%        >>
+%        (backward) <<
+%            (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
+%            (left)     {      tw               }   (bottom)  {      th               }
+%            (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
+%            (right)    { pixx                  }   (top)     { pixy                  }
+%            (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
+%        >>
+%        (upward) <<
+%            (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
+%            (left)     {      th               }   (bottom)  {      0                }
+%            (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
+%            (right)    { pixx                  }   (top)     { pixy tw sub           }
+%            (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
+%        >>
+%        (downward) <<
+%            (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
+%            (left)     {      0                }   (bottom)  {      tw               }
+%            (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
+%            (right)    { pixx th sub           }   (top)     { pixy                  }
+%            (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
+%        >>
+%    >> def
+
+%    % x-align y-align direction text-width text-height
+%    /positiontext {
+%        /th exch def
+%        /tw exch def
+%        /nudge 1 def
+%        positions exch get dup
+%        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+%        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+%    } def
+
 %    % Display the text for elements in the text array
 %    includetext {
+
 %        textcolor (unset) ne { textcolor setanycolor } if
+
 %        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
 %            /s 0 def /fn () def
 %            txt {
@@ -3899,14 +3995,34 @@ begin
 %                moveto show
 %            } forall
 %        } {
-%            textfont textsize selectfont
+
 %            alttext () eq {
 %                /txt [ txt { 0 get {} forall } forall ] def
 %                /tstr txt length string def
 %                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
 %            } {
 %                /tstr alttext def
+%                0 1 alttext length 1 sub {
+%                    dup
+%                    alttext exch 1 getinterval alttextsubspace exch search {
+%                        alttext 4 index 32 put pop pop
+%                    } if
+%                    pop pop
+%                } for
 %            } ifelse
+
+%            alttext () ne alttextsplit () ne and {
+%                alttextsplit length 1 ne {
+%                    /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
+%                } if
+%                /textlines [
+%                    tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
+%                ] def
+%            } {
+%                /textlines [ tstr ] def
+%            } ifelse
+
+%            textfont textsize selectfont
 
 %            % Find true ascent of font
 %            tstr length 0 eq {
@@ -3925,22 +4041,53 @@ begin
 %                } if
 %            } ifelse
 %            /textascent exch def
-%            /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
 
-%            /textxpos textxoffset pixx textwidth sub 2 div add def
-%            textxalign (left)     eq { /textxpos textxoffset def } if
-%            textxalign (right)    eq { /textxpos pixx textxoffset sub textwidth sub def } if
-%            textxalign (offleft)  eq { /textxpos textwidth textxoffset add neg def } if
-%            textxalign (offright) eq { /textxpos pixx textxoffset add def } if
-%            textxalign (justify)  eq textwidth pixx lt and {
-%                /textxpos 0.0 def
-%                /textgaps pixx textwidth sub tstr length 1 sub div def
+%            /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
+%            /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
+
+%            textxalign (unset) eq { /textxalign (center) def } if
+%            textyalign (unset) eq { /textyalign (below)  def } if
+
+%            textxalign (justify) eq {
+%                textdirection (forward) ne textdirection (backward) ne and {
+%                    /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
+%                } if
+%                textwidth pixx lt {
+%                    /textgaps pixx textwidth sub tstr length 1 sub div def
+%                    /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
+%                } {
+%                    /textgaps 0.0 def
+%                    /textxalign (center) def
+%                } ifelse
 %            } if
-%            /textypos textyoffset textascent add 1 add neg def
-%            textyalign (above)  eq { /textypos textyoffset pixy add 1 add def } if
-%            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
-%            textxpos textypos moveto textgaps 0 tstr ashow
+
+%            textyalign (justify) eq {
+%                textdirection (upward) ne textdirection (downward) ne and {
+%                    /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
+%                } if
+%                textwidth pixy lt {
+%                    /textgaps pixy textwidth sub tstr length 1 sub div def
+%                    /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
+%                } {
+%                    /textgaps 0.0 def
+%                    /textyalign (center) def
+%                } ifelse
+%            } if
+
+%            textxalign textyalign textdirection textwidth textheight positiontext moveto
+%            textxoffset textyoffset rmoveto
+%            gsave
+%            << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
+%            currentpoint translate
+%            0 1 textlines length 1 sub {
+%                /i exch def
+%                0 0 textascent textlinegaps add i mul add moveto
+%                textgaps 0 textlines dup length i sub 1 sub get ashow
+%            } for
+%            grestore
+
 %        } ifelse
+
 %    } if
 
 %    % Display the guard elements
@@ -3964,6 +4111,26 @@ begin
 
 %    % Render any extratext
 %    extratext () ne {
+
+%        0 1 extratext length 1 sub {
+%            dup
+%            extratext exch 1 getinterval extratextsubspace exch search {
+%                extratext 4 index 32 put pop pop
+%            } if
+%            pop pop
+%        } for
+
+%        extratextsplit () ne {
+%            extratextsplit length 1 ne {
+%                /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
+%            } if
+%            /textlines [
+%                extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
+%            ] def
+%        } {
+%            /textlines [ extratext ] def
+%        } ifelse
+
 %        extratextcolor (unset) ne { extratextcolor setanycolor } if
 %        extratextfont extratextsize selectfont
 
@@ -3980,21 +4147,48 @@ begin
 %            add
 %        } if
 %        /textascent exch def
-%        /textwidth extratext stringwidth pop extratext length 1 sub extratextgaps mul add def
 
-%        /extratextxpos extratextxoffset pixx textwidth sub 2 div add def
-%        extratextxalign (left)     eq { /textxpos extratextxoffset def } if
-%        extratextxalign (right)    eq { /textxpos pixx extratextxoffset sub textwidth sub def } if
-%        extratextxalign (offleft)  eq { /textxpos textwidth extratextxoffset add neg def } if
-%        extratextxalign (offright) eq { /textxpos pixx extratextxoffset add def } if
-%        extratextxalign (justify)  eq textwidth pixx lt and {
-%            /textxpos 0.0 def
-%            /extratextgaps pixx textwidth sub extratext length 1 sub div def
+%        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
+%        /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
+
+%        extratextxalign (justify) eq {
+%            extratextdirection (forward) ne extratextdirection (backward) ne and {
+%                /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
+%            } if
+%            textwidth pixx lt {
+%                /extratextgaps pixx textwidth sub extratext length 1 sub div def
+%                /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
+%            } {
+%                /extratextgaps 0.0 def
+%                /extratextxalign (center) def
+%            } ifelse
 %        } if
-%        /textypos extratextyoffset textascent add 1 add neg def
-%        extratextyalign (above)  eq { /textypos extratextyoffset pixy add 1 add def } if
-%        extratextyalign (center) eq { /textypos extratextyoffset pixy textascent sub 2 div add def } if
-%        textxpos textypos moveto extratextgaps 0 extratext ashow
+
+%        extratextyalign (justify) eq {
+%            extratextdirection (upward) ne extratextdirection (downward) ne and {
+%                /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
+%            } if
+%            textwidth pixy lt {
+%                /extratextgaps pixy textwidth sub extratext length 1 sub div def
+%                /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
+%            } {
+%                /extratextgaps 0.0 def
+%                /extratextyalign (center) def
+%            } ifelse
+%        } if
+
+%        extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
+%        extratextxoffset extratextyoffset rmoveto
+%        gsave
+%        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
+%        currentpoint translate
+%        0 1 textlines length 1 sub {
+%            /i exch def
+%            0 0 textascent extratextlinegaps add i mul add moveto
+%            extratextgaps 0 textlines dup length i sub 1 sub get ashow
+%        } for
+%        grestore
+
 %    } if
 
 %    grestore
@@ -4013,8 +4207,8 @@ end
 
 % --BEGIN RENDERER renmatrix--
 % --REQUIRES preamble raiseerror processoptions--
-%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2025041900 118278 116442
-%%BeginData:        408 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2025102400 146907 144397
+%%BeginData:        593 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
@@ -4042,16 +4236,24 @@ begin
 %    /textcolor (unset) def
 %    /textxalign (unset) def
 %    /textyalign (unset) def
+%    /textdirection (forward) def
 %    /textfont (Courier) def
 %    /textsize 10.0 def
 %    /textxoffset 0.0 def
 %    /textyoffset 0.0 def
 %    /textgaps 0.0 def
+%    /textlinegaps 1.2 def
 %    /alttext () def
+%    /alttextsplit () def
+%    /alttextsubspace () def
 %    /extratext () def
+%    /extratextsubspace () def
+%    /extratextsplit () def
+%    /extratextlinegaps 1.2 def
 %    /extratextcolor (unset) def
 %    /extratextxalign (left) def
 %    /extratextyalign (above) def
+%    /extratextdirection (forward) def
 %    /extratextfont (Courier) def
 %    /extratextsize 10.0 def
 %    /extratextxoffset 0.0 def
@@ -4078,8 +4280,42 @@ begin
 %        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
 %    } { pop } ifelse
 
-%    textsize 0 le {
-%        /bwipp.renmatrixBadTextsize (The font size must be greater than zero) //raiseerror exec
+%    % Input validation
+
+%    textxalign (unset) ne {
+%        << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
+%            /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
+%        } if
+%    } if
+
+%    textyalign (unset) ne {
+%        << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
+%            /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
+%        } if
+%    } if
+
+%    << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
+%        /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
+%    } if
+
+%    textsize 0 le textsize 25 ge or {
+%        /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
+%    } if
+
+%    << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
+%        /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
+%    } if
+
+%    << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
+%        /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
+%    } if
+
+%    << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
+%        /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
+%    } if
+
+%    extratextsize 0 le extratextsize 25 ge or {
+%        /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
 %    } if
 
 %    /xyget { pixx mul add pixs exch get} def
@@ -4316,9 +4552,54 @@ begin
 %        ] dotty {drawlayerdots} {drawlayer} ifelse
 %    } forall
 
+%    /positions <<
+%    %   direction
+%    %       x-align                                y-align
+%        (forward) <<
+%            (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
+%            (left)     {      0                }   (bottom)  {      0                }
+%            (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
+%            (right)    { pixx tw sub           }   (top)     { pixy th sub           }
+%            (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
+%        >>
+%        (backward) <<
+%            (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
+%            (left)     {      tw               }   (bottom)  {      th               }
+%            (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
+%            (right)    { pixx                  }   (top)     { pixy                  }
+%            (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
+%        >>
+%        (upward) <<
+%            (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
+%            (left)     {      th               }   (bottom)  {      0                }
+%            (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
+%            (right)    { pixx                  }   (top)     { pixy tw sub           }
+%            (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
+%        >>
+%        (downward) <<
+%            (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
+%            (left)     {      0                }   (bottom)  {      tw               }
+%            (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
+%            (right)    { pixx th sub           }   (top)     { pixy                  }
+%            (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
+%        >>
+%    >> def
+
+%    % x-align y-align direction text-width text-height
+%    /positiontext {
+%        /th exch def
+%        /tw exch def
+%        /nudge 1 def
+%        positions exch get dup
+%        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+%        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+%    } def
+
 %    % Display the text for elements in the text array
 %    includetext {
+
 %        textcolor (unset) ne { textcolor setanycolor } if
+
 %        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
 %            /s 0 def /fn () def
 %            txt {
@@ -4336,14 +4617,34 @@ begin
 %                moveto show
 %            } forall
 %        } {
-%            textfont textsize selectfont
+
 %            alttext () eq {
 %                /txt [ txt { 0 get {} forall } forall ] def
 %                /tstr txt length string def
 %                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
 %            } {
 %                /tstr alttext def
+%                0 1 alttext length 1 sub {
+%                    dup
+%                    alttext exch 1 getinterval alttextsubspace exch search {
+%                        alttext 4 index 32 put pop pop
+%                    } if
+%                    pop pop
+%                } for
 %            } ifelse
+
+%            alttext () ne alttextsplit () ne and {
+%                alttextsplit length 1 ne {
+%                    /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
+%                } if
+%                /textlines [
+%                    tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
+%                ] def
+%            } {
+%                /textlines [ tstr ] def
+%            } ifelse
+
+%            textfont textsize selectfont
 
 %            % Find true ascent of font
 %            tstr length 0 eq {
@@ -4362,26 +4663,77 @@ begin
 %                } if
 %            } ifelse
 %            /textascent exch def
-%            /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
 
-%            /textxpos textxoffset pixx textwidth sub 2 div add def
-%            textxalign (left)     eq { /textxpos textxoffset def } if
-%            textxalign (right)    eq { /textxpos pixx textxoffset sub textwidth sub def } if
-%            textxalign (offleft)  eq { /textxpos textwidth textxoffset add neg def } if
-%            textxalign (offright) eq { /textxpos pixx textxoffset add def } if
-%            textxalign (justify)  eq textwidth pixx lt and {
-%                /textxpos 0.0 def
-%                /textgaps pixx textwidth sub tstr length 1 sub div def
+%            /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
+%            /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
+
+%            textxalign (unset) eq { /textxalign (center) def } if
+%            textyalign (unset) eq { /textyalign (below)  def } if
+
+%            textxalign (justify) eq {
+%                textdirection (forward) ne textdirection (backward) ne and {
+%                    /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
+%                } if
+%                textwidth pixx lt {
+%                    /textgaps pixx textwidth sub tstr length 1 sub div def
+%                    /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
+%                } {
+%                    /textgaps 0.0 def
+%                    /textxalign (center) def
+%                } ifelse
 %            } if
-%            /textypos textyoffset textascent add 1 add neg def
-%            textyalign (above)  eq { /textypos textyoffset pixy add 1 add def } if
-%            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
-%            textxpos textypos moveto textgaps 0 tstr ashow
+
+%            textyalign (justify) eq {
+%                textdirection (upward) ne textdirection (downward) ne and {
+%                    /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
+%                } if
+%                textwidth pixy lt {
+%                    /textgaps pixy textwidth sub tstr length 1 sub div def
+%                    /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
+%                } {
+%                    /textgaps 0.0 def
+%                    /textyalign (center) def
+%                } ifelse
+%            } if
+
+%            textxalign textyalign textdirection textwidth textheight positiontext moveto
+%            textxoffset textyoffset rmoveto
+%            gsave
+%            << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
+%            currentpoint translate
+%            0 1 textlines length 1 sub {
+%                /i exch def
+%                0 0 textascent textlinegaps add i mul add moveto
+%                textgaps 0 textlines dup length i sub 1 sub get ashow
+%            } for
+%            grestore
+
 %        } ifelse
+
 %    } if
 
 %    % Render any extratext
 %    extratext () ne {
+
+%        0 1 extratext length 1 sub {
+%            dup
+%            extratext exch 1 getinterval extratextsubspace exch search {
+%                extratext 4 index 32 put pop pop
+%            } if
+%            pop pop
+%        } for
+
+%        extratextsplit () ne {
+%            extratextsplit length 1 ne {
+%                /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
+%            } if
+%            /textlines [
+%                extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
+%            ] def
+%        } {
+%            /textlines [ extratext ] def
+%        } ifelse
+
 %        extratextcolor (unset) ne { extratextcolor setanycolor } if
 %        extratextfont extratextsize selectfont
 
@@ -4398,21 +4750,48 @@ begin
 %            add
 %        } if
 %        /textascent exch def
-%        /textwidth extratext stringwidth pop extratext length 1 sub extratextgaps mul add def
 
-%        /extratextxpos extratextxoffset pixx textwidth sub 2 div add def
-%        extratextxalign (left)     eq { /textxpos extratextxoffset def } if
-%        extratextxalign (right)    eq { /textxpos pixx extratextxoffset sub textwidth sub def } if
-%        extratextxalign (offleft)  eq { /textxpos textwidth extratextxoffset add neg def } if
-%        extratextxalign (offright) eq { /textxpos pixx extratextxoffset add def } if
-%        extratextxalign (justify)  eq textwidth pixx lt and {
-%            /textxpos 0.0 def
-%            /extratextgaps pixx textwidth sub extratext length 1 sub div def
+%        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
+%        /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
+
+%        extratextxalign (justify) eq {
+%            extratextdirection (forward) ne extratextdirection (backward) ne and {
+%                /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
+%            } if
+%            textwidth pixx lt {
+%                /extratextgaps pixx textwidth sub extratext length 1 sub div def
+%                /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
+%            } {
+%                /extratextgaps 0.0 def
+%                /extratextxalign (center) def
+%            } ifelse
 %        } if
-%        /textypos extratextyoffset textascent add 1 add neg def
-%        extratextyalign (above)  eq { /textypos extratextyoffset pixy add 1 add def } if
-%        extratextyalign (center) eq { /textypos extratextyoffset pixy textascent sub 2 div add def } if
-%        textxpos textypos moveto extratextgaps 0 extratext ashow
+
+%        extratextyalign (justify) eq {
+%            extratextdirection (upward) ne extratextdirection (downward) ne and {
+%                /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
+%            } if
+%            textwidth pixy lt {
+%                /extratextgaps pixy textwidth sub extratext length 1 sub div def
+%                /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
+%            } {
+%                /extratextgaps 0.0 def
+%                /extratextyalign (center) def
+%            } ifelse
+%        } if
+
+%        extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
+%        extratextxoffset extratextyoffset rmoveto
+%        gsave
+%        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
+%        currentpoint translate
+%        0 1 textlines length 1 sub {
+%            /i exch def
+%            0 0 textascent extratextlinegaps add i mul add moveto
+%            extratextgaps 0 textlines dup length i sub 1 sub get ashow
+%        } for
+%        grestore
+
 %    } if
 
 %    grestore
@@ -4431,7 +4810,7 @@ end
 
 % --BEGIN RENDERER renmaximatrix--
 % --REQUIRES preamble raiseerror processoptions--
-%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2025041900 71333 70630
+%%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2025102400 71333 70630
 %%BeginData:        144 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -4589,7 +4968,7 @@ end
 % --EXAM: 90200
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2025041900 67564 67396
+%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2025102400 67564 67372
 %%BeginData:        133 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -4734,7 +5113,7 @@ end
 % --EXAM: 05
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2025041900 66227 66066
+%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2025102400 66227 65962
 %%BeginData:        119 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -4865,7 +5244,7 @@ end
 % --EXAM: 9520123456788
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2025041900 85880 82383
+%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2025102400 86032 82255
 %%BeginData:        208 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -5085,7 +5464,7 @@ end
 % --EXAM: 95200002
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2025041900 83851 80236
+%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2025102400 83875 80340
 %%BeginData:        193 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -5290,7 +5669,7 @@ end
 % --EXAM: 012345000058
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2025041900 90769 87190
+%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2025102400 91001 87086
 %%BeginData:        241 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -5543,7 +5922,7 @@ end
 % --EXAM: 01234558
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2025041900 95398 91758
+%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2025102400 95630 91526
 %%BeginData:        280 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -5835,7 +6214,7 @@ end
 % --EXAM: 978-1-56581-231-4 90000
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2025041900 94814 93701
+%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2025102400 94582 93749
 %%BeginData:        238 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -6085,7 +6464,7 @@ end
 % --EXAM: 979-0-2605-3211-3
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2025041900 91386 90286
+%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2025102400 91154 90158
 %%BeginData:        217 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -6314,7 +6693,7 @@ end
 % --EXAM: 0311-175X 00 17
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2025041900 82730 81858
+%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2025102400 82498 81858
 %%BeginData:        160 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -6486,7 +6865,7 @@ end
 % --EXAM: 0642118
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp mands 0.0 2025041900 72631 72510
+%%BeginResource: uk.co.terryburton.bwipp mands 0.0 2025102400 72631 72278
 %%BeginData:         73 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -6571,8 +6950,8 @@ end
 % --EXAM: Count01234567!
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2025041900 171859 173275
-%%BeginData:        596 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2025102400 171363 189627
+%%BeginData:        590 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
 dup /loadctx dup /uk.co.terryburton.bwipp findresource put
@@ -6584,11 +6963,11 @@ dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 begin
 /code128 {
 
-    20 dict begin                  % Confine variables to local scope
+    20 dict begin
 
     /ctx null def
     /dontdraw false def
-    /includetext false def    % Enable/disable text
+    /includetext false def
     /textfont /Courier def
     /textsize 10.0 def
     /textxoffset 0.0 def
@@ -7107,7 +7486,7 @@ begin
     } for
     /csum csum 103 mod def
     cws j csum put
-    cws j 1 add 106 put %stp
+    cws j 1 add 106 put  % stp
 
     options /debugcws known { /bwipp.debugcws cws //raiseerror exec } if
 
@@ -7173,7 +7552,7 @@ end
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2025041900 80639 80398
+%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2025102400 84095 80374
 %%BeginData:        102 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -7287,7 +7666,7 @@ end
 % --EXAM: (01) 0 952 8765 43210 8
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2025041900 72518 72334
+%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2025102400 72518 75766
 %%BeginData:         92 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -7391,7 +7770,7 @@ end
 % --EXAM: (00) 0 9528765 432101234 6
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2025041900 72530 72341
+%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2025102400 72530 75773
 %%BeginData:         92 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -7495,7 +7874,7 @@ end
 % --EXAM: THIS IS CODE 39
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2025041900 72969 72621
+%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2025102400 72969 72645
 %%BeginData:        141 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -7648,7 +8027,7 @@ end
 % --EXAM: Code39 Ext!
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2025041900 72160 72100
+%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2025102400 72240 71996
 %%BeginData:         99 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -7759,7 +8138,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2025041900 67745 67498
+%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2025102400 67769 67754
 %%BeginData:         87 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -7858,7 +8237,7 @@ end
 % --EXAM: 123456
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2025041900 67592 67270
+%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2025102400 67616 67526
 %%BeginData:         87 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -7957,7 +8336,7 @@ end
 % --EXAM: THIS IS CODE 93
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2025041900 69311 72353
+%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2025102400 69311 72665
 %%BeginData:        134 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -8103,7 +8482,7 @@ end
 % --EXAM: Code93 Ext!
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2025041900 73092 73156
+%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2025102400 73196 72924
 %%BeginData:        107 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -8222,7 +8601,7 @@ end
 % --EXAM: 2401234567
 % --EXOP: height=0.5 includecheck includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2025041900 71021 70698
+%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2025102400 71021 70698
 %%BeginData:        147 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -8381,7 +8760,7 @@ end
 % --EXAM: 0 952 1234 54321 3
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2025041900 70300 70052
+%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2025102400 70300 70284
 %%BeginData:         97 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -8401,7 +8780,7 @@ begin
     /textfont /Courier def
     /textsize 10.0 def
     /textxoffset 0.0 def
-    /textyoffset 3.5 def
+    /textyoffset -3.5 def
     /height 0.5 def
     /showborder true def
     /borderwidth 4.0 def
@@ -8490,7 +8869,7 @@ end
 % --EXAM: 563102430313
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2025041900 66534 66390
+%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2025102400 66534 66518
 %%BeginData:         78 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -8580,7 +8959,7 @@ end
 % --EXAM: 21348075016401
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2025041900 66526 66386
+%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2025102400 66526 66514
 %%BeginData:         78 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -8670,7 +9049,7 @@ end
 % --EXAM: (01)09521234543213
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2025041900 117687 116247
+%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2025102400 117572 126647
 %%BeginData:        455 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 20 dict
@@ -9137,7 +9516,7 @@ end
 % --EXAM: (01)09521234543213
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2025041900 67838 67653
+%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2025102400 67838 71421
 %%BeginData:         66 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -9215,7 +9594,7 @@ end
 % --EXAM: (01)24012345678905
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2025041900 67986 67781
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2025102400 67986 71445
 %%BeginData:         66 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -9293,7 +9672,7 @@ end
 % --EXAM: (01)09521234543213
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2025041900 67864 67669
+%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2025102400 67864 71437
 %%BeginData:         66 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -9371,7 +9750,7 @@ end
 % --EXAM: (01)09521234543213
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2025041900 91664 90835
+%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2025102400 91664 90939
 %%BeginData:        285 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 20 dict
@@ -9668,7 +10047,7 @@ end
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2025041900 248583 246869
+%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2025102400 248479 246893
 %%BeginData:        864 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -10544,7 +10923,7 @@ end
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP: segments=4
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2025041900 72851 72809
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2025102400 76411 69377
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -10592,7 +10971,7 @@ end
 % --EXAM: (8110)106141416543213500110000310123196000
 % --EXOP: includetext segments=8
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2025041900 83651 86802
+%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2025102400 83651 86802
 %%BeginData:         89 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -10693,7 +11072,7 @@ end
 % --EXAM: 117480
 % --EXOP: showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2025041900 55184 54856
+%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2025102400 55312 54856
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -10784,7 +11163,7 @@ end
 % --EXAM: 117480
 % --EXOP: includetext showborder
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2025041900 56447 56250
+%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2025102400 56575 56250
 %%BeginData:         87 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -10883,7 +11262,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2025041900 73470 72989
+%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2025102400 73470 73117
 %%BeginData:        154 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11049,7 +11428,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2025041900 60262 60228
+%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2025102400 60390 60356
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11097,7 +11476,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2025041900 60232 60204
+%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2025102400 60360 60332
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11145,7 +11524,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2025041900 60242 60212
+%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2025102400 60370 60340
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11193,7 +11572,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2025041900 60232 60204
+%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2025102400 60360 60332
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11241,7 +11620,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2025041900 60257 60224
+%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2025102400 60385 60352
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11289,7 +11668,7 @@ end
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2025041900 74778 74430
+%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2025102400 74778 74558
 %%BeginData:        158 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11459,7 +11838,7 @@ end
 % --EXAM: BC412SEMI
 % --EXOP: semi includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2025041900 75837 75435
+%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2025102400 75837 75539
 %%BeginData:        192 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11663,7 +12042,7 @@ end
 % --EXAM: A0123456789B
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2025041900 75951 75465
+%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2025102400 75951 75593
 %%BeginData:        156 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -11831,7 +12210,7 @@ end
 % --EXAM: 0123456709498765432101234567891
 % --EXOP: barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2025041900 110162 109841
+%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2025102400 110162 110073
 %%BeginData:        347 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -12190,7 +12569,7 @@ end
 % --EXAM: 01234
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2025041900 70790 70477
+%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2025102400 70790 70477
 %%BeginData:        136 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -12338,7 +12717,7 @@ end
 % --EXAM: 01234567890
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2025041900 70634 70325
+%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2025102400 70634 70325
 %%BeginData:        137 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -12487,7 +12866,7 @@ end
 % --EXAM: LE28HS9Z
 % --EXOP: includetext barcolor=FF0000
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2025041900 71895 71613
+%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2025102400 71895 71613
 %%BeginData:        145 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -12644,7 +13023,7 @@ end
 % --EXAM: 5956439111ABA 9
 % --EXOP: includetext custinfoenc=character
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2025041900 87312 86885
+%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2025102400 87312 86909
 %%BeginData:        235 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -12891,7 +13270,7 @@ end
 % --EXAM: 1231FZ13XHS
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2025041900 67031 66928
+%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2025102400 67135 66800
 %%BeginData:        111 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -13014,7 +13393,7 @@ end
 % --EXAM: 6540123789-A-K-Z
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2025041900 74182 73910
+%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2025102400 74182 73934
 %%BeginData:        176 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -13202,7 +13581,7 @@ end
 % --EXAM: 0123456789
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2025041900 79847 79468
+%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2025102400 79951 79596
 %%BeginData:        168 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -13382,7 +13761,7 @@ end
 % --EXAM: 01234ABCD
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2025041900 73519 73217
+%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2025102400 73519 73241
 %%BeginData:        146 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -13540,7 +13919,7 @@ end
 % --EXAM: ABCDEF
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2025041900 74611 77631
+%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2025102400 74611 77759
 %%BeginData:        173 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -13725,7 +14104,7 @@ end
 % --EXAM: 01234567
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2025041900 63095 63213
+%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2025102400 63223 63165
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -13773,7 +14152,7 @@ end
 % --EXAM: ABC123
 % --EXOP: version=b inkspread=-0.5 parsefnc includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2025041900 115991 118774
+%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2025102400 116199 118646
 %%BeginData:        395 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -14180,7 +14559,7 @@ end
 % --EXAM: CODABLOCK F 34567890123456789010040digit
 % --EXOP: columns=8
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2025041900 140634 142962
+%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2025102400 140762 149850
 %%BeginData:        538 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -14730,7 +15109,7 @@ end
 % --EXAM: Abcd-1234567890-wxyZ
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2025041900 163491 165795
+%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2025102400 164035 183083
 %%BeginData:        740 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -15482,7 +15861,7 @@ end
 % --EXAM: MULTIPLE ROWS IN CODE 49
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2025041900 265309 281424
+%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2025102400 265853 295280
 %%BeginData:       1096 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -16590,7 +16969,7 @@ end
 % --EXAM: 3493
 % --EXOP: height=0.5 includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2025041900 133256 132263
+%%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2025102400 133256 132135
 %%BeginData:        252 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -16854,7 +17233,7 @@ end
 % --EXAM: 11099
 % --EXOP: inkspread=-0.25 showborder borderleft=0 borderright=0
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2025041900 62535 62340
+%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2025102400 62535 62340
 %%BeginData:         82 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -16948,7 +17327,7 @@ end
 % --EXAM: 331132131313411122131311333213114131131221323
 % --EXOP: height=0.5
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2025041900 50029 49847
+%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2025102400 50157 49951
 %%BeginData:         43 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -17003,7 +17382,7 @@ end
 % --EXAM: FATDAFTDAD
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2025041900 53640 53508
+%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2025102400 53768 53532
 %%BeginData:         71 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -17086,7 +17465,7 @@ end
 % --EXAM: fima
 % --EXOP: backgroundcolor=DD000011
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2025041900 72901 72366
+%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2025102400 72901 72390
 %%BeginData:         87 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -17185,7 +17564,7 @@ end
 % --EXAM: This is PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2025041900 212221 217086
+%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2025102400 212349 234350
 %%BeginData:        981 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -18178,7 +18557,7 @@ end
 % --EXAM: This is compact PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2025041900 63089 63056
+%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2025102400 63089 63184
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -18226,7 +18605,7 @@ end
 % --EXAM: MicroPDF417
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2025041900 230421 241982
+%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2025102400 230653 259454
 %%BeginData:       1107 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -19345,7 +19724,7 @@ end
 % --EXAM: This is Data Matrix!
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2025041900 214108 239223
+%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2025102400 221308 249519
 %%BeginData:        959 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -20316,7 +20695,7 @@ end
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2025041900 63145 63232
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2025102400 63145 66536
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -20364,7 +20743,7 @@ end
 % --EXAM: 1234
 % --EXOP: version=8x96
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2025041900 63554 63528
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2025102400 63554 66936
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 20 dict
@@ -20412,7 +20791,7 @@ end
 % --EXAM: JGB 012100123412345678AB19XY1A 0             www.xyz.com
 % --EXOP: type=29
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2025041900 67768 67632
+%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2025102400 71200 67632
 %%BeginData:         74 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -20498,7 +20877,7 @@ end
 % --EXAM: http://goo.gl/0bis
 % --EXOP: eclevel=M
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2025041900 355140 395149
+%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2025102400 378516 401549
 %%BeginData:       1430 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -21940,7 +22319,7 @@ end
 % --EXAM:
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2025041900 68877 72208
+%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2025102400 68877 72208
 %%BeginData:        117 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -22069,7 +22448,7 @@ end
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2025041900 63569 63516
+%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2025102400 63569 63516
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -22117,7 +22496,7 @@ end
 % --EXAM: 1234
 % --EXOP: version=R17x139
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2025041900 63612 63548
+%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2025102400 63612 63548
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -22165,7 +22544,7 @@ end
 % --EXAM: [)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004
 % --EXOP: mode=2 parse
 % --RNDR: renmaximatrix
-%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2025041900 191498 196297
+%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2025102400 191498 209793
 %%BeginData:        879 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -23056,7 +23435,7 @@ end
 % --EXAM: This is Aztec Code
 % --EXOP: format=full
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2025041900 196240 214562
+%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2025102400 199592 224858
 %%BeginData:        830 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -23898,7 +24277,7 @@ end
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2025041900 63121 63085
+%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2025102400 63121 66517
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -23946,7 +24325,7 @@ end
 % --EXAM: 1
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2025041900 63090 63061
+%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2025102400 63090 66493
 %%BeginData:         36 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -23994,7 +24373,7 @@ end
 % --EXAM: Code One
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2025041900 205506 227305
+%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2025102400 209055 241265
 %%BeginData:        921 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -24927,7 +25306,7 @@ end
 % --EXAM: This is Han Xin
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2025041900 316699 359875
+%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2025102400 334195 359875
 %%BeginData:        884 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -25823,7 +26202,7 @@ end
 % --EXAM: This is DotCode
 % --EXOP: inkspread=0.16
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2025041900 242745 275035
+%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2025102400 253273 281667
 %%BeginData:       1090 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -26925,7 +27304,7 @@ end
 % --EXAM: Awesome colours!
 % --EXOP: eclevel=EC2
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2025041900 97834 100638
+%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2025102400 98066 100510
 %%BeginData:        357 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -27294,7 +27673,7 @@ end
 % --EXAM: This is JAB Code
 % --EXOP: eclevel=6
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2025041900 244126 279246
+%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2025102400 261846 289558
 %%BeginData:       1121 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -28427,7 +28806,7 @@ end
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP: ccversion=b cccolumns=4
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2025041900 209868 212315
+%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2025102400 209868 212315
 %%BeginData:        654 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -29093,7 +29472,7 @@ end
 % --EXAM: 9520123456788|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2025041900 105683 112370
+%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2025102400 105683 108914
 %%BeginData:        151 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -29256,7 +29635,7 @@ end
 % --EXAM: 95200002|(21)A12345678
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2025041900 106024 112688
+%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2025102400 109480 109256
 %%BeginData:        154 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -29422,7 +29801,7 @@ end
 % --EXAM: 012345000058|(99)1234-abcd
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2025041900 109213 108909
+%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2025102400 105677 112341
 %%BeginData:        151 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -29585,7 +29964,7 @@ end
 % --EXAM: 01234558|(15)021231
 % --EXOP: includetext
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2025041900 105676 108908
+%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2025102400 109212 108908
 %%BeginData:        151 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -29748,7 +30127,7 @@ end
 % --EXAM: (01)09521234543213|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2025041900 101257 97575
+%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2025102400 101233 101007
 %%BeginData:        150 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -29910,7 +30289,7 @@ end
 % --EXAM: (01)09521234543213|(17)010200
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2025041900 102965 105670
+%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2025102400 106525 102238
 %%BeginData:        145 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -30067,7 +30446,7 @@ end
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2025041900 102993 105694
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2025102400 106553 102262
 %%BeginData:        145 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -30224,7 +30603,7 @@ end
 % --EXAM: (01)09521234543213|(11)990102
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2025041900 104739 107532
+%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2025102400 108299 103996
 %%BeginData:        150 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -30386,7 +30765,7 @@ end
 % --EXAM: (01)09521234543213|(21)abcdefghijklmnopqrst
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2025041900 96010 99229
+%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2025102400 99570 99229
 %%BeginData:        140 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -30538,7 +30917,7 @@ end
 % --EXAM: (01)09521234543213(3103)001234|(91)1A2B3C4D5E
 % --EXOP:
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2025041900 101754 104943
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2025102400 101754 104919
 %%BeginData:        149 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -30699,7 +31078,7 @@ end
 % --EXAM: (01)09521234543213(10)ABCDEF|(21)12345678
 % --EXOP: segments=4
 % --RNDR: renmatrix renlinear
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2025041900 107156 102822
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2025102400 107132 102822
 %%BeginData:        140 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -30851,7 +31230,7 @@ end
 % --EXAM: (00)095287654321012346|(02)09521234543213(37)24(10)1234567ABCDEFG
 % --EXOP: ccversion=c
 % --RNDR: renlinear renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2025041900 111986 111182
+%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2025102400 111986 107646
 %%BeginData:        165 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31028,7 +31407,7 @@ end
 % --EXAM: (01)09521234543213(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2025041900 78264 77846
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2025102400 78264 77846
 %%BeginData:         81 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31121,7 +31500,7 @@ end
 % --EXAM: (01)09521234543213(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2025041900 78499 78070
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2025102400 78499 78070
 %%BeginData:         82 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31215,7 +31594,7 @@ end
 % --EXAM: https://id.gs1.org/01/09521234543213/22/ABC%2D123?99=XYZ-987
 % --EXOP: includetext
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2025041900 70017 69657
+%%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2025102400 73425 69681
 %%BeginData:         61 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31263,7 +31642,7 @@ begin
 
     args (opt) options put
     args (alttext) hri put
-    args (textyoffset) 1.0 put
+    args (textyoffset) -1.0 put
     args (textfont) /Helvetica put
     args (textsize) 5 put
     args
@@ -31288,7 +31667,7 @@ end
 % --EXAM: (01)09521234543213(8200)http://www.abc.net(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2025041900 78014 77602
+%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2025102400 78014 77602
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31379,7 +31758,7 @@ end
 % --EXAM: HTTPS://ID.GS1.ORG/01/09521234543213/22/ABC%2D123?99=XYZ-987
 % --EXOP: includetext
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2025041900 73401 73093
+%%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2025102400 73401 73093
 %%BeginData:         61 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31427,7 +31806,7 @@ begin
 
     args (opt) options put
     args (alttext) hri put
-    args (textyoffset) 4.0 put
+    args (textyoffset) -4.0 put
     args (textfont) /Helvetica put
     args (textsize) 5 put
     args
@@ -31452,7 +31831,7 @@ end
 % --EXAM: (235)5vBZIF%!<B;?oa%(01)09521234543213(8008)19052001
 % --EXOP: rows=16
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2025041900 77989 77575
+%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2025102400 77989 77575
 %%BeginData:         80 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31544,7 +31923,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2025041900 67608 67460
+%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2025102400 67736 67716
 %%BeginData:         92 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31648,7 +32027,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP: includetext
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2025041900 70379 70172
+%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2025102400 70379 70172
 %%BeginData:         91 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31751,7 +32130,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2025041900 68385 68150
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2025102400 71817 68150
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31842,7 +32221,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2025041900 68645 68366
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2025102400 72077 68366
 %%BeginData:         80 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -31934,7 +32313,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2025041900 68516 68327
+%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2025102400 68540 71863
 %%BeginData:         81 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -32027,7 +32406,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2025041900 68571 68362
+%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2025102400 72107 71794
 %%BeginData:         81 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -32120,7 +32499,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2025041900 69425 72632
+%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2025102400 69425 72736
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -32211,7 +32590,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2025041900 68369 68150
+%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2025102400 68497 68150
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -32302,7 +32681,7 @@ end
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2025041900 68358 68143
+%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2025102400 71790 68143
 %%BeginData:         79 ASCII Lines
 /setpacking where {pop currentpacking true setpacking} if
 10 dict
@@ -32389,4 +32768,4 @@ end
 
 % --END TEMPLATE--
 0 0 moveto
-(\(01\)09521234543213|\(17\)010200) () /databarstackedcomposite /uk.co.terryburton.bwipp findresource exec
+(\(91\)ABC^04011^041XYZ) (parse) /gs1datamatrix /uk.co.terryburton.bwipp findresource exec

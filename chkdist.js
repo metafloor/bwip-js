@@ -2,8 +2,8 @@
 const _import = require('esm')(module);
 
 // Just enough canvas element for our built-in drawing.
-function HTMLCanvasElement() {
-    this.getContext = function() {
+class HTMLCanvasElement {
+    getContext() {
         return {
             setTransform() {},
             clearRect() {},
@@ -25,7 +25,7 @@ global.atob = function(str) {
 let canvas = new HTMLCanvasElement();
 
 function checkcvs(cvs) {
-    if (!(cvs instanceof HTMLCanvasElement)) {
+    if (!cvs || Object.getPrototypeOf(cvs).constructor.name != 'HTMLCanvasElement') {
         console.log('cvs', cvs);
         throw new Error('not a canvas');
     }

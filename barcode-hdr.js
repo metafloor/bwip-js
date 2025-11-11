@@ -11,6 +11,7 @@ var $_ = {};    // base of the dictionary stack
 // Aliases from Math ops
 const $abs = Math.abs;
 const $ceil = Math.ceil;
+const $floor = Math.floor;
 const $log = Math.log;
 const $pow = Math.pow
 const $round = Math.round;
@@ -160,14 +161,14 @@ function $cvs(s,v) {
     }
     $k[$j++] = i < s.length ? s.subarray(0, i) : s;
 }
-// cvi operator - converts a numeric string value to integer.
+// cvi operator - converts a numeric string value to integer/real.
 function $cvi(s) {
     if (s instanceof Uint8Array) {
         // nul-chars on the end of a string are ignored by postscript but cause javascript
         // to return a zero result.
-        return String.fromCharCode.apply(null,s).replace(/\0+$/, '')|0;
+        return $floor(String.fromCharCode.apply(null,s).replace(/\0+$/, ''));
     }
-    return (''+s)|0;
+    return $floor(''+s);
 }
 
 // cvrs operator - convert a number to a radix string
@@ -622,6 +623,13 @@ function bwipp_processoptions() {
             // This allows numbers to be strings
             if (typeof val == 'number') {
                 val = ''+val;
+                opts.set(id, val);
+            } else if ((id === 'extratext' || id === 'alttext') && typeof val === 'string') {
+                // BWIPP 2025-06-13 introduced (alt|extra)textsubspace which 
+                // allows replacing a marker character with space.  This
+                // requires the text to be a uint8array otherwise we get
+                //      Error: put-not-writable-string
+                val = $s(val);
                 opts.set(id, val);
             } else if (typeof val != 'string' && !(val instanceof Uint8Array)) {
                 throw new Error('bwipp.invalidOptionType: ' + id +

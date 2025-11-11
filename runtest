@@ -36,7 +36,7 @@ cat tests/barcode.ps - > tests/runtest.ps <<@EOF
 0 0 moveto
 ($pstext) ($(echo "$opts" | sed -e 's/ !\w\w*//')) /$sym /uk.co.terryburton.bwipp findresource exec
 @EOF
-cp tests/runtest.ps tests/$tid.ps
+##cp tests/runtest.ps tests/$tid.ps
 
 ## Ghostscript prints integer floats as e.g. "1.0" whereas javascript prints
 ## them as simply "1".
@@ -48,8 +48,8 @@ gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9
 
 ## Node/bwip-js
 (
-node <<@EOF
-var bwipjs = require('.');
+cat <<@EOF
+var bwipjs = require('..');
 
 try {
     var stack = bwipjs.raw("$sym", "$jstext", "$opts");
@@ -75,8 +75,9 @@ try {
     }
     process.exit();
 }
+//console.dir(stack, { depth:9 });
 // Order of printing must match the ghostscript code.
-for (var i = stack.length-1; i >= 0; i--) {
+for (var i = 0; i < stack.length; i++) {
     var o = stack[i];
     if (o.pixs) { console.log('[' + o.pixs.join(' ') + ']'); }
     if (o.sbs) { console.log('[' + o.sbs.join(' ') + ']'); }
@@ -84,7 +85,8 @@ for (var i = stack.length-1; i >= 0; i--) {
     if (o.bhs) { console.log('[' + o.bhs.join(' ') + ']'); }
 }
 @EOF
-) | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' -e 's/\(\.[1-9]*\)00*\([^0-9]\)/\1\2/g' > $JSOUT
+) > tests/runtest.js
+node tests/runtest.js | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' -e 's/\(\.[1-9]*\)00*\([^0-9]\)/\1\2/g' > $JSOUT
 
 ## diff ignoring whitespace (-b) differences.
 diff -qb $GSOUT $JSOUT

@@ -67,5 +67,14 @@
 {  % Don't start in C if A or B would be more efficient
     (123^FNC14567) (debugcws parse parsefnc newencoder) code128
 } [104 17 99 23 102 45 67 84 106] debugIsEqual
+
+
+%
+%  Test for raw mode
+%
+{
+    (^104^033^034^035^065^066^067^016^017^018^019) (debugcws raw) code128
+} [104 33 34 35 65 66 67 16 17 18 19 48 106] debugIsEqual
+
 end
 } bind def

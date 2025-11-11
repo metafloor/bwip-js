@@ -11,7 +11,7 @@
 // The signature of this factory constructor is up to you.  It is your code that
 // calls it and passes the returned drawing instance to `bwipjs.render()`.
 // See example.html.
-function DrawingExample(opts, canvas) {
+function DrawingExample(canvas, opts) {
 
     let ctx = canvas.getContext('2d', { willReadFrequently:true });
 
@@ -193,22 +193,32 @@ function DrawingExample(opts, canvas) {
         },
         // Draw text.
         // `y` is the baseline.
-        // `font` is an object with properties { name, width, height, dx }
+        // `font` is an object with properties { name, width, height, rotate, dx }
         //
-        // `name` will be the same as the font name in `measure()`.
-        // `width` and `height` are the font cell size.
-        // `dx` is extra space requested between characters (usually zero).
+        // `font.name` will be the same as the font name in `measure()`.
+        // `font.width` and `font.height` are the font cell size, in px.
+        // `font.rotate` is the angle to rotate the text about `x,y` and is set by
+        //     the BWIPP `textdirection` and `extratextdirection` options.  One of:
+        //           0 : direction `forward` (default)
+        //          90 : direction `upward`
+        //         180 : direction `backward`
+        //         270 : direction `downward`
+        //     Note that postscript rotates anti-clockwise for positive values whereas
+        //     SVG and HTML canvas rotate clockwise.  This value uses the postscript
+        //     convention.
+        // `font.dx` is extra space requested between characters (usually zero).
         //
         // This code ignores the inter-character spacing to keep it simple.
         text(x, y, str, rgb, font) {
-            let sx = font.width / font.height;
             ctx.save();
-            ctx.scale(sx, 1);
+            ctx.translate(x, y);
+            ctx.rotate(-font.rotate * Math.PI / 180);
+            ctx.scale(font.width / font.height, 1);
             ctx.font = font.height  + 'px monospace';
             ctx.fillStyle = '#' + rgb;
             ctx.textBaseline = 'alphabetic';
             ctx.textAlign = 'left';
-            ctx.fillText(str, x / sx, y);
+            ctx.fillText(str, 0, 0);
             ctx.restore();
         },
         // Called after all drawing is complete.  The return value from this method

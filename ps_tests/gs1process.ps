@@ -25,7 +25,7 @@
 /lintreqs true def
 
 
-% N18,csum,key
+% N18,csum,gcppos2
 ((00)123456789012345675) good_tmpl
 ((00)) /bwipp.GS1valueTooShort er_tmpl
 ((00)12345678901234567) /bwipp.GS1valueTooShort er_tmpl
@@ -53,19 +53,25 @@
 % ... Z..90
 ((01)12312312312319(21)ABC123(8030)ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_) good_tmpl
 ((01)12312312312319(21)ABC123(8030)ABC:123) /bwipp.GS1badCSET64character er_tmpl
+((01)12312312312319(21)ABC123(8030)1) good_tmpl      % Padding is not compulsory
+((01)12312312312319(21)ABC123(8030)12) good_tmpl     % Padding is not compulsory
 ((01)12312312312319(21)ABC123(8030)12345=) good_tmpl
 ((01)12312312312319(21)ABC123(8030)1234==) good_tmpl
-% TODO There should fail
-% ((01)12312312312319(21)ABC123(8030)ABC=123)
-% ((01)12312312312319(21)ABC123(8030)123=)
-% ((01)12312312312319(21)ABC123(8030)123==)
-% ((01)12312312312319(21)ABC123(8030)123===)
-% ((01)12312312312319(21)ABC123(8030)1234=)
-% ((01)12312312312319(21)ABC123(8030)1234===)
-% ((01)12312312312319(21)ABC123(8030)12345==)
-% ((01)12312312312319(21)ABC123(8030)12345===)
+((01)12312312312319(21)ABC123(8030)ABC=123) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)===) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)12===) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)12====) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)12=====) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)12======) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)123=) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)123==) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)123===) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)1234=) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)1234===) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)12345==) /bwipp.GS1badCSET64padding er_tmpl
+((01)12312312312319(21)ABC123(8030)12345===) /bwipp.GS1badCSET64padding er_tmpl
 
-% N1,zero N13,csum,key [X..16]
+% N1,zero N13,csum,gcppos1 [X..16]
 ((8003)01234567890128) good_tmpl
 ((8003)012345678901281) good_tmpl
 ((8003)012345678901281234567890123456) good_tmpl
@@ -200,7 +206,7 @@
 ((01)12312312312319(20)1) /bwipp.GS1valueTooShort er_tmpl
 ((01)12312312312319(20)123) /bwipp.GS1valueTooLong er_tmpl
 
-% N13,csum,key [X..17]
+% N13,csum,gcppos1 [X..17]
 ((253)1234567890128) good_tmpl
 ((253)1234567890128A) good_tmpl
 ((253)1234567890128ABCDEFGHIJKLMNOPQ) good_tmpl
@@ -234,22 +240,22 @@
 ((01)12312312312319(7030)850) /bwipp.GS1valueTooShort er_tmpl
 ((01)12312312312319(7030)8501234567890123456789012345678) /bwipp.GS1valueTooLong er_tmpl
 
-% ... N..15,iso3166list
+% ... N3,iso3166 [N3],iso3166 [N3],iso3166 [N3],iso3166 [N3],iso3166
 ((01)12312312312319(423)850) good_tmpl
 ((01)12312312312319(423)004100400850894) good_tmpl
-((01)12312312312319(423)8501) /bwipp.GS1BadCountryListLength er_tmpl
-((01)12312312312319(423)85012) /bwipp.GS1BadCountryListLength er_tmpl
+((01)12312312312319(423)8501) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(423)85012) /bwipp.GS1valueTooShort er_tmpl
 ((01)12312312312319(423)) /bwipp.GS1valueTooShort er_tmpl
-((01)12312312312319(423)1) /bwipp.GS1BadCountryListLength er_tmpl
-((01)12312312312319(423)12) /bwipp.GS1BadCountryListLength er_tmpl
+((01)12312312312319(423)1) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(423)12) /bwipp.GS1valueTooShort er_tmpl
 
 
 % Note: In reality, almost all GCPs are six or more numeric digits so the
-% restriction for "key" could be tightened
+% restriction for "gcp" could be tightened
 %
-% X..30,key
+% X..30,gcppos1
 ((401)12) good_tmpl
-((401)1) /bwipp.GS1keyTooShort er_tmpl
+((401)1) /bwipp.GS1gcpTooShort er_tmpl
 ((401)) /bwipp.GS1valueTooShort er_tmpl
 ((401)A1) /bwipp.GS1badGCP er_tmpl
 ((401)1A) /bwipp.GS1badGCP er_tmpl
@@ -304,7 +310,7 @@
 ((00)123456789012345675(4321)8) /bwipp.GS1badBoolean er_tmpl
 ((00)123456789012345675(4321)9) /bwipp.GS1badBoolean er_tmpl
 
-% ... N6,yymmd0 N4,hhmm
+% ... N6,yymmd0 N4,hhmi
 ((00)123456789012345675(4324)2006150015) good_tmpl
 ((00)123456789012345675(4324)2006152359) good_tmpl
 ((00)123456789012345675(4324)2006152400) /bwipp.GS1badHour er_tmpl
@@ -370,7 +376,7 @@
 ((415)1231231231232(8020)A(8007)LC14BOSLxx3456789012345678901230) /bwipp.GS1badIBANcharacter er_tmpl
 ((415)1231231231232(8020)A(8007)XX361234567890) /bwipp.GS1UnknownCountryAlpha er_tmpl
 
-% ... N8,yymmddhh [N..4],optmmss
+% ... N6,yymmdd N2,hh [N2],mi [N2],ss
 ((01)12312312312319(8008)200615121530) good_tmpl
 ((01)12312312312319(8008)2006151215) good_tmpl
 ((01)12312312312319(8008)20061512) good_tmpl
@@ -378,10 +384,10 @@
 ((01)12312312312319(8008)200615126030) /bwipp.GS1badMinute er_tmpl
 ((01)12312312312319(8008)200615125960) /bwipp.GS1badSecond er_tmpl
 ((01)12312312312319(8008)2006151) /bwipp.GS1valueTooShort er_tmpl
-((01)12312312312319(8008)200615123) /bwipp.GS1badTimeLength er_tmpl
-((01)12312312312319(8008)20061512345) /bwipp.GS1badTimeLength er_tmpl
+((01)12312312312319(8008)200615123) /bwipp.GS1valueTooShort er_tmpl
+((01)12312312312319(8008)20061512345) /bwipp.GS1valueTooShort er_tmpl
 
-% C..30,key
+% C..30,gcppos1
 ((8010)12345ABC) good_tmpl
 ((8010)12#-/0123456789ABCDEFGHIJK) good_tmpl  % "#" is acceptable in CSET32
 ((8010)12CDEFGHIJKLMNOPQRSTUVWXYZ) good_tmpl
@@ -392,7 +398,7 @@
 ((8010)12345ABC(8011)0) good_tmpl
 ((8010)12345ABC(8011)01) /bwipp.GS1badZeroPrefix er_tmpl
 
-% X..25,csumalpha,key
+% X..25,csumalpha,gcppos1
 ((8013)1987654Ad4X4bL5ttr2310c2K) good_tmpl
 ((8013)12345678901234567890123NT) good_tmpl
 ((8013)12345_ABCDEFGHIJKLMCP) good_tmpl
@@ -934,6 +940,11 @@
 ((8018)123123123123123121(7259)NAME(7258)1/0) /bwipp.endZeroPrefix er_tmpl
 ((8018)123123123123123121(7259)NAME(7258)2/1) /bwipp.positionExceedsEnd er_tmpl
 ((8018)123123123123123121(7259)NAME(7258)9/8) /bwipp.positionExceedsEnd er_tmpl
+
+% X..4,packagetype
+((00)123456789012345675(7041)9) good_tmpl
+((00)123456789012345675(7041)AA) good_tmpl
+((00)123456789012345675(7041)AZ) /bwipp.GS1unknownPackageType /bwipp.er_tmpl
 
 % Unknown
 ((89)ABC) /bwipp.GS1unknownAI er_tmpl

@@ -66,6 +66,28 @@ echo '  throw new Error("bwipp.unknownEncoder: unknown encoder name: " + symbol)
 echo '}'
 ) > barcode-lookup.js
 
+## Check for changes in the renderers
+let diffs=0
+for name in renlinear renmatrix renmaximatrix ; do
+    ## BeginResource contains variable data
+    sed -n "/% --BEGIN RENDERER $name--/,/% --END RENDERER $name--/{//!p}" barcode.ps | grep -vF '%%BeginResource:' > /tmp/$name.bwipp
+    diff -q /tmp/$name.bwipp custom/$name.bwipp 1>/dev/null
+    if [ $? != 0 ] ; then
+        let diffs=diffs+1
+        echo "!!! BEGIN $name CHANGES"
+        diff /tmp/$name.bwipp custom/$name.bwipp
+        echo "!!! END $name CHANGES"
+    fi
+done
+if [ $diffs != 0 ] ; then
+    echo 'BWIPP renderers have changed.'
+    echo 'New template files at /tmp/ren*.bwipp'
+    md5sum /tmp/renlinear.bwipp custom/renlinear.bwipp
+    md5sum /tmp/renmatrix.bwipp custom/renmatrix.bwipp
+    md5sum /tmp/renmaximatrix.bwipp custom/renmaximatrix.bwipp
+    exit 0
+fi
+rm -f /tmp/renlinear.bwipp /tmp/renmatrix.bwipp /tmp/renmaximatrix.bwipp
 
 cp barcode.ps barcode.tmp
 for name in $(cd custom; ls *.ps | sed -e 's/\.ps//') ; do
@@ -97,7 +119,6 @@ cat barcode.tmp custom/*.ps | sed \
     -e '/^\s*options type \/stringtype eq {/,/^\s*} if/s/^/%psc &/'\
     -e '/^\s*currentfont \/PaintType .* ifelse/,/^\s*} if/s/^/%psc &/'\
     -e '/^\s*{.*} stopped {/,/^\s*} ifelse\s*$/s/^/%psc &/'\
-    -e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
     -e 's,/ctx null def,%psc &,'\
     -e 's,//processoptions,currentdict //processoptions,'\
     -e 's,/suppresskanjimode false def,/suppresskanjimode true def,'\
@@ -108,6 +129,7 @@ cat barcode.tmp custom/*.ps | sed \
     -e 's/{\s*2 3 div /{ 0.6666667 /g'\
     > barcode.psc
 
+    ##-e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
     ## -e 's,/\S\S* //loadctx exec,%psc &,'\
     ## -e 's,//unloadctx exec,%psc &,'\
 ##
@@ -130,7 +152,13 @@ var fs  = require('fs');
 var psc = require('./psc.js');// Not to be confused with this like-named script
 var pstext = fs.readFileSync('barcode.psc', 'binary');
 var flags  = "$*".split(' ');
-fs.writeFileSync('barcode.js', psc(pstext, flags), 'binary');
+var code = psc(pstext, flags)
+    .replace(/function bwipp_ren(?:linear|matrix|maximatrix)[()\\s{]+/g, (\$0) => {
+        return \$0 + 'if (\$_.bwipjs_rawstack) {\\n' +
+               '\$_.bwipjs_rawstack.push(\$k[--\$j]); return;\\n' +
+               '}\\n';
+    });
+fs.writeFileSync('barcode.js', code, 'binary');
 @EOF
 
 if [ ! -f barcode.js ] ; then
@@ -203,7 +231,7 @@ echo "" >> src/bwipp.js
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##
-rm -f barcode.psc
+##rm -f barcode.psc
 rm -f barcode.tmp
 rm -f barcode-lookup.js
 ##rm -f barcode.js

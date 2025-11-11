@@ -55,13 +55,11 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
     $$ = bwipjs;
     $k = [ text, map ];
     $j = 2;
-    $_ = { bwipjs_dontdraw : opts.dontdraw || dontdraw || false };
+    $_ = { bwipjs_rawstack : opts.dontdraw || dontdraw ? [] : false };
     encoder();
 
-    // Return what is left on the stack.  This branch should only be taken
-    // when running with the dontdraw option.
-    if ($j) {
-        return $k.splice(0, $j);
+    if ($_.bwipjs_rawstack) {
+        return $_.bwipjs_rawstack;
     }
 
     return true;

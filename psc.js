@@ -2189,6 +2189,12 @@ function PSC(str, flags) {
         st[sp++] = { type:TYPE_NUMVAL, expr:tid + '.y', seq:++seq };
     }
 
+    $.rotate = function() {
+        need(1);
+        var a = st[sp-1].expr;
+        sp-=1;
+        emit('$$.rotate(' + a + ');');                  // CANVAS
+    }
     $.scale = function() {
         need(2);
         var x = st[sp-2].expr;

@@ -6,8 +6,8 @@ import nodejs,  { gs1_128 as nodejs_128, loadFont as nodejs_lf }  from './dist/b
 import reactnv, { gs1_128 as reactnv_128, loadFont as reactnv_lf } from './dist/bwip-js-rn.mjs';
 
 // Just enough canvas element for our built-in drawing.
-function HTMLCanvasElement() {
-    this.getContext = function() {
+class HTMLCanvasElement {
+    getContext() {
         return {
             setTransform() {},
             clearRect() {},

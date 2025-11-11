@@ -79,7 +79,13 @@ $k[$j++]="debugcws parse parsefnc newencoder";//#68
 bwipp_code128();//#68
 };//#68
 debugIsEqual(_P,$a([104,17,99,23,102,45,67,84,106]));//#68
-$_ = $__;//#70
+var _R=function(){
+$k[$j++]="^104^033^034^035^065^066^067^016^017^018^019";//#76
+$k[$j++]="debugcws raw";//#76
+bwipp_code128();//#76
+};//#76
+debugIsEqual(_R,$a([104,33,34,35,65,66,67,16,17,18,19,48,106]));//#76
+$_ = $__;//#79
 }//bwipp_runtest_code128
 console.log("code128...")
 bwipp_runtest_code128();
