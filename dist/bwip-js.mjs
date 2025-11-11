@@ -5,7 +5,7 @@
 // Copyright (c) 2011-2025 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2025-04-19
+// Barcode Writer in Pure PostScript - Version 2025-10-24
 // Copyright (c) 2004-2024 Terry Burton
 //
 // The MIT License
@@ -31,23 +31,27 @@
 "use strict";
 
 import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_jabcode,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
-
 // exports.js
-const BWIPJS_VERSION = '4.7.0 (2025-07-01)';
+const BWIPJS_VERSION = '4.8.0 (2025-11-11)';
 
+// Context insensitive canvas element test.
+function IsCanvas(elt) {
+    return elt && /HTMLCanvasElement|OffscreenCanvas/.test(Object.getPrototypeOf(elt).constructor.name);
+}
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
 //
 // Uses the built-in canvas drawing.
 //
-// `canvas` can be an HTMLCanvasElement or an ID string or unique selector string.
+// `canvas` can be an HTMLCanvasElement|OffscreenCanvas or
+// an ID string or unique selector string.
 // `options` are a bwip-js/BWIPP options object.
 //
 // This function is synchronous and throws on error.
 //
-// Returns the HTMLCanvasElement.
+// Returns the canvas element.
 function ToCanvas(cvs, opts) {
-    if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
+    if (typeof opts == 'string' || IsCanvas(opts)) {
         let tmp = cvs;
         cvs = opts;
         opts = tmp;
@@ -59,30 +63,31 @@ function ToCanvas(cvs, opts) {
 // Polymorphic internal interface
 // _ToAny(encoder, string, opts) : HTMLCanvasElement
 // _ToAny(encoder, HTMLCanvasElement, opts) : HTMLCanvasElement
+// _ToAny(encoder, OffscreenCanvas, opts) : OffscreenCanvas
 // _ToAny(encoder, opts, string) : HTMLCanvasElement
-// _ToAny(encoder, opts, HTMLCanvasElement) : HTMLCanvasElement
+// _ToAny(encoder, opts, OffscreenCanvas) : OffscreenCanvas
 // _ToAny(encoder, opts, drawing) : any
 //
 // 'string` can be either an `id` or query selector returning a single canvas element.
 function _ToAny(encoder, opts, drawing) {
     if (typeof opts == 'string') {
         var canvas = document.getElementById(opts) || document.querySelector(opts);
-        if (!(canvas instanceof HTMLCanvasElement)) {
+        if (!IsCanvas(canvas)) {
             throw new Error('bwipjs: `' + opts + '`: not a canvas');
         }
         opts = drawing;
         drawing = DrawingCanvas(canvas);
-    } else if (opts instanceof HTMLCanvasElement) {
+    } else if (IsCanvas(opts)) {
         var canvas = opts;
         opts = drawing;
         drawing = DrawingCanvas(canvas);
     } else if (typeof drawing == 'string') {
         var canvas = document.getElementById(drawing) || document.querySelector(drawing);
-        if (!(canvas instanceof HTMLCanvasElement)) {
+        if (!IsCanvas(canvas)) {
             throw new Error('bwipjs: `' + drawing + '`: not a canvas');
         }
         drawing = DrawingCanvas(canvas);
-    } else if (drawing instanceof HTMLCanvasElement) {
+    } else if (IsCanvas(drawing)) {
         drawing = DrawingCanvas(drawing);
     } else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
@@ -334,12 +339,18 @@ function BWIPJS(drawing) {
 
 // All graphics state that must be saved/restored is given a prefix of g_
 BWIPJS.prototype.reset = function() {
-    // Current Transform Matrix - since we don't do rotation, we can fake
-    // the matrix math
-    this.g_tdx  = 0;        // CTM x-offset
-    this.g_tdy  = 0;        // CTM y-offset
-    this.g_tsx  = 1;        // CTM x-scale factor
-    this.g_tsy  = 1;        // CTM y-scale factor
+    // Current Transform Matrix
+    this.g_m0 = 1;
+    this.g_m1 = 0;
+    this.g_m2 = 0;
+    this.g_m3 = 1;
+    this.g_m4 = 0;
+    this.g_m5 = 0;
+
+    // Keep scale and rotateion distinct for the drawing interface
+    this.g_tsx  = 1;        // x-scale factor
+    this.g_tsy  = 1;        // y-scale factor
+    this.g_rot  = 0;        // text rotation (0, 90, 180 , 270)
 
     this.g_posx = 0;        // current x position
     this.g_posy = 0;        // current y position
@@ -401,18 +412,35 @@ BWIPJS.prototype.restore = function() {
 //  changed, the coordinates returned by currentpoint will be different
 //  from those that were originally specified for the point.
 BWIPJS.prototype.currpos = function() {
-    return { x:(this.g_posx-this.g_tdx)/this.g_tsx,
-             y:(this.g_posy-this.g_tdy)/this.g_tsy
+    return { x:(this.g_posx-this.g_m4)/this.g_tsx,
+             y:(this.g_posy-this.g_m5)/this.g_tsy
         };
 };
 BWIPJS.prototype.currfont = function() {
     return this.g_font;
 };
+// rotate is only used with text/fonts and limited to the angles 0, 90, 180, 270.
+BWIPJS.prototype.rotate = function(rot) {
+    this.g_rot += rot;
+
+    var cos = round(Math.cos(rot * Math.PI / 180));
+    var sin = round(Math.sin(rot * Math.PI / 180));
+    var m0 = this.g_m0 * cos + this.g_m2 * sin;
+    var m1 = this.g_m1 * cos + this.g_m3 * sin;
+    var m2 = this.g_m0 * -sin + this.g_m2 * cos;
+    var m3 = this.g_m1 * -sin + this.g_m3 * cos;
+    this.g_m0 = m0;
+    this.g_m1 = m1;
+    this.g_m2 = m2;
+    this.g_m3 = m3;
+};
 BWIPJS.prototype.translate = function(x, y) {
-    this.g_tdx = this.g_tsx * x;
-    this.g_tdy = this.g_tsy * y;
+    this.g_m4 += this.g_tsx * x;
+    this.g_m5 += this.g_tsy * y;
 };
 BWIPJS.prototype.scale = function(x, y) {
+    var sx = this.g_tsx;
+    var sy = this.g_tsy;
     this.g_tsx *= x;
     this.g_tsy *= y;
     var sxy = this.drawing.scale(this.g_tsx, this.g_tsy);
@@ -420,6 +448,10 @@ BWIPJS.prototype.scale = function(x, y) {
         this.g_tsx = sxy[0];
         this.g_tsy = sxy[1];
     }
+    this.g_m0 *= this.g_tsx / sx;
+    this.g_m1 *= this.g_tsx / sx;
+    this.g_m2 *= this.g_tsy / sy;
+    this.g_m3 *= this.g_tsy / sy;
 };
 BWIPJS.prototype.setlinewidth = function(w) {
     this.g_penw = w;
@@ -531,18 +563,18 @@ BWIPJS.prototype.closepath = function() {
     }
 };
 BWIPJS.prototype.moveto = function(x,y) {
-    this.g_posx = this.g_tdx + this.g_tsx * x;
-    this.g_posy = this.g_tdy + this.g_tsy * y;
+    this.g_posx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
 };
 BWIPJS.prototype.rmoveto = function(x,y) {
-    this.g_posx += this.g_tsx * x;
-    this.g_posy += this.g_tsy * y;
+    this.g_posx += this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy += this.g_m1 * x + this.g_m3 * y + this.g_m5;
 };
 BWIPJS.prototype.lineto = function(x,y) {
     var x0 = round(this.g_posx);
     var y0 = round(this.g_posy);
-    this.g_posx = this.g_tdx + this.g_tsx * x;
-    this.g_posy = this.g_tdy + this.g_tsy * y;
+    this.g_posx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
     var x1 = round(this.g_posx);
     var y1 = round(this.g_posy);
 
@@ -551,8 +583,8 @@ BWIPJS.prototype.lineto = function(x,y) {
 BWIPJS.prototype.rlineto = function(x,y) {
     var x0 = round(this.g_posx);
     var y0 = round(this.g_posy);
-    this.g_posx += this.g_tsx * x;
-    this.g_posy += this.g_tsy * y;
+    this.g_posx += this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy += this.g_m1 * x + this.g_m3 * y + this.g_m5;
     var x1 = round(this.g_posx);
     var y1 = round(this.g_posy);
 
@@ -568,14 +600,14 @@ BWIPJS.prototype.arc = function(x,y,r,sa,ea,ccw) {
         throw new Error('arc: not a full circle (' + sa + ',' + ea + ')');
     }
 
-    x = this.g_tdx + this.g_tsx * x;
-    y = this.g_tdy + this.g_tsy * y;
+    var xx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    var yy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
 
     // e == ellipse
     var rx = r * this.g_tsx;
     var ry = r * this.g_tsy;
-    this.g_path.push({ op:'e', x0:x-rx, y0:y-ry, x1:x+rx, y1:y+ry,
-                                x:x, y:y, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw });
+    this.g_path.push({ op:'e', x0:xx-rx, y0:yy-ry, x1:xx+rx, y1:yy+ry,
+                       x:xx, y:yy, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw });
 };
 BWIPJS.prototype.stringwidth = function(str) {
     var tsx  = this.g_tsx;
@@ -627,10 +659,10 @@ BWIPJS.prototype.pathbbox = function() {
     }
 
     // Convert to user-space coordinates
-    var rv = {  llx:(llx-this.g_tdx)/this.g_tsx,
-                lly:(lly-this.g_tdy)/this.g_tsy,
-                urx:(urx-this.g_tdx)/this.g_tsx,
-                ury:(ury-this.g_tdy)/this.g_tsy };
+    var rv = {  llx:(llx-this.g_m4)/this.g_tsx,
+                lly:(lly-this.g_m5)/this.g_tsy,
+                urx:(urx-this.g_m4)/this.g_tsx,
+                ury:(ury-this.g_m5)/this.g_tsy };
     return rv;
 };
 // Tranforms the pts array to standard (not y-inverted), unscalled values.
@@ -976,8 +1008,9 @@ BWIPJS.prototype.show = function(str, dx, dy) {
     }
 
     // Capture current graphics state
-    var tsx  = this.g_tsx;
-    var tsy  = this.g_tsy;
+    var rot  = this.g_rot;
+    var tsx  = rot == 90 || rot == 270 ? this.g_tsy : this.g_tsx;
+    var tsy  = rot == 90 || rot == 270 ? this.g_tsx : this.g_tsy;
     var name = this.g_font.FontName || 'OCR-B';
     var size = (this.g_font.FontSize || 10);
     var szx  = size * tsx;
@@ -986,26 +1019,35 @@ BWIPJS.prototype.show = function(str, dx, dy) {
     var posy = this.g_posy;
     var rgb  = this.getRGB();
 
-    // The string can be either a uint8-string or regular string.
-    str = this.toUCS2(this.jsstring(str));
-
     // Convert dx,dy to device space
     dx = tsx * dx || 0;
     dy = tsy * dy || 0;
 
+    // The string can be either a uint8-string or regular string.
+    str = this.toUCS2(this.jsstring(str));
+
     // Bounding box.
-    var base = posy + dy;
+    // BWIPP rotates, then translates to currentpoint, before rendering the text.
+    // Therefore, the bbox values must match the rotation.
     var bbox = this.drawing.measure(str, name, szx, szy);
     var width = bbox.width + (str.length-1) * dx;
-    this.bbox(posx, base-bbox.descent+1, posx+width-1, base+bbox.ascent);
-    this.g_posx += width;
+    if (rot == 90) { // upward
+        this.bbox(posx-dy+bbox.descent-1, posy, posx-dy-bbox.ascent, posy+width-1);
+    } else if (rot == 180) { // backward
+        this.bbox(posx, posy-dy+bbox.descent-1, posx-width+1, posy-dy-bbox.ascent);
+    } else if (rot == 270) { // downward
+        this.bbox(posx+dy-bbox.descent+1, posy, posx+dy+bbox.ascent, posy-width+1);
+    } else {
+        rot = 0;
+        this.bbox(posx, posy+dy-bbox.descent+1, posx+width-1, posy+dy+bbox.ascent);
+        this.g_posx += width;
+    }
 
     var self = this;
     self.cmds.push(function() {
-        // self.transform()
         var x = posx - self.minx;
         var y = self.maxy - posy;
-        self.drawing.text(x, y, str, rgb, { name:name, width:szx, height:szy, dx:dx });
+        self.drawing.text(x, y, str, rgb, { name:name, width:szx, height:szy, rotate:rot, dx:dx });
     });
 };
 // drawing surface bounding box
@@ -1505,8 +1547,9 @@ function DrawingBuiltin() {
             gs_xyclip = null;
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
-        // font is an object with properties { name, width, height, dx }
+        // font is an object with properties { name, width, height, rotate, dx }
         // width and height are the font cell size.
+        // rotate is one of 0, 90, 180, 270 (default is zero)
         // dx is extra space requested between characters (usually zero).
         text : function(x, y, str, rgb, font) {
             x = x|0;
@@ -1520,11 +1563,22 @@ function DrawingBuiltin() {
             var fwidth  = font.width|0;
             var fheight = font.height|0;
             var dx      = font.dx|0;
+
+            // Since the SVG drawing must use a local rotation, we'll do it here as well.
+            var tx0 = 0, tx1 = 0, ty0 = 0, ty1 = 0;
+            switch (font.rotate) {
+            case 90:  tx1 =  1; ty0 = -1; break;
+            case 180: tx0 = -1; ty1 = -1; break;
+            case 270: tx1 = -1; ty0 =  1; break;
+            default:  tx0 =  1; ty1 =  1; break;
+            }
+
+            var gx = 0;
             for (var k = 0; k < str.length; k++) {
                 var ch = str.charCodeAt(k);
                 var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
 
-                var gt = y - glyph.top;
+                var gt = -glyph.top;
                 var gl = glyph.left;
                 var gw = glyph.width;
                 var gh = glyph.height;
@@ -1535,11 +1589,15 @@ function DrawingBuiltin() {
                     for (var j = 0; j < gh; j++) {
                         var a = gb[go + j * gw + i];
                         if (a) {
-                            set(x+gl+i, gt+j, a);
+                            var xx = gx+gl+i;
+                            var yy = gt+j;
+                            var tx = tx0 * xx + tx1 * yy;
+                            var ty = ty0 * xx + ty1 * yy;
+                            set(x+tx, y+ty, a);
                         }
                     }
                 }
-                x += glyph.advance + dx;
+                gx += glyph.advance + dx;
             }
         },
         // Called after all drawing is complete.
@@ -1724,7 +1782,7 @@ function DrawingBuiltin() {
 // `maybe` maybe the canvas, pre v4.0.
 function DrawingCanvas(canvas, maybe) {
     // Pre setops() backward compatibility
-    if (maybe && maybe instanceof HTMLCanvasElement) {
+    if (IsCanvas(maybe)) {    // IsCanvas() defined in exports.js
         canvas = maybe;
     }
 
@@ -2011,10 +2069,14 @@ function DrawingSVG() {
             clipid = '';
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
-        // font is an object with properties { name, width, height, dx }
+        // font is an object with properties { name, width, height, rotate, dx }
         // width and height are the font cell size.
+        // rotate is one of 0, 90, 180, 270 (default 0).
         // dx is extra space requested between characters (usually zero).
         text(x, y, str, rgb, font) {
+            x = x|0;
+            y = y|0;
+            var x0 = x, y0 = y;
             var fontid  = FontLib.lookup(font.name);
             var fwidth  = font.width|0;
             var fheight = font.height|0;
@@ -2027,11 +2089,12 @@ function DrawingSVG() {
                     continue;
                 }
                 if (glyph.length) {
-                    // A glyph is composed of sequence of curve and line segments.
-                    // M is move-to
-                    // L is line-to
-                    // Q is quadratic bezier curve-to
-                    // C is cubic bezier curve-to
+                    // A glyph is composed of a sequence of curve and line segments.
+                    // `type` is one of:
+                    //   M is move-to
+                    //   L is line-to
+                    //   Q is quadratic bezier curve-to
+                    //   C is cubic bezier curve-to
                     for (var i = 0, l = glyph.length; i < l; i++) {
                         let seg = glyph[i];
                         if (seg.type == 'M' || seg.type == 'L') {
@@ -2053,7 +2116,15 @@ function DrawingSVG() {
                 x += FontLib.getglyph(fontid, ch, fwidth, fheight).advance + dx;
             }
             if (path) {
-                svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
+                if (font.rotate) {
+                    // Note the '-' on the rotate.
+                    // Postscript rotates anti-clockwise for positive values.
+                    // SVG rotates clockwise for positive values.
+                    svg += '<path d="' + path + '" fill="#' + rgb + '" transform="rotate(-' +
+                            font.rotate + ' ' + transform(x0, y0) + ')" />\n';
+                } else {
+                    svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
+                }
             }
         },
         // Called after all drawing is complete.  The return value from this method
