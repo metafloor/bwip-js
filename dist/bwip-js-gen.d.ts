@@ -182,6 +182,8 @@ declare namespace BwipJs {
     }
     export function toSVG(opts: RenderOptions): string;
     export function drawingSVG(): DrawingContext<string>;
+    export function toTable(opts: RenderOptions): string;
+    export function drawingTable(): DrawingContext<string>;
 
     // platform-specific exports
     export function auspost<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;

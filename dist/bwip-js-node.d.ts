@@ -186,6 +186,8 @@ declare namespace BwipJs {
     }
     export function toSVG(opts: RenderOptions): string;
     export function drawingSVG(): DrawingContext<string>;
+    export function toTable(opts: RenderOptions): string;
+    export function drawingTable(): DrawingContext<string>;
 
     // platform-specific exports
     export type ToBufferCallback = (err: string | Error, png: Buffer) => void;
