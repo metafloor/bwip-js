@@ -276,6 +276,23 @@ function ToSVG(opts) {
     return _Render(bwipp_lookup(opts.bcid), opts, DrawingSVG());
 }
 
+// bwipjs.toTable(options)
+//
+// Uses the built-in table drawing interface.
+//
+// `options` are a bwip-js/BWIPP options object.
+//
+// This function is synchronous and throws on error.
+//
+// Returns a string containing an HTML table element with the barcode
+// rendered using colspan/rowspan for compact output.  Ideal for embedding
+// in emails where image support is unreliable.
+//
+// Available on all platforms.
+function ToTable(opts) {
+    return _Render(bwipp_lookup(opts.bcid), opts, DrawingTable());
+}
+
 function FixupOptions(opts) {
     var scale   = opts.scale || 2;
     var scaleX  = +opts.scaleX || scale;
