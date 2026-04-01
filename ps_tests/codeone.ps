@@ -3,13 +3,22 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % AIM USS Code One Revision March 3, 2000
 
-% vim: set ts=4 sw=4 et :
 
 %%/codeone dup /uk.co.terryburton.bwipp findresource cvx def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ codeone }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
+} def
 
 
 % EDI
@@ -85,9 +94,8 @@
     opt length ver length add string dup dup 0 opt putinterval opt length ver putinterval  % Concatenate opt and ver for options
     cnt string 0 1 cnt 1 sub { exch dup 3 -1 roll str putinterval } for  % Expand string for data
     % 0 1 are placeholders for data and options
-    /t exch def
-    /o exch def
-    { t o codeone /pixs known }
+    { _arg0_ _arg1_ codeone /pixs known } dup 3 -1 roll 0 exch put  % Substitute data for placeholder 0
+    dup 3 -1 roll 1 exch put  % Substitute options for placeholder 1
 } def
 
 6 (1) (S-10) dcap_tmpl true isEqual
@@ -184,5 +192,389 @@ systemdict /STRING_CONTINUE_BUG known not {
 1481 <01> (H) dcap_tmpl /bwipp.codeoneTooLong isError
 
 } if
+
+
+% Invalid version
+(TEST) (version=X dontdraw) /bwipp.codeoneBadVersion er_tmpl
+
+% S-type must be numeric only
+(ABC) (version=S-10 dontdraw) /bwipp.codeoneStypeNonDigit er_tmpl
+
+4001 string (dontdraw) /bwipp.codeoneinputTooLong er_tmpl
+
+% Data exceeds maximum symbol capacity
+2500 string 0 1 2499 { 2 copy 65 put pop } for (dontdraw) /bwipp.codeoneTooLong er_tmpl
+
+% Data exceeds symbol capacity via binary encoding
+{ 1500 string 0 1 1499 { 1 index exch 128 put } for (dontdraw) codeone } /bwipp.codeoneTooLong isError
+
+% Data exceeds symbol capacity via Text encoding
+{ 2500 string 0 1 2499 { 1 index exch 97 put } for (dontdraw) codeone } /bwipp.codeoneTooLong isError
+
+% Data exceeds symbol capacity via X12 encoding
+{ 2500 string 0 1 2499 { 1 index exch 42 put } for (dontdraw) codeone } /bwipp.codeoneTooLong isError
+
+% Data exceeds symbol capacity via Decimal encoding
+{ 4000 string 0 1 3999 { 1 index exch 49 put } for (dontdraw) codeone } /bwipp.codeoneTooLong isError
+
+% ECI range
+{ (^ECI000000TEST) (parsefnc dontdraw) codeone pop true } true isEqual
+{ (^ECI999999TEST) (parsefnc dontdraw) codeone pop true } true isEqual
+
+(TEST) (version=S dontdraw) /bwipp.codeoneBadVersion er_tmpl
+(TEST) (version=T dontdraw) /bwipp.codeoneBadVersion er_tmpl
+(TEST) (version=Z dontdraw) /bwipp.codeoneBadVersion er_tmpl
+
+
+%
+% S-type encoding
+%
+
+% S-10: empty encodes as value 1 (all zeros + 1)
+{ () (debugcws version=S-10) codeone } [
+    0 0 0 1  % 5-bit codewords: value=0+1=1
+] debugIsEqual
+
+% S-10: single digit
+{ (1) (debugcws version=S-10) codeone } [
+    0 0 0 2  % 5-bit codewords: value=1+1=2
+] debugIsEqual
+
+% S-10: max capacity (6 digits)
+{ (123456) (debugcws version=S-10) codeone } [
+    3 24 18 1  % 5-bit codewords: value=123456+1=123457
+] debugIsEqual
+
+% S-10: all zeros
+{ (000000) (debugcws version=S-10) codeone } [
+    0 0 0 1  % 5-bit codewords: value=0+1=1
+] debugIsEqual
+
+% S-10: all nines
+{ (999999) (debugcws version=S-10) codeone } [
+    30 16 18 0  % 5-bit codewords: value=999999+1=1000000
+] debugIsEqual
+
+% S-20: single digit
+{ (1) (debugcws version=S-20) codeone } [
+    0 0 0 0 0 0 0 2  % 5-bit codewords: value=1+1=2
+] debugIsEqual
+
+% S-20: max capacity (12 digits)
+{ (123456789012) (debugcws version=S-20) codeone } [
+    3 18 31 9 18 6 16 21  % 5-bit codewords: value=123456789012+1
+] debugIsEqual
+
+% S-30: max capacity (18 digits)
+{ (123456789012345678) (debugcws version=S-30) codeone } [
+    3 13 20 27 9 14 19 3 1 28 26 15  % 5-bit codewords: value=123456789012345678+1
+] debugIsEqual
+
+
+%
+% ASCII mode encoding
+%
+
+% Single character: value + 1
+{ (A) (debugcws) codeone } [
+    66                                   % 'A'+1
+    129 129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+% Two characters
+{ (AB) (debugcws) codeone } [
+    66 67                            % 'A'+1 'B'+1
+    129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+% Text
+{ (Hello) (debugcws) codeone } [
+    73 102 109 109 112   % 'H'+1 'e'+1 'l'+1 'l'+1 'o'+1
+    129 129 129 129 129  % PAD
+] debugIsEqual
+
+% Space
+{ ( ) (debugcws) codeone } [
+    33                                   % ' '+1
+    129 129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+% Double-digit pairs: dd+130
+{ (12) (debugcws) codeone } [
+    142                                  % 12+130
+    129 129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+{ (1234) (debugcws) codeone } [
+    142 164                          % 12+130 34+130
+    129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+% Double-digit: 00 → 130
+{ (00) (debugcws) codeone } [
+    130                                  % 00+130
+    129 129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+% Double-digit: 99 → 229
+{ (99) (debugcws) codeone } [
+    229                                  % 99+130
+    129 129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+
+%
+% C40 mode encoding
+%
+
+% 10 uppercase: triggers C40 latch (230), 3 triplets + implied unlatch
+{ (ABCDEFGHIJ) (debugcws) codeone } [
+    230     % lC40
+    89 233  % ABC
+    109 36  % DEF
+    128 95  % GHI
+    255     % unlatch
+    75      % 'J'+1
+    129     % PAD
+] debugIsEqual
+
+% 13 uppercase: 4 triplets, J via implied unlatch
+{ (ABCDEFGHIJKLM) (debugcws) codeone } [
+    230      % lC40
+    89 233   % ABC
+    109 36   % DEF
+    128 95   % GHI
+    147 154  % JKL
+    78       % 'M'+1 (implied unlatch)
+] debugIsEqual
+
+% C40 with spaces (space is native C40 value 3)
+{ (HELLO WORLD) (debugcws) codeone } [
+    230      % lC40
+    134 42   % HEL
+    160 164  % LO<sp>
+    229 128  % WOR
+    255      % unlatch
+    77 69    % 'L'+1 'D'+1
+] debugIsEqual
+
+
+%
+% Text mode encoding
+%
+
+% 10 lowercase: triggers Text latch (239)
+{ (abcdefghij) (debugcws) codeone } [
+    239     % lText
+    89 233  % abc
+    109 36  % def
+    128 95  % ghi
+    255     % unlatch
+    107     % 'j'+1
+    129     % PAD
+] debugIsEqual
+
+% 13 lowercase: 4 triplets, j via implied unlatch
+{ (abcdefghijklm) (debugcws) codeone } [
+    239      % lText
+    89 233   % abc
+    109 36   % def
+    128 95   % ghi
+    147 154  % jkl
+    110      % 'm'+1 (implied unlatch)
+] debugIsEqual
+
+% Text with spaces
+{ (hello world) (debugcws) codeone } [
+    239      % lText
+    134 42   % hel
+    160 164  % lo<sp>
+    229 128  % wor
+    255      % unlatch
+    109 101  % 'l'+1 'd'+1
+] debugIsEqual
+
+
+%
+% X12 mode encoding
+%
+
+% X12 chars: CR(13)=0, *(42)=1, >(62)=2
+{ 6 string dup 0 13 put dup 1 42 put dup 2 62 put dup 3 13 put dup 4 42 put dup 5 62 put (debugcws) codeone } [
+    238              % lX12
+    0 43             % CR * >
+    0 43             % CR * >
+    255              % unlatch
+    129 129 129 129  % PAD
+] debugIsEqual
+
+
+%
+% Base256 mode encoding
+%
+
+% 3 bytes: latch (231) + length (3) + data
+{ 3 string dup 0 128 put dup 1 129 put dup 2 130 put (debugcws) codeone } [
+    231                  % lB256
+    3                    % length
+    128 129 130          % data bytes
+    129 129 129 129 129  % PAD
+] debugIsEqual
+
+% 5 bytes
+{ 5 string dup 0 200 put dup 1 201 put dup 2 202 put dup 3 203 put dup 4 204 put (debugcws) codeone } [
+    231                  % lB256
+    5                    % length
+    200 201 202 203 204  % data bytes
+    129 129 129          % PAD
+] debugIsEqual
+
+
+%
+% Extended ASCII
+%
+
+% Single extended char: FNC4 (235) + (value - 128 + 1)
+{ 1 string dup 0 192 put (debugcws) codeone } [
+    235                              % FNC4 (upper shift)
+    65                               % 192-128+1
+    129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+% Two extended chars: triggers Base256 mode
+{ 2 string dup 0 192 put dup 1 193 put (debugcws) codeone } [
+    231                      % lB256
+    2                        % length
+    192 193                  % data bytes
+    129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+
+%
+% Mode transitions
+%
+
+% Short sequences stay in ASCII
+{ (ABCabc) (debugcws) codeone } [
+    66 67 68         % 'A'+1 'B'+1 'C'+1
+    98 99 100        % 'a'+1 'b'+1 'c'+1
+    129 129 129 129  % PAD
+] debugIsEqual
+
+{ (abcABC) (debugcws) codeone } [
+    98 99 100        % 'a'+1 'b'+1 'c'+1
+    66 67 68         % 'A'+1 'B'+1 'C'+1
+    129 129 129 129  % PAD
+] debugIsEqual
+
+% Digit pair then ASCII
+{ (123ABCabc) (debugcws) codeone } [
+    142        % 12+130
+    52         % '3'+1
+    66 67 68   % 'A'+1 'B'+1 'C'+1
+    98 99 100  % 'a'+1 'b'+1 'c'+1
+    129 129    % PAD
+] debugIsEqual
+
+
+%
+% CTX backtracking
+%
+
+% C40 backtrack: 9 uppercase + extended ASCII
+{ 10 string dup 0 (ABCDEFGHI) putinterval dup 9 200 put (debugcws) codeone } [
+    230     % lC40
+    89 233  % ABC
+    109 36  % DEF
+    128 95  % GHI
+    255     % unlatch
+    235 73  % FNC4 200-128+1
+] debugIsEqual
+
+% C40 backtrack: 12 uppercase + extended ASCII (larger symbol)
+{ 13 string dup 0 (ABCDEFGHIJKL) putinterval dup 12 200 put (debugcws) codeone } [
+    230                          % lC40
+    89 233                       % ABC
+    109 36                       % DEF
+    128 95                       % GHI
+    147 154                      % JKL
+    255                          % unlatch
+    235 73                       % FNC4 200-128+1
+    129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+% Text backtrack: 9 lowercase + extended ASCII
+{ 10 string dup 0 (abcdefghi) putinterval dup 9 200 put (debugcws) codeone } [
+    239     % lText
+    89 233  % abc
+    109 36  % def
+    128 95  % ghi
+    255     % unlatch
+    235 73  % FNC4 200-128+1
+] debugIsEqual
+
+
+%
+% Special characters
+%
+
+% FNC1 before data
+{ (^FNC1Hello) (debugcws parsefnc) codeone } [
+    232                 % FNC1
+    73 102 109 109 112  % 'H'+1 'e'+1 'l'+1 'l'+1 'o'+1
+    129 129 129 129     % PAD
+] debugIsEqual
+
+% FNC1 in middle
+{ (Hello^FNC1World) (debugcws parsefnc) codeone } [
+    73 102 109 109 112               % 'H'+1 'e'+1 'l'+1 'l'+1 'o'+1
+    232                              % FNC1
+    88 112 115 109 101               % 'W'+1 'o'+1 'r'+1 'l'+1 'd'+1
+    129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+% FNC1 + Decimal latch (15 digits after FNC1)
+{ (^FNC1123456789012345) (debugcws parsefnc) codeone } [
+    236                     % FNC1+lDecimal
+    31 28 156 88 13 86 191  % decimal-encoded digits
+    129 129                 % PAD
+] debugIsEqual
+
+% ECI
+{ (^ECI000003Hello) (debugcws parsefnc) codeone } [
+    129 93 93 130 130 133            % ECI 000003
+    73 102 109 109 112               % 'H'+1 'e'+1 'l'+1 'l'+1 'o'+1
+    129 129 129 129 129 129 129 129  % PAD
+] debugIsEqual
+
+
+%
+% Fuzz tests: verify no interpreter errors
+%
+
+% Rapid mode alternation
+/s 200 string def
+0 1 199 {dup 2 mod 0 eq {s exch 65 put} {s exch 97 put} ifelse} for
+{ s (dontdraw) codeone pop true } true isEqual
+
+% Extended ASCII stress
+/s 200 string def 0 1 199 {s exch 200 put} for
+{ s (dontdraw) codeone pop true } true isEqual
+
+% Large digit string
+{ 200 string 0 1 199 { 1 index exch 49 put } for (dontdraw) codeone pop true } true isEqual
+
+% Mixed data stress
+/s 200 string def
+0 1 199 {dup 4 mod 0 eq {s exch 65 put} {dup 4 mod 1 eq {s exch 97 put} {dup 4 mod 2 eq {s exch 49 put} {s exch 200 put} ifelse} ifelse} ifelse} for
+{ s (dontdraw) codeone pop true } true isEqual
+
+% Rendering smoke tests
+10 10 moveto
+{ (Hello World) () codeone true } true isEqual
+10 10 moveto
+{ (123456) (version=S-10) codeone true } true isEqual
+10 10 moveto
+{ (Hello) (version=T-16) codeone true } true isEqual
 end
 } bind def

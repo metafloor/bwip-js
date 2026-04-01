@@ -3,11 +3,13 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % https://web.archive.org/web/20120120060743/http://www.royalmail.com/sites/default/files/docs/pdf/Know How 2006 PIP vs 1.6a Accepted Changes.pdf
 
-% vim: set ts=4 sw=4 et :
 
 %%/royalmail dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -48,6 +50,8 @@
 
 { (SO316XY1AT) (dontdraw validatecheck) royalmail  % 'S' is the correct check digit
 } /bwipp.royalmailBadCheckDigit isError
+
+{ 501 string (dontdraw) royalmail } /bwipp.royalmailInputTooLong isError
 
 
 % Examples

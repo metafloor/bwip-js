@@ -3,13 +3,22 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ANSI/AIM BC6-2000
 
-% vim: set ts=4 sw=4 et :
 
 %%/code49 dup /uk.co.terryburton.bwipp findresource cvx def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ code49 }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
+} def
 
 
 {  % 2.3.1 Regular Alphanumeric Mode
@@ -115,5 +124,33 @@
     0 0 0 0 0 0 0 0 0 0 1 0 1 1 0 0 0 1 0 0 1 1 0 0 1 0 0 0 1 1 0 0 0 1 0 1 1 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 1 1 0 1 0 0 0 0 0 0 1 0 0 1 0 1 1 1 0 1 1 1 1 0
     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 ] isEqual
+
+
+%
+% Error tests
+%
+
+% Invalid rows (valid: 2-8)
+(TEST) (rows=1 dontdraw) /bwipp.code49badRows er_tmpl
+(TEST) (rows=9 dontdraw) /bwipp.code49badRows er_tmpl
+
+% Invalid row height (valid: 8-50)
+(TEST) (rowheight=7 dontdraw) /bwipp.code49badRowHeight er_tmpl
+(TEST) (rowheight=51 dontdraw) /bwipp.code49badRowHeight er_tmpl
+
+% Invalid separator height (valid: 1-5)
+(TEST) (sepheight=0 dontdraw) /bwipp.code49badSepHeight er_tmpl
+(TEST) (sepheight=6 dontdraw) /bwipp.code49badSepHeight er_tmpl
+
+% Invalid SAM format
+(TEST) (sam=1 dontdraw) /bwipp.code49badSAM er_tmpl
+(TEST) (sam=110 dontdraw) /bwipp.code49badSAM er_tmpl
+
+% Invalid character (ASCII > 127)
+(^128) (parse dontdraw) /bwipp.code49badCharacter er_tmpl
+
+() (dontdraw) /bwipp.code49emptyData er_tmpl
+
+501 string (dontdraw) /bwipp.code49inputTooLong er_tmpl
 end
 } bind def

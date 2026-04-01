@@ -3,24 +3,24 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ISO/IEC 24724:2011
 
-% vim: set ts=4 sw=4 et :
 
 %%/databarstackedomni dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) databarstackedomni /pixs get } e isEqual
+    exch { _arg0_ (dontdraw) databarstackedomni /pixs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) databarstackedomni /pixs get } e isError
+    exch { _arg0_ (dontdraw) databarstackedomni /pixs get } dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 
@@ -97,11 +97,16 @@
     1 0 1 1 0 1 1 1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 1 0 1 1 0 0 1 0 0 0 1 1 0 1
 ] eq_tmpl
 
+()                      /bwipp.databarstackedomniBadLength      er_tmpl
+(123)                   /bwipp.databarstackedomniBadLength      er_tmpl
 
 ((01)00034567890124)    /bwipp.databarstackedomniBadCheckDigit  er_tmpl  % Should be '5'
 ((01)000345678901251)   /bwipp.databarstackedomniBadLength      er_tmpl
 ((01)000345678901)      /bwipp.databarstackedomniBadLength      er_tmpl
 ((01)0003456789012A)    /bwipp.databarstackedomniBadCharacter   er_tmpl
 ((02)0003456789012)     /bwipp.databarstackedomniBadAI          er_tmpl
+
+{ ((01)00034567890125) (barxmult=32 dontdraw) databarstackedomni
+} /bwipp.databarStackedOmniBarXmult isError
 end
 } bind def

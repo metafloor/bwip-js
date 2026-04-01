@@ -1,0 +1,447 @@
+% --REQUIRES preamble processoptions setanycolor--
+%%BeginData:        443 ASCII Lines
+currentglobal
+true setglobal
+/setpacking where {pop currentpacking true setpacking} if
+32 dict
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+begin
+
+% Text position lookup table
+/render.positions <<
+%   direction
+%       x-align                                     y-align
+    (forward) <<
+        (offleft)  {      tw neg nudge sub } bind   (below)   {      th neg nudge sub } bind
+        (left)     {      0                } bind   (bottom)  {      0                } bind
+        (xcenter)  { pixx tw sub 2 div     } bind   (ycenter) { pixy th sub 2 div     } bind
+        (right)    { pixx tw sub           } bind   (top)     { pixy th sub           } bind
+        (offright) { pixx        nudge add } bind   (above)   { pixy        nudge add } bind
+    >>
+    (backward) <<
+        (offleft)  {      0      nudge sub } bind   (below)   {      0      nudge sub } bind
+        (left)     {      tw               } bind   (bottom)  {      th               } bind
+        (xcenter)  { pixx tw add 2 div     } bind   (ycenter) { pixy th add 2 div     } bind
+        (right)    { pixx                  } bind   (top)     { pixy                  } bind
+        (offright) { pixx tw add nudge add } bind   (above)   { pixy th add nudge add } bind
+    >>
+    (upward) <<
+        (offleft)  {      0      nudge sub } bind   (below)   {      tw neg nudge sub } bind
+        (left)     {      th               } bind   (bottom)  {      0                } bind
+        (xcenter)  { pixx th add 2 div     } bind   (ycenter) { pixy tw sub 2 div     } bind
+        (right)    { pixx                  } bind   (top)     { pixy tw sub           } bind
+        (offright) { pixx th add nudge add } bind   (above)   { pixy        nudge add } bind
+    >>
+    (downward) <<
+        (offleft)  {      th neg nudge sub } bind   (below)   {      0      nudge sub } bind
+        (left)     {      0                } bind   (bottom)  {      tw               } bind
+        (xcenter)  { pixx th sub 2 div     } bind   (ycenter) { pixy tw add 2 div     } bind
+        (right)    { pixx th sub           } bind   (top)     { pixy                  } bind
+        (offright) { pixx        nudge add } bind   (above)   { pixy tw add nudge add } bind
+    >>
+>> readonly def
+
+% Template for text option groups
+/render.groupoptions <<
+    ()           ()
+    (subspace)   ()
+    (split)      ()
+    (linegaps)   1.2
+    (color)      (unset)
+    (xalign)     (left)
+    (yalign)     (above)
+    (direction)  (forward)
+    (font)       (Courier)
+    (size)       10.0
+    (xoffset)    0.0
+    (yoffset)    0.0
+    (gaps)       0.0
+>> readonly def
+
+% Validation dicts
+/render.xalignopts <<
+    /offleft dup  /left dup  /center dup  /right dup  /offright dup  /justify dup
+>> readonly def
+
+/render.yalignopts <<
+    /above dup  /top dup  /center dup  /bottom dup  /below dup  /justify dup
+>> readonly def
+
+/render.directionoptions <<
+    /forward dup  /backward dup  /upward dup  /downward dup
+>> readonly def
+
+%
+%  Validate a single text option dict
+%
+%  grp textdict /validateoptions //render exec => bool [errorname errorstring |]
+%
+/render.validateoptions {
+
+    16 dict begin
+
+    /td exch def
+    /grp exch def
+
+    % Build prefix: text | extratext | textN
+    /pfx grp 1 eq { (text) } {
+        grp 2 eq { (extratext) } {
+            5 string dup 0 (text) putinterval dup 4 grp 48 add put
+        } ifelse
+    } ifelse def
+
+    /mkerr {  % /property (msgtail) => errorname errorstring
+        /msgtail exch def
+        /prop exch 128 string cvs def
+        pfx length 9 add prop length add string
+        dup 0 (bwipp.) putinterval
+        dup 6 pfx putinterval
+        dup pfx length 6 add (Bad) putinterval
+        dup pfx length 9 add prop putinterval cvn
+        pfx length prop length add msgtail length add string
+        dup 0 pfx putinterval
+        dup pfx length prop putinterval
+        dup pfx length prop length add msgtail putinterval
+    } def
+
+    1 {  % Common exit
+
+        td (xalign) get dup (unset) ne {
+            //render.xalignopts exch known not {
+                /xalign ( must be offleft, left, center, right, offright or justify) mkerr false exit
+            } if
+        } { pop } ifelse
+
+        td (yalign) get dup (unset) ne {
+            //render.yalignopts exch known not {
+                /yalign ( must be above, top, center, bottom, below or justify) mkerr false exit
+            } if
+        } { pop } ifelse
+
+        //render.directionoptions td (direction) get known not {
+            /direction ( must be forward, backward, upward or downward) mkerr false exit
+        } if
+
+        td (size) get dup 0 le exch 25 ge or {
+            /size ( must be greater than zero and less than 25) mkerr false exit
+        } if
+
+        td (xoffset) get dup -150 lt exch 150 gt or {
+            /xoffset ( must be from -150 to 150) mkerr false exit
+        } if
+
+        td (yoffset) get dup -150 lt exch 150 gt or {
+            /yoffset ( must be from -150 to 150) mkerr false exit
+        } if
+
+        td (gaps) get dup -20 lt exch 20 gt or {
+            /gaps ( must be from -20 to 20) mkerr false exit
+        } if
+
+        td (linegaps) get dup 0 lt exch 20 gt or {
+            /linegaps ( must be from 0 to 20) mkerr false exit
+        } if
+
+        true exit
+
+    } repeat
+
+    end
+
+} bind def
+
+%
+%  Render a single text element
+%
+%  pixx pixy grp textdict /rendertext //render exec => bool [errorname errorstring |]
+%
+/render.rendertext {
+
+    begin            % td on dict stack
+    32 dict begin
+
+    /grp exch def
+    /pixy exch def
+    /pixx exch def
+
+    /makeerr {  % /errname (errmsg) => /bwipp.PFXerrname (PFXerrmsg)
+
+        /makeerr.msg exch def
+        /makeerr.name exch 128 string cvs def
+
+        grp 1 eq {
+            (text)
+        } {
+        grp 2 eq {
+            (extratext)
+        } {
+            5 string dup 0 (text) putinterval dup 4 grp 48 add put
+        } ifelse } ifelse
+        /makeerr.pfx exch def
+
+        makeerr.pfx length 6 add makeerr.name length add string
+        dup 0 (bwipp.) putinterval
+        dup 6 makeerr.pfx putinterval
+        dup makeerr.pfx length 6 add makeerr.name putinterval
+        cvn
+
+        makeerr.pfx length makeerr.msg length add string
+        dup 0 makeerr.pfx putinterval
+        dup makeerr.pfx length makeerr.msg putinterval
+
+    } def
+
+    /positiontext {
+        /th exch def
+        /tw exch def
+        /nudge 1 def
+        //render.positions exch get dup
+        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+    } def
+
+    1 {  % Common exit
+
+        %
+        % Encoder-positioned text
+        %
+        txt length 0 gt xalign (unset) eq and yalign (unset) eq and content () eq and {
+
+            color (unset) ne { color //setanycolor exec not { false exit } if } if
+
+            /s 0 def /fn () def /xoff 0 def /yoff 0 def
+            {
+                txt {
+                    aload pop
+                    2 copy s ne exch fn ne or {
+                        dup 0 le {
+                            pop pop pop pop pop stop
+                        } if
+                        2 copy /s exch def /fn exch def
+                        selectfont
+                        % Ink-centre offsets for single-char positioning
+                        (0) stringwidth pop 2 div neg /xoff exch def
+                        gsave newpath 0 0 moveto (0) false charpath pathbbox grestore
+                        exch pop add 2 div neg /yoff exch def pop
+                    } {
+                        pop pop
+                    } ifelse
+                    moveto dup length 1 eq { xoff yoff rmoveto } if show
+                } forall
+            } stopped {
+                /bwipp.fontTooSmall (The font size is too small) false exit
+            } if
+
+            true exit
+
+        } if
+
+        %
+        % Text content with alignment
+        %
+
+        % Extract text from txt array if content empty but txt available
+        content () eq txt length 0 gt and {
+            /txtchars [ txt { 0 get {} forall } forall ] def
+            /tstr txtchars length string def
+            0 1 txtchars length 1 sub {
+                dup txtchars exch get tstr 3 1 roll put
+            } for
+            /content tstr def
+        } if
+
+        % Nothing to render
+        content () eq { true exit } if
+
+        % Space replacement
+        subspace () ne subspace length 1 ne and {
+            /subspaceBad (subspace option must be a single character) makeerr false exit
+        } if
+        subspace () ne {
+            0 1 content length 1 sub {
+                dup
+                content exch 1 getinterval subspace exch search {
+                    content 4 index 32 put pop pop
+                } if
+                pop pop
+            } for
+        } if
+
+        % Split into lines
+        split () ne content () ne and {
+            split length 1 ne {
+                /splitBad (split option must be a single character) makeerr false exit
+            } if
+            /textlines [
+                content {
+                    split search { exch pop exch } { exit } ifelse
+                } loop
+            ] def
+        } {
+            /textlines [ content ] def
+        } ifelse
+
+        color (unset) ne { color //setanycolor exec not { false exit } if } if
+
+        font size selectfont
+
+        % Find true ascent of font
+        content length 0 eq {
+            0
+        } {
+            gsave
+            newpath 0 0 moveto (0) false charpath pathbbox
+            4 1 roll pop pop pop
+            grestore
+            currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+            currentfont /StrokeWidth known and {
+                currentfont /StrokeWidth get 2 div 0 exch
+                currentfont /FontMatrix get dtransform
+                dup mul exch dup mul add sqrt
+                add
+            } if
+        } ifelse
+        /textascent exch def
+
+        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall content length 1 sub gaps mul add def
+        /textheight textlines length dup textascent mul exch 1 sub linegaps mul add def
+
+        xalign (unset) eq { /xalign (center) def } if
+        yalign (unset) eq { /yalign (below)  def } if
+
+        xalign (justify) eq {
+            direction (forward) ne direction (backward) ne and {
+                /xjustify (xalign=justify requires forward or backward text) makeerr false exit
+            } if
+            textwidth pixx lt content length 1 gt and {
+                /gaps pixx textwidth sub content length 1 sub div def
+                /xalign direction (forward) eq { (left) } { (right) } ifelse def
+            } {
+                /gaps 0.0 def
+                /xalign (center) def
+            } ifelse
+        } if
+
+        yalign (justify) eq {
+            direction (upward) ne direction (downward) ne and {
+                /yjustify (yalign=justify requires upward or downward text) makeerr false exit
+            } if
+            textwidth pixy lt content length 1 gt and {
+                /gaps pixy textwidth sub content length 1 sub div def
+                /yalign direction (upward) eq { (bottom) } { (top) } ifelse def
+            } {
+                /gaps 0.0 def
+                /yalign (center) def
+            } ifelse
+        } if
+
+        xalign yalign direction textwidth textheight positiontext exec moveto
+        xoffset yoffset rmoveto
+        gsave
+        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> direction get rotate
+        currentpoint translate
+        0 1 textlines length 1 sub {
+            /i exch def
+            0 0 textascent linegaps add i mul add moveto
+            gaps 0 textlines dup length i sub 1 sub get ashow
+        } for
+        grestore
+
+        true exit
+
+    } repeat
+
+    end
+    end  % td
+
+} bind def
+
+%
+%  Snap module boundaries to device pixel grid
+%
+/render.gridfit {
+
+    16 dict begin
+
+    %
+    %  0 => no snap; +/- N => round/floor to nearest multiple of N
+    %
+    /snapy exch def       % true: snap y independently; false: uniform with x
+    /mode exch def        % ±N: round/floor to nearest multiple of N
+
+    % val mode => factor; clamps to minimum 1 granularity unit
+    /snapdim {
+        /sdmode exch def /val exch def
+        val sdmode abs div
+        sdmode 0 gt { round } { floor } ifelse
+        dup 0 le { pop 1 } if
+        sdmode abs mul val div
+    } def
+
+    %
+    %  Detect device x and y resolution via default matrix
+    %
+    gsave matrix defaultmatrix setmatrix
+    72 0 dtransform abs exch abs 2 copy lt {exch} if pop /hwxres exch def
+    0 72 dtransform abs exch abs 2 copy lt {exch} if pop /hwyres exch def
+    grestore
+    griddpi 0 eq { /griddpi hwxres def } if
+
+    %
+    % Guard against bogus device (nullpage ~3e16)
+    %
+    hwxres 1 gt hwxres 100000 lt and hwyres 1 gt hwyres 100000 lt and and {
+
+        %
+        %  CTM scaled to target DPI pixel coordinates, per axis
+        %
+        [ griddpi hwxres div  0  0
+          griddpi hwyres div  0  0 ] matrix currentmatrix matrix concatmatrix
+        /gridmatrix exch def
+
+        %
+        %  Snap basepoint to target pixel boundary
+        %
+        0 0 gridmatrix transform round exch round exch gridmatrix itransform translate
+
+        %
+        %  Snap module dimensions to whole target pixels
+        %
+        1 0 gridmatrix dtransform abs exch abs 2 copy lt {exch} if pop
+        mode snapdim
+        snapy {
+            0 1 gridmatrix dtransform abs exch abs 2 copy lt {exch} if pop
+            mode snapdim
+        } { dup } ifelse
+        scale
+
+    } if
+
+    end
+
+} bind def
+
+%
+%  Dispatcher table
+%
+/render.dispatch <<
+    /groupoptions     //render.groupoptions
+    /rendertext       //render.rendertext
+    /validateoptions  //render.validateoptions
+    /gridfit          //render.gridfit
+>> readonly def
+
+/render {
+
+    //render.dispatch exch get exec
+
+}
+[/barcode] {null def} forall
+bind def
+/render dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+setglobal
+%%EndData
+%%EndResource

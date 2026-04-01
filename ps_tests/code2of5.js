@@ -1,140 +1,104 @@
 function bwipp_runtest_code2of5(){
 var $__ = $_;//#2
-$_ = Object.assign({}, $_);//#2
-var _0=function(){
-$k[$j++]="";//#20
-$k[$j++]="dontdraw";//#20
-bwipp_code2of5();//#20
-};//#20
-isError(_0,'bwipp.code2of5emptyData#21');//#20
-var _1=function(){
-$k[$j++]="";//#22
+$_=Object.assign({},$_,bwipp_runtest_code2of5.globals);//#2
+var _0=$_.isError;//#17
+var _1=$_.isError;//#20
+var _2=$_.isError;//#23
+var _3=$_.isError;//#26
+var _4=$_.isError;//#29
+var _5=$_.isError;//#31
+var _6=$a([3,1,3,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,1,1,3]);//#37
+var _7=$_.debugIsEqual;//#37
+var _8=$a([3,1,3,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,1,1,3]);//#40
+var _9=$_.debugIsEqual;//#40
+var _A=$a([3,1,3,1,1,1,3,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,3,1,1,1,1,1,3,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,3,1,3,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,1,1,3,1,1,1,1,1,3,1,3,1,1,1,3]);//#43
+var _B=$_.debugIsEqual;//#43
+var _C=$a([3,1,3,1,1,1,3,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,3,1,1,1,1,1,3,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,3,1,3,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,3,1,1,1,3]);//#46
+var _D=$_.debugIsEqual;//#46
+$k[$j++]=function(){
+$k[$j++]="";//#16
+$k[$j++]="dontdraw";//#16
+bwipp_code2of5();//#16
+};//#16
+$k[$j++]='bwipp.code2of5emptyData';//#16
+$k[$j++]=_0;//#16
+$k[$j++]=function(){
+$k[$j++]="";//#19
+$k[$j++]="dontdraw validatecheck";//#19
+bwipp_code2of5();//#19
+};//#19
+$k[$j++]='bwipp.code2of5emptyData';//#19
+$k[$j++]=_1;//#19
+$k[$j++]=function(){
+$k[$j++]="A";//#22
 $k[$j++]="dontdraw";//#22
-bwipp_industrial2of5();//#22
+bwipp_code2of5();//#22
 };//#22
-isError(_1,'bwipp.code2of5emptyData#23');//#22
-var _2=function(){
-$k[$j++]="";//#24
-$k[$j++]="dontdraw";//#24
-bwipp_iata2of5();//#24
-};//#24
-isError(_2,'bwipp.code2of5emptyData#25');//#24
-var _3=function(){
-$k[$j++]="";//#26
-$k[$j++]="dontdraw";//#26
-bwipp_matrix2of5();//#26
-};//#26
-isError(_3,'bwipp.code2of5emptyData#27');//#26
-var _4=function(){
-$k[$j++]="";//#28
-$k[$j++]="dontdraw";//#28
-bwipp_coop2of5();//#28
+$k[$j++]='bwipp.code2of5badCharacter';//#22
+$k[$j++]=_2;//#22
+$k[$j++]=function(){
+$k[$j++]="876543211";//#25
+$k[$j++]="dontdraw validatecheck";//#25
+bwipp_code2of5();//#25
+};//#25
+$k[$j++]='bwipp.code2of5badCheckDigit';//#25
+$k[$j++]=_3;//#25
+$k[$j++]=function(){
+$k[$j++]="0";//#28
+$k[$j++]="dontdraw version=blah";//#28
+bwipp_code2of5();//#28
 };//#28
-isError(_4,'bwipp.code2of5emptyData#29');//#28
-var _5=function(){
-$k[$j++]="";//#30
-$k[$j++]="dontdraw";//#30
-bwipp_datalogic2of5();//#30
-};//#30
-isError(_5,'bwipp.code2of5emptyData#31');//#30
-var _6=function(){
-$k[$j++]="";//#33
-$k[$j++]="dontdraw validatecheck";//#33
-bwipp_code2of5();//#33
-};//#33
-isError(_6,'bwipp.code2of5emptyData#34');//#33
-var _7=function(){
-$k[$j++]="A";//#36
+$k[$j++]='bwipp.code2of5badVersion';//#28
+$k[$j++]=_4;//#28
+$k[$j++]=function(){
+var _E=$s(501);//#31
+$k[$j++]=_E;//#31
+$k[$j++]="dontdraw";//#31
+bwipp_code2of5();//#31
+};//#31
+$k[$j++]='bwipp.code2of5inputTooLong';//#31
+$k[$j++]=_5;//#31
+$k[$j++]=function(){
+$k[$j++]="0";//#36
 $k[$j++]="dontdraw";//#36
 bwipp_code2of5();//#36
+var _F=$k[--$j];//#36
+var _G=$get(_F,'sbs');//#36
+$k[$j++]=_G;//#36
 };//#36
-isError(_7,'bwipp.code2of5badCharacter#37');//#36
-var _8=function(){
-$k[$j++]="876543211";//#39
+$k[$j++]=_6;//#36
+$k[$j++]=_7;//#36
+$k[$j++]=function(){
+$k[$j++]="0";//#39
 $k[$j++]="dontdraw validatecheck";//#39
 bwipp_code2of5();//#39
+var _H=$k[--$j];//#39
+var _I=$get(_H,'sbs');//#39
+$k[$j++]=_I;//#39
 };//#39
-isError(_8,'bwipp.code2of5badCheckDigit#40');//#39
-var _9=function(){
-$k[$j++]="0";//#42
-$k[$j++]="dontdraw version=blah";//#42
+$k[$j++]=_8;//#39
+$k[$j++]=_9;//#39
+$k[$j++]=function(){
+$k[$j++]="876543212";//#42
+$k[$j++]="dontdraw validatecheck";//#42
 bwipp_code2of5();//#42
+var _J=$k[--$j];//#42
+var _K=$get(_J,'sbs');//#42
+$k[$j++]=_K;//#42
 };//#42
-isError(_9,'bwipp.code2of5badVersion#43');//#42
-var _D=function(){
-$k[$j++]="0";//#48
-$k[$j++]="dontdraw";//#48
-bwipp_code2of5();//#48
-var _C=$get($k[--$j],'sbs');//#48
-$k[$j++]=_C;//#48
-};//#48
-debugIsEqual(_D,$a([3,1,3,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,1,1,3]));//#48
-var _H=function(){
-$k[$j++]="0";//#51
-$k[$j++]="dontdraw validatecheck";//#51
-bwipp_code2of5();//#51
-var _G=$get($k[--$j],'sbs');//#51
-$k[$j++]=_G;//#51
-};//#51
-debugIsEqual(_H,$a([3,1,3,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,1,1,3]));//#51
-var _L=function(){
-$k[$j++]="876543212";//#54
-$k[$j++]="dontdraw validatecheck";//#54
-bwipp_code2of5();//#54
-var _K=$get($k[--$j],'sbs');//#54
-$k[$j++]=_K;//#54
-};//#54
-debugIsEqual(_L,$a([3,1,3,1,1,1,3,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,3,1,1,1,1,1,3,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,3,1,3,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,1,1,3,1,1,1,1,1,3,1,3,1,1,1,3]));//#54
-var _P=function(){
-$k[$j++]="87654321";//#57
-$k[$j++]="dontdraw";//#57
-bwipp_code2of5();//#57
-var _O=$get($k[--$j],'sbs');//#57
-$k[$j++]=_O;//#57
-};//#57
-debugIsEqual(_P,$a([3,1,3,1,1,1,3,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,3,1,1,1,1,1,3,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,3,1,3,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,3,1,1,1,3]));//#57
-var _T=function(){
-$k[$j++]="87654321";//#60
-$k[$j++]="dontdraw";//#60
-bwipp_industrial2of5();//#60
-var _S=$get($k[--$j],'sbs');//#60
-$k[$j++]=_S;//#60
-};//#60
-debugIsEqual(_T,$a([3,1,3,1,1,1,3,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,3,1,1,1,1,1,3,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,3,1,3,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,3,1,1,1,3]));//#60
-var _X=function(){
-$k[$j++]="87654321";//#63
-$k[$j++]="dontdraw";//#63
-bwipp_iata2of5();//#63
-var _W=$get($k[--$j],'sbs');//#63
-$k[$j++]=_W;//#63
-};//#63
-debugIsEqual(_X,$a([1,1,1,1,3,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,3,1,1,1,3,1,3,1,1,1,1,1,3,1,1,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,3,1,3,1,3,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,3,1,1]));//#63
-var _b=function(){
-$k[$j++]="87654321";//#66
-$k[$j++]="dontdraw";//#66
-bwipp_matrix2of5();//#66
-var _a=$get($k[--$j],'sbs');//#66
-$k[$j++]=_a;//#66
-};//#66
-debugIsEqual(_b,$a([3,1,1,1,1,1,3,1,1,3,1,1,1,1,1,3,3,1,1,3,3,1,1,1,3,1,3,1,1,1,1,1,3,1,3,1,3,3,1,1,1,1,1,3,1,1,3,1,3,1,1,1,3,1,3,1,1,1,1]));//#66
-var _c=$a([3,1,3,1,3,1,1,3,1,1,3,1,1,1,3,1,1,3,3,1,1,1,1,3,1,3,1,1,1,3,1,1,3,1,1,1,3,3,1,1,1,1,3,1,3,1,1,1,1,3,3,1,1,3,3]);//#70
-var _f=function(){
-$k[$j++]="87654321";//#69
-$k[$j++]="dontdraw";//#69
-bwipp_coop2of5();//#69
-var _e=$get($k[--$j],'sbs');//#69
-$k[$j++]=_e;//#69
-};//#69
-debugIsEqual(_f,_c);//#69
-var _j=function(){
-$k[$j++]="87654321";//#72
-$k[$j++]="dontdraw";//#72
-bwipp_datalogic2of5();//#72
-var _i=$get($k[--$j],'sbs');//#72
-$k[$j++]=_i;//#72
-};//#72
-debugIsEqual(_j,$a([1,1,1,1,3,1,1,3,1,1,1,1,1,3,3,1,1,3,3,1,1,1,3,1,3,1,1,1,1,1,3,1,3,1,3,3,1,1,1,1,1,3,1,1,3,1,3,1,1,1,3,1,3,1,1]));//#72
-$_ = $__;//#74
+$k[$j++]=_A;//#42
+$k[$j++]=_B;//#42
+$k[$j++]=function(){
+$k[$j++]="87654321";//#45
+$k[$j++]="dontdraw";//#45
+bwipp_code2of5();//#45
+var _L=$k[--$j];//#45
+var _M=$get(_L,'sbs');//#45
+$k[$j++]=_M;//#45
+};//#45
+$k[$j++]=_C;//#45
+$k[$j++]=_D;//#45
+$_ = $__;//#45
 }//bwipp_runtest_code2of5
 console.log("code2of5...")
 bwipp_runtest_code2of5();

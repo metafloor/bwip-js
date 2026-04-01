@@ -29,6 +29,9 @@ fi
 rm -f tests/*.gsout tests/*.jsout 2>/dev/null
 ##rm -f coverage/* 2>/dev/null
 
+## Capture all output to a log file
+{
+
 ##
 ## Create a special barcode.ps that emits the renderer values
 ##
@@ -217,3 +220,8 @@ echo "-----------------------"
 echo "Number of tests: $NTESTS"
 echo "Number of failures: $NFAILS"
 echo "-----------------------"
+
+} | tee runtests.log 2>&1
+
+echo "Test output saved to runtests.log"
+exit 0

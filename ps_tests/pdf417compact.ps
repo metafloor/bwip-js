@@ -3,11 +3,13 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % ISO/IEC 15438:2015
 
-% vim: set ts=4 sw=4 et :
 
 %%/pdf417compact dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -35,5 +37,16 @@
     1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 0 0 1 1 1 1 0 1 0 1 1 1 1 0 1 0 0 0 0 1 1 1 0 0 0 1 1 1 1 1 1 0 1 0 1 0 1 1 0 0 1 0 1 0 0 1 1 1 1 1 0 0 0 1
     1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 0 0 1 1 1 1 0 1 0 1 1 1 1 0 1 0 0 0 0 1 1 1 0 0 0 1 1 1 1 1 1 0 1 0 1 0 1 1 0 0 1 0 1 0 0 1 1 1 1 1 0 0 0 1
 ] isEqual
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ pdf417compact }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
+} def
+
+% Option edges
+(TEST) (columns=31 dontdraw) /bwipp.pdf417invalidColumns er_tmpl
+(TEST) (rows=91 dontdraw) /bwipp.pdf417invalidRows er_tmpl
 end
 } bind def

@@ -3,32 +3,31 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 %%/ean8 dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) ean8 /sbs get } e isEqual
+    exch { _arg0_ (dontdraw) ean8 /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) ean8 /sbs get } e isError
+    exch { _arg0_ (dontdraw) ean8 /sbs get } dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 /eq_tmpl_addon {
-    /e exch def
-    /t exch def
-    { t (dontdraw permitaddon) ean8 /sbs get } e isEqual
+    exch { _arg0_ (dontdraw permitaddon) ean8 /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 /er_tmpl_addon {
-    /e exch def
-    /t exch def
-    { t (dontdraw permitaddon) ean8 /sbs get } e isError
+    exch { _arg0_ (dontdraw permitaddon) ean8 /sbs get } dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 

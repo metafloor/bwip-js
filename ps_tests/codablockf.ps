@@ -3,18 +3,26 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2025 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % AIM Europe ISS-X-24 - Uniform Symbology Specification - Codablock F (1995)
 
-% vim: set ts=4 sw=4 et :
 
 %%/codablockf dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw parse) codablockf /pixs get } e isEqual
+    exch { _arg0_ (dontdraw parse) codablockf /pixs get } dup 3 -1 roll 0 exch put
+    exch isEqual
+} def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ codablockf }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 
@@ -88,5 +96,35 @@
     1 1 0 1 0 0 0 0 1 0 0 1 0 1 1 1 1 0 1 1 1 0 1 0 0 1 1 0 1 1 1 0 0 1 0 0 1 1 1 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 0 1 0 0 0 0 1 1 0 1 0 0 1 0 0 1 1 0 1 0 0 0 0 1 0 0 0 0 1 1 0 1 0 0 1 0 0 1 1 1 1 0 1 0 0 1 1 0 1 1 1 0 1 1 1 0 1 0 1 1 1 0 0 0 1 1 0 1 1 0 0 1 0 0 0 0 1 0 1 1 0 0 0 1 1 1 0 1 0 1 1
     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 ] eq_tmpl
+
+
+%
+% Error tests
+%
+
+% Input too long
+25001 string (dontdraw) /bwipp.codablockfinputTooLong er_tmpl
+
+% Invalid columns (valid: 4-62)
+(TEST) (columns=3 dontdraw) /bwipp.codablockfBadColumns er_tmpl
+(TEST) (columns=63 dontdraw) /bwipp.codablockfBadColumns er_tmpl
+
+% Invalid rows (valid: 2-44)
+(TEST) (rows=1 dontdraw) /bwipp.codablockfBadRows er_tmpl
+(TEST) (rows=45 dontdraw) /bwipp.codablockfBadRows er_tmpl
+
+% Invalid row height (valid: 8-50)
+(TEST) (rowheight=7 dontdraw) /bwipp.codablockfBadRowHeight er_tmpl
+(TEST) (rowheight=51 dontdraw) /bwipp.codablockfBadRowHeight er_tmpl
+
+% Invalid separator height (valid: 1-5)
+(TEST) (sepheight=0 dontdraw) /bwipp.codablockfBadSepHeight er_tmpl
+(TEST) (sepheight=6 dontdraw) /bwipp.codablockfBadSepHeight er_tmpl
+
+% Data too long
+{ 2000 string 0 1 1999 { 1 index exch 65 put } for (dontdraw) codablockf } /bwipp.codablockfTooBig isError
+
+% Maximum dimensions smoke test (max dims exceed strict interpreter limits)
+{ 0 0 moveto (CODABLOCK F 34567890123456789010040digit) (columns=10 rows=10) codablockf true } true isEqual
 end
 } bind def

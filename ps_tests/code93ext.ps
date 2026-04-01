@@ -3,35 +3,26 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % AIM USS Code 93 AIM-BC5-2000
 
-% vim: set ts=4 sw=4 et :
 
 %%/code93ext dup /uk.co.terryburton.bwipp findresource cvx def
-%%/code93 dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw parse includecheck) code93ext /sbs get } e isEqual
-} def
-
-/eq_nonext_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw includecheck) code93 /sbs get } e isEqual
+    exch { _arg0_ (dontdraw parse includecheck) code93ext /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 
 % Non-shifts $/+%
 
-($/+%)  % Same as non-extended below
+($/+%)  % Same as non-extended
     [1 1 1 1 4 1 3 2 1 1 1 1 1 1 2 1 3 1 1 1 3 1 2 1 2 1 1 1 3 1 1 2 1 1 2 2 1 1 1 2 2 2 1 1 1 1 4 1 1] eq_tmpl
-
-($/+%)
-    [1 1 1 1 4 1 3 2 1 1 1 1 1 1 2 1 3 1 1 1 3 1 2 1 2 1 1 1 3 1 1 2 1 1 2 2 1 1 1 2 2 2 1 1 1 1 4 1 1] eq_nonext_tmpl
 
 ($%&^039()*+,-./)
     [1 1 1 1 4 1 3 2 1 1 1 1 2 1 1 1 3 1 3 1 1 1 2 1 2 3 1 1 1 1 3 1 1 1 2 1 1 1 2 1 1 3 3 1 1 1 2 1 1 1 2 2 1 2 3 1 1 1 2 1 1 1 2 3 1 1 3 1 1 1 2 1 1 2 2 1 1 2 1 1 3 1 2 1 3 1 1 1 2 1 1 1 1 1 2 3 1 2 1 1 3 1 3 1 1 1 1 2 1 1 2 1 3 1 2 1 2 2 1 1 1 1 1 1 1 4 1 1 1 1 4 1 1] eq_tmpl
@@ -41,5 +32,23 @@
 
 (CODE^01393)  % Figure B1, same
     [1 1 1 1 4 1 2 1 1 3 1 1 1 2 1 1 2 2 2 2 1 1 1 2 2 2 1 2 1 1 1 2 1 2 2 1 1 1 1 2 2 2 1 4 1 1 1 1 1 1 1 4 1 1 2 2 1 1 1 2 1 3 1 1 2 1 1 1 1 1 4 1 1] eq_tmpl
+
+
+%
+% Error tests
+%
+
+{ (ABC^200) (dontdraw parse) code93ext } /bwipp.code93extbadCharacter isError
+
+{ 501 string (dontdraw) code93ext } /bwipp.code93extinputTooLong isError
+
+
+% Regression: rangecheck when txt is single-string entry
+
+{ (Code93 Ext!) (includetext) code93ext } { true } true isEqual
+
+{ (Code93 Ext!) (includetext includecheck) code93ext } { true } true isEqual
+
+{ (Code93 Ext!) (includetext includecheck includecheckintext) code93ext } { true } true isEqual
 end
 } bind def

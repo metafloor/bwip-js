@@ -3,133 +3,448 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ISO/IEC 18004:2015
 
-% vim: set ts=4 sw=4 et :
 
 %%/qrcode dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o qrcode /pixs get } e isEqual
+    3 1 roll { _arg0_ _arg1_ qrcode /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o qrcode /pixs get } e isError
+    3 1 roll { _arg0_ _arg1_ qrcode /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
+} def
+
+/_bitseqsEqual {
+    % Stack: errorname errorinfo [vg (expected)]
+    aload pop 3 1 roll get
+    ne {/testError pstack quit} if
+    pop
+} bind def
+/bitseqsEqual { //_bitseqsEqual //_doTest exec } def
+
+% data opts vg [(seg1) (seg2) ...] bitseqs_tmpl
+/bitseqs_tmpl {
+    exch 4 1 roll                         % vg data opts [parts]
+    0 1 index {length add} forall string  % cs = concat(parts)
+    0 3 -1 roll { 3 copy putinterval length add } forall pop
+    4 -1 roll exch 2 array astore         % data opts [vg cs]
+    3 1 roll { _arg0_ _arg1_ qrcode }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch bitseqsEqual
 } def
 
 
+% Codewords check
 {
     (TESTING) (fixedeclevel debugcws) qrcode
 } [32 61 39 161 45 5 0 236 17 236 17 236 17 236 17 236] debugIsEqual
 
+% ECC check
 {
     (TESTING) (fixedeclevel debugecc) qrcode
 } [32 61 39 161 45 5 0 236 17 236 17 236 17 236 17 236 124 49 125 89 133 221 9 38 29 92] debugIsEqual
 
-{  % K4 (点茗点茗); 7.4.6 examples 点 0x935F (^147^095) and 茗 0xE4AA (^228^170); 4 Kanji max for version 1-H (Table 7)
-    (^147^095^228^170^147^095^228^170) (parse version=1 eclevel=H fixedeclevel debugcws) qrcode
-} [128 70 207 234 169 179 250 170 0] debugIsEqual
+% K4 (点茗点茗); 7.4.6 examples 点 0x935F (^147^095) and 茗 0xE4AA (^228^170); 4 Kanji max for version 1-H (Table 7)
+(^147^095^228^170^147^095^228^170) (parse version=1 eclevel=H fixedeclevel debugbitseqs) 0 [
+    (1000)             % Kanji mode
+    (00000100)         % Char count: 4 (8-bit)
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+] bitseqs_tmpl
 
-{  % B1 K9 A2 (?やややややややややAB); や 0x82E2 (^130^226); note ^226^130 (0xE282) and ^226A (0xE241) also valid Shift JIS
-    (?^130^226^130^226^130^226^130^226^130^226^130^226^130^226^130^226^130^226AB) (parse version=2 eclevel=Q fixedeclevel debugcws) qrcode
-} [64 19 248 9 11 16 88 130 196 22 32 177 5 136 44 65 98 11 17 0 142 104] debugIsEqual
+% B1 K9 A2 (?やややややややややAB); や 0x82E2 (^130^226); note ^226^130 (0xE282) and ^226A (0xE241) also valid Shift JIS
+(?^130^226^130^226^130^226^130^226^130^226^130^226^130^226^130^226^130^226AB) (parse version=2 eclevel=Q fixedeclevel debugbitseqs) 0 [
+    (0100)             % Byte mode
+    (00000001)         % Char count: 1 (8-bit)
+    (00111111)         % 0x3F '?'
+    (1000)             % Kanji mode
+    (00001001)         % Char count: 9 (8-bit)
+    (0000101100010)    % や: Kanji 354
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0010)             % Alphanumeric mode
+    (000000010)        % Char count: 2 (9-bit)
+    (00111001101)      % AB: 10*45+11 = 461
+] bitseqs_tmpl
 
-{  % B19 K5 (?ややややwやややや ややややや); note ^266w (0xE277) and ^266<SP> (0xE240) also valid Shift JIS
-    (?^130^226^130^226^130^226^130^226w^130^226^130^226^130^226^130^226 ^130^226^130^226^130^226^130^226^130^226) (parse version=2 eclevel=L fixedeclevel debugcws) qrcode
-} [65 51 248 46 40 46 40 46 40 46 39 120 46 40 46 40 46 40 46 34 8 5 11 16 88 130 196 22 32 177 0 236 17 236] debugIsEqual
+% B19 K5 (?ややややwやややや ややややや); note ^266w (0xE277) and ^266<SP> (0xE240) also valid Shift JIS
+(?^130^226^130^226^130^226^130^226w^130^226^130^226^130^226^130^226 ^130^226^130^226^130^226^130^226^130^226) (parse version=2 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)             % Byte mode
+    (00010011)         % Char count: 19 (8-bit)
+    (00111111)         % 0x3F '?'
+    (10000010)         % 0x82
+    (11100010)         % 0xE2
+    (10000010)         % 0x82
+    (11100010)         % 0xE2
+    (10000010)         % 0x82
+    (11100010)         % 0xE2
+    (10000010)         % 0x82
+    (11100010)         % 0xE2
+    (01110111)         % 0x77 'w'
+    (10000010)         % 0x82
+    (11100010)         % 0xE2
+    (10000010)         % 0x82
+    (11100010)         % 0xE2
+    (10000010)         % 0x82
+    (11100010)         % 0xE2
+    (10000010)         % 0x82
+    (11100010)         % 0xE2
+    (00100000)         % 0x20 ' '
+    (1000)             % Kanji mode
+    (00000101)         % Char count: 5 (8-bit)
+    (0000101100010)    % や: Kanji 354
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0000101100010)    % や
+    (0000101100010)    % や
+] bitseqs_tmpl
 
-{  % ECI regression fix (PR #179 calculate numBs from "not others" to avoid Kanji overlap [88510ab])
-    (^182^ECI000007^182) (parse parsefnc version=1 eclevel=H fixedeclevel debugcws) qrcode
-} [64 27 103 7 64 27 96 236 17] debugIsEqual
+% ECI regression fix (PR #179 calculate numBs from "not others" to avoid Kanji overlap [88510ab])
+(^182^ECI000007^182) (parse parsefnc version=1 eclevel=H fixedeclevel debugbitseqs) 0 [
+    (0100)        % Byte mode
+    (00000001)    % Char count: 1 (8-bit)
+    (10110110)    % 0xB6
+    (0111)        % ECI mode
+    (00000111)    % ECI 7
+    (0100)        % Byte mode
+    (00000001)    % Char count: 1 (8-bit)
+    (10110110)    % 0xB6
+] bitseqs_tmpl
 
-{
-    % B1 K8 A1 (?点茗や点茗や点茗A), modeBKbeforeA v1to9 change 9 -> 8, previously B18 (longer msgbits length)
-    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170A) (parse version=2 eclevel=L fixedeclevel debugcws) qrcode
-} [64 19 248 8 108 254 170 130 196 217 253 85 5 137 179 250 170 32 9 64 7 { 236 17 } repeat ] debugIsEqual
+% B1 K8 A1 (?点茗や点茗や点茗A), modeBKbeforeA v1to9 change 9 -> 8, previously B18 (longer msgbits length)
+(?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170A) (parse version=2 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)             % Byte mode
+    (00000001)         % Char count: 1 (8-bit)
+    (00111111)         % 0x3F '?'
+    (1000)             % Kanji mode
+    (00001000)         % Char count: 8 (8-bit)
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0010)             % Alphanumeric mode
+    (000000001)        % Char count: 1 (9-bit)
+    (001010)           % A: 10
+] bitseqs_tmpl
 
-{
-    % B1 K11 A1 (?点茗や点茗や点茗や点茗A), modeBKbeforeA v27to40 change 12 -> 11, previously B24 (longer msgbits length)
-    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170A) (parse version=27 eclevel=L fixedeclevel debugcws) qrcode
-} [64 0 19 248 0 182 207 234 168 44 77 159 213 80 88 155 63 170 160 177 54 127 85 68 0 18 128 236 720 { 17 236 } repeat ] debugIsEqual
+% B1 K11 A1 (?点茗や点茗や点茗や点茗A), modeBKbeforeA v27to40 change 12 -> 11, previously B24 (longer msgbits length)
+(?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170A) (parse version=27 eclevel=L fixedeclevel debugbitseqs) 2 [
+    (0100)                % Byte mode
+    (0000000000000001)    % Char count: 1 (16-bit)
+    (00111111)            % 0x3F '?'
+    (1000)                % Kanji mode
+    (000000001011)        % Char count: 11 (12-bit)
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0010)                % Alphanumeric mode
+    (0000000000001)       % Char count: 1 (13-bit)
+    (001010)              % A: 10
+] bitseqs_tmpl
 
-{
-    % B1 K8 N1 (?点茗や点茗や点茗1), modeBKbeforeN v1to9 change 9 -> 8, previously B18 (longer msgbits length)
-    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^1701) (parse version=2 eclevel=L fixedeclevel debugcws) qrcode
-} [64 19 248 8 108 254 170 130 196 217 253 85 5 137 179 250 170 16 4 64 7 { 236 17 } repeat ] debugIsEqual
+% B1 K8 N1 (?点茗や点茗や点茗1), modeBKbeforeN v1to9 change 9 -> 8, previously B18 (longer msgbits length)
+(?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^1701) (parse version=2 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)             % Byte mode
+    (00000001)         % Char count: 1 (8-bit)
+    (00111111)         % 0x3F '?'
+    (1000)             % Kanji mode
+    (00001000)         % Char count: 8 (8-bit)
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0001)             % Numeric mode
+    (0000000001)       % Char count: 1 (10-bit)
+    (0001)             % 1
+] bitseqs_tmpl
 
-{
-    % B1 K9 N1 (?点茗や点茗や点茗や1), modeBKbeforeN v10to26 change 10 -> 9, previously B20 (longer msgbits length)
-    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^2261) (parse version=10 eclevel=L fixedeclevel debugcws) qrcode
-} [64 0 19 248 2 91 63 170 160 177 54 127 85 65 98 108 254 170 130 196 32 2 32 236 125 { 17 236 } repeat ] debugIsEqual
+% B1 K9 N1 (?点茗や点茗や点茗や1), modeBKbeforeN v10to26 change 10 -> 9, previously B20 (longer msgbits length)
+(?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^2261) (parse version=10 eclevel=L fixedeclevel debugbitseqs) 1 [
+    (0100)                % Byte mode
+    (0000000000000001)    % Char count: 1 (16-bit)
+    (00111111)            % 0x3F '?'
+    (1000)                % Kanji mode
+    (0000001001)          % Char count: 9 (10-bit)
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0001)                % Numeric mode
+    (000000000001)        % Char count: 1 (12-bit)
+    (0001)                % 1
+] bitseqs_tmpl
 
-{
-    % A1 K9 N1 (?点茗や点茗や点茗や1), modeBKbeforeN v10to26 change 10 -> 9, previously B20 (longer msgbits length)
-    (?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^2261) (parse version=10 eclevel=L fixedeclevel debugcws) qrcode
-} [64 0 19 248 2 91 63 170 160 177 54 127 85 65 98 108 254 170 130 196 32 2 32 236 125 { 17 236 } repeat ] debugIsEqual
+% A1 K9 N1 (?点茗や点茗や点茗や1), modeBKbeforeN v10to26 change 10 -> 9, previously B20 (longer msgbits length)
+(?^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^2261) (parse version=10 eclevel=L fixedeclevel debugbitseqs) 1 [
+    (0100)                % Byte mode
+    (0000000000000001)    % Char count: 1 (16-bit)
+    (00111111)            % 0x3F '?'
+    (1000)                % Kanji mode
+    (0000001001)          % Char count: 9 (10-bit)
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0110110011111)       % 点: Kanji 3487
+    (1101010101010)       % 茗: Kanji 6826
+    (0000101100010)       % や: Kanji 354
+    (0001)                % Numeric mode
+    (000000000001)        % Char count: 1 (12-bit)
+    (0001)                % 1
+] bitseqs_tmpl
 
-{
-    % B9 (?点茗や点), modeBKbeforeE (mode0KbeforeE) v1to9 change 4 -> 5, previously B1 K4 (same msgbits length)
-    (?^147^095^228^170^130^226^147^095) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [64 147 249 53 254 74 168 46 41 53 240 236 17 236 17 236 17 236 17] debugIsEqual
+% B9 (?点茗や点), modeBKbeforeE (mode0KbeforeE) v1to9 change 4 -> 5, previously B1 K4 (same msgbits length)
+(?^147^095^228^170^130^226^147^095) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)        % Byte mode
+    (00001001)    % Char count: 9 (8-bit)
+    (00111111)    % 0x3F '?'
+    (10010011)    % 0x93
+    (01011111)    % 0x5F
+    (11100100)    % 0xE4
+    (10101010)    % 0xAA
+    (10000010)    % 0x82
+    (11100010)    % 0xE2
+    (10010011)    % 0x93
+    (01011111)    % 0x5F
+] bitseqs_tmpl
 
-{
-    % B1 N4 (?1234), modeBNbeforeE v27to40 change 5 -> 4 previously B5 (same msgbits length)
-    (?1234) (parse version=27 eclevel=L fixedeclevel debugcws) qrcode
-} [64 0 19 241 0 16 123 64 730 { 236 17 } repeat ] debugIsEqual
+% B1 N4 (?1234), modeBNbeforeE v27to40 change 5 -> 4 previously B5 (same msgbits length)
+(?1234) (parse version=27 eclevel=L fixedeclevel debugbitseqs) 2 [
+    (0100)                % Byte mode
+    (0000000000000001)    % Char count: 1 (16-bit)
+    (00111111)            % 0x3F '?'
+    (0001)                % Numeric mode
+    (00000000000100)      % Char count: 4 (14-bit)
+    (0001111011)          % 123
+    (0100)                % 4
+] bitseqs_tmpl
 
-{
-    % A6 K1 (ABCDEF点), new initial mode A before K re-using modeBAbeforeE array, previously B8 (longer msgbits length)
-    (ABCDEF^147^095) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [32 49 205 69 42 22 0 91 62 0 236 17 236 17 236 17 236 17 236] debugIsEqual
+% A6 K1 (ABCDEF点), new initial mode A before K reusing modeBAbeforeE array, previously B8 (longer msgbits length)
+(ABCDEF^147^095) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0010)             % Alphanumeric mode
+    (000000110)        % Char count: 6 (9-bit)
+    (00111001101)      % AB: 10*45+11 = 461
+    (01000101001)      % CD: 12*45+13 = 553
+    (01010000101)      % EF: 14*45+15 = 645
+    (1000)             % Kanji mode
+    (00000001)         % Char count: 1 (8-bit)
+    (0110110011111)    % 点: Kanji 3487
+] bitseqs_tmpl
 
-{
-    % B17, issue #237, previously unencodable A3 B14
-    (K9K^000^000^000^000^000^000^000^000^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [65 20 179 148 176 0 0 0 0 0 0 0 0 0 0 0 0 0 0] debugIsEqual
-{
-    % B17, inversion of above
-    (^000^000^000^000^000^000^000^000^000^000^000^000^000^000K9K) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [65 16 0 0 0 0 0 0 0 0 0 0 0 0 0 4 179 148 176] debugIsEqual
+% B17, issue #237, previously unencodable A3 B14
+(K9K^000^000^000^000^000^000^000^000^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)        % Byte mode
+    (00010001)    % Char count: 17 (8-bit)
+    (01001011)    % 0x4B 'K'
+    (00111001)    % 0x39 '9'
+    (01001011)    % 0x4B 'K'
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+] bitseqs_tmpl
 
-{
-    % A10 B9
-    (K9K9K9K9K9^000^000^000^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [32 83 141 113 174 53 198 184 212 9 0 0 0 0 0 0 0 0 0] debugIsEqual
-{
-    % B9 A10, inversion of above
-    (^000^000^000^000^000^000^000^000^000K9K9K9K9K9) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [64 144 0 0 0 0 0 0 0 0 2 5 56 215 26 227 92 107 141] debugIsEqual
+% B17, inversion of above
+(^000^000^000^000^000^000^000^000^000^000^000^000^000^000K9K) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)        % Byte mode
+    (00010001)    % Char count: 17 (8-bit)
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (01001011)    % 0x4B 'K'
+    (00111001)    % 0x39 '9'
+    (01001011)    % 0x4B 'K'
+] bitseqs_tmpl
 
-{
-    % B9 A10, with AorN sequence containing N5
-    (^000^000^000^000^000^000^000^000^000K99999K9KK) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [64 144 0 0 0 0 0 0 0 0 2 5 56 211 60 103 156 107 152] debugIsEqual
+% A10 B9
+(K9K9K9K9K9^000^000^000^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0010)           % Alphanumeric mode
+    (000001010)      % Char count: 10 (9-bit)
+    (01110001101)    % K9: 20*45+9 = 909
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (0100)           % Byte mode
+    (00001001)       % Char count: 9 (8-bit)
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+] bitseqs_tmpl
+
+% B9 A10, inversion of above
+(^000^000^000^000^000^000^000^000^000K9K9K9K9K9) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)           % Byte mode
+    (00001001)       % Char count: 9 (8-bit)
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (0010)           % Alphanumeric mode
+    (000001010)      % Char count: 10 (9-bit)
+    (01110001101)    % K9: 20*45+9 = 909
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (01110001101)    % K9
+] bitseqs_tmpl
+
+% B9 A10, with AorN sequence containing N5
+(^000^000^000^000^000^000^000^000^000K99999K9KK) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)           % Byte mode
+    (00001001)       % Char count: 9 (8-bit)
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (0010)           % Alphanumeric mode
+    (000001010)      % Char count: 10 (9-bit)
+    (01110001101)    % K9: 20*45+9 = 909
+    (00110011110)    % 99: 9*45+9 = 414
+    (00110011110)    % 99
+    (01110001101)    % K9: 20*45+9 = 909
+    (01110011000)    % KK: 20*45+20 = 920
+] bitseqs_tmpl
     % With AorN sequence containing N6 fails with unencodable B10 N6 A3 (due to nextNslt test)
     (^000^000^000^000^000^000^000^000^000K999999KKK) (parse version=1 eclevel=L fixedeclevel dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
 
-{
-    % A14 B6
-    (K9K9K9K9K9K9K9^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [32 115 141 113 174 53 198 184 215 26 227 80 24 0 0 0 0 0 0] debugIsEqual
-    % Inversion of above fails with unencodable B8 A12 (terminal AorN sequence too long to produce B6 A14)
-    (^000^000^000^000^000^000K9K9K9K9K9K9K9) (parse version=1 eclevel=L fixedeclevel dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
-{
-    % One less fits with B7 A12, though longer msgbits length than B6 A13
-    (^000^000^000^000^000^000K9K9K9K9K9K9K) (parse version=1 eclevel=L fixedeclevel debugcws) qrcode
-} [64 112 0 0 0 0 0 4 178 6 26 147 82 106 77 73 169 53 32] debugIsEqual
+% A14 B6
+(K9K9K9K9K9K9K9^000^000^000^000^000^000) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0010)           % Alphanumeric mode
+    (000001110)      % Char count: 14 (9-bit)
+    (01110001101)    % K9: 20*45+9 = 909
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (01110001101)    % K9
+    (0100)           % Byte mode
+    (00000110)       % Char count: 6 (8-bit)
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+] bitseqs_tmpl
 
-{
-    % N6 K1 with mode0NbeforeB NbeforeK -> N in mode -1, previously had 0-length B0 seq prefixed due to mode -1 -> B and then immediately -> N
-    (123456^138^197) (parse version=1 eclevel=H fixedeclevel debugcws) qrcode
-} [16 24 123 114 32 4 232 160 236] debugIsEqual
+% Inversion of above fails with unencodable B8 A12 (terminal AorN sequence too long to produce B6 A14)
+(^000^000^000^000^000^000K9K9K9K9K9K9K9) (parse version=1 eclevel=L fixedeclevel dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
+
+% One less fits with B7 A12, though longer msgbits length than B6 A13
+(^000^000^000^000^000^000K9K9K9K9K9K9K) (parse version=1 eclevel=L fixedeclevel debugbitseqs) 0 [
+    (0100)           % Byte mode
+    (00000111)       % Char count: 7 (8-bit)
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (00000000)       % 0x00
+    (01001011)       % 0x4B 'K'
+    (0010)           % Alphanumeric mode
+    (000001100)      % Char count: 12 (9-bit)
+    (00110101001)    % 9K: 9*45+20 = 425
+    (00110101001)    % 9K
+    (00110101001)    % 9K
+    (00110101001)    % 9K
+    (00110101001)    % 9K
+    (00110101001)    % 9K
+] bitseqs_tmpl
+
+% N6 K1 with mode0NbeforeB NbeforeK -> N in mode -1, previously had 0-length B0 seq prefixed due to mode -1 -> B and then immediately -> N
+(123456^138^197) (parse version=1 eclevel=H fixedeclevel debugbitseqs) 0 [
+    (0001)             % Numeric mode
+    (0000000110)       % Char count: 6 (10-bit)
+    (0001111011)       % 123
+    (0111001000)       % 456
+    (1000)             % Kanji mode
+    (00000001)         % Char count: 1 (8-bit)
+    (0011101000101)    % Kanji 1861
+] bitseqs_tmpl
 
 
 % Figures
@@ -245,5 +560,123 @@
     1 0 0 0 0 0 1 0 0 1 0 1 1 0 1 0 1 1 1 1 0
     1 1 1 1 1 1 1 0 1 1 0 0 0 1 0 1 1 1 0 0 0
 ] eq_tmpl
+
+
+%
+% Sequence building tests - exercise same-mode path which extends seq array
+% These patterns have letters followed by digits, which triggers same-mode
+% iterations as digits are processed one at a time in alphanumeric mode
+%
+
+% A10 (A1B2C3D4E5), alternating alpha-digit pattern
+(A1B2C3D4E5) (fixedeclevel debugbitseqs) 0 [
+    (0010)             % Alphanumeric mode
+    (000001010)        % Char count: 10 (9-bit)
+    (00111000011)      % A1: 10*45+1=451
+    (00111110001)      % B2: 11*45+2=497
+    (01000011111)      % C3: 12*45+3=543
+    (01001001101)      % D4: 13*45+4=589
+    (01001111011)      % E5: 14*45+5=635
+] bitseqs_tmpl
+
+% A10 (ABCDE12345), 5 letters then 5 digits - tests same-mode with short run
+(ABCDE12345) (fixedeclevel debugbitseqs) 0 [
+    (0010)             % Alphanumeric mode
+    (000001010)        % Char count: 10 (9-bit)
+    (00111001101)      % AB: 10*45+11=461
+    (01000101001)      % CD: 12*45+13=553
+    (01001110111)      % E1: 14*45+1=631
+    (00001011101)      % 23: 2*45+3=93
+    (00010111001)      % 45: 4*45+5=185
+] bitseqs_tmpl
+
+% A5+N50 (ABCDE + 50 digits), 5 letters then 50 digits - stress test same-mode path
+(ABCDE12345678901234567890123456789012345678901234567890) (fixedeclevel debugbitseqs) 0 [
+    (0010)             % Alphanumeric mode
+    (000000101)        % Char count: 5 (9-bit)
+    (00111001101)      % AB: 10*45+11=461
+    (01000101001)      % CD: 12*45+13=553
+    (001110)           % E: 14
+    (0001)             % Numeric mode
+    (0000110010)       % Char count: 50 (10-bit)
+    (0001111011)       % 123
+    (0111001000)       % 456
+    (1100010101)       % 789
+    (0000001100)       % 012
+    (0101011001)       % 345
+    (1010100110)       % 678
+    (1110000101)       % 901
+    (0011101010)       % 234
+    (1000110111)       % 567
+    (1101111010)       % 890
+    (0001111011)       % 123
+    (0111001000)       % 456
+    (1100010101)       % 789
+    (0000001100)       % 012
+    (0101011001)       % 345
+    (1010100110)       % 678
+    (1011010)          % 90
+] bitseqs_tmpl
+
+
+%
+% Error tests
+%
+
+% Empty data
+() (dontdraw) /bwipp.qrcodeEmptyData er_tmpl
+
+% Input too long
+30001 string (dontdraw) /bwipp.qrcodeinputTooLong er_tmpl
+
+% Invalid format
+(TEST) (format=invalid dontdraw) /bwipp.qrcodeInvalidFormat er_tmpl
+
+% Invalid eclevel
+(TEST) (eclevel=X dontdraw) /bwipp.qrcodeInvalidEClevel er_tmpl
+
+% Invalid version for full QR Code (valid: 1-40)
+(TEST) (version=41 dontdraw) /bwipp.qrcodeInvalidFullVersion er_tmpl
+(TEST) (version=99 dontdraw) /bwipp.qrcodeInvalidFullVersion er_tmpl
+
+% Invalid mask (valid: 0-7)
+(TEST) (mask=9 dontdraw) /bwipp.qrcodeBadMask er_tmpl
+
+% Data exceeds maximum symbol capacity
+{ 7100 string 0 1 7099 { 1 index exch 49 put } for (dontdraw) qrcode } /bwipp.qrcodeNoValidSymbol isError
+
+% Option edges
+(TEST) (eclevel=Z dontdraw) /bwipp.qrcodeInvalidEClevel er_tmpl
+(TEST) (version=0 dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
+(TEST) (version=999 dontdraw) /bwipp.qrcodeInvalidFullVersion er_tmpl
+(TEST) (mask=-2 dontdraw) /bwipp.qrcodeBadMask er_tmpl
+{ (TEST) (mask=8 dontdraw) qrcode pop true } true isEqual
+(TEST) (mask=99 dontdraw) /bwipp.qrcodeBadMask er_tmpl
+(TEST) (version=M1 dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
+(TEST) (version=M5 dontdraw) /bwipp.qrcodeInvalidMicroVersion er_tmpl
+{ (TEST) (version=R7x43 dontdraw) qrcode pop true } true isEqual
+(TEST) (format=rmqr dontdraw) /bwipp.qrcodeRMQRwithoutVersion er_tmpl
+(TEST) (format=rmqr version=R99x99 dontdraw) /bwipp.qrcodeInvalidRMQRversion er_tmpl
+(TEST) (format=rmqr version=R7x43 mask=0 dontdraw) /bwipp.qrcodeRMQRmask er_tmpl
+
+% Parse edges
+{ (^) (parse dontdraw) qrcode pop true } true isEqual
+{ (^^) (parse dontdraw) qrcode pop true } true isEqual
+{ (^000) (parse dontdraw) qrcode pop true } true isEqual
+{ (^255) (parse dontdraw) qrcode pop true } true isEqual
+(^256) (parse dontdraw) /bwipp.invalidOrdinal er_tmpl
+(^999) (parse dontdraw) /bwipp.invalidOrdinal er_tmpl
+{ (^NUL) (parse dontdraw) qrcode pop true } true isEqual
+{ (A^) (parse dontdraw) qrcode pop true } true isEqual
+{ (^1) (parse dontdraw) qrcode pop true } true isEqual
+{ (^12) (parse dontdraw) qrcode pop true } true isEqual
+
+% parsefnc edges
+{ (^FNC1) (parse parsefnc dontdraw) qrcode pop true } true isEqual
+{ (^ECI000000) (parse parsefnc dontdraw) qrcode pop true } true isEqual
+{ (^ECI999999) (parse parsefnc dontdraw) qrcode pop true } true isEqual
+(^ECI) (parse parsefnc dontdraw) /bwipp.truncatedECI er_tmpl
+(^ECI1) (parse parsefnc dontdraw) /bwipp.truncatedECI er_tmpl
+
 end
 } bind def

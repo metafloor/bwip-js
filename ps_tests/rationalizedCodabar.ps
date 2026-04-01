@@ -3,11 +3,13 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % BS EN 798:1996
 
-% vim: set ts=4 sw=4 et :
 
 %%/rationalizedCodabar dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -31,6 +33,8 @@
 
 { (A37859.B) (dontdraw validatecheck) rationalizedCodabar  % Check digit should be "+"
 } /bwipp.rationalizedCodabarBadCheckDigit isError
+
+{ 501 string (dontdraw) rationalizedCodabar } /bwipp.rationalizedCodabarinputTooLong isError
 
 
 % Examples

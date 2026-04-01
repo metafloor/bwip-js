@@ -3,9 +3,10 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
-
-% vim: set ts=4 sw=4 et :
+%
 
 %%/daft dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -34,6 +35,9 @@
 
 
 % Input validation
+
+{ 2501 string (dontdraw) daft
+} /bwipp.daftinputTooLong isError
 
 { () (dontdraw) daft
 } /bwipp.daftEmptyData isError

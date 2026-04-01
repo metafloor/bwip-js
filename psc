@@ -1,56 +1,10 @@
 #!/bin/bash
+## bwip-js/develop/psc
 ##
-## file : bwipjs/psc
-##
-## The master script for cross-compiling barcode.ps into bwipp.js.
-##
+## The master script for cross-compiling barcode.ps into src/bwipp.js.
 
-##
-## Modify barcode.ps to work better with the cross-compiler and the
-## emulation interface.
-##
-## * There is a bunch of boilerplate in barcode.ps that would add code
-##   bloat and is not needed by the emulation.
-##
-##   The preamble that occurs at the top of the file:
-##      currentglobal
-##      true setglobal
-##      /Generic /Category findresource dup length 1 add dict copy dup
-##      /InstanceType /setpacking where {pop /packedarraytype} {/arraytype}...
-##      /uk.co.terryburton.bwipp exch /Category defineresource pop
-##      setglobal
-##
-##   The code that instantiates all of the rendering and encoding
-##   functions.
-##
-##   The prolog code looks like:
-##      /setpacking where {pop currentpacking true setpacking} if
-##      1 dict
-##      dup /<ident> dup /uk.co.terryburton.bwipp findresource put
-##      dup ...
-##      dup ...
-##      begin
-##
-##   And the epilog code looks like:
-##      /<ident> dup load /uk.co.terryburton.bwipp defineresource pop
-##      end
-##      /setpacking where {pop setpacking} if
-##
-## * Fixup renlinear and renmatrix.  Replace renmaximatrix.
-##
-## * Replace the isbn/ismn/issn Courier with OCR-A
-##   Change the isbn/ismn/issn textsize from 9 to 8
-##   Change the standard text y-offset from 7pt to 8.5pt (OCR fonts are taller
-##   than Courier at the same point-size).
-##
-## * There are problems with floating-point rounding in the datamatrix encoders
-##   due to differences between single- and double-precision arithmetic.  Perform
-##   explicit constant folding for the following expressions:
-##      13 3 div -> 4.3333334
-##      10 3 div -> 3.3333334
-##       8 3 div -> 2.6666667
-##       4 3 div -> 1.3333334
-##       2 3 div -> 0.6666667
+## 7-Zip annoyance
+chmod -x barcode.ps
 
 ##
 ## Create the lookup function
@@ -66,72 +20,76 @@ echo '  throw new Error("bwipp.unknownEncoder: unknown encoder name: " + symbol)
 echo '}'
 ) > barcode-lookup.js
 
-## Check for changes in the renderers
+##
+## Create the symbol list
+##
+(
+echo 'var bwipp_symlist = ['
+grep -E '% --BEGIN ENCODER|% --DESC:|% --EXAM:|% --EXOP:' barcode.ps |
+    sed -e 's/% --BEGIN ENCODER\s*\(.*\)--/  { bcid:"\1"/'\
+        -e 's/% --DESC:\s*\(.*\)/, desc:"\1"/'\
+        -e 's/% --EXAM:\s*\(.*\)/, text:"\1"/'\
+        -e 's/% --EXOP:\s*\(.*\)/, opts:"\1" },/'\
+        -e 's/height=0.5/height=12.5/' |
+    awk '{r = r $0} NR%4 == 0 {print r; r = ""}'
+echo "];";
+) > barcode-symlist.js
+
+##
+## Check for changes in the custom modules.
+## Any file with a .bwipp suffix will be watched.
+##
 let diffs=0
-for name in renlinear renmatrix renmaximatrix ; do
+for file in $(cd custom; ls *.bwipp) ; do
+    name=$(basename -s .bwipp $file)
     ## BeginResource contains variable data
-    sed -n "/% --BEGIN RENDERER $name--/,/% --END RENDERER $name--/{//!p}" barcode.ps | grep -vF '%%BeginResource:' > /tmp/$name.bwipp
-    diff -q /tmp/$name.bwipp custom/$name.bwipp 1>/dev/null
+    sed -n "/% --BEGIN [A-Z]* $name--/,/% --END [A-Z]* $name--/{//!p}" barcode.ps | grep -vF '%%BeginResource:' > /tmp/$file
+    diff -q /tmp/$file custom/$file 1>/dev/null
     if [ $? != 0 ] ; then
         let diffs=diffs+1
         echo "!!! BEGIN $name CHANGES"
-        diff /tmp/$name.bwipp custom/$name.bwipp
+        diff /tmp/$file custom/$file
         echo "!!! END $name CHANGES"
     fi
 done
 if [ $diffs != 0 ] ; then
-    echo 'BWIPP renderers have changed.'
-    echo 'New template files at /tmp/ren*.bwipp'
-    md5sum /tmp/renlinear.bwipp custom/renlinear.bwipp
-    md5sum /tmp/renmatrix.bwipp custom/renmatrix.bwipp
-    md5sum /tmp/renmaximatrix.bwipp custom/renmaximatrix.bwipp
+    echo 'BWIPP modules have changed.'
+    echo 'New template files at /tmp/*.bwipp'
+    for file in $(cd custom; ls *.bwipp) ; do
+        md5sum /tmp/$file custom/$file
+    done
     exit 0
 fi
-rm -f /tmp/renlinear.bwipp /tmp/renmatrix.bwipp /tmp/renmaximatrix.bwipp
+rm -f /tmp/*.bwipp
 
+##
+## Replace the custom modules
+##
+PSFUNCS=
 cp barcode.ps barcode.tmp
 for name in $(cd custom; ls *.ps | sed -e 's/\.ps//') ; do
     echo replacing $name...
-    sed -e "/^[/]$name [{]/,/^[/]setpacking where .* if/s/^/%psc /" barcode.tmp > barcode.psc
+    sed -e "/^% --BEGIN [A-Z]* $name--/,/^% --END [A-Z]* $name--/s/^/%psc /" barcode.tmp > barcode.psc
     mv -f barcode.psc barcode.tmp
+    PSFUNCS="$PSFUNCS $name"
 done
 
-## Append the customs and fixup the code
-cat barcode.tmp custom/*.ps | sed \
-    -e 's,/\(is..textfont\) /Courier,/\1 /OCR-A,' \
-    -e 's,/Helvetica,(OCR-B),' \
-    -e 's,/Courier,(OCR-B),' \
-    -e 's,(Courier),(OCR-B),' \
-    -e 's,/\(is..textsize\) 9,/\1 8,' \
-    -e 's,/textyoffset -7,/textyoffset -8,' \
-    -e 's,/textyoffset -4,/textyoffset -4,' \
-    -e 's/txt 11 \[barcode 11 1 getinterval textxoffset 103 add/txt 11 [barcode 11 1 getinterval textxoffset 104 add/' \
-    -e 's,^\s*backgroundcolor (unset) ne.* if,%psc &,' \
-    -e 's,^\[.*\] {null def} forall,%psc &,'\
-    -e 's,/inkspread 0\.[0-9]* def,/inkspread 0 def,'\
-    -e 's,/bordertop -0.2 def,/bordertop -0.55 def,'\
-    -e 's,/borderbottom -0.2 def,/borderbottom -0.55 def,'\
-    -e '/^\s*\/setanycolor {/,/^\s*}\s*def/s/^/%psc /' \
-    -e '/^\s*\/uk.co.terryburton.bwipp.global_ctx dup where {/,/^\s*} { pop } ifelse/s/^/%psc /' \
-    -e '/^currentglobal/,/^setglobal/s/^/%psc /' \
-    -e '/^\/setpacking where {pop currentpacking/,/^begin/s/^/%psc /'\
-    -e '/^\/[^ \t][^ \t]* dup load \/uk.co.terryburton/,/^\/setpacking where {pop setpacking} if/s/^/%psc /'\
-    -e '/^\s*options type \/stringtype eq {/,/^\s*} if/s/^/%psc &/'\
-    -e '/^\s*currentfont \/PaintType .* ifelse/,/^\s*} if/s/^/%psc &/'\
-    -e '/^\s*{.*} stopped {/,/^\s*} ifelse\s*$/s/^/%psc &/'\
-    -e 's,/ctx null def,%psc &,'\
-    -e 's,//processoptions,currentdict //processoptions,'\
-    -e 's,/suppresskanjimode false def,/suppresskanjimode true def,'\
-    -e 's/{\s*13 3 div /{ 4.3333334 /g'\
-    -e 's/{\s*10 3 div /{ 3.3333334 /g'\
-    -e 's/{\s*8 3 div /{ 2.6666667 /g'\
-    -e 's/{\s*4 3 div /{ 1.3333334 /g'\
-    -e 's/{\s*2 3 div /{ 0.6666667 /g'\
-    > barcode.psc
+(
+echo '// Automatically generated by psc'
+echo 'const PSFUNCS = "'$PSFUNCS'".trim().split(/ /g);'
+) > psc-funcs.js
 
-    ##-e '/^\/ren[a-z][a-z]* {/a     bwipjs_dontdraw { return } if'\
-    ## -e 's,/\S\S* //loadctx exec,%psc &,'\
-    ## -e 's,//unloadctx exec,%psc &,'\
+
+##
+## Run the preprocessing pass
+##
+cat barcode.tmp custom/*.ps > barcode.psc
+cp barcode.psc barcode.tmp
+node psc-pre.js
+if [ $? != 0 ] ; then
+    exit 1
+fi
+
 ##
 ## Update pscdbg.html
 ##
@@ -144,36 +102,51 @@ tac pscdbg.html | sed -e '/^<\/pre>/q' | tac
 mv pscdbg.tmp pscdbg.html
 
 ##
-## Cross-compile barcode.psc into barcode.js.
+## Cross-compile barcode.psc into barcode.pjs
 ##
 echo "compiling..."
+rm -f barcode.pjs 2> /dev/null
+
 node <<@EOF
-var fs  = require('fs');
-var psc = require('./psc.js');// Not to be confused with this like-named script
-var pstext = fs.readFileSync('barcode.psc', 'binary');
-var flags  = "$*".split(' ');
-var code = psc(pstext, flags)
-    .replace(/function bwipp_ren(?:linear|matrix|maximatrix)[()\\s{]+/g, (\$0) => {
-        return \$0 + 'if (\$_.bwipjs_rawstack) {\\n' +
-               '\$_.bwipjs_rawstack.push(\$k[--\$j]); return;\\n' +
-               '}\\n';
-    });
-fs.writeFileSync('barcode.js', code, 'binary');
+const fs  = require('node:fs');
+const PSOPS = require('./psc-opers.js');
+const PSLEX = require('./psc-lex.js');
+const PSFUNCS = "$PSFUNCS".trim().split(' ');
+const PSC = require('./psc.js');
+const pstext = fs.readFileSync('barcode.psc', 'binary');
+const flags  = "$*".split(' ');
+try {
+    const code = PSC(pstext, flags)
+        .replace(/function bwipp_ren(?:linear|matrix|maximatrix)[()\\s{]+/g, (\$0) => {
+            return \$0 + 'if (\$_.bwipjs_rawstack) {\\n' +
+                   '\$_.bwipjs_rawstack.push(\$k[--\$j]); return;\\n' +
+                   '}\\n';
+        });
+    fs.writeFileSync('barcode.pjs', code, 'binary');
+} catch (e) {
+    console.log(e.stack || e);
+    process.exit(1);
+}
 @EOF
 
-if [ ! -f barcode.js ] ; then
-    echo "psc.js exited with error."
+if [ ! -f barcode.pjs ] ; then
     exit 1
 fi
 
 ##
-## Peephole optimize
+## Peephole optimize barcode.pjs -> barcode.js
 ##
 echo "optimizing..."
-cp barcode.js barcode.raw
-node optimize.mjs > optimize.log
+rm -f barcode.js 2> /dev/null
+node optimize.mjs
+
+if [ ! -f barcode.js ] ; then
+    exit 1
+fi
 
 echo "finalizing..."
+js-beautify --preserve-newlines barcode.js > bwipp.js
+
 ##
 ## Get the BWIPP version (date)
 ##
@@ -218,7 +191,7 @@ $FILEV
 $COPYR
 //
 // Licensed MIT. See the LICENSE file in the bwip-js root directory.
-$(cat barcode-hdr.js barcode.js barcode-ftr.js barcode-lookup.js)
+$(cat barcode-hdr.js barcode.js barcode-ftr.js barcode-lookup.js barcode-symlist.js)
 var BWIPP_VERSION = '$BWIPP_VERSION';
 
 @EOF
@@ -231,8 +204,13 @@ echo "" >> src/bwipp.js
 ##
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##
-##rm -f barcode.psc
-rm -f barcode.tmp
+rm -f barcode.tmp  ## PS code after custom modules
+##rm -f barcode.psc  ## PS code after preprocessing
 rm -f barcode-lookup.js
-##rm -f barcode.js
-rm -f bwipp.js
+rm -f barcode-symlist.js
+##rm -f barcode.pjs  ## JS code output by psc.js
+##rm -f barcode.js   ## JS code after optimzing
+rm -f bwipp.js     ## JS code after branding
+
+echo "success!"
+exit 0

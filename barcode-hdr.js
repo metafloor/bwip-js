@@ -2,19 +2,25 @@
 //
 // This code is injected above the cross-compiled barcode.js.
 
-// The BWIPJS object (graphics interface)
-var $$ = null;
+var $$ = null;  // The BWIPJS object (graphics interface)
 var $j = 0;     // stack pointer
 var $k = [];    // operand stack
 var $_ = {};    // base of the dictionary stack
 
+// If you add a global variable here, add it to bwippdefs in psc.js replacing the
+// bwipp_ prefix with $-sign.
+// All globals must be referenced with $-sign prefix in the ps code.  They are handled
+// special in the cross-compiler.
+var bwipp_enabledontdraw = false;  // Used by the BWIPP pstests - always false in production
+var bwipp_error = new Map;         // The postscript system error dict
+
 // Aliases from Math ops
 const $abs = Math.abs;
 const $ceil = Math.ceil;
-const $floor = Math.floor;
+const $flr = Math.floor;
 const $log = Math.log;
 const $pow = Math.pow
-const $round = Math.round;
+const $rnd = Math.round;
 const $sqrt = Math.sqrt;
 
 // Code instrumenting
@@ -166,9 +172,9 @@ function $cvi(s) {
     if (s instanceof Uint8Array) {
         // nul-chars on the end of a string are ignored by postscript but cause javascript
         // to return a zero result.
-        return $floor(String.fromCharCode.apply(null,s).replace(/\0+$/, ''));
+        return $flr(String.fromCharCode.apply(null,s).replace(/\0+$/, ''));
     }
-    return $floor(''+s);
+    return $flr(''+s);
 }
 
 // cvrs operator - convert a number to a radix string
@@ -178,6 +184,28 @@ function $cvi(s) {
 function $cvrs(s,n,r) {
     return $strcpy(s,(~~n).toString(r).toUpperCase());
 }
+
+// cvx operator
+// BWIPP uses this to bind a function to ...args
+// The operand must be an array with a function as its last element.
+// All other elements get pushed on the stack before invoking the
+// function.
+function $cvx(a) {
+    if (!(a instanceof Array)) {
+        throw new Error('cvx: not arraytype');
+    }
+    if (typeof a[a.length-1] !== 'function') {
+        throw new Error('cvx: last array element not function');
+    }
+    const last = a.length-1;
+    return function() {
+        for (let i = 0; i < last; i++) {
+            $k[$j++] = a[i];
+        }
+        a[last]();
+    };
+}
+
 
 // get operator
 //  s : source
@@ -202,6 +230,27 @@ function $get(s,k) {
     return s[k];
 }
 
+// known operator
+function $has(v,k) {
+    if (v instanceof Uint8Array) {
+        return k < v.length;
+    }
+    if (typeof v === 'string') {
+        return k < v.length;
+    }
+    if (v instanceof Array) {
+        return k < v.length;
+    }
+    // Map or Object - need a string key
+    if (k instanceof Uint8Array) {
+        k = $z(k);
+    }
+    if (v instanceof Map) {
+        return v.has(k);
+    }
+    return k in v;
+}
+
 // put operator
 //  d : dest
 //  k : key
@@ -211,11 +260,17 @@ function $put(d,k,v) {
         d[k] = v;
     } else if (d instanceof Array) {
         d.b[d.o+k] = v;
-    } else if (typeof d == 'object') {
+    } else if (d instanceof Map) {
         if (k instanceof Uint8Array) {
             d.set($z(k), v);
         } else {
             d.set(k, v);
+        }
+    } else if (typeof d == 'object') {
+        if (k instanceof Uint8Array) {
+            d[$z(k)] = v;
+        } else {
+            d[k] = v;
         }
     } else {
         throw new Error('put-not-writable-' + (typeof d));
@@ -272,6 +327,17 @@ function $puti(d,o,s) {
     }
 }
 
+// see rendertext
+function $splay() {
+    var map = $k[--$j];
+    for (var keys = map.keys(), i = 0, l = map.size; i < l; i++) {
+        var id = keys.next().value;
+        if (id && typeof id === 'string') {
+            $_[id] = map.get(id);
+        }
+    }
+}
+
 // type operator
 function $type(v) {
     // null can be mis-typed - get it out of the way
@@ -280,7 +346,10 @@ function $type(v) {
     }
     var t = typeof v;
     if (t == 'number') {
-        return v % 1 ? 'realtype' : 'integertype';
+        if (isFinite(v)) {
+            return v % 1 ? 'realtype' : 'integertype';
+        }
+        return 'marktype';
     }
     if (t == 'boolean') {
         return 'booleantype';
@@ -298,7 +367,6 @@ function $type(v) {
     // filetype
     // fonttype
     // gstatetype
-    // marktype (v === Infinity)
     // nametype
     // savetype
 }
@@ -510,6 +578,10 @@ function $xo(a, b) {    // xor
 function $nt(a) {
     return typeof a == 'boolean' ? !a : ~a;
 }
+function $bs(v,n) {
+    // 64-bit shifts
+    return n < 0 ? $flr(v / $pow(2, -n)) : v * $pow(2, n);
+}
 // emulate single-precision floating-point.  This is not Math.fround().
 // More like ffloor()...
 var $f = (function (fa) {
@@ -523,78 +595,150 @@ var $f = (function (fa) {
 function bwipp_raiseerror() {
     var info = $k[--$j];
     var name = $k[--$j];
+    bwipp_error.set('errorname', name);
+    bwipp_error.set('errorinfo', info);
+
     if (typeof info == 'string' || info instanceof Uint8Array) {
         throw new Error($z(name) + ": " + $z(info));
     } else {
-        $k[$j++] = info;  // see mktests debugEqual
-        // Match ghostscript output
-        throw $z(name) + '\nAdditional information: ' + tostring(info);
+        throw $z(name);
     }
+}
 
-    function tostring(v) {
-        if (v instanceof Array) {
-            let s = '';
-            for (let i = v.o, l = v.o + v.length; i < l; i++) {
-                s += ' ' + tostring(v.b[i]);
-            }
-            return '[' + s.substr(1) + ']';
-        } else if (v instanceof Uint8Array) {
-            return String.fromCharCode.apply(String, v);
-        } else if (v instanceof Map) {
-            let s = '';
-            for (const [key, val] of v) {
-                s += ' ' + tostring(key) + ' ' + tostring(val);
-            }
-            return '<<' + s.substr(1) + '>>';
-        } else if (v && typeof v == 'object') {
-            let s = '';
-            for (let id in v) {
-                s += ' ' + tostring(id) + ' ' + tostring(v[id]);
-            }
-            return '<<' + s.substr(1) + '>>';
-        } else {
-            return '' + v;
+// This list was taken from BWIPP 2026-03-31
+const _textOptions = new Map([
+    [ '',           "" ],
+    [ 'subspace',   "" ],
+    [ 'split',      "" ],
+    [ 'linegaps',   1.2 ],
+    [ 'color',      "unset" ],
+    [ 'xalign',     "left" ],
+    [ 'yalign',     "above" ],
+    [ 'direction',  "forward" ],
+    [ 'font',       "OCR-B" ],
+    [ 'size',       10.0 ],
+    [ 'xoffset',    0.0 ],
+    [ 'yoffset',    0.0 ],
+    [ 'gaps',       0.0 ],
+]);
+
+
+// processoptions.generate
+// The BWIPP code uses currentdict as a user dict, which we do not support.
+// It also pulls in render.groupoptions which is not visible due to the
+// code transforms.
+function bwipp_inittextoptions() {
+    for (var grp = 1; grp <= 9; grp++) {
+        var map = _textOptions;
+        for (var keys = map.keys(), i = 0, l = map.size; i < l; i++) { 
+            var id = keys.next().value;
+            $_['text' + grp + id] = map.get(id); 
         }
     }
 }
 
+// processoptions.collectgroup
+function bwipp_grouptextoptions() {
+    var a = $a(9);
+    var map = _textOptions;
+    for (var grp = 1; grp <= 9; grp++) {
+        var dict = new Map;
+        var pfx = 'text' + grp; 
+        for (var keys = map.keys(), i = 0, l = map.size; i < l; i++) { 
+            var id = keys.next().value;
+            dict.set(id, $_[pfx + id]);
+        }
+        $put(a, grp-1, dict);
+    }
+    $k[$j++] = a;
+}
+
+// This list was taken from BWIPP 2026-03-31
+const _textAliases = {
+    alttext:              'text1',
+    alttextsubspace:      'text1subspace',
+    alttextsplit:         'text1split',
+    textlinegaps:         'text1linegaps',
+    textcolor:            'text1color',
+    textxalign:           'text1xalign',
+    textyalign:           'text1yalign',
+    textdirection:        'text1direction',
+    textfont:             'text1font',
+    textsize:             'text1size',
+    textxoffset:          'text1xoffset',
+    textyoffset:          'text1yoffset',
+    textgaps:             'text1gaps',
+    extratext:            'text2',
+    extratextsubspace:    'text2subspace',
+    extratextsplit:       'text2split',
+    extratextlinegaps:    'text2linegaps',
+    extratextcolor:       'text2color',
+    extratextxalign:      'text2xalign',
+    extratextyalign:      'text2yalign',
+    extratextdirection:   'text2direction',
+    extratextfont:        'text2font',
+    extratextsize:        'text2size',
+    extratextxoffset:     'text2xoffset',
+    extratextyoffset:     'text2yoffset',
+    extratextgaps:        'text2gaps',
+};
+
 // This is a replacement for the BWIPP processoptions function.
-// We cannot use the BWIPP version due to two reasons:
+// We cannot use the BWIPP version for several reasons:
 // - legacy code allows strings to be numbers and numbers to be strings
 // - in javascript, there is no way to tell the difference between a real
 //   number that is an integer, and an actual integer.
+// - (alt|extra)text must be uint8array due to the bwipp option 
+//   (alt|extra)subspace, which requires the text to be writable.
 //
-// options currentdict processoptions exec -> options
+// Invoked as:
+//      options //processoptions exec -> options
 function bwipp_processoptions() {
-    var dict = $k[--$j];
     var opts = $k[$j-1];
     if (opts instanceof Uint8Array) {
         opts = $z(opts);
     }
-    if (typeof opts == 'string') {
+    if (typeof opts === 'string') {
         let vals = opts.trim().split(/ +/g)
         $k[$j-1] = opts = new Map();
         for (let i = 0; i < vals.length; i++) {
             let pair = vals[i].split('=');
-            if (pair.length == 1) {
+            if (pair.length === 1) {
                 opts.set(pair[0], true);
             } else {
                 opts.set(pair[0], pair[1]);
             }
         }
     }
-    for (var id in dict) {
+    // BWIPP does not raiseerror on these (text1* and text2* override alttext* and extratext*)
+    if (opts.has('alttext') && opts.has('text1')) {
+        throw new Error('bwipp.invalidTextOptions: alttext and text1 are mutually exclusive');
+    }
+    if (opts.has('extratext') && opts.has('text2')) {
+        throw new Error('bwipp.invalidTextOptions: extratext and text2 are mutually exclusive');
+    }
+    // alttext* -> text1*, extratext* -> text2*
+    for (var keys = opts.keys(), i = 0, l = opts.size; i < l; i++) { 
+        var id = keys.next().value;
+        if (_textAliases[id]) {
+            opts.set(_textAliases[id], opts.get(id));
+            if (/^(?:alt|extra)text/.test(id)) {
+                opts.delete(id);
+            }
+        }
+    }
+    for (var id in $_) {
         var val;
         if (!opts.has(id)) {
             continue;
         }
         val = opts.get(id);
-        var def = dict[id];
+        var def = $_[id];
         var typ = typeof def;
 
         // null is a placeholder for realtype
-        if (def == null || typ == 'number') {
-            // This allows for numeric strings
+        if (def === null || typ == 'number') {
+            // Allow numeric strings to be numbers
             if (!isFinite(+val)) {
                 throw new Error('bwipp.invalidOptionType: ' + id +
                         ': not a realtype: ' + val);
@@ -609,9 +753,9 @@ function bwipp_processoptions() {
                 // interpretation of boolean.
                 if (val == null || (val|0) === val) {
                     val = !!val;
-                } else if (val == 'true') {
+                } else if (val === 'true') {
                     val = true;
-                } else if (val == 'false') {
+                } else if (val === 'false') {
                     val = false;
                 } else {
                     throw new Error('bwipp.invalidOptionType: ' + id +
@@ -620,14 +764,14 @@ function bwipp_processoptions() {
                 opts.set(id, val);
             }
         } else if (typ == 'string' || def instanceof Uint8Array) {
-            // This allows numbers to be strings
+            // Allow numbers to be strings
             if (typeof val == 'number') {
                 val = ''+val;
                 opts.set(id, val);
-            } else if ((id === 'extratext' || id === 'alttext') && typeof val === 'string') {
-                // BWIPP 2025-06-13 introduced (alt|extra)textsubspace which 
-                // allows replacing a marker character with space.  This
-                // requires the text to be a uint8array otherwise we get
+            } else if (/^text\d$/.test(id) && typeof val === 'string') {
+                // BWIPP 2025-06-13 introduced textsubspace which allows replacing
+                // a marker character with space.  This requires the text to be a
+                // uint8array otherwise we get
                 //      Error: put-not-writable-string
                 val = $s(val);
                 opts.set(id, val);
@@ -637,6 +781,137 @@ function bwipp_processoptions() {
             }
         }
         // Set the option into the dictionary
-        dict[id] = val;
+        $_[id] = val;
     }
 }
+
+// Replacement for fifocache constructor.  We can't use the postscript version
+// because it creates a user defined dict << ... >>> and fetch installs it as
+// the current dictionary...
+//    /fifocache {
+//        8 dict begin
+//    
+//        /limit exch def
+//        /max exch def
+//        /cache max dict def
+//        /fifo max array def
+//        /state << /head 0 /cnt 0 /total 0 >> def
+//        /fetch currentdict [
+//            exch { //fifocache.fetch exec } aload pop
+//        ] cvx def
+//    
+//        currentdict  % Leave this on the stack
+//        end
+//    } bind def
+function bwipp_fifocache() {
+    var limit = $k[--$j];
+    var max = $k[--$j];
+    var dict = {
+        limit:limit, max:max, cache:new Map(), fifo:[],
+        state:{ head:0, cnt:0, total:0 },
+        fetch() {
+            $k[$j++] = dict;
+            bwipp_fifocache_fetch();
+        },
+    };
+    $k[$j++] = dict;
+}
+
+// This is the initial output from the cross-compiler.  It is broken
+// in many ways...
+//  function bwipp_fifocache_fetch() {
+//      var $__ = $_; //#38454
+//      $_ = new Map; //#38454
+//      $_.self = $k[--$j]; //#38456
+//      $_.cardfn = $k[--$j]; //#38457
+//      $_.genfn = $k[--$j]; //#38458
+//      $_.key = $k[--$j]; //#38459
+//      $_.cache = $get($_.self, 'cache'); //#38461
+//      var _8 = $get($_.cache, $_.key) !== undefined; //#38463
+//      if (_8) { //#38521
+//          $k[$j++] = $get($_.cache, $_.key); //#38468
+//      } else { //#38521
+//          $_.fifo = $get($_.self, 'fifo'); //#38472
+//          $_.max = $get($_.self, 'max'); //#38473
+//          $_.limit = $get($_.self, 'limit'); //#38474
+//          if ($_.genfn() === true) {
+//              return true;
+//          } //#38482
+//          $_.result = $k[--$j]; //#38482
+//          $k[$j++] = $_.result; //#38483
+//          if ($_.cardfn() === true) {
+//              return true;
+//          } //#38483
+//          $_.card = $k[--$j]; //#38483
+//          if ($le($_.card, $_.limit)) { //#38517
+//              var $__ = $_; //#38490
+//              $_ = $get($_.self, 'state'); //#38490
+//              for (;;) { //#38504
+//                  if (($f($_.total + $_.card) <= $_.limit) && ($_.cnt < $_.max)) { //#38496
+//                      break; //#38496
+//                  } //#38496
+//                  var _Y = $get($_.fifo, $_.head); //#38498
+//                  $k[$j++] = _Y; //#38499
+//                  $k[$j++] = $get($_.cache, _Y); //#38499
+//                  if ($_.cardfn() === true) {
+//                      break;
+//                  } //#38499
+//                  $_.total = $f($_.total - $k[--$j]); //#38500
+//                  delete $_.cache[$k[--$j]]; //#38501
+//                  $_.head = ($_.head + 1) % $_.max; //#38502
+//                  $_.cnt = $_.cnt - 1; //#38503
+//              } //#38503
+//              $put($_.cache, $_.key, $_.result); //#38509
+//              $put($_.fifo, $f($_.head + $_.cnt) % $_.max, $_.key); //#38511
+//              $_.cnt = $_.cnt + 1; //#38512
+//              $_.total = $f($_.total + $_.card); //#38513
+//              $_ = $__; //#38515
+//          } //#38515
+//          $k[$j++] = $_.result; //#38521
+//      } //#38521
+//      $_ = $__; //#38525
+//  } //bwipp_fifocache_fetch
+
+function bwipp_fifocache_fetch() {
+    var self = $k[--$j];
+    var cardfn = $k[--$j];
+    var genfn = $k[--$j];
+    var key = $k[--$j];
+    if (key instanceof Uint8Array) {
+        key = String.fromCharCode.apply(null,key);
+    }
+    var cache = self.cache;
+    if (cache.has(key)) {
+        $k[$j++] = cache.get(key);
+        return;
+    }
+    var fifo = self.fifo;
+    var max = self.max;
+    var limit = self.limit;
+    genfn();
+    var result = $k[$j-1];
+    cardfn();
+    var card = $k[--$j];
+    var state = self.state; // { head:0, cnt:0, total:0 }
+    if (card < limit) {
+        for (;;) {
+            if (state.total + card <= limit && state.cnt < max) {
+                break;
+            }
+            var oldkey = fifo[state.head];
+            $k[$j++] = cache.get(oldkey);
+            cardfn();
+            state.total = state.total - $k[--$j];
+            cache.delete(oldkey);
+            state.head = (state.head + 1) % max;
+            state.cnt--;
+        }
+        cache.set(key, result);
+        fifo[(state.head + state.cnt) % max] = key;
+        state.cnt++;
+        state.total = state.total + card;
+    }
+    $k[$j++] = result;
+}
+
+

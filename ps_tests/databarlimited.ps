@@ -3,24 +3,24 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % ISO/IEC 24724:2011
 
-% vim: set ts=4 sw=4 et :
 
 %%/databarlimited dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) databarlimited /sbs get } e isEqual
+    exch { _arg0_ (dontdraw) databarlimited /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) databarlimited /sbs get } e isError
+    exch { _arg0_ (dontdraw) databarlimited /sbs get } dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 

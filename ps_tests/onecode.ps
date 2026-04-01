@@ -1,0 +1,42 @@
+/runtest_onecode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+%%/onecode dup /uk.co.terryburton.bwipp findresource cvx def
+
+%
+%
+% 20-digit barcode (exercises different startvals code path)
+%
+{ (01234567094987654321) (debugcws) onecode } [ 0 0 0 0 559 202 508 451 124 34 ] debugIsEqual
+
+%
+% 25-digit barcode
+%
+{ (0123456709498765432112345) (debugcws) onecode } [ 659 0 150 72 109 1016 535 1063 167 578 ] debugIsEqual
+
+%
+% 29-digit barcode
+%
+{ (01234567094987654321123456789) (debugcws) onecode } [ 0 1100 201 601 240 505 309 189 728 906 ] debugIsEqual
+
+%
+% 31-digit edge case: all 9s maximizes carry propagation
+%
+{ (9999999999999999999999999999999) (debugcws) onecode } [ 658 1133 256 291 361 249 330 1102 394 270 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (0123456709498765432A) (dontdraw) onecode } /bwipp.onecodeBadCharacter isError
+{ (012345670949876543210123456789) (dontdraw) onecode } /bwipp.onecodeInvalidLength isError
+end
+} bind def

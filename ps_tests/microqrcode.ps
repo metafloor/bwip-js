@@ -3,144 +3,510 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ISO/IEC 18004:2015
 
-% vim: set ts=4 sw=4 et :
 
 %%/microqrcode dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o microqrcode /pixs get } e isEqual
+    3 1 roll { _arg0_ _arg1_ microqrcode /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o microqrcode /pixs get } e isError
+    3 1 roll { _arg0_ _arg1_ microqrcode /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
 } def
+
+/_bitseqsEqual {
+    % Stack: errorname errorinfo [vg (expected)]
+    aload pop 3 1 roll get
+    ne {/testError pstack quit} if
+    pop
+} bind def
+/bitseqsEqual { //_bitseqsEqual //_doTest exec } def
+
+% data opts vg [(seg1) (seg2) ...] bitseqs_tmpl
+/bitseqs_tmpl {
+    exch 4 1 roll                         % vg data opts [parts]
+    0 1 index {length add} forall string  % cs = concat(parts)
+    0 3 -1 roll { 3 copy putinterval length add } forall pop
+    4 -1 roll exch 2 array astore         % data opts [vg cs]
+    3 1 roll { _arg0_ _arg1_ microqrcode }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch bitseqsEqual
+} def
+
+
+% Codewords pipeline check
+{  % M1 N5: 12345
+    (12345) (version=M1 debugcws) microqrcode
+} [163 218 208] debugIsEqual
 
 
 % numBs calculation
 
-{  % B1 not in Kanji 1st byte range
-    (^128) (parse fixedeclevel debugcws) microqrcode
-} [134 0 0 236 17 236 17 236 17 236 0] debugIsEqual
+% B1 not in Kanji 1st byte range
+(^128) (parse fixedeclevel debugbitseqs) 5 [
+    (10)          % B mode
+    (0001)        % Char count: 1
+    (10000000)    % 0x80
+] bitseqs_tmpl
 
-{  % B1 in Kanji 1st byte range
-    (^129) (parse fixedeclevel debugcws) microqrcode
-} [134 4 0 236 17 236 17 236 17 236 0] debugIsEqual
+% B1 in Kanji 1st byte range
+(^129) (parse fixedeclevel debugbitseqs) 5 [
+    (10)          % B mode
+    (0001)        % Char count: 1
+    (10000001)    % 0x81
+] bitseqs_tmpl
 
 
 % Encodation examples
 
-{
-    % A11, 11 alphanumerics max for M3-M (Table 7)
-    (ABCDEFGHIJK) (version=M3 eclevel=M fixedeclevel debugcws) microqrcode
-} [108 230 162 149 10 184 89 234 128] debugIsEqual
+% A11, 11 alphanumerics max for M3-M (Table 7)
+(ABCDEFGHIJK) (version=M3 eclevel=M fixedeclevel debugbitseqs) 5 [
+    (01)             % A mode
+    (1011)           % Char count: 11
+    (00111001101)    % AB: 10*45+11 = 461
+    (01000101001)    % CD: 12*45+13 = 553
+    (01010000101)    % EF: 14*45+15 = 645
+    (01011100001)    % GH: 16*45+17 = 737
+    (01100111101)    % IJ: 18*45+19 = 829
+    (010100)         % K: 20
+] bitseqs_tmpl
 
-{
-    % B15, 15 bytes max for M4-L (Table 7)
-    (???????????????) (version=M4 eclevel=L fixedeclevel debugcws) microqrcode
-} [79 63 63 63 63 63 63 63 63 63 63 63 63 63 63 63] debugIsEqual
+% B15, 15 bytes max for M4-L (Table 7)
+(???????????????) (version=M4 eclevel=L fixedeclevel debugbitseqs) 6 [
+    (010)         % B mode
+    (01111)       % Char count: 15
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+    (00111111)    % 0x3F '?'
+] bitseqs_tmpl
 
-{
-    % K9 (点茗や点茗や点茗や), 9 Kanji max for M4-L (Table 7); note ^226^147 (0xE293) also valid Shift JIS
-    (^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^226) (parse version=M4 eclevel=L fixedeclevel debugcws) microqrcode
-} [114 217 253 85 5 137 179 250 170 11 19 103 245 84 22 32] debugIsEqual
+% K9 (点茗や×3), 9 Kanji max for M4-L (Table 7); note ^226^147 (0xE293) also valid Shift JIS
+(^147^095^228^170^130^226^147^095^228^170^130^226^147^095^228^170^130^226) (parse version=M4 eclevel=L fixedeclevel debugbitseqs) 6 [
+    (011)              % K mode
+    (1001)             % Char count: 9
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+] bitseqs_tmpl
 
-{
-    % B12 (?点茗や点茗?), modeBKbeforeB M4 change 5 -> 6, previously B1 K5 B1 (same msgbits length)
-    (?^147^095^228^170^130^226^147^095^228^170?) (parse version=M4 eclevel=L fixedeclevel debugcws) microqrcode
-} [76 63 147 95 228 170 130 226 147 95 228 170 63 0 0 236] debugIsEqual
+% B12 (?点茗や点茗?), modeBKbeforeB M4 change 5 -> 6, previously B1 K5 B1 (same msgbits length)
+(?^147^095^228^170^130^226^147^095^228^170?) (parse version=M4 eclevel=L fixedeclevel debugbitseqs) 6 [
+    (010)         % B mode
+    (01100)       % Char count: 12
+    (00111111)    % 0x3F '?'
+    (10010011)    % 0x93
+    (01011111)    % 0x5F
+    (11100100)    % 0xE4
+    (10101010)    % 0xAA
+    (10000010)    % 0x82
+    (11100010)    % 0xE2
+    (10010011)    % 0x93
+    (01011111)    % 0x5F
+    (11100100)    % 0xE4
+    (10101010)    % 0xAA
+    (00111111)    % 0x3F '?'
+] bitseqs_tmpl
 
-{
-    % B1 K3 N1 (?点茗や1), modeBKbeforeN M3 change 5 -> 3, previously B8 (longer msgbits length)
-    (?^147^095^228^170^130^2261) (parse version=M3 eclevel=L fixedeclevel debugcws) microqrcode
-} [132 255 109 159 213 80 88 128 136 0 0] debugIsEqual
+% B1 K3 N1 (?点茗や1), modeBKbeforeN M3 change 5 -> 3, previously B8 (longer msgbits length)
+(?^147^095^228^170^130^2261) (parse version=M3 eclevel=L fixedeclevel debugbitseqs) 5 [
+    (10)               % B mode
+    (0001)             % Char count: 1
+    (00111111)         % 0x3F '?'
+    (11)               % K mode
+    (011)              % Char count: 3
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (00)               % N mode
+    (00001)            % Char count: 1
+    (0001)             % 1
+] bitseqs_tmpl
 
-{
-    % B1 K4 N1 (?点茗や点1), modeBKbeforeN M3 change 5 -> 3, previously not encodable (msgbits too long)
-    (?^147^095^228^170^130^226^147^0951) (parse version=M3 eclevel=L fixedeclevel debugcws) microqrcode
-} [132 255 141 159 213 80 88 155 62 4 64] debugIsEqual
+% B1 K4 N1 (?点茗や点1), modeBKbeforeN M3 change 5 -> 3, previously not encodable (msgbits too long)
+(?^147^095^228^170^130^226^147^0951) (parse version=M3 eclevel=L fixedeclevel debugbitseqs) 5 [
+    (10)               % B mode
+    (0001)             % Char count: 1
+    (00111111)         % 0x3F '?'
+    (11)               % K mode
+    (100)              % Char count: 4
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (0110110011111)    % 点: Kanji 3487
+    (00)               % N mode
+    (00001)            % Char count: 1
+    (0001)             % 1
+] bitseqs_tmpl
 
-{
-    % B1 K5 N1 (?点茗や点茗?), modeBKbeforeN M4 change 6 -> 5, previously B12 (longer msgbits length)
-    (?^147^095^228^170^130^226^147^095^228^1701) (parse version=M4 eclevel=L fixedeclevel debugcws) microqrcode
-} [65 63 106 217 253 85 5 137 179 250 170 0 136 0 236 17] debugIsEqual
+% B1 K5 N1 (?点茗や点茗1), modeBKbeforeN M4 change 6 -> 5, previously B12 (longer msgbits length)
+(?^147^095^228^170^130^226^147^095^228^1701) (parse version=M4 eclevel=L fixedeclevel debugbitseqs) 6 [
+    (010)              % B mode
+    (00001)            % Char count: 1
+    (00111111)         % 0x3F '?'
+    (011)              % K mode
+    (0101)             % Char count: 5
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (0000101100010)    % や: Kanji 354
+    (0110110011111)    % 点: Kanji 3487
+    (1101010101010)    % 茗: Kanji 6826
+    (000)              % N mode
+    (000001)           % Char count: 1
+    (0001)             % 1
+] bitseqs_tmpl
 
-{
-    % A3 K1 (ABC点), new initial mode A before K re-using modeBAbeforeE array, previously B5 (longer msgbits length)
-    (ABC^147^095) (parse version=M3 eclevel=L fixedeclevel debugcws) microqrcode
-} [76 230 153 150 207 128 236 17 236 17 0] debugIsEqual
+% A3 K1 (ABC点), new initial mode A before K reusing modeBAbeforeE array, previously B5 (longer msgbits length)
+(ABC^147^095) (parse version=M3 eclevel=L fixedeclevel debugbitseqs) 5 [
+    (01)               % A mode
+    (0011)             % Char count: 3
+    (00111001101)      % AB: 10*45+11 = 461
+    (001100)           % C: 12
+    (11)               % K mode
+    (001)              % Char count: 1
+    (0110110011111)    % 点: Kanji 3487
+] bitseqs_tmpl
 
-{
-    % B14, issue #237, initial AN, removal of mode0forceA AbeforeN, previously not encodable A2 B12
-    (K9^000^000^000^000^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugcws) microqrcode
-} [79 75 57 0 0 0 0 0 0 0 0 0 0 0 0 0] debugIsEqual
-{
-    % B14, issue #237, initial NA, removal of numN 1 ge test, previously not encodable A2 B12
-    (9K^000^000^000^000^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugcws) microqrcode
-} [79 57 75 0 0 0 0 0 0 0 0 0 0 0 0 0] debugIsEqual
+% B15, issue #237, initial AN, removal of mode0forceA AbeforeN, previously not encodable A2 B12
+(K9^000^000^000^000^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugbitseqs) 6 [
+    (010)         % B mode
+    (01111)       % Char count: 15
+    (01001011)    % 0x4B 'K'
+    (00111001)    % 0x39 '9'
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+] bitseqs_tmpl
+% B15, issue #237, initial NA, removal of numN 1 ge test, previously not encodable A2 B12
+(9K^000^000^000^000^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugbitseqs) 6 [
+    (010)         % B mode
+    (01111)       % Char count: 15
+    (00111001)    % 0x39 '9'
+    (01001011)    % 0x4B 'K'
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+] bitseqs_tmpl
 
-{
-    % B14, initial ANA
-    (K9K^000^000^000^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugcws) microqrcode
-} [79 75 57 75 0 0 0 0 0 0 0 0 0 0 0 0] debugIsEqual
-{
-    % B14, inversion of above
-    (^000^000^000^000^000^000^000^000^000^000^000^000K9K) (parse fixedeclevel debugcws) microqrcode
-} [79 0 0 0 0 0 0 0 0 0 0 0 0 75 57 75] debugIsEqual
+% B15, initial ANA
+(K9K^000^000^000^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugbitseqs) 6 [
+    (010)         % B mode
+    (01111)       % Char count: 15
+    (01001011)    % 0x4B 'K'
+    (00111001)    % 0x39 '9'
+    (01001011)    % 0x4B 'K'
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+] bitseqs_tmpl
+% B15, inversion of above
+(^000^000^000^000^000^000^000^000^000^000^000^000K9K) (parse fixedeclevel debugbitseqs) 6 [
+    (010)         % B mode
+    (01111)       % Char count: 15
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (00000000)    % 0x00
+    (01001011)    % 0x4B 'K'
+    (00111001)    % 0x39 '9'
+    (01001011)    % 0x4B 'K'
+] bitseqs_tmpl
 
-{
-    % A4 B11, issue #237, initial ANAN, new AorN before B re-using modeBAbeforeE array
-    % (needed after removals mentioned above), previously the same
-    (K9K9^000^000^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugcws) microqrcode
-} [36 113 174 53 44 0 0 0 0 0 0 0 0 0 0 0] debugIsEqual
-{
-    % B11 A4, inversion of above
-    (^000^000^000^000^000^000^000^000^000^000^000K9K9) (parse fixedeclevel debugcws) microqrcode
-} [75 0 0 0 0 0 0 0 0 0 0 0 36 113 174 52] debugIsEqual
+% A4 B11, issue #237, initial ANAN, new AorN before B reusing modeBAbeforeE array
+% (needed after removals mentioned above), previously the same
+(K9K9^000^000^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugbitseqs) 6 [
+    (001)          % A mode
+    (00100)        % Char count: 4
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (010)          % B mode
+    (01011)        % Char count: 11
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+] bitseqs_tmpl
+% B11 A4, inversion of above
+(^000^000^000^000^000^000^000^000^000^000^000K9K9) (parse fixedeclevel debugbitseqs) 6 [
+    (010)          % B mode
+    (01011)        % Char count: 11
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (001)          % A mode
+    (00100)        % Char count: 4
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+] bitseqs_tmpl
 
-{
-    % A7 B9, initial ANANANA
-    (K9K9K9K^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugcws) microqrcode
-} [39 113 174 53 198 168 146 0 0 0 0 0 0 0 0 0] debugIsEqual
-{
-    % B9 A7, inversion of above, new mode B terminal short AorN sequence
-    (^000^000^000^000^000^000^000^000^000K9K9K9K) (parse fixedeclevel debugcws) microqrcode
-} [73 0 0 0 0 0 0 0 0 0 39 113 174 53 198 168] debugIsEqual
-{
-    % B9 A7, with AorN sequence containg N3
-    (^000^000^000^000^000^000^000^000^000KK999KK) (parse fixedeclevel debugcws) microqrcode
-} [73 0 0 0 0 0 0 0 0 0 39 115 6 120 212 168] debugIsEqual
+% A7 B9, initial ANANANA
+(K9K9K9K^000^000^000^000^000^000^000^000^000) (parse fixedeclevel debugbitseqs) 6 [
+    (001)          % A mode
+    (00111)        % Char count: 7
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (010100)       % K: 20
+    (010)          % B mode
+    (01001)        % Char count: 9
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+] bitseqs_tmpl
+% B9 A7, inversion of above, new mode B terminal short AorN sequence
+(^000^000^000^000^000^000^000^000^000K9K9K9K) (parse fixedeclevel debugbitseqs) 6 [
+    (010)          % B mode
+    (01001)        % Char count: 9
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (001)          % A mode
+    (00111)        % Char count: 7
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (010100)       % K: 20
+] bitseqs_tmpl
+% B9 A7, with AorN sequence containing N3
+(^000^000^000^000^000^000^000^000^000KK999KK) (parse fixedeclevel debugbitseqs) 6 [
+    (010)          % B mode
+    (01001)        % Char count: 9
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (001)          % A mode
+    (00111)        % Char count: 7
+    (01110011000)  % KK: 20*45+20 = 920
+    (00110011110)  % 99: 9*45+9 = 414
+    (00110101001)  % 9K: 9*45+20 = 425
+    (010100)       % K: 20
+] bitseqs_tmpl
     % With AorN sequence containing N4 fails with unencodable B11 N4 A1 (due to next N sequence shorter than NbeforeA)
     (^000^000^000^000^000^000^000^000^000KK9999K) (parse fixedeclevel dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
 
-{
-    % A8 B8, initial ANANANAN
-    (K9K9K9K9^000^000^000^000^000^000^000^000) (parse fixedeclevel debugcws) microqrcode
-} [40 113 174 53 198 184 212 128 0 0 0 0 0 0 0 0] debugIsEqual
-{
-    % B8 A8, inversion of above
-    (^000^000^000^000^000^000^000^000K9K9K9K9) (parse fixedeclevel debugcws) microqrcode
-} [72 0 0 0 0 0 0 0 0 40 113 174 53 198 184 208] debugIsEqual
+% A8 B8, initial ANANANAN
+(K9K9K9K9^000^000^000^000^000^000^000^000) (parse fixedeclevel debugbitseqs) 6 [
+    (001)          % A mode
+    (01000)        % Char count: 8
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (010)          % B mode
+    (01000)        % Char count: 8
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+] bitseqs_tmpl
+% B8 A8, inversion of above
+(^000^000^000^000^000^000^000^000K9K9K9K9) (parse fixedeclevel debugbitseqs) 6 [
+    (010)          % B mode
+    (01000)        % Char count: 8
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (001)          % A mode
+    (01000)        % Char count: 8
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+] bitseqs_tmpl
 
-{
-    % A10 B7, initial ANANANANAN
-    (K9K9K9K9K9^000^000^000^000^000^000^000) (parse fixedeclevel debugcws) microqrcode
-} [42 113 174 53 198 184 215 26 142 0 0 0 0 0 0 0] debugIsEqual
-    % Inversion of above fails with unencodable B9 A8 (terminal AorN sequence too long to produce B7 A10)
-    (^000^000^000^000^000^000^000K9K9K9K9K9) (parse dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
-{
-    % B7 A9, one less works
-    (^000^000^000^000^000^000^000K9K9K9K9K) (parse fixedeclevel debugcws) microqrcode
-} [72 0 0 0 0 0 0 0 75 40 53 38 164 212 154 144] debugIsEqual
+% A10 B7, initial ANANANANAN
+(K9K9K9K9K9^000^000^000^000^000^000^000) (parse fixedeclevel debugbitseqs) 6 [
+    (001)          % A mode
+    (01010)        % Char count: 10
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (01110001101)  % K9: 20*45+9 = 909
+    (010)          % B mode
+    (00111)        % Char count: 7
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+] bitseqs_tmpl
+
+% Inversion of above fails with unencodable B9 A8 (terminal AorN sequence too long to produce B7 A10)
+(^000^000^000^000^000^000^000K9K9K9K9K9) (parse dontdraw) /bwipp.qrcodeNoValidSymbol er_tmpl
+
+% B8 A8, one less works
+(^000^000^000^000^000^000^000K9K9K9K9K) (parse fixedeclevel debugbitseqs) 6 [
+    (010)          % B mode
+    (01000)        % Char count: 8
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (00000000)     % 0x00
+    (01001011)     % 0x4B 'K'
+    (001)          % A mode
+    (01000)        % Char count: 8
+    (00110101001)  % 9K: 9*45+20 = 425
+    (00110101001)  % 9K: 9*45+20 = 425
+    (00110101001)  % 9K: 9*45+20 = 425
+    (00110101001)  % 9K: 9*45+20 = 425
+] bitseqs_tmpl
+
+
+%
+% Encoding mode bit sequences
+%
+
+% M1 N5: 12345 (no mode indicator in M1)
+(12345) (version=M1 debugbitseqs) 3 [
+    (101)         % Char count: 5
+    (0001111011)  % 123
+    (0101101)     % 45
+] bitseqs_tmpl
+
+% M2 A2: A1 (1-bit mode indicator)
+(A1) (version=M2 eclevel=L fixedeclevel debugbitseqs) 4 [
+    (1)            % A mode
+    (010)          % Char count: 2
+    (00111000011)  % A1: 10*45+1 = 451
+] bitseqs_tmpl
+
+% M3 B5: Hello (2-bit mode indicator)
+(Hello) (version=M3 eclevel=L fixedeclevel debugbitseqs) 5 [
+    (10)        % B mode
+    (0101)      % Char count: 5
+    (01001000)  % 0x48 'H'
+    (01100101)  % 0x65 'e'
+    (01101100)  % 0x6C 'l'
+    (01101100)  % 0x6C 'l'
+    (01101111)  % 0x6F 'o'
+] bitseqs_tmpl
+
+% M4 B5: Hello (3-bit mode indicator)
+(Hello) (version=M4 eclevel=L fixedeclevel debugbitseqs) 6 [
+    (010)       % B mode
+    (00101)     % Char count: 5
+    (01001000)  % 0x48 'H'
+    (01100101)  % 0x65 'e'
+    (01101100)  % 0x6C 'l'
+    (01101100)  % 0x6C 'l'
+    (01101111)  % 0x6F 'o'
+] bitseqs_tmpl
 
 
 % Figures
@@ -178,5 +544,23 @@
     0 1 0 0 1 0 0 0 1 0 1 0 1
     1 1 1 1 1 1 1 0 1 0 0 1 1
 ] eq_tmpl
+
+
+%
+% Error tests
+%
+
+% Empty data
+() (dontdraw) /bwipp.qrcodeEmptyData er_tmpl
+
+% Invalid version (valid: M1-M4)
+(TEST) (version=M0 dontdraw) /bwipp.qrcodeInvalidMicroVersion er_tmpl
+(TEST) (version=M5 dontdraw) /bwipp.qrcodeInvalidMicroVersion er_tmpl
+
+% Invalid mask (valid: 0-3)
+(TEST) (version=M2 mask=5 dontdraw) /bwipp.qrcodeBadMask er_tmpl
+
+% Option edges
+(TEST) (version=99 dontdraw) /bwipp.qrcodeInvalidMicroVersion er_tmpl
 end
 } bind def

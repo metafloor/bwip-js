@@ -1,13 +1,109 @@
-% --REQUIRES preamble raiseerror processoptions--
-%%BeginData:        593 ASCII Lines
+% --REQUIRES preamble raiseerror setuphooks processoptions setanycolor render--
+%%BeginData:        561 ASCII Lines
+currentglobal
+true setglobal
 /setpacking where {pop currentpacking true setpacking} if
-10 dict
+16 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+dup /render dup /uk.co.terryburton.bwipp findresource put
 begin
+
+
+/renmatrix [/before /after] //setuphooks exec
+
+(setup.define) //renmatrix.before exec
+
+/renmatrix.left  1 def
+/renmatrix.right 2 def
+/renmatrix.up    4 def
+/renmatrix.down  8 def
+
+%
+% Direction lookup table indexed by 2x2 neighbourhood:
+%
+%   +---+---+
+%   |A=8|B=4|
+%   +---*---+
+%   |C=2|D=1|
+%   +---+---+
+%
+/renmatrix.tracestep [
+
+                                                           %  0 0
+    null                                                   %   ?
+                                                           %  0 0
+
+                                                           %  0 0
+    {right}                                                %   +>
+                                                           %  0|1
+
+                                                           %  0 0
+    {down}                                                 %  -+
+                                                           %  1v0
+
+                                                           %  0 0
+    {right}                                                %  -->
+                                                           %  1 1
+
+                                                           %  0^1
+    {up}                                                   %   +-
+                                                           %  0 0
+
+                                                           %  0^1
+    {up}                                                   %   |
+                                                           %  0|1
+
+                                                           %  0 1      0^1
+    {dup //renmatrix.right eq {down} {up} ifelse} bind     %  -+   or   +-
+                                                           %  1v0      1 0
+
+                                                           %  0^1
+    {up}                                                   %  -+
+                                                           %  1 1
+
+                                                           %  1|0
+    {left}                                                 %  <+
+                                                           %  0 0
+
+                                                           %  1|0      1 0
+    {dup //renmatrix.down eq {left} {right} ifelse} bind   %  <+   or   +>
+                                                           %  0 1      0|1
+
+                                                           %  1|0
+    {down}                                                 %   |
+                                                           %  1v0
+
+                                                           %  1|0
+    {right}                                                %   +>
+                                                           %  1 1
+
+                                                           %  1 1
+    {left}                                                 %  <--
+                                                           %  0 0
+
+                                                           %  1 1
+    {left}                                                 %  <+
+                                                           %  0|1
+
+                                                           %  1 1
+    {down}                                                 %   +-
+                                                           %  1v0
+
+                                                           %  1 1
+    null                                                   %   ?
+                                                           %  1 1
+
+] readonly def
+
 /renmatrix {
 
-    20 dict begin
+    256 dict begin
+    {
+
+    (input.processoptions) //renmatrix.before exec
 
     % Default options
     /width 1.0 def
@@ -17,46 +113,38 @@ begin
     /bordercolor (unset) def
     /colormap (unset) def
     /dotty false def
-    /inkspread null def    % real sentinal
-    /inkspreadh null def   % real sentinal
-    /inkspreadv null def   % real sentinal
+    /inkspread null def    % real sentinel
+    /inkspreadh null def   % real sentinel
+    /inkspreadv null def   % real sentinel
     /txt [] def
+
+    % text{1-9}* options with common defaults
+    (text) 9 /groupoptions //render exec /generategroup //processoptions exec
+
+    % Overrides permitting encoder-positioned text
+    /text1xalign (unset) def
+    /text1yalign (unset) def
+
     /includetext false def
-    /textcolor (unset) def
-    /textxalign (unset) def
-    /textyalign (unset) def
-    /textdirection (forward) def
-    /textfont (Courier) def
-    /textsize 10.0 def
-    /textxoffset 0.0 def
-    /textyoffset 0.0 def
-    /textgaps 0.0 def
-    /textlinegaps 1.2 def
-    /alttext () def
-    /alttextsplit () def
-    /alttextsubspace () def
-    /extratext () def
-    /extratextsubspace () def
-    /extratextsplit () def
-    /extratextlinegaps 1.2 def
-    /extratextcolor (unset) def
-    /extratextxalign (left) def
-    /extratextyalign (above) def
-    /extratextdirection (forward) def
-    /extratextfont (Courier) def
-    /extratextsize 10.0 def
-    /extratextxoffset 0.0 def
-    /extratextyoffset 0.0 def
-    /extratextgaps 0.0 def
     /showborder false def
     /borderleft 0.0 def
     /borderright 0.0 def
     /bordertop 0.0 def
     /borderbottom 0.0 def
-    /borderwidth 0.25 def
+    /borderwidth 0.5 def
+    /gridfit false def
+    /griddpi 0 def
 
     {def} forall
-    opt currentdict /opt undef //processoptions exec pop
+    opt currentdict /opt undef /apply //processoptions exec /options exch def
+
+    % Resolve text aliases: alttext=>text1, extratext=>text2
+
+    inkspread null eq {
+        /uk.co.terryburton.bwipp.global_ctx dup where {
+            exch get /default_inkspread 2 copy known {get /inkspread exch def} {pop pop} ifelse
+        } {pop} ifelse
+    } if
 
     inkspread null eq {/inkspread 0.15 def} if
     inkspreadh null eq {/inkspreadh inkspread def} if
@@ -67,50 +155,93 @@ begin
         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+        griddpi         0 eq       { ctx /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
     } { pop } ifelse
 
+    % Auto-enable gridfit when griddpi is specified
+    griddpi 0 ne { /gridfit true def } if
+
+    (input.processoptions) //renmatrix.after exec
+
+    %
     % Input validation
+    %
+    (input.validate) //renmatrix.before exec
 
-    textxalign (unset) ne {
-        << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> textxalign known not {
-            /bwipp.renmatrixBadTextxalign (textxalign must be offleft, left, center, right or offright) //raiseerror exec
-        } if
+    %
+    % Collect text options and validate
+    %
+    /textopts (text) 9 /groupoptions //render exec /collectgroup //processoptions exec def
+
+    %
+    % Validate input
+    %
+
+    % text{1-9}* options validation
+    1 1 9 {
+        /textgrp exch def
+        textgrp textopts textgrp 1 sub get
+        /validateoptions //render exec not { //raiseerror exec } if
+    } for
+
+    inkspread -1 lt inkspread 1 gt or {
+        /bwipp.renmatrixBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
     } if
 
-    textyalign (unset) ne {
-        << /above dup  /top dup  /center dup  /bottom dup  /below dup >> textyalign known not {
-            /bwipp.renmatrixBadTextyalign (textyalign must be above, top, center, bottom or below) //raiseerror exec
-        } if
+    inkspreadh -1 lt inkspreadh 1 gt or {
+        /bwipp.renmatrixBadInkspreadh (inkspreadh must be from -1 to 1) //raiseerror exec
     } if
 
-    << /forward dup  /backward dup  /upward dup  /downward dup >> textdirection known not {
-        /bwipp.renmatrixBadTextdirection (textdirection must be forward, backward, upward or downward) //raiseerror exec
+    inkspreadv -1 lt inkspreadv 1 gt or {
+        /bwipp.renmatrixBadInkspreadv (inkspreadv must be from -1 to 1) //raiseerror exec
     } if
 
-    textsize 0 le textsize 25 ge or {
-        /bwipp.renmatrixBadTextsize (textsize must be greater than zero and less that 25) //raiseerror exec
+    borderleft -1 lt borderleft 50 gt or {
+        /bwipp.renmatrixBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
     } if
 
-    << /offleft dup  /left dup  /center dup  /right dup  /offright dup >> extratextxalign known not {
-        /bwipp.renmatrixBadExtratextxalign (extratextxalign must be offleft, left, center, right or offright) //raiseerror exec
+    borderright -1 lt borderright 50 gt or {
+        /bwipp.renmatrixBadBorderright (borderright must be from -1 to 50) //raiseerror exec
     } if
 
-    << /above dup  /top dup  /center dup  /bottom dup  /below dup >> extratextyalign known not {
-        /bwipp.renmatrixBadExtratextyalign (extratextyalign must be above, top, center, bottom or below) //raiseerror exec
+    bordertop -1 lt bordertop 50 gt or {
+        /bwipp.renmatrixBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
     } if
 
-    << /forward dup  /backward dup  /upward dup  /downward dup >> extratextdirection known not {
-        /bwipp.renmatrixBadExtratextdirection (extratextdirection must be forward, backward, upward or downward) //raiseerror exec
+    borderbottom -1 lt borderbottom 50 gt or {
+        /bwipp.renmatrixBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
     } if
 
-    extratextsize 0 le extratextsize 25 ge or {
-        /bwipp.renmatrixBadTextsize (extratextsize must be greater than zero and less that 25) //raiseerror exec
+    borderwidth 0 lt borderwidth 10 gt or {
+        /bwipp.renmatrixBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
     } if
 
-    /xyget { pixx mul add pixs exch get} def
-    /cget { pixx mul add cache exch get and} def
+    width 0.01 lt width 50 gt or {
+        /bwipp.renmatrixBadWidth (width must be from 0.01 to 50) //raiseerror exec
+    } if
+
+    height 0.01 lt height 50 gt or {
+        /bwipp.renmatrixBadHeight (height must be from 0.01 to 50) //raiseerror exec
+    } if
+
+    griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
+        /bwipp.renmatrixBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
+    } if } if
+
+    pixx 0 le pixy 0 le or {
+        /bwipp.renmatrixBadDimensions (The symbol dimensions must be positive) //raiseerror exec
+    } if
+
+    pixs length pixx pixy mul lt {
+        /bwipp.renmatrixBadPixelData (The pixel data is shorter than the symbol dimensions require) //raiseerror exec
+    } if
+
+    (input.validate) //renmatrix.after exec
+
+    /xyget { pixx mul add pixs exch get } def
+    /cget { pixx mul add cache exch get and } def
     /cput {  % Optimise by only storing "stem" corners
-        dup 4 mod 0 eq { % dir is up or left
+        dup dup //renmatrix.up eq exch //renmatrix.left eq or {  % dir is up or left
             3 1 roll pixx mul add cache exch 2 copy get 4 -1 roll or put
         } {
             pop pop pop
@@ -118,147 +249,190 @@ begin
     } def
 
     /abcd {
-        4 string 0 [
-            5 -2 roll
-            pixx mul add dup
-            pixs exch 2 getinterval aload pop 3 -1 roll  % A B
-            pixs exch pixx add 2 getinterval aload pop   % C D
-        ] {3 copy 48 add put pop 1 add} forall pop
+        pixx mul add      dup 1 add  % A B
+        1 index pixx add  dup 1 add  % C D
+             pixs exch get
+        exch pixs exch get 2 mul add
+        exch pixs exch get 4 mul add
+        exch pixs exch get 8 mul add
     } def
 
-    /right {dir 1 ne {x y dir cput [x y]} if  /x x 1 add def  /dir 1 def} def
-    /down  {dir 2 ne {x y dir cput [x y]} if  /y y 1 add def  /dir 2 def} def
-    /left  {dir 4 ne {x y dir cput [x y]} if  /x x 1 sub def  /dir 4 def} def
-    /up    {dir 8 ne {x y dir cput [x y]} if  /y y 1 sub def  /dir 8 def} def
+    /pack   { pixxpad mul add } def                    % x y -> y*pixxpad+x
+    /unpack { dup pixxpad mod exch pixxpad idiv } def  % y*pixxpad+x -> x y
 
+    %
+    % Stack: x y dir -> (packed vertex?) x' y' dir'
+    %
+    /left {
+        dup //renmatrix.left ne {
+            3 copy cput
+            2 index 2 index pack 4 1 roll
+        } if
+        pop
+        exch 1 sub exch  % x--
+        //renmatrix.left
+    } def
+
+    /right {
+        dup //renmatrix.right ne {
+            3 copy cput
+            2 index 2 index pack 4 1 roll
+        } if
+        pop
+        exch 1 add exch  % x++
+        //renmatrix.right
+    } def
+
+    /up {
+        dup //renmatrix.up ne {
+            3 copy cput
+            2 index 2 index pack 4 1 roll
+        } if
+        pop
+        1 sub  % y--
+        //renmatrix.up
+    } def
+
+    /down {
+        dup //renmatrix.down ne {
+            3 copy cput
+            2 index 2 index pack 4 1 roll
+        } if
+        pop
+        1 add  % y++
+        //renmatrix.down
+    } def
+
+    %
+    % Walk the outline of a region emitting edge coordinates of the path
+    %
     /trace {
-        % Walk the outline of a region emitting edge coordinates of the path
         /y exch def  /x exch def
-        % dir 1:right 2:down 4:left 8:up
-        /dir x 1 add y 1 add xyget 1 eq {8} {4} ifelse def
+        /dir x 1 add y 1 add xyget 1 eq {//renmatrix.up} {//renmatrix.left} ifelse def
         /sx x def  /sy y def  /sdir dir def
 
-        % A B
-        % C D
-        mark {
-            x y abcd
-            1 {  % Common exit
-                dup dup (0001) eq exch dup (0011) eq exch (1011) eq or or {pop right exit} if
-                dup dup (0010) eq exch dup (1010) eq exch (1110) eq or or {pop down  exit} if
-                dup dup (1000) eq exch dup (1100) eq exch (1101) eq or or {pop left  exit} if
-                dup dup (0100) eq exch dup (0101) eq exch (0111) eq or or {pop up    exit} if
-                dup (1001) eq {
-                    dir 2 eq {pop left exit} {pop right exit} ifelse
-                } {  % 0110
-                    dir 1 eq {pop down exit} {pop up exit} ifelse
-                } ifelse
-            } repeat
-            x sx eq y sy eq and dir sdir eq and {exit} if
+        mark x y dir
+        {  % [vertex...] x y dir
+            //renmatrix.tracestep 3 index 3 index abcdget get exec
+            dup sdir eq { 1 index sy eq { 2 index sx eq {
+                pop pop pop exit
+            } if } if } if
         } loop
         counttomark array astore exch pop
 
     } def
 
-    % Set RGB or CMYK color, or some other color by name
-    /setanycolor {
-        /anycolor exch def
-        anycolor length 1 lt {
-            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
-        } if
-        anycolor 0 get 95 ne {  % RGB or CMYK
-            anycolor length dup 6 ne exch 8 ne and {
-                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
-            } if
-            mark
-            0 2 anycolor length 1 sub {
-                anycolor exch 2 getinterval 0 exch {
-                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
-                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F
-                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f
-                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
-                    } ifelse } ifelse } ifelse
-                    exch 16 mul add
-                } forall
-                255 div
-            } for
-            counttomark
-            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
-            exch 2 add -1 roll pop  % clear mark
-        } {  % Named color beginning "_..."
-            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
-            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
-            anycolor 2 copy known not {
-                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
-            } if
-            get mark exch aload pop counttomark 1 add -2 roll exch pop
-        } ifelse
-        { setcolorspace setcolor } stopped {
-            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
-        } if
-    } def
-
+    %
     % Plot a layer of single colour
+    %
     /drawlayer {
 
         /pixsorig pixs def
         /pixs exch def
 
+        (render.tracepaths) //renmatrix.before exec
+
         % Pad the bitmap on all sides
-        /pixs [
-            pixx 2 add {0} repeat
-            0 pixx pixs length 1 sub {
-                0 exch
-                pixs exch pixx getinterval aload pop
-                0
-            } for
-            pixx 2 add {0} repeat
-        ] def
         /pixx pixx 2 add def
         /pixy pixy 2 add def
+        /pixxpad pixx def
+        /zerorow [ pixx {0} repeat ] def
+        pixx pixy mul { array } stopped {
+            pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
+        } if /padded exch def
+        0 pixx padded length 1 sub {
+            padded exch zerorow putinterval
+        } for
+        0 1 pixy 3 sub {
+            /row exch def
+            padded row 1 add pixx mul 1 add pixs row pixx 2 sub mul pixx 2 sub getinterval putinterval
+        } for
+        /pixs padded def
 
+        %
         % Cache of visited corners for each direction
-        /cache [ pixs length {0} repeat ] def
+        %
+        pixs length { array } stopped {
+            pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
+        } if /cache exch def
+        0 pixx cache length 1 sub {
+            cache exch zerorow putinterval
+        } for
 
+        %
+        % Pre-compute abcd values (printed neighbours) for all cells
+        %
+        /abcdw pixx 1 sub def
+        abcdw pixy 1 sub mul { array } stopped {
+            pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
+        } if /abcdcache exch def
+        /abcdrow abcdw array def
+        0 1 pixy 2 sub {
+            /j exch def
+            0 1 abcdw 1 sub {
+                dup j abcd  abcdrow 3 1 roll put
+            } for
+            abcdcache j abcdw mul abcdrow putinterval
+        } for
+
+        /abcdget { pixx 1 sub mul add abcdcache exch get } def
+
+        %
         % Construct paths by tracing regions avoiding duplication by using the cache
+        %
         /paths [
             0 1 pixy 2 sub {
                 /j exch def
                 0 1 pixx 2 sub {
                     /i exch def
-                    /k i j abcd def
-                    k (0001) eq k (1001) eq or {  % Black region stem corners
-                        8 i j cget 0 eq {
-                            i j trace
-                        } if
+                    /k i j abcdget def
+                    k 2#0001 eq                           % Black region stem corners:
+                    k 2#1001 eq or {                      %
+                        //renmatrix.up i j cget 0 eq {    %   0 0       1 0
+                            i j trace                     %    *   and   *
+                        } if                              %   0 1       0 1
                     } if
-                    k (1110) eq {  % White region stem corner
-                        4 i j cget 0 eq {
-                            i j trace
-                        } if
-                    } if
+                    k 2#1110 eq {                         % White region stem corner:
+                        //renmatrix.left i j cget 0 eq {  %
+                            i j trace                     %   1 1
+                        } if                              %    *
+                    } if                                  %   1 0
                 } for
             } for
         ] def
 
+        %
         % Revert the bitmap size
+        %
         /pixx pixx 2 sub def
         /pixy pixy 2 sub def
 
+
+        options /debugpaths known
+        /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+        and { grestore /bwipp.debugpaths [ paths { dup length 2 mul exch { unpack } forall } forall ] //raiseerror exec } if
+
+        (render.tracepaths) //renmatrix.after exec
+
+        %
         % Draw the image
+        %
+        (render.drawpaths) //renmatrix.before exec
+
         newpath
         paths {
             /p exch def
             /len p length def
-            p len 1 sub get aload pop
-            p 0 get aload pop
+            p len 1 sub get unpack
+            p 0 get unpack
             0 1 len 1 sub {                                % x1 y1 x2 y2
                 /i exch def
-                p i 1 add len mod get aload pop 6 -2 roll  % x3 y3 x1 y1 x2 y2
-                5 index inkspreadh
-                4 index 4 -1 roll lt {add} {sub} ifelse    % y3<y1 ? x2+i : x2-i
+                p i 1 add len mod get unpack 6 -2 roll     % x3 y3 x1 y1 x2 y2
+                5 index inkspreadh 2 div
+                4 index 4 -1 roll lt {add} {sub} ifelse    % y3<y1 ? x2+ih : x2-ih
                 4 1 roll
-                4 index inkspreadv
-                4 index 4 -1 roll gt {add} {sub} ifelse    % x3>x1 ? y2+i : y2-i
+                4 index inkspreadv 2 div
+                4 index 4 -1 roll gt {add} {sub} ifelse    % x3>x1 ? y2+iv : y2-iv
                 4 -1 roll exch pixy exch sub
                 i 0 eq {moveto} {lineto} ifelse
             } for                                          % x2 y2 x3 y3
@@ -269,9 +443,13 @@ begin
 
         /pixs pixsorig def
 
+        (render.drawpaths) //renmatrix.after exec
+
     } def
 
     /drawlayerdots {
+
+        (render.drawdots) //renmatrix.before exec
 
         /pixsorig pixs def
         /pixs exch def
@@ -282,12 +460,14 @@ begin
             pixx idiv /y exch def
             x y xyget 1 eq {
                x 0.5 add pixy y sub 0.5 sub moveto
-               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc
+               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread 2 div sub 0 360 arc
             } if
         } for
         fill
 
         /pixs pixsorig def
+
+        (render.drawdots) //renmatrix.after exec
 
     } def
 
@@ -295,14 +475,19 @@ begin
 
     currentpoint translate
 
-    /inkspread  inkspread  2 div def
-    /inkspreadh inkspreadh 2 div def
-    /inkspreadv inkspreadv 2 div def
-
+    %
     % Force symbol to given width
+    %
     width pixx div 72 mul height pixy div 72 mul scale
 
+    %
+    % Grid fit: snap module boundaries to device pixel grid
+    %
+    gridfit { 1 true /gridfit //render exec } if
+
+    %
     % Display the border and background
+    %
     showborder {
         /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
         /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
@@ -317,281 +502,64 @@ begin
     backgroundcolor (unset) ne {
         gsave
         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        backgroundcolor setanycolor fill
+        backgroundcolor //setanycolor exec not { grestore grestore //raiseerror exec } if fill
         grestore
     } if
     showborder {
         gsave
         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        bordercolor (unset) ne { bordercolor setanycolor } if
+        bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
         borderwidth inkspread 2 mul sub setlinewidth stroke
         grestore
     } if
 
+    %
     % Display the matrix
+    %
     colormap (unset) eq {
         /colormap << 1 barcolor >> def
     } if
 
     colormap {
-        dup (unset) ne { setanycolor } { pop } ifelse
+        dup (unset) ne { //setanycolor exec not { 3 -1 roll pop grestore //raiseerror exec } if } { pop } ifelse
         /key exch def
-        [
-            pixs { key eq {1} {0} ifelse } forall
-        ] dotty {drawlayerdots} {drawlayer} ifelse
+        pixs length { array } stopped {
+            pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
+        } if /layer exch def
+        0 1 pixs length 1 sub {
+            dup pixs exch get key eq {layer exch 1 put} {layer exch 0 put} ifelse
+        } for
+        layer dotty {drawlayerdots} {drawlayer} ifelse
     } forall
 
-    /positions <<
-    %   direction
-    %       x-align                                y-align
-        (forward) <<
-            (offleft)  {      tw neg nudge sub }   (below)   {      th neg nudge sub }
-            (left)     {      0                }   (bottom)  {      0                }
-            (xcenter)  { pixx tw sub 2 div     }   (ycenter) { pixy th sub 2 div     }
-            (right)    { pixx tw sub           }   (top)     { pixy th sub           }
-            (offright) { pixx        nudge add }   (above)   { pixy        nudge add }
-        >>
-        (backward) <<
-            (offleft)  {      0      nudge sub }   (below)   {      0      nudge sub }
-            (left)     {      tw               }   (bottom)  {      th               }
-            (xcenter)  { pixx tw add 2 div     }   (ycenter) { pixy th add 2 div     }
-            (right)    { pixx                  }   (top)     { pixy                  }
-            (offright) { pixx tw add nudge add }   (above)   { pixy th add nudge add }
-        >>
-        (upward) <<
-            (offleft)  {      0      nudge sub }   (below)   {      tw neg nudge sub }
-            (left)     {      th               }   (bottom)  {      0                }
-            (xcenter)  { pixx th add 2 div     }   (ycenter) { pixy tw sub 2 div     }
-            (right)    { pixx                  }   (top)     { pixy tw sub           }
-            (offright) { pixx th add nudge add }   (above)   { pixy        nudge add }
-        >>
-        (downward) <<
-            (offleft)  {      th neg nudge sub }   (below)   {      0      nudge sub }
-            (left)     {      0                }   (bottom)  {      tw               }
-            (xcenter)  { pixx th sub 2 div     }   (ycenter) { pixy tw add 2 div     }
-            (right)    { pixx th sub           }   (top)     { pixy                  }
-            (offright) { pixx        nudge add }   (above)   { pixy tw add nudge add }
-        >>
-    >> def
-
-    % x-align y-align direction text-width text-height
-    /positiontext {
-        /th exch def
-        /tw exch def
-        /nudge 1 def
-        positions exch get dup
-        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
-        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
-    } def
-
-    % Display the text for elements in the text array
-    includetext {
-
-        textcolor (unset) ne { textcolor setanycolor } if
-
-        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
-            /s 0 def /fn () def
-            txt {
-                aload pop
-                2 copy s ne exch fn ne or {
-                    dup 0 le {
-                        pop pop pop pop pop
-                        /bwipp.renmatrixFontTooSmall (The font size is too small) //raiseerror exec
-                    } if
-                    2 copy /s exch def /fn exch def
-                    selectfont
-                } {
-                    pop pop
-                } ifelse
-                moveto show
-            } forall
-        } {
-
-            alttext () eq {
-                /txt [ txt { 0 get {} forall } forall ] def
-                /tstr txt length string def
-                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
-            } {
-                /tstr alttext def
-                0 1 alttext length 1 sub {
-                    dup
-                    alttext exch 1 getinterval alttextsubspace exch search {
-                        alttext 4 index 32 put pop pop
-                    } if
-                    pop pop
-                } for
-            } ifelse
-
-            alttext () ne alttextsplit () ne and {
-                alttextsplit length 1 ne {
-                    /bwipp.alttextsplitBad (The alttextsplit option must be a single character) //raiseerror exec
-                } if
-                /textlines [
-                    tstr { alttextsplit search { exch pop exch } { exit } ifelse } loop
-                ] def
-            } {
-                /textlines [ tstr ] def
-            } ifelse
-
-            textfont textsize selectfont
-
-            % Find true ascent of font
-            tstr length 0 eq {
-                0
-            } {
-                gsave
-                newpath 0 0 moveto (0) false charpath pathbbox
-                4 1 roll pop pop pop
-                grestore
-                currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-                currentfont /StrokeWidth known and {
-                    currentfont /StrokeWidth get 2 div 0 exch
-                    currentfont /FontMatrix get dtransform
-                    dup mul exch dup mul add sqrt
-                    add
-                } if
-            } ifelse
-            /textascent exch def
-
-            /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall tstr length 1 sub textgaps mul add def
-            /textheight textlines length dup textascent mul exch 1 sub textlinegaps mul add def
-
-            textxalign (unset) eq { /textxalign (center) def } if
-            textyalign (unset) eq { /textyalign (below)  def } if
-
-            textxalign (justify) eq {
-                textdirection (forward) ne textdirection (backward) ne and {
-                    /bwipp.textxjustify (textxalign=justify requires forward or backward text) //raiseerror exec
-                } if
-                textwidth pixx lt {
-                    /textgaps pixx textwidth sub tstr length 1 sub div def
-                    /textxalign textdirection (forward) eq { (left) } { (right) } ifelse def
-                } {
-                    /textgaps 0.0 def
-                    /textxalign (center) def
-                } ifelse
-            } if
-
-            textyalign (justify) eq {
-                textdirection (upward) ne textdirection (downward) ne and {
-                    /bwipp.textyjustify (textyalign=justify requires upward or downward text) //raiseerror exec
-                } if
-                textwidth pixy lt {
-                    /textgaps pixy textwidth sub tstr length 1 sub div def
-                    /textyalign textdirection (upward) eq { (bottom) } { (top) } ifelse def
-                } {
-                    /textgaps 0.0 def
-                    /textyalign (center) def
-                } ifelse
-            } if
-
-            textxalign textyalign textdirection textwidth textheight positiontext moveto
-            textxoffset textyoffset rmoveto
-            gsave
-            << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> textdirection get rotate
-            currentpoint translate
-            0 1 textlines length 1 sub {
-                /i exch def
-                0 0 textascent textlinegaps add i mul add moveto
-                textgaps 0 textlines dup length i sub 1 sub get ashow
-            } for
-            grestore
-
-        } ifelse
-
-    } if
-
-    % Render any extratext
-    extratext () ne {
-
-        0 1 extratext length 1 sub {
-            dup
-            extratext exch 1 getinterval extratextsubspace exch search {
-                extratext 4 index 32 put pop pop
-            } if
-            pop pop
-        } for
-
-        extratextsplit () ne {
-            extratextsplit length 1 ne {
-                /bwipp.extratextsplitBad (The extratextsplit option must be a single character) //raiseerror exec
-            } if
-            /textlines [
-                extratext { extratextsplit search { exch pop exch } { exit } ifelse } loop
-            ] def
-        } {
-            /textlines [ extratext ] def
-        } ifelse
-
-        extratextcolor (unset) ne { extratextcolor setanycolor } if
-        extratextfont extratextsize selectfont
-
-        % Find true ascent of font
-        gsave
-        newpath 0 0 moveto (0) false charpath pathbbox
-        4 1 roll pop pop pop
-        grestore
-        currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-        currentfont /StrokeWidth known and {
-            currentfont /StrokeWidth get 2 div 0 exch
-            currentfont /FontMatrix get dtransform
-            dup mul exch dup mul add sqrt
-            add
+    %
+    % Display the text
+    %
+    1 1 9 {
+        /textgrp exch def
+        textopts textgrp 1 sub get () get () ne              % Has manual contents
+        textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
+        {
+            textopts textgrp 1 sub get
+            dup (txt) txt put
+            dup dup () get (content) exch put
+            pixx pixy textgrp 4 -1 roll /rendertext //render exec
+            not { grestore //raiseerror exec } if
         } if
-        /textascent exch def
-
-        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall extratext length 1 sub extratextgaps mul add def
-        /textheight textlines length dup textascent mul exch 1 sub extratextlinegaps mul add def
-
-        extratextxalign (justify) eq {
-            extratextdirection (forward) ne extratextdirection (backward) ne and {
-                /bwipp.extratextxjustify (extratextxalign=justify requires forward or backward text) //raiseerror exec
-            } if
-            textwidth pixx lt {
-                /extratextgaps pixx textwidth sub extratext length 1 sub div def
-                /extratextxalign extratextdirection (forward) eq { (left) } { (right) } ifelse def
-            } {
-                /extratextgaps 0.0 def
-                /extratextxalign (center) def
-            } ifelse
-        } if
-
-        extratextyalign (justify) eq {
-            extratextdirection (upward) ne extratextdirection (downward) ne and {
-                /bwipp.extratextyjustify (extratextyalign=justify requires upward or downward text) //raiseerror exec
-            } if
-            textwidth pixy lt {
-                /extratextgaps pixy textwidth sub extratext length 1 sub div def
-                /extratextyalign extratextdirection (upward) eq { (bottom) } { (top) } ifelse def
-            } {
-                /extratextgaps 0.0 def
-                /extratextyalign (center) def
-            } ifelse
-        } if
-
-        extratextxalign extratextyalign extratextdirection textwidth textheight positiontext moveto
-        extratextxoffset extratextyoffset rmoveto
-        gsave
-        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> extratextdirection get rotate
-        currentpoint translate
-        0 1 textlines length 1 sub {
-            /i exch def
-            0 0 textascent extratextlinegaps add i mul add moveto
-            extratextgaps 0 textlines dup length i sub 1 sub get ashow
-        } for
-        grestore
-
-    } if
+    } for
 
     grestore
 
+    } stopped {end stop} if
     end
 
 }
 [/barcode] {null def} forall
 bind def
 /renmatrix dup load /uk.co.terryburton.bwipp defineresource pop
+(setup.define) //renmatrix.after exec
 end
 /setpacking where {pop setpacking} if
+setglobal
 %%EndData
 %%EndResource

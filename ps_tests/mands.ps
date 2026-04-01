@@ -1,0 +1,26 @@
+/runtest_mands {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+%%/mands dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (0642118) (includetext dontdraw) mands /sbs get
+} [ 1 1 1 3 2 1 1 3 2 1 1 1 1 1 4 1 1 3 2 1 1 1 1 1 2 1 2 2 2 2 2 1 2 2 2 1 1 2 1 3 1 1 1 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (123456) (dontdraw) mands } /bwipp.MandSbadLength isError
+
+% Without includetext
+(12345670) (dontdraw) mands pop
+end
+} bind def

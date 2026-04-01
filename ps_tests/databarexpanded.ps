@@ -3,24 +3,29 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ISO/IEC 24724:2011
 
-% vim: set ts=4 sw=4 et :
 
 %%/databarexpanded dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) databarexpanded /sbs get } e isEqual
+    exch { _arg0_ (dontdraw) databarexpanded /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 /eq_tmpl_dontlint {
-    /e exch def
-    /t exch def
-    { t (dontdraw dontlint) databarexpanded /sbs get } e isEqual
+    exch { _arg0_ (dontdraw dontlint) databarexpanded /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
+} def
+
+/eq_tmpl_bits {
+    exch { _arg0_ (debugbits dontlint) databarexpanded } dup 3 -1 roll 0 exch put
+    exch debugIsEqual
 } def
 
 
@@ -60,5 +65,435 @@
 ((01)90012345678908(3103)012233(15)000000)  % Encoding method "0111100" prospect but invalid date so encoding method "1"
     [1 1 4 2 2 2 1 3 2 1 8 4 1 1 1 2 1 3 5 2 2 1 1 1 4 2 2 1 5 1 1 1 5 6 2 3 1 1 2 4 2 1 3 3 4 1 2 1 1 1 4 3 6 4 1 1 1 2 1 1 2 3 3 4 1 5 1 2 2 3 2 1 1 1 8 2 3 2 2 1 5 1 4 1 1 1 4 1 3 4 1 2 1 3 2 8 1 1 1 1 2 4 1 6 1 1 1 1 1 1 4 1 6 2 1 1 9 2 2 1 1]
     eq_tmpl_dontlint
+
+
+%
+% Method selection
+%
+
+% Method "00": No (01) AI
+((10)12A) [
+    0                                                                      % Linkage
+    0 0                                                                    % Method "00"
+    0 0 0 0 1 0 0 1 1 0 0 1 0 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0        % gpf + pad
+    0
+] eq_tmpl_bits
+
+% Method "1": (01) with non-9 prefix
+((01)00012345678905(10)ABC123) [
+    0                                                                      % Linkage
+    1                                                                      % Method "1"
+    1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1        % cdf
+    0 1 1 1 1 1 0 1 1 1 1 0
+    1 0 0 0 1 0 0 1 1 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 1 0 0 0 1 0 0        % gpf + pad
+    0 1 1 0 0 0 1 1 1 0 1 0 0 0 0 0 1 0
+] eq_tmpl_bits
+
+% Method "1": (01)9... with (3103) but weight > 99999 (fails 0100 and 0111x)
+((01)90012345678908(3103)100000) [
+    0                                                                      % Linkage
+    1                                                                      % Method "1"
+    0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1        % cdf
+    0 1 1 1 1 1 0 1 1 1 1 0
+    1 0 0 1 0 1 0 1 0 0 0 0 1 0 1 1 0 0 1 0 0 1 1 0 0 0 1 0 0 0 0 0        % gpf + pad
+    0 1 0 0 0 0
+] eq_tmpl_bits
+
+% Method "1": (01) with non-9 prefix and (3103)
+((01)00012345678905(3103)001750) [
+    0                                                                      % Linkage
+    1                                                                      % Method "1"
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1        % cdf
+    0 1 1 1 1 1 0 1 1 1 1 0
+    1 0 0 1 0 1 0 1 0 0 0 0 1 0 1 1 0 0 0 1 0 0 0 0 0 1 1 0 1 0 0 1        % gpf + pad
+    1 1 1 1 1 0
+] eq_tmpl_bits
+
+% Method "0100": (01)9...(3103)..., weight <= 32767
+((01)90012345678908(3103)001750) [
+    0                                                                      % Linkage
+    0 1 0 0                                                                % Method "0100"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 0 0 0 1 1 0 1 1 0 1 0 1 1 0
+] eq_tmpl_bits
+
+% Method "0100": boundary, weight = 32767
+((01)90012345678908(3103)032767) [
+    0                                                                      % Linkage
+    0 1 0 0                                                                % Method "0100"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0100" overflow: weight = 32768 -> method "0111000"
+((01)90012345678908(3103)032768) [
+    0                                                                      % Linkage
+    0 1 1 1 0 0 0                                                          % Method "0111000"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 1 0 0 0 1 0 0 1 1 1 1 1 0 0 0 0 0 1 0 0 1
+    0 1 1 0 0 0 0 0 0 0 0 0
+] eq_tmpl_bits
+
+% Method "0101": (01)9...(3202)..., weight <= 9999
+((01)90012345678908(3202)000156) [
+    0                                                                      % Linkage
+    0 1 0 1                                                                % Method "0101"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 0
+] eq_tmpl_bits
+
+% Method "0101": boundary, (3202) weight = 9999
+((01)90012345678908(3202)009999) [
+    0                                                                      % Linkage
+    0 1 0 1                                                                % Method "0101"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 1 0 0 0 0 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0101" overflow: (3202) weight = 10000 -> method "0111001"
+((01)90012345678908(3202)010000) [
+    0                                                                      % Linkage
+    0 1 1 1 0 0 1                                                          % Method "0111001"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 0 1 1 0 0 1 1 0 1 0 0 0 1 0 1 0 0 0 0 1 0 0 1
+    0 1 1 0 0 0 0 0 0 0 0 0
+] eq_tmpl_bits
+
+% Method "0101": (01)9...(3203)..., weight <= 22767
+((01)90012345678908(3203)000156) [
+    0                                                                      % Linkage
+    0 1 0 1                                                                % Method "0101"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 1 1 0 1 0 1 1 0 0
+] eq_tmpl_bits
+
+% Method "0101": boundary, (3203) weight = 22767
+((01)90012345678908(3203)022767) [
+    0                                                                      % Linkage
+    0 1 0 1                                                                % Method "0101"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0101" overflow: (3203) weight = 22768 -> method "0111001" (3203 is 320x)
+((01)90012345678908(3203)022768) [
+    0                                                                      % Linkage
+    0 1 1 1 0 0 1                                                          % Method "0111001"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 1 0 1 1 0 0 1 1 0 1 0 0 0 0 1 0 0 1
+    0 1 1 0 0 0 0 0 0 0 0 0
+] eq_tmpl_bits
+
+% Method "0111000": (01)9...(3100)..., 2 AIs (no date, sentinel 38400)
+((01)90012345678908(3100)012233) [
+    0                                                                      % Linkage
+    0 1 1 1 0 0 0                                                          % Method "0111000"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 0 0 0 0 0 1 0 1 1 1 1 1 1 0 0 1 0 0 1 1 0 0 1
+    0 1 1 0 0 0 0 0 0 0 0 0
+] eq_tmpl_bits
+
+% Method "0111000": (01)9...(310x)...(11)YYMMDD, 3 AIs
+((01)90012345678908(3103)012233(11)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 0 0 0                                                          % Method "0111000"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0111000": boundary, weight = 99999 (max for 0111x)
+((01)90012345678908(3103)099999) [
+    0                                                                      % Linkage
+    0 1 1 1 0 0 0                                                          % Method "0111000"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 1 0 0 0 0 1 1 0 1 0 0 1 1 1 1 1 1 1 1 0 0 1
+    0 1 1 0 0 0 0 0 0 0 0 0
+] eq_tmpl_bits
+
+% Method "0111001": (01)9...(3200)..., 2 AIs (no date, sentinel 38400)
+((01)90012345678908(3200)012233) [
+    0                                                                      % Linkage
+    0 1 1 1 0 0 1                                                          % Method "0111001"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 0 0 0 0 0 1 0 1 1 1 1 1 1 0 0 1 0 0 1 1 0 0 1
+    0 1 1 0 0 0 0 0 0 0 0 0
+] eq_tmpl_bits
+
+% Method "0111001": (01)9...(320x)...(11)YYMMDD, 3 AIs
+((01)90012345678908(3202)012233(11)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 0 0 1                                                          % Method "0111001"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 0 1 1 0 0 1 1 1 1 0 1 0 0 0 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0111010": (01)9...(310x)...(13)YYMMDD
+((01)90012345678908(3103)012233(13)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 0 1 0                                                          % Method "0111010"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0111011": (01)9...(320x)...(13)YYMMDD
+((01)90012345678908(3202)012233(13)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 0 1 1                                                          % Method "0111011"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 0 1 1 0 0 1 1 1 1 0 1 0 0 0 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0111100": (01)9...(310x)...(15)YYMMDD
+((01)90012345678908(3103)012233(15)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 1 0 0                                                          % Method "0111100"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0111101": (01)9...(320x)...(15)YYMMDD
+((01)98898765432106(3202)012345(15)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 1 0 1                                                          % Method "0111101"
+    1 1 0 1 1 1 1 0 0 1 1 1 0 1 1 0 1 1 0 0 1 0 0 0 0 1 1 1 1 1 0 0        % cdf
+    1 1 0 1 0 0 1 0 0 0 1 1 0 0 1 1 1 1 0 1 0 1 1 1 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0111110": (01)9...(310x)...(17)YYMMDD
+((01)90012345678908(3103)012233(17)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 1 1 0                                                          % Method "0111110"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "0111111": (01)9...(320x)...(17)YYMMDD
+((01)90012345678908(3202)012233(17)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 1 1 1                                                          % Method "0111111"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 0 1 1 0 0 1 1 1 1 0 1 0 0 0 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Method "01100": (01)9...(392x)...
+((01)90012345678908(3922)795) [
+    0                                                                      % Linkage
+    0 1 1 0 0                                                              % Method "01100"
+    1 0 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1        % cdf
+    1 1 0 1 1 1 1 0 1 0
+    1 0 1 0 1 1 1 1 0 1 0 0 1 0 0 1 0 0 0 0 0 0 1 0                        % gpf + pad
+] eq_tmpl_bits
+
+% Method "01101": (01)9...(393x)...
+((01)90012345678908(3932)040123) [
+    0                                                                      % Linkage
+    0 1 1 0 1                                                              % Method "01101"
+    1 0 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1        % cdf
+    1 1 0 1 1 1 1 0 1 0 1 0 0 0 0 0 1 0 1 0
+    0 0 0 0 1 0 1 0 1 0 1 0 0 0                                            % gpf + pad
+] eq_tmpl_bits
+
+%
+% Date boundary tests via debugbits
+%
+
+% Date day=00 valid (unspecified day) -> method "0111100"
+((01)90012345678908(3103)012233(15)991200) [
+    0                                                                      % Linkage
+    0 1 1 1 1 0 0                                                          % Method "0111100"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 0 0 0 0 0
+] eq_tmpl_bits
+
+% Date month=01, day=01 (minimum valid date) -> method "0111100"
+((01)90012345678908(3103)012233(15)990101) [
+    0                                                                      % Linkage
+    0 1 1 1 1 0 0                                                          % Method "0111100"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 1
+    0 1 0 0 1 0 0 0 0 0 0 1
+] eq_tmpl_bits
+
+% Date month=12, day=31 (maximum valid date) -> method "0111100"
+((01)90012345678908(3103)012233(15)991231) [
+    0                                                                      % Linkage
+    0 1 1 1 1 0 0                                                          % Method "0111100"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1        % cdf
+    0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 1
+    0 1 0 1 1 1 1 1 1 1 1 1
+] eq_tmpl_bits
+
+% Date month=00 -> falls to method "1" (month invalid)
+((01)90012345678908(3103)012233(15)990031) [
+    0                                                                      % Linkage
+    1                                                                      % Method "1"
+    1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1        % cdf
+    0 1 1 1 1 1 0 1 1 1 1 0
+    1 0 0 1 0 1 0 1 0 0 0 0 1 0 1 1 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 1        % gpf + pad
+    0 1 1 0 0 0 0 1 1 0 0 0 1 1 1 0 1 0 0 0 0 0 1 0 0 0 0 1 0 1 0 1
+    0 0 0 0 0 0 0 1 0 0
+] eq_tmpl_bits
+
+% Date month=13 -> falls to method "1" (month invalid)
+((01)90012345678908(3103)012233(15)991331) [
+    0                                                                      % Linkage
+    1                                                                      % Method "1"
+    1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1        % cdf
+    0 1 1 1 1 1 0 1 1 1 1 0
+    1 0 0 1 0 1 0 1 0 0 0 0 1 0 1 1 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 1        % gpf + pad
+    0 1 1 0 0 0 0 1 1 0 0 0 1 1 1 0 1 0 0 0 0 1 0 1 1 0 0 1 0 1 0 1
+    0 0 0 0 0 0 0 1 0 0
+] eq_tmpl_bits
+
+% Date day=32 -> falls to method "1" (day invalid)
+((01)90012345678908(3103)012233(15)991232) [
+    0                                                                      % Linkage
+    1                                                                      % Method "1"
+    1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1        % cdf
+    0 1 1 1 1 1 0 1 1 1 1 0
+    1 0 0 1 0 1 0 1 0 0 0 0 1 0 1 1 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 1        % gpf + pad
+    0 1 1 0 0 0 0 1 1 0 0 0 1 1 1 0 1 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1
+    1 0 0 0 0 0 0 1 0 0
+] eq_tmpl_bits
+
+
+%
+% Error tests
+%
+
+{ ((01)00012345678905) (format=invalid dontdraw) databarexpanded
+} /bwipp.databarexpandedBadFormat isError
+
+{ ((01)00012345678905) (format=expandedstacked segments=3 dontdraw) databarexpanded
+} /bwipp.gs1databarexpandedBadSegments isError
+
+{ ((01)00012345678905) (format=expandedstacked segments=24 dontdraw) databarexpanded
+} /bwipp.gs1databarexpandedBadSegments isError
+
+{ ((01)00012345678905(10)ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ) (dontdraw dontlint) databarexpanded
+} /bwipp.gs1databarexpandedTooLong isError
+
+% Non-numeric GTIN with dontlint falls through to method "00"
+((01)ABCDEFGHIJKLMN) (dontdraw dontlint) databarexpanded pop
+
+% GTIN starting with 9 but non-numeric — compressed methods skipped, falls through to method "00"
+((01)9BCDEFGHIJKLMN) (dontdraw dontlint) databarexpanded pop
+((01)9BCDEFGHIJKLMN(3103)001234) (dontdraw dontlint) databarexpanded pop
+
+% Non-numeric weight/date/price/currency with dontlint falls through to method "1"
+((01)95212345432130(3103)ABCDEF) (dontdraw dontlint) databarexpanded pop
+((01)95212345432130(3202)ABCD) (dontdraw dontlint) databarexpanded pop
+((01)95212345432130(3100)ABCDEF(11)991231) (dontdraw dontlint) databarexpanded pop
+((01)95212345432130(3100)001234(11)ABCDEF) (dontdraw dontlint) databarexpanded pop
+((01)95212345432130(3920)ABCDEF) (dontdraw dontlint) databarexpanded pop
+((01)95212345432130(3930)ABCDEF) (dontdraw dontlint) databarexpanded pop
+
+% Short GTIN with dontlint falls through to method "00"
+((01)9) (dontdraw dontlint) databarexpanded pop
+((01)90012) (dontdraw dontlint) databarexpanded pop
+
+% Short/empty weight and date values with dontlint fall through
+((01)90012345678908(3103)) (dontdraw dontlint) databarexpanded pop
+((01)90012345678908(3202)) (dontdraw dontlint) databarexpanded pop
+((01)90012345678908(3103)001234(15)) (dontdraw dontlint) databarexpanded pop
+((01)90012345678908(3103)001234(15)1) (dontdraw dontlint) databarexpanded pop
+{ () (segments=0 dontdraw) databarexpanded } /bwipp.gs1databarexpandedBadSegments isError
+{ () (segments=-1 dontdraw) databarexpanded } /bwipp.GS1aiMissingOpenParen isError
+{ () (segments=99 dontdraw) databarexpanded } /bwipp.gs1databarexpandedBadSegments isError
+
+% Minimum barxmult for expanded stacked
+{ (\(01\)09521234543213) (barxmult=33 format=expandedstacked dontdraw) databarexpanded } /bwipp.databarStackedOmniBarXmult isError
+
+%
+% GPF encoding: numeric with AI (21)
+%
+((01)09521234543213(21)12345) [
+    0                                                                                            % linkage=0
+    1                                                                                            % method "1"
+    0 0 0 0 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 1 1 1 0 1 1 0 1 1 1 0 0 0 1 1 0 0 1 0 1 0 0 0 0 0 1  % GTIN-13 (44 bits)
+    0 0 1 1 1 1 1 0 0 1 0 1 0 1 0 1 0 1 1 0 1 1 0 0 1 0 0 1 0 0 0 0 0 0 1 0                      % GPF: (21)12345 numeric
+] eq_tmpl_bits
+
+((01)09521234543213(21)12345) [1 2 1 3 2 1 3 4 1 1 8 4 1 1 3 2 1 4 1 1 2 3 2 1 1 4 1 5 2 1 1 1 6 4 3 4 1 1 1 1 2 3 4 2 4 3 1 1 3 2 1 3 6 4 1 1 1 4 1 2 4 1 1 3 1 1 1 1 2 2 4 5 1 1 8 2 3 3 1 2 3 1 2 3 2 1 1] eq_tmpl
+
+%
+% GPF encoding: alphanumeric with FNC1 then numeric
+%
+((01)09521234543213(10)AB(21)12345) [
+    0                                                                                            % linkage=0
+    1                                                                                            % method "1"
+    0 0 0 0 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 1 1 1 0 1 1 0 1 1 1 0 0 0 1 1 0 0 1 0 1 0 0 0 0 0 1  % GTIN-13 (44 bits)
+    0 0 1 0 0 1 1 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 1 1 1 1                                      % GPF: (10) A B FNC1 alphanumeric
+    0 0 1 1 1 1 1 0 0 1 0 1 0 1 0 1 0 1 1 0 1 1 0 0 1 0 0 1 0 0 0 0                              % GPF: (21)12345 numeric
+] eq_tmpl_bits
+
+((01)09521234543213(10)AB(21)12345) [1 4 1 2 1 1 1 3 4 1 8 4 1 1 3 2 1 4 1 1 2 3 2 1 1 4 1 5 2 1 1 1 5 6 2 4 1 1 1 1 2 3 4 2 4 3 1 1 3 2 1 3 6 4 1 1 3 3 2 2 1 4 1 1 1 1 3 2 6 1 2 1 1 1 8 2 3 2 1 4 1 4 1 1 3 4 3 3 2 2 1 1 1 3 4 6 1 1 3 1 3 3 2 1 3 1 1 1] eq_tmpl
+
+%
+% GPF encoding: ISO 646 mode (lowercase)
+%
+((01)09521234543213(10)abc) [
+    0                                                                                                % linkage=0
+    1                                                                                                % method "1"
+    1 0 0 0 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 1 1 1 0 1 1 0 1 1 1 0 0 0 1 1 0 0 1 0 1 0 0 0 0 0 1      % GTIN-13 (44 bits)
+    0 0 1 0 0 1 1 0 0 0 0 0 0 1 0 0 1 0 1 1 0 1 0 1 0 1 1 0 1 1 1 0 1 1 1 0 0 0 0 1 0 0 0 0 1 0 0 0  % GPF: (10) a b c ISO 646
+] eq_tmpl_bits
+
+((01)09521234543213(10)abc) [1 3 3 4 1 2 2 1 1 1 8 4 1 1 3 4 3 1 2 2 1 1 2 1 1 4 1 5 2 1 1 1 5 6 2 4 1 1 1 1 2 3 4 2 4 3 1 1 3 2 1 3 6 4 1 1 4 3 1 2 1 4 1 1 3 3 5 1 1 2 1 1 1 1 8 2 3 1 3 5 1 1 3 2 1 3 1 4 1 4 1 1 2 3 4 6 1 1 1 1] eq_tmpl_dontlint
+
+%
+% Linkage flag: bit 0 = 1 for composite linkage
+%
+{
+    ((01)09521234543213) (debugbits linkage dontlint) databarexpanded
+} [
+    1                                                                                            % linkage=1
+    1                                                                                            % method "1"
+    1 0 0 0 0 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 1 1 1 0 1 1 0 1 1 1 0 0 0 1 1 0 0 1 0 1 0 0 0 0 0 1  % GTIN-13 (44 bits)
+] debugIsEqual
+
+{
+    ((01)09521234543213) (dontdraw linkage) databarexpanded /sbs get
+} [1 3 1 2 1 1 2 6 1 1 8 4 1 1 1 2 3 1 6 1 1 2 2 1 1 4 1 5 2 1 1 1 4 6 3 4 1 1 1 1 2 3 4 2 4 3 1 1 3 2 1 3 6 4 1 1 1 1] isEqual
+
+%
+% Method "0100": (01)+(3103), weight = 0
+%
+((01)90012345678908(3103)000000) [
+    0                                                                                % linkage=0
+    0 1 0 0                                                                          % method "0100"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1 0 1 1 1 1 0 1 0  % GTIN-12 (40 bits, conv12to40)
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0                                                    % weight=0 (15 bits)
+] eq_tmpl_bits
+
+%
+% Method "0101": (01)+(3203), weight = 10000+10000=20000
+%
+((01)90012345678908(3203)010000) [
+    0                                                                                % linkage=0
+    0 1 0 1                                                                          % method "0101"
+    0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1 0 1 1 1 1 0 1 0  % GTIN-12 (40 bits, conv12to40)
+    1 0 0 1 1 1 0 0 0 1 0 0 0 0 0                                                    % weight=20000 (15 bits)
+] eq_tmpl_bits
+
+%
+% Method "01100": (01)+(3922)+additional AIs
+%
+((01)90012345678908(3922)795(20)01) [
+    0                                                                                % linkage=0
+    0 1 1 0 0                                                                        % method "01100"
+    0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1 0 1 1 1 1 0  % GTIN-12 (40 bits, conv12to40)
+    1 0                                                                              % AI code (3922: last digit=2)
+    1 0 1 0 1 1 1 1 0 1 0 0 1 0 0 1 0 0 1 1 1 1 0 0 0 0 1 0 0 1 0 0 0 0 0 0          % GPF: 795 FNC1 (20)01
+] eq_tmpl_bits
 end
 } bind def

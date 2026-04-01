@@ -3,26 +3,28 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ISO/IEC 16023:2000
 
-% vim: set ts=4 sw=4 et :
 
 %%/maxicode dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o maxicode /p 990 array def 0 1 989 { p exch 0 put } for /pixs get { p exch 1 put } forall p } e isEqual
+    3 1 roll { _arg0_ _arg1_ maxicode /p 990 array def 0 1 989 { p exch 0 put } for /pixs get { p exch 1 put } forall p }  % Convert to 0/1 array
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o maxicode /pixs get } e isError
+    3 1 roll { _arg0_ _arg1_ maxicode /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 
@@ -158,6 +160,7 @@
 ([^041>^03001^0299A) (mode=2 parse dontdraw) /bwipp.maxicodeBadMode2PostCode er_tmpl
 
 % Exercise the error checks
+1001 string (dontdraw) /bwipp.maxicodeinputTooLong er_tmpl
 () (mode=2 dontdraw) /bwipp.maxicodeEmptyData er_tmpl
 (A) (mode=1 dontdraw) /bwipp.maxicodeBadMode er_tmpl
 (A) (mode=4 sam=11 dontdraw) /bwipp.maxicodeBadSAM er_tmpl
@@ -178,6 +181,12 @@
 (123456789^029840^029^029) (mode=2 parse dontdraw) /bwipp.maxicodeBadServiceClass er_tmpl
 (123456789^029840^0291^029) (mode=2 parse dontdraw) /bwipp.maxicodeBadServiceClass er_tmpl
 (123456789^029840^02912A^029) (mode=2 parse dontdraw) /bwipp.maxicodeBadServiceClass er_tmpl
+
+% Mode 2/3 secondary message too long (>84 chars)
+{ (123456789^029840^029001^029) 90 string 0 1 89 { 1 index exch 65 put } for concatstrings (mode=2 parse dontdraw) maxicode } /bwipp.maxicodeMode23TooLong isError
+
+% Mode 5/6 message too long
+{ 100 string 0 1 99 { 1 index exch 65 put } for (mode=5 dontdraw) maxicode } /bwipp.maxicodeMode56TooLong isError
 
 % Figures
 
@@ -254,5 +263,27 @@
     0 0 0 1 1 1 1 0 1 0 0 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 0 1 1 0
     0 0 0 1 0 0 1 0 1 0 0 0 1 1 0 0 0 0 0 0 0 1 1 1 1 1 0 0 1 1
 ] eq_tmpl
+
+% Mode 2 structured data: header only
+<5b293e1e30311d30301d3132331d3435361d41> (mode=2 dontdraw) /bwipp.maxicodeBadMode2PostCode er_tmpl
+
+% Mode 2 alpha postcode
+<5b293e1e30311d30301d414243441d3435361d41> (mode=2 dontdraw) /bwipp.maxicodeBadMode2PostCode er_tmpl
+
+% Mode 2 bad country
+<5b293e1e30311d30301d3132331d4142431d41> (mode=2 dontdraw) /bwipp.maxicodeBadMode2PostCode er_tmpl
+
+% ECI range
+{ (^ECI000000TEST) (parsefnc mode=4 dontdraw) maxicode pop true } true isEqual
+{ (^ECI999999TEST) (parsefnc mode=4 dontdraw) maxicode pop true } true isEqual
+
+% Mode option edges
+(A) (mode=7 dontdraw) /bwipp.maxicodeBadMode er_tmpl
+(A) (mode=0 dontdraw) /bwipp.maxicodeBadMode er_tmpl
+{ (A) (mode=-1 dontdraw) maxicode pop true } true isEqual
+
+% SAM option edges
+(A) (mode=4 sam=00 dontdraw) /bwipp.maxicodeBadSAM er_tmpl
+(A) (mode=4 sam=99 dontdraw) /bwipp.maxicodeBadSAM er_tmpl
 end
 } bind def

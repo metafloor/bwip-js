@@ -1,0 +1,26 @@
+/runtest_leitcode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/leitcode dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (21348075016401) (dontdraw) leitcode /sbs get
+} [ 1 1 1 1 1 2 2 1 1 1 1 1 2 2 2 1 2 1 1 2 1 1 1 2 2 1 1 1 1 2 2 2 1 1 1 2 1 1 1 2 2 1 2 1 1 2 1 1 2 1 2 1 1 2 1 1 2 1 2 2 1 1 1 2 1 2 1 1 2 1 2 1 1 2 2 1 1 1 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (123456789012) (dontdraw) leitcode } /bwipp.leitcodeBadLength isError
+{ (123456789012345) (dontdraw) leitcode } /bwipp.leitcodeBadLength isError
+{ (2134807501640A) (dontdraw) leitcode } /bwipp.leitcodeBadCharacter isError
+{ (21348075016400) (dontdraw) leitcode } /bwipp.leitcodeBadCheckDigit isError
+end
+} bind def

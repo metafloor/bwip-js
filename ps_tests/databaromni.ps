@@ -3,24 +3,24 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ISO/IEC 24724:2011
 
-% vim: set ts=4 sw=4 et :
 
 %%/databaromni dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) databaromni /sbs get } e isEqual
+    exch { _arg0_ (dontdraw) databaromni /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) databaromni /sbs get } e isError
+    exch { _arg0_ (dontdraw) databaromni /sbs get } dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 
@@ -39,5 +39,11 @@
 ((01)200123456789)      /bwipp.databaromniBadLength      er_tmpl
 ((01)2001234567890A)    /bwipp.databaromniBadCharacter   er_tmpl
 ((02)2001234567890)     /bwipp.databaromniBadAI          er_tmpl
+
+{ ((01)20012345678909) (format=invalid dontdraw) databaromni
+} /bwipp.databaromniBadFormat isError
+
+% Minimum barxmult for stacked omnidirectional
+{ (\(01\)09521234543213) (barxmult=32 dontdraw) databaromni } /bwipp.databarStackedOmniBarXmult isError
 end
 } bind def

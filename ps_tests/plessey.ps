@@ -3,9 +3,10 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
-
-% vim: set ts=4 sw=4 et :
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/plessey dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -29,6 +30,11 @@
 
 { (01) (dontdraw validatecheck) plessey  % Check digits should be "00"
 } /bwipp.plesseyBadCheckDigits isError
+
+{ (A) (dontdraw validatecheck) plessey  % Too short for validatecheck (need 2+)
+} /bwipp.plesseyBadLength isError
+
+{ 501 string (dontdraw) plessey } /bwipp.plesseyInputTooLong isError
 
 
 % Examples

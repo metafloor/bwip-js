@@ -3,37 +3,68 @@
 import fs from 'node:fs';
 import { parse as aparse } from 'acorn';
 import { generate as astring } from 'astring';
+import { devar } from './optmz-devar.mjs';
 
 const verbose = true;
 
-const lines = fs.readFileSync('barcode.js', 'utf-8').split(/\r\n|[\r\n]/g);
+// pjs is the file emitted by psc
+const lines = fs.readFileSync('barcode.pjs', 'utf-8').split(/\r\n|[\r\n]/g);
+
+// console.log() is slow as molasses for logging...
+let output = '';
+let outfd = fs.openSync('optimize.log', 'w');
+function traceln(s) {
+    output += s + '\n';
+    if (output.length > 4000) {
+        fs.writeSync(outfd, output, 'utf-8');
+        output = '';
+    }
+
+}
+devar(lines, verbose && before, verbose && after);
 while (optimize()) {
     deadvars();
 }
 de$f();
+
 fs.writeFileSync('barcode.js', lines.join('\n'), 'utf-8');
+fs.writeSync(outfd, output, 'utf-8');
+fs.closeSync(outfd);
+
+process.exit(0);
 
 function before(i, n) {
-    console.log('<<<');
+    // at optimize (file:///mnt/c/bwip-js/develop/optimize.mjs:51:17)
+    let m = /optimize.mjs:(\d+):/.exec(''+(new Error('before')).stack);
+    traceln('<<<' + (m ? '#' + m[1] : ''));
     for (let j = 0; j < n; j++) {
-        console.log(lines[i+j]);
+        traceln(lines[i+j]);
     }
 }
 function after(i, n) {
-    console.log('>>>');
+    traceln('>>>');
     for (let j = 0; j < n; j++) {
-        console.log(lines[i+j]);
+        traceln(lines[i+j]);
     }
-    console.log('');
+    traceln('');
+}
+
+function parseexpr(expr) {
+    try {
+        return aparse(expr, { ecmaVersion:'latest' });
+    } catch (e) {
+        console.log(expr);
+        console.log(e.stack || e);
+        process.exit(1);
+    }
 }
 
 function optimize() {
     let changed = false;
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i];
+    restart: for (let i = 0; i < lines.length; i++) {
         // $j--;
         // $k[$j++] = ...
-        if (/^ *\$j--;/.test(line) &&
+        if (/^ *\$j--;/.test(lines[i]) &&
                 /^ *\$k\[\$j\+\+\] *= *(?!'bwipp\.)/.test(lines[i+1])) {
             if (verbose) {
                 before(i, 2);
@@ -49,8 +80,8 @@ function optimize() {
         // $j -= 2;
         // $k[$j++] = ...
         // But don't bother to optimize away the raiseerror handling.
-        } else if (/^ *\$j -= 2;/.test(line) &&
-                /^ *\$k\[\$j\+\+\] *= *(?!'bwipp\.)/.test(lines[i+1])) {
+        } else if (/^ *\$j -= 2;/.test(lines[i]) &&
+                /^ *\$k\[\$j\+\+\] *= *(?!['"]bwipp\.)/.test(lines[i+1])) {
             if (verbose) {
                 before(i, 2);
             }
@@ -64,7 +95,7 @@ function optimize() {
             i++;
         // $k[$j++]=_R1;//#2633
         // $j--;//#2633
-        } else if (/^ *\$k\[\$j\+\+\] *= *\w+;/.test(line) &&
+        } else if (/^ *\$k\[\$j\+\+\] *= *\w+;/.test(lines[i]) &&
                 /^ *\$j--;/.test(lines[i+1])) {
             if (verbose) {
                 before(i, 2);
@@ -76,13 +107,13 @@ function optimize() {
             changed = true;
             i -= 2;
         // Convert obviously boolean operators to native
-        } else if (/^ *if *\([^{}]*\$(?:an|or|nt)\([^{}]+\) *\{/.test(line)) {
+        } else if (/^ *if *\([^{}]*\$(?:an|or|nt)\([^{}]+\) *\{/.test(lines[i])) {
             try {
-                let m = /^( *if *\()([^{}]+)(\) *\{.*)/.exec(line);
-                let expr = aparse(m[2], { ecmaVersion:'latest' }).body[0].expression;
+                let m = /^( *if *\()([^{}]+)(\) *\{.*)/.exec(lines[i]);
+                let expr = parseexpr(m[2]).body[0].expression;
                 mkboolean(expr, true);
                 let newline = m[1] + astring(expr) + m[3];
-                if (line != newline) {
+                if (lines[i] != newline) {
                     changed = true;
                     if (verbose) {
                         before(i, 1);
@@ -110,8 +141,8 @@ function optimize() {
         //  - 2 or 3 pops after the roll
         //  - Only put,get,puti,geti and var assignments allowed to interlace.
         //  - No references to $j otherwise.
-        } else if (/^ *\$r\(3, *-?1\);/.test(line)) {
-            let m = /(-?1)\);(.*)/.exec(line);
+        } else if (/^ *\$r\(3, *-?1\);/.test(lines[i])) {
+            let m = /(-?1)\);(.*)/.exec(lines[i]);
             let c = 0;
             let end = 0;
             for (let j = i+1; j < i+9 && c < 3; j++) {
@@ -180,11 +211,11 @@ function optimize() {
         //  $k[$j++]=Infinity;//#31327
         //  var _X=$k[--$j];//#31327
         //  var _Y=$k[--$j];//#31327
-        } else if (/^ *\$k\[\$j\+\+\] *=/.test(line) &&
+        } else if (/^ *\$k\[\$j\+\+\] *=/.test(lines[i]) &&
                    /^ *\$k\[\$j\+\+\] *=/.test(lines[i+1]) &&
                    /^ *var _\w+ *= *\$k\[--\$j\];/.test(lines[i+2]) &&
                    /^ *var _\w+ *= *\$k\[--\$j\];/.test(lines[i+3])) {
-            let m0 = /^ *\$k\[\$j\+\+\] *=(.*)/.exec(line);
+            let m0 = /^ *\$k\[\$j\+\+\] *=(.*)/.exec(lines[i]);
             let m1 = /^ *\$k\[\$j\+\+\] *=(.*)/.exec(lines[i+1]);
             let m2 = /^ *var (_\w+) *= *\$k\[--\$j\];/.exec(lines[i+2]);
             let m3 = /^ *var (_\w+) *= *\$k\[--\$j\];/.exec(lines[i+3]);
@@ -198,7 +229,7 @@ function optimize() {
             }
             changed = true;
 
-        // Pop/push pattern caused by the compiler's context flush.
+        // Pattern caused by the compiler's context flush.
         //
         //  var _GE=$k[--$j];//#7090
         //  $put(_GE,0,$get($_.start_code,$_.state));//#7090
@@ -222,8 +253,7 @@ function optimize() {
         //
         //  - Only put,get,puti,geti and var assignments allowed to interlace.
         //  - No references to $j other than the pop/push ops.
-
-        } else if (/^ *var _\w+ *= *\$k\[--\$j\];/.test(line)) {
+        } else if (/^ *var _\w+ *= *\$k\[--\$j\];/.test(lines[i])) {
             // Find the corresponding push
             let k = i+1;
             while (/^ *(?:\$geti?|\$puti?|var )/.test(lines[k]) && !/\$j/.test(lines[k])) {
@@ -268,8 +298,111 @@ function optimize() {
                 if (verbose) {
                     after(j, k-j+1-pairs.length);
                 }
+                changed = true;
             }
+        // ctxflush() caused register spill
+        //    var _6 = Infinity; //#3963
+        //    var _7 = $_; //#3964
+        //    $k[$j++] = _6; //#3964
+        //    $k[$j++] = _7; //#3964
+        } else if (/^\s*var _\w+ *=/.test(lines[i]) && !/\$j\b/.test(lines[i])) {
+            let vars = [];
+            let exprs = [];
+            let j = i;
+            out: while (j < lines.length) {
+                let m = /^\s*var (_\w+) *= *(.*)/.exec(lines[j]);
+                if (!m || /\$j\b/.test(lines[j])) {
+                    break;
+                }
+                // Ensure the temp variables are not used in subsequent expressions
+                for (let v = 0; v < vars.length; v++) {
+                    let re = /\b_\w+\b/g;
+                    let m = re.exec(lines[j]);
+                    while (m) {
+                        if (vars[v] === m[0]) {
+                            continue restart;
+                        }
+                        m = re.exec(lines[j]);
+                    }
+                }
+                // No expressions that modify $j e.g. $a( .. ) or $d( .. )
+                if (/\$[adr]\(|--\$j|\$j\+\+/.test(m[2])) {
+                    continue restart;
+                }
+                vars.push(m[1]);
+                exprs.push(m[2]);
+                j++;
+            }
+            let count = 0;
+            while (count < vars.length && j < lines.length) {
+                let m = /^\s*\$k\[\$j\+\+\] *= *(_\w+);/.exec(lines[j]);
+                if (!m || vars[count] != m[1]) {
+                    break;
+                }
+                count++;
+                j++;
+            }
+            if (count !== vars.length) {
+                continue restart;
+            }
+            // Ensure the variables are not used below
+            while (j < lines.length) {
+                if (/^\s*\};?\s*(\/\/.*)?$/.test(lines[j])) {
+                    break;
+                }
+                let re = /\b_\w+\b/g;
+                let m = re.exec(lines[j]);
+                while (m) {
+                    for (let v = 0; v < vars.length; v++) {
+                        if (vars[v] === m[0]) {
+                            continue restart;
+                        }
+                    }
+                    m = re.exec(lines[j]);
+                }
+                j++;
+            }
+            if (verbose) {
+                before(i, count*2);
+            }
+            let code = [];
+            for (let v = 0; v < vars.length; v++) {
+                code[v] = '$k[$j++]=' + exprs[v];
+            }
+            lines.splice(i, count*2, ...code);
+            if (verbose) {
+                after(i, count);
+            }
+            changed = true;
+        // Pop/push pattern at the global scope level
+        //   var _2s=$a();
+        //   code128.prioritized_latch_length_c1=_2s;
+        } else if (/^ *var _\w+ *=/.test(lines[i]) && /^ *(\w+\.\w+) *= *(_\w+);/.test(lines[i+1])) {
+            let m0 = /^ *var (_\w+) *=(.*)/.exec(lines[i]);
+            let m1 = /^ *(\w+\.\w+) *= *(_\w+);/.exec(lines[i+1]);
+            if (m0 && m1 && m0[1] == m1[2]) {
+                if (verbose) {
+                    before(i, 2);
+                }
+                lines.splice(i, 2, m1[1] + '=' + m0[2]);
+                if (verbose) {
+                    after(i, 1);
+                }
+                changed = true;
+            }
+        // The readonly def code emits this pattern
+        //      auspost.rstable = auspost.rstable;
+        } else if (!changed && /^\s*(\w+\.\w+) *= *\1;/.test(lines[i])) {
+            if (verbose) {
+                before(i, 1);
+            }
+            lines.splice(i, 1);
+            if (verbose) {
+                after(i, 0);
+            }
+            changed = true;
         }
+        
     }
     return changed;
 }
@@ -408,13 +541,13 @@ function de$f() {
             if (/^ *if *\(/.test(line)) {
                 let re = /^( *if *\()(.+)(\) *\{.*$)/;
                 let m = re.exec(line);
-                let expr = aparse(m[2], { ecmaVersion:'latest' }).body[0].expression;
+                let expr = parseexpr(m[2]).body[0].expression;
                 _de$f(expr, false);
                 lines[i] = m[1] + astring(expr) + m[3];
             } else if (/^ *for *\(/.test(line)) {
                 let re = /^( *for *\()(.+;)(.+;.+\).*)$/;
                 let m = re.exec(line);
-                let decl = aparse(m[2], { ecmaVersion:'latest' }).body[0];
+                let decl = parseexpr(m[2]).body[0];
                 for (let d = 0, l = decl.declarations.length; d < l; d++) {
                     _de$f(decl.declarations[d], false);
                 }
@@ -422,7 +555,7 @@ function de$f() {
             } else if (/^ *var */.test(line)) {
                 let re = /^(.*;)( *\/\/.*)?$/;
                 let m = re.exec(line);
-                let decl = aparse(m[1], { ecmaVersion:'latest' }).body[0];
+                let decl = parseexpr(m[1]).body[0];
                 for (let d = 0, l = decl.declarations.length; d < l; d++) {
                     _de$f(decl.declarations[d], false);
                 }
@@ -430,7 +563,7 @@ function de$f() {
             } else {
                 let re = /^(.*;)( *\/\/.*)?$/;
                 let m = re.exec(line);
-                let expr = aparse(m[1], { ecmaVersion:'latest' }).body[0].expression;
+                let expr = parseexpr(m[1]).body[0].expression;
                 _de$f(expr, false);
                 lines[i] = astring(expr) + ';' + (m[2]||'');
             }

@@ -3,15 +3,16 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/gs1northamericancoupon dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl_opts {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o gs1northamericancoupon /pixs get } e isEqual
+    3 1 roll 2 array astore { _arg0_ _arg1_ gs1northamericancoupon /pixs get } dup 3 -1 roll 0 exch putinterval
+    exch isEqual
 } def
 
 
@@ -95,7 +96,7 @@ eq_tmpl_opts
 eq_tmpl_opts
 
 % Example 6
-((8110)106141416543213500110000310123196000) (dontdraw segments=8)
+((8110)106141416543213500110000310123196000) (dontdraw segments=8 dontlint)
 [
 34 {0 1 0 0 1 1 0 0 1 0 1 1 1 0 0 0 1 1 1 0 1 1 1 1 1 1 1 1 0 0 0 0 1 0 1 0 0 0 0 0 1 1 0 1 0 0 0 0 0 1 0 1 0 1 1 1 1 0 0 1 1 0 1 1 1 0 0 0 1 0 1 1 1 1 1 0 0 0 0 0 0 1 1 0 1 1 0 1 0 0 0 1 0 0 0 0 0 0 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 0 1 0 1 0 0 0 1 1 1 1 1 1 0 0 0 0 1 0 1 0 0 0 0 0 1 0 1 0 1 1 1 1 0 0 0 1 1 1 0 1 0 0 0 0 0 1 1 0 0 1 1 0 1 0 1 1 1 1 1 1 1 1 0 0 1 1 1 0 0 0 0 0 0 1 1 0 1 1 0 1 0 0 0 1 0 1} repeat
     0 0 0 0 0 0 1 1 0 1 0 0 0 1 1 1 0 0 0 1 0 0 0 0 0 0 0 0 1 0 1 0 0 1 0 1 1 1 1 1 0 0 1 0 1 1 1 1 1 0 1 0 1 0 0 0 0 1 1 0 0 1 0 0 0 1 1 1 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 1 0 0 1 0 1 1 1 0 1 1 1 1 1 1 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 1 0 1 0 1 0 1 0 0 0 0 0 0 1 0 1 0 0 1 0 1 1 1 1 1 0 1 0 1 0 0 0 0 1 1 1 0 0 0 1 0 1 1 1 1 1 0 0 1 1 0 0 1 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 1 0 1 1 0 0 0 0
@@ -104,5 +105,14 @@ eq_tmpl_opts
 34 {0 0 1 0 0 0 1 1 1 0 1 0 0 1 1 1 1 0 0 1 0 0 1 1 1 1 1 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 1 1 0 0 0 0 1 0 0 0 1 1 0 1 0 0 1 1 1 0 0 0 1 1 0 0 0 1 0 1 1 1 1 1 1 1 1 1 0 0 1 1 0 1 1 1 1 1 0 0 1 0 1 1 0 1 1 1 1 0 1 1 1 0 0 0 0 1 0 0 0 1 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 1 0 1 1 0 0 0 1 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0} repeat
 ]
 eq_tmpl_opts
+
+
+%
+% Error tests
+%
+
+{ ((01)09501101530003) (dontdraw) gs1northamericancoupon } /bwipp.gs1northamericancouponBadAIStructure isError
+{ ((8110)7123456789012) (dontdraw dontlint) gs1northamericancoupon } /bwipp.gs1northamericancouponBadVLI isError
+{ ((8110)012345) (dontdraw dontlint) gs1northamericancoupon } /bwipp.gs1northamericancouponTooShort isError
 end
 } bind def

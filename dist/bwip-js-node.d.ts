@@ -95,6 +95,12 @@ declare namespace BwipJs {
         bcid: string;
         text: string;
     }
+    export interface SymbolDesc {
+        bcid: string;
+        desc: string;
+        text: string;
+        opts: string;
+    }
     export interface DrawingContext<T> {
         setopts?(options: RenderOptions): void;
         scale(sx: number, sy: number): [number, number] | null;
@@ -142,6 +148,7 @@ declare namespace BwipJs {
 
     export const BWIPP_VERSION: string;
     export const BWIPJS_VERSION: string;
+    export const symbolList: readonly SymbolDesc[];
 
     // wrapper around FontLib.loadFont()
     export function loadFont(name: string, data: string | Uint8Array): void;

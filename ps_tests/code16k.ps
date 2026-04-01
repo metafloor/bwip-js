@@ -3,18 +3,26 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % EN 12323:2005
 
-% vim: set ts=4 sw=4 et :
 
 %%/code16k dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw parse) code16k /pixs get } e isEqual
+    exch { _arg0_ (dontdraw parse) code16k /pixs get } dup 3 -1 roll 0 exch put
+    exch isEqual
+} def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ code16k }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 
@@ -25,6 +33,23 @@
 {  % Fits in 3
     (123456789012345678901234) (debugcws rows=3) code16k
 } [9 12 34 56 78 90 12 34 56 78 90 12 34 71 42] debugIsEqual
+
+
+%
+% Extended ASCII (FNC4) tests
+%
+
+{  % Single extended ASCII character (shift)
+    (^160) (debugcws parse) code16k
+} [1 100 0 103 103 103 103 103 55 41] debugIsEqual
+
+{  % Multiple extended ASCII characters (latch)
+    (^160^160^160^160) (debugcws parse) code16k
+} [1 100 100 0 0 0 0 103 24 43] debugIsEqual
+
+{  % Mixed extended ASCII and Code C digits
+    (^193^193^193^193^193^19399999999999999^193) (debugcws parse) code16k
+} [22 100 100 33 33 33 33 33 33 100 100 99 99 99 99 99 99 99 99 100 100 33 103 90 74] debugIsEqual
 
 
 % Example
@@ -51,5 +76,42 @@
     0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 1 0 1 0 0 0 1 0 0 1 1 1 0 1 1 1 1 0 1 0 0 1 1 0 0 1 0 0 1 0 0 0 0 1 0 0 1 1 0 1 0 0 0 1 1 0 1 0 0 1 0 0 0 1 1 1 0 0 1 1 0 0 1 0
     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 ] eq_tmpl
+
+
+%
+% Error tests
+%
+
+% Invalid rows (valid: 2-16)
+(TEST) (rows=1 dontdraw) /bwipp.code16kBadRows er_tmpl
+(TEST) (rows=17 dontdraw) /bwipp.code16kBadRows er_tmpl
+
+% Invalid row height (valid: 8-50)
+(TEST) (rowheight=7 dontdraw) /bwipp.code16kBadRowHeight er_tmpl
+(TEST) (rowheight=51 dontdraw) /bwipp.code16kBadRowHeight er_tmpl
+
+% Invalid separator height (valid: 1-5)
+(TEST) (sepheight=0 dontdraw) /bwipp.code16kBadSepHeight er_tmpl
+(TEST) (sepheight=6 dontdraw) /bwipp.code16kBadSepHeight er_tmpl
+
+% Invalid SAM (Structured Append Mode) format
+(TEST) (sam=1 dontdraw) /bwipp.code16kBadSAM er_tmpl
+(TEST) (sam=110 dontdraw) /bwipp.code16kBadSAM er_tmpl
+
+% Invalid raw format
+(TEST) (raw dontdraw) /bwipp.code16kBadRawFormat er_tmpl
+(^12A) (raw dontdraw) /bwipp.code16kBadRawFormat er_tmpl
+(^12) (raw dontdraw) /bwipp.code16kBadRawFormat er_tmpl
+(^1) (raw dontdraw) /bwipp.code16kBadRawFormat er_tmpl
+(^) (raw dontdraw) /bwipp.code16kBadRawFormat er_tmpl
+
+% Raw codeword out of range (valid: 0-106)
+(^107) (raw dontdraw) /bwipp.code16kBadRawCodeword er_tmpl
+(^999) (raw dontdraw) /bwipp.code16kBadRawCodeword er_tmpl
+
+501 string (dontdraw) /bwipp.code16kinputTooLong er_tmpl
+
+% Maximum row and separator height
+{ 0 0 moveto (TEST) (rowheight=50 sepheight=5) code16k true } true isEqual
 end
 } bind def

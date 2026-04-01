@@ -45,7 +45,7 @@ BWIPJS.prototype.reset = function() {
     this.g_posy = 0;        // current y position
     this.g_penw = 1;        // current line/pen width
     this.g_path = [];       // current path
-    this.g_font = null;     // current font object
+    this.g_font = null;     // current font
     this.g_rgb  = [0,0,0];  // current color (black)
     this.g_clip = false;    // clip region active
 };

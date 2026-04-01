@@ -3,7 +3,10 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/parseinput dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -195,6 +198,14 @@
 {  % Invalid ECI 99999A
     (A^ECI99999ABC) << /parse false /parsefnc true /eci true (FNC1) -1 >> parseinput
 } /bwipp.invalidECI isError
+
+{  % Truncated ECI (less than 6 digits after ^ECI)
+    (A^ECI12345) << /parse false /parsefnc true /eci true (FNC1) -1 >> parseinput
+} /bwipp.truncatedECI isError
+
+{  % Truncated ECI (just ^ECI)
+    (A^ECI) << /parse false /parsefnc true /eci true (FNC1) -1 >> parseinput
+} /bwipp.truncatedECI isError
 
 {  % No parse
     (A^000BC) << /parse false /parsefnc true >> parseinput

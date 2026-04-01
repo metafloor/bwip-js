@@ -1,0 +1,27 @@
+/runtest_telepen {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/telepen dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (ABCDEF) (dontdraw) telepen /sbs get
+} [ 1 1 1 1 1 1 1 1 1 1 3 3 1 1 3 1 3 1 3 3 3 3 3 1 3 3 1 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 3 1 3 3 1 1 3 3 3 1 1 1 1 1 1 3 1 3 3 1 1 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 1 1 3 3 1 1 1 1 1 1 1 1 1 1 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (123) (numeric dontdraw) telepen } /bwipp.telepenNumericOddLength isError
+{ (X123) (numeric dontdraw) telepen } /bwipp.telepenInvalidNumericCharacter isError
+{ (ABC\200) (dontdraw) telepen } /bwipp.telepenInvalidAlphaCharacter isError
+
+{ 501 string (dontdraw) telepen } /bwipp.telepeninputTooLong isError
+end
+} bind def

@@ -1,0 +1,31 @@
+/runtest_issn {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+%%/issn dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (0311-175X) (dontdraw) issn /sbs get
+} [ 1 1 1 1 3 1 2 2 1 3 1 1 1 2 3 1 4 1 1 1 2 2 2 2 2 2 1 1 1 1 1 1 2 2 2 1 1 3 1 2 1 2 3 1 3 2 1 1 3 2 1 1 2 2 2 1 1 1 1 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (0311-17) (dontdraw) issn } /bwipp.issnBadLength isError
+{ (ABCD-1750) (dontdraw) issn } /bwipp.issnFirstThroughFourthNotNumeric isError
+{ (03111750) (dontdraw) issn } /bwipp.issnNeedsDash isError
+{ (0311-A750) (dontdraw) issn } /bwipp.issnSixthThroughEighthNotNumeric isError
+{ (0311-175?) (dontdraw) issn } /bwipp.issnNinthCharacterBadFormat isError
+{ (0311-175X 1) (dontdraw) issn } /bwipp.issnBadSequenceVariantLength isError
+{ (0311-175X AB) (dontdraw) issn } /bwipp.issnSequenceVariantBadCharacter isError
+{ (0311-175X 12 1234) (dontdraw) issn } /bwipp.issnBadAddOnLength isError
+{ (0311-1750) (dontdraw) issn } /bwipp.issnBadCheckDigit isError
+end
+} bind def

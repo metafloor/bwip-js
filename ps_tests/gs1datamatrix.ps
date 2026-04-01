@@ -3,14 +3,15 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % GS1 General Specifications 21.0.1
 
-% vim: set ts=4 sw=4 et :
 
 %%/gs1datamatrix dup /uk.co.terryburton.bwipp findresource cvx def
-%%/gs1datamatrixrectangular dup /uk.co.terryburton.bwipp findresource cvx def
 
 
 % GS Separator
@@ -23,13 +24,6 @@
     ((01)00012345678905(17)180401(21)ABCDEFGHIJKL12345678(91)ABCDEFGHI123456789(92)abcdefghi) (debugcws gssep) gs1datamatrix
 } [232 131 130 131 153 175 197 219 135 147 148 134 131 151 230 89 233 109 36 128 95 147 154 32 56 51 115 70 161 183 78 89 233 109 36 128 95 254 142 164 186 208 58 30 222 239 89 233 109 36 128 95 254 129 229 124 20 170 65 215 110 6] debugIsEqual
 
-{
-    ((01)00012345678905(17)180401(21)ABCDEFGHIJKL12345678(91)abcdefghi) (debugcws) gs1datamatrixrectangular  % Figure 5.6.3.2-3 (right), not same, different encodation
-} [232 131 130 131 153 175 197 219 135 147 148 134 131 151 230 89 233 109 36 128 95 147 154 254 142 164 186 208 232 221 239 89 233 109 36 128 95 254 129 17 167 62 212 107 3 153 48 198 93] debugIsEqual
-
-{
-    ((01)00012345678905(17)180401(21)ABCDEFGHIJKL12345678(91)abcdefghi) (debugcws gssep) gs1datamatrixrectangular
-} [232 131 130 131 153 175 197 219 135 147 148 134 131 151 230 89 233 109 36 128 95 147 154 254 142 164 186 208 30 221 239 89 233 109 36 128 95 254 129 17 167 62 212 107 3 153 48 198 93] debugIsEqual
 
 
 % Figures
@@ -59,12 +53,11 @@
     ((01)09512345678901(15)170810(21)abcde) (debugcws) gs1datamatrix  % Figure 5.6.2-1, same
 } [232 131 139 181 153 175 197 219 131 145 147 138 140 151 98 99 100 101 102 129 223 118] debugIsEqual
 
-{
-    ((01)00012345678905(17)040115) (debugcws) gs1datamatrixrectangular  % Figure 5.6.3.1-1 (left), same
-} [232 131 130 131 153 175 197 219 135 147 134 131 145 129 87 237] debugIsEqual
 
 {
     ((01)00012345678905(17)040115) (debugcws) gs1datamatrix  % Figure 5.6.3.1-1 (right), same
 } [232 131 130 131 153 175 197 219 135 147 134 131 145 129 87 237 133 28] debugIsEqual
+
+{ 4001 string (dontdraw) gs1datamatrix } /bwipp.gs1datamatrixinputTooLong isError
 end
 } bind def

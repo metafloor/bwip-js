@@ -1,0 +1,266 @@
+/runtest_rendertext {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+%%/rendertext dup /uk.co.terryburton.bwipp findresource cvx def
+
+/uk.co.terryburton.bwipp.global_ctx <<
+    /named_colors <<
+        (_testsep) [
+            [ /Separation (Test Separation) /DeviceCMYK { dup 0.49 mul exch dup 0 mul exch dup 0.03 mul exch 0 mul } ]  1.0
+        ]
+    >>
+>> def
+
+/setup {
+    /pixx 100 def
+    /pixy 100 def
+    /txt [] def
+    /includetext false def
+    /textcolor (unset) def
+    /textxalign (unset) def
+    /textyalign (unset) def
+    /textdirection (forward) def
+    /textfont (Courier) def
+    /textsize 10.0 def
+    /textxoffset 0.0 def
+    /textyoffset 0.0 def
+    /textgaps 0.0 def
+    /textlinegaps 1.2 def
+    /alttext () def
+    /alttextsplit () def
+    /alttextsubspace () def
+    /extratext () def
+    /extratextsubspace () def
+    /extratextsplit () def
+    /extratextlinegaps 1.2 def
+    /extratextcolor (unset) def
+    /extratextxalign (left) def
+    /extratextyalign (above) def
+    /extratextdirection (forward) def
+    /extratextfont (Courier) def
+    /extratextsize 10.0 def
+    /extratextxoffset 0.0 def
+    /extratextyoffset 0.0 def
+    /extratextgaps 0.0 def
+} def
+
+/ok_tmpl {
+    { 50 dict begin setup _arg4_ exec rendertext end }
+    dup 3 -1 roll 4 exch put
+    true isEqual
+} def
+
+/er_tmpl {
+    { 50 dict begin setup _arg4_ exec rendertext pop pop end }
+    dup 4 5 -1 roll put
+    exch isEqual
+} def
+
+
+%
+% includetext=false (no-op)
+%
+{ } ok_tmpl
+
+
+%
+% txt array (encoder-positioned text)
+%
+{ /includetext true def /txt [ [ (X) 0 0 (Courier) 10 ] ] def } ok_tmpl
+
+{ /includetext true def /txt [ [ (X) 0 0 (Courier)  0 ] ] def } /bwipp.fontTooSmall er_tmpl
+{ /includetext true def /txt [ [ (X) 0 0 (Courier) -1 ] ] def } /bwipp.fontTooSmall er_tmpl
+
+
+%
+% alttext
+%
+{ /includetext true def /alttext (TEST) def } ok_tmpl
+
+
+%
+% textfont textsize
+%
+{ /includetext true def /alttext (TEST) def /textfont (Helvetica) def } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textfont (Times-Roman) def } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textsize 8.0 def  } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textsize 14.0 def } ok_tmpl
+
+
+%
+% alttextsplit alttextsubspace
+%
+{ /includetext true def /alttext (A|B) def /alttextsplit (|) def    } ok_tmpl
+{ /includetext true def /alttext (A_B) def /alttextsubspace (_) def } ok_tmpl
+
+{ /includetext true def /alttext (A|B) def /alttextsplit (||) def } /bwipp.alttextsplitBad er_tmpl
+{ /includetext true def /alttext (A_B) def /alttextsubspace (__) def } /bwipp.alttextsubspaceBad er_tmpl
+
+
+%
+% textcolor
+%
+{ /includetext true def /alttext (TEST) def /textcolor (FF0000) def   } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textcolor (00FF0000) def } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textcolor (_testsep) def } ok_tmpl
+
+
+%
+% textdirection
+%
+{ /includetext true def /alttext (TEST) def /textdirection (forward) def  } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textdirection (backward) def } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textdirection (upward) def   } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textdirection (downward) def } ok_tmpl
+
+
+%
+% textxoffset textyoffset
+%
+{ /includetext true def /alttext (TEST) def /textxoffset  5.0 def } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textxoffset -5.0 def } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textyoffset  5.0 def } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textyoffset -5.0 def } ok_tmpl
+
+
+%
+% textgaps textlinegaps
+%
+{ /includetext true def /alttext (TEST) def /textgaps 1.0 def     } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textlinegaps 2.0 def } ok_tmpl
+
+
+%
+% textxalign
+%
+{ /includetext true def /alttext (TEST) def /textxalign (left) def     } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textxalign (center) def   } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textxalign (right) def    } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textxalign (offleft) def  } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textxalign (offright) def } ok_tmpl
+
+{ /includetext true def /alttext (TEST) def /textxalign (justify) def /textdirection (forward) def  } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textxalign (justify) def /textdirection (backward) def } ok_tmpl
+{ /includetext true def /alttext (A) def /textxalign (justify) def /textdirection (forward) def    } ok_tmpl
+
+{ /includetext true def /alttext (TEST) def /textxalign (justify) def /textdirection (upward) def   } /bwipp.textxjustify er_tmpl
+{ /includetext true def /alttext (TEST) def /textxalign (justify) def /textdirection (downward) def } /bwipp.textxjustify er_tmpl
+
+
+%
+% textyalign
+%
+{ /includetext true def /alttext (TEST) def /textyalign (above) def  } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textyalign (below) def  } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textyalign (top) def    } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textyalign (bottom) def } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textyalign (center) def } ok_tmpl
+
+{ /includetext true def /alttext (TEST) def /textyalign (justify) def /textdirection (upward) def   } ok_tmpl
+{ /includetext true def /alttext (TEST) def /textyalign (justify) def /textdirection (downward) def } ok_tmpl
+{ /includetext true def /alttext (A) def /textyalign (justify) def /textdirection (upward) def     } ok_tmpl
+
+{ /includetext true def /alttext (TEST) def /textyalign (justify) def /textdirection (forward) def  } /bwipp.textyjustify er_tmpl
+{ /includetext true def /alttext (TEST) def /textyalign (justify) def /textdirection (backward) def } /bwipp.textyjustify er_tmpl
+
+
+%
+% extratext
+%
+{ /extratext (EXTRA) def } ok_tmpl
+
+
+%
+% extratextfont extratextsize
+%
+{ /extratext (EXTRA) def /extratextfont (Helvetica) def } ok_tmpl
+{ /extratext (EXTRA) def /extratextfont (Times-Roman) def } ok_tmpl
+{ /extratext (EXTRA) def /extratextsize 8.0 def  } ok_tmpl
+{ /extratext (EXTRA) def /extratextsize 14.0 def } ok_tmpl
+
+
+%
+% extratextcolor
+%
+{ /extratext (EXTRA) def /extratextcolor (FF0000) def   } ok_tmpl
+{ /extratext (EXTRA) def /extratextcolor (00FF0000) def } ok_tmpl
+{ /extratext (EXTRA) def /extratextcolor (_testsep) def } ok_tmpl
+
+
+%
+% extratextdirection
+%
+{ /extratext (EXTRA) def /extratextdirection (forward) def  } ok_tmpl
+{ /extratext (EXTRA) def /extratextdirection (backward) def } ok_tmpl
+{ /extratext (EXTRA) def /extratextdirection (upward) def   } ok_tmpl
+{ /extratext (EXTRA) def /extratextdirection (downward) def } ok_tmpl
+
+
+%
+% extratextxoffset extratextyoffset
+%
+{ /extratext (EXTRA) def /extratextxoffset  5.0 def } ok_tmpl
+{ /extratext (EXTRA) def /extratextxoffset -5.0 def } ok_tmpl
+{ /extratext (EXTRA) def /extratextyoffset  5.0 def } ok_tmpl
+{ /extratext (EXTRA) def /extratextyoffset -5.0 def } ok_tmpl
+
+
+%
+% extratextgaps extratextlinegaps
+%
+{ /extratext (EXTRA) def /extratextgaps 1.0 def     } ok_tmpl
+{ /extratext (EXTRA) def /extratextlinegaps 2.0 def } ok_tmpl
+
+
+%
+% extratextsplit extratextsubspace
+%
+{ /extratext (A|B) def /extratextsplit (|) def    } ok_tmpl
+{ /extratext (A_B) def /extratextsubspace (_) def } ok_tmpl
+
+{ /extratext (A|B) def /extratextsplit (||) def } /bwipp.extratextsplitBad er_tmpl
+{ /extratext (A_B) def /extratextsubspace (__) def } /bwipp.extratextsubspaceBad er_tmpl
+
+
+%
+% extratextxalign
+%
+{ /extratext (EXTRA) def /extratextxalign (left) def     } ok_tmpl
+{ /extratext (EXTRA) def /extratextxalign (center) def   } ok_tmpl
+{ /extratext (EXTRA) def /extratextxalign (right) def    } ok_tmpl
+{ /extratext (EXTRA) def /extratextxalign (offleft) def  } ok_tmpl
+{ /extratext (EXTRA) def /extratextxalign (offright) def } ok_tmpl
+
+{ /extratext (EXTRA) def /extratextxalign (justify) def /extratextdirection (forward) def  } ok_tmpl
+{ /extratext (EXTRA) def /extratextxalign (justify) def /extratextdirection (backward) def } ok_tmpl
+{ /extratext (A) def /extratextxalign (justify) def /extratextdirection (forward) def     } ok_tmpl
+
+{ /extratext (EXTRA) def /extratextxalign (justify) def /extratextdirection (upward) def   } /bwipp.extratextxjustify er_tmpl
+{ /extratext (EXTRA) def /extratextxalign (justify) def /extratextdirection (downward) def } /bwipp.extratextxjustify er_tmpl
+
+
+%
+% extratextyalign
+%
+{ /extratext (EXTRA) def /extratextyalign (above) def  } ok_tmpl
+{ /extratext (EXTRA) def /extratextyalign (below) def  } ok_tmpl
+{ /extratext (EXTRA) def /extratextyalign (top) def    } ok_tmpl
+{ /extratext (EXTRA) def /extratextyalign (bottom) def } ok_tmpl
+{ /extratext (EXTRA) def /extratextyalign (center) def } ok_tmpl
+
+{ /extratext (EXTRA) def /extratextyalign (justify) def /extratextdirection (upward) def   } ok_tmpl
+{ /extratext (EXTRA) def /extratextyalign (justify) def /extratextdirection (downward) def } ok_tmpl
+{ /extratext (A) def /extratextyalign (justify) def /extratextdirection (upward) def      } ok_tmpl
+
+{ /extratext (EXTRA) def /extratextyalign (justify) def /extratextdirection (forward) def  } /bwipp.extratextyjustify er_tmpl
+{ /extratext (EXTRA) def /extratextyalign (justify) def /extratextdirection (backward) def } /bwipp.extratextyjustify er_tmpl
+
+end
+} bind def

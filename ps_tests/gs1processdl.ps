@@ -3,20 +3,24 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 %%/gs1process dup /uk.co.terryburton.bwipp findresource cvx def
 
 /good_tmpl {
-    /t exch def
-    { t /dl gs1process null } null isEqual
+    { 0 /dl gs1process pop pop pop null } exch
+    1 index 0 3 -1 roll put
+    null isEqual
 } def
 
 
 /er_tmpl {
-    /e exch def
-    /t exch def
-    { t /dl gs1process null } e isError
+    exch { 0 /dl gs1process null } 3 1 roll
+    2 index 0 3 -1 roll put
+    isError
 } def
 
 
@@ -62,7 +66,7 @@
 (https://example.com/01/12312312312333?99=ABC&98=XYZ) good_tmpl
 (https://example.com/01/12312312312333?&&&99=ABC&&&&&&98=XYZ&&&) good_tmpl    % Ignore extraneous separators
 (https://example.com/01/12312312312333?99=ABC&unknown=666&98=XYZ) good_tmpl   % Ignore non-numeric params
-(https://example.com/01/12312312312333?99=ABC&singleton&98=XYZ) good_tmpl     % Ignore singlton params
+(https://example.com/01/12312312312333?99=ABC&singleton&98=XYZ) good_tmpl     % Ignore singleton params
 (https://example.com/01/12312312312333?singleton&99=ABC&98=XYZ) good_tmpl
 (https://example.com/01/12312312312333?99=ABC&98=XYZ&singleton) good_tmpl
 

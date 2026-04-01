@@ -6,17 +6,14 @@
 % --RNDR: renlinear
 %%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2017071000 68302 68105
 %%BeginData:        149 ASCII Lines
-%%/setpacking where {pop currentpacking true setpacking} if
-%%1 dict
-%%dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-%%dup /renlinear dup /uk.co.terryburton.bwipp findresource put
-%%begin
+/setpacking where {pop currentpacking true setpacking} if
+1 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /renlinear dup /uk.co.terryburton.bwipp findresource put
+begin
 /channelcode {
 
     20 dict begin                 % Confine variables to local scope
-
-    /options exch def       % We are given an option string
-    /barcode exch def       % We are given a barcode string
 
     /dontdraw false def
     /shortfinder false def
@@ -24,18 +21,13 @@
     /includecheck false def
     /height 1 def
 
-    % Parse the input options
-    options type /stringtype eq {
-        1 dict begin
-        options {
-            token false eq {exit} if dup length string cvs (=) search
-            true eq {cvlit exch pop exch def} {cvlit true def} ifelse
-        } loop
-        currentdict end /options exch def
-    } if
-    options {def} forall
+    //processoptions exec /options exch def
+    /barcode exch def
 
-    /height height cvr def
+    /_render
+        dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
+        /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
+    def
 
     % Validate the input
     barcode length 2 lt barcode length 7 gt or {
@@ -138,23 +130,25 @@
 
     % Return the arguments
     <<
-    /ren //renlinear
+    /ren /renlinear
     /sbs sbs
     /bhs [sbs length 1 add 2 idiv {height} repeat]
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     /txt txt
-    /textxalign (center)
+    /text1xalign (center)
+    /borderleft 1.0
+    /borderright 2.0
     /opt options
     >>
 
-    dontdraw not //renlinear if
+    _render //renlinear if
 
     end
 
 } bind def
-%%/channelcode dup load /uk.co.terryburton.bwipp defineresource pop
-%%end
-%%/setpacking where {pop setpacking} if
+/channelcode dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END ENCODER channelcode--

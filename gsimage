@@ -15,7 +15,7 @@ opts="$3"
 
 ## Use node to create the output file name
 outfile=$(node <<@EOF
-console.log(Buffer.from('$sym $text $opts'.trim().replace(/ /g, '-').replace(/=/g, '_')).toString('binary').replace(/[\x00-\x1f\x7f-\xff]/g, (c) => '%'+('0'+c.charCodeAt(0).toString(16)).slice(-2)) + '.png');
+console.log(Buffer.from('$sym $text $opts'.trim().replace(/ /g, '-').replace(/[\/?*:]/g, '@').replace(/=/g, '_')).toString('binary').replace(/[\x00-\x1f\x7f-\xff]/g, (c) => '%'+('0'+c.charCodeAt(0).toString(16)).slice(-2)) + '.png');
 @EOF
 )
 

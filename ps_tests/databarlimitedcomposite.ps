@@ -3,19 +3,21 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % ISO/IEC 24723:2010
 
-% vim: set ts=4 sw=4 et :
 
 %%/databarlimitedcomposite dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o databarlimitedcomposite /pixs get } e isEqual
+    3 1 roll { _arg0_ _arg1_ databarlimitedcomposite /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    isEqual
 } def
 
 
@@ -86,5 +88,8 @@
     0 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 1 0 0 0 1 1 1 0 0 1 0 1 1 1 0 0 0 1 0 1 0 1 0 1 0 0 1 0 1 0 1 1 0 0 1 1 0 1 0 0 0 1 0 1 1 0 1 1 0 0 0 1 1 1 0 0 1 0 1 0 0 0 0 1 0 1 0 0 0 0 0
     0 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 1 0 0 0 1 1 1 0 0 1 0 1 1 1 0 0 0 1 0 1 0 1 0 1 0 0 1 0 1 0 1 1 0 0 1 1 0 1 0 0 0 1 0 1 1 0 1 1 0 0 0 1 1 1 0 0 1 0 1 0 0 0 0 1 0 1 0 0 0 0 0
 ] eq_tmpl
+
+% Missing composite component (no pipe character)
+{ (\(01\)09521234543213) (dontdraw) databarlimitedcomposite } /bwipp.missingCompositeComponent isError
 end
 } bind def

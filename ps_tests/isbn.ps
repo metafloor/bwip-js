@@ -1,0 +1,38 @@
+/runtest_isbn {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+%%/isbn dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (978-1-56581-231-4) (dontdraw) isbn /sbs get
+} [ 1 1 1 1 3 1 2 3 1 2 1 1 2 2 2 1 2 3 1 4 1 1 1 1 2 3 1 1 1 1 1 1 1 2 1 3 2 2 2 1 2 1 2 2 1 4 1 1 2 2 2 1 1 1 3 2 1 1 1 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (978-1-5658-231) (dontdraw) isbn } /bwipp.isbnBadLength isError
+{ (978-1-56581-231-4 123) (dontdraw) isbn } /bwipp.isbnBadAddOnLength isError
+{ (123-1-56581-231-7) (dontdraw) isbn } /bwipp.isbn13badPrefix isError
+{ (978-1--58121-31-7) (dontdraw) isbn } /bwipp.isbn13adjacentDashes isError
+{ (978-1-565812314-7) (dontdraw) isbn } /bwipp.isbn13numDashesDigits isError
+{ (978-1-56581-23A-7) (dontdraw) isbn } /bwipp.isbn13character15 isError
+{ (978-1-56581-23147) (dontdraw) isbn } /bwipp.isbn13character16 isError
+{ (978-1-56581-231-A) (dontdraw) isbn } /bwipp.isbn13character17 isError
+{ (978-1-56581-231-0) (dontdraw) isbn } /bwipp.isbn13badCheckDigit isError
+{ (A-56581-231-7) (dontdraw) isbn } /bwipp.isbn10FirstDigit isError
+{ (1--6581-231-7) (dontdraw) isbn } /bwipp.isbn10adjacentDashes isError
+{ (1-565812314-7) (dontdraw) isbn } /bwipp.isbn10numDashesDigits isError
+{ (1-56581-23A-7) (dontdraw) isbn } /bwipp.isbn10character11 isError
+{ (1-56581-231X7) (dontdraw) isbn } /bwipp.isbn10character12 isError
+{ (1-56581-231-?) (dontdraw) isbn } /bwipp.isbn10character13 isError
+{ (1-56581-231-0) (dontdraw) isbn } /bwipp.isbn10badCheckDigit isError
+end
+} bind def

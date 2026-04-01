@@ -3,9 +3,10 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
-
-% vim: set ts=4 sw=4 et :
+%
 
 %%/code11 dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -29,6 +30,8 @@
 
 { (1234567890149) (dontdraw validatecheck) code11  % 2nd check digit should be '-'
 } /bwipp.code11badCheckDigits isError
+
+{ 501 string (dontdraw) code11 } /bwipp.code11inputTooLong isError
 
 
 % Examples

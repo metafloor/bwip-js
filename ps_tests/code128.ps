@@ -3,11 +3,13 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % ISO/IEC 15417:2007
 
-% vim: set ts=4 sw=4 et :
 
 %%/code128 dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -75,6 +77,19 @@
 {
     (^104^033^034^035^065^066^067^016^017^018^019) (debugcws raw) code128
 } [104 33 34 35 65 66 67 16 17 18 19 48 106] debugIsEqual
+
+{ 501 string (dontdraw) code128 } /bwipp.code128inputTooLong isError
+
+% Invalid raw format
+{ (^12A) (raw dontdraw) code128 } /bwipp.code128BadRawFormat isError
+{ (^12) (raw dontdraw) code128 } /bwipp.code128BadRawFormat isError
+{ (^1) (raw dontdraw) code128 } /bwipp.code128BadRawFormat isError
+{ (^) (raw dontdraw) code128 } /bwipp.code128BadRawFormat isError
+{ (^105garbage) (raw dontdraw) code128 } /bwipp.code128BadRawFormat isError
+
+% Raw codeword out of range (valid: 0-106)
+{ (^107) (raw dontdraw) code128 } /bwipp.code128BadRawCodeword isError
+{ (^999) (raw dontdraw) code128 } /bwipp.code128BadRawCodeword isError
 
 end
 } bind def

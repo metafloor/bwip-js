@@ -3,11 +3,13 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % ANSI/HIBC 2.6-2016
 
-% vim: set ts=4 sw=4 et :
 
 %%/hibcdatamatrix dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -19,6 +21,9 @@
 
 { () (dontdraw validatecheck) hibcdatamatrix
 } /bwipp.hibcdatamatrixEmptyData isError
+
+{ 15001 string (dontdraw) hibcdatamatrix
+} /bwipp.hibcdatamatrixinputTooLong isError
 
 { (,) (dontdraw) hibcdatamatrix
 } /bwipp.hibcdatamatrixBadCharacter isError

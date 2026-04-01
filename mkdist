@@ -69,7 +69,7 @@ cp dist/bwip-js.js dist/bwip-js-gen.mjs
 bwipp_exports() {
     grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
         sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/bwipp_\1/' -e 's/-/_/g' | tr -s '[:space:]' ','
-    echo "bwipp_lookup,bwipp_encode,BWIPP_VERSION"
+    echo "bwipp_lookup,bwipp_symlist,bwipp_encode,BWIPP_VERSION"
 }
 
 ## Finish the bwipp.mjs module
@@ -262,6 +262,7 @@ module.exports = {
     request:Request, toBuffer:ToBuffer, toSVG:ToSVG, render:Render, raw:ToRaw,
     drawingZlibPng:DrawingZlibPng, drawingSVG:DrawingSVG,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib:FontLib,
+    symbolList:bwipp_symlist,
     BWIPJS_VERSION:BWIPJS_VERSION, BWIPP_VERSION:BWIPP_VERSION,
     _metrics:\$metrics,
 };
@@ -275,11 +276,11 @@ grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
 cat - <<@EOF >> dist/bwip-js-node.mjs
 export { ToBuffer as toBuffer, ToSVG as toSVG, Render as render, LoadFont as loadFont,
          DrawingZlibPng as drawingZlibPng, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
     request:Request, toBuffer:ToBuffer, toSVG:ToSVG, render:Render, raw:ToRaw,
-    drawingZlibPng:DrawingZlibPng, drawingSVG:DrawingSVG,
+    drawingZlibPng:DrawingZlibPng, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };
 @EOF
@@ -292,11 +293,11 @@ grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
 cat - <<@EOF >> dist/bwip-js.mjs
 export { ToCanvas as toCanvas, ToSVG as toSVG, Render as render, LoadFont as loadFont,
          DrawingCanvas as drawingCanvas, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
     toCanvas:ToCanvas, toSVG:ToSVG, render:Render, raw:ToRaw,
-    drawingCanvas:DrawingCanvas, drawingSVG:DrawingSVG,
+    drawingCanvas:DrawingCanvas, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };
 @EOF
@@ -309,11 +310,11 @@ grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
 cat - <<@EOF >> dist/bwip-js-rn.mjs
 export { ToDataURL as toDataURL, ToSVG as toSVG, Render as render, LoadFont as loadFont,
          DrawingDataURL as drawingDataURL, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
     toDataURL:ToDataURL, toSVG:ToSVG, render:Render, raw:ToRaw,
-    drawingDataURL:DrawingDataURL, drawingSVG:DrawingSVG,
+    drawingDataURL:DrawingDataURL, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };
 @EOF
@@ -325,10 +326,10 @@ grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u | \
 
 cat - <<@EOF >> dist/bwip-js-gen.mjs
 export { ToSVG as toSVG, Render as render, LoadFont as loadFont, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
-    toSVG:ToSVG, render:Render, raw:ToRaw, drawingSVG:DrawingSVG,
+    toSVG:ToSVG, render:Render, raw:ToRaw, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };
 @EOF
@@ -338,7 +339,7 @@ for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
 cat - <<@EOF >> $file
     return {
         toCanvas:ToCanvas, toSVG:ToSVG, render:Render, raw:ToRaw,
-        drawingCanvas:DrawingCanvas, drawingSVG:DrawingSVG,
+        drawingCanvas:DrawingCanvas, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
         fixupOptions:FixupOptions, loadFont:LoadFont, FontLib:FontLib,
         BWIPJS_VERSION:BWIPJS_VERSION, BWIPP_VERSION:BWIPP_VERSION,
     };

@@ -3,221 +3,844 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ISO/IEC 24778:2008
 
-% vim: set ts=4 sw=4 et :
 
 %%/azteccode dup /uk.co.terryburton.bwipp findresource cvx def
-%%/aztecrune dup /uk.co.terryburton.bwipp findresource cvx def
 
-/aztecrune_eq_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o aztecrune /pixs get } e isEqual
+/_bitsEqual {
+    % Stack: errorname errorinfo (expected)
+    ne {/testError pstack quit} if
+    pop
+} bind def
+/bitsEqual { //_bitsEqual //_doTest exec } def
+
+% data opts [(seg1) (seg2) ...] bits_tmpl
+/bits_tmpl {
+    0 1 index {length add} forall string       % data opts [parts] cs
+    0 3 -1 roll { 3 copy putinterval length add } forall pop  % data opts cs
+    3 1 roll { _arg0_ _arg1_ azteccode }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch bitsEqual
 } def
 
-/aztecrune_er_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o aztecrune /pixs get } e isError
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ azteccode }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 
 % Punctuation-space combinations (PR #161)
 
-{
-    (. ) (debugcws) azteccode
-} [1 7] debugIsEqual  % P/S <.SP>
+(. ) (debugbits) [
+    (00000)    % P/S
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (^013^010) (parse debugcws) azteccode
-} [1 5] debugIsEqual  % P/S <CRLF>
+(^013^010) (parse debugbits) [
+    (00000)    % P/S
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (. . . . . ) (debugcws) azteccode
-} [59 56 24 49 35 7] debugIsEqual  % M/L P/L <.SP>(x5)
+(. . . . . ) (debugbits) [
+    (11101)    % M/L
+    (11110)    % P/L
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (A. ) (debugcws) azteccode  % Upper
-} [4 1 15] debugIsEqual  % "A" P/S <.SP>
+(A. ) (debugbits) [          % Upper
+    (00010)    % A
+    (00000)    % P/S
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (A^013^010) (parse debugcws) azteccode  % Upper
-} [4 1 11] debugIsEqual  % "A" P/S <CRLF>
+(A^013^010) (parse debugbits) [  % Upper
+    (00010)    % A
+    (00000)    % P/S
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (A. . . . . ) (debugcws) azteccode  % Upper
-} [5 55 48 49 35 6 15] debugIsEqual  % "A" M/L P/L <.SP>(x5)
+(A. . . . . ) (debugbits) [  % Upper
+    (00010)    % A
+    (11101)    % M/L
+    (11110)    % P/L
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (A^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Upper
-} [5 55 48 33 2 4 11] debugIsEqual  % "A" M/L P/L <CRLF>(x5)
+(A^013^010^013^010^013^010^013^010^013^010) (parse debugbits) [  % Upper
+    (00010)    % A
+    (11101)    % M/L
+    (11110)    % P/L
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (a. ) (debugcws) azteccode  % Lower
-} [56 8 1 31] debugIsEqual  % L/L "a" P/S <.SP>
+(a. ) (debugbits) [          % Lower
+    (11100)    % L/L
+    (00010)    % a
+    (00000)    % P/S
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (a^013^010) (parse debugcws) azteccode  % Lower
-} [56 8 1 23] debugIsEqual  % L/L "a" P/S <CRLF>
+(a^013^010) (parse debugbits) [  % Lower
+    (11100)    % L/L
+    (00010)    % a
+    (00000)    % P/S
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (a. . . . . ) (debugcws) azteccode  % Lower
-} [56 11 47 33 35 6 12 31] debugIsEqual  % L/L "a" M/L P/L <.SP>(x5)
+(a. . . . . ) (debugbits) [  % Lower
+    (11100)    % L/L
+    (00010)    % a
+    (11101)    % M/L
+    (11110)    % P/L
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (a^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Lower
-} [56 11 47 33 2 4 8 23] debugIsEqual  % L/L "a" M/L P/L <CRLF>(x5)
+(a^013^010^013^010^013^010^013^010^013^010) (parse debugbits) [  % Lower
+    (11100)    % L/L
+    (00010)    % a
+    (11101)    % M/L
+    (11110)    % P/L
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (@. ) (debugcws) azteccode  % Mixed
-} [59 16 1 31] debugIsEqual  % M/L "@" P/S <.SP>
+(@. ) (debugbits) [          % Mixed
+    (11101)    % M/L
+    (10100)    % @
+    (00000)    % P/S
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (@^013^010) (parse debugcws) azteccode  % Mixed
-} [59 17 50 62] debugIsEqual  % M/L "@" <CR> <LF>
+(@^013^010) (parse debugbits) [  % Mixed: CR and LF encoded separately
+    (11101)    % M/L
+    (10100)    % @
+    (01110)    % CR
+    (01011)    % LF
+] bits_tmpl
 
-{
-    (@. . ) (debugcws) azteccode  % Mixed
-} [59 19 48 49 62] debugIsEqual  % M/L "@" P/L <.SP>(x2)
+(@. . ) (debugbits) [        % Mixed
+    (11101)    % M/L
+    (10100)    % @
+    (11110)    % P/L
+    (00011)    % .SP
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (@^013^010^013^010) (parse debugcws) azteccode  % Mixed
-} [59 19 48 33 31] debugIsEqual  % M/L "@" P/L <CRLF>(x2)
+(@^013^010^013^010) (parse debugbits) [  % Mixed
+    (11101)    % M/L
+    (10100)    % @
+    (11110)    % P/L
+    (00010)    % CRLF
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (@. . . . . ) (debugcws) azteccode  % Mixed
-} [59 19 48 49 35 6 15] debugIsEqual  % M/L "@" P/L <.SP>(x5)
+(@. . . . . ) (debugbits) [  % Mixed
+    (11101)    % M/L
+    (10100)    % @
+    (11110)    % P/L
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (@^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Mixed
-} [59 19 48 33 2 4 11] debugIsEqual  % M/L "@" P/L <CRLF>(x5)
+(@^013^010^013^010^013^010^013^010^013^010) (parse debugbits) [  % Mixed
+    (11101)    % M/L
+    (10100)    % @
+    (11110)    % P/L
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (!. ) (debugcws) azteccode  % Punct.
-} [1 12 1 15] debugIsEqual  % P/S "!" P/S <.SP>
+(!. ) (debugbits) [          % Punct.
+    (00000)    % P/S
+    (00110)    % !
+    (00000)    % P/S
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (!^013^010) (parse debugcws) azteccode  % Punct.
-} [1 12 1 11] debugIsEqual  % P/S "!" P/S <CRLF>
+(!^013^010) (parse debugbits) [  % Punct.
+    (00000)    % P/S
+    (00110)    % !
+    (00000)    % P/S
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (!. . ) (debugcws) azteccode  % Punct.
-} [59 56 48 49 62] debugIsEqual  % M/L P/L "!" <.SP>(x2)
+(!. . ) (debugbits) [        % Punct.
+    (11101)    % M/L
+    (11110)    % P/L
+    (00110)    % !
+    (00011)    % .SP
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (!^013^010^013^010) (parse debugcws) azteccode  % Punct.
-} [59 56 48 33 31] debugIsEqual  % M/L P/L "!" <CRLF>(x2)
+(!^013^010^013^010) (parse debugbits) [  % Punct.
+    (11101)    % M/L
+    (11110)    % P/L
+    (00110)    % !
+    (00010)    % CRLF
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (!. . . . . ) (debugcws) azteccode  % Punct.
-} [59 56 48 49 35 6 15] debugIsEqual  % M/L P/L "!" <.SP>(x5)
+(!. . . . . ) (debugbits) [  % Punct.
+    (11101)    % M/L
+    (11110)    % P/L
+    (00110)    % !
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (!^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Punct.
-} [59 56 48 33 2 4 11] debugIsEqual  % M/L P/L "!" <CRLF>(x5)
+(!^013^010^013^010^013^010^013^010^013^010) (parse debugbits) [  % Punct.
+    (11101)    % M/L
+    (11110)    % P/L
+    (00110)    % !
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (1. ) (debugcws) azteccode  % Digit
-} [60 30 35] debugIsEqual  % D/L "1" "." <SP>
+(1. ) (debugbits) [          % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (1101)     % .
+    (0001)     % SP
+] bits_tmpl
 
-{
-    (1^013^010) (parse debugcws) azteccode  % Digit
-} [60 24 2] debugIsEqual  % D/L "1" P/S <CRLF>
+(1^013^010) (parse debugbits) [  % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (0000)     % P/S
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (1. . ) (debugcws) azteccode  % Digit
-} [60 30 35 40 62] debugIsEqual  % D/L "1" "." <SP> "." <SP>
+(1. . ) (debugbits) [        % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (1101)     % .
+    (0001)     % SP
+    (1101)     % .
+    (0001)     % SP
+] bits_tmpl
 
-{
-    (1^013^010^013^010) (parse debugcws) azteccode  % Digit
-} [60 24 2 1 11] debugIsEqual  % D/L "1" P/S <CRLF> P/S <CRLF>
+(1^013^010^013^010) (parse debugbits) [  % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (0000)     % P/S
+    (00010)    % CRLF
+    (0000)     % P/S
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (1. . . ) (debugcws) azteccode  % Digit
-} [60 30 35 40 58 15] debugIsEqual  % D/L "1" "." <SP> "." <SP> "." <SP>
+(1. . . ) (debugbits) [      % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (1101)     % .
+    (0001)     % SP
+    (1101)     % .
+    (0001)     % SP
+    (1101)     % .
+    (0001)     % SP
+] bits_tmpl
 
-{
-    (1^013^010^013^010^013^010) (parse debugcws) azteccode  % Digit
-} [60 24 2 1 8 1 47] debugIsEqual  % D/L "1" P/S <CRLF> P/S <CRLF> P/S <CRLF>
+(1^013^010^013^010^013^010) (parse debugbits) [  % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (0000)     % P/S
+    (00010)    % CRLF
+    (0000)     % P/S
+    (00010)    % CRLF
+    (0000)     % P/S
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (1. . . . ) (debugcws) azteccode  % Digit
-} [60 30 35 40 58 14 35] debugIsEqual  % D/L "1" "." <SP> "." <SP> "." <SP> "." <SP>
+(1. . . . ) (debugbits) [    % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (1101)     % .
+    (0001)     % SP
+    (1101)     % .
+    (0001)     % SP
+    (1101)     % .
+    (0001)     % SP
+    (1101)     % .
+    (0001)     % SP
+] bits_tmpl
 
-{
-    (1^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Digit
-} [60 31 29 60 8 16 33 31] debugIsEqual  % D/L "1" U/L M/L P/L <CRLF>(x4)
+(1^013^010^013^010^013^010^013^010) (parse debugbits) [  % Digit: 4xCRLF triggers U/L M/L P/L
+    (11110)    % D/L
+    (0011)     % 1
+    (1110)     % U/L
+    (11101)    % M/L
+    (11110)    % P/L
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (1. . . . . ) (debugcws) azteccode  % Digit
-} [60 31 29 60 12 24 49 35] debugIsEqual  % D/L "1" U/L M/L P/L <.SP>(x5)
+(1. . . . . ) (debugbits) [  % Digit: 5x.SP triggers U/L M/L P/L
+    (11110)    % D/L
+    (0011)     % 1
+    (1110)     % U/L
+    (11101)    % M/L
+    (11110)    % P/L
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+    (00011)    % .SP
+] bits_tmpl
 
-{
-    (1^013^010^013^010^013^010^013^010^013^010) (parse debugcws) azteccode  % Digit
-} [60 31 29 60 8 16 33 2] debugIsEqual  % D/L "1" U/L M/L P/L <CRLF>(x5)
+(1^013^010^013^010^013^010^013^010^013^010) (parse debugbits) [  % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (1110)     % U/L
+    (11101)    % M/L
+    (11110)    % P/L
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+    (00010)    % CRLF
+] bits_tmpl
 
-{
-    (1, ) (debugcws) azteccode  % Digit
-} [60 30 3] debugIsEqual  % D/L "1" "," <SP>
+(1, ) (debugbits) [          % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (1100)     % ,
+    (0001)     % SP
+] bits_tmpl
 
-{
-    (1, , , , ) (debugcws) azteccode  % Digit
-} [60 30 3 32 56 14 3] debugIsEqual  % D/L "1" "," <SP> "," <SP> "," <SP> "," <SP>
+(1, , , , ) (debugbits) [    % Digit
+    (11110)    % D/L
+    (0011)     % 1
+    (1100)     % ,
+    (0001)     % SP
+    (1100)     % ,
+    (0001)     % SP
+    (1100)     % ,
+    (0001)     % SP
+    (1100)     % ,
+    (0001)     % SP
+] bits_tmpl
 
-{
-    (1, , , , , ) (debugcws) azteccode  % Digit
-} [60 31 29 60 16 33 2 4] debugIsEqual  % D/L "1" U/L M/L P/L <,SP>(x5)
+(1, , , , , ) (debugbits) [  % Digit: 5x,SP triggers U/L M/L P/L
+    (11110)    % D/L
+    (0011)     % 1
+    (1110)     % U/L
+    (11101)    % M/L
+    (11110)    % P/L
+    (00100)    % ,SP
+    (00100)    % ,SP
+    (00100)    % ,SP
+    (00100)    % ,SP
+    (00100)    % ,SP
+] bits_tmpl
 
 
 % #284 (BWIP-JS #354) - binary wasn't considered in PR #161 (now does nothing if in B/S)
 
+<6A 3E E8 AD F2 EF 17 99 3A 20 53 94 9F C3 1D 87> (debugbits) [  % BWIP-JS #354
+    (11111)       % B/S
+    (10000)       % len 16
+    (01101010)    % 0x6A
+    (00111110)    % 0x3E
+    (11101000)    % 0xE8
+    (10101101)    % 0xAD
+    (11110010)    % 0xF2
+    (11101111)    % 0xEF
+    (00010111)    % 0x17
+    (10011001)    % 0x99
+    (00111010)    % 0x3A
+    (00100000)    % 0x20
+    (01010011)    % 0x53
+    (10010100)    % 0x94
+    (10011111)    % 0x9F
+    (11000011)    % 0xC3
+    (00011101)    % 0x1D
+    (10000111)    % 0x87
+] bits_tmpl
+
+<1D CE A4 2E 20 44 04 BD 19 7D A4 C9 18 1D 3E 74> (debugbits) [  % BWIP-JS #354
+    (11111)       % B/S
+    (10000)       % len 16
+    (00011101)    % 0x1D
+    (11001110)    % 0xCE
+    (10100100)    % 0xA4
+    (00101110)    % 0x2E
+    (00100000)    % 0x20
+    (01000100)    % 0x44
+    (00000100)    % 0x04
+    (10111101)    % 0xBD
+    (00011001)    % 0x19
+    (01111101)    % 0x7D
+    (10100100)    % 0xA4
+    (11001001)    % 0xC9
+    (00011000)    % 0x18
+    (00011101)    % 0x1D
+    (00111110)    % 0x3E
+    (01110100)    % 0x74
+] bits_tmpl
+
+% Binary before punct compression had a problem
+
+<6A 99 3A 20 53> (debugbits) [  % "j<99>: S": B/S for 3 non-text bytes, then U text
+    (11111)       % B/S
+    (00011)       % len 3
+    (01101010)    % 0x6A
+    (10011001)    % 0x99
+    (00111010)    % 0x3A
+    (00001)       % SP
+    (10100)       % S
+] bits_tmpl
+
+(^153. ) (parse debugbits) [
+    (11111)       % B/S
+    (00010)       % len 2
+    (10011001)    % 0x99
+    (00101110)    % 0x2E '.'
+    (00001)       % SP
+] bits_tmpl
+
+(.^153 ) (parse debugbits) [
+    (11111)       % B/S
+    (00010)       % len 2
+    (00101110)    % 0x2E '.'
+    (10011001)    % 0x99
+    (00001)       % SP
+] bits_tmpl
+
+(. ^153. ) (parse debugbits) [
+    (00000)       % P/S
+    (00011)       % .SP
+    (11111)       % B/S
+    (00010)       % len 2
+    (10011001)    % 0x99
+    (00101110)    % 0x2E '.'
+    (00001)       % SP
+] bits_tmpl
+
+(.^153 . ) (parse debugbits) [
+    (11111)       % B/S
+    (00010)       % len 2
+    (00101110)    % 0x2E '.'
+    (10011001)    % 0x99
+    (00001)       % SP
+    (00000)       % P/S
+    (00011)       % .SP
+] bits_tmpl
+
+(@@. ^153. ) (parse debugbits) [
+    (11101)       % M/L
+    (10100)       % @
+    (10100)       % @
+    (00000)       % P/S
+    (00011)       % .SP
+    (11111)       % B/S
+    (00001)       % len 1
+    (10011001)    % 0x99
+    (11110)       % P/L
+    (00011)       % .SP
+] bits_tmpl
+
+(@@.^153 . ) (parse debugbits) [
+    (11101)       % M/L
+    (10100)       % @
+    (10100)       % @
+    (11111)       % B/S
+    (00010)       % len 2
+    (00101110)    % 0x2E '.'
+    (10011001)    % 0x99
+    (00001)       % SP
+    (00000)       % P/S
+    (00011)       % .SP
+] bits_tmpl
+
+(@@. ^153. A) (parse debugbits) [
+    (11101)       % M/L
+    (10100)       % @
+    (10100)       % @
+    (00000)       % P/S
+    (00011)       % .SP
+    (11111)       % B/S
+    (00001)       % len 1
+    (10011001)    % 0x99
+    (11110)       % P/L
+    (00011)       % .SP
+    (11111)       % U/L
+    (00010)       % A
+] bits_tmpl
+
+(@@.^153 . A) (parse debugbits) [
+    (11101)       % M/L
+    (10100)       % @
+    (10100)       % @
+    (11111)       % B/S
+    (00010)       % len 2
+    (00101110)    % 0x2E '.'
+    (10011001)    % 0x99
+    (11101)       % M/L (return from B/S)
+    (00001)       % SP
+    (00000)       % P/S
+    (00011)       % .SP
+    (00010)       % ^1 (ctrl char via M)
+] bits_tmpl
+
+(. . ^153. . . ) (parse debugbits) [
+    (00000)       % P/S
+    (00011)       % .SP
+    (00000)       % P/S
+    (00011)       % .SP
+    (11111)       % B/S
+    (00001)       % len 1
+    (10011001)    % 0x99
+    (11101)       % M/L
+    (11110)       % P/L
+    (00011)       % .SP
+    (00011)       % .SP
+    (00011)       % .SP
+] bits_tmpl
+
+(. . .^153 . . ) (parse debugbits) [
+    (00000)       % P/S
+    (00011)       % .SP
+    (00000)       % P/S
+    (00011)       % .SP
+    (11111)       % B/S
+    (00010)       % len 2
+    (00101110)    % 0x2E '.'
+    (10011001)    % 0x99
+    (00001)       % SP
+    (00000)       % P/S
+    (00011)       % .SP
+    (00000)       % P/S
+    (00011)       % .SP
+] bits_tmpl
+
+(123^153. . . . . ) (parse debugbits) [
+    (11110)       % D/L
+    (0011)        % 1
+    (0100)        % 2
+    (0101)        % 3
+    (1110)        % U/L
+    (11111)       % B/S
+    (00001)       % len 1
+    (10011001)    % 0x99
+    (11101)       % M/L
+    (11110)       % P/L
+    (00011)       % .SP
+    (00011)       % .SP
+    (00011)       % .SP
+    (00011)       % .SP
+    (00011)       % .SP
+] bits_tmpl
+
+(123.^153 . . . . ) (parse debugbits) [
+    (11110)       % D/L
+    (0011)        % 1
+    (0100)        % 2
+    (0101)        % 3
+    (1101)        % .
+    (1110)        % U/L
+    (11111)       % B/S
+    (00001)       % len 1
+    (10011001)    % 0x99
+    (00001)       % SP
+    (11101)       % M/L
+    (11110)       % P/L
+    (00011)       % .SP
+    (00011)       % .SP
+    (00011)       % .SP
+    (00011)       % .SP
+] bits_tmpl
+
+
+% Text compaction: Upper submode
+
+(A) (debugbits) [
+    (00010)    % A
+] bits_tmpl
+
+% HELLO in upper
+(HELLO) (debugbits) [
+    (01001)    % H
+    (00110)    % E
+    (01101)    % L
+    (01101)    % L
+    (10000)    % O
+] bits_tmpl
+
+% Text compaction: Lower submode
+(hello) (debugbits) [
+    (11100)    % L/L
+    (01001)    % h
+    (00110)    % e
+    (01101)    % l
+    (01101)    % l
+    (10000)    % o
+] bits_tmpl
+
+% Text compaction: Mixed submode
+(0123) (debugbits) [
+    (11110)    % D/L
+    (0010)     % 0
+    (0011)     % 1
+    (0100)     % 2
+    (0101)     % 3
+] bits_tmpl
+
+% Text compaction: mode transitions
+
+% Upper to lower
+(ABCabc) (debugbits) [
+    (00010)    % A
+    (00011)    % B
+    (00100)    % C
+    (11100)    % L/L
+    (00010)    % a
+    (00011)    % b
+    (00100)    % c
+] bits_tmpl
+
+% Lower to upper (via D/L U/L)
+(abcABC) (debugbits) [
+    (11100)    % L/L
+    (00010)    % a
+    (00011)    % b
+    (00100)    % c
+    (11110)    % D/L
+    (1110)     % U/L
+    (00010)    % A
+    (00011)    % B
+    (00100)    % C
+] bits_tmpl
+
+% Upper to mixed via digit
+(ABC123) (debugbits) [
+    (00010)    % A
+    (00011)    % B
+    (00100)    % C
+    (11110)    % D/L
+    (0011)     % 1
+    (0100)     % 2
+    (0101)     % 3
+] bits_tmpl
+
+% Punctuation encoding: ". " compression
+(A. B) (debugbits) [
+    (00010)    % A
+    (00000)    % P/S
+    (00011)    % .SP
+    (00011)    % B
+] bits_tmpl
+
+% Punctuation shift for "!"
+(Hello!) (debugbits) [
+    (01001)    % H
+    (11100)    % L/L
+    (00110)    % e
+    (01101)    % l
+    (01101)    % l
+    (10000)    % o
+    (00000)    % P/S
+    (00110)    % !
+] bits_tmpl
+
+% Byte compaction: 6 bytes
 {
-    <6A 3E E8 AD F2 EF 17 99 3A 20 53 94 9F C3 1D 87> (debugcws) azteccode  % BWIP-JS #354
-} [62 32 53 7 55 17 22 62 11 47 5 57 36 58 8 5 14 20 39 60 12 29 33 62] debugIsEqual
+    /bdata 6 string def 0 1 5 {bdata exch 128 put} for
+    bdata (debugbits) azteccode
+} (1111100110100000001000000010000000100000001000000010000000) bitsEqual
 
+% Byte compaction: 1 byte
 {
-    <1D CE A4 2E 20 44 04 BD 19 7D A4 C9 18 1D 3E 74> (debugcws) azteccode  % BWIP-JS #354
-} [62 32 14 57 53 8 23 4 2 8 2 23 40 50 62 26 19 9 6 1 58 31 14 39] debugIsEqual
+    /bdata 1 string def bdata 0 255 put
+    bdata (debugbits) azteccode
+} (111110000111111111) bitsEqual
 
-%  Binary before punct compression had a problem
-
+% Mixed text and bytes: "Hi" + 0x80 0x81 + "ABCD"
 {
-    <6A 99 3A 20 53> (debugcws) azteccode  % "j<99>: S"
-} [62 6 53 19 9 52 6 39] debugIsEqual
+    /mdata 8 string def
+    mdata 0 72 put mdata 1 105 put mdata 2 128 put mdata 3 129 put
+    mdata 4 65 put mdata 5 66 put mdata 6 67 put mdata 7 68 put
+    mdata (debugbits) azteccode
+} (01001111110001101101001100000001000000100010000110010000101) bitsEqual
 
-{ (^153. ) (parse debugcws) azteccode } [62 5 12 37 48 31] debugIsEqual
-{ (.^153 ) (parse debugcws) azteccode } [62 4 23 19 8 31] debugIsEqual
-{ (. ^153. ) (parse debugcws) azteccode } [1 7 60 20 50 23 1 62] debugIsEqual
-{ (.^153 . ) (parse debugcws) azteccode } [62 4 23 19 8 16 3] debugIsEqual
-{ (@@. ^153. ) (parse debugcws) azteccode } [59 18 32 1 62 48 51 15 33 62] debugIsEqual
-{ (@@.^153 . ) (parse debugcws) azteccode } [59 18 39 49 5 52 50 4 1 31] debugIsEqual
-{ (@@. ^153. A) (parse debugcws) azteccode } [59 18 32 1 62 48 51 15 33 62 34] debugIsEqual
-{ (@@.^153 . A) (parse debugcws) azteccode } [59 18 39 49 5 52 51 52 8 1 49 31] debugIsEqual
-{ (. . ^153. . . ) (parse debugcws) azteccode } [1 6 1 15 56 25 39 47 33 35 7] debugIsEqual
-{ (. . .^153 . . ) (parse debugcws) azteccode } [1 6 1 15 56 34 58 25 2 1 12 1 31] debugIsEqual
-{ (123^153. . . . . ) (parse debugcws) azteccode } [60 26 11 55 48 51 15 31 3 6 12 24 62] debugIsEqual
-{ (123.^153 . . . . ) (parse debugcws) azteccode } [60 26 11 47 31 3 12 33 59 56 24 49 35] debugIsEqual
+% Format options: compact
+(Hello) (format=compact debugbits) [
+    (01001)    % H
+    (11100)    % L/L
+    (00110)    % e
+    (01101)    % l
+    (01101)    % l
+    (10000)    % o
+] bits_tmpl
+
+% Format options: full
+(Hello World) (format=full debugbits) [
+    (01001)    % H
+    (11100)    % L/L
+    (00110)    % e
+    (01101)    % l
+    (01101)    % l
+    (10000)    % o
+    (00001)    % SP
+    (11100)    % U/S
+    (11000)    % W
+    (10000)    % o
+    (10011)    % r
+    (01101)    % l
+    (00101)    % d
+] bits_tmpl
+
+% EC level: 50%
+(Hello) (eclevel=50 debugbits) [
+    (01001)    % H
+    (11100)    % L/L
+    (00110)    % e
+    (01101)    % l
+    (01101)    % l
+    (10000)    % o
+] bits_tmpl
+
+% Reader initialisation
+(Hello) (format=compact readerinit debugbits) [
+    (01001)    % H
+    (11100)    % L/L
+    (00110)    % e
+    (01101)    % l
+    (01101)    % l
+    (10000)    % o
+] bits_tmpl
+
+% ECI 3
+(^ECI000003Hello) (parsefnc debugbits) [
+    (00000)      % P/S
+    (00000)      % Flg
+    (0010101)    % ECI 3
+    (01001)      % H
+    (11100)      % L/L
+    (00110)      % e
+    (01101)      % l
+    (01101)      % l
+    (10000)      % o
+] bits_tmpl
+
+% ECI 900
+(^ECI000900Hello) (parsefnc debugbits) [
+    (00000)              % P/S
+    (00000)              % Flg
+    (011101100100010)    % ECI 900
+    (01001)              % H
+    (11100)              % L/L
+    (00110)              % e
+    (01101)              % l
+    (01101)              % l
+    (10000)              % o
+] bits_tmpl
+
+% FNC1
+(^FNC1Hello) (parsefnc debugbits) [
+    (00000)    % P/S
+    (00000)    % Flg
+    (000)      % FNC1
+    (01001)    % H
+    (11100)    % L/L
+    (00110)    % e
+    (01101)    % l
+    (01101)    % l
+    (10000)    % o
+] bits_tmpl
+
+% Parse mode - null byte
+(^000) (parse debugbits) [
+    (11111)       % B/S
+    (00001)       % len 1
+    (00000000)    % 0x00
+] bits_tmpl
+
+% Raw mode
+(101010) (raw debugbits) [
+    (101010)
+] bits_tmpl
 
 
 % Figures
 
-{
-    (123456789012) (debugcws) azteccode  % Figure 1 (left), same
-} [60 26 10 51 49 13 22 17 41] debugIsEqual
+% Figure 1 (left)
+(123456789012) (debugbits) [
+    (11110)    % D/L
+    (0011)     % 1
+    (0100)     % 2
+    (0101)     % 3
+    (0110)     % 4
+    (0111)     % 5
+    (1000)     % 6
+    (1001)     % 7
+    (1010)     % 8
+    (1011)     % 9
+    (0010)     % 0
+    (0011)     % 1
+    (0100)     % 2
+] bits_tmpl
+
+% Figure G.2
+(Code 2D!) (debugbits) [
+    (00100)    % C
+    (11100)    % L/L
+    (10000)    % o
+    (00101)    % d
+    (00110)    % e
+    (11110)    % D/L
+    (0001)     % SP
+    (0100)     % 2
+    (1111)     % U/S
+    (00101)    % D
+    (0000)     % P/S
+    (00110)    % !
+] bits_tmpl
 
 {
     % Figure 1 (right), same
     (Aztec Code is a public domain 2D matrix barcode symbology of nominally square symbols built on a square grid with a distinctive square bullseye pattern at their center.) (debugcws) azteccode
 } [23 55 83 16 60 36 10 96 170 129 16 99 97 181 68 9 96 225 41 254 10 113 120 23 10 179 86 66 49 76 144 41 131 77 56 112 108 17 160 192 225 124 28 167 137 173 208 105 43 10 102 13 52 225 193 180 8 236 166 212 48 120 68 26 74 194 153 130 137 168 161 194 170 144 136 37 85 42 167 146 170 185 131 73 88 83 48 71 102 182 134 209 131 17 86 166 155 194 42 134 169 50 166 18 25 245 52 253 191] debugIsEqual
-
-{
-    (Code 2D!) (debugcws) azteccode  % Figure G.2, same
-} [9 50 1 41 47 2 39 37 1 27] debugIsEqual
 
 {
     % Figure I.1 (left), 400 1's + CRLF, same
@@ -230,40 +853,79 @@
 } [970 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 682 672 191] debugIsEqual
 
 
-% Aztec Runes
+%
+% Error tests
+%
 
-(0) (dontdraw)
-[
-    1 1 1 0 1 0 1 0 1 0 1
-    1 1 1 1 1 1 1 1 1 1 1
-    0 1 0 0 0 0 0 0 0 1 0
-    1 1 0 1 1 1 1 1 0 1 1
-    0 1 0 1 0 0 0 1 0 1 0
-    1 1 0 1 0 1 0 1 0 1 1
-    0 1 0 1 0 0 0 1 0 1 0
-    1 1 0 1 1 1 1 1 0 1 1
-    0 1 0 0 0 0 0 0 0 1 0
-    0 1 1 1 1 1 1 1 1 1 1
-    0 0 1 0 1 0 1 0 1 0 0
-] aztecrune_eq_tmpl
+% Input too long
+20001 string (dontdraw) /bwipp.azteccodeinputTooLong er_tmpl
 
-(255) (dontdraw)
-[
-    1 1 0 1 0 1 0 1 0 0 1
-    1 1 1 1 1 1 1 1 1 1 1
-    0 1 0 0 0 0 0 0 0 1 1
-    1 1 0 1 1 1 1 1 0 1 1
-    1 1 0 1 0 0 0 1 0 1 1
-    0 1 0 1 0 1 0 1 0 1 1
-    0 1 0 1 0 0 0 1 0 1 0
-    1 1 0 1 1 1 1 1 0 1 1
-    1 1 0 0 0 0 0 0 0 1 0
-    0 1 1 1 1 1 1 1 1 1 1
-    0 0 1 1 0 0 1 1 1 0 0
-] aztecrune_eq_tmpl
+% Empty data
+() (dontdraw) /bwipp.aztecEmptyData er_tmpl
 
-(/) (dontdraw) /bwipp.aztecRuneNotNumeric aztecrune_er_tmpl
-(:) (dontdraw) /bwipp.aztecRuneNotNumeric aztecrune_er_tmpl
-(256) (dontdraw) /bwipp.aztecRuneInvalid aztecrune_er_tmpl
+% Invalid eclevel (valid: 5-95)
+(TEST) (eclevel=4 dontdraw) /bwipp.aztecInvalidEClevel er_tmpl
+(TEST) (eclevel=96 dontdraw) /bwipp.aztecInvalidEClevel er_tmpl
+
+% Invalid ecaddchars (valid: 3+)
+(TEST) (ecaddchars=2 dontdraw) /bwipp.aztecInvalidECaddChars er_tmpl
+
+% Invalid format (valid: full, compact, rune)
+(TEST) (format=invalid dontdraw) /bwipp.aztecInvalidFormat er_tmpl
+
+% Invalid layers (valid: 1-32 for full)
+(TEST) (layers=0 dontdraw) /bwipp.aztecFullInvalidLayers er_tmpl
+(TEST) (layers=33 dontdraw) /bwipp.aztecFullInvalidLayers er_tmpl
+
+% Reader init invalid layers (valid: 1-22 for full)
+(TEST) (layers=23 readerinit dontdraw) /bwipp.aztecFullInitInvalidLayers er_tmpl
+
+% Data too long for symbol
+(ABCDEFGHIJKLMNOPQRSTUVWXYZ) (layers=1 dontdraw) /bwipp.aztecNoValidSymbol er_tmpl
+
+% Large binary input that requires segment splitting
+{ 2100 string 0 1 2099 { 1 index exch 128 put } for (dontdraw) azteccode } /bwipp.aztecNoValidSymbol isError
+
+
+%
+% Coefficient cache tests (azteccode.cachelimit in global context)
+%
+
+% Large symbol with caching (default)
+{
+    (Aztec Code is a public domain 2D matrix barcode symbology) (debugcws) azteccode
+} [23 55 83 16 60 36 10 96 170 129 16 99 97 181 68 9 96 225 41 254 10 113 120 23 10 179 86 66 49 76 144 41 131 77 56 112 108 17 175] debugIsEqual
+
+% Cache disabled via global context - same result
+%%uk.co.terryburton.bwipp.global_ctx /azteccode.cachelimit 0 put
+{
+    (Aztec Code is a public domain 2D matrix barcode symbology) (debugcws) azteccode
+} [23 55 83 16 60 36 10 96 170 129 16 99 97 181 68 9 96 225 41 254 10 113 120 23 10 179 86 66 49 76 144 41 131 77 56 112 108 17 175] debugIsEqual
+%%uk.co.terryburton.bwipp.global_ctx /azteccode.cachelimit undef  % Remove to restore default
+
+
+% Option edges: layers
+{ (TEST) (layers=-1 dontdraw) azteccode pop true } true isEqual
+
+% Option edges: eclevel
+(TEST) (eclevel=-1 dontdraw) /bwipp.aztecInvalidEClevel er_tmpl
+(TEST) (eclevel=200 dontdraw) /bwipp.aztecInvalidEClevel er_tmpl
+
+% Option edges: format
+(TEST) (format=badval dontdraw) /bwipp.aztecInvalidFormat er_tmpl
+
+% Option edges: compact layers (valid: 1-4)
+(TEST) (format=compact layers=0 dontdraw) /bwipp.aztecCompactInvalidLayers er_tmpl
+(TEST) (format=compact layers=5 dontdraw) /bwipp.aztecCompactInvalidLayers er_tmpl
+
+% Option edges: compact readerinit layers (must be 1)
+(TEST) (format=compact layers=2 readerinit dontdraw) /bwipp.aztecCompactInitInvalidLayers er_tmpl
+
+% Option edges: rune layers (not allowed)
+(255) (format=rune layers=1 dontdraw) /bwipp.aztecRuneInvalidLayers er_tmpl
+
+% parsefnc edge cases
+{ (^ECI000000) (parsefnc dontdraw) azteccode pop true } true isEqual
+{ (^ECI999999) (parsefnc dontdraw) azteccode pop true } true isEqual
 end
 } bind def

@@ -3,9 +3,10 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
-
-% vim: set ts=4 sw=4 et :
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/msi dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -38,5 +39,13 @@
 
 { (1234567) (dontdraw includecheck checktype=ncrmod11) msi /sbs get
 } [2 1 1 2 1 2 1 2 2 1 1 2 1 2 2 1 1 2 1 2 1 2 2 1 2 1 1 2 2 1 1 2 1 2 1 2 2 1 1 2 2 1 1 2 2 1 2 1 1 2 1 2 2 1 2 1 2 1 2 1 1 2 1 2 2 1 1 2 1] debugIsEqual
+
+{ (123A) (dontdraw) msi
+} /bwipp.msiBadCharacter isError
+
+{ (1234) (checktype=mod10 dontdraw) msi
+} /bwipp.msiCheckTypeWithoutCheck isError
+
+{ 501 string (dontdraw) msi } /bwipp.msiinputTooLong isError
 end
 } bind def

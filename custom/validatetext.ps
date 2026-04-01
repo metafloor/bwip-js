@@ -1,0 +1,111 @@
+% --BEGIN RESOURCE render--
+% --REQUIRES preamble processoptions setanycolor--
+%%BeginResource: uk.co.terryburton.bwipp render 0.0 2026033100 204797 210987
+%%BeginData:        443 ASCII Lines
+currentglobal
+true setglobal
+/setpacking where {pop currentpacking true setpacking} if
+32 dict
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+begin
+
+% Validation dicts
+/validatetext.xalignopts <<
+    /offleft dup  /left dup  /center dup  /right dup  /offright dup  /justify dup
+>> readonly def
+
+/validatetext.yalignopts <<
+    /above dup  /top dup  /center dup  /bottom dup  /below dup  /justify dup
+>> readonly def
+
+/validatetext.directionoptions <<
+    /forward dup  /backward dup  /upward dup  /downward dup
+>> readonly def
+
+%
+%  Validate a single text option dict
+%
+%  grp textdict /validateoptions //render exec => bool [errorname errorstring |]
+%
+/validatetext {
+
+    16 dict begin
+
+    /td exch def
+    /grp exch def
+
+    % Build prefix: text | extratext | textN
+    /pfx grp 1 eq { (text) } {
+        grp 2 eq { (extratext) } {
+            5 string dup 0 (text) putinterval dup 4 grp 48 add put
+        } ifelse
+    } ifelse def
+
+    /mkerr {  % /property (msgtail) => errorname errorstring
+        /msgtail exch def
+        /prop exch 128 string cvs def
+        pfx length 9 add prop length add string
+        dup 0 (bwipp.) putinterval
+        dup 6 pfx putinterval
+        dup pfx length 6 add (Bad) putinterval
+        dup pfx length 9 add prop putinterval cvn
+        pfx length prop length add msgtail length add string
+        dup 0 pfx putinterval
+        dup pfx length prop putinterval
+        dup pfx length prop length add msgtail putinterval
+    } def
+
+    1 {  % Common exit
+
+        td (xalign) get dup (unset) ne {
+            //validatetext.xalignopts exch known not {
+                /xalign ( must be offleft, left, center, right, offright or justify) mkerr false exit
+            } if
+        } { pop } ifelse
+
+        td (yalign) get dup (unset) ne {
+            //validatetext.yalignopts exch known not {
+                /yalign ( must be above, top, center, bottom, below or justify) mkerr false exit
+            } if
+        } { pop } ifelse
+
+        //validatetext.directionoptions td (direction) get known not {
+            /direction ( must be forward, backward, upward or downward) mkerr false exit
+        } if
+
+        td (size) get dup 0 le exch 25 ge or {
+            /size ( must be greater than zero and less than 25) mkerr false exit
+        } if
+
+        td (xoffset) get dup -150 lt exch 150 gt or {
+            /xoffset ( must be from -150 to 150) mkerr false exit
+        } if
+
+        td (yoffset) get dup -150 lt exch 150 gt or {
+            /yoffset ( must be from -150 to 150) mkerr false exit
+        } if
+
+        td (gaps) get dup -20 lt exch 20 gt or {
+            /gaps ( must be from -20 to 20) mkerr false exit
+        } if
+
+        td (linegaps) get dup 0 lt exch 20 gt or {
+            /linegaps ( must be from 0 to 20) mkerr false exit
+        } if
+
+        true exit
+
+    } repeat
+
+    end
+
+} bind def
+[/barcode] {null def} forall
+/validatetext dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+setglobal
+%%EndData
+%%EndResource
+% --END RESOURCE render--

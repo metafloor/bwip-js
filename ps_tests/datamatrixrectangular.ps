@@ -1,0 +1,32 @@
+/runtest_datamatrixrectangular {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/datamatrixrectangular dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    3 1 roll { _arg0_ _arg1_ datamatrixrectangular /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    isEqual
+} def
+
+(1234) (dontdraw)
+[
+    1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+    1 1 0 0 0 1 0 1 1 1 1 1 0 1 1 0 0 1
+    1 1 0 0 0 1 1 0 0 1 0 1 0 1 0 1 0 0
+    1 1 0 0 1 1 0 0 1 1 0 1 1 0 1 1 0 1
+    1 1 1 0 0 1 1 1 0 1 0 1 1 1 1 0 0 0
+    1 0 0 1 0 1 0 0 0 0 0 0 1 1 0 1 1 1
+    1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 1 1 0
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+] eq_tmpl
+end
+} bind def

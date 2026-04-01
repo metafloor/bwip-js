@@ -3,18 +3,19 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
+%
 
 % GS1 General Specifications 22.0 (Jan 2022)
 
-% vim: set ts=4 sw=4 et :
 
 %%/gs1-128 dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) gs1-128 /sbs get } e isEqual
+    exch { _arg0_ (dontdraw) gs1-128 /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 
@@ -25,5 +26,14 @@
 {  % Avoid extraneous CodeC switch (with immediate switch back to CodeA/B) by re-checking digit runlength >= 4 after enca/encb push
     ((90)111(91)2(92)3) (debugcws) gs1-128
 } [105 102 90 11 100 17 102 25 17 18 102 25 18 19 40 106] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ ((01)09501101530003) (linkagea linkagec dontdraw) gs1-128 } /bwipp.gs1128badLinkage isError
+
+{ 501 string (dontdraw) gs1-128 } /bwipp.gs1128inputTooLong isError
 end
 } bind def

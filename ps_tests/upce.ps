@@ -3,20 +3,21 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/upce dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) upce /sbs get } e isEqual
+    exch { _arg0_ (dontdraw) upce /sbs get } dup 3 -1 roll 0 exch put
+    exch isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /t exch def
-    { t (dontdraw) upce /sbs get } e isError
+    exch { _arg0_ (dontdraw) upce /sbs get } dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 
@@ -50,6 +51,8 @@
 (098700000659)   [1 1 1 2 1 1 3 1 2 1 3 1 3 1 2 4 1 1 1 1 2 3 1 1 1 4 1 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion NNNN00000NNN
 (098760000057)   [1 1 1 2 1 1 3 1 2 1 3 2 1 3 1 1 1 1 4 1 3 2 1 1 1 3 2 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion NNNNN00000NN
 (098765000076)   [1 1 1 2 1 1 3 1 2 1 3 1 3 1 2 1 1 1 4 1 3 2 1 2 1 3 1 1 1 1 1 1 1] eq_tmpl  % UPC-A conversion NNNNNN0000{5-9}N
+
+(012345678905)   /bwipp.upcEupcAnotCompressible                                    er_tmpl  % UPC-A not compressible
 
 end
 } bind def

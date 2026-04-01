@@ -3,9 +3,10 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
+% vim: set sw=4 sts=4 et:
+%
 % Copyright (c) 2004-2024 Terry Burton
-
-% vim: set ts=4 sw=4 et :
+%
 
 %%/hibccodablockf dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -17,6 +18,9 @@
 
 { () (dontdraw validatecheck) hibccodablockf
 } /bwipp.hibccodablockfEmptyData isError
+
+{ 25001 string (dontdraw) hibccodablockf
+} /bwipp.hibccodablockfinputTooLong isError
 
 { (,) (dontdraw) hibccodablockf
 } /bwipp.hibccodablockfBadCharacter isError

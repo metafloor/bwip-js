@@ -43,6 +43,10 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
         text = unescape(encodeURIComponent(text));
     }
 
+    if (opts.dontdraw) {
+        dontdraw = true;
+    }
+
     // Convert opts to a Map
     var map = new Map;
     for (var id in opts) {
@@ -55,12 +59,13 @@ function bwipp_encode(bwipjs, encoder, text, opts, dontdraw) {
     $$ = bwipjs;
     $k = [ text, map ];
     $j = 2;
-    $_ = { bwipjs_rawstack : opts.dontdraw || dontdraw ? [] : false };
+    $_ = { bwipjs_rawstack: dontdraw ? [] : false };
+
     encoder();
 
     if ($_.bwipjs_rawstack) {
         return $_.bwipjs_rawstack;
     }
-
+ 
     return true;
 }

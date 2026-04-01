@@ -3,19 +3,23 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/gs1process dup /uk.co.terryburton.bwipp findresource cvx def
 
 /good_tmpl {
-    /t exch def
-    { t /ai gs1process pop pop pop null } null isEqual
+    { _arg0_ /ai gs1process pop pop pop null } exch
+    1 index 0 3 -1 roll put
+    null isEqual
 } def
 
 /er_tmpl {
-    /e exch def
-    /t exch def
-    { t /ai gs1process pop pop pop null } e isError
+    exch { _arg0_ /ai gs1process pop pop pop null } exch
+    1 index 0 3 -1 roll put
+    exch isError
 } def
 
 
@@ -1007,6 +1011,43 @@
 ((01)12345678901231(3925)12599(3575)654321) good_tmpl
 ((01)12345678901231(3925)12599(3600)654321) good_tmpl
 ((01)12345678901231(3925)12599(3695)654321) good_tmpl
+
+% lintiso5218 (biological sex code)
+((8018)123123123123123121(7252)0) good_tmpl
+((8018)123123123123123121(7252)1) good_tmpl
+((8018)123123123123123121(7252)2) good_tmpl
+((8018)123123123123123121(7252)9) good_tmpl
+((8018)123123123123123121(7252)3) /bwipp.GS1biologicalSexCode er_tmpl
+((8018)123123123123123121(7252)4) /bwipp.GS1biologicalSexCode er_tmpl
+((8018)123123123123123121(7252)5) /bwipp.GS1biologicalSexCode er_tmpl
+((8018)123123123123123121(7252)6) /bwipp.GS1biologicalSexCode er_tmpl
+((8018)123123123123123121(7252)7) /bwipp.GS1biologicalSexCode er_tmpl
+((8018)123123123123123121(7252)8) /bwipp.GS1biologicalSexCode er_tmpl
+
+% lintmediatype (AIDC media type)
+((8017)123123123123123121(7241)01) good_tmpl
+((8017)123123123123123121(7241)10) good_tmpl
+((8017)123123123123123121(7241)80) good_tmpl
+((8017)123123123123123121(7241)99) good_tmpl
+((8017)123123123123123121(7241)00) /bwipp.GS1UnknownMediaType er_tmpl
+((8017)123123123123123121(7241)11) /bwipp.GS1UnknownMediaType er_tmpl
+((8017)123123123123123121(7241)79) /bwipp.GS1UnknownMediaType er_tmpl
+
+% lintcsumalpha (alphanumeric check digit) - check chars must be in cset32
+((8013)2) /bwipp.GS1alphaTooShort er_tmpl
+
+% linthyphen (hyphen required in optional trailing char)
+((00)123456789012345675(4330)123456) good_tmpl
+((00)123456789012345675(4330)123456-) good_tmpl
+((00)123456789012345675(4330)123456X) /bwipp.GS1hyphenRequired er_tmpl
+
+% lintiban (IBAN format)
+((415)1231231231232(8020)A(8007)GB82WEST12345698765432) good_tmpl
+((415)1231231231232(8020)A(8007)GB82) /bwipp.GS1tooShort er_tmpl
+((415)1231231231232(8020)A(8007)GB8) /bwipp.GS1tooShort er_tmpl
+
+% Missing close paren in AI
+(\(01) /bwipp.GS1aiMissingCloseParen er_tmpl
 
 % Requisite linting disabled
 /lintreqs false def

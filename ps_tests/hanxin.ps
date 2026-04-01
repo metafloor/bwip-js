@@ -3,11 +3,19 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
-
-% vim: set ts=4 sw=4 et :
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/hanxin dup /uk.co.terryburton.bwipp findresource cvx def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ hanxin }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
+} def
 
 
 % Stub test because the encoder isn't finalised
@@ -41,5 +49,37 @@
     1 1 1 0 1 0 1 0 0 0 0 1 0 0 0 0 1 1 1 1 1 1 1
 ] debugIsEqual
 
+
+%
+% Error tests
+%
+
+% Empty data
+() (dontdraw) /bwipp.hanxinEmptyData er_tmpl
+
+% Invalid version (valid: 1-84)
+(TEST) (version=0 dontdraw) /bwipp.hanxinInvalidVersion er_tmpl
+(TEST) (version=85 dontdraw) /bwipp.hanxinInvalidVersion er_tmpl
+
+% Invalid error correction level (valid: L1-L4)
+(TEST) (eclevel=L0 dontdraw) /bwipp.hanxinInvalidErrorCorrectionLevel er_tmpl
+(TEST) (eclevel=L5 dontdraw) /bwipp.hanxinInvalidErrorCorrectionLevel er_tmpl
+
+% Invalid mask (valid: 0-3)
+(TEST) (mask=5 dontdraw) /bwipp.hanxinInvalidErrorCorrectionLevel er_tmpl
+
+% Data too long for symbol
+(ABCDEFGHIJKLMNOPQRSTUVWXYZ) (version=1 dontdraw) /bwipp.hanxinNoValidSymbol er_tmpl
+
+14001 string (dontdraw) /bwipp.hanxinInputTooLong er_tmpl
+
+% Data exceeds 13-bit character count field
+{ 8200 string 0 1 8199 { 1 index exch 49 put } for (dontdraw) hanxin } /bwipp.hanxinInputTooLarge isError
+
+{ (TEST) (version=1 dontdraw) hanxin pop true } true isEqual
+{ (TEST) (version=84 dontdraw) hanxin pop true } true isEqual
+{ (TEST) (eclevel=L1 dontdraw) hanxin pop true } true isEqual
+{ (TEST) (eclevel=L4 dontdraw) hanxin pop true } true isEqual
+(TEST) (mask=-2 dontdraw) /bwipp.hanxinInvalidErrorCorrectionLevel er_tmpl
 end
 } bind def

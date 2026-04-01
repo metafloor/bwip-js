@@ -3,11 +3,13 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % http://www.tntpost.nl/zakelijk/klantenservice/downloads/kIX_code/download.aspx
 
-% vim: set ts=4 sw=4 et :
 
 %%/kix dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -42,6 +44,8 @@
 
 { (,) (dontdraw) kix
 } /bwipp.kixBadCharacter isError
+
+{ 501 string (dontdraw) kix } /bwipp.kixInputTooLong isError
 
 
 % Examples

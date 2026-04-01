@@ -3,95 +3,371 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 % ISO/IEC 15438:2015
 
-% vim: set ts=4 sw=4 et :
 
 %%/pdf417 dup /uk.co.terryburton.bwipp findresource cvx def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ pdf417 }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
+} def
 
 
 % Check when text pad spans ECI(s)
 
 {  % Alpha sub-mode ml pad ECI alpha sub-mode
     (ABCDE^ECI000017FGHIJ) (debugcws parse parsefnc) pdf417
-} [10 1 63 148 927 17 845 187 249 900 416 334 719 368 268 807 704 302] debugIsEqual
+} [10 1 63 148 927 17 845 187 249 900] debugIsEqual
 
 {  % Alpha sub-mode ll pad ECI lower sub-mode
     (ABCDE^ECI000017fghij) (debugcws parse parsefnc) pdf417
-} [10 1 63 147 927 17 156 218 299 900 789 101 867 605 544 497 286 175] debugIsEqual
+} [10 1 63 147 927 17 156 218 299 900] debugIsEqual
 
 {  % Alpha sub-mode ml pad ECI mixed sub-mode
     (ABCDE^ECI000017,:#-.) (debugcws parse parsefnc) pdf417
-} [10 1 63 148 927 17 404 466 539 900 258 530 604 736 34 857 83 87] debugIsEqual
+} [10 1 63 148 927 17 404 466 539 900] debugIsEqual
 
 {  % Alpha sub-mode ml pad ECI punctuation sub-mode
     (ABCDE^ECI000017;<>@[) (debugcws parse parsefnc) pdf417
-} [10 1 63 148 927 17 750 32 94 900 584 719 688 323 833 520 96 310] debugIsEqual
+} [10 1 63 148 927 17 750 32 94 900] debugIsEqual
 
 {  % Lower sub-mode ml pad ECI lower sub-mode
     (abcdef^ECI000017ghijk) (debugcws parse parsefnc) pdf417
-} [10 810 32 94 178 927 17 816 218 280 684 805 217 720 495 875 5 509] debugIsEqual
+} [10 810 32 94 178 927 17 816 218 280] debugIsEqual
 
 {  % Lower sub-mode ml pad ECI mixed sub-mode
     (abcdef^ECI000017,:#-.$) (debugcws parse parsefnc) pdf417
-} [10 810 32 94 178 927 17 404 466 528 56 751 474 91 244 128 462 527] debugIsEqual
+} [10 810 32 94 178 927 17 404 466 528] debugIsEqual
 
 {  % Mixed sub-mode ll pad ECI lower sub-mode
     (,:#-.$^ECI000017abcde) (debugcws parse parsefnc) pdf417
-} [10 853 435 497 567 927 17 1 63 149 147 776 891 628 708 789 869 217] debugIsEqual
+} [10 853 435 497 567 927 17 1 63 149] debugIsEqual
 
 {  % Mixed sub-mode pl pad ECI punctuation sub-mode
     (,:#-.$^ECI000017;<>@[) (debugcws parse parsefnc) pdf417
-} [10 853 435 497 565 927 17 1 63 149 897 52 93 252 547 478 851 343] debugIsEqual
+} [10 853 435 497 565 927 17 1 63 149] debugIsEqual
 
 {  % Mixed sub-mode al pad ECI alpha sub-mode
     (,:#-.$^ECI000017ABCDE) (debugcws parse parsefnc) pdf417
-} [10 853 435 497 568 927 17 1 63 149 701 209 361 816 324 480 878 154] debugIsEqual
+} [10 853 435 497 568 927 17 1 63 149] debugIsEqual
 
 {  % Punctuation sub-mode al pad ECI alpha sub-mode
     (;<>@[^ECI000017ABCDE) (debugcws parse parsefnc) pdf417
-} [10 865 1 63 149 927 17 1 63 149 388 653 70 103 256 15 145 325] debugIsEqual
+} [10 865 1 63 149 927 17 1 63 149] debugIsEqual
 
 {  % Alpha sub-mode ps pad ECI numeric mode mixed sub-mode (no change)
     (ABCDE^ECI000017123456789012345,:#-.) (debugcws parse parsefnc) pdf417
-} [19 1 63 149 927 17 902 1 812 292 890 124 745 900 853 435 497 900 900 922 25 913 708 587 75 612 101] debugIsEqual
+} [19 1 63 149 927 17 902 1 812 292 890 124 745 900 853 435 497 900 900] debugIsEqual
 
 {  % Alpha sub-mode ps pad ECI byte mode mixed sub-mode (no change)
     (ABCDE^ECI000017^160^161^162,:#-.) (debugcws parse parsefnc) pdf417
-} [16 1 63 149 927 17 901 160 161 162 900 853 435 497 900 900 698 368 606 843 769 697 824 680] debugIsEqual
+} [16 1 63 149 927 17 901 160 161 162 900 853 435 497 900 900] debugIsEqual
 
 {  % Alpha sub-mode ml pad ECIs alpha sub-mode
     (ABCDE^ECI000017^ECI000004FGHIJ) (debugcws parse parsefnc) pdf417
-} [12 1 63 148 927 17 927 4 845 187 249 900 559 708 663 465 31 690 138 451] debugIsEqual
+} [12 1 63 148 927 17 927 4 845 187 249 900] debugIsEqual
 
 {  % Lower sub-mode ml pad ECIs mixed sub-mode al pad ECI alpha sub-mode
     (abcdef^ECI000017^ECI000004,:#-.^ECI000005FGHIJ) (debugcws parse parsefnc) pdf417
-} [19 810 32 94 178 927 17 927 4 404 466 538 927 5 156 218 299 900 900 496 715 726 458 51 802 313 674] debugIsEqual
+} [19 810 32 94 178 927 17 927 4 404 466 538 927 5 156 218 299 900 900] debugIsEqual
+
+
+%
+% Text compaction submodes
+%
+
+% Alpha submode: single char
+{ (A) (debugcws) pdf417 } [
+    4       % symbol length
+    913 65  % byte-shift 'A'
+    900     % PAD (text latch)
+] debugIsEqual
+
+% Alpha submode: HELLO
+{ (HELLO) (debugcws) pdf417 } [
+    4            % symbol length
+    214 341 449  % HELLO (text alpha)
+] debugIsEqual
+
+% Lower submode: hello
+{ (hello) (debugcws) pdf417 } [
+    4            % symbol length
+    817 131 344  % hello (text lower)
+] debugIsEqual
+
+% Mixed submode: digits
+{ (0123456789) (debugcws) pdf417 } [
+    6              % symbol length
+    902            % numeric latch
+    13 798 85 289  % 0123456789 (numeric compaction)
+] debugIsEqual
+
+% Punctuation submode: semicolons
+{ (;;) (debugcws) pdf417 } [
+    4          % symbol length
+    901 59 59  % ;; (text punct via byte)
+] debugIsEqual
+
+
+%
+% Text mode transitions
+%
+
+% Alpha to Lower
+{ (ABCabc) (debugcws) pdf417 } [
+    6          % symbol length
+    1 87       % ABC (alpha)
+    1 89       % abc (lower)
+    900        % PAD (text latch)
+] debugIsEqual
+
+% Lower to Alpha
+{ (abcABC) (debugcws) pdf417 } [
+    6           % symbol length
+    810 32 868  % abc (lower)
+    1 89        % ABC (alpha)
+] debugIsEqual
+
+% Alpha to Mixed
+{ (ABC123) (debugcws) pdf417 } [
+    6          % symbol length
+    1 88       % ABC (alpha)
+    32 119     % 123 (mixed)
+    900        % PAD (text latch)
+] debugIsEqual
+
+% Mixed to Alpha
+{ (123ABC) (debugcws) pdf417 } [
+    6           % symbol length
+    841 63 840  % 123 (mixed)
+    32          % ABC (alpha, partial)
+    900         % PAD (text latch)
+] debugIsEqual
+
+
+%
+% Numeric compaction
+%
 
 % Numeric compaction for all-numeric input with length >= 8
 {
     (12345678) (debugcws) pdf417
-} [6 902 138 628 478 900 746 409 376 866 256 762 493 826] debugIsEqual
+} [6          % symbol length
+  902         % numeric latch
+  138 628 478  % 12345678 (numeric compaction)
+  900         % PAD (text latch)
+] debugIsEqual
+
+{  % 13 digits
+    (1234567890123) (debugcws) pdf417
+} [8          % symbol length
+  902         % numeric latch
+  17 110 836 811 223  % 1234567890123 (numeric compaction)
+  900         % PAD (text latch)
+] debugIsEqual
+
+{  % 44 digits (full group)
+    (11111111111111111111111111111111111111111111) (debugcws) pdf417
+} [19         % symbol length
+  902         % numeric latch
+  485 624 195 647 193 431 299 2 752 141 640 160 581 556 711  % 44 digits (numeric)
+  900 900     % PAD PAD
+] debugIsEqual
+
+{  % 50 digits exercises multiple iterations of numeric encoding outer loop
+    (12345678901234567890123456789012345678901234567890) (debugcws) pdf417
+} [22         % symbol length
+  902         % numeric latch
+  491 81 137 450 302 67 15 174 492 862 667 475 869 12 434 1 842 90  % 50 digits (numeric)
+  900 900     % PAD PAD
+] debugIsEqual
+
+%
+% Byte compaction
+%
+
+/bdata6 6 string def 0 1 5 {bdata6 exch 128 put} for
+{  % 6 bytes (exact group)
+    bdata6 (debugcws) pdf417
+} [8          % symbol length
+  924         % byte latch (6n compaction)
+  215 312 558 104 768  % 6x 0x80 (byte compaction)
+  900         % PAD (text latch)
+] debugIsEqual
+
+/bdata1 1 string def bdata1 0 128 put
+{  % 1 byte (shift to byte)
+    bdata1 (debugcws) pdf417
+} [4          % symbol length
+  913 128     % byte-shift 0x80
+  900         % PAD (text latch)
+] debugIsEqual
+
+
+%
+% Mixed text then bytes
+%
+
+/mdata 8 string def
+mdata 0 65 put mdata 1 66 put mdata 2 67 put
+3 1 7 {mdata exch 200 put} for
+{  % Text followed by byte data
+    mdata (debugcws) pdf417
+} [10         % symbol length
+  901         % byte latch
+  109 326 378 776 648  % ABC (text-encoded as bytes)
+  200 200     % 0xC8 0xC8 (raw bytes)
+  900         % PAD (text latch)
+] debugIsEqual
+
+
+%
+% Fixed EC levels
+%
+
+{  % Fixed eclevel 0: 2 ECC codewords
+    (Hello) (fixedeclevel eclevel=0 debugcws) pdf417
+} [4          % symbol length
+  237 131 344  % Hello (text alpha+lower)
+] debugIsEqual
+
+{  % Fixed eclevel 0: 2 ECC codewords
+    (Hello) (fixedeclevel eclevel=0 debugecc) pdf417
+} [312 132    % ECC (2 codewords)
+] debugIsEqual
+
+{  % Fixed eclevel 1: 4 ECC codewords
+    (Hello) (fixedeclevel eclevel=1 debugcws) pdf417
+} [4          % symbol length
+  237 131 344  % Hello (text alpha+lower)
+] debugIsEqual
+
+{  % Fixed eclevel 1: 4 ECC codewords
+    (Hello) (fixedeclevel eclevel=1 debugecc) pdf417
+} [844 635 466 149  % ECC (4 codewords)
+] debugIsEqual
+
+
+%
+% Column options
+%
+
+{  % 1 column
+    (Hello World) (columns=1 debugcws) pdf417
+} [8          % symbol length
+  237 131 344 807 674 521 119  % Hello World (text)
+] debugIsEqual
+
+{  % 5 columns (with padding)
+    (Hello World) (columns=5 debugcws) pdf417
+} [12         % symbol length
+  237 131 344 807 674 521 119  % Hello World (text)
+  900 900 900 900  % PAD PAD PAD PAD
+] debugIsEqual
+
+
+%
+% Compact mode
+%
+
+{  % Compact
+    (Hello World) (compact debugcws) pdf417
+} [8          % symbol length
+  237 131 344 807 674 521 119  % Hello World (text)
+] debugIsEqual
+
+
+%
+% Raw mode
+%
+
+{  % Raw codewords
+    (^001^002^003) (raw debugcws) pdf417
+} [4          % symbol length
+  1 2 3       % raw codewords
+] debugIsEqual
+
+
+%
+% ECI
+%
+
+{  % ECI 3 (Latin-1)
+    (^ECI000003Hello) (parsefnc debugcws) pdf417
+} [6          % symbol length
+  927 3       % ECI 3
+  237 131 344  % Hello (text)
+] debugIsEqual
+
+{  % ECI 900 (two-codeword)
+    (^ECI000900Hello) (parsefnc debugcws) pdf417
+} [8          % symbol length
+  926 0 0     % ECI 900 (two-codeword form)
+  237 131 344  % Hello (text)
+  900         % PAD (text latch)
+] debugIsEqual
+
+{  % ECI 811799 (max, one-codeword)
+    (^ECI811799Hello) (parsefnc debugcws) pdf417
+} [6          % symbol length
+  925 899     % ECI 811799 (one-codeword form: 811799-810900=899)
+  237 131 344  % Hello (text)
+] debugIsEqual
+
+
+%
+% Parse mode
+%
+
+{  % Parse NUL byte
+    (^000) (parse debugcws) pdf417
+} [4          % symbol length
+  913 0       % byte-shift 0x00
+  900         % PAD (text latch)
+] debugIsEqual
+
 
 % eclevel validation
 
-{
+{  % eclevel 0: 2 ECC codewords
     (12345678) (debugcws eclevel=0) pdf417
-} [5 902 138 628 478 88 873] debugIsEqual
+} [5          % symbol length
+  902         % numeric latch
+  138 628 478  % 12345678 (numeric)
+] debugIsEqual
 
-{
+{  % eclevel 0: 2 ECC codewords
+    (12345678) (debugecc eclevel=0) pdf417
+} [88 873     % ECC (2 codewords)
+] debugIsEqual
+
+{  % eclevel 8: 512 ECC codewords
     (12345678) (debugcws eclevel=8) pdf417
-} [8 902 138 628 478 900 900 900 173 307 501 239 401 399 113 523 528 81 157 378 857 432 61 741 237 661 650 70 256 339 103 422 122 757 660 616 250 451 364 420 702 346 413 836 83 637 920 291 116 226 852 182 93 382 131 669 822 558 104 924 170 360 93 300 507 371 847 451 469 130 605 102 820 758 706 713 220 305 654 263 278 640 621 322 645 268 496 160 109 581 280 510 206 591 138 219 119 247 3 837 52 889 495 814 442 871 95 488 922 724 480 566 868 22 290 545 46 215 871 160 462 844 746 352 854 304 810 925 744 873 560 664 267 157 749 379 342 599 227 603 52 483 501 468 518 210 878 898 740 233 201 811 845 774 662 574 99 311 559 810 73 403 880 696 601 449 764 289 378 364 663 147 240 410 631 33 721 383 623 897 779 804 19 835 793 34 785 716 843 577 683 535 881 382 605 718 574 662 247 909 16 884 817 904 503 616 358 516 631 144 46 79 682 120 819 81 838 338 790 582 667 176 797 671 501 446 478 113 294 906 11 478 801 869 914 705 161 848 678 243 896 513 434 534 743 209 321 626 390 708 102 251 463 424 338 415 250 123 848 372 610 812 444 385 395 108 260 294 780 319 722 612 9 624 607 721 717 558 312 797 278 298 571 211 61 818 307 278 490 229 121 494 495 228 62 405 759 276 425 281 342 342 251 818 185 601 613 781 702 738 553 513 81 233 438 569 107 633 479 321 120 581 494 872 638 8 576 111 482 385 370 292 346 594 673 768 882 605 772 515 586 286 206 751 98 431 826 436 625 99 123 82 320 645 697 481 732 1 141 852 478 187 625 607 337 731 388 607 98 271 914 486 861 18 74 619 228 750 795 247 608 45 335 704 232 736 108 608 781 657 505 474 353 690 494 382 879 479 227 305 349 208 133 615 359 605 913 842 652 732 301 801 275 670 301 453 840 97 639 106 571 308 222 906 177 537 255 489 175 53 841 779 322 28 111 795 184 169 594 251 635 431 493 685 574 111 682 171 927 699 667 719 682 616 765 55 192 423 336 381 443 554 473 35 817 216 884 856 399 542 306 843 745 61 194 893 40 61 215 654 517 736 48 312 360 109 778 183 607 358 616 181 678 544 449 321 886 76 247 401 567 605 588 12 384 66 861 537 864 250 737 802 623 716 593 567 214 851 112 650] debugIsEqual
+} [8          % symbol length
+  902         % numeric latch
+  138 628 478  % 12345678 (numeric)
+  900 900 900  % PAD PAD PAD
+] debugIsEqual
 
 {
     (12345678) (debugcws eclevel=9) pdf417
 } /bwipp.pdf417InvalidErrorCorrectionLevel isError
 
-{  % Defaults to eclevel 2
+{  % Defaults to eclevel 2: 8 ECC codewords
     (12345678) (debugcws eclevel=-1) pdf417
-} [6 902 138 628 478 900 746 409 376 866 256 762 493 826] debugIsEqual
+} [6          % symbol length
+  902         % numeric latch
+  138 628 478  % 12345678 (numeric)
+  900         % PAD (text latch)
+] debugIsEqual
 
 {
     (12345678) (debugcws eclevel=-2) pdf417
@@ -133,5 +409,103 @@
     1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 0 0 1 0 1 0 0 0 1 1 0 0 0 0 0 1 1 0 0 1 1 1 0 1 1 1 0 0 1 0 0 0 0 0 1 0 1 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 1 1 0 1 0 0 0 1 1 0 0 0 1 1 1 0 0 1 1 1 1 1 1 1 0 1 0 0 0 1 0 1 0 0 1
     1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 0 0 1 0 1 0 0 0 1 1 0 0 0 0 0 1 1 0 0 1 1 1 0 1 1 1 0 0 1 0 0 0 0 0 1 0 1 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 1 1 0 1 0 0 0 1 1 0 0 0 1 1 1 0 0 1 1 1 1 1 1 1 0 1 0 0 0 1 0 1 0 0 1
 ] isEqual
+
+
+%
+% Error tests
+%
+
+% Input too long
+12501 string (dontdraw) /bwipp.pdf417inputTooLong er_tmpl
+
+% Long text input must not crash the text submode optimizer
+/s 10000 string def 0 1 9999 { s exch 65 put } for
+s (dontdraw) /bwipp.pdf417dataTooLong er_tmpl
+
+% Empty data
+() (dontdraw) /bwipp.pdf417emptyData er_tmpl
+
+% Invalid rows (valid: 3-90)
+(TEST) (rows=2 dontdraw) /bwipp.pdf417invalidRows er_tmpl
+(TEST) (rows=91 dontdraw) /bwipp.pdf417invalidRows er_tmpl
+
+% Invalid columns (valid: 1-30)
+(TEST) (columns=-1 dontdraw) /bwipp.pdf417invalidColumns er_tmpl
+(TEST) (columns=31 dontdraw) /bwipp.pdf417invalidColumns er_tmpl
+
+% Invalid row multiplier
+(TEST) (rowmult=0 dontdraw) /bwipp.pdf417badRowMult er_tmpl
+(TEST) (rowmult=51 dontdraw) /bwipp.pdf417badRowMult er_tmpl
+
+% Cannot combine ccc and raw
+(TEST) (ccc raw dontdraw) /bwipp.pdf417cccAndRaw er_tmpl
+
+% Cannot combine ccc and compact
+(TEST) (ccc compact dontdraw) /bwipp.pdf417cccAndCompact er_tmpl
+
+% Invalid raw format
+(TEST) (raw parse dontdraw) /bwipp.pdf417badRawFormat er_tmpl
+(^12A) (raw dontdraw) /bwipp.pdf417badRawFormat er_tmpl
+(^12) (raw dontdraw) /bwipp.pdf417badRawFormat er_tmpl
+(^1) (raw dontdraw) /bwipp.pdf417badRawFormat er_tmpl
+(^) (raw dontdraw) /bwipp.pdf417badRawFormat er_tmpl
+
+% Raw codeword out of range (valid: 0-928)
+(^929) (raw dontdraw) /bwipp.pdf417badRawCodeword er_tmpl
+(^999) (raw dontdraw) /bwipp.pdf417badRawCodeword er_tmpl
+
+% ECI range (valid: 000000-811799)
+{ (^ECI811799) (parsefnc dontdraw) pdf417 pop true } true isEqual
+(^ECI811800) (parsefnc dontdraw) /bwipp.pdf417badECI er_tmpl
+(^ECI900000) (parsefnc dontdraw) /bwipp.pdf417badECI er_tmpl
+
+% Data too long (>926 codewords)
+{ 2000 string 0 1 1999 { 1 index exch 65 put } for (dontdraw) pdf417 } /bwipp.pdf417dataTooLong isError
+
+% Insufficient capacity
+(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA) (columns=1 dontdraw) /bwipp.pdf417insufficientCapacity er_tmpl
+
+% Symbol length descriptor exceeds codeword range
+(test) (rows=90 columns=30 dontdraw) /bwipp.pdf417insufficientCapacity er_tmpl
+
+% Option edges: columns
+{ (TEST) (columns=0 dontdraw) pdf417 pop true } true isEqual
+(TEST) (columns=999 dontdraw) /bwipp.pdf417invalidColumns er_tmpl
+
+% Option edges: rows
+(TEST) (rows=-1 dontdraw) /bwipp.pdf417invalidRows er_tmpl
+(TEST) (rows=999 dontdraw) /bwipp.pdf417invalidRows er_tmpl
+
+% Option edges: eclevel
+(TEST) (eclevel=9 dontdraw) /bwipp.pdf417InvalidErrorCorrectionLevel er_tmpl
+
+% Option edges: columns and rows combined
+{ (TEST) (columns=1 rows=3 dontdraw) pdf417 pop true } true isEqual
+
+% Raw mode edge cases
+{ (^928) (raw dontdraw) pdf417 pop true } true isEqual
+{ (^000) (raw dontdraw) pdf417 pop true } true isEqual
+{ (^928^000) (raw dontdraw) pdf417 pop true } true isEqual
+
+% Parse mode edge cases
+{ (^^) (parse dontdraw) pdf417 pop true } true isEqual
+{ (^000) (parse dontdraw) pdf417 pop true } true isEqual
+{ (^255) (parse dontdraw) pdf417 pop true } true isEqual
+(^256) (parse dontdraw) /bwipp.invalidOrdinal er_tmpl
+(^999) (parse dontdraw) /bwipp.invalidOrdinal er_tmpl
+{ (^NUL) (parse dontdraw) pdf417 pop true } true isEqual
+{ (A^) (parse dontdraw) pdf417 pop true } true isEqual
+{ (^1) (parse dontdraw) pdf417 pop true } true isEqual
+{ (^12) (parse dontdraw) pdf417 pop true } true isEqual
+
+% parsefnc edge cases
+(^FNC1) (parsefnc dontdraw) /bwipp.unknownFNC er_tmpl
+(^FNC2) (parsefnc dontdraw) /bwipp.unknownFNC er_tmpl
+(^FNC3) (parsefnc dontdraw) /bwipp.unknownFNC er_tmpl
+(^FNC4) (parsefnc dontdraw) /bwipp.unknownFNC er_tmpl
+{ (^ECI000000) (parsefnc dontdraw) pdf417 pop true } true isEqual
+(^ECI999999) (parsefnc dontdraw) /bwipp.pdf417badECI er_tmpl
+(^ECI) (parsefnc dontdraw) /bwipp.truncatedECI er_tmpl
+(^ECI1) (parsefnc dontdraw) /bwipp.truncatedECI er_tmpl
 end
 } bind def

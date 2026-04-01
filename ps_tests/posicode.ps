@@ -3,9 +3,10 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
-
-% vim: set ts=4 sw=4 et :
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/posicode dup /uk.co.terryburton.bwipp findresource cvx def
 
@@ -21,6 +22,18 @@
 { (AB^029CD) (dontdraw parse version=limitedb) posicode
 } /bwipp.posicodeBadCharacter isError
 
+{ 501 string (dontdraw) posicode } /bwipp.posicodeinputTooLong isError
+
+% Invalid raw format
+{ (^12A) (raw dontdraw) posicode } /bwipp.posicodeBadRawFormat isError
+{ (^12) (raw dontdraw) posicode } /bwipp.posicodeBadRawFormat isError
+{ (^1) (raw dontdraw) posicode } /bwipp.posicodeBadRawFormat isError
+{ (^) (raw dontdraw) posicode } /bwipp.posicodeBadRawFormat isError
+{ (^020garbage) (raw dontdraw) posicode } /bwipp.posicodeBadRawFormat isError
+
+% Raw codeword out of range (valid: 0-45)
+{ (^046) (raw dontdraw) posicode } /bwipp.posicodeBadRawCodeword isError
+{ (^999) (raw dontdraw) posicode } /bwipp.posicodeBadRawCodeword isError
 
 % Examples
 
@@ -38,5 +51,19 @@
 [
     1 5 1 1 1 1 1 1 1 3 1 2 1 1 1 2 1 3 1 1 1 1 1 4 1 2 1 3 1 1 1 2 1 2 1 2 1 2 1 1 1 3 1 4 1 1 1 1 1 3 1 2 1 1 1 3 1 1 1 2 1 1 1 4 1 1 1 7 1 1 1 1 1 6 1 2 1 1 1 5 1 3 1 1 1 4 1 4 1 1 1 3 1 5 1 1 1 2 1 6 1 1 1 1 1 7 1 1 1 6 1 1 1 2 1 5 1 2 1 2 1 4 1 3 1 2 1 3 1 4 1 2 1 2 1 5 1 2 1 1 1 6 1 2 1 5 1 1 1 3 1 4 1 2 1 3 1 3 1 3 1 3 1 2 1 4 1 3 1 1 1 5 1 3 1 4 1 1 1 4 1 3 1 2 1 4 1 2 1 3 1 4 1 1 1 4 1 4 1 3 1 1 1 5 1 2 1 2 1 5 1 1 1 3 1 5 1 2 1 1 1 6 1 1 1 2 1 6 1 1 1 1 1 7 1 1 1 7 1 1 1 1 1 3 1 1 1
 ] debugIsEqual
+
+
+%
+% Extended ASCII (FNC4) tests
+%
+
+(^160) (dontdraw parse version=a) posicode /sbs get
+[1 12 1 1 1 1 1 2 1 1 1 1 1 8 1 1 1 1 1 8 1 2 1 3 1 5 1 3 1 3 1 2 1 2 1 2 1 2 1 1 1 1 1 1 1 1 1 11 1] debugIsEqual
+
+(^160) (dontdraw parse version=b) posicode /sbs get
+[1 12 1 2 1 3 1 2 1 2 1 2 1 9 1 2 1 2 1 9 1 3 1 4 1 6 1 4 1 4 1 3 1 3 1 3 1 3 1 2 1 2 1 2 1 2 1 12 1] debugIsEqual
+
+(^160^160^160^160) (dontdraw parse version=a) posicode /sbs get
+[1 12 1 1 1 1 1 2 1 1 1 1 1 8 1 1 1 1 1 8 1 1 1 1 1 8 1 1 1 1 1 8 1 2 1 3 1 5 1 2 1 3 1 5 1 2 1 3 1 5 1 2 1 3 1 5 1 4 1 1 1 2 1 1 1 3 1 3 1 1 1 1 1 1 1 1 1 11 1] debugIsEqual
 end
 } bind def

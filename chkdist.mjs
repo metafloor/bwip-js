@@ -4,6 +4,7 @@ import './atob.mjs';
 import browser, { gs1_128 as browser_128, loadFont as browser_lf } from './dist/bwip-js.mjs';
 import nodejs,  { gs1_128 as nodejs_128, loadFont as nodejs_lf }  from './dist/bwip-js-node.mjs';
 import reactnv, { gs1_128 as reactnv_128, loadFont as reactnv_lf } from './dist/bwip-js-rn.mjs';
+import generic, { gs1_128 as generic_128, drawingSVG as generic_svg } from './dist/bwip-js-gen.mjs';
 
 // Just enough canvas element for our built-in drawing.
 class HTMLCanvasElement {
@@ -29,6 +30,11 @@ browser.toCanvas(canvas, { bcid:'code128', text:'01234566789', includetext:true 
 console.log('browser-esm toCanvas ok');
 browser_128(canvas, { text:'(01)95012345678903', includetext:true });
 console.log('browser-esm named export ok');
+
+generic.toSVG({ bcid:'code128', text:'01234566789', includetext:true });
+console.log('generic-esm toSVG ok');
+generic_128({ text:'(01)95012345678903', includetext:true }, generic_svg());
+console.log('generic-esm named export ok');
 
 nodejs.toBuffer({ bcid:'code128', text:'01234566789', includetext:true })
     .then((png) => {

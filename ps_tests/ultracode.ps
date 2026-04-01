@@ -3,15 +3,25 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/ultracode dup /uk.co.terryburton.bwipp findresource cvx def
 
 /eq_tmpl {
-    /e exch def
-    /o exch def
-    /t exch def
-    { t o ultracode /pixs get } e isEqual
+    3 1 roll { _arg0_ _arg1_ ultracode /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    isEqual
+} def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ ultracode }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
 } def
 
 {
@@ -127,5 +137,38 @@
     9 0 1 9 0 3 1 3 6 3 3 3 5 6 5 3 1 1 3 0 1 5 9
     9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
 ] eq_tmpl
+
+
+%
+% Error tests
+%
+
+% Input too long
+2501 string (dontdraw) /bwipp.ultracodeinputTooLong er_tmpl
+
+% Invalid revision (valid: 1-2)
+(TEST) (rev=0 dontdraw) /bwipp.ultracodeInvalidRevision er_tmpl
+(TEST) (rev=3 dontdraw) /bwipp.ultracodeInvalidRevision er_tmpl
+
+% Invalid error correction level (valid: EC0-EC5, EC0 only for rev=1)
+(TEST) (eclevel=EC6 dontdraw) /bwipp.ultracodeInvalidErrorCorrectionLevel er_tmpl
+(TEST) (rev=2 eclevel=EC0 dontdraw) /bwipp.ultracodeInvalidErrorCorrectionLevel er_tmpl
+
+% Invalid raw format
+(^12A) (raw dontdraw) /bwipp.ultracodeBadRawFormat er_tmpl
+(^12) (raw dontdraw) /bwipp.ultracodeBadRawFormat er_tmpl
+(^1) (raw dontdraw) /bwipp.ultracodeBadRawFormat er_tmpl
+(^) (raw dontdraw) /bwipp.ultracodeBadRawFormat er_tmpl
+(^282garbage) (raw dontdraw) /bwipp.ultracodeBadRawFormat er_tmpl
+
+% Raw codeword out of range (valid: 0-284)
+(^285) (raw dontdraw) /bwipp.ultracodeBadRawCodeword er_tmpl
+(^999) (raw dontdraw) /bwipp.ultracodeBadRawCodeword er_tmpl
+
+% Data too long for symbol
+{ 300 string 0 1 299 { 1 index exch 65 put } for (dontdraw) ultracode } /bwipp.ultracodeNoValidSymbol isError
+
+(TEST) (eclevel=EC0 dontdraw) /bwipp.ultracodeInvalidErrorCorrectionLevel er_tmpl
+(TEST) (eclevel=EC7 dontdraw) /bwipp.ultracodeInvalidErrorCorrectionLevel er_tmpl
 end
 } bind def

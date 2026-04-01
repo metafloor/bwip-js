@@ -1,73 +1,83 @@
-% --REQUIRES preamble raiseerror processoptions--
-%%BeginData:        144 ASCII Lines
+% --REQUIRES preamble raiseerror setuphooks processoptions setanycolor render--
+%%BeginData:        165 ASCII Lines
+currentglobal
+true setglobal
 /setpacking where {pop currentpacking true setpacking} if
-10 dict
+2 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+dup /render dup /uk.co.terryburton.bwipp findresource put
 begin
 /renmaximatrix {
 
-    20 dict begin
+    32 dict begin
+    {
 
+    %
     % Default options
+    %
     /barcolor (unset) def
     /backgroundcolor (unset) def
     /bordercolor (unset) def
-    /inkspread 0.15 def
+    /inkspread null def
     /showborder false def
     /borderleft 0.0 def
     /borderright 0.0 def
     /bordertop 0.0 def
     /borderbottom 0.0 def
-    /borderwidth 0.25 def
+    /borderwidth 0.5 def
+    /gridfit false def
+    /griddpi 0 def
 
     {def} forall
-    opt currentdict /opt undef //processoptions exec pop
+    opt currentdict /opt undef /apply //processoptions exec /options exch def
 
     /uk.co.terryburton.bwipp.global_ctx dup where {
         exch get /ctx exch def
         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+        inkspread       null eq    { ctx /default_inkspread       2 copy known {get /inkspread       exch def} {pop pop} ifelse } if
+        griddpi         0 eq       { ctx /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
     } { pop } ifelse
 
-    % Set RGB or CMYK color, or some other color by name
-    /setanycolor {
-        /anycolor exch def
-        anycolor length 1 lt {
-            /bwipp.colorEnpty (Colors must not be empty) //raiseerror exec
-        } if
-        anycolor 0 get 95 ne {  % RGB or CMYK
-            anycolor length dup 6 ne exch 8 ne and {
-                /bwipp.colorBadLength (Colors must be 6 or 8 hexadecimal characters or a defined name beginning with underscore) //raiseerror exec
-            } if
-            mark
-            0 2 anycolor length 1 sub {
-                anycolor exch 2 getinterval 0 exch {
-                    dup dup 48 ge exch  57 le and {48 sub} {  % 0-9
-                    dup dup 65 ge exch  70 le and {55 sub} {  % A-F
-                    dup dup 97 ge exch 102 le and {87 sub} {  % a-f
-                        cleartomark /bwipp.colorBadCharacter (RGB and CMYK Colors must be in hexadecimal notation) //raiseerror exec
-                    } ifelse } ifelse } ifelse
-                    exch 16 mul add
-                } forall
-                255 div
-            } for
-            counttomark
-            dup 3 eq { /DeviceRGB } { /DeviceCMYK } ifelse
-            exch 2 add -1 roll pop  % clear mark
-        } {  % Named color beginning "_..."
-            /uk.co.terryburton.bwipp.global_ctx dup where {exch get} {0 dict} ifelse
-            /named_colors 2 copy known {get} {pop pop 0 dict} ifelse
-            anycolor 2 copy known not {
-                pop pop /bwipp.colorUnknown (Color is not defined) //raiseerror exec
-            } if
-            get mark exch aload pop counttomark 1 add -2 roll exch pop
-        } ifelse
-        { setcolorspace setcolor } stopped {
-            /bwipp.colorFailedToSet (Failed to set color) //raiseerror exec
-        } if
-    } def
+    % Auto-enable gridfit when griddpi is specified
+    griddpi 0 ne { /gridfit true def } if
+
+    inkspread null eq {/inkspread 0.15 def} if
+
+    inkspread -1 lt inkspread 1 gt or {
+        /bwipp.renmaximatrixBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
+    } if
+
+    borderleft -1 lt borderleft 50 gt or {
+        /bwipp.renmaximatrixBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderright -1 lt borderright 50 gt or {
+        /bwipp.renmaximatrixBadBorderright (borderright must be from -1 to 50) //raiseerror exec
+    } if
+
+    bordertop -1 lt bordertop 50 gt or {
+        /bwipp.renmaximatrixBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderbottom -1 lt borderbottom 50 gt or {
+        /bwipp.renmaximatrixBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderwidth 0 lt borderwidth 10 gt or {
+        /bwipp.renmaximatrixBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
+    } if
+
+    griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
+        /bwipp.renmaximatrixBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
+    } if } if
+
+    options /debughexagons known
+    /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+    and { /bwipp.debughexagons pixs //raiseerror exec } if
 
     gsave
 
@@ -75,7 +85,14 @@ begin
 
     2.4945 dup scale  % from 1pt to 0.88mm
 
+    %
+    % Grid fit: uniform even-pixel snap preserves hex aspect ratio
+    %
+    gridfit { 2 false /gridfit //render exec } if
+
+    %
     % Display the border and background
+    %
     showborder {
         /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
         /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
@@ -90,18 +107,18 @@ begin
     backgroundcolor (unset) ne {
         gsave
         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        backgroundcolor setanycolor fill
+        backgroundcolor //setanycolor exec not { grestore grestore //raiseerror exec } if fill
         grestore
     } if
     showborder {
         gsave
         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        bordercolor (unset) ne { bordercolor setanycolor } if
+        bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
         borderwidth inkspread 2 mul sub setlinewidth stroke
         grestore
     } if
 
-    barcolor (unset) ne { barcolor setanycolor } if
+    barcolor (unset) ne { barcolor //setanycolor exec not { grestore //raiseerror exec } if } if
 
     /g 0.06 inkspread add def
 
@@ -126,7 +143,9 @@ begin
     } forall
     fill
 
+    %
     % Plot the locator symbol
+    %
     newpath 14 13.8576 0.5774 inkspread add 0 360 arc closepath
             14 13.8576 1.3359 inkspread sub 360 0 arcn closepath fill
     newpath 14 13.8576 2.1058 inkspread add 0 360 arc closepath
@@ -136,6 +155,7 @@ begin
 
     grestore
 
+    } stopped {end stop} if
     end
 
 }
@@ -144,5 +164,6 @@ bind def
 /renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
 end
 /setpacking where {pop setpacking} if
+setglobal
 %%EndData
 %%EndResource

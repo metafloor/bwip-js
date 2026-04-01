@@ -3,11 +3,19 @@
 % Barcode Writer in Pure PostScript
 % https://bwipp.terryburton.co.uk
 %
-% Copyright (c) 2004-2024 Terry Burton
-
-% vim: set ts=4 sw=4 et :
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
 
 %%/datamatrix dup /uk.co.terryburton.bwipp findresource cvx def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ datamatrix }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
+} def
 
 
 % Macro 05
@@ -98,5 +106,779 @@
 {
     ([\)>^03006^029+/ACMRN123456/V2009121908334^030^004) (debugcws parse) datamatrix  % ANSI/HIBC 1.3-2010 Section 2.2 Patient Identification Example (p.28), Macro 06, same
 } [237 44 48 66 68 78 83 79 142 164 186 48 87 150 139 142 149 138 163 53 129 118] debugIsEqual
+
+
+%
+% Error tests
+%
+
+% Input too long
+15001 string (dontdraw) /bwipp.datamatrixinputTooLong er_tmpl
+
+% Empty data
+() (dontdraw) /bwipp.datamatrixEmptyData er_tmpl
+
+% Invalid format
+(TEST) (format=invalid dontdraw) /bwipp.datamatrixInvalidFormat er_tmpl
+
+% Version with rows/columns conflict
+(TEST) (version=10x10 rows=10 dontdraw) /bwipp.datamatrixVersionRowsCols er_tmpl
+(TEST) (version=10x10 columns=10 dontdraw) /bwipp.datamatrixVersionRowsCols er_tmpl
+
+% Invalid version format
+(TEST) (version=invalid dontdraw) /bwipp.datamatrixVersionFormat er_tmpl
+
+% Invalid version RxC
+(TEST) (version=10xABC dontdraw) /bwipp.datamatrixVersionBadRowOrColumn er_tmpl
+(TEST) (version=ABCx10 dontdraw) /bwipp.datamatrixVersionBadRowOrColumn er_tmpl
+
+% Invalid raw format
+(^12A) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+(^12) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+(^1) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+(^) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+(^230garbage) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+
+% Raw codeword out of range (valid: 0-255)
+(^256) (raw dontdraw) /bwipp.datamatrixBadRawCodeword er_tmpl
+(^999) (raw dontdraw) /bwipp.datamatrixBadRawCodeword er_tmpl
+
+% Data too long for symbol
+(ABCDEFGHIJKLMNOPQRSTUVWXYZ) (version=10x10 dontdraw) /bwipp.datamatrixNoValidSymbol er_tmpl
+
+% Data exceeds maximum symbol capacity
+4000 string 0 1 3999 { 2 copy 49 put pop } for (dontdraw) /bwipp.datamatrixTooMuchData er_tmpl
+
+% Data exceeds symbol capacity via binary encoding
+{ 2500 string 0 1 2499 { 1 index exch 128 put } for (dontdraw) datamatrix } /bwipp.datamatrixTooMuchData isError
+
+% Data exceeds symbol capacity via C40 encoding
+{ 2500 string 0 1 2499 { 1 index exch 65 put } for (dontdraw) datamatrix } /bwipp.datamatrixTooMuchData isError
+
+% Data exceeds symbol capacity via Text encoding
+{ 2500 string 0 1 2499 { 1 index exch 97 put } for (dontdraw) datamatrix } /bwipp.datamatrixTooMuchData isError
+
+% Data exceeds symbol capacity via X12 encoding
+{ 2500 string 0 1 2499 { 1 index exch 42 put } for (dontdraw) datamatrix } /bwipp.datamatrixTooMuchData isError
+
+% Data exceeds symbol capacity via EDIFACT encoding
+{ 2500 string 0 1 2499 { 1 index exch 91 put } for (dontdraw) datamatrix } /bwipp.datamatrixTooMuchData isError
+
+% Option edges: version
+{ (TEST) (version=0x0 dontdraw) datamatrix pop true } true isEqual
+(TEST) (version=999 dontdraw) /bwipp.datamatrixVersionFormat er_tmpl
+(TEST) (version=1x1 dontdraw) /bwipp.datamatrixNoValidSymbol er_tmpl
+
+% Raw mode edge cases
+(^) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+(^1) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+(^12) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+(^999) (raw dontdraw) /bwipp.datamatrixBadRawCodeword er_tmpl
+{ (^000) (raw dontdraw) datamatrix pop true } true isEqual
+{ (^230^001) (raw dontdraw) datamatrix pop true } true isEqual
+(^230^) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+(^230^1) (raw dontdraw) /bwipp.datamatrixBadRawFormat er_tmpl
+
+% Parse mode edge cases
+{ (^^) (parse dontdraw) datamatrix pop true } true isEqual
+{ (^000) (parse dontdraw) datamatrix pop true } true isEqual
+{ (^255) (parse dontdraw) datamatrix pop true } true isEqual
+{ (^NUL) (parse dontdraw) datamatrix pop true } true isEqual
+{ (A^) (parse dontdraw) datamatrix pop true } true isEqual
+(^256) (parse dontdraw) /bwipp.invalidOrdinal er_tmpl
+
+% parsefnc edge cases
+{ (^FNC1) (parsefnc dontdraw) datamatrix pop true } true isEqual
+{ (^ECI000000) (parsefnc dontdraw) datamatrix pop true } true isEqual
+{ (^ECI999999) (parsefnc dontdraw) datamatrix pop true } true isEqual
+(^ECI) (parsefnc dontdraw) /bwipp.truncatedECI er_tmpl
+
+
+%
+% ASCII mode encoding
+%
+
+% Single ASCII character
+{ (A) (debugcws) datamatrix } [
+    66       % 'A'+1
+    129 70   % PAD PAD
+] debugIsEqual
+
+% Two ASCII characters
+{ (AB) (debugcws) datamatrix } [
+    66 67    % 'A'+1 'B'+1
+    129      % PAD
+] debugIsEqual
+
+% ASCII text
+{ (Hello) (debugcws) datamatrix } [
+    73 102 109 109 112  % 'H'+1 'e'+1 'l'+1 'l'+1 'o'+1
+] debugIsEqual
+
+% Digit pairs: dd+130
+{ (12) (debugcws) datamatrix } [
+    142      % 12+130
+    129 70   % PAD PAD
+] debugIsEqual
+
+{ (1234) (debugcws) datamatrix } [
+    142 164  % 12+130 34+130
+    129      % PAD
+] debugIsEqual
+
+{ (123456) (debugcws) datamatrix } [
+    142 164 186  % 12+130 34+130 56+130
+] debugIsEqual
+
+{ (12345678) (debugcws) datamatrix } [
+    142 164 186 208  % 12+130 34+130 56+130 78+130
+    129              % PAD
+] debugIsEqual
+
+{ (1234567890) (debugcws) datamatrix } [
+    142 164 186 208 220  % 12+130 34+130 56+130 78+130 90+130
+] debugIsEqual
+
+% Single digit (not a pair)
+{ (0) (debugcws) datamatrix } [
+    49       % '0'+1
+    129 70   % PAD PAD
+] debugIsEqual
+
+% Space character
+{ ( ) (debugcws) datamatrix } [
+    33       % ' '+1
+    129 70   % PAD PAD
+] debugIsEqual
+
+
+%
+% C40 mode encoding
+%
+
+% Short C40: stays in ASCII (not worth latching)
+{ (ABCD) (debugcws) datamatrix } [
+    66 67 68 69  % 'A'+1..'D'+1
+    129          % PAD
+] debugIsEqual
+
+{ (ABCDE) (debugcws) datamatrix } [
+    66 67 68 69 70  % 'A'+1..'E'+1
+] debugIsEqual
+
+% C40 latch: 6+ uppercase chars
+{ (ABCDEF) (debugcws) datamatrix } [
+    230        % lC40
+    89 233     % ABC
+    109 36     % DEF
+] debugIsEqual
+
+{ (ABCDEFGHI) (debugcws) datamatrix } [
+    230        % lC40
+    89 233     % ABC
+    109 36     % DEF
+    128 95     % GHI
+    254        % unlatch
+] debugIsEqual
+
+{ (ABCDEFGHIJKL) (debugcws) datamatrix } [
+    230        % lC40
+    89 233     % ABC
+    109 36     % DEF
+    128 95     % GHI
+    147 154    % JKL
+    254        % unlatch
+    129 147    % PAD PAD
+] debugIsEqual
+
+% Long C40
+{ (ABCDEFGHIJKLMNOPQR) (debugcws) datamatrix } [
+    230             % lC40
+    89 233          % ABC
+    109 36          % DEF
+    128 95          % GHI
+    147 154         % JKL
+    166 213         % MNO
+    186 16          % PQR
+    254             % unlatch
+    129 237 133 28  % PAD PAD PAD PAD
+] debugIsEqual
+
+% C40 with spaces (space is native C40)
+{ (ABC DEF) (debugcws) datamatrix } [
+    230        % lC40
+    89 233     % ABC
+    21 123     % <sp>DE
+    254        % unlatch
+    71         % 'F'+1
+    129        % PAD
+] debugIsEqual
+
+
+%
+% Text mode encoding
+%
+
+% Text latch
+{ (abcdef) (debugcws) datamatrix } [
+    239        % lText
+    89 233     % abc
+    109 36     % def
+] debugIsEqual
+
+{ (abcdefghi) (debugcws) datamatrix } [
+    239   % lText
+    89 233     % abc
+    109 36     % def
+    128 95     % ghi
+    254        % unlatch
+] debugIsEqual
+
+% Text with uppercase shift: too short to latch, stays in ASCII
+{ (abcABCabc) (debugcws) datamatrix } [
+    98 99 100    % 'a'+1 'b'+1 'c'+1
+    66 67 68     % 'A'+1 'B'+1 'C'+1
+    98 99 100    % 'a'+1 'b'+1 'c'+1
+    129 251 147  % PAD PAD PAD
+] debugIsEqual
+
+
+%
+% X12 mode encoding
+%
+
+% X12 specific chars
+{ (>*>*>*) (debugcws) datamatrix } [
+    238     % lX12
+    12 171  % >*>
+    6 146   % *>* (+ implicit unlatch)
+] debugIsEqual
+
+% X12 with mixed chars: uses C40 when X12 not advantageous
+{ (>ABC>DEF) (debugcws) datamatrix } [
+    230      % lC40
+    9 71     % >AB
+    96 66    % C>D
+    121 123  % EF (+ implicit unlatch)
+    71       % (padding codeword)
+] debugIsEqual
+
+{ (>ABC>DEF>GHI) (debugcws) datamatrix } [
+    238      % lX12
+    14 192   % >AB
+    100 98   % C>D
+    115 123  % EF>
+    128 95   % GHI
+    254      % unlatch
+    129 147  % PAD PAD
+] debugIsEqual
+
+
+%
+% CTX backtracking
+%
+% The backtracking code (encCTX lines 789-809) fires when:
+%  - The CTX loop exits without setting done=true
+%  - p mod 3 != 0 (not on a triplet boundary)
+% It backtracks character-by-character until p mod 3 == 0,
+% emits the aligned triplets + unlatch, then encodes backtracked
+% chars in ASCII ("encode something" to prevent immediate re-latch).
+%
+
+% C40 backtrack: extended ASCII at end misaligns p (4 vals, p mod 3 = 1)
+% Backtracks to last triplet boundary, unlatch, then ASCII for remaining
+{ 10 string dup 0 (ABCDEFGHI) putinterval dup 9 192 put (debugcws) datamatrix } [
+    230      % lC40
+    89 233   % ABC
+    109 36   % DEF
+    128 95   % GHI
+    254      % unlatch
+    235 65   % upper-shift 192-128+1
+    129 147  % PAD PAD
+] debugIsEqual
+
+% C40 backtrack: two extended ASCII chars (8 vals, p mod 3 = 2)
+{ 11 string dup 0 (ABCDEFGHI) putinterval dup 9 192 put dup 10 193 put (debugcws) datamatrix } [
+    230                    % lC40
+    89 233                 % ABC
+    109 36                 % DEF
+    254                    % unlatch (backtrack to triplet boundary)
+    231                    % lB256
+    178 138 32 183 196 90  % B256 data (randomised)
+    129 87 237 133 28      % PAD PAD PAD PAD PAD
+] debugIsEqual
+
+% C40 backtrack: 12 C40 + 1 ext (p=16, mod 3=1, backtrack to p=12)
+{ 13 string dup 0 (ABCDEFGHIJKL) putinterval dup 12 192 put (debugcws) datamatrix } [
+    230      % lC40
+    89 233   % ABC
+    109 36   % DEF
+    128 95   % GHI
+    147 154  % JKL
+    254      % unlatch
+    235 65   % upper-shift 192-128+1
+] debugIsEqual
+
+% Text backtrack: 9 lowercase + 1 ext (p=13, mod 3=1)
+{ 10 string dup 0 (abcdefghi) putinterval dup 9 192 put (debugcws) datamatrix } [
+    239      % lText
+    89 233   % abc
+    109 36   % def
+    128 95   % ghi
+    254      % unlatch
+    235 65   % upper-shift 192-128+1
+    129 147  % PAD PAD
+] debugIsEqual
+
+% Text backtrack: 12 lowercase + 1 ext
+{ 13 string dup 0 (abcdefghijkl) putinterval dup 12 192 put (debugcws) datamatrix } [
+    239      % lText
+    89 233   % abc
+    109 36   % def
+    128 95   % ghi
+    147 154  % jkl
+    254      % unlatch
+    235 65   % upper-shift 192-128+1
+] debugIsEqual
+
+% X12 backtrack: 10 X12 + non-X12 (p=10, mod 3=1, backtracks 1 char)
+{ 11 string
+  dup 0 62 put dup 1 42 put dup 2 13 put dup 3 62 put dup 4 42 put
+  dup 5 13 put dup 6 62 put dup 7 42 put dup 8 13 put dup 9 62 put
+  dup 10 97 put (debugcws) datamatrix
+} [
+    238        % lX12
+    12 169     % >*CR
+    12 169     % >*CR
+    254        % unlatch (backtrack: > not emitted)
+    63 43 14   % '>'+1 '*'+1 CR+1
+    63         % '>'+1
+    98         % 'a'+1
+    129        % PAD
+] debugIsEqual
+
+% X12 backtrack: 11 X12 + non-X12 (p=11, mod 3=2, backtracks 2 chars)
+{ 12 string
+  dup 0 62 put dup 1 42 put dup 2 13 put dup 3 62 put dup 4 42 put
+  dup 5 13 put dup 6 62 put dup 7 42 put dup 8 13 put dup 9 62 put
+  dup 10 42 put dup 11 97 put (debugcws) datamatrix
+} [
+    238     % lX12
+    12 169  % >*CR
+    12 169  % >*CR
+    12 169  % >*CR
+    254     % unlatch (backtrack: >* not emitted)
+    63 43   % '>'+1 '*'+1
+    98      % 'a'+1
+    129     % PAD
+] debugIsEqual
+
+% X12 backtrack: 13 X12 + non-X12 (p=13, mod 3=1, backtracks 1 char)
+{ 14 string
+  dup 0 62 put dup 1 42 put dup 2 13 put dup 3 62 put dup 4 42 put
+  dup 5 13 put dup 6 62 put dup 7 42 put dup 8 13 put dup 9 62 put
+  dup 10 42 put dup 11 13 put dup 12 62 put dup 13 97 put
+  (debugcws) datamatrix
+} [
+    238                % lX12
+    12 169             % >*CR
+    12 169             % >*CR
+    12 169             % >*CR
+    254                % unlatch (backtrack: > not emitted)
+    63 43 14           % '>'+1 '*'+1 CR+1
+    63                 % '>'+1
+    98                 % 'a'+1
+    129 87 237 133 28  % PAD PAD PAD PAD PAD
+] debugIsEqual
+
+% Backtrack "encode something" with digit pair (line 802)
+{ 12 string dup 0 (ABCDEFGHI) putinterval dup 9 192 put dup 10 49 put dup 11 50 put (debugcws) datamatrix } [
+    230     % lC40
+    89 233  % ABC
+    109 36  % DEF
+    128 95  % GHI
+    254     % unlatch
+    235 65  % upper-shift 192-128+1
+    142     % 12+130
+    129     % PAD
+] debugIsEqual
+
+% Backtrack "encode something" with single char (line 806)
+{ 11 string dup 0 (ABCDEFGHI) putinterval dup 9 192 put dup 10 49 put (debugcws) datamatrix } [
+    230     % lC40
+    89 233  % ABC
+    109 36  % DEF
+    128 95  % GHI
+    254     % unlatch
+    235 65  % upper-shift 192-128+1
+    50      % '1'+1
+    129     % PAD
+] debugIsEqual
+
+%
+% CTX mode transitions without backtracking (mode switch at triplet boundary)
+%
+
+% C40 to lowercase: mode switch at triplet boundary (sets done=true)
+{ (ABCDEFGHIabc) (debugcws) datamatrix } [
+    230        % lC40
+    89 233     % ABC
+    109 36     % DEF
+    128 95     % GHI
+    254        % unlatch
+    98 99 100  % 'a'+1 'b'+1 'c'+1
+    129        % PAD
+] debugIsEqual
+
+% Short C40: not enough to latch, stays in ASCII
+{ (ABCDEa) (debugcws) datamatrix } [
+    66 67 68 69 70 98  % 'A'+1..'E'+1 'a'+1
+    129 56             % PAD PAD
+] debugIsEqual
+
+{ (ABCa) (debugcws) datamatrix } [
+    66 67 68 98  % 'A'+1..'C'+1 'a'+1
+    129          % PAD
+] debugIsEqual
+
+{ (ABCab) (debugcws) datamatrix } [
+    66 67 68 98 99  % 'A'+1..'C'+1 'a'+1 'b'+1
+] debugIsEqual
+
+{ (ABCDEFabc) (debugcws) datamatrix } [
+    66 67 68 69 70 71  % 'A'+1..'F'+1
+    98 99 100          % 'a'+1 'b'+1 'c'+1
+    129 251 147        % PAD PAD PAD
+] debugIsEqual
+
+% Text then uppercase
+{ (abcA) (debugcws) datamatrix } [
+    98 99 100 66  % 'a'+1..'c'+1 'A'+1
+    129           % PAD
+] debugIsEqual
+
+{ (abcAB) (debugcws) datamatrix } [
+    98 99 100 66 67  % 'a'+1..'c'+1 'A'+1 'B'+1
+] debugIsEqual
+
+% X12 chars: short runs stay in ASCII
+{ (>ABa) (debugcws) datamatrix } [
+    63 66 67 98  % '>'+1 'A'+1 'B'+1 'a'+1
+    129          % PAD
+] debugIsEqual
+
+{ (>ABCa) (debugcws) datamatrix } [
+    63 66 67 68 98  % '>'+1 'A'+1..'C'+1 'a'+1
+] debugIsEqual
+
+{ (>ABCDa) (debugcws) datamatrix } [
+    63 66 67 68 69 98  % '>'+1 'A'+1..'D'+1 'a'+1
+    129 56             % PAD PAD
+] debugIsEqual
+
+
+%
+% CTX end-of-data special cases
+%
+
+% Clean end at triplet boundary + unlatch
+{ (ABCABCABC) (debugcws) datamatrix } [
+    230     % lC40
+    89 233  % ABC
+    89 233  % ABC
+    89 233  % ABC
+    254     % unlatch
+] debugIsEqual
+
+% 12 C40 chars: 4 triplets + unlatch
+{ (ABCABCABCDEF) (debugcws) datamatrix } [
+    230      % lC40
+    89 233   % ABC
+    89 233   % ABC
+    89 233   % ABC
+    109 36   % DEF
+    254      % unlatch
+    129 147  % PAD PAD
+] debugIsEqual
+
+% 10 C40 chars: 3 triplets, J via implied unlatch (line 766)
+{ (ABCDEFGHIJ) (debugcws) datamatrix } [
+    230     % lC40
+    89 233  % ABC
+    109 36  % DEF
+    128 95  % GHI
+    75      % 'J'+1 (implied unlatch)
+] debugIsEqual
+
+% 8 C40 chars: 2 triplets, mode switch to ASCII for remaining 2 (line 710)
+{ (ABCDEFGH) (debugcws) datamatrix } [
+    230     % lC40
+    89 233  % ABC
+    109 36  % DEF
+    254     % unlatch
+    72 73   % 'G'+1 'H'+1
+] debugIsEqual
+
+% 7 C40 chars: 2 triplets, G via unlatch to ASCII (line 756)
+{ (ABCDEFG) (debugcws) datamatrix } [
+    230     % lC40
+    89 233  % ABC
+    109 36  % DEF
+    254     % unlatch
+    72      % 'G'+1
+    129     % PAD
+] debugIsEqual
+
+
+%
+% Mode transitions
+%
+
+% Digit pairs then C40
+{ (12ABCDEF) (debugcws) datamatrix } [
+    142     % 12+130
+    230     % lC40
+    89 233  % ABC
+    109 36  % DEF
+    254     % unlatch
+    129     % PAD
+] debugIsEqual
+
+{ (1234ABCDEF) (debugcws) datamatrix } [
+    142 164  % 12+130 34+130
+    230      % lC40
+    89 233   % ABC
+    109 36   % DEF
+    254      % unlatch
+] debugIsEqual
+
+% Digits then C40 (odd digit doesn't pair)
+{ (12345ABCDEF) (debugcws) datamatrix } [
+    142 164  % 12+130 34+130
+    230      % lC40
+    58 128   % 5AB
+    102 187  % CDE
+    71       % 'F'+1 (implied unlatch)
+] debugIsEqual
+
+% Mixed digit/alpha
+{ (123ABCabc) (debugcws) datamatrix } [
+    142        % 12+130
+    52         % '3'+1
+    66 67 68   % 'A'+1 'B'+1 'C'+1
+    98 99 100  % 'a'+1 'b'+1 'c'+1
+] debugIsEqual
+
+
+%
+% Extended ASCII (upper shift)
+%
+
+% Single extended char
+{ 1 string dup 0 192 put (debugcws) datamatrix } [
+    235  % upper-shift
+    65   % 192-128+1
+    129  % PAD
+] debugIsEqual
+
+% C40 then extended char
+{ 4 string dup 0 65 put dup 1 66 put dup 2 67 put dup 3 192 put (debugcws) datamatrix} [
+    66 67 68  % 'A'+1 'B'+1 'C'+1
+    235 65    % upper-shift 192-128+1
+] debugIsEqual
+
+
+%
+% Base256 encoding
+%
+
+% Single byte in base256: uses upper-shift in ASCII mode
+{ 1 string dup 0 128 put (debugcws) datamatrix } [
+    235  % upper-shift
+    1    % 128-128+1
+    129  % PAD
+] debugIsEqual
+
+% Two bytes: two upper-shifts
+{ 2 string dup 0 128 put dup 1 129 put (debugcws) datamatrix } [
+    235 1  % upper-shift 128-128+1
+    235 2  % upper-shift 129-128+1
+    129    % PAD
+] debugIsEqual
+
+% Three bytes (triggers Base256 mode)
+{ 3 string dup 0 128 put dup 1 129 put dup 2 130 put (debugcws) datamatrix } [
+    231            % lB256
+    44 65 216 110  % randomised length+data bytes
+] debugIsEqual
+
+
+%
+% EDIFACT mode
+%
+% EDIFACT is favored for data with brackets/backslash (chars 91-94)
+% which require shifts in C40 but are native EDIFACT
+%
+
+% EDIFACT latch with bracket-heavy data
+{ ([]^[]^[]^[]^) (debugcws) datamatrix } [
+    240      % lEDIFACT
+    109 215  % []^[  (4 chars packed into 3 bytes)
+    155 117  % ]^[]
+    230 221  % ^[]^
+    121 183  % []^[  (unlatch injected)
+    94       % (remaining)
+    129 147  % PAD PAD
+] debugIsEqual
+
+% EDIFACT clean end at quartet boundary
+{ <5B5D5E5B5D5E5B5D> (debugcws) datamatrix } [
+    240      % lEDIFACT
+    109 215  % []^[
+    155 117  % ]^[]
+    230 221  % ^[]^ (+ implicit unlatch)
+    129      % PAD
+] debugIsEqual
+
+% EDIFACT with non-EDIFACT trailing (control char forces unlatch)
+{ 10 string
+  dup 0 91 put dup 1 93 put dup 2 94 put dup 3 91 put dup 4 93 put
+  dup 5 94 put dup 6 91 put dup 7 93 put dup 8 94 put dup 9 1 put
+  (debugcws) datamatrix
+} [
+    240      % lEDIFACT
+    109 215  % []^[
+    155 117  % ]^[]
+    230 221  % ^[]^  (unlatch injected)
+    124 95   % (remaining packed)
+    2        % 0x01+1
+    129 147  % PAD PAD
+] debugIsEqual
+
+% EDIFACT with trailing extended ASCII
+{ 10 string
+  dup 0 91 put dup 1 93 put dup 2 94 put dup 3 91 put dup 4 93 put
+  dup 5 94 put dup 6 91 put dup 7 93 put dup 8 94 put dup 9 192 put
+  (debugcws) datamatrix } [
+    240      % lEDIFACT
+    109 215  % []^[
+    155 117  % ]^[]
+    230 221  % ^[]^  (unlatch injected)
+    124 95   % (remaining packed)
+    235 65   % upper-shift 192-128+1
+    129      % PAD
+] debugIsEqual
+
+% EDIFACT with mixed letters and brackets
+{ (AB[CD]EF[GH]IJ) (debugcws) datamatrix } [
+    240        % lEDIFACT
+    4 38       % AB[C
+    195 17     % D]EF
+    209 70     % [GH]
+    108 114    % IJ (+ unlatch)
+    29 74 75   % (padding codewords)
+] debugIsEqual
+
+
+%
+% Special characters
+%
+
+% FNC1
+{ (^FNC1Hello) (parsefnc debugcws) datamatrix } [
+    232                 % FNC1
+    73 102 109 109 112  % 'H'+1 'e'+1 'l'+1 'l'+1 'o'+1
+    129 56              % PAD PAD
+] debugIsEqual
+
+% FNC1 with digits (GS1 mode)
+{ (^FNC11234) (parsefnc debugcws) datamatrix } [
+    232      % FNC1
+    142 164  % 12+130 34+130
+] debugIsEqual
+
+% ECI
+{ (^ECI000003Hello) (parsefnc debugcws) datamatrix } [
+    241                 % ECI
+    4                   % ECI value 3+1
+    73 102 109 109 112  % 'H'+1 'e'+1 'l'+1 'l'+1 'o'+1
+    129                 % PAD
+] debugIsEqual
+
+% PROG (structured append)
+{ (^PROG) (parsefnc debugcws) datamatrix } [
+    234     % PROG
+    129 70  % PAD PAD
+] debugIsEqual
+
+
+%
+% Symbol size selection
+%
+
+% Forced 10x10 (3 data codewords)
+{ (AB) (debugcws rows=10 columns=10) datamatrix } [
+    66 67  % 'A'+1 'B'+1
+    129    % PAD
+] debugIsEqual
+{ (ABC) (debugcws rows=10 columns=10) datamatrix } [
+    66 67 68  % 'A'+1 'B'+1 'C'+1
+] debugIsEqual
+
+% Forced 12x12 (5 data codewords)
+{ (ABC) (debugcws rows=12 columns=12) datamatrix } [
+    66 67 68  % 'A'+1 'B'+1 'C'+1
+    129 115   % PAD PAD
+] debugIsEqual
+
+% Rectangle format: Text mode for "Hello World"
+{ (Hello World) (debugcws format=rectangle) datamatrix } [
+    239        % lText
+    13 211     % hel
+    160 69     % lo<sp>
+    19 40      % wor
+    179 242    % ld (+ unlatch)
+    101        % (padding codeword)
+] debugIsEqual
+
+% Square format: Text mode for "Hello World"
+{ (Hello World) (debugcws format=square) datamatrix } [
+    239      % lText
+    13 211   % hel
+    160 69   % lo<sp>
+    19 40    % wor
+    179 242  % ld
+    254      % unlatch
+    101      % (padding codeword)
+    129      % PAD
+] debugIsEqual
+
+
+%
+% Fuzz tests: verify no interpreter errors
+%
+
+% Extended ASCII stress in C40 path
+/s 500 string def 0 1 499 {s exch 200 put} for
+{ s (dontdraw) datamatrix pop true } true isEqual
+
+% Rapid mode alternation
+/s 200 string def 0 1 199 {dup 2 mod 0 eq {s exch 65 put} {s exch 97 put} ifelse} for
+{ s (dontdraw) datamatrix pop true } true isEqual
+
+% Binary data
+{ 1555 string (dontdraw) datamatrix pop true } true isEqual
+
+% Near max capacity
+/s 3116 string def 0 1 3115 {s exch 48 put} for
+{ s (dontdraw) datamatrix pop true } true isEqual
+
+% DMRE format
+{ (Hello World) (format=rectangle dmre dontdraw) datamatrix pop true } true isEqual
+
+% c40headerlength option
+{ (ABabc) (c40headerlength=2 dontdraw) datamatrix pop true } true isEqual
+{ (A) (c40headerlength=10 dontdraw) datamatrix pop true } true isEqual
+
 end
 } bind def

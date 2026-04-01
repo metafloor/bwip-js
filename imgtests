@@ -28,6 +28,9 @@ fi
 ##
 rm -f tests/*.png 2>/dev/null
 
+## Capture all output to a log file
+{
+
 ##
 ## Test number seed
 ##
@@ -119,4 +122,9 @@ echo "Number of tests: $NTESTS"
 echo "Number of failures: $NFAILS"
 echo "-----------------------"
 echo
-echo "imgtests.html to view results"
+
+} | tee imgtests.log 2>&1
+
+echo "Use imgtests.html to view results"
+echo "Test output saved to imgtests.log"
+exit 0

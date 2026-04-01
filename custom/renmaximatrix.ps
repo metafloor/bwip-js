@@ -2,28 +2,59 @@
 % --REQUIRES preamble raiseerror--
 %%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2018020400 56037 55803
 %%BeginData:         79 ASCII Lines
-%%/setpacking where {pop currentpacking true setpacking} if
-%%1 dict
-%%dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-%%begin
+/setpacking where {pop currentpacking true setpacking} if
+2 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+begin
+
 /renmaximatrix {
 
     20 dict begin
 
+    %
     % Default options
+    %
     /barcolor (unset) def
 %%    /backgroundcolor (unset) def
     /bordercolor (unset) def
-    /inkspread 0 def
+    /inkspread null def
     /showborder false def
     /borderleft 0.0 def
     /borderright 0.0 def
     /bordertop 0.0 def
     /borderbottom 0.0 def
-    /borderwidth 0.25 def
+    /borderwidth 0.5 def
 
     {def} forall
     opt currentdict /opt undef //processoptions exec pop
+
+    inkspread null eq {/inkspread 0.15 def} if
+
+    inkspread -1 lt inkspread 1 gt or {
+        /bwipp.renmaximatrixBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
+    } if
+
+    borderleft -1 lt borderleft 50 gt or {
+        /bwipp.renmaximatrixBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderright -1 lt borderright 50 gt or {
+        /bwipp.renmaximatrixBadBorderright (borderright must be from -1 to 50) //raiseerror exec
+    } if
+
+    bordertop -1 lt bordertop 50 gt or {
+        /bwipp.renmaximatrixBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderbottom -1 lt borderbottom 50 gt or {
+        /bwipp.renmaximatrixBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderwidth 0 lt borderwidth 10 gt or {
+        /bwipp.renmaximatrixBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
+    } if
 
     gsave
 
