@@ -1,4 +1,4 @@
-// Type definitions for bwip-js  4.8.0 (2025-11-11)
+// Type definitions for bwip-js  4.9.0 (2026-03-31)
 //
 // THIS DEFINITION FILE IS MACHINE GENERATED - DO NOT EDIT
 //
@@ -95,6 +95,12 @@ declare namespace BwipJs {
         bcid: string;
         text: string;
     }
+    export interface SymbolDesc {
+        bcid: string;
+        desc: string;
+        text: string;
+        opts: string;
+    }
     export interface DrawingContext<T> {
         setopts?(options: RenderOptions): void;
         scale(sx: number, sy: number): [number, number] | null;
@@ -142,6 +148,7 @@ declare namespace BwipJs {
 
     export const BWIPP_VERSION: string;
     export const BWIPJS_VERSION: string;
+    export const symbolList: readonly SymbolDesc[];
 
     // wrapper around FontLib.loadFont()
     export function loadFont(name: string, data: string | Uint8Array): void;
