@@ -39002,13 +39002,6 @@ for(var _1i=0;_1i<1;_1i++){//#38987
 if(((($_.txt.length>0)&&$eq($_.xalign,"unset"))&&$eq($_.yalign,"unset"))&&($_.content.length==0)){//#38872
 if($ne($_.color,"unset")){//#38845
 $$.setcolor($_.color);//#38845
-var _1p=$k[--$j];//#38845
-if(_1p()===true){break;}//#38845
-var _1q=$k[--$j];//#38845
-if(!_1q){//#38845
-$k[$j++]=false;//#38845
-break;//#38845
-}//#38845
 }//#38845
 $_.s=0;//#38847
 $_.fn="";//#38847
@@ -39016,53 +39009,53 @@ $_.xoff=0;//#38847
 $_.yoff=0;//#38847
 try{//#38866
 $forall($_.txt,function(){//#38865
-var _1s=$k[--$j];//#38850
-$aload(_1s);//#38850
-var _1t=$k[$j-1];//#38851
-var _1u=$k[$j-2];//#38851
-if((_1t!=$_.s)||$ne(_1u,$_.fn)){//#38862
-var _1x=$k[$j-1];//#38852
-if(_1x<=0){//#38854
+var _1q=$k[--$j];//#38850
+$aload(_1q);//#38850
+var _1r=$k[$j-1];//#38851
+var _1s=$k[$j-2];//#38851
+if((_1r!=$_.s)||$ne(_1s,$_.fn)){//#38862
+var _1v=$k[$j-1];//#38852
+if(_1v<=0){//#38854
 $j-=5;//#38853
 throw Infinity;//#38853
 }//#38853
-var _1y=$k[--$j];//#38855
-var _1z=$k[--$j];//#38855
-$_.s=_1y;//#38855
-$_.fn=_1z;//#38855
-$$.selectfont(_1z,_1y);//#38856
-var _20=$$.stringwidth("0");//#38858
-$_.xoff=-(_20.w/2);//#38858
+var _1w=$k[--$j];//#38855
+var _1x=$k[--$j];//#38855
+$_.s=_1w;//#38855
+$_.fn=_1x;//#38855
+$$.selectfont(_1x,_1w);//#38856
+var _1y=$$.stringwidth("0");//#38858
+$_.xoff=-(_1y.w/2);//#38858
 $$.save();//#38859
 $$.newpath();//#38859
 $$.moveto(0,0);//#38859
 $$.charpath("0",false);//#38859
-var _21=$$.pathbbox();//#38859
+var _1z=$$.pathbbox();//#38859
 $$.restore();//#38859
-$k[$j++]=_21.llx;//#38860
-$k[$j++]=_21.lly;//#38860
-$k[$j++]=_21.ury;//#38860
-$k[$j++]=_21.urx;//#38860
+$k[$j++]=_1z.llx;//#38860
+$k[$j++]=_1z.lly;//#38860
+$k[$j++]=_1z.ury;//#38860
+$k[$j++]=_1z.urx;//#38860
 $j--;//#38860
-var _22=$k[--$j];//#38860
-var _23=$k[--$j];//#38860
-$_.yoff = -($f(_23 + _22) / 2)//#38860
+var _20=$k[--$j];//#38860
+var _21=$k[--$j];//#38860
+$_.yoff = -($f(_21 + _20) / 2)//#38860
 $j--;//#38860
 }else{//#38862
 $j-=2;//#38862
 }//#38862
-var _24=$k[--$j];//#38864
-var _25=$k[--$j];//#38864
-$$.moveto(_25,_24);//#38864
-var _26=$k[$j-1];//#38864
-if(_26.length==1){//#38864
+var _22=$k[--$j];//#38864
+var _23=$k[--$j];//#38864
+$$.moveto(_23,_22);//#38864
+var _24=$k[$j-1];//#38864
+if(_24.length==1){//#38864
 $$.rmoveto($_.xoff,$_.yoff);//#38864
 }//#38864
-var _29=$k[--$j];//#38864
-$$.show(_29,0,0);//#38864
+var _27=$k[--$j];//#38864
+$$.show(_27,0,0);//#38864
 });//#38864
-var _2A=false}catch(e){$k[$j++]=true}//#38864
-if(_2A){//#38868
+var _28=false}catch(e){$k[$j++]=true}//#38864
+if(_28){//#38868
 $k[$j++]="bwipp.fontTooSmall#38867";//#38867
 $k[$j++]="The font size is too small";//#38867
 $k[$j++]=false;//#38867
@@ -39074,13 +39067,13 @@ break;//#38870
 if(($_.content.length==0)&&($_.txt.length>0)){//#38886
 $k[$j++]=Infinity;//#38880
 $forall($_.txt,function(){//#38880
-var _2E=$k[--$j];//#38880
-$forall($get(_2E,0));//#38880
+var _2C=$k[--$j];//#38880
+$forall($get(_2C,0));//#38880
 });//#38880
 $_.txtchars=$a();//#38880
 $_.tstr=$s($_.txtchars.length);//#38881
-for(var _2K=0,_2J=$_.txtchars.length-1;_2K<=_2J;_2K+=1){//#38884
-$put($_.tstr,_2K,$get($_.txtchars,_2K));//#38883
+for(var _2I=0,_2H=$_.txtchars.length-1;_2I<=_2H;_2I+=1){//#38884
+$put($_.tstr,_2I,$get($_.txtchars,_2I));//#38883
 }//#38883
 $_.content=$_.tstr;//#38885
 }//#38885
@@ -39096,15 +39089,15 @@ $k[$j++]=false;//#38893
 break;//#38893
 }//#38893
 if($_.subspace.length!=0){//#38903
-for(var _2V=0,_2U=$_.content.length-1;_2V<=_2U;_2V+=1){//#38902
-$k[$j++]=_2V;//#38898
-$search($_.subspace,$geti($_.content,_2V,1));//#38898
-var _2Z=$k[--$j];//#38900
-if(_2Z){//#38900
+for(var _2T=0,_2S=$_.content.length-1;_2T<=_2S;_2T+=1){//#38902
+$k[$j++]=_2T;//#38898
+$search($_.subspace,$geti($_.content,_2T,1));//#38898
+var _2X=$k[--$j];//#38900
+if(_2X){//#38900
 $j--;//#38899
 $j--;//#38899
-var _2e=$k[$j-2];//#38899
-$put($_.content,_2e,32);//#38899
+var _2c=$k[$j-2];//#38899
+$put($_.content,_2c,32);//#38899
 }//#38899
 $j-=2;//#38901
 }//#38901
@@ -39120,15 +39113,15 @@ break;//#38908
 $k[$j++]=Infinity;//#38910
 $k[$j++]=$_.content;//#38913
 for(;;){//#38913
+var _2i=$k[--$j];//#38912
+$search(_2i,$_.split);//#38912
+var _2j=$k[--$j];//#38912
+if(_2j){//#38912
 var _2k=$k[--$j];//#38912
-$search(_2k,$_.split);//#38912
-var _2l=$k[--$j];//#38912
-if(_2l){//#38912
-var _2m=$k[--$j];//#38912
 $j--;//#38912
-var _2p=$k[--$j];//#38912
-$k[$j++]=_2m;//#38912
-$k[$j++]=_2p;//#38912
+var _2n=$k[--$j];//#38912
+$k[$j++]=_2k;//#38912
+$k[$j++]=_2n;//#38912
 }else{//#38912
 break;//#38912
 }//#38912
@@ -39139,13 +39132,6 @@ $_.textlines=$a([$_.content]);//#38916
 }//#38916
 if($ne($_.color,"unset")){//#38919
 $$.setcolor($_.color);//#38919
-var _2t=$k[--$j];//#38919
-if(_2t()===true){break;}//#38919
-var _2u=$k[--$j];//#38919
-if(!_2u){//#38919
-$k[$j++]=false;//#38919
-break;//#38919
-}//#38919
 }//#38919
 $$.selectfont($_.font,$_.size);//#38921
 if($_.content.length==0){//#38930
@@ -39155,29 +39141,29 @@ $$.save();//#38927
 $$.newpath();//#38928
 $$.moveto(0,0);//#38928
 $$.charpath("0",false);//#38928
-var _2y=$$.pathbbox();//#38928
+var _2u=$$.pathbbox();//#38928
 $$.restore();//#38930
-$k[$j++]=_2y.ury;//#38930
+$k[$j++]=_2u.ury;//#38930
 }//#38930
-var _2z=$k[--$j];//#38939
-$_.textascent=_2z;//#38939
-var _30=$_.textlines;//#38941
+var _2v=$k[--$j];//#38939
+$_.textascent=_2v;//#38939
+var _2w=$_.textlines;//#38941
 $k[$j++]=0;//#38941
-for(var _31=0,_32=_30.length;_31<_32;_31++){//#38941
-var _34=$$.stringwidth($get(_30,_31));//#38941
+for(var _2x=0,_2y=_2w.length;_2x<_2y;_2x++){//#38941
+var _30=$$.stringwidth($get(_2w,_2x));//#38941
+var _31=$k[--$j];//#38941
+var _32=_30.w;//#38941
+if(_31<_30.w){//#38941
+var _=_32;//#38941
+_32=_31;//#38941
+_31=_;//#38941
+}//#38941
+$k[$j++]=_31;//#38941
+}//#38941
 var _35=$k[--$j];//#38941
-var _36=_34.w;//#38941
-if(_35<_34.w){//#38941
-var _=_36;//#38941
-_36=_35;//#38941
-_35=_;//#38941
-}//#38941
-$k[$j++]=_35;//#38941
-}//#38941
-var _39=$k[--$j];//#38941
-$_.textwidth = $f(_39 + ($_.content.length - 1) * $_.gaps)//#38941
-var _3C=$_.textlines.length;//#38942
-$_.textheight = $f(_3C * $_.textascent + (_3C - 1) * $_.linegaps)//#38942
+$_.textwidth = $f(_35 + ($_.content.length - 1) * $_.gaps)//#38941
+var _38=$_.textlines.length;//#38942
+$_.textheight = $f(_38 * $_.textascent + (_38 - 1) * $_.linegaps)//#38942
 if($eq($_.xalign,"unset")){//#38944
 $_.xalign="center";//#38944
 }//#38944
@@ -39194,8 +39180,8 @@ break;//#38949
 }//#38949
 if($lt($_.textwidth,$_.pixx)&&($_.content.length>1)){//#38956
 $_.gaps = $f($_.pixx - $_.textwidth) / ($_.content.length - 1)//#38952
-var _3R=$eq($_.direction,"forward")?"left":"right";//#38953
-$_.xalign=_3R;//#38953
+var _3N=$eq($_.direction,"forward")?"left":"right";//#38953
+$_.xalign=_3N;//#38953
 }else{//#38956
 $_.gaps=0;//#38955
 $_.xalign="center";//#38956
@@ -39211,8 +39197,8 @@ break;//#38962
 }//#38962
 if($lt($_.textwidth,$_.pixy)&&($_.content.length>1)){//#38969
 $_.gaps = $f($_.pixy - $_.textwidth) / ($_.content.length - 1)//#38965
-var _3d=$eq($_.direction,"upward")?"bottom":"top";//#38966
-$_.yalign=_3d;//#38966
+var _3Z=$eq($_.direction,"upward")?"bottom":"top";//#38966
+$_.yalign=_3Z;//#38966
 }else{//#38969
 $_.gaps=0;//#38968
 $_.yalign="center";//#38969
@@ -39224,20 +39210,20 @@ $k[$j++]=$_.direction;//#38973
 $k[$j++]=$_.textwidth;//#38973
 $k[$j++]=$_.textheight;//#38973
 $_.positiontext();//#38973
-var _3k=$k[--$j];//#38973
-var _3l=$k[--$j];//#38973
-$$.moveto(_3l,_3k);//#38973
+var _3g=$k[--$j];//#38973
+var _3h=$k[--$j];//#38973
+$$.moveto(_3h,_3g);//#38973
 $$.rmoveto($_.xoffset,$_.yoffset);//#38974
 $$.save();//#38975
-var _3o=new Map([["forward",0],["upward",90],["backward",180],["downward",270]]);//#38976
-$$.rotate($get(_3o,$_.direction));//#38976
-var _3r=$$.currpos();//#38977
-$$.translate(_3r.x,_3r.y);//#38977
-for(var _3u=0,_3t=$_.textlines.length-1;_3u<=_3t;_3u+=1){//#38982
-$_.i=_3u;//#38979
+var _3k=new Map([["forward",0],["upward",90],["backward",180],["downward",270]]);//#38976
+$$.rotate($get(_3k,$_.direction));//#38976
+var _3n=$$.currpos();//#38977
+$$.translate(_3n.x,_3n.y);//#38977
+for(var _3q=0,_3p=$_.textlines.length-1;_3q<=_3p;_3q+=1){//#38982
+$_.i=_3q;//#38979
 $$.moveto(0, 0 + $f($_.textascent + $_.linegaps) * $_.i)//#38980
-var _3z=$_.textlines;//#38981
-$$.show($get(_3z,(_3z.length-$_.i)-1),$_.gaps,0);//#38981
+var _3v=$_.textlines;//#38981
+$$.show($get(_3v,(_3v.length-$_.i)-1),$_.gaps,0);//#38981
 }//#38981
 $$.restore();//#38983
 $k[$j++]=true;//#38985

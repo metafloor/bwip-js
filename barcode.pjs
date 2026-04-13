@@ -65424,77 +65424,70 @@ var _1n=$_.color;//#38845
 if($ne(_1n,"unset")){//#38845
 var _1o=$_.color;//#38845
 $$.setcolor(_1o);//#38845
-var _1p=$k[--$j];//#38845
-if(_1p()===true){break;}//#38845
-var _1q=$k[--$j];//#38845
-if($nt(_1q)){//#38845
-$k[$j++]=false;//#38845
-break;//#38845
-}//#38845
 }//#38845
 $_.s=0;//#38847
 $_.fn="";//#38847
 $_.xoff=0;//#38847
 $_.yoff=0;//#38847
 try{//#38866
-var _1r=$_.txt;//#38849
-$forall(_1r,function(){//#38865
-var _1s=$k[--$j];//#38850
-$aload(_1s);//#38850
-var _1t=$k[--$j];//#38851
-var _1u=$k[--$j];//#38851
-var _1v=$_.s;//#38851
-var _1w=$_.fn;//#38851
-$k[$j++]=_1u;//#38863
-$k[$j++]=_1t;//#38863
-if((_1t!=_1v)||$ne(_1u,_1w)){//#38862
-var _1x=$k[--$j];//#38852
-$k[$j++]=_1x;//#38854
-if(_1x<=0){//#38854
+var _1p=$_.txt;//#38849
+$forall(_1p,function(){//#38865
+var _1q=$k[--$j];//#38850
+$aload(_1q);//#38850
+var _1r=$k[--$j];//#38851
+var _1s=$k[--$j];//#38851
+var _1t=$_.s;//#38851
+var _1u=$_.fn;//#38851
+$k[$j++]=_1s;//#38863
+$k[$j++]=_1r;//#38863
+if((_1r!=_1t)||$ne(_1s,_1u)){//#38862
+var _1v=$k[--$j];//#38852
+$k[$j++]=_1v;//#38854
+if(_1v<=0){//#38854
 $j-=5;//#38853
 throw Infinity;//#38853
 }//#38853
-var _1y=$k[--$j];//#38855
-var _1z=$k[--$j];//#38855
-$_.s=_1y;//#38855
-$_.fn=_1z;//#38855
-$$.selectfont(_1z,_1y);//#38856
-var _20=$$.stringwidth("0");//#38858
-$_.xoff=-(_20.w/2);//#38858
+var _1w=$k[--$j];//#38855
+var _1x=$k[--$j];//#38855
+$_.s=_1w;//#38855
+$_.fn=_1x;//#38855
+$$.selectfont(_1x,_1w);//#38856
+var _1y=$$.stringwidth("0");//#38858
+$_.xoff=-(_1y.w/2);//#38858
 $$.save();//#38859
 $$.newpath();//#38859
 $$.moveto(0,0);//#38859
 $$.charpath("0",false);//#38859
-var _21=$$.pathbbox();//#38859
+var _1z=$$.pathbbox();//#38859
 $$.restore();//#38859
-$k[$j++]=_21.llx;//#38860
-$k[$j++]=_21.lly;//#38860
-$k[$j++]=_21.ury;//#38860
-$k[$j++]=_21.urx;//#38860
+$k[$j++]=_1z.llx;//#38860
+$k[$j++]=_1z.lly;//#38860
+$k[$j++]=_1z.ury;//#38860
+$k[$j++]=_1z.urx;//#38860
 $j--;//#38860
-var _22=$k[--$j];//#38860
-var _23=$k[--$j];//#38860
-$_.yoff=-($f(_23+_22)/2);//#38860
+var _20=$k[--$j];//#38860
+var _21=$k[--$j];//#38860
+$_.yoff=-($f(_21+_20)/2);//#38860
 $j--;//#38860
 }else{//#38862
 $j-=2;//#38862
 }//#38862
+var _22=$k[--$j];//#38864
+var _23=$k[--$j];//#38864
+$$.moveto(_23,_22);//#38864
 var _24=$k[--$j];//#38864
-var _25=$k[--$j];//#38864
-$$.moveto(_25,_24);//#38864
-var _26=$k[--$j];//#38864
-$k[$j++]=_26;//#38864
-if(_26.length==1){//#38864
-var _27=$_.xoff;//#38864
-var _28=$_.yoff;//#38864
-$$.rmoveto(_27,_28);//#38864
+$k[$j++]=_24;//#38864
+if(_24.length==1){//#38864
+var _25=$_.xoff;//#38864
+var _26=$_.yoff;//#38864
+$$.rmoveto(_25,_26);//#38864
 }//#38864
-var _29=$k[--$j];//#38864
-$$.show(_29,0,0);//#38864
+var _27=$k[--$j];//#38864
+$$.show(_27,0,0);//#38864
 });//#38864
 $k[$j++]=false}catch(e){$k[$j++]=true}//#38864
-var _2A=$k[--$j];//#38868
-if(_2A){//#38868
+var _28=$k[--$j];//#38868
+if(_28){//#38868
 $k[$j++]="bwipp.fontTooSmall#38867";//#38867
 $k[$j++]="The font size is too small";//#38867
 $k[$j++]=false;//#38867
@@ -65503,72 +65496,72 @@ break;//#38867
 $k[$j++]=true;//#38870
 break;//#38870
 }//#38870
-var _2B=$_.content;//#38879
-var _2C=$_.txt;//#38879
-if((_2B.length==0)&&(_2C.length>0)){//#38886
+var _29=$_.content;//#38879
+var _2A=$_.txt;//#38879
+if((_29.length==0)&&(_2A.length>0)){//#38886
 $k[$j++]=Infinity;//#38880
-var _2D=$_.txt;//#38880
-$forall(_2D,function(){//#38880
-var _2E=$k[--$j];//#38880
-var _2F=$get(_2E,0);//#38880
-$forall(_2F);//#38880
+var _2B=$_.txt;//#38880
+$forall(_2B,function(){//#38880
+var _2C=$k[--$j];//#38880
+var _2D=$get(_2C,0);//#38880
+$forall(_2D);//#38880
 });//#38880
 $_.txtchars=$a();//#38880
-var _2G=$_.txtchars;//#38881
-var _2H=$s(_2G.length);//#38881
-$_.tstr=_2H;//#38881
-var _2I=$_.txtchars;//#38882
-for(var _2K=0,_2J=_2I.length-1;_2K<=_2J;_2K+=1){//#38884
-var _2L=$_.txtchars;//#38883
-var _2M=$get(_2L,_2K);//#38883
-var _2N=$_.tstr;//#38883
-$put(_2N,_2K,_2M);//#38883
+var _2E=$_.txtchars;//#38881
+var _2F=$s(_2E.length);//#38881
+$_.tstr=_2F;//#38881
+var _2G=$_.txtchars;//#38882
+for(var _2I=0,_2H=_2G.length-1;_2I<=_2H;_2I+=1){//#38884
+var _2J=$_.txtchars;//#38883
+var _2K=$get(_2J,_2I);//#38883
+var _2L=$_.tstr;//#38883
+$put(_2L,_2I,_2K);//#38883
 }//#38883
-var _2O=$_.tstr;//#38885
-$_.content=_2O;//#38885
+var _2M=$_.tstr;//#38885
+$_.content=_2M;//#38885
 }//#38885
-var _2P=$_.content;//#38889
-if(_2P.length==0){//#38889
+var _2N=$_.content;//#38889
+if(_2N.length==0){//#38889
 $k[$j++]=true;//#38889
 break;//#38889
 }//#38889
-var _2Q=$_.subspace;//#38892
-var _2R=$_.subspace;//#38892
-if((_2Q.length!=0)&&(_2R.length!=1)){//#38894
+var _2O=$_.subspace;//#38892
+var _2P=$_.subspace;//#38892
+if((_2O.length!=0)&&(_2P.length!=1)){//#38894
 $k[$j++]='subspaceBad';//#38893
 $k[$j++]="subspace option must be a single character";//#38893
 $_.makeerr();//#38893
 $k[$j++]=false;//#38893
 break;//#38893
 }//#38893
-var _2S=$_.subspace;//#38895
-if(_2S.length!=0){//#38903
-var _2T=$_.content;//#38896
-for(var _2V=0,_2U=_2T.length-1;_2V<=_2U;_2V+=1){//#38902
-var _2W=$_.content;//#38898
-var _2X=$geti(_2W,_2V,1);//#38898
-var _2Y=$_.subspace;//#38898
-$k[$j++]=_2V;//#38898
-$search(_2Y,_2X);//#38898
-var _2Z=$k[--$j];//#38900
-if(_2Z){//#38900
-var _2a=$_.content;//#38899
+var _2Q=$_.subspace;//#38895
+if(_2Q.length!=0){//#38903
+var _2R=$_.content;//#38896
+for(var _2T=0,_2S=_2R.length-1;_2T<=_2S;_2T+=1){//#38902
+var _2U=$_.content;//#38898
+var _2V=$geti(_2U,_2T,1);//#38898
+var _2W=$_.subspace;//#38898
+$k[$j++]=_2T;//#38898
+$search(_2W,_2V);//#38898
+var _2X=$k[--$j];//#38900
+if(_2X){//#38900
+var _2Y=$_.content;//#38899
+var _2Z=$k[--$j];//#38899
+var _2a=$k[--$j];//#38899
 var _2b=$k[--$j];//#38899
 var _2c=$k[--$j];//#38899
-var _2d=$k[--$j];//#38899
-var _2e=$k[--$j];//#38899
-$put(_2a,_2e,32);//#38899
-$k[$j++]=_2e;//#38899
-$k[$j++]=_2d;//#38899
+$put(_2Y,_2c,32);//#38899
+$k[$j++]=_2c;//#38899
+$k[$j++]=_2b;//#38899
 }//#38899
 $j-=2;//#38901
 }//#38901
 }//#38901
-var _2f=$_.split;//#38906
-var _2g=$_.content;//#38906
-if((_2f.length!=0)&&(_2g.length!=0)){//#38916
-var _2h=$_.split;//#38907
-if(_2h.length!=1){//#38909
+var _2d=$_.split;//#38906
+var _2e=$_.content;//#38906
+if((_2d.length!=0)&&(_2e.length!=0)){//#38916
+var _2f=$_.split;//#38907
+if(_2f.length!=1){//#38909
 $k[$j++]='splitBad';//#38908
 $k[$j++]="split option must be a single character";//#38908
 $_.makeerr();//#38908
@@ -65576,198 +65569,191 @@ $k[$j++]=false;//#38908
 break;//#38908
 }//#38908
 $k[$j++]=Infinity;//#38910
-var _2i=$_.content;//#38911
-$k[$j++]=_2i;//#38913
+var _2g=$_.content;//#38911
+$k[$j++]=_2g;//#38913
 for(;;){//#38913
-var _2j=$_.split;//#38912
+var _2h=$_.split;//#38912
+var _2i=$k[--$j];//#38912
+$search(_2i,_2h);//#38912
+var _2j=$k[--$j];//#38912
+if(_2j){//#38912
 var _2k=$k[--$j];//#38912
-$search(_2k,_2j);//#38912
 var _2l=$k[--$j];//#38912
-if(_2l){//#38912
+$k[$j++]=_2k;//#38912
+$k[$j++]=_2l;//#38912
+$j--;//#38912
 var _2m=$k[--$j];//#38912
 var _2n=$k[--$j];//#38912
 $k[$j++]=_2m;//#38912
 $k[$j++]=_2n;//#38912
-$j--;//#38912
-var _2o=$k[--$j];//#38912
-var _2p=$k[--$j];//#38912
-$k[$j++]=_2o;//#38912
-$k[$j++]=_2p;//#38912
 }else{//#38912
 break;//#38912
 }//#38912
 }//#38912
 $_.textlines=$a();//#38912
 }else{//#38916
-var _2q=$_.content;//#38916
-$_.textlines=$a([_2q]);//#38916
+var _2o=$_.content;//#38916
+$_.textlines=$a([_2o]);//#38916
 }//#38916
-var _2r=$_.color;//#38919
-if($ne(_2r,"unset")){//#38919
-var _2s=$_.color;//#38919
-$$.setcolor(_2s);//#38919
-var _2t=$k[--$j];//#38919
-if(_2t()===true){break;}//#38919
-var _2u=$k[--$j];//#38919
-if($nt(_2u)){//#38919
-$k[$j++]=false;//#38919
-break;//#38919
+var _2p=$_.color;//#38919
+if($ne(_2p,"unset")){//#38919
+var _2q=$_.color;//#38919
+$$.setcolor(_2q);//#38919
 }//#38919
-}//#38919
-var _2v=$_.font;//#38921
-var _2w=$_.size;//#38921
-$$.selectfont(_2v,_2w);//#38921
-var _2x=$_.content;//#38924
-if(_2x.length==0){//#38930
+var _2r=$_.font;//#38921
+var _2s=$_.size;//#38921
+$$.selectfont(_2r,_2s);//#38921
+var _2t=$_.content;//#38924
+if(_2t.length==0){//#38930
 $k[$j++]=0;//#38925
 }else{//#38930
 $$.save();//#38927
 $$.newpath();//#38928
 $$.moveto(0,0);//#38928
 $$.charpath("0",false);//#38928
-var _2y=$$.pathbbox();//#38928
+var _2u=$$.pathbbox();//#38928
 $$.restore();//#38930
-$k[$j++]=_2y.ury;//#38930
+$k[$j++]=_2u.ury;//#38930
 }//#38930
-var _2z=$k[--$j];//#38939
-$_.textascent=_2z;//#38939
-var _30=$_.textlines;//#38941
+var _2v=$k[--$j];//#38939
+$_.textascent=_2v;//#38939
+var _2w=$_.textlines;//#38941
 $k[$j++]='textwidth';//#38941
 $k[$j++]=0;//#38941
-for(var _31=0,_32=_30.length;_31<_32;_31++){//#38941
-var _33=$get(_30,_31);//#38941
-var _34=$$.stringwidth(_33);//#38941
+for(var _2x=0,_2y=_2w.length;_2x<_2y;_2x++){//#38941
+var _2z=$get(_2w,_2x);//#38941
+var _30=$$.stringwidth(_2z);//#38941
+var _31=$k[--$j];//#38941
+var _32=_30.w;//#38941
+if(_31<_30.w){//#38941
+var _=_32;//#38941
+_32=_31;//#38941
+_31=_;//#38941
+}//#38941
+$k[$j++]=_31;//#38941
+}//#38941
+var _33=$_.content;//#38941
+var _34=$_.gaps;//#38941
 var _35=$k[--$j];//#38941
-var _36=_34.w;//#38941
-if(_35<_34.w){//#38941
-var _=_36;//#38941
-_36=_35;//#38941
-_35=_;//#38941
-}//#38941
-$k[$j++]=_35;//#38941
-}//#38941
-var _37=$_.content;//#38941
-var _38=$_.gaps;//#38941
-var _39=$k[--$j];//#38941
-var _3A=$k[--$j];//#38941
-$_[_3A]=$f(_39+((_37.length-1)*_38));//#38941
-var _3B=$_.textlines;//#38942
-var _3C=_3B.length;//#38942
-var _3D=$_.textascent;//#38942
-var _3E=$_.linegaps;//#38942
-$_.textheight=$f((_3C*_3D)+((_3C-1)*_3E));//#38942
-var _3F=$_.xalign;//#38944
-if($eq(_3F,"unset")){//#38944
+var _36=$k[--$j];//#38941
+$_[_36]=$f(_35+((_33.length-1)*_34));//#38941
+var _37=$_.textlines;//#38942
+var _38=_37.length;//#38942
+var _39=$_.textascent;//#38942
+var _3A=$_.linegaps;//#38942
+$_.textheight=$f((_38*_39)+((_38-1)*_3A));//#38942
+var _3B=$_.xalign;//#38944
+if($eq(_3B,"unset")){//#38944
 $_.xalign="center";//#38944
 }//#38944
-var _3G=$_.yalign;//#38945
-if($eq(_3G,"unset")){//#38945
+var _3C=$_.yalign;//#38945
+if($eq(_3C,"unset")){//#38945
 $_.yalign="below";//#38945
 }//#38945
-var _3H=$_.xalign;//#38947
-if($eq(_3H,"justify")){//#38958
-var _3I=$_.direction;//#38948
-var _3J=$_.direction;//#38948
-if($ne(_3I,"forward")&&$ne(_3J,"backward")){//#38950
+var _3D=$_.xalign;//#38947
+if($eq(_3D,"justify")){//#38958
+var _3E=$_.direction;//#38948
+var _3F=$_.direction;//#38948
+if($ne(_3E,"forward")&&$ne(_3F,"backward")){//#38950
 $k[$j++]='xjustify';//#38949
 $k[$j++]="xalign=justify requires forward or backward text";//#38949
 $_.makeerr();//#38949
 $k[$j++]=false;//#38949
 break;//#38949
 }//#38949
-var _3K=$_.textwidth;//#38951
-var _3L=$_.pixx;//#38951
-var _3M=$_.content;//#38951
-if($lt(_3K,_3L)&&(_3M.length>1)){//#38956
-var _3N=$_.pixx;//#38952
-var _3O=$_.textwidth;//#38952
-var _3P=$_.content;//#38952
-$_.gaps=$f(_3N-_3O)/(_3P.length-1);//#38952
-var _3Q=$_.direction;//#38953
+var _3G=$_.textwidth;//#38951
+var _3H=$_.pixx;//#38951
+var _3I=$_.content;//#38951
+if($lt(_3G,_3H)&&(_3I.length>1)){//#38956
+var _3J=$_.pixx;//#38952
+var _3K=$_.textwidth;//#38952
+var _3L=$_.content;//#38952
+$_.gaps=$f(_3J-_3K)/(_3L.length-1);//#38952
+var _3M=$_.direction;//#38953
 $k[$j++]='xalign';//#38953
-if($eq(_3Q,"forward")){//#38953
+if($eq(_3M,"forward")){//#38953
 $k[$j++]="left";//#38953
 }else{//#38953
 $k[$j++]="right";//#38953
 }//#38953
-var _3R=$k[--$j];//#38953
-var _3S=$k[--$j];//#38953
-$_[_3S]=_3R;//#38953
+var _3N=$k[--$j];//#38953
+var _3O=$k[--$j];//#38953
+$_[_3O]=_3N;//#38953
 }else{//#38956
 $_.gaps=0;//#38955
 $_.xalign="center";//#38956
 }//#38956
 }//#38956
-var _3T=$_.yalign;//#38960
-if($eq(_3T,"justify")){//#38971
-var _3U=$_.direction;//#38961
-var _3V=$_.direction;//#38961
-if($ne(_3U,"upward")&&$ne(_3V,"downward")){//#38963
+var _3P=$_.yalign;//#38960
+if($eq(_3P,"justify")){//#38971
+var _3Q=$_.direction;//#38961
+var _3R=$_.direction;//#38961
+if($ne(_3Q,"upward")&&$ne(_3R,"downward")){//#38963
 $k[$j++]='yjustify';//#38962
 $k[$j++]="yalign=justify requires upward or downward text";//#38962
 $_.makeerr();//#38962
 $k[$j++]=false;//#38962
 break;//#38962
 }//#38962
-var _3W=$_.textwidth;//#38964
-var _3X=$_.pixy;//#38964
-var _3Y=$_.content;//#38964
-if($lt(_3W,_3X)&&(_3Y.length>1)){//#38969
-var _3Z=$_.pixy;//#38965
-var _3a=$_.textwidth;//#38965
-var _3b=$_.content;//#38965
-$_.gaps=$f(_3Z-_3a)/(_3b.length-1);//#38965
-var _3c=$_.direction;//#38966
+var _3S=$_.textwidth;//#38964
+var _3T=$_.pixy;//#38964
+var _3U=$_.content;//#38964
+if($lt(_3S,_3T)&&(_3U.length>1)){//#38969
+var _3V=$_.pixy;//#38965
+var _3W=$_.textwidth;//#38965
+var _3X=$_.content;//#38965
+$_.gaps=$f(_3V-_3W)/(_3X.length-1);//#38965
+var _3Y=$_.direction;//#38966
 $k[$j++]='yalign';//#38966
-if($eq(_3c,"upward")){//#38966
+if($eq(_3Y,"upward")){//#38966
 $k[$j++]="bottom";//#38966
 }else{//#38966
 $k[$j++]="top";//#38966
 }//#38966
-var _3d=$k[--$j];//#38966
-var _3e=$k[--$j];//#38966
-$_[_3e]=_3d;//#38966
+var _3Z=$k[--$j];//#38966
+var _3a=$k[--$j];//#38966
+$_[_3a]=_3Z;//#38966
 }else{//#38969
 $_.gaps=0;//#38968
 $_.yalign="center";//#38969
 }//#38969
 }//#38969
-var _3f=$_.xalign;//#38973
-var _3g=$_.yalign;//#38973
-var _3h=$_.direction;//#38973
-var _3i=$_.textwidth;//#38973
-var _3j=$_.textheight;//#38973
+var _3b=$_.xalign;//#38973
+var _3c=$_.yalign;//#38973
+var _3d=$_.direction;//#38973
+var _3e=$_.textwidth;//#38973
+var _3f=$_.textheight;//#38973
+$k[$j++]=_3b;//#38973
+$k[$j++]=_3c;//#38973
+$k[$j++]=_3d;//#38973
+$k[$j++]=_3e;//#38973
 $k[$j++]=_3f;//#38973
-$k[$j++]=_3g;//#38973
-$k[$j++]=_3h;//#38973
-$k[$j++]=_3i;//#38973
-$k[$j++]=_3j;//#38973
 $_.positiontext();//#38973
-var _3k=$k[--$j];//#38973
-var _3l=$k[--$j];//#38973
-$$.moveto(_3l,_3k);//#38973
-var _3m=$_.xoffset;//#38974
-var _3n=$_.yoffset;//#38974
-$$.rmoveto(_3m,_3n);//#38974
+var _3g=$k[--$j];//#38973
+var _3h=$k[--$j];//#38973
+$$.moveto(_3h,_3g);//#38973
+var _3i=$_.xoffset;//#38974
+var _3j=$_.yoffset;//#38974
+$$.rmoveto(_3i,_3j);//#38974
 $$.save();//#38975
-var _3o=new Map([["forward",0],["upward",90],["backward",180],["downward",270]]);//#38976
-var _3p=$_.direction;//#38976
-var _3q=$get(_3o,_3p);//#38976
-$$.rotate(_3q);//#38976
-var _3r=$$.currpos();//#38977
-$$.translate(_3r.x,_3r.y);//#38977
-var _3s=$_.textlines;//#38978
-for(var _3u=0,_3t=_3s.length-1;_3u<=_3t;_3u+=1){//#38982
-$_.i=_3u;//#38979
-var _3v=$_.textascent;//#38980
-var _3w=$_.linegaps;//#38980
-var _3x=$_.i;//#38980
-$$.moveto(0,0+($f(_3v+_3w)*_3x));//#38980
-var _3y=$_.gaps;//#38981
-var _3z=$_.textlines;//#38981
-var _40=$_.i;//#38981
-var _41=$get(_3z,(_3z.length-_40)-1);//#38981
-$$.show(_41,_3y,0);//#38981
+var _3k=new Map([["forward",0],["upward",90],["backward",180],["downward",270]]);//#38976
+var _3l=$_.direction;//#38976
+var _3m=$get(_3k,_3l);//#38976
+$$.rotate(_3m);//#38976
+var _3n=$$.currpos();//#38977
+$$.translate(_3n.x,_3n.y);//#38977
+var _3o=$_.textlines;//#38978
+for(var _3q=0,_3p=_3o.length-1;_3q<=_3p;_3q+=1){//#38982
+$_.i=_3q;//#38979
+var _3r=$_.textascent;//#38980
+var _3s=$_.linegaps;//#38980
+var _3t=$_.i;//#38980
+$$.moveto(0,0+($f(_3r+_3s)*_3t));//#38980
+var _3u=$_.gaps;//#38981
+var _3v=$_.textlines;//#38981
+var _3w=$_.i;//#38981
+var _3x=$get(_3v,(_3v.length-_3w)-1);//#38981
+$$.show(_3x,_3u,0);//#38981
 }//#38981
 $$.restore();//#38983
 $k[$j++]=true;//#38985

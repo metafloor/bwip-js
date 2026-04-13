@@ -10,8 +10,10 @@ let debug = false;
 modout('preamble');
 modout('render');
 modout('setuphooks');
+
+//    //setanycolor exec not { false exit } if
 modout('setanycolor');
-strrep(/\/\/setanycolor/, 'setanycolor');
+strrep(/\/\/setanycolor exec not \{ false exit \} if/, 'setanycolor');
 
 // Move each module's global code into its execution block.
 moveglobalcode();

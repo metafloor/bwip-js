@@ -38842,7 +38842,7 @@ bind def
         %
         txt length 0 gt xalign (unset) eq and yalign (unset) eq and content () eq and {
 
-            color (unset) ne { color setanycolor exec not { false exit } if } if
+            color (unset) ne { color setanycolor } if
 
             /s 0 def /fn () def /xoff 0 def /yoff 0 def
             {
@@ -38916,7 +38916,7 @@ bind def
             /textlines [ content ] def
         } ifelse
 
-        color (unset) ne { color setanycolor exec not { false exit } if } if
+        color (unset) ne { color setanycolor } if
 
         font size selectfont
 
