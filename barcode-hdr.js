@@ -251,6 +251,27 @@ function $has(v,k) {
     return k in v;
 }
 
+// undef operator
+//  d : dict
+//  k : key
+function $del(d,k) {
+    if (d instanceof Map) {
+        if (k instanceof Uint8Array) {
+            d.delete($z(k));
+        } else {
+            d.delete(k);
+        }
+    } else if (typeof d == 'object') {
+        if (k instanceof Uint8Array) {
+            delete d[$z(k)];
+        } else {
+            delete d[k];
+        }
+    } else {
+        throw new Error('undef-not-a-dict-' + (typeof d));
+    }
+}
+
 // put operator
 //  d : dest
 //  k : key
@@ -816,61 +837,6 @@ function bwipp_fifocache() {
     };
     $k[$j++] = dict;
 }
-
-// This is the initial output from the cross-compiler.  It is broken
-// in many ways...
-//  function bwipp_fifocache_fetch() {
-//      var $__ = $_; //#38454
-//      $_ = new Map; //#38454
-//      $_.self = $k[--$j]; //#38456
-//      $_.cardfn = $k[--$j]; //#38457
-//      $_.genfn = $k[--$j]; //#38458
-//      $_.key = $k[--$j]; //#38459
-//      $_.cache = $get($_.self, 'cache'); //#38461
-//      var _8 = $get($_.cache, $_.key) !== undefined; //#38463
-//      if (_8) { //#38521
-//          $k[$j++] = $get($_.cache, $_.key); //#38468
-//      } else { //#38521
-//          $_.fifo = $get($_.self, 'fifo'); //#38472
-//          $_.max = $get($_.self, 'max'); //#38473
-//          $_.limit = $get($_.self, 'limit'); //#38474
-//          if ($_.genfn() === true) {
-//              return true;
-//          } //#38482
-//          $_.result = $k[--$j]; //#38482
-//          $k[$j++] = $_.result; //#38483
-//          if ($_.cardfn() === true) {
-//              return true;
-//          } //#38483
-//          $_.card = $k[--$j]; //#38483
-//          if ($le($_.card, $_.limit)) { //#38517
-//              var $__ = $_; //#38490
-//              $_ = $get($_.self, 'state'); //#38490
-//              for (;;) { //#38504
-//                  if (($f($_.total + $_.card) <= $_.limit) && ($_.cnt < $_.max)) { //#38496
-//                      break; //#38496
-//                  } //#38496
-//                  var _Y = $get($_.fifo, $_.head); //#38498
-//                  $k[$j++] = _Y; //#38499
-//                  $k[$j++] = $get($_.cache, _Y); //#38499
-//                  if ($_.cardfn() === true) {
-//                      break;
-//                  } //#38499
-//                  $_.total = $f($_.total - $k[--$j]); //#38500
-//                  delete $_.cache[$k[--$j]]; //#38501
-//                  $_.head = ($_.head + 1) % $_.max; //#38502
-//                  $_.cnt = $_.cnt - 1; //#38503
-//              } //#38503
-//              $put($_.cache, $_.key, $_.result); //#38509
-//              $put($_.fifo, $f($_.head + $_.cnt) % $_.max, $_.key); //#38511
-//              $_.cnt = $_.cnt + 1; //#38512
-//              $_.total = $f($_.total + $_.card); //#38513
-//              $_ = $__; //#38515
-//          } //#38515
-//          $k[$j++] = $_.result; //#38521
-//      } //#38521
-//      $_ = $__; //#38525
-//  } //bwipp_fifocache_fetch
 
 function bwipp_fifocache_fetch() {
     var self = $k[--$j];

@@ -10,6 +10,8 @@ let debug = false;
 modout('preamble');
 modout('render');
 modout('setuphooks');
+modout('setanycolor');
+strrep(/\/\/setanycolor/, 'setanycolor');
 
 // Move each module's global code into its execution block.
 moveglobalcode();

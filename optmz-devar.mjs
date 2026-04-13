@@ -37,31 +37,8 @@
 //
 // That is safe to substitute as it is self-referencing.
 
-// The goal is to inline the following common construct caused by context flushes:
-//    var _3U = $_.sbs; //#6416
-//    var _3V = $_.bhs; //#6417
-//    var _3W = $_.bbs; //#6418
-//    var _3X = $_.txt; //#6419
-//    var _3Y = $_.options; //#6420
-//    var _3Z = $_.addon; //#6421
-//    $k[$j++] = 'ren'; //#6421
-//    $k[$j++] = 'renlinear'; //#6421
-//    $k[$j++] = 'sbs'; //#6421
-//    $k[$j++] = _3U; //#6421
-//    $k[$j++] = 'bhs'; //#6421
-//    $k[$j++] = _3V; //#6421
-//    $k[$j++] = 'bbs'; //#6421
-//    $k[$j++] = _3W; //#6421
-//    $k[$j++] = 'txt'; //#6421
-//    $k[$j++] = _3X; //#6421
-//    $k[$j++] = 'opt'; //#6421
-//    $k[$j++] = _3Y; //#6421
-//    $k[$j++] = 'guardrightpos'; //#6421
-//    if (_3Z.length == 0) { //#6421
-//        $k[$j++] = 9; //#6421
-//    } else { //#6421
-//        $k[$j++] = 5; //#6421
-//    } //#6421
+// RE that matches anything that might change the stack
+const restack = /\$j\b|\$[ad]\(\)|\$r\(|\$aload\(|\$astore\(|\$(?:anchor)?search\(/;
 
 // Walk down the lines, verifying the RE matches only once to end of block.
 // `lines` is the "safe" lines array, with all string literals removed and no indenting.
@@ -72,7 +49,6 @@ function once(lines, i, re, term) {
 
     // No stack references or stack manipulation?
     // No modification to the term?
-    let restack = /\$[jk]\b|\$[ad]\(\)|\$aload\(|\$astore\(/;
     let nostack = restack.test(term);
     let getident = /^\$get\(([^,]+),/.exec(term);
     if (getident) {
@@ -122,7 +98,7 @@ function once(lines, i, re, term) {
     return where;
 }
 
-function devar(lines, before, after) {
+export function optmz(lines, before, after) {
     // Create RE safe lines for testing by removing:
     // - all string literals that might create false positives
     // - all indenting to simplify the REs
@@ -138,9 +114,9 @@ function devar(lines, before, after) {
 
 // In strict mode, we only substitute var-decls that are unit terms
 // (no operator precedence issues after substitution).  E.g.:
-//      var _X = $k[--$j];
+//      /*var _X = $k[--$j]; (not performed in this pass anymore) */
 //      var _X = $_.ident;
-//      var _X = $_.ident[ ... ];
+//      var _X = $_.ident.ident;
 //      var _X = $get(ident, ... );
 //      var _X = $geti(ident, ... );
 //      var _X = $a([ ... ])
@@ -149,7 +125,10 @@ function devar(lines, before, after) {
 // [2] == term
 // [3] == get ident
 function strict(lines, safe, before, after) {
-    const redecl = /^\s*var (_\w+) *= *(\$k\[--\$j\]|\$_\.\w+(?:\[.*\])?|\$geti?\([^()]+\)|\$a\(\[.*\]\));/;
+    // Do not move $k[--$j] terms.  Keep them on their own line (var id = $k[--$j])
+    // so that other optmizing passes don't have to look inside expressions.
+    //const redecl = /^\s*var (_\w+) *= *(\$k\[--\$j\]|\$_\.\w+(?:\.\w+)?|\$geti?\([^()]+\)|\$a\(\[.*\]\));/;
+    const redecl = /^\s*var (_\w+) *= *(\$_\.\w+(?:\.\w+)?|\$geti?\([^()]+\)|\$a\(\[.*\]\));/;
     for (let i = 0; i < lines.length; i++) {
         let m = redecl.exec(lines[i]);
         if (m) {
@@ -183,7 +162,6 @@ function strict(lines, safe, before, after) {
 //    $_.text = _S;
 function loose(lines, safe, before, after) {
     const redecl = /^\s*var (_\w+) *= *(\$\w+\(.*\));/;
-    const restack = /\$[jk]\b|\$[ad]\(\)|\$aload\(|\$astore\(/;
     outer: for (let i = 0; i < lines.length; i++) {
         let m = redecl.exec(lines[i]);
         if (m && !restack.test(safe[i])) {
@@ -208,5 +186,3 @@ function loose(lines, safe, before, after) {
         }
     }
 }
-
-export { devar };

@@ -1,0 +1,240 @@
+<!doctype html>
+<html><head><title>Optimize</title>
+<style type="text/css">
+* {
+    font-family:        Arial, Helvetica, sans-serif;
+    font-size:          10pt;
+    box-sizing:         border-box;
+}
+body, html {
+    margin:             0px;
+    border:             0px;
+    padding:            0px;
+    background-color:   #ddd;
+}
+body {
+    overflow-y:         hidden;
+    overflow-x:         auto;
+}
+#header {
+    position:           relative;
+    height:             32px;
+    padding:            1ex;
+    padding-left:       24px;
+}
+.button {
+    display:            inline-block;
+    min-width:          20ex;
+    text-align:         center;
+    padding:            1ex 3ex;
+    background-color:   #0090ff;
+    border-radius:      4px;
+    color:              white;
+    font-family:        Verdana, Arial, san-serif;
+    font-weight:        bold;
+    cursor:             default;
+}
+#layout {
+    border:             10px solid transparent;
+    padding:            0px;
+    margin:             0px;
+    border-spacing:     0px;
+}
+#layout td {
+    padding:            0px;
+    border:             0px;
+    vertical-align:     top;
+}
+#layout #lefttd {
+    border-right:       10px solid #ddd;
+}
+#layout #centertd {
+    border-right:       10px solid #ddd;
+}
+#srcnbrs, #dstnbrs {
+    border:             1px solid #aaa;
+    resize:             none;
+    height:             100%;
+    width:              50px;
+    font-size:          12pt;
+    white-space:        pre;
+    text-align:         right;
+    overflow:           hidden;
+}
+#srctext, #dsttext {
+    border:             1px solid #aaa;
+    resize:             none;
+    height:             100%;
+    width:              76ex;
+    font-size:          12pt;
+    white-space:        pre;
+}
+</style>
+<script type="module">
+import { optmz as devar } from './optmz-devar.mjs';
+import { optmz as peepopts } from './optmz-peep.mjs';
+import { optmz as ifopts } from './optmz-if.mjs';
+import { optmz as foropts } from './optmz-for.mjs';
+import { optmz as miscopts } from './optmz-misc.mjs';
+import { optmz as jopts } from './optmz-j.mjs';
+import { optmz as astopts } from './optmz-ast.mjs';
+
+window.addEventListener('load', onload, false);
+window.addEventListener('resize', resize, false);
+
+function onload() {
+    resize();
+
+    // Bind the numbering textareas to their content
+    linkta('src');
+    linkta('dst');
+
+    try {
+        var state = JSON.parse(localStorage.getItem('optimize') || '{}');
+    } catch (e) {
+        state = {};
+    }
+    if (state.text) {
+        document.getElementById('srctext').value = state.text;
+        numbers('src');
+    }
+    if (+state.pos) {
+        document.getElementById('srctext').scrollTop = +state.pos;
+    }
+
+    console.log('yelp');
+    document.querySelector('#run-btn').addEventListener('click', (ev) => compile());
+}
+function resize() {
+    var table   = document.getElementById('layout');
+    var left    = document.getElementById('lefttd');
+    var right   = document.getElementById('righttd');
+    var srctext  = document.getElementById('srctext');
+    var dsttext  = document.getElementById('dsttext');
+    var srcnbrs  = document.getElementById('srcnbrs');
+    var dstnbrs  = document.getElementById('dstnbrs');
+
+    var height  = window.innerHeight;
+    var width   = window.innerWidth;
+    var innerh  = height - (table.offsetHeight - left.offsetHeight);
+    var innerw  = width - (table.offsetWidth - table.rows[0].offsetWidth);
+
+    srctext.style.height = innerh + 'px';
+    dsttext.style.height = innerh + 'px';
+    srcnbrs.style.height = innerh + 'px';
+    dstnbrs.style.height = innerh + 'px';
+    srctext.style.width  = ((width-150) / 2) + 'px';
+    dsttext.style.width  = ((width-150) / 2) + 'px';
+}
+
+function compile() {
+    var srcelt = document.getElementById('srctext');
+    var dstelt = document.getElementById('dsttext');
+    var srctxt = srcelt.value;
+    var srcpos = srcelt.scrollTop;
+
+    localStorage.setItem('optimize', JSON.stringify({ text:srctxt, pos:srcpos  }));
+
+    var lines = srctxt.split(/\r?\n/g);
+    debugger;
+
+    devar(lines);
+    peepopts(lines);
+    ifopts(lines);
+    foropts(lines);
+    miscopts(lines);
+    jopts(lines);
+    astopts(lines);
+
+    dstelt.value = lines.join('\r\n');
+
+    numbers('dst');
+    indent('dst');
+    sync();
+}
+function sync() {
+    var srcelt = document.getElementById('srctext');
+    var dstelt = document.getElementById('dsttext');
+    var srctxt = srcelt.value;
+    var dsttxt = dstelt.value;
+
+    // Get the top visible line number of the source text.  Add X to display the
+    // result code more in the middle of the listing.
+    var nlines = srctxt.replace(/[^\n]+/g, '').length+1;
+    var lnbr = Math.ceil(nlines * srcelt.scrollTop / srcelt.scrollHeight) + 12;
+
+    // Find the first occurrence of that line number in the javascript.
+    // One issue is that not every source line number appears in the result.
+    // Therefore, keep looking.
+    while (lnbr < nlines) {
+        // Line numbers are wrapped in /*###*/ comments
+        var a = (new RegExp("/\\*" + lnbr + "\\*/")).exec(dsttxt);
+        if (a) {
+            console.log(lnbr, a);
+            dstelt.scrollTop = dstelt.scrollHeight *
+                      (dsttxt.substr(0,a.index).replace(/[^\n]+/g,'').length+1) /
+                      (dsttxt.replace(/[^\n]+/g,'').length+1)
+            break;
+        }
+        lnbr++;
+    }
+}
+function linkta(id) {
+    var text = document.getElementById(id + 'text');
+    var nbrs = document.getElementById(id + 'nbrs');
+
+    nbrs.disabled = true;
+    numbers(id);
+
+    text.onscroll = function() {
+        if (text.scrollHeight != nbrs.scrollHeight) {
+            numbers(id);
+        }
+        nbrs.scrollTop = text.scrollTop;
+    }
+}
+function numbers(id) {
+    var text = document.getElementById(id + 'text').value;
+    var nlines = Math.max(text.replace(/[^\n]+/g, '').length+1, 99);
+
+    var t = '';
+    for (var i = 1; i < nlines; i++) {
+        t += i + '\n';
+    }
+    document.getElementById(id + 'nbrs').textContent = t;
+}
+function indent(id) {
+    var lines = document.getElementById(id + 'text').value.split(/\r?\n/);
+
+    var tabs = '';
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].replace(/"([^\\"]|\\.)*"/g, '')
+                            .replace(/\/\/.*/, '')
+                            .replace(/\/\*([^*]|\*[^\/])*\*\//, '')
+                            ;
+        if (/^\s*\}/.test(line)) {
+            tabs = tabs.substr(0, tabs.length-1);
+        }
+        lines[i] = tabs + lines[i];
+        if (/\{$/.test(line)) {
+            tabs = tabs + '\t';
+        }
+    }
+
+    document.getElementById(id + 'text').value = lines.join('\n');
+}
+</script>
+</head>
+<body>
+<table id="layout"><tbody>
+<tr><td style="white-space:nowrap;overflow:hidden">&nbsp;<b>Source</b>
+    &nbsp;<button id="run-btn">Optimize</button>&nbsp;
+    <td>&nbsp;<b>Result</b>
+    &nbsp;<button onclick="sync()">Goto</button>&nbsp;
+<tr><td id="lefttd"><textarea id="srcnbrs" spellcheck="false"></textarea>
+                    <textarea id="srctext" spellcheck="false"></textarea>
+    <td id="righttd"><textarea id="dstnbrs" spellcheck="false"></textarea>
+                    <textarea id="dsttext" spellcheck="false"></textarea>
+</table>
+</body>
+</html>

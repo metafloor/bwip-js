@@ -8,14 +8,11 @@ function PSC(pscode, flags) {
 
     // Configure from command line flags
     var cfg = {
-        devar:      true,   // run devar() optimization
         coverage:   false,  // no branch coverage instrumentation
     };
 
     for (var i = 0; i < flags.length; i++) {
         switch (flags[i]) {
-        case '--no-devar':      cfg.devar = false;      break;
-        case '--with-devar':    cfg.devar = true;       break;
         case '--no-coverage':   cfg.coverage = false;   break;
         case '--with-coverage': cfg.coverage = true;    break;
         case '--no-perf':       cfg.perf = false;       break;
@@ -737,12 +734,12 @@ function PSC(pscode, flags) {
                     // to hold that initial reference to thispairs.
                     //
                     // This de-optimization caused massive unnecessary var
-                    // assignments.  See devar() for recovery from it.
+                    // assignments.  The optimize.mjs pass attempts to recover from it.
                     //
                     // Do not change this code.  Took hours of debugging to find
                     // this issue.  Optimize using peephole techniques instead.
                     let tid = tvar();
-                    emit('var ' + tid + '=$_.' + mkid(id) + ';');
+                    emit('var ' + tid + '=$_.' + id + ';');
                     st[sp++] = { type:dict[id] || TYPE_UNKNOWN, expr:tid, seq:++seq };
                 }
                 /*
@@ -798,13 +795,6 @@ function PSC(pscode, flags) {
         ctxpush(tkns);
         compile();
         var lines = ctxpop();
-
-        // Perform simple var declaration elimination.
-        if (cfg.devar) {
-            // 26-Mar'26 This is causing bugs...  Push to the optimize pass, where
-            // all changes get logged and can be reviewed.
-            //devar(lines);
-        }
 
         // The top of the trace stack contains the name of this function
         var fname = sp && st[sp-1].type == TYPE_IDENT ? st[sp-1].expr : '';
@@ -1319,7 +1309,22 @@ function PSC(pscode, flags) {
         var name = st[--sp];
         var dict = st[--sp];
         ctxflush();
-        emit('delete ' + dict.expr + '[' + name.expr + '];');
+        emit('$del(' + dict.expr + ',' + name.expr + ')');
+        /*
+        if (name.type === TYPE_STRLIT) {
+            let id = name.expr.slice(1, -1);
+            if (/^[a-zA-Z_]\w*$/.test(id)) {
+                emit('delete ' + dict.expr + '.' + id + ';');
+            } else {
+                emit('delete ' + dict.expr + '[' + name.expr + '];');
+            }
+        } else if (name.type === TYPE_IDENT) {
+            let id = name.expr.slice(1, -1);
+            emit('delete ' + dict.expr + '.' + id + ';');
+        } else {
+            emit('delete ' + dict.expr + '[' + name.expr + '];');
+        }
+        */
     }
 
     // load looks up key the same way the interpreter looks up names that it

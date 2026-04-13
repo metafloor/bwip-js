@@ -13,7 +13,7 @@ for (let i = 0; i < all.length; i++) {
                      syms:JSON.parse(fs.readFileSync('bench-stats/' + all[i]))
             });
     } else if (a) {
-        let bwipp = fs.readFileSync('../node_modules/bwipjs-' + a[1] + '.' + a[2] + '/barcode.ps', 'ascii')
+        let bwipp = fs.readFileSync('../bwip-js-vers/bwipjs-' + a[1] + '.' + a[2] + '/barcode.ps', 'ascii')
                         .match(/Barcode Writer in Pure PostScript - Version (\d+-\d\d-\d\d)/);
         stats.push({ vers:a[1] + '.' + a[2] + (a[3]||''), sort:a[1]*1000 + +a[2], bwipp:bwipp[1],
                      syms:JSON.parse(fs.readFileSync('bench-stats/' + all[i]))
@@ -48,7 +48,7 @@ let md =
     '### Times by Encoder\n\n' +
     '  * Slowest to fastest (latest version)\n' +
     '  * All times in msecs\n' +
-    '  * Benchmarked using node.js ' + process.version + ' : ' + os.platform + '/' + os.arch + ' : ' + os.cpus()[0].model + '\n' +
+    '  * Benchmarked on ' + os.platform + '/' + os.arch + ' : ' + os.cpus()[0].model + '\n' +
     '\n'+
     '| Encoder |';
 for (let i = 0; i < stats.length; i++) {
@@ -80,12 +80,14 @@ for (var j = 0; j < arr.length; j++) {
 }
 md += '\n';
 
+md += '### Version Information\n\n';
 for (let i = 0; i < stats.length; i++) {
     if (stats[i].sort != Infinity) {
-        md += '* v' + stats[i].vers + '&numsp;'.repeat(4-stats[i].vers.length) + ' : BWIPP ' + stats[i].bwipp + '\n';
+        md += '* bwip-js v' + stats[i].vers + '&numsp;'.repeat(4-stats[i].vers.length);
     } else {
-        md += '* ' + stats[i].vers + ' : BWIPP ' + stats[i].bwipp + '\n';
+        md += '* bwip-js ' + stats[i].vers;
     }
+    md += ' : BWIPP ' + stats[i].bwipp + ' : node-js ' + stats[i].syms.node + '\n';
 }
 /*
 let dt = new Date();

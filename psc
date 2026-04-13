@@ -24,14 +24,16 @@ echo '}'
 ## Create the symbol list
 ##
 (
+SWISSQRTEXT='SPC^CR^LF0200^CR^LF1^CR^LFCH5800791123000889012^CR^LFS^CR^LFRobert Schneider AG^CR^LFRue du Lac^CR^LF1268^CR^LF2501^CR^LFBiel^CR^LFCH^CR^LF^CR^LF^CR^LF^CR^LF^CR^LF^CR^LF^CR^LF^CR^LF199.95^CR^LFCHF^CR^LFK^CR^LFPia-Maria Rutschmann-Schnyder^CR^LFGrosse Marktgasse 28^CR^LF9400 Rorschach^CR^LF^CR^LF^CR^LFCH^CR^LFSCOR^CR^LFRF18539007547034^CR^LF^CR^LFEPD'
+
 echo 'var bwipp_symlist = ['
 grep -E '% --BEGIN ENCODER|% --DESC:|% --EXAM:|% --EXOP:' barcode.ps |
     sed -e 's/% --BEGIN ENCODER\s*\(.*\)--/  { bcid:"\1"/'\
-        -e 's/% --DESC:\s*\(.*\)/, desc:"\1"/'\
-        -e 's/% --EXAM:\s*\(.*\)/, text:"\1"/'\
-        -e 's/% --EXOP:\s*\(.*\)/, opts:"\1" },/'\
+        -e 's/% --DESC:\s*\(.*\)/,desc:"\1"/'\
+        -e 's/% --EXAM:\s*\(.*\)/,text:"\1"/'\
+        -e 's/% --EXOP:\s*\(.*\)/,opts:"\1" },/'\
         -e 's/height=0.5/height=12.5/' |
-    awk '{r = r $0} NR%4 == 0 {print r; r = ""}'
+    awk '{r = r $0} NR%4 == 0 {print r; r = ""}' | sed -e "/bcid:\"swissqrcode\"/s/text:\"\",opts:\"\"/text:\"$SWISSQRTEXT\",opts:\"parse\"/"
 echo "];";
 ) > barcode-symlist.js
 
@@ -207,8 +209,8 @@ echo "" >> src/bwipp.js
 rm -f barcode.tmp  ## PS code after custom modules
 ##rm -f barcode.psc  ## PS code after preprocessing
 rm -f barcode-lookup.js
-rm -f barcode-symlist.js
-##rm -f barcode.pjs  ## JS code output by psc.js
+##rm -f barcode-symlist.js
+##rm -f barcode.pjs  ## JS code after psc.js
 ##rm -f barcode.js   ## JS code after optimzing
 rm -f bwipp.js     ## JS code after branding
 
