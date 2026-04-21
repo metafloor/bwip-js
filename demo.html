@@ -5,11 +5,11 @@
 <meta name="description" content="JavaScript barcode generator and library.  Create any barcode in your browser." />
 <link rel="stylesheet" type="text/css" href="lib/demo.css">
 <script type="text/javascript" src="dist/bwip-js.js"></script>
-<script type="text/javascript" src="lib/symdesc.js"></script>
 <script type="text/javascript" src="lib/canvas-toblob.js"></script>
 <script type="text/javascript" src="lib/filesaver.js"></script>
 <script type="text/javascript" src="lib/inconsolata.js"></script>
 <script type="text/javascript">
+const symbols = {};
 window.addEventListener('load', function() {
     var lastSymbol, lastBarText, lastAltText, lastOptions, lastRotate, lastScaleX, lastScaleY,
         lastRenderAs = 'render-canvas';
@@ -27,20 +27,20 @@ window.addEventListener('load', function() {
 
     // Set up the select list of barcode types
     var sel = document.getElementById('symbol');
-    var opts = [];
-    for (var id in symdesc) {
-        opts.push(symdesc[id]);
+    var opts = bwipjs.symbolList.slice();
+    for (let i = 0; i < opts.length; i++) {
+        symbols[opts[i].bcid] = opts[i];
     }
     opts.sort(function (a,b) { return a.desc < b.desc ? -1 : 1 });
     for (var i = 0, l = opts.length; i < l; i++) {
         var elt = document.createElement('option');
         elt.textContent = opts[i].desc;
-        elt.value = opts[i].sym;
+        elt.value = opts[i].bcid;
         sel.appendChild(elt);
     }
 
     sel.addEventListener('change', function(ev) {
-            var desc = symdesc[sel.value];
+            var desc = symbols[sel.value];
             if (desc) {
                 document.getElementById('symtext').value = desc.text;
                 document.getElementById('symopts').value = desc.opts;
@@ -105,7 +105,7 @@ window.addEventListener('load', function() {
 });
 
 function render() {
-    var elt  = symdesc[document.getElementById('symbol').value];
+    var elt  = symbols[document.getElementById('symbol').value];
     var text = document.getElementById('symtext').value.trim();
     var alttext = document.getElementById('symaltx').value.trim();
     var options = document.getElementById('symopts').value.trim();
@@ -115,7 +115,7 @@ function render() {
     var renderAs = document.querySelector('input[name="render-as"]:checked').id;
 
     try {
-        localStorage.setItem('bwipjsLastSymbol',  elt.sym);
+        localStorage.setItem('bwipjsLastSymbol',  elt.bcid);
         localStorage.setItem('bwipjsLastBarText', text);
         localStorage.setItem('bwipjsLastAltText', alttext);
         localStorage.setItem('bwipjsLastOptions', options);
@@ -163,7 +163,7 @@ function render() {
 
     // Finish up the options
     opts.text = text;
-    opts.bcid = elt.sym;
+    opts.bcid = elt.bcid;
     opts.scaleX = scaleX;
     opts.scaleY = scaleY;
     opts.rotate = rotate;
@@ -216,9 +216,9 @@ function render() {
     function showCVS(ts0, ts1) {
         canvas.style.display = '';
         setURL();
-        document.getElementById('stats').textContent = elt.sym + ' rendered in ' + (ts1-ts0) + ' msecs.';
+        document.getElementById('stats').textContent = elt.bcid + ' rendered in ' + (ts1-ts0) + ' msecs.';
         document.getElementById('saveas').style.visibility = 'visible';
-        saveCanvas.basename = elt.sym + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-');
+        saveCanvas.basename = elt.bcid + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-');
         if (window.devicePixelRatio) {
             canvas.style.zoom = 1 / window.devicePixelRatio;
         } else {
@@ -237,7 +237,7 @@ function render() {
         svgdiv.innerHTML = svg;
         svgdiv.style.display = '';
         document.getElementById('output').textContent = svg;
-        document.getElementById('stats').textContent = elt.sym + ' rendered in ' + (ts1-ts0) + ' msecs.';
+        document.getElementById('stats').textContent = elt.bcid + ' rendered in ' + (ts1-ts0) + ' msecs.';
     }
 }
 function saveCanvas(type, ext) {
@@ -247,7 +247,7 @@ function saveCanvas(type, ext) {
                   }, type, 1);
 }
 function setURL() {
-    var elt  = symdesc[document.getElementById('symbol').value];
+    var elt  = symbols[document.getElementById('symbol').value];
     var text = document.getElementById('symtext').value.trim();
     var alttext = document.getElementById('symaltx').value.trim();
     var options = document.getElementById('symopts').value.trim();
@@ -255,7 +255,7 @@ function setURL() {
     var scaleX = +document.getElementById('scaleX').value || 2;
     var scaleY = +document.getElementById('scaleY').value || scaleX;
 
-    var url = 'http://bwipjs-api.metafloor.com/?bcid=' + elt.sym +
+    var url = 'http://bwipjs-api.metafloor.com/?bcid=' + elt.bcid +
                 '&text=' + encodeURIComponent(text) +
                 (alttext ? '&alttext=' + encodeURIComponent(alttext) : '') +
                 (options ? '&' + options.replace(/ +/g, '&') : '') +
