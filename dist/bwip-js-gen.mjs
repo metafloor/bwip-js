@@ -5,7 +5,7 @@
 // Copyright (c) 2011-2026 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2026-03-31
+// Barcode Writer in Pure PostScript - Version 2026-04-21
 // Copyright (c) 2004-2024 Terry Burton
 //
 // The MIT License

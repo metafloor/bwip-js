@@ -1,24 +1,20 @@
 #!/usr/bin/node
 
-const syms = require('./lib/symdesc.js');
 const bwipjs = require('./dist/bwip-js-node.js');
 
-var a = [];
-for (let sym in syms) {
-    a.push(sym);
-}
+var syms = bwipjs.symbolList.slice();
 
 const SYMITERS = 50;
 let   symiters = 0;
 let   runiters = 5;
 
 function render(index) {
-    let id = a[index];
+    let bcid = syms[index].bcid;
     let options = {
-            bcid:id,
-            text:syms[id].text,
+            bcid:bcid,
+            text:syms[index].text,
         };
-    let opts = syms[id].opts.split(' ');
+    let opts = syms[index].opts.split(' ');
     for (let i = 0; i < opts.length; i++) {
         let s = opts[i];
         let eq = s.indexOf('=');
@@ -32,14 +28,14 @@ function render(index) {
     try {
         bwipjs.toBuffer(options, (err, png) => {
                 if (err) {
-                    console.log(id, ': ' + err);
+                    console.log(bcid, ': ' + err);
                     process.exit(1);
                 } else {
-                    console.log(id, ': ' + index + ' of ' + runiters);
+                    console.log(bcid, ': ' + index + ' of ' + runiters);
                 }
                 if (++symiters < SYMITERS) {
                     render(index);
-                } else if (++index < a.length) {
+                } else if (++index < syms.length) {
                     symiters = 0;
                     render(index);
                 } else if (--runiters > 0) {
@@ -50,7 +46,7 @@ function render(index) {
                 }
             });
     } catch (e) {
-        console.log(id, ': ' + e);
+        console.log(bcid, ': ' + e);
     }
 }
 

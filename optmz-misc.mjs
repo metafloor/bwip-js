@@ -14,7 +14,7 @@ export function optmz(lines, before, after) {
         for (let i = 0, l = lines.length; i < l; i++) {
             if (poppush(i) || pushnostackpop(i) || pusharraypop(i) ||
                 varalias(i) || varinfinity(i) || vardef(i) ||
-                pushdef(i) || savereturnval(i)) {
+                /*pushdef(i) ||*/ savereturnval(i)) {
                 changed = true;
             }
         }
@@ -250,6 +250,15 @@ export function optmz(lines, before, after) {
     // } //#9063
     // var _M = $k[--$j]; //#9063
     // $_[_M] = _L; //#9063
+    /*
+    This logic cannot be proved true under all circumstances.  From ean8composite:
+        /borderleft
+            linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse linpad length 1 add sub
+            1  % CC-A QZ; left inset 0
+            2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+        def
+    The double-push of /borderleft causes the wrong /borderleft to be optimized out.
+
     function pushdef(i) {
         let m0 = /^ *\$k\[\$j\+\+] *= *'([a-zA-Z_]\w*)';/.exec(lines[i]);
         if (!m0) {
@@ -271,6 +280,7 @@ export function optmz(lines, before, after) {
         after?.(i, j-i-1);
         return true;
     }
+    */
 
     // save return value
     //    $k[$j++] = 'cdf'; //#11754

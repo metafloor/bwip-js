@@ -1,0 +1,42 @@
+
+/renderguards {
+
+    /pixx exch def
+
+    guardwidth 0 lt guardwidth 20 gt or {
+        /bwipp.renderBadGuardwidth (guardwidth must be from 0 to 20) //raiseerror exec
+    } if
+
+    guardheight 0 lt guardheight 20 gt or {
+        /bwipp.renderBadGuardheight (guardheight must be from 0 to 20) //raiseerror exec
+    } if
+
+    guardleftpos -50 lt guardleftpos 150 gt or {
+        /bwipp.renderBadGuardleftpos (guardleftpos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardleftypos -50 lt guardleftypos 150 gt or {
+        /bwipp.renderBadGuardleftypos (guardleftypos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardrightpos -50 lt guardrightpos 150 gt or {
+        /bwipp.renderBadGuardrightpos (guardrightpos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardrightypos -50 lt guardrightypos 150 gt or {
+        /bwipp.renderBadGuardrightypos (guardrightypos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardwhitespace {
+        (OCR-B) guardheight 2 mul selectfont
+        guardleftpos 0 ne {
+            guardleftpos neg 2 sub guardleftypos guardheight 2 div sub 1.25 sub moveto
+            (<) show
+        } if
+        guardrightpos 0 ne {
+            guardrightpos pixx add guardwidth sub 1 sub guardrightypos guardheight 2 div sub 1.25 sub moveto
+            (>) show
+        } if
+    } if
+
+} bind def

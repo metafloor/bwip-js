@@ -35,7 +35,7 @@ rm -f tests/*.gsout tests/*.jsout 2>/dev/null
 ##
 ## Create a special barcode.ps that emits the renderer values
 ##
-sed -e '/\/ren\w* {\s*$/,/^}/s/^\s/% /' barcode.ps > tests/barcode.ps
+sed -e '/\/ren[lm]\w* {\s*$/,/^}/s/^\s/% /' barcode.ps > tests/barcode.ps
 node <<@EOF
 const fs = require('node:fs');
 const text = fs.readFileSync('tests/barcode.ps', 'utf-8')

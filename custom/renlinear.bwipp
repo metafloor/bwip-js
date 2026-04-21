@@ -1,5 +1,5 @@
 % --REQUIRES preamble raiseerror processoptions setanycolor render--
-%%BeginData:        323 ASCII Lines
+%%BeginData:        219 ASCII Lines
 currentglobal
 true setglobal
 /setpacking where {pop currentpacking true setpacking} if
@@ -9,7 +9,6 @@ dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
 dup /render dup /uk.co.terryburton.bwipp findresource put
 begin
-
 
 /renlinear {
 
@@ -55,26 +54,25 @@ begin
     /guardheight 7.0 def
     /gridfit false def
     /griddpi 0 def
+    /strictspec false def
+    /loosespec false def
+    /xdim -1.0 def
+    /xmin -1.0 def
+    /xmax -1.0 def
+    /modunit 1 def
 
     {def} forall
     opt currentdict /opt undef /apply //processoptions exec /options exch def
+    /global_renderer_defaults //render exec
 
-    % Resolve text aliases: alttext=>text1, extratext=>text2
-
-    % Collect into an text options array
+    % Collect text options into an array
     /textopts (text) 9 /groupoptions //render exec /collectgroup //processoptions exec def
 
-    /uk.co.terryburton.bwipp.global_ctx dup where {
-        exch get /ctx exch def
-        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-        inkspread       null eq    { ctx /default_inkspread       2 copy known {get /inkspread       exch def} {pop pop} ifelse } if
-        griddpi         0 eq       { ctx /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
-    } { pop } ifelse
-
-    % Auto-enable gridfit when griddpi is specified
     griddpi 0 ne { /gridfit true def } if
+    inkspread null eq { /inkspread 0.15 def } if
+
+    % Adjust inkspread to fixed physical amount under strictspec
+    strictspec { /inkspread inkspread modunit mul 25.4 mul xdim 72 mul div def } if
 
     % Auto-disable gridfit for fractional-width bars (postal, pharmacode)
     gridfit {
@@ -86,42 +84,11 @@ begin
         } if
     } if
 
-    inkspread null eq {/inkspread 0.15 def} if
-
     %
     % Validate input
     %
 
-    % Validate text{1-9}* options
-    1 1 9 {
-        /textgrp exch def
-        textgrp textopts textgrp 1 sub get
-        /validateoptions //render exec not { //raiseerror exec } if
-    } for
-
-    inkspread -1 lt inkspread 1 gt or {
-        /bwipp.renlinearBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
-    } if
-
-    borderleft -1 lt borderleft 50 gt or {
-        /bwipp.renlinearBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderright -1 lt borderright 50 gt or {
-        /bwipp.renlinearBadBorderright (borderright must be from -1 to 50) //raiseerror exec
-    } if
-
-    bordertop -1 lt bordertop 50 gt or {
-        /bwipp.renlinearBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderbottom -1 lt borderbottom 50 gt or {
-        /bwipp.renlinearBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderwidth 0 lt borderwidth 10 gt or {
-        /bwipp.renlinearBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
-    } if
+    /validate_common //render exec
 
     barratio 0.1 lt barratio 5 gt or {
         /bwipp.renlinearBadBarratio (barratio must be from 0.1 to 5) //raiseerror exec
@@ -133,34 +100,6 @@ begin
 
     width 0 ne { width 0.01 lt width 20 gt or {
         /bwipp.renlinearBadWidth (width must be 0 or from 0.01 to 20) //raiseerror exec
-    } if } if
-
-    guardwidth 0 lt guardwidth 20 gt or {
-        /bwipp.renlinearBadGuardwidth (guardwidth must be from 0 to 20) //raiseerror exec
-    } if
-
-    guardheight 0 lt guardheight 20 gt or {
-        /bwipp.renlinearBadGuardheight (guardheight must be from 0 to 20) //raiseerror exec
-    } if
-
-    guardleftpos -50 lt guardleftpos 150 gt or {
-        /bwipp.renlinearBadGuardleftpos (guardleftpos must be from -50 to 150) //raiseerror exec
-    } if
-
-    guardleftypos -50 lt guardleftypos 150 gt or {
-        /bwipp.renlinearBadGuardleftypos (guardleftypos must be from -50 to 150) //raiseerror exec
-    } if
-
-    guardrightpos -50 lt guardrightpos 150 gt or {
-        /bwipp.renlinearBadGuardrightpos (guardrightpos must be from -50 to 150) //raiseerror exec
-    } if
-
-    guardrightypos -50 lt guardrightypos 150 gt or {
-        /bwipp.renlinearBadGuardrightypos (guardrightypos must be from -50 to 150) //raiseerror exec
-    } if
-
-    griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
-        /bwipp.renlinearBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
     } if } if
 
     sbs length 0 ne {
@@ -211,46 +150,28 @@ begin
     } if
 
     %
+    % Scale to physical specification dimensions
+    %
+    strictspec {
+        xdim 72 mul 25.4 div modunit div dup scale
+    } if
+
+    %
     % Grid fit: snap module boundaries to device pixel grid
     %
-    gridfit { width 0 eq { 1 } { -1 } ifelse false /gridfit //render exec } if
+    gridfit {
+        1 strictspec { xdim xmin xmax } { 0 -1 -1 } ifelse
+        width 0 ne  % Floor when width forced
+        false /gridfit //render exec
+        not { grestore //raiseerror exec } if
+    } if
+
 
     %
     % Display the border and background
     %
-    showborder showbearer or {
-        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
-        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
-        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
-        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
-    } {  % No need to extend background when there is no border or bearer
-        /tl [ borderleft neg inkspread add                pixy bordertop add                       ] def
-        /tr [ pixx borderright add inkspread sub          pixy bordertop add                       ] def
-        /bl [ borderleft neg inkspread add                borderbottom neg                         ] def
-        /br [ pixx borderright add inkspread sub          borderbottom neg                         ] def
-    } ifelse
-    backgroundcolor (unset) ne {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        backgroundcolor //setanycolor exec not { grestore grestore //raiseerror exec } if fill
-        grestore
-    } if
-    showbearer {  % Overrides showborder
-        gsave
-        newpath
-        bl aload pop moveto br aload pop lineto
-        tl aload pop moveto tr aload pop lineto
-        bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
-        borderwidth inkspread 2 mul sub setlinewidth stroke
-        grestore
-    } {
-    showborder {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
-        borderwidth inkspread 2 mul sub setlinewidth stroke
-        grestore
-    } if } ifelse
+    pixx pixy inkspread 0 /renderborder //render exec  % No inkspread in y for bars
+    not { grestore //raiseerror exec } if
 
     %
     % Display the bars for elements in the bars array
@@ -277,39 +198,14 @@ begin
     %
     % Display text{1-9}
     %
-    1 1 9 {
-        /textgrp exch def
-        textopts textgrp 1 sub get () get () ne              % Has manual contents
-        textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
-        {
-            textopts textgrp 1 sub get
-            dup dup () get (content) exch put
-            dup (txt) textgrp 1 eq { txt } { [] } ifelse put
-            pixx pixy textgrp 4 -1 roll /rendertext //render exec
-            not { grestore //raiseerror exec } if
-        } if
-    } for
+    pixx pixy /textgroups //render exec
+    not { grestore //raiseerror exec } if
 
     %
     % Display the guard elements
     %
-    guardwhitespace {
-        0.75 setlinewidth
-        guardleftpos 0 ne {
-            newpath
-            guardleftpos neg guardwidth add guardleftypos guardheight 2 div add moveto
-            guardwidth neg guardheight -2 div rlineto
-            guardwidth guardheight -2 div rlineto
-            stroke
-        } if
-        guardrightpos 0 ne {
-            newpath
-            guardrightpos pixx add guardwidth sub guardrightypos guardheight 2 div add moveto
-            guardwidth guardheight -2 div rlineto
-            guardwidth neg guardheight -2 div rlineto
-            stroke
-        } if
-    } if
+    pixx /renderguards //render exec
+    not { grestore //raiseerror exec } if
 
     grestore
 

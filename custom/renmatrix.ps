@@ -54,6 +54,13 @@ begin
     /bordertop 0.0 def
     /borderbottom 0.0 def
     /borderwidth 0.5 def
+    /guardwhitespace false def
+    /guardleftpos 0.0 def
+    /guardleftypos 0.0 def
+    /guardrightpos 0.0 def
+    /guardrightypos 0.0 def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
 
     {def} forall
     opt currentdict /opt undef //processoptions exec pop
@@ -62,6 +69,23 @@ begin
     inkspread null eq {/inkspread 0.15 def} if
     inkspreadh null eq {/inkspreadh inkspread def} if
     inkspreadv null eq {/inkspreadv inkspread def} if
+
+    % Default rowmult to all 1s if not provided
+    currentdict /rowmult known not {
+        /rowmult [ pixy { 1 } repeat ] def
+    } if
+
+    % Inflate the pixels
+    /bufnew pixx pixy mul array def
+    /bufoff 0 def
+    /pixoff 0 def
+    rowmult {
+        { bufnew bufoff pixs pixoff pixx getinterval putinterval
+          /bufoff bufoff pixx add def
+        } repeat
+        /pixoff pixoff pixx add def
+    } forall
+    /pixs bufnew def
 
     %
     % Input validation
@@ -216,6 +240,11 @@ begin
             not { grestore //raiseerror exec } if
         } if
     } for
+
+    %
+    % Display the guard elements
+    %
+    pixx //renderguards exec
 
     grestore
 

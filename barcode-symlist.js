@@ -81,7 +81,6 @@ var bwipp_symlist = [
   { bcid:"hanxin",desc:"Han Xin Code",text:"This is Han Xin",opts:"" },
   { bcid:"dotcode",desc:"DotCode",text:"This is DotCode",opts:"inkspread=0.16" },
   { bcid:"ultracode",desc:"Ultracode",text:"Awesome colours!",opts:"eclevel=EC2" },
-  { bcid:"jabcode",desc:"JAB Code (Beta)",text:"This is JAB Code",opts:"eclevel=6" },
   { bcid:"gs1-cc",desc:"GS1 Composite 2D Component",text:"(01)09521234543213(3103)000123",opts:"ccversion=b cccolumns=4" },
   { bcid:"ean13composite",desc:"EAN-13 Composite",text:"9520123456788|(99)1234-abcd",opts:"includetext" },
   { bcid:"ean8composite",desc:"EAN-8 Composite",text:"95200002|(21)A12345678",opts:"includetext" },

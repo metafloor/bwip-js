@@ -13,7 +13,7 @@ chmod -x barcode.ps
 echo 'function bwipp_lookup(symbol) {'
 echo '  if (!symbol) { throw new Error("bwipp.undefinedEncoder: bcid is not defined"); }'
 echo '  switch (symbol.replace(/-/g, "_")) {'
-grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u |\
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u |\
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    case "\1":return bwipp_\1;/' -e 's/-/_/g'
 echo '  }'
 echo '  throw new Error("bwipp.unknownEncoder: unknown encoder name: " + symbol);'
@@ -33,7 +33,7 @@ grep -E '% --BEGIN ENCODER|% --DESC:|% --EXAM:|% --EXOP:' barcode.ps |
         -e 's/% --EXAM:\s*\(.*\)/,text:"\1"/'\
         -e 's/% --EXOP:\s*\(.*\)/,opts:"\1" },/'\
         -e 's/height=0.5/height=12.5/' |
-    awk '{r = r $0} NR%4 == 0 {print r; r = ""}' | sed -e "/bcid:\"swissqrcode\"/s/text:\"\",opts:\"\"/text:\"$SWISSQRTEXT\",opts:\"parse\"/"
+    awk '{r = r $0} NR%4 == 0 {print r; r = ""}' | grep -v jabcode | sed -e "/bcid:\"swissqrcode\"/s/text:\"\",opts:\"\"/text:\"$SWISSQRTEXT\",opts:\"parse\"/"
 echo "];";
 ) > barcode-symlist.js
 
@@ -50,6 +50,7 @@ for file in $(cd custom; ls *.bwipp) ; do
     if [ $? != 0 ] ; then
         let diffs=diffs+1
         echo "!!! BEGIN $name CHANGES"
+        echo "< NEW OLD >"
         diff /tmp/$file custom/$file
         echo "!!! END $name CHANGES"
     fi

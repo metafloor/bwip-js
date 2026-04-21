@@ -244,17 +244,7 @@ begin
     %
     % Display the guard elements
     %
-    guardwhitespace {
-		(OCR-B) guardheight 2 mul selectfont
-        guardleftpos 0 ne {
-            guardleftpos neg 2 sub guardleftypos guardheight 2 div sub 1.25 sub moveto
-			(<) show
-        } if
-        guardrightpos 0 ne {
-            guardrightpos pixx add guardwidth sub 1 sub guardrightypos guardheight 2 div sub 1.25 sub moveto
-			(>) show
-        } if
-    } if
+    pixx //renderguards exec
 
     grestore
 

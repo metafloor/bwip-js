@@ -1,9 +1,9 @@
 % --REQUIRES preamble raiseerror setuphooks processoptions setanycolor render--
-%%BeginData:        165 ASCII Lines
+%%BeginData:        148 ASCII Lines
 currentglobal
 true setglobal
 /setpacking where {pop currentpacking true setpacking} if
-2 dict
+4 dict
 dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
@@ -17,6 +17,7 @@ begin
     %
     % Default options
     %
+    /includetext false def
     /barcolor (unset) def
     /backgroundcolor (unset) def
     /bordercolor (unset) def
@@ -27,53 +28,38 @@ begin
     /bordertop 0.0 def
     /borderbottom 0.0 def
     /borderwidth 0.5 def
+    /txt [] def
+
+    % text{1-9}* options with common defaults
+    (text) 9 /groupoptions //render exec /generategroup //processoptions exec
+
+    % Overrides permitting encoder-positioned text
+    /text1xalign (unset) def
+    /text1yalign (unset) def
+
     /gridfit false def
     /griddpi 0 def
+    /strictspec false def
+    /loosespec false def
+    /xdim -1.0 def
+    /xmin -1.0 def
+    /xmax -1.0 def
+    /modunit 2 def
 
     {def} forall
     opt currentdict /opt undef /apply //processoptions exec /options exch def
+    /global_renderer_defaults //render exec
 
-    /uk.co.terryburton.bwipp.global_ctx dup where {
-        exch get /ctx exch def
-        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-        inkspread       null eq    { ctx /default_inkspread       2 copy known {get /inkspread       exch def} {pop pop} ifelse } if
-        griddpi         0 eq       { ctx /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
-    } { pop } ifelse
+    % Collect text options into an array
+    /textopts (text) 9 /groupoptions //render exec /collectgroup //processoptions exec def
 
-    % Auto-enable gridfit when griddpi is specified
     griddpi 0 ne { /gridfit true def } if
+    inkspread null eq { /inkspread 0.15 def } if
 
-    inkspread null eq {/inkspread 0.15 def} if
-
-    inkspread -1 lt inkspread 1 gt or {
-        /bwipp.renmaximatrixBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
-    } if
-
-    borderleft -1 lt borderleft 50 gt or {
-        /bwipp.renmaximatrixBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderright -1 lt borderright 50 gt or {
-        /bwipp.renmaximatrixBadBorderright (borderright must be from -1 to 50) //raiseerror exec
-    } if
-
-    bordertop -1 lt bordertop 50 gt or {
-        /bwipp.renmaximatrixBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderbottom -1 lt borderbottom 50 gt or {
-        /bwipp.renmaximatrixBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderwidth 0 lt borderwidth 10 gt or {
-        /bwipp.renmaximatrixBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
-    } if
-
-    griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
-        /bwipp.renmaximatrixBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
-    } if } if
+    %
+    % Validate options
+    %
+    /validate_common //render exec
 
     options /debughexagons known
     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
@@ -86,37 +72,28 @@ begin
     2.4945 dup scale  % from 1pt to 0.88mm
 
     %
+    % Scale to physical specification dimensions
+    %
+    strictspec {
+        xdim 72 mul 25.4 div 2.4945 div dup scale  % Relative to existing 2.4945 scale
+        /inkspread inkspread 2.4945 mul 25.4 mul xdim 72 mul div def  % Fixed physical amount
+    } if
+
+    %
     % Grid fit: uniform even-pixel snap preserves hex aspect ratio
     %
-    gridfit { 2 false /gridfit //render exec } if
+    gridfit {
+        2 strictspec { xdim xmin xmax } { 0 -1 -1 } ifelse
+        false false /gridfit //render exec
+        not { grestore //raiseerror exec } if
+    } if
+
 
     %
     % Display the border and background
     %
-    showborder {
-        /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
-        /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
-        /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
-        /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def
-    } {  % No need to extend background when there is no border
-        /tl [ borderleft neg inkspread add              29 bordertop add inkspread sub         ] def
-        /tr [ 30 borderright add inkspread sub          29 bordertop add inkspread sub         ] def
-        /bl [ borderleft neg inkspread add              borderbottom neg inkspread add         ] def
-        /br [ 30 borderright add inkspread sub          borderbottom neg inkspread add         ] def
-    } ifelse
-    backgroundcolor (unset) ne {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        backgroundcolor //setanycolor exec not { grestore grestore //raiseerror exec } if fill
-        grestore
-    } if
-    showborder {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
-        borderwidth inkspread 2 mul sub setlinewidth stroke
-        grestore
-    } if
+    30 29 inkspread inkspread /renderborder //render exec  % 30x29 hex grid
+    not { grestore //raiseerror exec } if
 
     barcolor (unset) ne { barcolor //setanycolor exec not { grestore //raiseerror exec } if } if
 
@@ -152,6 +129,12 @@ begin
             14 13.8576 2.8644 inkspread sub 360 0 arcn closepath fill
     newpath 14 13.8576 3.6229 inkspread add 0 360 arc closepath
             14 13.8576 4.3814 inkspread sub 360 0 arcn closepath fill
+
+    %
+    % Display text{1-9}
+    %
+    30 29 /textgroups //render exec
+    not { grestore //raiseerror exec } if
 
     grestore
 

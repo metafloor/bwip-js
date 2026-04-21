@@ -15,6 +15,34 @@ modout('setuphooks');
 modout('setanycolor');
 strrep(/\/\/setanycolor exec not \{ false exit \} if/, 'setanycolor');
 
+modout('jabcode');
+// Fix jabcode naming
+//strrep(/(jabcode\.\w+)\.(\w+)/g, '$1_$2');
+// Disable jabcode large array support (not needed by javascript and breaks our tracing)
+//blockout(/^\s*{65536 array} stopped \{/, /^\s*\} ifelse\s*$/);
+
+// AST boilerplate
+lineout(/^ *\/(propspec|loosespec|strictspec|ast|mag|[xh]dim|[xh]nom|xmin|xmax) \S+ def/);
+lineout(/\((ast|mag)\) undef/);
+lineout(/\((propspec|loosespec|strictspec|mag|[xh]dim|[xh]nom|xmin|xmax|modunit)\) \1 put/);
+lineout(/^ *\/(propspec|loosespec|strictspec|mag|[xh]dim|[xh]nom|xmin|xmax|modunit) \1/);
+//strrep(/ *modunit mul */, ' ');
+lineout(/^ *\/global_encoder_defaults/);
+lineout(/^ *\/\w[-\w]+ ast \/apply_ast/);
+lineout(/^ *\/resolve_strictspec/);
+
+//    options (strictspec) undef
+//    options (loosespec) undef
+//    options (propspec) undef
+// >> dup (strictspec) undef dup (propspec) undef dup (loosespec) undef //gs1-cc exec
+lineout(/^ *options \((?:strict|loose|prop)spec\) undef/);
+strrep(/>>(?: dup \((?:strict|loose|prop)spec\) undef)+/, '>>');
+
+// /height /resolve_height //render exec dup -1 eq { pop 0.7 } if def
+strrep(/\/height \/resolve_height \/\/render exec dup -1 eq \{ pop (.*) \} if def/,
+        'height -1 eq { /height $1 def } if');
+
+
 // Move each module's global code into its execution block.
 moveglobalcode();
 
@@ -68,9 +96,6 @@ strrep(/^(\s*)\/_render/, '$1/_render dontdraw bwipp_dontdraw $enabledontdraw or
 blockout(/^\s*dontdraw \/uk.co.terryburton.bwipp.global_ctx dup where .* ifelse and/, /^\s*def/);
 strrep(/^(\s*)\/uk.co.terryburton.bwipp._dontdraw true def/, '$1/bwipp_dontdraw true def');
 
-// Fix jabcode naming
-strrep(/(jabcode\.\w+)\.(\w+)/g, '$1_$2');
-
 // Remove the latevars function blocks
 latevars();
 
@@ -80,9 +105,6 @@ lineout(/^\s*\/\/[\w-]+\.latevars \/init get exec/);
 
 // Disable font sizing - we do it internally
 blockout(/^\s*currentfont \/PaintType .* ifelse/,/^\s*\} if/);
-
-// Disable jabcode large array support (not needed by javascript and breaks our tracing)
-blockout(/^\s*{65536 array} stopped \{/, /^\s*\} ifelse\s*$/);
 
 // EAN2/EAN5 move the text down 1 pixel
 strrep(/\/text1yoffset height 72 mul 5.75 add def/, '/text1yoffset height 72 mul 4.75 add def');
@@ -193,7 +215,8 @@ function strrep(re, sub) {
     }
     if (!matches) {
         console.log(re, sub);
-        throw 'strrep: no matches';
+        fs.writeFileSync('barcode.bad', lines.join('\n'), 'ascii');
+        throw new Error('strrep: no matches');
     }
 }
 
@@ -232,7 +255,8 @@ function lineout(re) {
     }
     if (!matches) {
         console.log(re);
-        throw 'lineout: no matches';
+        fs.writeFileSync('barcode.bad', lines.join('\n'), 'ascii');
+        throw new Error('lineout: no matches');
     }
 }
 

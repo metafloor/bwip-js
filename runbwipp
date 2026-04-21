@@ -1,5 +1,5 @@
 ## This code was automatically generated from:
-## Barcode Writer in Pure PostScript - Version 2026-03-31
+## Barcode Writer in Pure PostScript - Version 2026-04-21
 run 0 "ean5" "90200" "includetext guardwhitespace"
 run 0 "ean2" "05" "includetext guardwhitespace"
 run 0 "ean13" "9520123456788" "includetext guardwhitespace"
@@ -16,7 +16,7 @@ run 0 "ean14" "(01) 0 952 8765 43210 8" "includetext"
 run 0 "sscc18" "(00) 0 9528765 432101234 6" "includetext"
 run 0 "code39" "THIS IS CODE 39" "includetext includecheck includecheckintext"
 run 0 "code39ext" "Code39 Ext!" "includetext includecheck includecheckintext"
-run 0 "code32" "01234567" "includetext"
+run 0 "code32" "01234567" "includetext textcolor=0000bd"
 run 0 "pzn" "123456" "includetext"
 run 0 "code93" "THIS IS CODE 93" "includetext includecheck"
 run 0 "code93ext" "Code93 Ext!" "includetext includecheck"

@@ -1,5 +1,5 @@
 % --REQUIRES preamble raiseerror setuphooks processoptions setanycolor render--
-%%BeginData:        561 ASCII Lines
+%%BeginData:        546 ASCII Lines
 currentglobal
 true setglobal
 /setpacking where {pop currentpacking true setpacking} if
@@ -132,36 +132,47 @@ begin
     /bordertop 0.0 def
     /borderbottom 0.0 def
     /borderwidth 0.5 def
+    /guardwhitespace false def
+    /guardleftpos 0.0 def
+    /guardleftypos 0.0 def
+    /guardrightpos 0.0 def
+    /guardrightypos 0.0 def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
     /gridfit false def
     /griddpi 0 def
+    /strictspec false def
+    /loosespec false def
+    /xdim -1.0 def
+    /xmin -1.0 def
+    /xmax -1.0 def
+    /modunit 2 def
 
     {def} forall
     opt currentdict /opt undef /apply //processoptions exec /options exch def
+    /global_renderer_defaults //render exec
 
-    % Resolve text aliases: alttext=>text1, extratext=>text2
+    griddpi 0 ne { /gridfit true def } if
 
-    inkspread null eq {
-        /uk.co.terryburton.bwipp.global_ctx dup where {
-            exch get /default_inkspread 2 copy known {get /inkspread exch def} {pop pop} ifelse
-        } {pop} ifelse
-    } if
-
-    inkspread null eq {/inkspread 0.15 def} if
+    inkspread null eq { /inkspread 0.15 def } if
     inkspreadh null eq {/inkspreadh inkspread def} if
     inkspreadv null eq {/inkspreadv inkspread def} if
 
-    /uk.co.terryburton.bwipp.global_ctx dup where {
-        exch get /ctx exch def
-        barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-        backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-        bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-        griddpi         0 eq       { ctx /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
-    } { pop } ifelse
-
-    % Auto-enable gridfit when griddpi is specified
-    griddpi 0 ne { /gridfit true def } if
-
     (input.processoptions) //renmatrix.after exec
+
+    % Default rowmult to all 1s if not provided
+    currentdict /rowmult known not {
+        /rowmult [ pixy { 1 } repeat ] def
+    } if
+
+    /pixycomp rowmult length def
+    /rowcumul pixycomp 1 add array def
+    rowcumul 0 0 put
+    0 1 pixycomp 1 sub {                       % i
+        dup rowcumul exch get                  % ... rowcumul[i]
+        1 index rowmult exch get add           % ... rowcumul[i] + rowmult[i]
+        exch 1 add exch rowcumul 3 1 roll put  % rowcumul[i+1] = rowcumul[i]+rowmult[i]
+    } for
 
     %
     % Input validation
@@ -177,16 +188,7 @@ begin
     % Validate input
     %
 
-    % text{1-9}* options validation
-    1 1 9 {
-        /textgrp exch def
-        textgrp textopts textgrp 1 sub get
-        /validateoptions //render exec not { //raiseerror exec } if
-    } for
-
-    inkspread -1 lt inkspread 1 gt or {
-        /bwipp.renmatrixBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
-    } if
+    /validate_common //render exec
 
     inkspreadh -1 lt inkspreadh 1 gt or {
         /bwipp.renmatrixBadInkspreadh (inkspreadh must be from -1 to 1) //raiseerror exec
@@ -194,26 +196,6 @@ begin
 
     inkspreadv -1 lt inkspreadv 1 gt or {
         /bwipp.renmatrixBadInkspreadv (inkspreadv must be from -1 to 1) //raiseerror exec
-    } if
-
-    borderleft -1 lt borderleft 50 gt or {
-        /bwipp.renmatrixBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderright -1 lt borderright 50 gt or {
-        /bwipp.renmatrixBadBorderright (borderright must be from -1 to 50) //raiseerror exec
-    } if
-
-    bordertop -1 lt bordertop 50 gt or {
-        /bwipp.renmatrixBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderbottom -1 lt borderbottom 50 gt or {
-        /bwipp.renmatrixBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
-    } if
-
-    borderwidth 0 lt borderwidth 10 gt or {
-        /bwipp.renmatrixBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
     } if
 
     width 0.01 lt width 50 gt or {
@@ -224,19 +206,30 @@ begin
         /bwipp.renmatrixBadHeight (height must be from 0.01 to 50) //raiseerror exec
     } if
 
-    griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
-        /bwipp.renmatrixBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
-    } if } if
-
     pixx 0 le pixy 0 le or {
         /bwipp.renmatrixBadDimensions (The symbol dimensions must be positive) //raiseerror exec
     } if
 
-    pixs length pixx pixy mul lt {
+    pixs length pixx pixycomp mul lt {
         /bwipp.renmatrixBadPixelData (The pixel data is shorter than the symbol dimensions require) //raiseerror exec
     } if
 
+    rowcumul pixycomp get pixy ne {
+        /bwipp.renmatrixRowmultMismatch (rowmult sum does not equal pixy) //raiseerror exec
+    } if
+
     (input.validate) //renmatrix.after exec
+
+    %
+    % Convert pixs to string for efficient padding and comparison
+    %
+    /spixs pixs length string def
+    0 1 pixs length 1 sub { dup pixs exch get spixs 3 1 roll put } for
+    /pixs spixs def
+
+    %
+    % Generate the symbol
+    %
 
     /xyget { pixx mul add pixs exch get } def
     /cget { pixx mul add cache exch get and } def
@@ -332,42 +325,35 @@ begin
 
         (render.tracepaths) //renmatrix.before exec
 
-        % Pad the bitmap on all sides
+        % Pad the bitmap on all sides (string is zero-initialized)
         /pixx pixx 2 add def
-        /pixy pixy 2 add def
+        /pixycomp pixycomp 2 add def
         /pixxpad pixx def
-        /zerorow [ pixx {0} repeat ] def
-        pixx pixy mul { array } stopped {
+        pixx pixycomp mul { string } stopped {
             pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
         } if /padded exch def
-        0 pixx padded length 1 sub {
-            padded exch zerorow putinterval
-        } for
-        0 1 pixy 3 sub {
+        0 1 pixycomp 3 sub {
             /row exch def
             padded row 1 add pixx mul 1 add pixs row pixx 2 sub mul pixx 2 sub getinterval putinterval
         } for
         /pixs padded def
 
         %
-        % Cache of visited corners for each direction
+        % Cache of visited corners for each direction (string is zero-initialized)
         %
-        pixs length { array } stopped {
+        pixs length { string } stopped {
             pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
         } if /cache exch def
-        0 pixx cache length 1 sub {
-            cache exch zerorow putinterval
-        } for
 
         %
         % Pre-compute abcd values (printed neighbours) for all cells
         %
         /abcdw pixx 1 sub def
-        abcdw pixy 1 sub mul { array } stopped {
+        abcdw pixycomp 1 sub mul { string } stopped {
             pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
         } if /abcdcache exch def
-        /abcdrow abcdw array def
-        0 1 pixy 2 sub {
+        /abcdrow abcdw string def
+        0 1 pixycomp 2 sub {
             /j exch def
             0 1 abcdw 1 sub {
                 dup j abcd  abcdrow 3 1 roll put
@@ -381,7 +367,7 @@ begin
         % Construct paths by tracing regions avoiding duplication by using the cache
         %
         /paths [
-            0 1 pixy 2 sub {
+            0 1 pixycomp 2 sub {
                 /j exch def
                 0 1 pixx 2 sub {
                     /i exch def
@@ -405,8 +391,7 @@ begin
         % Revert the bitmap size
         %
         /pixx pixx 2 sub def
-        /pixy pixy 2 sub def
-
+        /pixycomp pixycomp 2 sub def
 
         options /debugpaths known
         /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
@@ -423,11 +408,12 @@ begin
         paths {
             /p exch def
             /len p length def
-            p len 1 sub get unpack
-            p 0 get unpack
+            p len 1 sub get unpack rowcumul exch get
+            p 0 get unpack rowcumul exch get
             0 1 len 1 sub {                                % x1 y1 x2 y2
                 /i exch def
-                p i 1 add len mod get unpack 6 -2 roll     % x3 y3 x1 y1 x2 y2
+                p i 1 add len mod get unpack
+                rowcumul exch get 6 -2 roll                % x3 y3 x1 y1 x2 y2
                 5 index inkspreadh 2 div
                 4 index 4 -1 roll lt {add} {sub} ifelse    % y3<y1 ? x2+ih : x2-ih
                 4 1 roll
@@ -459,8 +445,11 @@ begin
             dup pixx mod /x exch def
             pixx idiv /y exch def
             x y xyget 1 eq {
-               x 0.5 add pixy y sub 0.5 sub moveto
-               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread 2 div sub 0 360 arc
+                rowcumul y get 1 rowcumul y 1 add get 1 sub {
+                    /vy exch def
+                    x 0.5 add pixy vy sub 0.5 sub moveto
+                    x 0.5 add pixy vy sub 0.5 sub 0.5 inkspread 2 div sub 0 360 arc
+                } for
             } if
         } for
         fill
@@ -481,37 +470,32 @@ begin
     width pixx div 72 mul height pixy div 72 mul scale
 
     %
+    % Scale to physical specification dimensions
+    %
+    strictspec {
+        xdim 72 mul 25.4 div modunit div dup scale
+        % Adjust inkspread to fixed physical amount
+        modunit 25.4 mul xdim 72 mul div  % scale factor on stack
+        dup inkspread mul /inkspread exch def
+        dup inkspreadh mul /inkspreadh exch def
+        inkspreadv mul /inkspreadv exch def
+    } if
+
+    %
     % Grid fit: snap module boundaries to device pixel grid
     %
-    gridfit { 1 true /gridfit //render exec } if
+    gridfit {
+        1 strictspec { xdim xmin xmax } { 0 -1 -1 } ifelse
+        false true /gridfit //render exec
+        not { grestore //raiseerror exec } if
+    } if
+
 
     %
     % Display the border and background
     %
-    showborder {
-        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
-        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
-        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
-        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
-    } {  % No need to extend background when there is no border
-        /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def
-        /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def
-        /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def
-        /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def
-    } ifelse
-    backgroundcolor (unset) ne {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        backgroundcolor //setanycolor exec not { grestore grestore //raiseerror exec } if fill
-        grestore
-    } if
-    showborder {
-        gsave
-        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-        bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
-        borderwidth inkspread 2 mul sub setlinewidth stroke
-        grestore
-    } if
+    pixx pixy inkspread inkspread /renderborder //render exec  % Inkspread in both axes for modules
+    not { grestore //raiseerror exec } if
 
     %
     % Display the matrix
@@ -523,30 +507,31 @@ begin
     colormap {
         dup (unset) ne { //setanycolor exec not { 3 -1 roll pop grestore //raiseerror exec } if } { pop } ifelse
         /key exch def
-        pixs length { array } stopped {
-            pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
-        } if /layer exch def
-        0 1 pixs length 1 sub {
-            dup pixs exch get key eq {layer exch 1 put} {layer exch 0 put} ifelse
-        } for
-        layer dotty {drawlayerdots} {drawlayer} ifelse
+        key 1 eq colormap length 1 eq and {
+            pixs  % Single colour with key=1: pixs is already the binary layer
+        } {
+            pixs length { string } stopped {
+                pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
+            } if /layer exch def
+            0 1 pixs length 1 sub {
+                dup pixs exch get key eq {layer exch 1 put} {layer exch 0 put} ifelse
+            } for
+            layer
+        } ifelse
+        dotty {drawlayerdots} {drawlayer} ifelse
     } forall
 
     %
     % Display the text
     %
-    1 1 9 {
-        /textgrp exch def
-        textopts textgrp 1 sub get () get () ne              % Has manual contents
-        textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
-        {
-            textopts textgrp 1 sub get
-            dup (txt) txt put
-            dup dup () get (content) exch put
-            pixx pixy textgrp 4 -1 roll /rendertext //render exec
-            not { grestore //raiseerror exec } if
-        } if
-    } for
+    pixx pixy /textgroups //render exec
+    not { grestore //raiseerror exec } if
+
+    %
+    % Display the guard elements
+    %
+    pixx /renderguards //render exec
+    not { grestore //raiseerror exec } if
 
     grestore
 

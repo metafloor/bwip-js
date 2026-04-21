@@ -1,6 +1,6 @@
 %!PS
 
-% Barcode Writer in Pure PostScript - Version 2026-03-31
+% Barcode Writer in Pure PostScript - Version 2026-04-21
 % https://bwipp.terryburton.co.uk
 %
 % Copyright (c) 2004-2024 Terry Burton
@@ -32,7 +32,7 @@
 % --BEGIN TEMPLATE--
 
 %psc % --BEGIN RESOURCE preamble--
-%psc %%BeginResource: Category uk.co.terryburton.bwipp 0.0 2026033100 28861 32102
+%psc %%BeginResource: Category uk.co.terryburton.bwipp 0.0 2026042100 28861 32102
 %psc %%BeginData:          6 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -46,7 +46,7 @@
 
 %psc % --BEGIN RESOURCE raiseerror--
 %psc % --REQUIRES preamble--
-%psc %%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2026033100 38053 34460
+%psc %%BeginResource: uk.co.terryburton.bwipp raiseerror 0.0 2026042100 38053 34460
 %psc %%BeginData:         18 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -72,7 +72,7 @@
 
 %psc % --BEGIN RESOURCE setuphooks--
 %psc % --REQUIRES preamble--
-%psc %%BeginResource: uk.co.terryburton.bwipp setuphooks 0.0 2026033100 42779 39029
+%psc %%BeginResource: uk.co.terryburton.bwipp setuphooks 0.0 2026042100 42779 39029
 %psc %%BeginData:         62 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -142,7 +142,7 @@
 
 %psc % --BEGIN RESOURCE processoptions--
 %psc % --REQUIRES preamble raiseerror setuphooks--
-%psc %%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2026033100 76957 76122
+%psc %%BeginResource: uk.co.terryburton.bwipp processoptions 0.0 2026042100 76957 76122
 %psc %%BeginData:        224 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -374,7 +374,7 @@
 
 % --BEGIN RESOURCE parseinput--
 % --REQUIRES preamble raiseerror setuphooks--
-%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2026033100 67145 66688
+%%BeginResource: uk.co.terryburton.bwipp parseinput 0.0 2026042100 67145 66688
 %%BeginData:        201 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -583,7 +583,7 @@ bind def
 
 % --BEGIN RESOURCE gs1process--
 % --REQUIRES preamble parseinput raiseerror--
-%%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2026033100 599164 648150
+%%BeginResource: uk.co.terryburton.bwipp gs1process 0.0 2026042100 599164 648150
 %%BeginData:       3373 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -3964,7 +3964,7 @@ bind def
 
 %psc % --BEGIN RESOURCE setanycolor--
 %psc % --REQUIRES preamble setuphooks--
-%psc %%BeginResource: uk.co.terryburton.bwipp setanycolor 0.0 2026033100 47627 44058
+%psc %%BeginResource: uk.co.terryburton.bwipp setanycolor 0.0 2026042100 47627 44058
 %psc %%BeginData:         58 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -4030,7 +4030,7 @@ bind def
 
 %psc % --BEGIN RESOURCE fifocache--
 %psc % --REQUIRES preamble--
-%psc %%BeginResource: uk.co.terryburton.bwipp fifocache 0.0 2026033100 45995 42351
+%psc %%BeginResource: uk.co.terryburton.bwipp fifocache 0.0 2026042100 45995 42351
 %psc %%BeginData:        108 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -4144,14 +4144,130 @@ bind def
 %psc %%EndResource
 %psc % --END RESOURCE fifocache--
 
-%psc % --BEGIN RESOURCE render--
-%psc % --REQUIRES preamble processoptions setanycolor--
-%psc %%BeginResource: uk.co.terryburton.bwipp render 0.0 2026033100 204797 210987
-%psc %%BeginData:        443 ASCII Lines
+% --BEGIN RESOURCE rsecbinary--
+% --REQUIRES preamble--
+%%BeginResource: uk.co.terryburton.bwipp rsecbinary 0.0 2026042100 40129 36516
+%%BeginData:         49 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 4 dict
+/rsecbinary { /bwipjs_rsecbinary (start-global) def  % begin
+
+%
+% Reed-Solomon encoder for binary extension fields GF(2^n).
+%
+% Runs a streaming LFSR over nd data codewords using the generator polynomial
+% coeffs. The caller-owned lfsr is the shift register; on return, its first
+% nc cells are the ECC codewords. Addition is XOR; multiplication is delegated
+% to the caller-supplied rsprod procedure (typically a log/alog table lookup).
+%
+/bwipjs_rsecbinary (end-global) def  % rsecbinary {
+
+    7 dict begin
+
+    /rsprod exch def   % Implements GF multiplication.
+    /lfsr exch def     % Workspace of length at least nc
+    /nc exch def       % Number of ECC codewords to produce
+    /coeffs exch def   % Generator polynomial coefficients
+    /nd exch def       % Number of data codewords
+    /getdata exch def  % Implements fetching nth codeword
+
+    0 1 nc 1 sub {lfsr exch 0 put} for
+
+    0 1 nd 1 sub {  % m
+        getdata exec lfsr 0 get xor           % fb = data[m] ^ S[0]
+        0 1 nc 2 sub {  % j
+            lfsr exch dup 1 add               % ... lfsr j j+1
+            2 index exch get                  % ... lfsr j S[j+1]
+            coeffs nc 3 index sub 1 sub get   % ... coeffs[nc-1-j]
+            4 index                           % ... fb
+            rsprod exec                       % p = coeffs[nc-1-j] * fb
+            xor put                           % S[j] = S[j+1] ^ p
+        } for
+        lfsr nc 1 sub coeffs 0 get 3 index    % S[nc-1] = coeffs[0] * fb
+        rsprod exec put
+        pop  % fb
+    } for
+
+    end
+
+} bind def
+%psc /rsecbinary dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
+%psc setglobal
+%%EndData
+%%EndResource
+% --END RESOURCE rsecbinary--
+
+% --BEGIN RESOURCE rsecprime--
+% --REQUIRES preamble--
+%%BeginResource: uk.co.terryburton.bwipp rsecprime 0.0 2026042100 40415 36825
+%%BeginData:         50 ASCII Lines
+%psc currentglobal
+%psc true setglobal
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 4 dict
+/rsecprime { /bwipjs_rsecprime (start-global) def  % begin
+
+%
+% Reed-Solomon encoder for prime-field GF(p).
+%
+% Runs a streaming LFSR over nd data codewords using the generator polynomial
+% coeffs. The caller-owned lfsr is the shift register; on return, its first
+% nc cells are the ECC codewords in the negated form expected by callers
+% (pdf417, micropdf417, ultracode): this fuses what used to be a separate
+% post-pass of (p - cws[i]) mod p into the inner update.
+%
+/bwipjs_rsecprime (end-global) def  % rsecprime {
+
+    7 dict begin
+
+    /p exch def        % Prime modulus
+    /lfsr exch def     % Workspace of length at least nc
+    /nc exch def       % Number of ECC codewords to produce
+    /coeffs exch def   % Generator polynomial coefficients
+    /nd exch def       % Number of data codewords
+    /getdata exch def  % Implements fetching nth codeword
+
+    0 1 nc 1 sub {lfsr exch 0 put} for
+
+    0 1 nd 1 sub {  % m
+        getdata exec lfsr 0 get sub p add p mod   % fb = (data[m] - S[0]) mod p
+        0 1 nc 2 sub {  % j
+            lfsr exch dup 1 add                   % ... lfsr j j+1
+            2 index exch get                      % ... lfsr j S[j+1]
+            coeffs nc 3 index sub 1 sub get       % ... coeffs[nc-1-j]
+            4 index                               % ... fb
+            mul p mod                             % prod = (coeffs[nc-1-j] * fb) mod p
+            add p mod put                         % S[j] = (S[j+1] + prod) mod p
+        } for
+        lfsr nc 1 sub coeffs 0 get 3 index        % S[nc-1] = (coeffs[0] * fb) mod p
+        mul p mod put
+        pop  % fb
+    } for
+
+    end
+
+} bind def
+%psc /rsecprime dup load /uk.co.terryburton.bwipp defineresource pop
+%psc end
+%psc /setpacking where {pop setpacking} if
+%psc setglobal
+%%EndData
+%%EndResource
+% --END RESOURCE rsecprime--
+
+%psc % --BEGIN RESOURCE render--
+%psc % --REQUIRES preamble raiseerror processoptions setanycolor--
+%psc %%BeginResource: uk.co.terryburton.bwipp render 0.0 2026042100 331712 390076
+%psc %%BeginData:       1193 ASCII Lines
+%psc currentglobal
+%psc true setglobal
+%psc /setpacking where {pop currentpacking true setpacking} if
+%psc 48 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -4223,9 +4339,9 @@ bind def
 %psc %
 %psc %  Validate a single text option dict
 %psc %
-%psc %  grp textdict /validateoptions //render exec => bool [errorname errorstring |]
+%psc %  grp textdict /validatetextoptions //render exec => bool [errorname errorstring |]
 %psc %
-%psc /render.validateoptions {
+%psc /render.validatetextoptions {
 %psc 
 %psc     16 dict begin
 %psc 
@@ -4506,6 +4622,438 @@ bind def
 %psc } bind def
 %psc 
 %psc %
+%psc %  Render text groups 1-9
+%psc %
+%psc /render.textgroups {
+%psc 
+%psc     4 dict begin
+%psc 
+%psc     /pixy exch def
+%psc     /pixx exch def
+%psc 
+%psc     /ok true def
+%psc     1 1 9 {
+%psc         /textgrp exch def
+%psc         textopts textgrp 1 sub get () get () ne              % Has manual contents
+%psc         textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
+%psc         {
+%psc             textopts textgrp 1 sub get
+%psc             dup (txt) textgrp 1 eq { txt } { [] } ifelse put
+%psc             dup dup () get (content) exch put
+%psc             pixx pixy textgrp 4 -1 roll //render.rendertext exec
+%psc             not { /ok false def exit } if
+%psc         } if
+%psc     } for
+%psc     ok
+%psc 
+%psc     end
+%psc 
+%psc } bind def
+%psc 
+%psc %
+%psc %  Application Specification Tables (ASTs)
+%psc %
+%psc /render.ast <<
+%psc 
+%psc     /ean13 <<
+%psc         /default                         << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+%psc         /gs1.sst1             1 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.70 >>
+%psc         /gs1.sst3             1 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.70 >>
+%psc         /gs1.sst4             5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+%psc         /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.70 >>
+%psc         /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+%psc     >>
+%psc     /upca 1 index
+%psc     /upce 1 index
+%psc     /isbn 1 index
+%psc     /ismn 1 index
+%psc     /issn 1 index
+%psc     /ean13composite 1 index
+%psc     /upcacomposite 1 index
+%psc     /upcecomposite 1 index
+%psc 
+%psc     /ean8 <<
+%psc         /default                         << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+%psc         /gs1.sst1             1 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 36.46 >>
+%psc         /gs1.sst3             1 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 36.46 >>
+%psc         /gs1.sst4             5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+%psc         /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 36.46 >>
+%psc         /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+%psc     >>
+%psc     /ean8composite 1 index
+%psc 
+%psc     /itf14 <<
+%psc         /default                         << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+%psc         /gs1.sst2             1 index  % << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+%psc         /gs1.sst4                        << /xmin 0.250  /xnom 0.495  /xmax 0.495  /hnom 12.70 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.495  /xmax 0.495  /hnom 12.70 >>
+%psc         /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+%psc         /gs1.sst10                       << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 12.70 >>
+%psc     >>
+%psc 
+%psc     /gs1-128 <<
+%psc         /default                         << /xmin 0.170               /xmax 1.016              >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+%psc         /gs1.sst4                        << /xmin 0.250  /xnom 0.495  /xmax 0.495  /hnom 12.70 >>
+%psc         /gs1.sst5                        << /xmin 0.495  /xnom 0.495  /xmax 0.940  /hnom 31.75 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.495  /xmax 0.495  /hnom 12.70 >>
+%psc         /gs1.sst8             7 index  % << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+%psc         /gs1.sst9                        << /xmin 0.250  /xnom 0.250  /xmax 0.495  /hnom 12.70 >>
+%psc         /gs1.sst10                       << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 12.70 >>
+%psc         /gs1.sst11                       << /xmin 0.170  /xnom 0.250  /xmax 0.495  /hnom 12.70 >>
+%psc         /gs1.sst12.group      7 index  % << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+%psc         /gs1.sst12.logistic  13 index  % << /xmin 0.495  /xnom 0.495  /xmax 0.940  /hnom 31.75 >>
+%psc         /gs1.sst13                       << /xmin 0.495               /xmax 0.940  /hnom 12.70 >>
+%psc     >>
+%psc     /gs1-128composite 1 index
+%psc 
+%psc     /databaromni <<
+%psc         /default                         << /xmin 0.170               /xmax 0.660              >>
+%psc         /gs1.sst1                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 15.19 >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 21.78 >>
+%psc         /gs1.sst3                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 30.36 >>
+%psc         /gs1.sst4                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 10.89 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom  6.60 >>
+%psc         /gs1.sst8             7 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 21.78 >>
+%psc         /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 10.89 >>
+%psc     >>
+%psc     /databaromnicomposite 1 index
+%psc 
+%psc     /databartruncated <<
+%psc         /default                         << /xmin 0.170               /xmax 0.660             >>
+%psc         /gs1.sst4                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 4.29 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 2.60 >>
+%psc         /gs1.sst8                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 8.58 >>
+%psc         /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 4.29 >>
+%psc     >>
+%psc     /databartruncatedcomposite 1 index
+%psc 
+%psc     /databarstacked <<
+%psc         /default                         << /xmin 0.170               /xmax 0.660             >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 8.58 >>
+%psc         /gs1.sst4             3 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 4.29 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 2.60 >>
+%psc         /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 8.58 >>
+%psc         /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 4.29 >>
+%psc     >>
+%psc     /databarstackedcomposite 1 index
+%psc 
+%psc     /databarstackedomni <<
+%psc         /default                         << /xmin 0.170               /xmax 0.660              >>
+%psc         /gs1.sst1                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 31.37 >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.54 >>
+%psc         /gs1.sst3                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 62.70 >>
+%psc         /gs1.sst4                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 27.78 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 13.80 >>
+%psc         /gs1.sst8             7 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.54 >>
+%psc         /gs1.sst10                       << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 27.78 >>
+%psc     >>
+%psc     /databarstackedomnicomposite 1 index
+%psc 
+%psc     /databarlimited <<
+%psc         /default                         << /xmin 0.170               /xmax 0.660             >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 6.60 >>
+%psc         /gs1.sst4                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 3.30 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 2.00 >>
+%psc         /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 6.60 >>
+%psc         /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 3.30 >>
+%psc     >>
+%psc     /databarlimitedcomposite 1 index
+%psc 
+%psc     /databarexpanded <<
+%psc         /default                         << /xmin 0.170               /xmax 0.660              >>
+%psc         /gs1.sst1                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 11.23 >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 22.44 >>
+%psc         /gs1.sst3             1 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 22.44 >>
+%psc         /gs1.sst4             5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 11.23 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom  6.80 >>
+%psc         /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 22.44 >>
+%psc         /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 11.23 >>
+%psc         /gs1.sst11            1 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 11.23 >>
+%psc     >>
+%psc     /databarexpandedcomposite 1 index
+%psc 
+%psc     /databarexpandedstacked <<
+%psc         /default                         << /xmin 0.170               /xmax 0.660              >>
+%psc         /gs1.sst1                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 23.44 >>
+%psc         /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 46.86 >>
+%psc         /gs1.sst3             1 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 46.86 >>
+%psc         /gs1.sst4             5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 23.44 >>
+%psc         /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 14.20 >>
+%psc         /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 46.86 >>
+%psc         /gs1.sst10           11 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 23.44 >>
+%psc         /gs1.sst11            1 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 23.44 >>
+%psc     >>
+%psc     /databarexpandedstackedcomposite 1 index
+%psc     /gs1northamericancoupon 1 index
+%psc 
+%psc     /gs1datamatrix <<
+%psc         /default                         << /xmin 0.100               /xmax 3.500              >>
+%psc         /gs1.sst1                        << /xmin 0.375  /xnom 0.625  /xmax 0.990              >>
+%psc         /gs1.sst1.ai8200                 << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+%psc         /gs1.sst1.dl          1 index  % << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+%psc         /gs1.sst2                        << /xmin 0.743  /xnom 0.743  /xmax 1.500              >>
+%psc         /gs1.sst4                        << /xmin 0.380  /xnom 0.380  /xmax 0.495              >>
+%psc         /gs1.sst5             3 index  % << /xmin 0.743  /xnom 0.743  /xmax 1.500              >>
+%psc         /gs1.sst6                        << /xmin 0.254  /xnom 0.380  /xmax 0.990              >>
+%psc         /gs1.sst7                        << /xmin 0.254  /xnom 0.300  /xmax 0.615              >>
+%psc         /gs1.sst7.dpm.a                  << /xmin 0.100  /xnom 0.200  /xmax 0.300              >>
+%psc         /gs1.sst7.dpm.b                  << /xmin 0.200  /xnom 0.300  /xmax 0.495              >>
+%psc         /gs1.sst8                        << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+%psc         /gs1.sst9            13 index  % << /xmin 0.380  /xnom 0.380  /xmax 0.495              >>
+%psc         /gs1.sst10                       << /xmin 0.396  /xnom 0.495  /xmax 0.990              >>
+%psc         /gs1.sst11                       << /xmin 0.254  /xnom 0.380  /xmax 0.495              >>
+%psc         /gs1.sst12.trade                 << /xmin 0.380  /xnom 0.380  /xmax 0.990              >>
+%psc         /gs1.sst12.group      9 index  % << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+%psc         /gs1.sst12.logistic   1 index  % << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+%psc         /gs1.sst13                       << /xmin 0.495               /xmax 3.500              >>
+%psc     >>
+%psc     /gs1datamatrixrectangular 1 index
+%psc     /gs1datamatrixrectangularextension 1 index
+%psc 
+%psc     /gs1qrcode <<
+%psc         /default                         << /xmin 0.254               /xmax 3.500              >>
+%psc         /gs1.sst1                        << /xmin 0.375  /xnom 0.625  /xmax 0.990              >>
+%psc         /gs1.sst1.ai8200                 << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+%psc         /gs1.sst1.dl          1 index  % << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+%psc         /gs1.sst2                        << /xmin 0.743  /xnom 0.743  /xmax 1.500              >>
+%psc         /gs1.sst4                        << /xmin 0.380  /xnom 0.380  /xmax 0.495              >>
+%psc         /gs1.sst5             3 index  % << /xmin 0.743  /xnom 0.743  /xmax 1.500              >>
+%psc         /gs1.sst7                        << /xmin 0.254  /xnom 0.300  /xmax 0.615              >>
+%psc         /gs1.sst8                        << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+%psc         /gs1.sst9             7 index  % << /xmin 0.380  /xnom 0.380  /xmax 0.495              >>
+%psc         /gs1.sst11                       << /xmin 0.254  /xnom 0.380  /xmax 0.495              >>
+%psc         /gs1.sst12.trade                 << /xmin 0.380  /xnom 0.380  /xmax 0.990              >>
+%psc         /gs1.sst12.group      7 index  % << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+%psc         /gs1.sst12.logistic   1 index  % << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+%psc         /gs1.sst13                       << /xmin 0.495               /xmax 3.500              >>
+%psc     >>
+%psc 
+%psc     /gs1dotcode <<
+%psc         /default                         << /xmin 0.380  /xnom 0.380  /xmax 0.990              >>
+%psc         /gs1.sst12.trade      1 index  % << /xmin 0.380  /xnom 0.380  /xmax 0.990              >>
+%psc     >>
+%psc 
+%psc     /gs1dldatamatrix <<
+%psc         /default                         << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+%psc         /gs1.sst1.dl          1 index  % << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+%psc     >>
+%psc 
+%psc     /gs1dlqrcode <<
+%psc         /default                         << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+%psc         /gs1.sst1.dl          1 index  % << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+%psc     >>
+%psc 
+%psc     % ISO/AIM symbology defaults (non-GS1)
+%psc 
+%psc     /code39 <<
+%psc         /default                         << /xmin 0.191                                        >>
+%psc     >>
+%psc     /interleaved2of5 <<
+%psc         /default                         << /xmin 0.191                                        >>
+%psc     >>
+%psc 
+%psc     /qrcode <<
+%psc         /default                         << /xmin 0.250                                        >>
+%psc     >>
+%psc 
+%psc     /datamatrix <<
+%psc         /default                         << /xmin 0.250                                        >>
+%psc     >>
+%psc 
+%psc     /pharmacode <<
+%psc         /default                         << /xnom 0.500                            /hnom 8.000 >>
+%psc     >>
+%psc 
+%psc     /maxicode <<
+%psc         /default                         <<              /xnom 0.880                           >>
+%psc     >>
+%psc 
+%psc     % Postal symbology defaults
+%psc 
+%psc     /onecode <<
+%psc         /default                         << /xmin 0.381  /xnom 0.508  /xmax 0.635  /hnom 3.683 >>
+%psc     >>
+%psc 
+%psc >> readonly def
+%psc 
+%psc %
+%psc %  Set xmin, xnom, xmax and hnom based on AST for an encoder
+%psc %
+%psc /render.apply_ast {
+%psc 
+%psc     currentdict
+%psc     4 dict begin
+%psc 
+%psc     /tgt exch def
+%psc 
+%psc     /astname exch def
+%psc     /encname exch def
+%psc 
+%psc     1 {  % Common exit
+%psc 
+%psc         //render.ast encname 2 copy known not {
+%psc             pop pop astname /default eq exit
+%psc         } if
+%psc 
+%psc         get astname 2 copy known not { pop pop astname /default eq exit } if
+%psc 
+%psc         get {  % key value
+%psc             tgt 2 index known {
+%psc                 tgt 2 index get -1 eq {
+%psc                     tgt 3 1 roll put
+%psc                 } {  % Skip if already defined
+%psc                     pop pop
+%psc                 } ifelse
+%psc             } {  % Key not in caller's dict; skip
+%psc                 pop pop
+%psc             } ifelse
+%psc         } forall
+%psc 
+%psc         true
+%psc 
+%psc     } repeat
+%psc 
+%psc     dup not {
+%psc         pop /bwipp.renderUnknownAST
+%psc         [ (Unknown AST ") astname (" for ) encname 40 string cvs ]
+%psc         dup 0 exch { length add } forall string
+%psc         exch 0 exch { dup length 2 index add 3 index 4 2 roll putinterval } forall pop
+%psc         false
+%psc     } if
+%psc 
+%psc     end
+%psc 
+%psc } bind def
+%psc 
+%psc %
+%psc %  Validate effective X dimension against spec bounds (low-level)
+%psc %
+%psc %  xdim xmin xmax => true | /errorname (info) false
+%psc %
+%psc /render.validate_xdim {
+%psc     3 dict begin
+%psc     /max exch def /min exch def /dim exch def
+%psc     min -1 ne dim min lt and {
+%psc         /bwipp.renderXdimTooSmall
+%psc         [ (Effective X-dimension ) dim 20 string cvs (mm is below the minimum ) min 20 string cvs (mm for the ast) ]
+%psc     } {
+%psc         max -1 ne dim max gt and {
+%psc             /bwipp.renderXdimTooLarge
+%psc             [ (Effective X-dimension ) dim 20 string cvs (mm is above the maximum ) max 20 string cvs (mm for the ast) ]
+%psc         } {
+%psc             null null  % Sentinel: ok
+%psc         } ifelse
+%psc     } ifelse
+%psc     dup null eq { pop pop true } {
+%psc         dup 0 exch {length add} forall string
+%psc         exch 0 exch { dup length 2 index add 3 index 4 2 roll putinterval } forall pop
+%psc         false
+%psc     } ifelse
+%psc     end
+%psc } bind def
+%psc 
+%psc %
+%psc %  Resolve strictspec dimensions
+%psc %
+%psc /render.resolve_strictspec {
+%psc     % Validate spec mode mutual exclusivity (outermost encoder only)
+%psc     /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse not {
+%psc         strictspec loosespec and {
+%psc             /bwipp.renderSpecModeMutex (strictspec and loosespec are mutually exclusive) //raiseerror exec
+%psc         } if
+%psc         strictspec propspec and {
+%psc             /bwipp.renderSpecModeMutex (strictspec and propspec are mutually exclusive) //raiseerror exec
+%psc         } if
+%psc         loosespec propspec and {
+%psc             /bwipp.renderSpecModeMutex (loosespec and propspec are mutually exclusive) //raiseerror exec
+%psc         } if
+%psc     } if
+%psc     loosespec { /strictspec true def } if
+%psc     % Validate spec options are not orphaned (outermost encoder only)
+%psc     /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse not {
+%psc         strictspec not {
+%psc             xdim -1 ne {
+%psc                 /bwipp.renderOrphanedXdim (xdim requires strictspec or loosespec) //raiseerror exec
+%psc             } if
+%psc             currentdict /hdim known { hdim -1 ne } { false } ifelse {
+%psc                 /bwipp.renderOrphanedHdim (hdim requires strictspec or loosespec) //raiseerror exec
+%psc             } if
+%psc             mag 1.0 ne {
+%psc                 /bwipp.renderOrphanedMag (mag requires strictspec or loosespec) //raiseerror exec
+%psc             } if
+%psc         } if
+%psc         strictspec not propspec not and {
+%psc             currentdict /ast known { ast (default) ne } { false } ifelse {
+%psc                 /bwipp.renderOrphanedAST (ast requires strictspec, loosespec, or propspec) //raiseerror exec
+%psc             } if
+%psc         } if
+%psc     } if
+%psc     strictspec {
+%psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse not {
+%psc             currentdict /height known { height -1.0 ne } { false } ifelse
+%psc             currentdict /width known { width 0 ne } { false } ifelse
+%psc             or {
+%psc                 loosespec { /loosespec false def /strictspec false def } {
+%psc                     /bwipp.renderStrictspecDimOverride (width and height options are not compatible with strictspec; use xdim and hdim to directly specify physical dimensions) //raiseerror exec
+%psc                 } ifelse
+%psc             } if
+%psc         } if
+%psc     } if
+%psc     strictspec {
+%psc         mag 1.0 ne xdim -1 ne currentdict /hdim known { hdim -1 ne } { false } ifelse or and {
+%psc             /bwipp.renderMagExclusive (use either mag \(to scale nominal dimensions\) or explicit xdim/hdim options, not both) //raiseerror exec
+%psc         } if
+%psc         xdim -1 eq {
+%psc             xnom -1 eq {
+%psc                 loosespec { /strictspec false def } {
+%psc                     /bwipp.renderNeedXnom (strictspec requires a nominal X-dimension to be defined for the application or for xdim to be supplied) //raiseerror exec
+%psc                 } ifelse
+%psc             } if
+%psc             strictspec { /xdim xnom mag mul def } if
+%psc         } if
+%psc         strictspec {
+%psc             currentdict /hdim known currentdict /hnom known and {
+%psc                 hdim -1 eq hnom -1 ne and {
+%psc                     /hdim hnom mag mul def
+%psc                 } if
+%psc             } if
+%psc             xdim xmin xmax //render.validate_xdim exec not {
+%psc                 loosespec { pop pop } { //raiseerror exec } ifelse
+%psc             } if
+%psc         } if
+%psc     } if
+%psc } bind def
+%psc 
+%psc %
+%psc %  Resolve linear bar height from spec proportions
+%psc %
+%psc %  Returns derived height, current height, or -1 sentinel
+%psc %
+%psc /render.resolve_height {
+%psc     currentdict /hdim known { hdim -1 ne } { false } ifelse strictspec and {
+%psc         % strictspec with resolved hdim: derive from hdim/xdim
+%psc         hdim xdim div modunit mul 72 div
+%psc     } {
+%psc         hnom -1 ne strictspec propspec or and {
+%psc             xnom -1 eq {
+%psc                 /bwipp.renderHnomNeedXnom (Proportional bar height derivation requires a nominal X-dimension to be defined for the application or for xdim to be supplied) //raiseerror exec
+%psc             } if
+%psc             hnom xnom div modunit mul
+%psc                 strictspec not { round } if  % Pixel-lock derived height
+%psc             72 div
+%psc             propspec { height -1.0 ne { height mul } if } if  % height is a multiplier under propspec
+%psc         } {
+%psc             height
+%psc         } ifelse
+%psc     } ifelse
+%psc } bind def
+%psc 
+%psc %
 %psc %  Snap module boundaries to device pixel grid
 %psc %
 %psc /render.gridfit {
@@ -4513,23 +5061,42 @@ bind def
 %psc     16 dict begin
 %psc 
 %psc     %
-%psc     %  0 => no snap; +/- N => round/floor to nearest multiple of N
+%psc     %  magnitude: user units per module (e.g. 1 or 2)
+%psc     %  xdim: target X in mm (0 = no spec bounds checking)
+%psc     %  xmin: minimum X in mm (-1 = no minimum)
+%psc     %  xmax: maximum X in mm (-1 = no maximum)
+%psc     %  usefloor: true=floor (for forced width); false=round
+%psc     %  snapy: true=snap y independently; false=uniform with x
 %psc     %
-%psc     /snapy exch def       % true: snap y independently; false: uniform with x
-%psc     /mode exch def        % B1N: round/floor to nearest multiple of N
+%psc     /snapy exch def
+%psc     /usefloor exch def
+%psc     /xmax exch def
+%psc     /xmin exch def
+%psc     /xdim exch def
+%psc     /mag exch def
 %psc 
-%psc     % val mode => factor; clamps to minimum 1 granularity unit
-%psc     /snapdim {
-%psc         /sdmode exch def /val exch def
-%psc         val sdmode abs div
-%psc         sdmode 0 gt { round } { floor } ifelse
+%psc     % val => snapped; snaps to whole device pixels per module, clamps to minimum 1
+%psc     /snapto {  % val mode => snapped
+%psc         /snapmode exch def
+%psc         mag div
+%psc         snapmode 0 eq {
+%psc             round
+%psc         } { snapmode 1 eq {
+%psc             floor
+%psc         } {  % 2
+%psc             ceiling
+%psc         } ifelse } ifelse
 %psc         dup 0 le { pop 1 } if
-%psc         sdmode abs mul val div
+%psc         mag mul
 %psc     } def
 %psc 
+%psc     % snapped => effective X; compute effective X dimension from snapped device pixels
+%psc     /effx { xdim mul 1 0 gridmatrix dtransform abs exch abs 2 copy lt {exch} if pop div } def
+%psc 
 %psc     %
-%psc     %  Detect device x and y resolution via default matrix
+%psc     %  Determine device resolution
 %psc     %
+%psc     /usergriddpi griddpi 0 ne def
 %psc     gsave matrix defaultmatrix setmatrix
 %psc     72 0 dtransform abs exch abs 2 copy lt {exch} if pop /hwxres exch def
 %psc     0 72 dtransform abs exch abs 2 copy lt {exch} if pop /hwyres exch def
@@ -4537,9 +5104,14 @@ bind def
 %psc     griddpi 0 eq { /griddpi hwxres def } if
 %psc 
 %psc     %
-%psc     % Guard against bogus device (nullpage ~3e16)
+%psc     % Guard against bogus auto-detected resolution (skip unless user provided griddpi)
 %psc     %
-%psc     hwxres 1 gt hwxres 100000 lt and hwyres 1 gt hwyres 100000 lt and and {
+%psc     1 {  % Common exit
+%psc 
+%psc         hwxres 1 gt hwxres 100000 lt and hwyres 1 gt hwyres 100000 lt and and not {
+%psc             usergriddpi not { true exit } if
+%psc             /hwxres griddpi def /hwyres griddpi def  % Bogus hardware but user knows the target DPI
+%psc         } if
 %psc 
 %psc         %
 %psc         %  CTM scaled to target DPI pixel coordinates, per axis
@@ -4557,16 +5129,298 @@ bind def
 %psc         %  Snap module dimensions to whole target pixels
 %psc         %
 %psc         1 0 gridmatrix dtransform abs exch abs 2 copy lt {exch} if pop
-%psc         mode snapdim
+%psc 
+%psc         % Snap mode used for x (0=round, 1=floor, 2=ceiling). The snapy
+%psc         % branch replays this against the y-axis devpx so square matrix
+%psc         % symbols stay square when the x-axis retry bumps to floor/ceiling.
+%psc         /xsnapmode 0 def
+%psc 
+%psc         xdim 0 ne {  % strictspec is provided
+%psc             /devpx exch def
+%psc             /snapped devpx 0 snapto def
+%psc             snapped effx xmin xmax //render.validate_xdim exec
+%psc             not {
+%psc                 pop pop  % Discard error details
+%psc                 /snap1 snapped def
+%psc                 devpx mag div dup floor sub 0.5 lt { 2 } { 1 } ifelse
+%psc                 dup /xsnapmode exch def
+%psc                 devpx exch snapto /snapped exch def
+%psc                 snapped effx xmin xmax //render.validate_xdim exec
+%psc                 not {
+%psc                     pop pop  % Discard error details
+%psc                     loosespec {
+%psc                         % Pick whichever snap is closest to being in spec
+%psc                         /eff1 snap1 effx def  /eff2 snapped effx def
+%psc                         /dist {  % eff => distance outside [xmin,xmax]
+%psc                             0
+%psc                             xmin -1 ne { xmin 2 index sub dup 0 gt { add } { pop } ifelse } if
+%psc                             xmax -1 ne { 1 index xmax sub dup 0 gt { add } { pop } ifelse } if
+%psc                             exch pop
+%psc                         } def
+%psc                         eff1 dist eff2 dist lt { /snapped snap1 def /xsnapmode 0 def } if
+%psc                     } {
+%psc                         /bwipp.renderGridfitXdimOutOfSpec
+%psc                         [ (No X-dimension within the permissible range )
+%psc                           xmin 20 string cvs ( to )
+%psc                           xmax 20 string cvs (mm produces a fixed pixel grid at )
+%psc                           griddpi cvi 20 string cvs ( DPI)
+%psc                         ] dup 0 exch {length add} forall string
+%psc                         exch 0 exch { dup length 2 index add 3 index 4 2 roll putinterval } forall pop
+%psc                         false exit
+%psc                     } ifelse
+%psc                 } if
+%psc             } if
+%psc             snapped devpx div
+%psc         } {  % No strictspec
+%psc             dup mag div usefloor { floor } { round } ifelse dup 0 le { pop 1 } if mag mul exch div
+%psc         } ifelse
+%psc 
 %psc         snapy {
 %psc             0 1 gridmatrix dtransform abs exch abs 2 copy lt {exch} if pop
-%psc             mode snapdim
+%psc             dup xsnapmode snapto exch div
 %psc         } { dup } ifelse
+%psc 
 %psc         scale
 %psc 
-%psc     } if
+%psc         true
+%psc 
+%psc     } repeat  % Common exit
 %psc 
 %psc     end
+%psc 
+%psc } bind def
+%psc 
+%psc %
+%psc %  Apply defaults from global context for properties common to all encoders
+%psc %  Guarded by _dontdraw so sub-encoders do not re-read global defaults
+%psc %
+%psc /render.global_encoder_defaults {
+%psc     /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse not {
+%psc         /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc             exch get
+%psc             dup /loosespec  2 copy known { get { /loosespec  true def } if } { pop pop } ifelse
+%psc             dup /strictspec 2 copy known { get { /strictspec true def } if } { pop pop } ifelse
+%psc                 /propspec 2 copy known { get { /propspec true def } if } { pop pop } ifelse
+%psc         } {pop} ifelse
+%psc     } if
+%psc } bind def
+%psc 
+%psc %
+%psc %  Apply defaults from global context for properties common to all renderers
+%psc %
+%psc /render.global_renderer_defaults {
+%psc 
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get  % ctx
+%psc         barcolor        (unset) eq { dup /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
+%psc         backgroundcolor (unset) eq { dup /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
+%psc         bordercolor     (unset) eq { dup /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+%psc         inkspread       null eq    { dup /default_inkspread       2 copy known {get /inkspread       exch def} {pop pop} ifelse } if
+%psc         griddpi         0 eq       { dup /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
+%psc         gridfit         false eq   { dup /default_gridfit         2 copy known {get /gridfit         exch def} {pop pop} ifelse } if
+%psc         pop
+%psc     } { pop } ifelse
+%psc 
+%psc } bind def
+%psc 
+%psc %
+%psc %  Validate common renderer options
+%psc %
+%psc /render.validate_common {
+%psc 
+%psc     /textopts where {
+%psc         pop
+%psc         1 1 9 {
+%psc             textopts 1 index 1 sub get
+%psc             //render.validatetextoptions exec not { //raiseerror exec } if
+%psc         } for
+%psc     } if
+%psc 
+%psc     inkspread -1 lt inkspread 1 gt or {
+%psc         /bwipp.renderBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
+%psc     } if
+%psc 
+%psc     borderleft -1 lt borderleft 50 gt or {
+%psc         /bwipp.renderBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
+%psc     } if
+%psc 
+%psc     borderright -1 lt borderright 50 gt or {
+%psc         /bwipp.renderBadBorderright (borderright must be from -1 to 50) //raiseerror exec
+%psc     } if
+%psc 
+%psc     bordertop -1 lt bordertop 50 gt or {
+%psc         /bwipp.renderBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
+%psc     } if
+%psc 
+%psc     borderbottom -1 lt borderbottom 50 gt or {
+%psc         /bwipp.renderBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
+%psc     } if
+%psc 
+%psc     borderwidth 0 lt borderwidth 10 gt or {
+%psc         /bwipp.renderBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
+%psc     } if
+%psc 
+%psc     griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
+%psc         /bwipp.renderBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
+%psc     } if } if
+%psc 
+%psc } bind def
+%psc 
+%psc %
+%psc %  Draw border, bearer bars, and background
+%psc %
+%psc /render.renderborder {
+%psc 
+%psc     16 dict begin
+%psc 
+%psc     /yspread exch def
+%psc     /xspread exch def
+%psc     /pixy exch def
+%psc     /pixx exch def
+%psc 
+%psc     /showbearer /showbearer where { /showbearer get } { false } ifelse def
+%psc 
+%psc     %
+%psc     % Corner geometry
+%psc     %
+%psc     showborder showbearer or {
+%psc         /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+%psc         /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+%psc         /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+%psc         /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+%psc     } {
+%psc         /tl [ borderleft neg xspread add                  pixy bordertop add yspread sub           ] def
+%psc         /tr [ pixx borderright add xspread sub            pixy bordertop add yspread sub           ] def
+%psc         /bl [ borderleft neg xspread add                  borderbottom neg yspread add             ] def
+%psc         /br [ pixx borderright add xspread sub            borderbottom neg yspread add             ] def
+%psc     } ifelse
+%psc 
+%psc     1 {  % Common exit
+%psc 
+%psc         %
+%psc         % Background fill
+%psc         %
+%psc         backgroundcolor (unset) ne {
+%psc             gsave
+%psc             newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%psc             backgroundcolor //setanycolor exec not {
+%psc                 grestore
+%psc                 /bwipp.renderBadBackgroundColor (Invalid background color) false exit
+%psc             } if fill
+%psc             grestore
+%psc         } if
+%psc 
+%psc         %
+%psc         % Bearer bars (horizontal rules at top and bottom)
+%psc         %
+%psc         showbearer {
+%psc             borderwidth inkspread gt {
+%psc                 gsave
+%psc                 newpath
+%psc                 bl aload pop moveto br aload pop lineto
+%psc                 tl aload pop moveto tr aload pop lineto
+%psc                 bordercolor (unset) ne {
+%psc                     bordercolor //setanycolor exec not {
+%psc                         grestore
+%psc                         /bwipp.renderBadBorderColor (Invalid border color) false exit
+%psc                     } if
+%psc                 } if
+%psc                 borderwidth inkspread sub setlinewidth stroke
+%psc                 grestore
+%psc             } if
+%psc         } if
+%psc 
+%psc         %
+%psc         % Border (eofill rectangle frame)
+%psc         %
+%psc         showborder showbearer not and {
+%psc             /hw borderwidth inkspread sub 2 div def
+%psc             hw 0 gt {
+%psc                 gsave
+%psc                 bordercolor (unset) ne {
+%psc                     bordercolor //setanycolor exec not {
+%psc                         grestore
+%psc                         /bwipp.renderBadBorderColor (Invalid border color) false exit
+%psc                     } if
+%psc                 } if
+%psc                 newpath
+%psc                 bl aload pop hw sub exch hw sub exch moveto
+%psc                 br aload pop hw sub exch hw add exch lineto
+%psc                 tr aload pop hw add exch hw add exch lineto
+%psc                 tl aload pop hw add exch hw sub exch lineto closepath
+%psc                 bl aload pop hw add exch hw add exch moveto
+%psc                 tl aload pop hw sub exch hw add exch lineto
+%psc                 tr aload pop hw sub exch hw sub exch lineto
+%psc                 br aload pop hw add exch hw sub exch lineto closepath
+%psc                 eofill
+%psc                 grestore
+%psc             } if
+%psc         } if
+%psc 
+%psc         true exit
+%psc 
+%psc     } repeat
+%psc 
+%psc     end
+%psc 
+%psc } bind def
+%psc 
+%psc %
+%psc %  Draw whitespace guard brackets
+%psc %
+%psc %  pixx /renderguards //render exec
+%psc %
+%psc /render.renderguards {
+%psc 
+%psc     /pixx exch def
+%psc 
+%psc     1 {  % Common exit
+%psc 
+%psc         guardwidth 0 lt guardwidth 20 gt or {
+%psc             /bwipp.renderBadGuardwidth (guardwidth must be from 0 to 20) false exit
+%psc         } if
+%psc 
+%psc         guardheight 0 lt guardheight 20 gt or {
+%psc             /bwipp.renderBadGuardheight (guardheight must be from 0 to 20) false exit
+%psc         } if
+%psc 
+%psc         guardleftpos -50 lt guardleftpos 150 gt or {
+%psc             /bwipp.renderBadGuardleftpos (guardleftpos must be from -50 to 150) false exit
+%psc         } if
+%psc 
+%psc         guardleftypos -50 lt guardleftypos 150 gt or {
+%psc             /bwipp.renderBadGuardleftypos (guardleftypos must be from -50 to 150) false exit
+%psc         } if
+%psc 
+%psc         guardrightpos -50 lt guardrightpos 150 gt or {
+%psc             /bwipp.renderBadGuardrightpos (guardrightpos must be from -50 to 150) false exit
+%psc         } if
+%psc 
+%psc         guardrightypos -50 lt guardrightypos 150 gt or {
+%psc             /bwipp.renderBadGuardrightypos (guardrightypos must be from -50 to 150) false exit
+%psc         } if
+%psc 
+%psc         guardwhitespace {
+%psc             0.75 setlinewidth
+%psc             guardleftpos 0 ne {
+%psc                 newpath
+%psc                 guardleftpos neg guardwidth add guardleftypos guardheight 2 div add moveto
+%psc                 guardwidth neg guardheight -2 div rlineto
+%psc                 guardwidth guardheight -2 div rlineto
+%psc                 stroke
+%psc             } if
+%psc             guardrightpos 0 ne {
+%psc                 newpath
+%psc                 guardrightpos pixx add guardwidth sub guardrightypos guardheight 2 div add moveto
+%psc                 guardwidth guardheight -2 div rlineto
+%psc                 guardwidth neg guardheight -2 div rlineto
+%psc                 stroke
+%psc             } if
+%psc         } if
+%psc 
+%psc         true exit
+%psc 
+%psc     } repeat
 %psc 
 %psc } bind def
 %psc 
@@ -4574,10 +5428,21 @@ bind def
 %psc %  Dispatcher table
 %psc %
 %psc /render.dispatch <<
-%psc     /groupoptions     //render.groupoptions
-%psc     /rendertext       //render.rendertext
-%psc     /validateoptions  //render.validateoptions
-%psc     /gridfit          //render.gridfit
+%psc     /apply_ast            //render.apply_ast
+%psc     /ast                  //render.ast
+%psc     /groupoptions         //render.groupoptions
+%psc     /textgroups           //render.textgroups
+%psc     /rendertext           //render.rendertext
+%psc     /validatetextoptions  //render.validatetextoptions
+%psc     /gridfit              //render.gridfit
+%psc     /global_encoder_defaults  //render.global_encoder_defaults
+%psc     /global_renderer_defaults //render.global_renderer_defaults
+%psc     /validate_common      //render.validate_common
+%psc     /renderborder         //render.renderborder
+%psc     /renderguards         //render.renderguards
+%psc     /validate_xdim        //render.validate_xdim
+%psc     /resolve_strictspec     //render.resolve_strictspec
+%psc     /resolve_height       //render.resolve_height
 %psc >> readonly def
 %psc 
 %psc /render {
@@ -4597,8 +5462,8 @@ bind def
 
 %psc % --BEGIN RENDERER renlinear--
 %psc % --REQUIRES preamble raiseerror processoptions setanycolor render--
-%psc %%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2026033100 94171 89917
-%psc %%BeginData:        323 ASCII Lines
+%psc %%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2026042100 81340 74204
+%psc %%BeginData:        219 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
@@ -4608,7 +5473,6 @@ bind def
 %psc dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
 %psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc begin
-%psc 
 %psc 
 %psc /renlinear {
 %psc 
@@ -4654,26 +5518,25 @@ bind def
 %psc     /guardheight 7.0 def
 %psc     /gridfit false def
 %psc     /griddpi 0 def
+%psc     /strictspec false def
+%psc     /loosespec false def
+%psc     /xdim -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /modunit 1 def
 %psc 
 %psc     {def} forall
 %psc     opt currentdict /opt undef /apply //processoptions exec /options exch def
+%psc     /global_renderer_defaults //render exec
 %psc 
-%psc     % Resolve text aliases: alttext=>text1, extratext=>text2
-%psc 
-%psc     % Collect into an text options array
+%psc     % Collect text options into an array
 %psc     /textopts (text) 9 /groupoptions //render exec /collectgroup //processoptions exec def
 %psc 
-%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
-%psc         exch get /ctx exch def
-%psc         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-%psc         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-%psc         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-%psc         inkspread       null eq    { ctx /default_inkspread       2 copy known {get /inkspread       exch def} {pop pop} ifelse } if
-%psc         griddpi         0 eq       { ctx /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
-%psc     } { pop } ifelse
-%psc 
-%psc     % Auto-enable gridfit when griddpi is specified
 %psc     griddpi 0 ne { /gridfit true def } if
+%psc     inkspread null eq { /inkspread 0.15 def } if
+%psc 
+%psc     % Adjust inkspread to fixed physical amount under strictspec
+%psc     strictspec { /inkspread inkspread modunit mul 25.4 mul xdim 72 mul div def } if
 %psc 
 %psc     % Auto-disable gridfit for fractional-width bars (postal, pharmacode)
 %psc     gridfit {
@@ -4685,42 +5548,11 @@ bind def
 %psc         } if
 %psc     } if
 %psc 
-%psc     inkspread null eq {/inkspread 0.15 def} if
-%psc 
 %psc     %
 %psc     % Validate input
 %psc     %
 %psc 
-%psc     % Validate text{1-9}* options
-%psc     1 1 9 {
-%psc         /textgrp exch def
-%psc         textgrp textopts textgrp 1 sub get
-%psc         /validateoptions //render exec not { //raiseerror exec } if
-%psc     } for
-%psc 
-%psc     inkspread -1 lt inkspread 1 gt or {
-%psc         /bwipp.renlinearBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderleft -1 lt borderleft 50 gt or {
-%psc         /bwipp.renlinearBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderright -1 lt borderright 50 gt or {
-%psc         /bwipp.renlinearBadBorderright (borderright must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     bordertop -1 lt bordertop 50 gt or {
-%psc         /bwipp.renlinearBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderbottom -1 lt borderbottom 50 gt or {
-%psc         /bwipp.renlinearBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderwidth 0 lt borderwidth 10 gt or {
-%psc         /bwipp.renlinearBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
-%psc     } if
+%psc     /validate_common //render exec
 %psc 
 %psc     barratio 0.1 lt barratio 5 gt or {
 %psc         /bwipp.renlinearBadBarratio (barratio must be from 0.1 to 5) //raiseerror exec
@@ -4732,34 +5564,6 @@ bind def
 %psc 
 %psc     width 0 ne { width 0.01 lt width 20 gt or {
 %psc         /bwipp.renlinearBadWidth (width must be 0 or from 0.01 to 20) //raiseerror exec
-%psc     } if } if
-%psc 
-%psc     guardwidth 0 lt guardwidth 20 gt or {
-%psc         /bwipp.renlinearBadGuardwidth (guardwidth must be from 0 to 20) //raiseerror exec
-%psc     } if
-%psc 
-%psc     guardheight 0 lt guardheight 20 gt or {
-%psc         /bwipp.renlinearBadGuardheight (guardheight must be from 0 to 20) //raiseerror exec
-%psc     } if
-%psc 
-%psc     guardleftpos -50 lt guardleftpos 150 gt or {
-%psc         /bwipp.renlinearBadGuardleftpos (guardleftpos must be from -50 to 150) //raiseerror exec
-%psc     } if
-%psc 
-%psc     guardleftypos -50 lt guardleftypos 150 gt or {
-%psc         /bwipp.renlinearBadGuardleftypos (guardleftypos must be from -50 to 150) //raiseerror exec
-%psc     } if
-%psc 
-%psc     guardrightpos -50 lt guardrightpos 150 gt or {
-%psc         /bwipp.renlinearBadGuardrightpos (guardrightpos must be from -50 to 150) //raiseerror exec
-%psc     } if
-%psc 
-%psc     guardrightypos -50 lt guardrightypos 150 gt or {
-%psc         /bwipp.renlinearBadGuardrightypos (guardrightypos must be from -50 to 150) //raiseerror exec
-%psc     } if
-%psc 
-%psc     griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
-%psc         /bwipp.renlinearBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
 %psc     } if } if
 %psc 
 %psc     sbs length 0 ne {
@@ -4810,46 +5614,28 @@ bind def
 %psc     } if
 %psc 
 %psc     %
+%psc     % Scale to physical specification dimensions
+%psc     %
+%psc     strictspec {
+%psc         xdim 72 mul 25.4 div modunit div dup scale
+%psc     } if
+%psc 
+%psc     %
 %psc     % Grid fit: snap module boundaries to device pixel grid
 %psc     %
-%psc     gridfit { width 0 eq { 1 } { -1 } ifelse false /gridfit //render exec } if
+%psc     gridfit {
+%psc         1 strictspec { xdim xmin xmax } { 0 -1 -1 } ifelse
+%psc         width 0 ne  % Floor when width forced
+%psc         false /gridfit //render exec
+%psc         not { grestore //raiseerror exec } if
+%psc     } if
+%psc 
 %psc 
 %psc     %
 %psc     % Display the border and background
 %psc     %
-%psc     showborder showbearer or {
-%psc         /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
-%psc         /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
-%psc         /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
-%psc         /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
-%psc     } {  % No need to extend background when there is no border or bearer
-%psc         /tl [ borderleft neg inkspread add                pixy bordertop add                       ] def
-%psc         /tr [ pixx borderright add inkspread sub          pixy bordertop add                       ] def
-%psc         /bl [ borderleft neg inkspread add                borderbottom neg                         ] def
-%psc         /br [ pixx borderright add inkspread sub          borderbottom neg                         ] def
-%psc     } ifelse
-%psc     backgroundcolor (unset) ne {
-%psc         gsave
-%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-%psc         backgroundcolor //setanycolor exec not { grestore grestore //raiseerror exec } if fill
-%psc         grestore
-%psc     } if
-%psc     showbearer {  % Overrides showborder
-%psc         gsave
-%psc         newpath
-%psc         bl aload pop moveto br aload pop lineto
-%psc         tl aload pop moveto tr aload pop lineto
-%psc         bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
-%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
-%psc         grestore
-%psc     } {
-%psc     showborder {
-%psc         gsave
-%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-%psc         bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
-%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
-%psc         grestore
-%psc     } if } ifelse
+%psc     pixx pixy inkspread 0 /renderborder //render exec  % No inkspread in y for bars
+%psc     not { grestore //raiseerror exec } if
 %psc 
 %psc     %
 %psc     % Display the bars for elements in the bars array
@@ -4876,39 +5662,14 @@ bind def
 %psc     %
 %psc     % Display text{1-9}
 %psc     %
-%psc     1 1 9 {
-%psc         /textgrp exch def
-%psc         textopts textgrp 1 sub get () get () ne              % Has manual contents
-%psc         textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
-%psc         {
-%psc             textopts textgrp 1 sub get
-%psc             dup dup () get (content) exch put
-%psc             dup (txt) textgrp 1 eq { txt } { [] } ifelse put
-%psc             pixx pixy textgrp 4 -1 roll /rendertext //render exec
-%psc             not { grestore //raiseerror exec } if
-%psc         } if
-%psc     } for
+%psc     pixx pixy /textgroups //render exec
+%psc     not { grestore //raiseerror exec } if
 %psc 
 %psc     %
 %psc     % Display the guard elements
 %psc     %
-%psc     guardwhitespace {
-%psc         0.75 setlinewidth
-%psc         guardleftpos 0 ne {
-%psc             newpath
-%psc             guardleftpos neg guardwidth add guardleftypos guardheight 2 div add moveto
-%psc             guardwidth neg guardheight -2 div rlineto
-%psc             guardwidth guardheight -2 div rlineto
-%psc             stroke
-%psc         } if
-%psc         guardrightpos 0 ne {
-%psc             newpath
-%psc             guardrightpos pixx add guardwidth sub guardrightypos guardheight 2 div add moveto
-%psc             guardwidth guardheight -2 div rlineto
-%psc             guardwidth neg guardheight -2 div rlineto
-%psc             stroke
-%psc         } if
-%psc     } if
+%psc     pixx /renderguards //render exec
+%psc     not { grestore //raiseerror exec } if
 %psc 
 %psc     grestore
 %psc 
@@ -4928,8 +5689,8 @@ bind def
 
 %psc % --BEGIN RENDERER renmatrix--
 %psc % --REQUIRES preamble raiseerror setuphooks processoptions setanycolor render--
-%psc %%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2026033100 116718 115553
-%psc %%BeginData:        561 ASCII Lines
+%psc %%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2026042100 121628 121127
+%psc %%BeginData:        546 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
@@ -5062,36 +5823,47 @@ bind def
 %psc     /bordertop 0.0 def
 %psc     /borderbottom 0.0 def
 %psc     /borderwidth 0.5 def
+%psc     /guardwhitespace false def
+%psc     /guardleftpos 0.0 def
+%psc     /guardleftypos 0.0 def
+%psc     /guardrightpos 0.0 def
+%psc     /guardrightypos 0.0 def
+%psc     /guardwidth 5.0 def
+%psc     /guardheight 7.0 def
 %psc     /gridfit false def
 %psc     /griddpi 0 def
+%psc     /strictspec false def
+%psc     /loosespec false def
+%psc     /xdim -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /modunit 2 def
 %psc 
 %psc     {def} forall
 %psc     opt currentdict /opt undef /apply //processoptions exec /options exch def
+%psc     /global_renderer_defaults //render exec
 %psc 
-%psc     % Resolve text aliases: alttext=>text1, extratext=>text2
+%psc     griddpi 0 ne { /gridfit true def } if
 %psc 
-%psc     inkspread null eq {
-%psc         /uk.co.terryburton.bwipp.global_ctx dup where {
-%psc             exch get /default_inkspread 2 copy known {get /inkspread exch def} {pop pop} ifelse
-%psc         } {pop} ifelse
-%psc     } if
-%psc 
-%psc     inkspread null eq {/inkspread 0.15 def} if
+%psc     inkspread null eq { /inkspread 0.15 def } if
 %psc     inkspreadh null eq {/inkspreadh inkspread def} if
 %psc     inkspreadv null eq {/inkspreadv inkspread def} if
 %psc 
-%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
-%psc         exch get /ctx exch def
-%psc         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-%psc         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-%psc         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-%psc         griddpi         0 eq       { ctx /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
-%psc     } { pop } ifelse
-%psc 
-%psc     % Auto-enable gridfit when griddpi is specified
-%psc     griddpi 0 ne { /gridfit true def } if
-%psc 
 %psc     (input.processoptions) //renmatrix.after exec
+%psc 
+%psc     % Default rowmult to all 1s if not provided
+%psc     currentdict /rowmult known not {
+%psc         /rowmult [ pixy { 1 } repeat ] def
+%psc     } if
+%psc 
+%psc     /pixycomp rowmult length def
+%psc     /rowcumul pixycomp 1 add array def
+%psc     rowcumul 0 0 put
+%psc     0 1 pixycomp 1 sub {                       % i
+%psc         dup rowcumul exch get                  % ... rowcumul[i]
+%psc         1 index rowmult exch get add           % ... rowcumul[i] + rowmult[i]
+%psc         exch 1 add exch rowcumul 3 1 roll put  % rowcumul[i+1] = rowcumul[i]+rowmult[i]
+%psc     } for
 %psc 
 %psc     %
 %psc     % Input validation
@@ -5107,16 +5879,7 @@ bind def
 %psc     % Validate input
 %psc     %
 %psc 
-%psc     % text{1-9}* options validation
-%psc     1 1 9 {
-%psc         /textgrp exch def
-%psc         textgrp textopts textgrp 1 sub get
-%psc         /validateoptions //render exec not { //raiseerror exec } if
-%psc     } for
-%psc 
-%psc     inkspread -1 lt inkspread 1 gt or {
-%psc         /bwipp.renmatrixBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
-%psc     } if
+%psc     /validate_common //render exec
 %psc 
 %psc     inkspreadh -1 lt inkspreadh 1 gt or {
 %psc         /bwipp.renmatrixBadInkspreadh (inkspreadh must be from -1 to 1) //raiseerror exec
@@ -5124,26 +5887,6 @@ bind def
 %psc 
 %psc     inkspreadv -1 lt inkspreadv 1 gt or {
 %psc         /bwipp.renmatrixBadInkspreadv (inkspreadv must be from -1 to 1) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderleft -1 lt borderleft 50 gt or {
-%psc         /bwipp.renmatrixBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderright -1 lt borderright 50 gt or {
-%psc         /bwipp.renmatrixBadBorderright (borderright must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     bordertop -1 lt bordertop 50 gt or {
-%psc         /bwipp.renmatrixBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderbottom -1 lt borderbottom 50 gt or {
-%psc         /bwipp.renmatrixBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderwidth 0 lt borderwidth 10 gt or {
-%psc         /bwipp.renmatrixBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
 %psc     } if
 %psc 
 %psc     width 0.01 lt width 50 gt or {
@@ -5154,19 +5897,30 @@ bind def
 %psc         /bwipp.renmatrixBadHeight (height must be from 0.01 to 50) //raiseerror exec
 %psc     } if
 %psc 
-%psc     griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
-%psc         /bwipp.renmatrixBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
-%psc     } if } if
-%psc 
 %psc     pixx 0 le pixy 0 le or {
 %psc         /bwipp.renmatrixBadDimensions (The symbol dimensions must be positive) //raiseerror exec
 %psc     } if
 %psc 
-%psc     pixs length pixx pixy mul lt {
+%psc     pixs length pixx pixycomp mul lt {
 %psc         /bwipp.renmatrixBadPixelData (The pixel data is shorter than the symbol dimensions require) //raiseerror exec
 %psc     } if
 %psc 
+%psc     rowcumul pixycomp get pixy ne {
+%psc         /bwipp.renmatrixRowmultMismatch (rowmult sum does not equal pixy) //raiseerror exec
+%psc     } if
+%psc 
 %psc     (input.validate) //renmatrix.after exec
+%psc 
+%psc     %
+%psc     % Convert pixs to string for efficient padding and comparison
+%psc     %
+%psc     /spixs pixs length string def
+%psc     0 1 pixs length 1 sub { dup pixs exch get spixs 3 1 roll put } for
+%psc     /pixs spixs def
+%psc 
+%psc     %
+%psc     % Generate the symbol
+%psc     %
 %psc 
 %psc     /xyget { pixx mul add pixs exch get } def
 %psc     /cget { pixx mul add cache exch get and } def
@@ -5262,42 +6016,35 @@ bind def
 %psc 
 %psc         (render.tracepaths) //renmatrix.before exec
 %psc 
-%psc         % Pad the bitmap on all sides
+%psc         % Pad the bitmap on all sides (string is zero-initialized)
 %psc         /pixx pixx 2 add def
-%psc         /pixy pixy 2 add def
+%psc         /pixycomp pixycomp 2 add def
 %psc         /pixxpad pixx def
-%psc         /zerorow [ pixx {0} repeat ] def
-%psc         pixx pixy mul { array } stopped {
+%psc         pixx pixycomp mul { string } stopped {
 %psc             pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
 %psc         } if /padded exch def
-%psc         0 pixx padded length 1 sub {
-%psc             padded exch zerorow putinterval
-%psc         } for
-%psc         0 1 pixy 3 sub {
+%psc         0 1 pixycomp 3 sub {
 %psc             /row exch def
 %psc             padded row 1 add pixx mul 1 add pixs row pixx 2 sub mul pixx 2 sub getinterval putinterval
 %psc         } for
 %psc         /pixs padded def
 %psc 
 %psc         %
-%psc         % Cache of visited corners for each direction
+%psc         % Cache of visited corners for each direction (string is zero-initialized)
 %psc         %
-%psc         pixs length { array } stopped {
+%psc         pixs length { string } stopped {
 %psc             pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
 %psc         } if /cache exch def
-%psc         0 pixx cache length 1 sub {
-%psc             cache exch zerorow putinterval
-%psc         } for
 %psc 
 %psc         %
 %psc         % Pre-compute abcd values (printed neighbours) for all cells
 %psc         %
 %psc         /abcdw pixx 1 sub def
-%psc         abcdw pixy 1 sub mul { array } stopped {
+%psc         abcdw pixycomp 1 sub mul { string } stopped {
 %psc             pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
 %psc         } if /abcdcache exch def
-%psc         /abcdrow abcdw array def
-%psc         0 1 pixy 2 sub {
+%psc         /abcdrow abcdw string def
+%psc         0 1 pixycomp 2 sub {
 %psc             /j exch def
 %psc             0 1 abcdw 1 sub {
 %psc                 dup j abcd  abcdrow 3 1 roll put
@@ -5311,7 +6058,7 @@ bind def
 %psc         % Construct paths by tracing regions avoiding duplication by using the cache
 %psc         %
 %psc         /paths [
-%psc             0 1 pixy 2 sub {
+%psc             0 1 pixycomp 2 sub {
 %psc                 /j exch def
 %psc                 0 1 pixx 2 sub {
 %psc                     /i exch def
@@ -5335,8 +6082,7 @@ bind def
 %psc         % Revert the bitmap size
 %psc         %
 %psc         /pixx pixx 2 sub def
-%psc         /pixy pixy 2 sub def
-%psc 
+%psc         /pixycomp pixycomp 2 sub def
 %psc 
 %psc         options /debugpaths known
 %psc         /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
@@ -5353,11 +6099,12 @@ bind def
 %psc         paths {
 %psc             /p exch def
 %psc             /len p length def
-%psc             p len 1 sub get unpack
-%psc             p 0 get unpack
+%psc             p len 1 sub get unpack rowcumul exch get
+%psc             p 0 get unpack rowcumul exch get
 %psc             0 1 len 1 sub {                                % x1 y1 x2 y2
 %psc                 /i exch def
-%psc                 p i 1 add len mod get unpack 6 -2 roll     % x3 y3 x1 y1 x2 y2
+%psc                 p i 1 add len mod get unpack
+%psc                 rowcumul exch get 6 -2 roll                % x3 y3 x1 y1 x2 y2
 %psc                 5 index inkspreadh 2 div
 %psc                 4 index 4 -1 roll lt {add} {sub} ifelse    % y3<y1 ? x2+ih : x2-ih
 %psc                 4 1 roll
@@ -5389,8 +6136,11 @@ bind def
 %psc             dup pixx mod /x exch def
 %psc             pixx idiv /y exch def
 %psc             x y xyget 1 eq {
-%psc                x 0.5 add pixy y sub 0.5 sub moveto
-%psc                x 0.5 add pixy y sub 0.5 sub 0.5 inkspread 2 div sub 0 360 arc
+%psc                 rowcumul y get 1 rowcumul y 1 add get 1 sub {
+%psc                     /vy exch def
+%psc                     x 0.5 add pixy vy sub 0.5 sub moveto
+%psc                     x 0.5 add pixy vy sub 0.5 sub 0.5 inkspread 2 div sub 0 360 arc
+%psc                 } for
 %psc             } if
 %psc         } for
 %psc         fill
@@ -5411,37 +6161,32 @@ bind def
 %psc     width pixx div 72 mul height pixy div 72 mul scale
 %psc 
 %psc     %
+%psc     % Scale to physical specification dimensions
+%psc     %
+%psc     strictspec {
+%psc         xdim 72 mul 25.4 div modunit div dup scale
+%psc         % Adjust inkspread to fixed physical amount
+%psc         modunit 25.4 mul xdim 72 mul div  % scale factor on stack
+%psc         dup inkspread mul /inkspread exch def
+%psc         dup inkspreadh mul /inkspreadh exch def
+%psc         inkspreadv mul /inkspreadv exch def
+%psc     } if
+%psc 
+%psc     %
 %psc     % Grid fit: snap module boundaries to device pixel grid
 %psc     %
-%psc     gridfit { 1 true /gridfit //render exec } if
+%psc     gridfit {
+%psc         1 strictspec { xdim xmin xmax } { 0 -1 -1 } ifelse
+%psc         false true /gridfit //render exec
+%psc         not { grestore //raiseerror exec } if
+%psc     } if
+%psc 
 %psc 
 %psc     %
 %psc     % Display the border and background
 %psc     %
-%psc     showborder {
-%psc         /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
-%psc         /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
-%psc         /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
-%psc         /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
-%psc     } {  % No need to extend background when there is no border
-%psc         /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def
-%psc         /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def
-%psc         /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def
-%psc         /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def
-%psc     } ifelse
-%psc     backgroundcolor (unset) ne {
-%psc         gsave
-%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-%psc         backgroundcolor //setanycolor exec not { grestore grestore //raiseerror exec } if fill
-%psc         grestore
-%psc     } if
-%psc     showborder {
-%psc         gsave
-%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-%psc         bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
-%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
-%psc         grestore
-%psc     } if
+%psc     pixx pixy inkspread inkspread /renderborder //render exec  % Inkspread in both axes for modules
+%psc     not { grestore //raiseerror exec } if
 %psc 
 %psc     %
 %psc     % Display the matrix
@@ -5453,30 +6198,31 @@ bind def
 %psc     colormap {
 %psc         dup (unset) ne { //setanycolor exec not { 3 -1 roll pop grestore //raiseerror exec } if } { pop } ifelse
 %psc         /key exch def
-%psc         pixs length { array } stopped {
-%psc             pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
-%psc         } if /layer exch def
-%psc         0 1 pixs length 1 sub {
-%psc             dup pixs exch get key eq {layer exch 1 put} {layer exch 0 put} ifelse
-%psc         } for
-%psc         layer dotty {drawlayerdots} {drawlayer} ifelse
+%psc         key 1 eq colormap length 1 eq and {
+%psc             pixs  % Single colour with key=1: pixs is already the binary layer
+%psc         } {
+%psc             pixs length { string } stopped {
+%psc                 pop /bwipp.renmatrixBitmapTooLarge (The bitmap exceeds the implementation limits) //raiseerror exec
+%psc             } if /layer exch def
+%psc             0 1 pixs length 1 sub {
+%psc                 dup pixs exch get key eq {layer exch 1 put} {layer exch 0 put} ifelse
+%psc             } for
+%psc             layer
+%psc         } ifelse
+%psc         dotty {drawlayerdots} {drawlayer} ifelse
 %psc     } forall
 %psc 
 %psc     %
 %psc     % Display the text
 %psc     %
-%psc     1 1 9 {
-%psc         /textgrp exch def
-%psc         textopts textgrp 1 sub get () get () ne              % Has manual contents
-%psc         textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
-%psc         {
-%psc             textopts textgrp 1 sub get
-%psc             dup (txt) txt put
-%psc             dup dup () get (content) exch put
-%psc             pixx pixy textgrp 4 -1 roll /rendertext //render exec
-%psc             not { grestore //raiseerror exec } if
-%psc         } if
-%psc     } for
+%psc     pixx pixy /textgroups //render exec
+%psc     not { grestore //raiseerror exec } if
+%psc 
+%psc     %
+%psc     % Display the guard elements
+%psc     %
+%psc     pixx /renderguards //render exec
+%psc     not { grestore //raiseerror exec } if
 %psc 
 %psc     grestore
 %psc 
@@ -5497,12 +6243,12 @@ bind def
 
 %psc % --BEGIN RENDERER renmaximatrix--
 %psc % --REQUIRES preamble raiseerror setuphooks processoptions setanycolor render--
-%psc %%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2026033100 79634 75699
-%psc %%BeginData:        165 ASCII Lines
+%psc %%BeginResource: uk.co.terryburton.bwipp renmaximatrix 0.0 2026042100 72191 68700
+%psc %%BeginData:        148 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 2 dict
+%psc 4 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
@@ -5516,6 +6262,7 @@ bind def
 %psc     %
 %psc     % Default options
 %psc     %
+%psc     /includetext false def
 %psc     /barcolor (unset) def
 %psc     /backgroundcolor (unset) def
 %psc     /bordercolor (unset) def
@@ -5526,53 +6273,38 @@ bind def
 %psc     /bordertop 0.0 def
 %psc     /borderbottom 0.0 def
 %psc     /borderwidth 0.5 def
+%psc     /txt [] def
+%psc 
+%psc     % text{1-9}* options with common defaults
+%psc     (text) 9 /groupoptions //render exec /generategroup //processoptions exec
+%psc 
+%psc     % Overrides permitting encoder-positioned text
+%psc     /text1xalign (unset) def
+%psc     /text1yalign (unset) def
+%psc 
 %psc     /gridfit false def
 %psc     /griddpi 0 def
+%psc     /strictspec false def
+%psc     /loosespec false def
+%psc     /xdim -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /modunit 2 def
 %psc 
 %psc     {def} forall
 %psc     opt currentdict /opt undef /apply //processoptions exec /options exch def
+%psc     /global_renderer_defaults //render exec
 %psc 
-%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
-%psc         exch get /ctx exch def
-%psc         barcolor        (unset) eq { ctx /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
-%psc         backgroundcolor (unset) eq { ctx /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
-%psc         bordercolor     (unset) eq { ctx /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
-%psc         inkspread       null eq    { ctx /default_inkspread       2 copy known {get /inkspread       exch def} {pop pop} ifelse } if
-%psc         griddpi         0 eq       { ctx /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
-%psc     } { pop } ifelse
+%psc     % Collect text options into an array
+%psc     /textopts (text) 9 /groupoptions //render exec /collectgroup //processoptions exec def
 %psc 
-%psc     % Auto-enable gridfit when griddpi is specified
 %psc     griddpi 0 ne { /gridfit true def } if
+%psc     inkspread null eq { /inkspread 0.15 def } if
 %psc 
-%psc     inkspread null eq {/inkspread 0.15 def} if
-%psc 
-%psc     inkspread -1 lt inkspread 1 gt or {
-%psc         /bwipp.renmaximatrixBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderleft -1 lt borderleft 50 gt or {
-%psc         /bwipp.renmaximatrixBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderright -1 lt borderright 50 gt or {
-%psc         /bwipp.renmaximatrixBadBorderright (borderright must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     bordertop -1 lt bordertop 50 gt or {
-%psc         /bwipp.renmaximatrixBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderbottom -1 lt borderbottom 50 gt or {
-%psc         /bwipp.renmaximatrixBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
-%psc     } if
-%psc 
-%psc     borderwidth 0 lt borderwidth 10 gt or {
-%psc         /bwipp.renmaximatrixBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
-%psc     } if
-%psc 
-%psc     griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
-%psc         /bwipp.renmaximatrixBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
-%psc     } if } if
+%psc     %
+%psc     % Validate options
+%psc     %
+%psc     /validate_common //render exec
 %psc 
 %psc     options /debughexagons known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
@@ -5585,37 +6317,28 @@ bind def
 %psc     2.4945 dup scale  % from 1pt to 0.88mm
 %psc 
 %psc     %
+%psc     % Scale to physical specification dimensions
+%psc     %
+%psc     strictspec {
+%psc         xdim 72 mul 25.4 div 2.4945 div dup scale  % Relative to existing 2.4945 scale
+%psc         /inkspread inkspread 2.4945 mul 25.4 mul xdim 72 mul div def  % Fixed physical amount
+%psc     } if
+%psc 
+%psc     %
 %psc     % Grid fit: uniform even-pixel snap preserves hex aspect ratio
 %psc     %
-%psc     gridfit { 2 false /gridfit //render exec } if
+%psc     gridfit {
+%psc         2 strictspec { xdim xmin xmax } { 0 -1 -1 } ifelse
+%psc         false false /gridfit //render exec
+%psc         not { grestore //raiseerror exec } if
+%psc     } if
+%psc 
 %psc 
 %psc     %
 %psc     % Display the border and background
 %psc     %
-%psc     showborder {
-%psc         /tl [ borderleft borderwidth 2 div add neg      29 bordertop add borderwidth 2 div add ] def
-%psc         /tr [ 30 borderright add borderwidth 2 div add  29 bordertop add borderwidth 2 div add ] def
-%psc         /bl [ borderleft borderwidth 2 div add neg      borderbottom borderwidth 2 div add neg ] def
-%psc         /br [ 30 borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg ] def
-%psc     } {  % No need to extend background when there is no border
-%psc         /tl [ borderleft neg inkspread add              29 bordertop add inkspread sub         ] def
-%psc         /tr [ 30 borderright add inkspread sub          29 bordertop add inkspread sub         ] def
-%psc         /bl [ borderleft neg inkspread add              borderbottom neg inkspread add         ] def
-%psc         /br [ 30 borderright add inkspread sub          borderbottom neg inkspread add         ] def
-%psc     } ifelse
-%psc     backgroundcolor (unset) ne {
-%psc         gsave
-%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-%psc         backgroundcolor //setanycolor exec not { grestore grestore //raiseerror exec } if fill
-%psc         grestore
-%psc     } if
-%psc     showborder {
-%psc         gsave
-%psc         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
-%psc         bordercolor (unset) ne { bordercolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
-%psc         borderwidth inkspread 2 mul sub setlinewidth stroke
-%psc         grestore
-%psc     } if
+%psc     30 29 inkspread inkspread /renderborder //render exec  % 30x29 hex grid
+%psc     not { grestore //raiseerror exec } if
 %psc 
 %psc     barcolor (unset) ne { barcolor //setanycolor exec not { grestore //raiseerror exec } if } if
 %psc 
@@ -5652,6 +6375,12 @@ bind def
 %psc     newpath 14 13.8576 3.6229 inkspread add 0 360 arc closepath
 %psc             14 13.8576 4.3814 inkspread sub 360 0 arcn closepath fill
 %psc 
+%psc     %
+%psc     % Display text{1-9}
+%psc     %
+%psc     30 29 /textgroups //render exec
+%psc     not { grestore //raiseerror exec } if
+%psc 
 %psc     grestore
 %psc 
 %psc     } stopped {end stop} if
@@ -5674,14 +6403,15 @@ bind def
 % --EXAM: 90200
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2026033100 64771 68019
-%%BeginData:        137 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean5 0.0 2026042100 72596 75848
+%%BeginData:        169 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /ean5 { /bwipjs_ean5 (start-global) def  % begin
 
@@ -5709,9 +6439,24 @@ bind def
     /text1size 12.0 def
     /text1xoffset 3.25 def
     /text1yoffset null def  % realtype sentinel
-    /height 0.7 def
+    /height -1.0 def
+    /addondescent 5.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -5719,21 +6464,31 @@ bind def
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
 
-    text1yoffset null eq {
-        /text1yoffset height 72 mul 4.75 add def
-    } if
-
     %
     % Validate input
     %
     barcode length 5 ne {
-        (bwipp.ean5badLength#5730) (EAN-5 add-on must be 5 digits) //raiseerror exec
+        (bwipp.ean5badLength#6471) (EAN-5 add-on must be 5 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.ean5badCharacter#5734) (EAN-5 add-on must contain only digits) //raiseerror exec
+            (bwipp.ean5badCharacter#6475) (EAN-5 add-on must contain only digits) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /ean5 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    height -1 eq { /height 0.7 def } if
+
+    /descent addondescent modunit mul 72 div def  % Add-on bar descent
+
+    text1yoffset null eq {
+        /text1yoffset height 72 mul 4.75 add def
+    } if
 
     /checksum 0 def
     0 1 4 {
@@ -5788,11 +6543,17 @@ bind def
     <<
     /ren /renlinear
     /sbs [sbs {48 sub} forall]
-    /bhs [16 {height} repeat]
-    /bbs [16 {0} repeat]
+    /bhs [16 {height descent add} repeat]
+    /bbs [16 {descent neg} repeat]
     includetext {
         /txt txt
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     /guardrightpos 5.0
     /guardrightypos text1yoffset
@@ -5823,14 +6584,15 @@ bind def
 % --EXAM: 05
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2026033100 63554 66801
-%%BeginData:        123 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean2 0.0 2026042100 71019 74286
+%%BeginData:        155 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /ean2 { /bwipjs_ean2 (start-global) def  % begin
 
@@ -5855,9 +6617,24 @@ bind def
     /text1size 12.0 def
     /text1xoffset 3.25 def
     /text1yoffset null def  % sentinel realtype
-    /height 0.7 def
+    /height -1.0 def
+    /addondescent 5.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -5865,21 +6642,31 @@ bind def
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
 
-    text1yoffset null eq {
-        /text1yoffset height 72 mul 4.75 add def
-    } if
-
     %
     % Validate input
     %
     barcode length 2 ne {
-      (bwipp.ean2badLength#5876) (EAN-2 add-on must be 2 digits) //raiseerror exec
+      (bwipp.ean2badLength#6649) (EAN-2 add-on must be 2 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.ean2badCharacter#5880) (EAN-2 add-on must contain only digits) //raiseerror exec
+            (bwipp.ean2badCharacter#6653) (EAN-2 add-on must contain only digits) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /ean2 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    height -1 eq { /height 0.7 def } if
+
+    /descent addondescent modunit mul 72 div def  % Add-on bar descent
+
+    text1yoffset null eq {
+        /text1yoffset height 72 mul 4.75 add def
+    } if
 
     /mirrormap //ean2.mirrormaps barcode 0 2 getinterval cvi 4 mod get def
 
@@ -5923,11 +6710,17 @@ bind def
     <<
     /ren /renlinear
     /sbs [sbs {48 sub} forall]
-    /bhs [12{height}repeat]
-    /bbs [12{0}repeat]
+    /bhs [12{height descent add}repeat]
+    /bbs [12{descent neg}repeat]
     includetext {
         /txt txt
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     /guardrightpos 5.0
     /guardrightypos text1yoffset
@@ -5959,14 +6752,15 @@ bind def
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
 % --FMLY: Point Of Sale
-%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2026033100 85841 88978
-%%BeginData:        224 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean13 0.0 2026042100 96721 103185
+%%BeginData:        262 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean2 dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean5 dup /uk.co.terryburton.bwipp findresource put
@@ -5989,18 +6783,35 @@ bind def
 
     /dontdraw false def
     /includetext false def
+
     /text1font (OCR-B) def
     /text1size 12.0 def
     /text1xoffset -7.75 def
-    /text1yoffset -.25 def
-    /height 1.0 def
+    /text1yoffset -5.25 def
+    /height -1.0 def
+    /guarddescent 5.0 def
+    /addondescent null def  % realtype sentinel: defaults to guarddescent
+    /width 0 def
     /addongap 12.0 def
     /addontextfont (unset) def
     /addontextsize null def     % realtype sentinel
     /addontextxoffset null def  % realtype sentinel
     /addontextyoffset null def  % realtype sentinel
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -6024,16 +6835,25 @@ bind def
     % Validate the input
     %
     barcode length 12 ne barcode length 13 ne and {
-        (bwipp.ean13badLength#6027) (EAN-13 must be 12 or 13 digits) //raiseerror exec
+        (bwipp.ean13badLength#6838) (EAN-13 must be 12 or 13 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.ean13badCharacter#6031) (EAN-13 must contain only digits) //raiseerror exec
+            (bwipp.ean13badCharacter#6842) (EAN-13 must contain only digits) //raiseerror exec
         } if
     } forall
     addon length 0 ne addon length 2 ne and addon length 5 ne and {
-        (bwipp.ean13badAddOnLength#6035) (Add-on for EAN-13 must be 2 or 5 digits) //raiseerror exec
+        (bwipp.ean13badAddOnLength#6846) (Add-on for EAN-13 must be 2 or 5 digits) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /ean13 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    /descent guarddescent modunit mul 72 div def  % Guard bar descent
+    addondescent null eq { /addondescent guarddescent def } if  % Default add-on descent to guard descent
 
     %
     % Add checksum digit
@@ -6052,7 +6872,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 13 eq {
         barcode 12 get checksum 48 add ne {
-            (bwipp.ean13badCheckDigit#6055) (Incorrect EAN-13 check digit provided) //raiseerror exec
+            (bwipp.ean13badCheckDigit#6875) (Incorrect EAN-13 check digit provided) //raiseerror exec
         } if
     } if
     pad 0 barcode putinterval       % Add barcode to the start of the pad
@@ -6124,15 +6944,19 @@ bind def
     sbs 56 //ean13.encs 12 get putinterval
 
     /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     includetext {
-        /bhs [height height 12{height .075 sub}repeat height height 12{height .075 sub}repeat height height] def
-        /bbs [0 0 12{.075}repeat 0 0 12{.075}repeat 0 0] def
+        /guardheight height descent add def
+        /bhs [guardheight guardheight 12{height}repeat guardheight guardheight 12{height}repeat guardheight guardheight] def
+        /bbs [descent neg descent neg 12{0}repeat descent neg descent neg 12{0}repeat descent neg descent neg] def
     } {
         /bhs [30{height}repeat] def
         /bbs [30{0}repeat] def
         /txt [] def
     } ifelse
-    /guardrightypos 0.0 def
+    /guardrightypos -5.0 def
 
     %
     % Append the addon
@@ -6141,6 +6965,7 @@ bind def
         /addopts <<
             /includetext true
             /height height includetext { 0.15 sub } if
+            /addondescent addondescent
             /text1xoffset addontextxoffset null ne {addontextxoffset} {98.25 addongap add} ifelse
             addontextyoffset null ne {/text1yoffset addontextyoffset} if
             /text1size addontextsize null ne {addontextsize} {text1size} ifelse
@@ -6170,7 +6995,13 @@ bind def
     /borderleft 11.0
     /borderright addon () eq {7.0} {5.0} ifelse
     /bordertop 0.0
-    /borderbottom 5.0
+    /borderbottom 5.0 guarddescent modunit mul add
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     >>
 
     _render //renlinear if
@@ -6196,14 +7027,15 @@ bind def
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
 % --FMLY: Point Of Sale
-%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2026033100 84290 83831
-%%BeginData:        209 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean8 0.0 2026042100 94747 97702
+%%BeginData:        248 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean2 dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean5 dup /uk.co.terryburton.bwipp findresource put
@@ -6227,8 +7059,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 12.0 def
     /text1xoffset 7.25 def
-    /text1yoffset -0.25 def
-    /height 1.0 def
+    /text1yoffset -5.25 def
+    /height -1.0 def
+    /guarddescent 5.0 def
+    /addondescent null def  % realtype sentinel: defaults to guarddescent
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     /permitaddon false def
     /addongap 12.0 def
     /addontextfont (unset) def
@@ -6237,6 +7084,8 @@ bind def
     /addontextyoffset null def  % realtype sentinel
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -6260,19 +7109,28 @@ bind def
     % Validate the input
     %
     barcode length 7 ne barcode length 8 ne and {
-        (bwipp.ean8badLength#6263) (EAN-8 must be 7 or 8 digits) //raiseerror exec
+        (bwipp.ean8badLength#7112) (EAN-8 must be 7 or 8 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.ean8badCharacter#6267) (EAN-8 must contain only digits) //raiseerror exec
+            (bwipp.ean8badCharacter#7116) (EAN-8 must contain only digits) //raiseerror exec
         } if
     } forall
     addon length 0 ne addon length 2 ne and addon length 5 ne and {
-        (bwipp.ean8badAddOnLength#6271) (Add-on for EAN-8 must be 2 or 5 digits) //raiseerror exec
+        (bwipp.ean8badAddOnLength#7120) (Add-on for EAN-8 must be 2 or 5 digits) //raiseerror exec
     } if
     permitaddon not addon length 0 ne and {
-        (bwipp.ean8badAddOnLength#6274) (Non-standard use of add-on for EAN-8 requires "permitaddon" option) //raiseerror exec
+        (bwipp.ean8badAddOnLength#7123) (Non-standard use of add-on for EAN-8 requires "permitaddon" option) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /ean8 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    /descent guarddescent modunit mul 72 div def  % Guard bar descent
+    addondescent null eq { /addondescent guarddescent def } if  % Default add-on descent to guard descent
 
     %
     % Add checksum digit
@@ -6291,7 +7149,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 8 eq {
         barcode 7 get checksum 48 add ne {
-            (bwipp.ean8badCheckDigit#6294) (Incorrect EAN-8 check digit provided) //raiseerror exec
+            (bwipp.ean8badCheckDigit#7152) (Incorrect EAN-8 check digit provided) //raiseerror exec
         } if
     } if
     pad 0 barcode putinterval      % Add barcode to the start of the pad
@@ -6345,15 +7203,19 @@ bind def
     sbs 40 //ean8.encs 12 get putinterval
 
     /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     includetext {
-        /bhs [height height 8{height .075 sub}repeat height height 8{height .075 sub}repeat height height] def
-        /bbs [0 0 8{.075}repeat 0 0 8{.075}repeat 0 0] def
+        /guardheight height descent add def
+        /bhs [guardheight guardheight 8{height}repeat guardheight guardheight 8{height}repeat guardheight guardheight] def
+        /bbs [descent neg descent neg 8{0}repeat descent neg descent neg 8{0}repeat descent neg descent neg] def
     } {
         /bhs [22{height}repeat] def
         /bbs [22{0}repeat] def
         /txt [] def
     } ifelse
-    /guardrightypos 0.0 def
+    /guardrightypos -5.0 def
 
     %
     % Append the addon
@@ -6362,6 +7224,7 @@ bind def
         /addopts <<
             /includetext true
             /height height includetext { 0.15 sub } if
+            /addondescent addondescent
             /text1xoffset addontextxoffset null ne {addontextxoffset} {70.25 addongap add} ifelse
             addontextyoffset null ne {/text1yoffset addontextyoffset} if
             /text1size addontextsize null ne {addontextsize} {text1size} ifelse
@@ -6387,12 +7250,19 @@ bind def
     /txt txt
     /opt options
     /guardleftpos 7.0
+    /guardleftypos -5.0
     /guardrightpos addon () eq {7.0} {5.0} ifelse
     /guardrightypos guardrightypos
     /borderleft 7.0
     /borderright addon () eq {7.0} {5.0} ifelse
     /bordertop 0.0
-    /borderbottom 5.0
+    /borderbottom 5.0 guarddescent modunit mul add
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     >>
 
     _render //renlinear if
@@ -6418,14 +7288,15 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Point Of Sale
-%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2026033100 90488 93497
-%%BeginData:        261 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp upca 0.0 2026042100 104785 104344
+%%BeginData:        299 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean2 dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean5 dup /uk.co.terryburton.bwipp findresource put
@@ -6449,8 +7320,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 12.0 def
     /text1xoffset -5.75 def
-    /text1yoffset -0.25 def
-    /height 1.0 def
+    /text1yoffset -5.25 def
+    /height -1.0 def
+    /guarddescent 5.0 def
+    /addondescent null def  % realtype sentinel: defaults to guarddescent
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     /addongap 12.0 def
     /addontextfont (unset) def
     /addontextsize null def     % sentinel realtype
@@ -6458,6 +7344,8 @@ bind def
     /addontextyoffset null def  % sentinel realtype
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -6486,11 +7374,11 @@ bind def
         %
         barcode {
             dup 48 lt exch 57 gt or {
-                (bwipp.upcAupcEbadCharacter#6489) (UPC-E must contain only digits) //raiseerror exec
+                (bwipp.upcAupcEbadCharacter#7377) (UPC-E must contain only digits) //raiseerror exec
             } if
         } forall
         barcode 0 get dup 48 ne exch 49 ne and {
-            (bwipp.upcAupcEbadNumberSystem#6493) (UPC-E must have number system 0 or 1) //raiseerror exec
+            (bwipp.upcAupcEbadNumberSystem#7381) (UPC-E must have number system 0 or 1) //raiseerror exec
         } if
         1 {  % Common exit
             /upcacode barcode length 8 eq {12} {11} ifelse string def
@@ -6530,16 +7418,25 @@ bind def
     % Validate the input
     %
     barcode length 11 ne barcode length 12 ne and {
-        (bwipp.upcAbadLength#6533) (UPC-A must be 11 or 12 digits) //raiseerror exec
+        (bwipp.upcAbadLength#7421) (UPC-A must be 11 or 12 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.upcAbadCharacter#6537) (UPC-A must contain only digits) //raiseerror exec
+            (bwipp.upcAbadCharacter#7425) (UPC-A must contain only digits) //raiseerror exec
         } if
     } forall
     addon length 0 ne addon length 2 ne and addon length 5 ne and {
-        (bwipp.upcAbadAddOnLength#6541) (Add-on for UPC-A must be 2 or 5 digits) //raiseerror exec
+        (bwipp.upcAbadAddOnLength#7429) (Add-on for UPC-A must be 2 or 5 digits) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /upca ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    /descent guarddescent modunit mul 72 div def  % Guard bar descent
+    addondescent null eq { /addondescent guarddescent def } if  % Default add-on descent to guard descent
 
     %
     % Add checksum digit to barcode
@@ -6558,7 +7455,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 12 eq {
         barcode 11 get checksum 48 add ne {
-            (bwipp.upcAbadCheckDigit#6561) (Incorrect UPC check digit provided) //raiseerror exec
+            (bwipp.upcAbadCheckDigit#7458) (Incorrect UPC check digit provided) //raiseerror exec
         } if
     } if
     pad 0 barcode putinterval       % Add barcode to the start of the pad
@@ -6620,15 +7517,19 @@ bind def
     sbs 56 //upca.encs 12 get putinterval
 
     /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     includetext {
-        /bhs [4{height}repeat 10{height .075 sub}repeat height height 10{height .075 sub}repeat 4{height}repeat] def
-        /bbs [0 0 0 0 10{.075}repeat 0 0 10{.075}repeat 0 0 0 0] def
+        /guardheight height descent add def
+        /bhs [4{guardheight}repeat 10{height}repeat guardheight guardheight 10{height}repeat 4{guardheight}repeat] def
+        /bbs [4{descent neg}repeat 10{0}repeat descent neg descent neg 10{0}repeat 4{descent neg}repeat] def
     } {
         /bhs [30{height}repeat] def
         /bbs [30{0}repeat] def
         /txt [] def
     } ifelse
-    /guardrightypos 0.0 def
+    /guardrightypos -5.0 def
 
     %
     % Append the addon
@@ -6637,6 +7538,7 @@ bind def
         /addopts <<
             /includetext true
             /height height includetext { 0.15 sub } if
+            /addondescent addondescent
             /text1xoffset addontextxoffset null ne {addontextxoffset} {98.25 addongap add} ifelse
             addontextyoffset null ne {/text1yoffset addontextyoffset} if
             /text1size addontextsize null ne {addontextsize} {text1size} ifelse
@@ -6666,7 +7568,13 @@ bind def
     /borderleft 9.0
     /borderright addon () eq {9.0} {5.0} ifelse
     /bordertop 0.0
-    /borderbottom 5.0
+    /borderbottom 5.0 guarddescent modunit mul add
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     >>
 
     _render //renlinear if
@@ -6692,14 +7600,15 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Point Of Sale
-%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2026033100 94076 97033
-%%BeginData:        301 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp upce 0.0 2026042100 109389 112240
+%%BeginData:        339 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean2 dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean5 dup /uk.co.terryburton.bwipp findresource put
@@ -6728,8 +7637,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 12.0 def
     /text1xoffset -5.75 def
-    /text1yoffset -0.25 def
-    /height 1.0 def
+    /text1yoffset -5.25 def
+    /height -1.0 def
+    /guarddescent 5.0 def
+    /addondescent null def  % realtype sentinel: defaults to guarddescent
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     /addongap 12.0 def
     /addontextfont (unset) def
     /addontextsize null def     % sentinel realtype
@@ -6737,6 +7661,8 @@ bind def
     /addontextyoffset null def  % sentinel realtype
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -6765,7 +7691,7 @@ bind def
         %
         barcode {
             dup 48 lt exch 57 gt or {
-                (bwipp.upcEupcAbadCharacter#6768) (UPC-A must contain only digits) //raiseerror exec
+                (bwipp.upcEupcAbadCharacter#7694) (UPC-A must contain only digits) //raiseerror exec
             } if
         } forall
         1 {  % Common exit
@@ -6793,7 +7719,7 @@ bind def
                 upcecode 6 barcode 10 1 getinterval putinterval
                 exit
             } if
-            (bwipp.upcEupcAnotCompressible#6796) (UPC-A cannot be converted to a UPC-E) //raiseerror exec
+            (bwipp.upcEupcAnotCompressible#7722) (UPC-A cannot be converted to a UPC-E) //raiseerror exec
         } repeat
         barcode length 12 eq {
             upcecode 7 barcode 11 1 getinterval putinterval
@@ -6805,23 +7731,32 @@ bind def
     % Validate the input
     %
     barcode length 7 ne barcode length 8 ne and {
-        (bwipp.upcEbadLength#6808) (UPC-E must be 7 or 8 digits) //raiseerror exec
+        (bwipp.upcEbadLength#7734) (UPC-E must be 7 or 8 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.upcEbadCharacter#6812) (UPC-E must contain only digits) //raiseerror exec
+            (bwipp.upcEbadCharacter#7738) (UPC-E must contain only digits) //raiseerror exec
         } if
     } forall
     addon length 0 ne addon length 2 ne and addon length 5 ne and {
-        (bwipp.upcEbadAddOnLength#6816) (Add-on for UPC-E must be 2 or 5 digits) //raiseerror exec
+        (bwipp.upcEbadAddOnLength#7742) (Add-on for UPC-E must be 2 or 5 digits) //raiseerror exec
     } if
 
     %
     % Ensure 0 or 1 number systems
     %
     barcode 0 get dup 48 ne exch 49 ne and {
-        (bwipp.upcEbadNumberSystem#6823) (UPC-E must have number system 0 or 1) //raiseerror exec
+        (bwipp.upcEbadNumberSystem#7749) (UPC-E must have number system 0 or 1) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /upce ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    /descent guarddescent modunit mul 72 div def  % Guard bar descent
+    addondescent null eq { /addondescent guarddescent def } if  % Default add-on descent to guard descent
 
     %
     % Derive the equivalent UPC-A for its checksum
@@ -6867,7 +7802,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 8 eq {
         barcode 7 get checksum 48 add ne {
-            (bwipp.upcEbadCheckDigit#6870) (Incorrect UPC check digit provided) //raiseerror exec
+            (bwipp.upcEbadCheckDigit#7805) (Incorrect UPC check digit provided) //raiseerror exec
         } if
     } if
     /pad 8 string def
@@ -6934,15 +7869,19 @@ bind def
     sbs 27 //upce.encs 11 get putinterval
 
     /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     includetext {
-        /bhs [height height 12{height .075 sub}repeat height height height] def
-        /bbs [0 0 12{.075}repeat 0 0 0] def
+        /guardheight height descent add def
+        /bhs [guardheight guardheight 12{height}repeat guardheight guardheight guardheight] def
+        /bbs [descent neg descent neg 12{0}repeat descent neg descent neg descent neg] def
     } {
         /bhs [17{height}repeat] def
         /bbs [17{0}repeat] def
         /txt [] def
     } ifelse
-    /guardrightypos 0.0 def
+    /guardrightypos -5.0 def
 
     %
     % Append the addon
@@ -6951,6 +7890,7 @@ bind def
         /addopts <<
             /includetext true
             /height height includetext { 0.15 sub } if
+            /addondescent addondescent
             /text1xoffset addontextxoffset null ne {addontextxoffset} {54.25 addongap add} ifelse
             addontextyoffset null ne {/text1yoffset addontextyoffset} if
             /text1size addontextsize null ne {addontextsize} {text1size} ifelse
@@ -6980,7 +7920,13 @@ bind def
     /borderleft 9.0
     /borderright addon () eq {9.0} {5.0} ifelse
     /bordertop 0.0
-    /borderbottom 5.0
+    /borderbottom 5.0 guarddescent modunit mul add
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     >>
 
     _render //renlinear if
@@ -7006,14 +7952,15 @@ bind def
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
 % --FMLY: Point Of Sale
-%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2026033100 98365 97874
-%%BeginData:        268 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp isbn 0.0 2026042100 111327 107304
+%%BeginData:        300 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean13 dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -7028,11 +7975,25 @@ bind def
     /isbntextsize 8.0 def
     /isbntextxoffset null def  % sentinel realtype
     /isbntextyoffset null def  % sentinel realtype
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
     /addongap 12.0 def
     /legacy false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -7057,21 +8018,21 @@ bind def
     %
     barcode length 15 ne barcode length 17 ne and
     barcode length 11 ne barcode length 13 ne and and {
-        (bwipp.isbnBadLength#7060) (ISBN-13 must be 15 or 17 characters including dashes. ISBN-10 must be 11 or 13 characters including dashes) //raiseerror exec
+        (bwipp.isbnBadLength#8021) (ISBN-13 must be 15 or 17 characters including dashes. ISBN-10 must be 11 or 13 characters including dashes) //raiseerror exec
     } if
     addon length 0 ne addon length 2 ne and addon length 5 ne and {
-        (bwipp.isbnBadAddOnLength#7063) (Add-on for ISBN must be 2 or 5 digits) //raiseerror exec
+        (bwipp.isbnBadAddOnLength#8024) (Add-on for ISBN must be 2 or 5 digits) //raiseerror exec
     } if
     barcode length 15 ge {  % ISBN-13
         barcode 0 4 getinterval dup (978-) ne exch (979-) ne and {
-            (bwipp.isbn13badPrefix#7067) (ISBN-13 prefix must be 978- or 979-) //raiseerror exec
+            (bwipp.isbn13badPrefix#8028) (ISBN-13 prefix must be 978- or 979-) //raiseerror exec
         } if
         /wasdash false def /numdash 0 def /numdigit 0 def
         barcode 5 9 getinterval {
             dup
             45 eq {
                 wasdash {
-                    pop (bwipp.isbn13adjacentDashes#7074) (ISBN-13 does not permit adjacent dashes) //raiseerror exec
+                    pop (bwipp.isbn13adjacentDashes#8035) (ISBN-13 does not permit adjacent dashes) //raiseerror exec
                 } if
                 /wasdash true def
                 /numdash numdash 1 add def
@@ -7082,29 +8043,29 @@ bind def
             } if
         } forall
         numdash 2 ne numdigit 7 ne or {
-            (bwipp.isbn13numDashesDigits#7085) (Incorrect number of dashes and digits for ISBN-13) //raiseerror exec
+            (bwipp.isbn13numDashesDigits#8046) (Incorrect number of dashes and digits for ISBN-13) //raiseerror exec
         } if
         barcode 14 get dup 48 lt exch 57 gt or {
-            (bwipp.isbn13character15#7088) (ISBN-13 character 15 must be a digit) //raiseerror exec
+            (bwipp.isbn13character15#8049) (ISBN-13 character 15 must be a digit) //raiseerror exec
         } if
         barcode length 17 eq {
             barcode 15 1 getinterval (-) ne {
-                (bwipp.isbn13character16#7092) (ISBN-13 penultimate character must be a dash) //raiseerror exec
+                (bwipp.isbn13character16#8053) (ISBN-13 penultimate character must be a dash) //raiseerror exec
             } if
             barcode 16 get dup 48 lt exch 57 gt or {
-                (bwipp.isbn13character17#7095) (ISBN-13 final character must be a digit) //raiseerror exec
+                (bwipp.isbn13character17#8056) (ISBN-13 final character must be a digit) //raiseerror exec
             } if
         } if
     } {  % ISBN-10
         barcode 0 get dup 48 lt exch 57 gt or {
-            (bwipp.isbn10FirstDigit#7100) (ISBN-10 first character must be a digit) //raiseerror exec
+            (bwipp.isbn10FirstDigit#8061) (ISBN-10 first character must be a digit) //raiseerror exec
         } if
         /wasdash false def /numdash 0 def /numdigit 0 def
         barcode 1 9 getinterval {
             dup
             45 eq {
                 wasdash {
-                    pop (bwipp.isbn10adjacentDashes#7107) (ISBN-10 does not permit adjacent dashes) //raiseerror exec
+                    pop (bwipp.isbn10adjacentDashes#8068) (ISBN-10 does not permit adjacent dashes) //raiseerror exec
                 } if
                 /wasdash true def
                 /numdash numdash 1 add def
@@ -7115,17 +8076,17 @@ bind def
             } if
         } forall
         numdash 2 ne numdigit 7 ne or {
-            (bwipp.isbn10numDashesDigits#7118) (Incorrect number of dashes and digits for ISBN-10) //raiseerror exec
+            (bwipp.isbn10numDashesDigits#8079) (Incorrect number of dashes and digits for ISBN-10) //raiseerror exec
         } if
         barcode 10 get dup 48 lt exch 57 gt or {
-            (bwipp.isbn10character11#7121) (ISBN-10 character 11 must be a digit) //raiseerror exec
+            (bwipp.isbn10character11#8082) (ISBN-10 character 11 must be a digit) //raiseerror exec
         } if
         barcode length 13 eq {
             barcode 11 1 getinterval (-) ne {
-                (bwipp.isbn10character12#7125) (ISBN-10 penultimate character must be a dash) //raiseerror exec
+                (bwipp.isbn10character12#8086) (ISBN-10 penultimate character must be a dash) //raiseerror exec
             } if
             barcode 12 get dup dup 48 lt exch 57 gt or exch 88 ne and {
-                (bwipp.isbn10character13#7128) (ISBN-10 final character must be a digit or X) //raiseerror exec
+                (bwipp.isbn10character13#8089) (ISBN-10 final character must be a digit or X) //raiseerror exec
             } if
         } if
     } ifelse
@@ -7155,7 +8116,7 @@ bind def
         /isbn isbn 0 9 getinterval def
         isbntxt length 13 eq {
             isbntxt 12 get checksum ne {
-                (bwipp.isbn10badCheckDigit#7158) (Incorrect ISBN-10 check digit provided) //raiseerror exec
+                (bwipp.isbn10badCheckDigit#8119) (Incorrect ISBN-10 check digit provided) //raiseerror exec
             } if
         } if
     } if
@@ -7194,7 +8155,7 @@ bind def
         /isbn isbn 0 12 getinterval def
         isbntxt length 17 eq {
             isbntxt 16 get checksum ne {
-                (bwipp.isbn13badCheckDigit#7197) (Incorrect ISBN-13 check digit provided) //raiseerror exec
+                (bwipp.isbn13badCheckDigit#8158) (Incorrect ISBN-13 check digit provided) //raiseerror exec
             } if
         } if
 
@@ -7233,9 +8194,26 @@ bind def
     } if
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /isbn ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with ean13
     %
     options (addongap) addongap put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //ean13 exec /args exch def
@@ -7248,7 +8226,7 @@ bind def
             /isbntextxoffset isbn length 9 eq {-1.0} {-12.0} ifelse def
         } if
         isbntextyoffset null eq {
-            /isbntextyoffset height 72 mul 3 add def
+            /isbntextyoffset args (bhs) get 2 get 72 mul 3 add def
         } if
         args (txt) known {
             /txt args (txt) get def
@@ -7287,14 +8265,15 @@ bind def
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
 % --FMLY: Point Of Sale
-%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2026033100 95145 94651
-%%BeginData:        247 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ismn 0.0 2026042100 107811 103873
+%%BeginData:        279 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean13 dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -7309,11 +8288,25 @@ bind def
     /ismntextsize 8.0 def
     /ismntextxoffset null def  % sentinel realtype
     /ismntextyoffset null def  % sentinel realtype
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
     /addongap 12.0 def
     /legacy false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -7338,21 +8331,21 @@ bind def
     %
     barcode length 15 ne barcode length 17 ne and
     barcode length 11 ne barcode length 13 ne and and {
-        (bwipp.ismnBadLength#7341) (ISMN-13 must be 15 or 17 characters including dashes. ISMN-10 must be 11 or 13 characters including dashes) //raiseerror exec
+        (bwipp.ismnBadLength#8334) (ISMN-13 must be 15 or 17 characters including dashes. ISMN-10 must be 11 or 13 characters including dashes) //raiseerror exec
     } if
     addon length 0 ne addon length 2 ne and addon length 5 ne and {
-        (bwipp.ismnBadAddOnLength#7344) (Add-on for ISMN must be 2 or 5 digits) //raiseerror exec
+        (bwipp.ismnBadAddOnLength#8337) (Add-on for ISMN must be 2 or 5 digits) //raiseerror exec
     } if
     barcode length 15 ge {  % ISMN-13
         barcode 0 4 getinterval (979-) ne {
-            (bwipp.ismn13badPrefix#7348) (ISMN-13 prefix must be 979-) //raiseerror exec
+            (bwipp.ismn13badPrefix#8341) (ISMN-13 prefix must be 979-) //raiseerror exec
         } if
         /wasdash false def /numdash 0 def /numdigit 0 def
         barcode 5 9 getinterval {
             dup
             45 eq {
                 wasdash {
-                    pop (bwipp.ismn13adjacentDashes#7355) (ISMN-13 does not permit adjacent dashes) //raiseerror exec
+                    pop (bwipp.ismn13adjacentDashes#8348) (ISMN-13 does not permit adjacent dashes) //raiseerror exec
                 } if
                 /wasdash true def
                 /numdash numdash 1 add def
@@ -7363,32 +8356,32 @@ bind def
             } if
         } forall
         numdash 2 ne numdigit 7 ne or {
-            (bwipp.ismn13numDashesDigits#7366) (Incorrect number of dashes and digits for ISMN-13) //raiseerror exec
+            (bwipp.ismn13numDashesDigits#8359) (Incorrect number of dashes and digits for ISMN-13) //raiseerror exec
         } if
         barcode 14 get dup 48 lt exch 57 gt or {
-            (bwipp.ismn13character15#7369) (ISMN-13 character 15 must be a digit) //raiseerror exec
+            (bwipp.ismn13character15#8362) (ISMN-13 character 15 must be a digit) //raiseerror exec
         } if
         barcode length 17 eq {
             barcode 15 1 getinterval (-) ne {
-                (bwipp.ismn13character16#7373) (ISMN-13 penultimate character must be a dash) //raiseerror exec
+                (bwipp.ismn13character16#8366) (ISMN-13 penultimate character must be a dash) //raiseerror exec
             } if
             barcode 16 get dup 48 lt exch 57 gt or {
-                (bwipp.ismn13character17#7376) (ISMN-13 final character must be a digit) //raiseerror exec
+                (bwipp.ismn13character17#8369) (ISMN-13 final character must be a digit) //raiseerror exec
             } if
         } if
     } {  % ISMN-10
         barcode 0 2 getinterval (M-) ne {
-            (bwipp.ismn10badPrefix#7381) (ISMN-10 prefix must be M-) //raiseerror exec
+            (bwipp.ismn10badPrefix#8374) (ISMN-10 prefix must be M-) //raiseerror exec
         } if
         barcode 2 get dup 48 lt exch 57 gt or {
-            (bwipp.ismn10character3#7384) (ISMN-10 character 3 must be a digit) //raiseerror exec
+            (bwipp.ismn10character3#8377) (ISMN-10 character 3 must be a digit) //raiseerror exec
         } if
         /wasdash false def /numdash 0 def /numdigit 0 def
         barcode 3 7 getinterval {
             dup
             45 eq {
                 wasdash {
-                    pop (bwipp.ismn10adjacentDashes#7391) (ISMN-10 does not permit adjacent dashes) //raiseerror exec
+                    pop (bwipp.ismn10adjacentDashes#8384) (ISMN-10 does not permit adjacent dashes) //raiseerror exec
                 } if
                 /wasdash true def
                 /numdash numdash 1 add def
@@ -7399,17 +8392,17 @@ bind def
             } if
         } forall
         numdash 1 ne numdigit 6 ne or {
-            (bwipp.ismn10numDashesDigits#7402) (Incorrect number of dashes and digits for ISMN-10) //raiseerror exec
+            (bwipp.ismn10numDashesDigits#8395) (Incorrect number of dashes and digits for ISMN-10) //raiseerror exec
         } if
         barcode 10 get dup 48 lt exch 57 gt or {
-            (bwipp.ismn10character11#7405) (ISMN-10 character 11 must be a digit) //raiseerror exec
+            (bwipp.ismn10character11#8398) (ISMN-10 character 11 must be a digit) //raiseerror exec
         } if
         barcode length 13 eq {
             barcode 11 1 getinterval (-) ne {
-                (bwipp.ismn10character12#7409) (ISMN-10 penultimate character must be a dash) //raiseerror exec
+                (bwipp.ismn10character12#8402) (ISMN-10 penultimate character must be a dash) //raiseerror exec
             } if
             barcode 12 get dup dup 48 lt exch 57 gt or exch 88 ne and {
-                (bwipp.ismn10character13#7412) (ISMN-10 final character must be a digit or X) //raiseerror exec
+                (bwipp.ismn10character13#8405) (ISMN-10 final character must be a digit or X) //raiseerror exec
             } if
         } if
     } ifelse
@@ -7457,7 +8450,7 @@ bind def
     %
     barcode length 13 eq barcode length 17 eq or {
         barcode dup length 1 sub get checksum ne {
-            (bwipp.ismnBadCheckDigit#7460) (Incorrect ISMN check digit provided) //raiseerror exec
+            (bwipp.ismnBadCheckDigit#8453) (Incorrect ISMN check digit provided) //raiseerror exec
         } if
     } if
 
@@ -7493,9 +8486,26 @@ bind def
     } if
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /ismn ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with ean13
     %
     options (addongap) addongap put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //ean13 exec /args exch def
@@ -7508,7 +8518,7 @@ bind def
             /ismntextxoffset ismntxt length 18 eq {-1.0} {-12.0} ifelse def
         } if
         ismntextyoffset null eq {
-            /ismntextyoffset height 72 mul 3 add def
+            /ismntextyoffset args (bhs) get 2 get 72 mul 3 add def
         } if
         args (txt) known {
             /txt args (txt) get def
@@ -7547,14 +8557,15 @@ bind def
 % --EXOP: includetext guardwhitespace
 % --RNDR: renlinear
 % --FMLY: Point Of Sale
-%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2026033100 82825 89247
-%%BeginData:        190 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp issn 0.0 2026042100 95195 94741
+%%BeginData:        222 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean13 dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -7569,11 +8580,25 @@ bind def
     /issntextsize 8.0 def
     /issntextxoffset null def  % sentinel realtype
     /issntextyoffset null def  % sentinel realtype
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
     /addongap 12.0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
-    /issntxt exch def
+%psc     /global_encoder_defaults //render exec
+
+    /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
@@ -7583,8 +8608,8 @@ bind def
     %
     % Split off the ISSN
     %
-    issntxt ( ) search {
-        /issntxt exch def
+    barcode ( ) search {
+        /barcode exch def
         pop
         /seqvar exch def
     } {
@@ -7607,47 +8632,47 @@ bind def
     %
     % Validate the input
     %
-    issntxt length 8 ne issntxt length 9 ne and {
-        (bwipp.issnBadLength#7611) (ISSN must be 8 or 9 characters including dash, in the format XXXX-XXXX) //raiseerror exec
+    barcode length 8 ne barcode length 9 ne and {
+        (bwipp.issnBadLength#8636) (ISSN must be 8 or 9 characters including dash, in the format XXXX-XXXX) //raiseerror exec
     } if
-    issntxt 0 4 getinterval {
+    barcode 0 4 getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.issnFirstThroughFourthNotNumeric#7615) (ISSN first four characters must be numeral characters) //raiseerror exec
+            (bwipp.issnFirstThroughFourthNotNumeric#8640) (ISSN first four characters must be numeral characters) //raiseerror exec
         } if
     } forall
-    issntxt 4 1 getinterval (-) ne {
-        (bwipp.issnNeedsDash#7619) (ISSN fifth character must be a dash) //raiseerror exec
+    barcode 4 1 getinterval (-) ne {
+        (bwipp.issnNeedsDash#8644) (ISSN fifth character must be a dash) //raiseerror exec
     } if
-    issntxt 5 3 getinterval {
+    barcode 5 3 getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.issnSixthThroughEighthNotNumeric#7623) (ISSN sixth through eighth characters must be numerals) //raiseerror exec
+            (bwipp.issnSixthThroughEighthNotNumeric#8648) (ISSN sixth through eighth characters must be numerals) //raiseerror exec
         } if
     } forall
-    issntxt length 9 eq {
-        issntxt 8 get dup dup 48 lt exch 57 gt or exch 88 ne and {  % Digits or X
-            (bwipp.issnNinthCharacterBadFormat#7628) (ISSN ninth character must be a number or the character X) //raiseerror exec
+    barcode length 9 eq {
+        barcode 8 get dup dup 48 lt exch 57 gt or exch 88 ne and {  % Digits or X
+            (bwipp.issnNinthCharacterBadFormat#8653) (ISSN ninth character must be a number or the character X) //raiseerror exec
         } if
     } if
     seqvar length 2 ne {
-        (bwipp.issnBadSequenceVariantLength#7632) (Sequence variant for ISSN must be 2 digits) //raiseerror exec
+        (bwipp.issnBadSequenceVariantLength#8657) (Sequence variant for ISSN must be 2 digits) //raiseerror exec
     } if
     seqvar {
         dup 48 lt exch 57 gt or {
-           (bwipp.issnSequenceVariantBadCharacter#7636) (Sequence variant for ISSN must contain only digits) //raiseerror exec
+           (bwipp.issnSequenceVariantBadCharacter#8661) (Sequence variant for ISSN must contain only digits) //raiseerror exec
         } if
     } forall
     addon length 0 ne addon length 2 ne and addon length 5 ne and {
-        (bwipp.issnBadAddOnLength#7640) (Add-on for ISSN must be 2 or 5 digits) //raiseerror exec
+        (bwipp.issnBadAddOnLength#8665) (Add-on for ISSN must be 2 or 5 digits) //raiseerror exec
     } if
 
     %
-    % Read the digits from issntxt and calculate checksums
+    % Read the digits from barcode and calculate checksums
     %
     /issn 8 string def
     /checksum 0 def
     /i 0 def /n 0 def
     { % loop
-        /issnchar issntxt i get 48 sub def
+        /issnchar barcode i get 48 sub def
         issnchar -3 ne {           % Ignore dashes
             issn n issnchar 48 add put
             n 7 lt {
@@ -7656,22 +8681,22 @@ bind def
             /n n 1 add def
         } if
         /i i 1 add def
-        i issntxt length eq {exit} if
+        i barcode length eq {exit} if
     } loop
     /checksum 11 checksum 11 mod sub 11 mod def
     /checksum checksum 48 add dup 58 eq {pop 88} if def
-    issntxt length 9 eq {
-        issntxt 8 get checksum ne {
-            (bwipp.issnBadCheckDigit#7665) (Incorrect ISSN check digit provided) //raiseerror exec
+    barcode length 9 eq {
+        barcode 8 get checksum ne {
+            (bwipp.issnBadCheckDigit#8690) (Incorrect ISSN check digit provided) //raiseerror exec
         } if
     } if
 
     %
-    % Add the ISSN header and checksum to the issntxt
+    % Build the ISSN display text
     %
     /pad 14 string def
     pad 0 (ISSN ) putinterval
-    pad 5 issntxt putinterval  % Add issntxt to the pad
+    pad 5 barcode putinterval  % Add barcode to the pad
     pad 13 checksum put
     /issntxt pad def
 
@@ -7700,9 +8725,26 @@ bind def
     } if
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /issn ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with ean13
     %
     options (addongap) addongap put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //ean13 exec /args exch def
@@ -7712,7 +8754,7 @@ bind def
     %
     includetext {
         issntextxoffset null eq {/issntextxoffset 10.0 def} if
-        issntextyoffset null eq {/issntextyoffset height 72 mul 3 add def} if
+        issntextyoffset null eq {/issntextyoffset args (bhs) get 2 get 72 mul 3 add def} if
         args (txt) known {
             /txt args (txt) get def
             /newtxt txt length 1 add array def
@@ -7750,7 +8792,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Specialist
-%%BeginResource: uk.co.terryburton.bwipp mands 0.0 2026033100 74046 77531
+%%BeginResource: uk.co.terryburton.bwipp mands 0.0 2026042100 78470 78259
 %%BeginData:         89 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -7783,7 +8825,7 @@ bind def
     % Validate the input
     %
     barlen 7 ne barlen 8 ne and {
-        (bwipp.MandSbadLength#7786) (M&S barcode must be 7 or 8 characters) //raiseerror exec
+        (bwipp.MandSbadLength#8828) (M&S barcode must be 7 or 8 characters) //raiseerror exec
     } if
 
     barlen 7 eq {
@@ -7852,15 +8894,16 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: One-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2026033100 214049 229503
-%%BeginData:        723 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code128 0.0 2026042100 237587 236062
+%%BeginData:        754 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 64 dict
+%psc 65 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /code128 { /bwipjs_code128 (start-global) def  % begin
 
@@ -8059,7 +9102,8 @@ bind def
     /text1size 10.0 def
     /text1xoffset 0.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
     /raw false def
     /newencoder false def
     /parse false def
@@ -8067,12 +9111,31 @@ bind def
     /suppressc false def          % Suppress code set C
     /unlatchextbeforec false def  % Suppress extended ASCII with code set C
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.code128inputTooLong#8074) (The input data is too long) //raiseerror exec
+        (bwipp.code128inputTooLong#9131) (The input data is too long) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /code128 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
@@ -8112,14 +9175,14 @@ bind def
             } forall { pop exit } if
             cvi /cw exch def
             cw 106 gt {
-                (bwipp.code128BadRawCodeword#8115) (Raw codewords must be 0 to 106) //raiseerror exec
+                (bwipp.code128BadRawCodeword#9178) (Raw codewords must be 0 to 106) //raiseerror exec
             } if
             cws j cw put
             /i i 4 add def
             /j j 1 add def
         } loop
         i barcode length ne {
-            (bwipp.code128BadRawFormat#8122) (Raw codewords must be formatted as ^NNN) //raiseerror exec
+            (bwipp.code128BadRawFormat#9185) (Raw codewords must be formatted as ^NNN) //raiseerror exec
         } if
         /cws cws 0 j getinterval def
         /text () def
@@ -8543,7 +9606,7 @@ bind def
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#8546) cws //raiseerror exec } if
+    { (bwipp.debugcws#9609) cws //raiseerror exec } if
 
 
     %
@@ -8555,13 +9618,23 @@ bind def
         sbs i 6 mul //code128.encs cws i get get putinterval
     } for
 
+    /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
-    /sbs [sbs {48 sub} forall]
+    /sbs sbs
     /bhs [sbs length 1 add 2 idiv {height} repeat]
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     /txt [ [text text1xoffset text1yoffset text1font text1size] ]
     /text1xalign (center)
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -8588,8 +9661,8 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2026033100 82873 79360
-%%BeginData:        114 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1-128 0.0 2026042100 84069 84083
+%%BeginData:        147 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
@@ -8598,6 +9671,7 @@ bind def
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /code128 dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -8612,18 +9686,32 @@ bind def
     /text1size 10.0 def
     /text1xoffset 0.0 def
     /textyoffset -8.0 def
-    /height 0.5 def
+    /height -1.0 def
+    /width 0 def
     /linkagea false def
     /linkagec false def
     /parse false def
     /dontlint false def
     /lintreqs false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.gs1128inputTooLong#8626) (The input data is too long) //raiseerror exec
+        (bwipp.gs1128inputTooLong#9714) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -8632,7 +9720,7 @@ bind def
 %psc     def
 
     linkagea linkagec and {
-        (bwipp.gs1128badLinkage#8635) (linkagea and linkagec cannot be used together) //raiseerror exec
+        (bwipp.gs1128badLinkage#9723) (linkagea and linkagec cannot be used together) //raiseerror exec
     } if
 
     /text barcode def
@@ -8678,11 +9766,29 @@ bind def
     /barcode barcode 0 j getinterval def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1-128 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+    height -1.0 eq { propspec hnom -1 ne and not { /height 0.5 def } if } if
+
+    %
     % Get the result of encoding with code128
     %
     options (parse) undef
     options (height) height put
     options (parsefnc) true put
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //code128 exec /args exch def
@@ -8715,7 +9821,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2026033100 78812 78356
+%%BeginResource: uk.co.terryburton.bwipp ean14 0.0 2026042100 78748 78396
 %%BeginData:        112 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -8737,7 +9843,7 @@ bind def
     /text1size 10.0 def
     /text1xoffset 0.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
 
     //processoptions exec /options exch def
     /barcode exch def
@@ -8760,14 +9866,14 @@ bind def
     % Validate the input
     %
     barcode length 17 ne barcode length 18 ne and {
-        (bwipp.ean14badLength#8763) (EAN-14 must be 13 or 14 digits) //raiseerror exec
+        (bwipp.ean14badLength#9869) (EAN-14 must be 13 or 14 digits) //raiseerror exec
     } if
     barcode 0 4 getinterval (\(01\)) ne {
-        (bwipp.ean14badAI#8766) (EAN-14 must begin with (01) application identifier) //raiseerror exec
+        (bwipp.ean14badAI#9872) (EAN-14 must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.ean14badCharacter#8770) (EAN-14 must contain only digits) //raiseerror exec
+            (bwipp.ean14badCharacter#9876) (EAN-14 must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -8782,7 +9888,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 18 eq {
         barcode 17 get checksum 48 add ne {
-            (bwipp.ean14badCheckDigit#8785) (Incorrect EAN-14 check digit provided) //raiseerror exec
+            (bwipp.ean14badCheckDigit#9891) (Incorrect EAN-14 check digit provided) //raiseerror exec
         } if
     } {
         18 string
@@ -8840,7 +9946,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2026033100 78824 78363
+%%BeginResource: uk.co.terryburton.bwipp sscc18 0.0 2026042100 78760 78403
 %%BeginData:        112 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -8862,7 +9968,7 @@ bind def
     /text1size 10.0 def
     /text1xoffset 0.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
 
     //processoptions exec /options exch def
     /barcode exch def
@@ -8885,14 +9991,14 @@ bind def
     % Validate the input
     %
     barcode length 21 ne barcode length 22 ne and {
-        (bwipp.sscc18badLength#8888) (SSCC-18 must be 17 or 18 digits) //raiseerror exec
+        (bwipp.sscc18badLength#9994) (SSCC-18 must be 17 or 18 digits) //raiseerror exec
     } if
     barcode 0 4 getinterval (\(00\)) ne {
-        (bwipp.sscc18badAI#8891) (SSCC-18 must begin with (00) application identifier) //raiseerror exec
+        (bwipp.sscc18badAI#9997) (SSCC-18 must begin with (00) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.sscc18badCharacter#8895) (SSCC-18 must contain only digits) //raiseerror exec
+            (bwipp.sscc18badCharacter#10001) (SSCC-18 must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -8907,7 +10013,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 22 eq {
         barcode 21 get checksum 48 add ne {
-            (bwipp.sscc18badCheckDigit#8910) (Incorrect SSCC-18 check digit provided) //raiseerror exec
+            (bwipp.sscc18badCheckDigit#10016) (Incorrect SSCC-18 check digit provided) //raiseerror exec
         } if
     } {
         22 string
@@ -8965,14 +10071,15 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: One-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2026033100 72142 75265
-%%BeginData:        170 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code39 0.0 2026042100 80440 83608
+%%BeginData:        201 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /code39 { /bwipjs_code39 (start-global) def  % begin
 
@@ -9031,9 +10138,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -9044,11 +10165,11 @@ bind def
 %psc     //code39.latevars /init get exec
 
     barcode () eq {
-        (bwipp.code39emptyData#9047) (The data must not be empty) //raiseerror exec
+        (bwipp.code39emptyData#10168) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.code39inputTooLong#9051) (The input data is too long) //raiseerror exec
+        (bwipp.code39inputTooLong#10172) (The input data is too long) //raiseerror exec
     } if
 
     %
@@ -9056,9 +10177,15 @@ bind def
     %
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.code39badCharacter#9059) (Code 39 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.code39badCharacter#10180) (Code 39 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /code39 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /barlen barcode length validatecheck {1 sub} if def
 
@@ -9070,7 +10197,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //code39.barchars checksum get ne {
-            (bwipp.code39badCheckDigit#9073) (Incorrect Code 39 check digit provided) //raiseerror exec
+            (bwipp.code39badCheckDigit#10200) (Incorrect Code 39 check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
         /includecheck true def
@@ -9113,15 +10240,25 @@ bind def
     } if
     hidestars not { text tpos (*) putinterval } if
 
+    /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
-    /sbs [sbs {48 sub} forall]
+    /sbs sbs
     /bhs [sbs length 1 add 2 idiv {height} repeat]
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     includetext {
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -9148,7 +10285,7 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: One-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2026033100 74030 76867
+%%BeginResource: uk.co.terryburton.bwipp code39ext 0.0 2026042100 77386 77019
 %%BeginData:        112 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -9187,7 +10324,7 @@ bind def
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.code39extinputTooLong#9190) (The input data is too long) //raiseerror exec
+        (bwipp.code39extinputTooLong#10327) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -9214,7 +10351,7 @@ bind def
     %
     barcode {
         128 ge {
-            (bwipp.code39extBadCharacter#9217) (Code 39 Extended must contain only ASCII characters) //raiseerror exec
+            (bwipp.code39extBadCharacter#10354) (Code 39 Extended must contain only ASCII characters) //raiseerror exec
         } if
     } forall
 
@@ -9273,7 +10410,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2026033100 69352 69272
+%%BeginResource: uk.co.terryburton.bwipp code32 0.0 2026042100 73744 73664
 %%BeginData:        107 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -9295,7 +10432,7 @@ bind def
     /text1size 10.0 def
     /textyoffset -8.0 def
     /text1xoffset 0.0 def
-    /height 1.0 def
+    /height -1.0 def
 
     //processoptions exec /options exch def
     /barcode exch def
@@ -9309,11 +10446,11 @@ bind def
     % Validate the input
     %
     barcode length 8 ne barcode length 9 ne and {
-        (bwipp.code32badLength#9312) (Italian Pharmacode must be 8 or 9 digits) //raiseerror exec
+        (bwipp.code32badLength#10449) (Italian Pharmacode must be 8 or 9 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.code32badCharacter#9316) (Italian Pharmacode must contain only digits) //raiseerror exec
+            (bwipp.code32badCharacter#10453) (Italian Pharmacode must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -9329,7 +10466,7 @@ bind def
     /checksum checksum 10 mod def
     barcode length 9 eq {
         barcode 8 get checksum 48 add ne {
-            (bwipp.code32badCheckDigit#9332) (Incorrect Italian Pharmacode check digit provided) //raiseerror exec
+            (bwipp.code32badCheckDigit#10469) (Incorrect Italian Pharmacode check digit provided) //raiseerror exec
         } if
     } if
     10 string
@@ -9393,7 +10530,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2026033100 69202 69076
+%%BeginResource: uk.co.terryburton.bwipp pzn 0.0 2026042100 74026 73988
 %%BeginData:        104 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -9415,7 +10552,7 @@ bind def
     /text1size 10.0 def
     /textyoffset -8.0 def
     /text1xoffset 0.0 def
-    /height 1.0 def
+    /height -1.0 def
     /pzn8 false def
 
     //processoptions exec /options exch def
@@ -9431,16 +10568,16 @@ bind def
     %
     pzn8 {
         barcode length 7 ne barcode length 8 ne and {
-            (bwipp.pzn8badLength#9434) (PZN8 must be 7 or 8 digits) //raiseerror exec
+            (bwipp.pzn8badLength#10571) (PZN8 must be 7 or 8 digits) //raiseerror exec
         } if
     } {
         barcode length 6 ne barcode length 7 ne and {
-            (bwipp.pzn7badLength#9438) (PZN7 must be 6 or 7 digits) //raiseerror exec
+            (bwipp.pzn7badLength#10575) (PZN7 must be 6 or 7 digits) //raiseerror exec
         } if
     } ifelse
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.pznBadCharacter#9443) (PZN must contain only digits) //raiseerror exec
+            (bwipp.pznBadCharacter#10580) (PZN must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -9456,11 +10593,11 @@ bind def
     } for
     /checksum checksum 11 mod def
     checksum 10 eq {
-        (bwipp.pznBadInputSequence#9459) (Incorrect PZN input sequence provided) //raiseerror exec
+        (bwipp.pznBadInputSequence#10596) (Incorrect PZN input sequence provided) //raiseerror exec
     } if
     barcode length msglen 1 sub eq {
         barcode msglen 2 sub get checksum 48 add ne {
-            (bwipp.pznBadCheckDigit#9463) (Incorrect PZN check digit provided) //raiseerror exec
+            (bwipp.pznBadCheckDigit#10600) (Incorrect PZN check digit provided) //raiseerror exec
         } if
     } if
     msglen string
@@ -9510,15 +10647,16 @@ bind def
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
 % --FMLY: One-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2026033100 73827 76893
-%%BeginData:        172 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code93 0.0 2026042100 89177 82002
+%%BeginData:        203 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /code93 { /bwipjs_code93 (start-global) def  % begin
 
@@ -9581,15 +10719,29 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
     /parse false def
     /parsefnc false def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.code93inputTooLong#9592) (The input data is too long) //raiseerror exec
+        (bwipp.code93inputTooLong#10744) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -9618,9 +10770,15 @@ bind def
     %
     msg {
         charvals exch known not {
-            (bwipp.code93BadCharacter#9621) (Code 93 must only contain digits, capital letters, spaces, the symbols -.$/+ and shift non-data characters) //raiseerror exec
+            (bwipp.code93BadCharacter#10773) (Code 93 must only contain digits, capital letters, spaces, the symbols -.$/+ and shift non-data characters) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /code93 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     includecheck {
         /sbs msglen 6 mul 25 add string def
@@ -9660,15 +10818,25 @@ bind def
         sbs msglen 6 mul 6 add //code93.encs 48 get putinterval
     } ifelse
 
+    /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
-    /sbs [sbs {48 sub} forall]
+    /sbs sbs
     /bhs [sbs length 1 add 2 idiv {height} repeat]
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     includetext {
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -9695,7 +10863,7 @@ bind def
 % --EXOP: includetext includecheck
 % --RNDR: renlinear
 % --FMLY: One-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2026033100 74564 77483
+%%BeginResource: uk.co.terryburton.bwipp code93ext 0.0 2026042100 78000 77627
 %%BeginData:        115 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -9740,7 +10908,7 @@ bind def
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.code93extinputTooLong#9743) (The input data is too long) //raiseerror exec
+        (bwipp.code93extinputTooLong#10911) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -9768,7 +10936,7 @@ bind def
         /i exch def
         barcode i get
         dup 127 gt {
-            pop (bwipp.code93extbadCharacter#9771) (Code 93 Extended only support ASCII characters with values 0 to 127) //raiseerror exec
+            pop (bwipp.code93extbadCharacter#10939) (Code 93 Extended only support ASCII characters with values 0 to 127) //raiseerror exec
         } if
         //code93ext.extencs exch get /extchar exch def
         /extlen extchar length def
@@ -9823,14 +10991,15 @@ bind def
 % --EXOP: height=0.5 includecheck includetext includecheckintext
 % --RNDR: renlinear
 % --FMLY: One-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2026033100 67433 70608
-%%BeginData:        160 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp interleaved2of5 0.0 2026042100 75616 78829
+%%BeginData:        191 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /interleaved2of5 { /bwipjs_interleaved2of5 (start-global) def  % begin
 
@@ -9854,13 +11023,27 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.interleaved2of5inputTooLong#9863) (The input data is too long) //raiseerror exec
+        (bwipp.interleaved2of5inputTooLong#11046) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -9873,9 +11056,15 @@ bind def
     %
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.interleaved2of5badCharacter#9876) (Interleaved 2 of 5 must contain only digits) //raiseerror exec
+            (bwipp.interleaved2of5badCharacter#11059) (Interleaved 2 of 5 must contain only digits) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /interleaved2of5 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /barlen barcode length def      % Length of the code
 
@@ -9959,9 +11148,13 @@ bind def
 
     /text barcode 0 includecheck includecheckintext not and { barlen 1 sub } { barlen } ifelse getinterval def
 
+    /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
-    /sbs [sbs {48 sub} forall]
+    /sbs sbs
     /bhs [sbs length 1 add 2 idiv {height} repeat]
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     includetext {
@@ -9970,6 +11163,12 @@ bind def
     } if
     /barratio 2.0
     /spaceratio 2.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -9996,14 +11195,15 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2026033100 71743 71555
-%%BeginData:        115 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp itf14 0.0 2026042100 79757 79678
+%%BeginData:        148 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /interleaved2of5 dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -10019,7 +11219,19 @@ bind def
     /text1size 10.0 def
     /text1xoffset 0.0 def
     /text1yoffset -3.5 def
-    /height 0.5 def
+    /height -1.0 def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
     /showborder true def
     /borderwidth 4.0 def
     /borderleft 10.0 def
@@ -10028,6 +11240,8 @@ bind def
     /borderbottom -0.55 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -10048,11 +11262,11 @@ bind def
     % Validate the input
     %
     barcode length 13 ne barcode length 14 ne and {
-        (bwipp.itf14badLength#10051) (ITF-14 must be 13 or 14 digits) //raiseerror exec
+        (bwipp.itf14badLength#11265) (ITF-14 must be 13 or 14 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.itf14badCharacter#10055) (ITF-14 must contain only digits) //raiseerror exec
+            (bwipp.itf14badCharacter#11269) (ITF-14 must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -10067,7 +11281,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 14 eq {
         barcode 13 get checksum 48 add ne {
-            (bwipp.itf14badCheckDigit#10070) (Incorrect ITF-14 check digit provided) //raiseerror exec
+            (bwipp.itf14badCheckDigit#11284) (Incorrect ITF-14 check digit provided) //raiseerror exec
         } if
     } {
         14 string
@@ -10082,6 +11296,13 @@ bind def
     } ifelse
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /itf14 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+    height -1.0 eq { propspec hnom -1 ne and not { /height 0.5 def } if } if
+
+    %
     % Get the result of encoding with interleaved2of5
     %
     options (showborder) showborder put
@@ -10092,6 +11313,17 @@ bind def
     options (borderbottom) borderbottom put
     options (height) height put
     options (text1yoffset) text1yoffset put
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //interleaved2of5 exec /args exch def
@@ -10124,7 +11356,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2026033100 68376 68284
+%%BeginResource: uk.co.terryburton.bwipp identcode 0.0 2026042100 72816 72724
 %%BeginData:         96 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -10146,7 +11378,7 @@ bind def
     /text1size 10.0 def
     /text1xoffset 0.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
 
     //processoptions exec /options exch def
     /barcode exch def
@@ -10160,11 +11392,11 @@ bind def
     % Validate the input
     %
     barcode length 11 ne barcode length 12 ne and {
-        (bwipp.identcodeBadLength#10163) (Deutsche Post Identcode must be 11 or 12 digits) //raiseerror exec
+        (bwipp.identcodeBadLength#11395) (Deutsche Post Identcode must be 11 or 12 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.identcodeBadCharacter#10167) (Deutsche Post Identcode must contain only digits) //raiseerror exec
+            (bwipp.identcodeBadCharacter#11399) (Deutsche Post Identcode must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -10179,7 +11411,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 12 eq {
         barcode 11 get checksum 48 add ne {
-            (bwipp.identcodeBadCheckDigit#10182) (Incorrect Deutsche Post Identcode check digit provided) //raiseerror exec
+            (bwipp.identcodeBadCheckDigit#11414) (Incorrect Deutsche Post Identcode check digit provided) //raiseerror exec
         } if
     } if
     12 string
@@ -10233,7 +11465,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2026033100 68368 68280
+%%BeginResource: uk.co.terryburton.bwipp leitcode 0.0 2026042100 72808 72720
 %%BeginData:         96 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -10255,7 +11487,7 @@ bind def
     /text1size 10.0 def
     /text1xoffset 0.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
 
     //processoptions exec /options exch def
     /barcode exch def
@@ -10269,11 +11501,11 @@ bind def
     % Validate the input
     %
     barcode length 13 ne barcode length 14 ne and {
-        (bwipp.leitcodeBadLength#10272) (Deutsche Post Leitcode must be 13 or 14 digits) //raiseerror exec
+        (bwipp.leitcodeBadLength#11504) (Deutsche Post Leitcode must be 13 or 14 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.leitcodeBadCharacter#10276) (Deutsche Post Leitcode must contain only digits) //raiseerror exec
+            (bwipp.leitcodeBadCharacter#11508) (Deutsche Post Leitcode must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -10288,7 +11520,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 14 eq {
         barcode 13 get checksum 48 add ne {
-            (bwipp.leitcodeBadCheckDigit#10291) (Incorrect Deutsche Post Leitcode check digit provided) //raiseerror exec
+            (bwipp.leitcodeBadCheckDigit#11523) (Incorrect Deutsche Post Leitcode check digit provided) //raiseerror exec
         } if
     } if
     14 string
@@ -10342,14 +11574,15 @@ bind def
 % --EXOP:
 % --RNDR: renlinear renmatrix
 % --FMLY: GS1 DataBar
-%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2026033100 131299 137460
-%%BeginData:        467 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databaromni 0.0 2026042100 141224 140675
+%%BeginData:        505 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 /databaromni { /bwipjs_databaromni (start-global) def  % begin
@@ -10392,12 +11625,26 @@ bind def
 %psc {
 
     /dontdraw false def
-    /height 33.0 72 div def
+    /height -1.0 def
+    /width 0 def
     /linkage false def
     /format (omni) def
     /barxmult 33 def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -10406,26 +11653,32 @@ bind def
 %psc     def
 
     barcode length 17 ne barcode length 18 ne and {
-        (bwipp.databaromniBadLength#10409) (GS1 DataBar Omnidirectional must be 13 or 14 digits) //raiseerror exec
+        (bwipp.databaromniBadLength#11656) (GS1 DataBar Omnidirectional must be 13 or 14 digits) //raiseerror exec
     } if
     barcode 0 4 getinterval (\(01\)) ne {
-        (bwipp.databaromniBadAI#10412) (GS1 DataBar Omnidirectional must begin with (01) application identifier) //raiseerror exec
+        (bwipp.databaromniBadAI#11659) (GS1 DataBar Omnidirectional must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.databaromniBadCharacter#10416) (GS1 DataBar Omnidirectional must contain only digits) //raiseerror exec
+            (bwipp.databaromniBadCharacter#11663) (GS1 DataBar Omnidirectional must contain only digits) //raiseerror exec
         } if
     } forall
 
     barxmult 33 lt {
-        (bwipp.databarStackedOmniBarXmult#10421) (GS1 DataBar Stacked Omnidirectional must have a barxmult of at least 33) //raiseerror exec
+        (bwipp.databarStackedOmniBarXmult#11668) (GS1 DataBar Stacked Omnidirectional must have a barxmult of at least 33) //raiseerror exec
     } if
 
     format (omni) ne format (stacked) ne and format (stackedomni) ne and format (truncated) ne and {
-        (bwipp.databaromniBadFormat#10425) (Valid formats are omni, stacked, stackedomni and truncated) //raiseerror exec
+        (bwipp.databaromniBadFormat#11672) (Valid formats are omni, stacked, stackedomni and truncated) //raiseerror exec
     } if
 
-    format (truncated) eq {/height 13.0 72 div def} if
+    format (truncated) eq height -1.0 eq and {/height 13.0 72 div def} if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databaromni ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     %
     % Calculate checksum and add to end of barcode
@@ -10438,7 +11691,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 18 eq {
         barcode 17 get checksum 48 add ne {
-            (bwipp.databaromniBadCheckDigit#10441) (Incorrect GS1 DataBar Omnidirectional check digit provided) //raiseerror exec
+            (bwipp.databaromniBadCheckDigit#11694) (Incorrect GS1 DataBar Omnidirectional check digit provided) //raiseerror exec
         } if
     } if
     18 string
@@ -10665,6 +11918,8 @@ bind def
             1 1
         ] def
 
+        height -1 eq { /height 33.0 72 div def } if
+
         <<
         /ren /renlinear
         /sbs sbs
@@ -10674,6 +11929,12 @@ bind def
         /text1xalign (center)
         /borderleft 0.0
         /borderright 0.0
+%psc         /strictspec strictspec
+%psc     /loosespec loosespec
+%psc         /xdim xdim
+%psc         /xmin xmin
+%psc         /xmax xmax
+%psc         /modunit modunit
         /opt options
         >>
 
@@ -10725,11 +11986,12 @@ bind def
             sep 0  //databaromni.seppad putinterval
             sep 46 //databaromni.seppad putinterval
             /pixs [
-                5 {top aload pop} repeat
+                top aload pop
                 sep aload pop
-                7 {bot aload pop} repeat
+                bot aload pop
             ] def
-            /pixy pixs length 50 idiv def
+            /rowmult [5 1 7] def
+            /pixy 13 def
         } if
 
         %
@@ -10774,13 +12036,14 @@ bind def
                 sep3 19 //databaromni.findersep putinterval
             } if
             /pixs [
-                barxmult {top aload pop} repeat
+                top aload pop
                 sep1 aload pop
                 sep2 aload pop
                 sep3 aload pop
-                barxmult {bot aload pop} repeat
+                bot aload pop
             ] def
-            /pixy pixs length 50 idiv def
+            /rowmult [barxmult 1 1 1 barxmult] def
+            /pixy barxmult 2 mul 3 add def
         } if
 
         <<
@@ -10788,12 +12051,19 @@ bind def
         /pixs pixs
         /pixx 50
         /pixy pixy
+        /rowmult rowmult
         /height pixy 72 div
         /width 50 72 div
         /borderleft 0.0
         /borderright 0.0
         /bordertop 0.0
         /borderbottom 0.0
+%psc         /strictspec strictspec
+%psc     /loosespec loosespec
+%psc         /xdim xdim
+%psc         /xmin xmin
+%psc         /xmax xmax
+%psc         /modunit modunit
         /opt options
         >>
 
@@ -10822,14 +12092,15 @@ bind def
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: GS1 DataBar
-%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2026033100 74451 73954
-%%BeginData:         81 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarstacked 0.0 2026042100 77200 76821
+%%BeginData:        113 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databaromni dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -10839,8 +12110,22 @@ bind def
 %psc {
 
     /dontdraw false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -10852,14 +12137,14 @@ bind def
     % Validate the input
     %
     barcode length 17 ne barcode length 18 ne and {
-        (bwipp.databarstackedBadLength#10855) (GS1 DataBar Stacked must be 13 or 14 digits) //raiseerror exec
+        (bwipp.databarstackedBadLength#12140) (GS1 DataBar Stacked must be 13 or 14 digits) //raiseerror exec
     } if
     barcode 0 4 getinterval (\(01\)) ne {
-        (bwipp.databarstackedBadAI#10858) (GS1 DataBar Stacked must begin with (01) application identifier) //raiseerror exec
+        (bwipp.databarstackedBadAI#12143) (GS1 DataBar Stacked must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.databarstackedBadCharacter#10862) (GS1 DataBar Stacked must contain only digits) //raiseerror exec
+            (bwipp.databarstackedBadCharacter#12147) (GS1 DataBar Stacked must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -10874,7 +12159,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 18 eq {
         barcode 17 get checksum 48 add ne {
-            (bwipp.databarstackedBadCheckDigit#10877) (Incorrect GS1 DataBar Stacked check digit provided) //raiseerror exec
+            (bwipp.databarstackedBadCheckDigit#12162) (Incorrect GS1 DataBar Stacked check digit provided) //raiseerror exec
         } if
     } if
     18 string
@@ -10883,9 +12168,26 @@ bind def
     /barcode exch def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarstacked ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with databaromni with format=stacked
     %
     options (format) (stacked) put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //databaromni exec /args exch def
@@ -10916,14 +12218,15 @@ bind def
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: GS1 DataBar
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2026033100 74551 74034
-%%BeginData:         81 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomni 0.0 2026042100 77296 76901
+%%BeginData:        113 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databaromni dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -10933,8 +12236,22 @@ bind def
 %psc {
 
     /dontdraw false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -10946,14 +12263,14 @@ bind def
     % Validate the input
     %
     barcode length 17 ne barcode length 18 ne and {
-        (bwipp.databarstackedomniBadLength#10949) (GS1 DataBar Stacked Omnidirectional must be 13 or 14 digits) //raiseerror exec
+        (bwipp.databarstackedomniBadLength#12266) (GS1 DataBar Stacked Omnidirectional must be 13 or 14 digits) //raiseerror exec
     } if
     barcode 0 4 getinterval (\(01\)) ne {
-        (bwipp.databarstackedomniBadAI#10952) (GS1 DataBar Stacked Omnidirectional must begin with (01) application identifier) //raiseerror exec
+        (bwipp.databarstackedomniBadAI#12269) (GS1 DataBar Stacked Omnidirectional must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.databarstackedomniBadCharacter#10956) (GS1 DataBar Stacked Omnidirectional must contain only digits) //raiseerror exec
+            (bwipp.databarstackedomniBadCharacter#12273) (GS1 DataBar Stacked Omnidirectional must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -10968,7 +12285,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 18 eq {
         barcode 17 get checksum 48 add ne {
-            (bwipp.databarstackedomniBadCheckDigit#10971) (Incorrect GS1 DataBar Stacked Omnidirectional check digit provided) //raiseerror exec
+            (bwipp.databarstackedomniBadCheckDigit#12288) (Incorrect GS1 DataBar Stacked Omnidirectional check digit provided) //raiseerror exec
         } if
     } if
     18 string
@@ -10977,9 +12294,26 @@ bind def
     /barcode exch def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarstackedomni ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with databaromni with format=stackedomni
     %
     options (format) (stackedomni) put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //databaromni exec /args exch def
@@ -11010,14 +12344,15 @@ bind def
 % --EXOP:
 % --RNDR: renlinear renmatrix
 % --FMLY: GS1 DataBar
-%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2026033100 74477 73970
-%%BeginData:         81 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databartruncated 0.0 2026042100 77224 76837
+%%BeginData:        113 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databaromni dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -11027,8 +12362,22 @@ bind def
 %psc {
 
     /dontdraw false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -11040,14 +12389,14 @@ bind def
     % Validate the input
     %
     barcode length 17 ne barcode length 18 ne and {
-        (bwipp.databartruncatedBadLength#11043) (GS1 DataBar Truncated must be 13 or 14 digits) //raiseerror exec
+        (bwipp.databartruncatedBadLength#12392) (GS1 DataBar Truncated must be 13 or 14 digits) //raiseerror exec
     } if
     barcode 0 4 getinterval (\(01\)) ne {
-        (bwipp.databartruncatedBadAI#11046) (GS1 DataBar Truncated must begin with (01) application identifier) //raiseerror exec
+        (bwipp.databartruncatedBadAI#12395) (GS1 DataBar Truncated must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 barcode length 4 sub getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.databartruncatedBadCharacter#11050) (GS1 DataBar Truncated must contain only digits) //raiseerror exec
+            (bwipp.databartruncatedBadCharacter#12399) (GS1 DataBar Truncated must contain only digits) //raiseerror exec
         } if
     } forall
 
@@ -11062,7 +12411,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 18 eq {
         barcode 17 get checksum 48 add ne {
-            (bwipp.databartruncatedBadCheckDigit#11065) (Incorrect GS1 DataBar Truncated check digit provided) //raiseerror exec
+            (bwipp.databartruncatedBadCheckDigit#12414) (Incorrect GS1 DataBar Truncated check digit provided) //raiseerror exec
         } if
     } if
     18 string
@@ -11071,9 +12420,26 @@ bind def
     /barcode exch def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databartruncated ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with databaromni with format=truncated
     %
     options (format) (truncated) put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //databaromni exec /args exch def
@@ -11104,14 +12470,15 @@ bind def
 % --EXOP:
 % --RNDR: renlinear
 % --FMLY: GS1 DataBar
-%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2026033100 90954 97198
-%%BeginData:        314 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarlimited 0.0 2026042100 106504 112977
+%%BeginData:        343 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /databarlimited { /bwipjs_databarlimited (start-global) def  % begin
 
@@ -11175,10 +12542,24 @@ bind def
 %psc {
 
     /dontdraw false def
-    /height 10.0 72 div def
+    /height -1.0 def
+    /width 0 def
     /linkage false def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -11192,19 +12573,25 @@ bind def
     % Validate the input
     %
     barcode length 17 ne barcode length 18 ne and {
-        (bwipp.databarlimitedBadLength#11195) (GS1 DataBar Limited must be 13 or 14 digits) //raiseerror exec
+        (bwipp.databarlimitedBadLength#12576) (GS1 DataBar Limited must be 13 or 14 digits) //raiseerror exec
     } if
     barcode 0 4 getinterval (\(01\)) ne {
-        (bwipp.databarlimitedBadAI#11198) (GS1 DataBar Limited must begin with (01) application identifier) //raiseerror exec
+        (bwipp.databarlimitedBadAI#12579) (GS1 DataBar Limited must begin with (01) application identifier) //raiseerror exec
     } if
     barcode 4 get dup 48 lt exch 49 gt or {
-        (bwipp.databarlimitedBadStartDigit#11201) (GS1 DataBar Limited must begin with 0 or 1) //raiseerror exec
+        (bwipp.databarlimitedBadStartDigit#12582) (GS1 DataBar Limited must begin with 0 or 1) //raiseerror exec
     } if
     barcode 5 barcode length 5 sub getinterval {
         dup 48 lt exch 57 gt or {
-            (bwipp.databarlimitedBadCharacter#11205) (GS1 DataBar Limited must contain only digits) //raiseerror exec
+            (bwipp.databarlimitedBadCharacter#12586) (GS1 DataBar Limited must contain only digits) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarlimited ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     %
     % Calculate checksum and add to end of barcode
@@ -11217,7 +12604,7 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     barcode length 18 eq {
         barcode 17 get checksum 48 add ne {
-            (bwipp.databarlimitedBadCheckDigit#11220) (Incorrect GS1 DataBar Limited check digit provided) //raiseerror exec
+            (bwipp.databarlimitedBadCheckDigit#12607) (Incorrect GS1 DataBar Limited check digit provided) //raiseerror exec
         } if
     } if
     18 string
@@ -11396,6 +12783,8 @@ bind def
         1 1 5
     ] def
 
+    height -1 eq { /height 10.0 72 div def } if
+
     <<
     /ren /renlinear
     /sbs sbs
@@ -11405,6 +12794,12 @@ bind def
     /text1xalign (center)
     /borderleft 0.0
     /borderright 0.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -11431,15 +12826,16 @@ bind def
 % --EXOP:
 % --RNDR: renlinear renmatrix
 % --FMLY: GS1 DataBar
-%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2026033100 259654 255670
-%%BeginData:        939 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarexpanded 0.0 2026042100 259905 266013
+%%BeginData:        984 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 /databarexpanded { /bwipjs_databarexpanded (start-global) def  % begin
@@ -11577,13 +12973,27 @@ bind def
     /dontlint false def
     /lintreqs true def
     /dontdraw false def
-    /height 34.0 72 div def
+    /height -1.0 def
+    /width 0 def
     /format (expanded) def
     /segments -1 def
     /linkage false def
     /barxmult 34 def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -11596,20 +13006,26 @@ bind def
     /fnc1 //databarexpanded.fnc1 def
 
     barxmult 34 lt {
-        (bwipp.databarStackedOmniBarXmult#11599) (GS1 DataBar Expanded Stacked must have a barxmult of at least 34) //raiseerror exec
+        (bwipp.databarStackedOmniBarXmult#13009) (GS1 DataBar Expanded Stacked must have a barxmult of at least 34) //raiseerror exec
     } if
 
     format (expanded) ne format (expandedstacked) ne and {
-        (bwipp.databarexpandedBadFormat#11603) (Valid formats are expanded and expandedstacked) //raiseerror exec
+        (bwipp.databarexpandedBadFormat#13013) (Valid formats are expanded and expandedstacked) //raiseerror exec
     } if
 
     segments -1 eq {
         /segments format (expandedstacked) eq {4} {22} ifelse def
     } {
         segments 2 lt segments 22 gt or segments 2 mod 0 ne or {
-            (bwipp.gs1databarexpandedBadSegments#11610) (The number of segments must be even from 2 to 22) //raiseerror exec
+            (bwipp.gs1databarexpandedBadSegments#13020) (The number of segments must be even from 2 to 22) //raiseerror exec
         } if
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarexpanded ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     barcode /ai //gs1process exec
     /fncs exch def
@@ -11872,7 +13288,7 @@ bind def
     /encode {
         dup /raw ne {exch get} {pop} ifelse
         dup length j add 252 ge {
-            pop (bwipp.gs1databarexpandedTooLong#11875) (Maximum length exceeded) //raiseerror exec
+            pop (bwipp.gs1databarexpandedTooLong#13291) (Maximum length exceeded) //raiseerror exec
         } if
         [ exch {48 sub} forall ]
         dup length exch
@@ -12042,7 +13458,7 @@ bind def
 
     options /debugbits known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugbits#12045) binval //raiseerror exec } if
+    { (bwipp.debugbits#13461) binval //raiseerror exec } if
 
     /datalen binval length 12 idiv def
 
@@ -12231,6 +13647,8 @@ bind def
             1 1
         ] def
 
+        height -1 eq { /height 34.0 72 div def } if
+
         <<
         /ren /renlinear
         /sbs sbs
@@ -12240,6 +13658,12 @@ bind def
         /borderright 0.0
         /bordertop 0.0
         /borderbottom 0.0
+%psc         /strictspec strictspec
+%psc     /loosespec loosespec
+%psc         /xdim xdim
+%psc         /xmin xmin
+%psc         /xmax xmax
+%psc         /modunit modunit
         /opt options
         >>
 
@@ -12328,7 +13752,7 @@ bind def
         sep pixx 4 sub //databarexpanded.seppad putinterval
 
         %
-        % Compose the symbol
+        % Compose the symbol with one copy of each unique row
         %
         /pixs [
             0 1 numrows 1 sub {
@@ -12336,25 +13760,41 @@ bind def
                 r 0 ne {
                     seps r get aload pop
                 } if
-                barxmult {rows r get aload pop} repeat
+                rows r get aload pop
                 r numrows 1 sub ne {
                     seps r get aload pop
                     sep aload pop
                 } if
             } for
         ] def
+        /rowmult [
+            0 1 numrows 1 sub {
+                /r exch def
+                r 0 ne { 1 } if
+                barxmult
+                r numrows 1 sub ne { 1 1 } if
+            } for
+        ] def
+        /pixy 0 rowmult {add} forall def
 
         <<
         /ren /renmatrix
         /pixs pixs
         /pixx pixx
-        /pixy pixs length pixx idiv
-        /height pixs length pixx idiv 72 div
+        /pixy pixy
+        /rowmult rowmult
+        /height pixy 72 div
         /width pixx 72 div
         /borderleft 0.0
         /borderright 0.0
         /bordertop 0.0
         /borderbottom 0.0
+%psc         /strictspec strictspec
+%psc     /loosespec loosespec
+%psc         /xdim xdim
+%psc         /xmin xmin
+%psc         /xmax xmax
+%psc         /modunit modunit
         /opt options
         >>
 
@@ -12383,14 +13823,15 @@ bind def
 % --EXOP: segments=4
 % --RNDR: renlinear renmatrix
 % --FMLY: GS1 DataBar
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2026033100 75298 75376
-%%BeginData:         47 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstacked 0.0 2026042100 81999 78563
+%%BeginData:         79 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databarexpanded dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -12400,8 +13841,22 @@ bind def
 %psc {
 
     /dontdraw false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -12410,9 +13865,26 @@ bind def
 %psc     def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarexpandedstacked ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with databarexpanded with format=expandedstacked
     %
     options (format) (expandedstacked) put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     /bwipp_dontdraw true def
     barcode options //databarexpanded exec /args exch def
@@ -12441,17 +13913,18 @@ bind def
 % --DESC: GS1 North American Coupon
 % --EXAM: (8110)106141416543213500110000310123196000
 % --EXOP: includetext segments=8
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 DataBar
-%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2026033100 86253 92896
-%%BeginData:        101 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1northamericancoupon 0.0 2026042100 88974 92311
+%%BeginData:        130 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databarexpandedstacked dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -12469,8 +13942,21 @@ bind def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -12485,20 +13971,20 @@ bind def
 
     % Validate the AI structure
     ais length 1 ne {
-        (bwipp.gs1northamericancouponBadAIStructure#12488) (A GS1 North American Coupon should consist of a single AI (8110)) //raiseerror exec
+        (bwipp.gs1northamericancouponBadAIStructure#13974) (A GS1 North American Coupon should consist of a single AI (8110)) //raiseerror exec
     } if
     ais 0 get (8110) ne {
-        (bwipp.gs1northamericancouponBadAIStructure#12491) (A GS1 North American Coupon should consist of a single AI (8110)) //raiseerror exec
+        (bwipp.gs1northamericancouponBadAIStructure#13977) (A GS1 North American Coupon should consist of a single AI (8110)) //raiseerror exec
     } if
 
     % Parse out the Company Prefix and Offer Code
     /val vals 0 get def
     /vli val 0 get 48 sub def
     vli 0 lt vli 6 gt or {
-        (bwipp.gs1northamericancouponBadVLI#12498) (The AI (8110) data should start with a Company Prefix length indicator in the range 0 to 6) //raiseerror exec
+        (bwipp.gs1northamericancouponBadVLI#13984) (The AI (8110) data should start with a Company Prefix length indicator in the range 0 to 6) //raiseerror exec
     } if
     val length vli 13 add lt {
-        (bwipp.gs1northamericancouponTooShort#12501) (The AI (8110) data is too short) //raiseerror exec
+        (bwipp.gs1northamericancouponTooShort#13987) (The AI (8110) data is too short) //raiseerror exec
     } if
     /gcp val 1 vli 6 add getinterval def
     /cod val vli 7 add 6 getinterval def
@@ -12507,7 +13993,22 @@ bind def
     coupontext gcp length (-) putinterval
     coupontext gcp length 1 add cod putinterval
 
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1northamericancoupon ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
     % Get the result of encoding with databarexpandedstacked
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (modunit) modunit put
     /bwipp_dontdraw true def
 
     barcode options //databarexpandedstacked exec /args exch def
@@ -12557,14 +14058,15 @@ bind def
 % --EXOP: showborder
 % --RNDR: renlinear
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2026033100 62672 65919
-%%BeginData:         93 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp pharmacode 0.0 2026042100 69062 72358
+%%BeginData:        122 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /pharmacode {
@@ -12573,12 +14075,26 @@ bind def
 %psc {
 
     /dontdraw false def
-    /height 8.0 2.835 mul 72 div def
-    /nwidth 0.5 2.835 mul def
-    /wwidth 1.5 2.835 mul def
-    /swidth 1.0 2.835 mul def
+    /height -1.0 def
+    /width 0 def
+    /nwidth 1 def
+    /wwidth 3 def
+    /swidth 2 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -12590,16 +14106,22 @@ bind def
     % Validate the input
     %
     barcode length 1 lt barcode length 6 gt or {
-        (bwipp.pharmacodeBadLength#12593) (Pharmacode must be 1 to 6 digits) //raiseerror exec
+        (bwipp.pharmacodeBadLength#14109) (Pharmacode must be 1 to 6 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.pharmacodeBadCharacter#12597) (Pharmacode must contain only digits) //raiseerror exec
+            (bwipp.pharmacodeBadCharacter#14113) (Pharmacode must contain only digits) //raiseerror exec
         } if
     } forall
     barcode cvi dup 3 lt exch 131070 gt or {
-        (bwipp.pharmacodeBadValue#12601) (Pharmacode value must be between 3 and 131070) //raiseerror exec
+        (bwipp.pharmacodeBadValue#14117) (Pharmacode value must be between 3 and 131070) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /pharmacode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     %
     % Create the human readable text
@@ -12630,6 +14152,8 @@ bind def
         sbs i 2 mul 1 add swidth put
     } for
 
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
     /sbs sbs
@@ -12637,6 +14161,12 @@ bind def
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     /txt txt
     /text1xalign (center)
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -12663,14 +14193,15 @@ bind def
 % --EXOP: includetext showborder
 % --RNDR: renlinear
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2026033100 63512 66715
-%%BeginData:        108 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp pharmacode2 0.0 2026042100 70478 73720
+%%BeginData:        136 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /pharmacode2 { /bwipjs_pharmacode2 (start-global) def  % begin
 
@@ -12685,9 +14216,23 @@ bind def
 
     /dontdraw false def
     /includetext false def      % Enable/disable text
-    /height 4.0 def             % Height of short bars in millimetres
+    /height -1.0 def             % Height of short bars in millimetres
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -12699,16 +14244,23 @@ bind def
     % Validate the input
     %
     barcode length 1 lt barcode length 8 gt or {
-        (bwipp.pharmacode2BadLength#12702) (Two-track Pharmacode must be 1 to 6 digits) //raiseerror exec
+        (bwipp.pharmacode2BadLength#14247) (Two-track Pharmacode must be 1 to 6 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.pharmacode2badCharacter#12706) (Two-track Pharmacode must contain only digits) //raiseerror exec
+            (bwipp.pharmacode2badCharacter#14251) (Two-track Pharmacode must contain only digits) //raiseerror exec
         } if
     } forall
     barcode cvi dup 4 lt exch 64570080 gt or {
-        (bwipp.pharmacode2badValue#12710) (Two-track Pharmacode value must be between 4 and 64570080) //raiseerror exec
+        (bwipp.pharmacode2badValue#14255) (Two-track Pharmacode value must be between 4 and 64570080) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /pharmacode2 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+    height -1 eq { /height 4.0 def } if
 
     %
     % Create the human readable text
@@ -12758,6 +14310,12 @@ bind def
     /txt txt
     /text1xalign (center)
     /text1yoffset -4.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -12784,14 +14342,15 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2026033100 69167 72251
-%%BeginData:        159 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code2of5 0.0 2026042100 77851 80974
+%%BeginData:        190 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /code2of5 { /bwipjs_code2of5 (start-global) def  % begin
 
@@ -12835,10 +14394,24 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
     /version (industrial) def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -12847,11 +14420,11 @@ bind def
 %psc     def
 
     barcode () eq {
-        (bwipp.code2of5emptyData#12850) (The data must not be empty) //raiseerror exec
+        (bwipp.code2of5emptyData#14423) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.code2of5inputTooLong#12854) (The input data is too long) //raiseerror exec
+        (bwipp.code2of5inputTooLong#14427) (The input data is too long) //raiseerror exec
     } if
 
     %
@@ -12859,9 +14432,15 @@ bind def
     %
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.code2of5badCharacter#12862) (Code 25 must contain only digits) //raiseerror exec
+            (bwipp.code2of5badCharacter#14435) (Code 25 must contain only digits) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /code2of5 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /barlen barcode length validatecheck {1 sub} if def
 
@@ -12873,14 +14452,14 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     validatecheck {
         barcode barlen get checksum 48 add ne {
-            (bwipp.code2of5badCheckDigit#12876) (Incorrect Code 25 check digit provided) //raiseerror exec
+            (bwipp.code2of5badCheckDigit#14455) (Incorrect Code 25 check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
         /includecheck true def
     } if
 
     //code2of5.versions version known not {
-        (bwipp.code2of5badVersion#12883) (Unrecognised Code 25 version) //raiseerror exec
+        (bwipp.code2of5badVersion#14462) (Unrecognised Code 25 version) //raiseerror exec
     } if
     /encs //code2of5.versions version get def
 
@@ -12921,15 +14500,25 @@ bind def
         barlen 1 add string dup 0 barcode putinterval dup barlen //code2of5.barchars checksum 1 getinterval putinterval
     } { barcode } ifelse def
 
+    /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
-    /sbs [sbs {48 sub} forall]
+    /sbs sbs
     /bhs [sbs length 1 add 2 idiv {height} repeat]
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     includetext {
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -12956,7 +14545,7 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2026033100 62771 62753
+%%BeginResource: uk.co.terryburton.bwipp industrial2of5 0.0 2026042100 63387 66801
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -13016,7 +14605,7 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2026033100 62741 62729
+%%BeginResource: uk.co.terryburton.bwipp iata2of5 0.0 2026042100 63357 66777
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -13076,7 +14665,7 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2026033100 62751 62737
+%%BeginResource: uk.co.terryburton.bwipp matrix2of5 0.0 2026042100 63367 66785
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -13136,7 +14725,7 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2026033100 62741 62729
+%%BeginResource: uk.co.terryburton.bwipp coop2of5 0.0 2026042100 63357 66777
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -13196,7 +14785,7 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2026033100 62766 62749
+%%BeginResource: uk.co.terryburton.bwipp datalogic2of5 0.0 2026042100 63382 66797
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -13256,14 +14845,15 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2026033100 74336 77315
-%%BeginData:        184 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code11 0.0 2026042100 83504 90042
+%%BeginData:        215 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /code11 { /bwipjs_code11 (start-global) def  % begin
 
@@ -13315,9 +14905,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -13328,11 +14932,11 @@ bind def
 %psc     //code11.latevars /init get exec
 
     barcode () eq {
-        (bwipp.code11emptyData#13331) (The data must not be empty) //raiseerror exec
+        (bwipp.code11emptyData#14935) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.code11inputTooLong#13335) (The input data is too long) //raiseerror exec
+        (bwipp.code11inputTooLong#14939) (The input data is too long) //raiseerror exec
     } if
 
     %
@@ -13340,14 +14944,20 @@ bind def
     %
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.code11badCharacter#13343) (Code 11 must contain only digits and dashes) //raiseerror exec
+            (bwipp.code11badCharacter#14947) (Code 11 must contain only digits and dashes) //raiseerror exec
         } if
     } for
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /code11 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /barlen barcode length def
     validatecheck {
         barlen 11 eq {
-            (bwipp.code11badLength#13350) (Code 11 cannot be 11 characters using check digits) //raiseerror exec
+            (bwipp.code11badLength#14960) (Code 11 cannot be 11 characters using check digits) //raiseerror exec
         } if
         /barlen barlen barlen 10 le {1} {2} ifelse sub def
     } if
@@ -13365,12 +14975,12 @@ bind def
     validatecheck {
         numchecks 1 eq {
             barcode barlen get //code11.barchars checksum1 get ne {
-                (bwipp.code11badCheckDigit#13368) (Incorrect Code 11 check digit provided) //raiseerror exec
+                (bwipp.code11badCheckDigit#14978) (Incorrect Code 11 check digit provided) //raiseerror exec
             } if
         } {
             barcode barlen get //code11.barchars checksum1 get ne
             barcode barlen 1 add get //code11.barchars checksum2 get ne or {
-                (bwipp.code11badCheckDigits#13373) (Incorrect Code 11 check digits provided) //raiseerror exec
+                (bwipp.code11badCheckDigits#14983) (Incorrect Code 11 check digits provided) //raiseerror exec
             } if
         } ifelse
         /barcode barcode 0 barlen getinterval def
@@ -13418,15 +15028,25 @@ bind def
         } ifelse
     } { barcode } ifelse def
 
+    /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
-    /sbs [sbs {48 sub} forall]
+    /sbs sbs
     /bhs [sbs length 1 add 2 idiv {height} repeat]
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     includetext {
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -13453,14 +15073,15 @@ bind def
 % --EXOP: semi includetext includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2026033100 75741 78760
-%%BeginData:        222 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp bc412 0.0 2026042100 84821 91399
+%%BeginData:        252 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /bc412 { /bwipjs_bc412 (start-global) def  % begin
 
@@ -13519,9 +15140,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -13532,11 +15167,11 @@ bind def
 %psc     //bc412.latevars /init get exec
 
     barcode () eq {
-        (bwipp.bc412emptyData#13535) (The data must not be empty) //raiseerror exec
+        (bwipp.bc412emptyData#15170) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.bc412inputTooLong#13539) (The input data is too long) //raiseerror exec
+        (bwipp.bc412inputTooLong#15174) (The input data is too long) //raiseerror exec
     } if
 
     semi {
@@ -13549,7 +15184,7 @@ bind def
     %
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.bc412badCharacter#13552) (BC412 must contain only digits and capital letters except O) //raiseerror exec
+            (bwipp.bc412badCharacter#15187) (BC412 must contain only digits and capital letters except O) //raiseerror exec
         } if
     } for
 
@@ -13559,11 +15194,11 @@ bind def
         %
         validatecheck {
             barcode length 8 lt barcode length 19 gt or {
-                (bwipp.bc412semivalidateBadLength#13562) (BC412 semi with check digit must be 8 to 19 characters long) //raiseerror exec
+                (bwipp.bc412semivalidateBadLength#15197) (BC412 semi with check digit must be 8 to 19 characters long) //raiseerror exec
             } if
         } {
             barcode length 7 lt barcode length 18 gt or {
-                (bwipp.bc412semiBadLength#13566) (BC412 semi must be 7 to 18 characters long) //raiseerror exec
+                (bwipp.bc412semiBadLength#15201) (BC412 semi must be 7 to 18 characters long) //raiseerror exec
             } if
         } ifelse
 
@@ -13589,7 +15224,7 @@ bind def
         /checksum sumodd 35 mod sumeven 35 mod 2 mul add 35 mod def  % F = Mod35( Mod35( Fodd ) + 2 * Mod35( Feven ) )
         validatecheck {
             checksum 0 ne {
-                (bwipp.bc412semiBadCheckDigit#13592) (Incorrect BC412 semi check digit provided) //raiseerror exec
+                (bwipp.bc412semiBadCheckDigit#15227) (Incorrect BC412 semi check digit provided) //raiseerror exec
             } if
         } {
             /checksum checksum 17 mul 35 mod def  % CD = Mod35( 17 * F )
@@ -13606,12 +15241,18 @@ bind def
         /checksum checksum 35 mod def
         validatecheck {
             barcode barlen get //bc412.barchars checksum get ne {
-                (bwipp.bc412badCheckDigit#13609) (Incorrect BC412 check digit provided) //raiseerror exec
+                (bwipp.bc412badCheckDigit#15244) (Incorrect BC412 check digit provided) //raiseerror exec
             } if
             /barcode barcode 0 barlen getinterval def
             /includecheck true def
         } if
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /bc412 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /sbs barlen 1 add 8 mul 5 add string def
 
@@ -13653,6 +15294,9 @@ bind def
     } { barcode } ifelse def
 
     /sbs sbs 0 pos getinterval def
+
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
     /sbs [sbs {48 sub} forall]
@@ -13662,6 +15306,12 @@ bind def
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -13688,14 +15338,15 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2026033100 71065 73991
-%%BeginData:        153 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp rationalizedCodabar 0.0 2026042100 80127 83092
+%%BeginData:        182 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /rationalizedCodabar { /bwipjs_rationalizedCodabar (start-global) def  % begin
 
@@ -13723,13 +15374,27 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.rationalizedCodabarinputTooLong#13732) (The input data is too long) //raiseerror exec
+        (bwipp.rationalizedCodabarinputTooLong#15397) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -13738,7 +15403,7 @@ bind def
 %psc     def
 
     barcode length 2 lt barcode length 3 lt validatecheck and or {
-        (bwipp.rationalizedCodabarBadLength#13741) (Codabar must be at least 2 characters in length excluding any check digit) //raiseerror exec
+        (bwipp.rationalizedCodabarBadLength#15406) (Codabar must be at least 2 characters in length excluding any check digit) //raiseerror exec
     } if
 
     /barchars altstartstop {//rationalizedCodabar.barcharsalt} {//rationalizedCodabar.barchars} ifelse def
@@ -13756,16 +15421,22 @@ bind def
     barcode 0 1 getinterval ssvals exch known not
     barcode barcode length 1 sub 1 getinterval ssvals exch known not or {
         altstartstop {
-            (bwipp.rationalizedCodabarBadAltStartStop#13759) (Codabar start and stop characters must be one of E N T or *) //raiseerror exec
+            (bwipp.rationalizedCodabarBadAltStartStop#15424) (Codabar start and stop characters must be one of E N T or *) //raiseerror exec
         } {
-            (bwipp.rationalizedCodabarBadStartStop#13761) (Codabar start and stop characters must be one of A B C or D) //raiseerror exec
+            (bwipp.rationalizedCodabarBadStartStop#15426) (Codabar start and stop characters must be one of A B C or D) //raiseerror exec
         } ifelse
     } if
     1 1 barcode length 2 sub {
         barcode exch 1 getinterval bodyvals exch known not {
-            (bwipp.rationalizedCodabarBadCharacter#13766) (Codabar body must contain only digits and symbols - $ : / . +) //raiseerror exec
+            (bwipp.rationalizedCodabarBadCharacter#15431) (Codabar body must contain only digits and symbols - $ : / . +) //raiseerror exec
         } if
     } for
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /rationalizedCodabar ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /barlen barcode length validatecheck {1 sub} if def
 
@@ -13779,7 +15450,7 @@ bind def
     /checksum 16 checksum 16 mod sub 16 mod def
     validatecheck {
         barcode barlen 1 sub get barchars checksum get ne {
-            (bwipp.rationalizedCodabarBadCheckDigit#13782) (Incorrect Codabar check digit provided) //raiseerror exec
+            (bwipp.rationalizedCodabarBadCheckDigit#15453) (Incorrect Codabar check digit provided) //raiseerror exec
         } if
         barlen string
         dup 0 barcode 0 barlen 1 sub getinterval putinterval
@@ -13819,6 +15490,8 @@ bind def
         dup barlen barcode barlen 1 sub 1 getinterval putinterval
     } { barcode } ifelse def
 
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
     /sbs [sbs {48 sub} forall]
@@ -13828,6 +15501,12 @@ bind def
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -13854,14 +15533,15 @@ bind def
 % --EXOP:
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2026033100 112047 115276
-%%BeginData:        371 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp onecode 0.0 2026042100 126224 132915
+%%BeginData:        400 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /onecode { /bwipjs_onecode (start-global) def  % begin
 
@@ -13992,9 +15672,23 @@ bind def
 %psc {
 
     /dontdraw false def
-    /height 0.15 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -14006,13 +15700,19 @@ bind def
 
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.onecodeBadCharacter#14009) (The data must contain only digits) //raiseerror exec
+            (bwipp.onecodeBadCharacter#15703) (The data must contain only digits) //raiseerror exec
         } if
     } forall
 
     barlen 20 ne barlen 25 ne and barlen 29 ne and barlen 31 ne and {
-        (bwipp.onecodeInvalidLength#14014) (The data must be 20, 25, 29 or 31 digits) //raiseerror exec
+        (bwipp.onecodeInvalidLength#15708) (The data must be 20, 25, 29 or 31 digits) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /onecode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     %
     % Create the human readable text
@@ -14153,7 +15853,7 @@ bind def
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#14156) codewords //raiseerror exec } if
+    { (bwipp.debugcws#15856) codewords //raiseerror exec } if
 
     %
     % Conversion from codewords to characters
@@ -14174,6 +15874,8 @@ bind def
             chars i chars i get 8191 xor put
         } if
     } for
+
+    height -1 eq { /height 0.15 def } if
 
     %
     % Conversion from characters to the OneCode encoding
@@ -14212,6 +15914,12 @@ bind def
     /text1font (OCR-B)
     /text1yoffset -1.0
     /text1xoffset -0.3
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -14238,14 +15946,15 @@ bind def
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2026033100 67247 70441
-%%BeginData:        140 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp postnet 0.0 2026042100 75413 78646
+%%BeginData:        169 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /postnet { /bwipjs_postnet (start-global) def  % begin
 
@@ -14269,9 +15978,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 0.125 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -14285,13 +16008,19 @@ bind def
     % Validate the input
     %
     barlen 5 ne barlen 9 ne and barlen 11 ne and {
-        (bwipp.postnetBadLength#14288) (USPS POSTNET must be 5, 9 or 11 digits excluding check digit) //raiseerror exec
+        (bwipp.postnetBadLength#16011) (USPS POSTNET must be 5, 9 or 11 digits excluding check digit) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.postnetBadCharacter#14292) (USPS POSTNET must contain only digits) //raiseerror exec
+            (bwipp.postnetBadCharacter#16015) (USPS POSTNET must contain only digits) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /postnet ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /checksum 0 def
     0 1 barlen 1 sub {
@@ -14301,10 +16030,12 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     validatecheck {
         barcode barlen get //postnet.barchars checksum get ne {
-            (bwipp.postnetBadCheckDigit#14304) (Incorrect USPS POSTNET check digit provided) //raiseerror exec
+            (bwipp.postnetBadCheckDigit#16033) (Incorrect USPS POSTNET check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
+
+    height -1 eq { /height 0.125 def } if
 
     /bhs barlen 5 mul 7 add array def
 
@@ -14365,6 +16096,12 @@ bind def
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -14391,14 +16128,15 @@ bind def
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2026033100 67121 70321
-%%BeginData:        143 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp planet 0.0 2026042100 75223 78462
+%%BeginData:        172 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /planet { /bwipjs_planet (start-global) def  % begin
 
@@ -14422,9 +16160,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 0.125 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -14438,13 +16190,19 @@ bind def
     % Validate the input
     %
     barlen 11 ne barlen 13 ne and {
-        (bwipp.planetBadLength#14441) (USPS PLANET must be 11 or 13 digits excluding check digit) //raiseerror exec
+        (bwipp.planetBadLength#16193) (USPS PLANET must be 11 or 13 digits excluding check digit) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.planetBadCharacter#14445) (USPS PLANET must contain only digits) //raiseerror exec
+            (bwipp.planetBadCharacter#16197) (USPS PLANET must contain only digits) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /planet ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     %
     % Calculate the checksum
@@ -14457,10 +16215,12 @@ bind def
     /checksum 10 checksum 10 mod sub 10 mod def
     validatecheck {
         barcode barlen get //planet.barchars checksum get ne {
-            (bwipp.planetBadCheckDigit#14460) (Incorrect USPS PLANET check digit provided) //raiseerror exec
+            (bwipp.planetBadCheckDigit#16218) (Incorrect USPS PLANET check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
+
+    height -1 eq { /height 0.125 def } if
 
     /bhs barlen 5 mul 7 add array def
 
@@ -14521,6 +16281,12 @@ bind def
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -14547,14 +16313,15 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2026033100 72292 75385
-%%BeginData:        180 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp royalmail 0.0 2026042100 80740 83872
+%%BeginData:        209 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /royalmail { /bwipjs_royalmail (start-global) def  % begin
 
@@ -14609,9 +16376,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 0.175 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -14622,19 +16403,25 @@ bind def
 %psc     //royalmail.latevars /init get exec
 
     barcode () eq {
-        (bwipp.royalmailEmptyData#14625) (The data must not be empty) //raiseerror exec
+        (bwipp.royalmailEmptyData#16406) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.royalmailInputTooLong#14629) (The input data is too long) //raiseerror exec
+        (bwipp.royalmailInputTooLong#16410) (The input data is too long) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /royalmail ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     %
     % Validate the input
     %
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.royalmailBadCharacter#14637) (RM4SCC must contain only capital letters and digits) //raiseerror exec
+            (bwipp.royalmailBadCharacter#16424) (RM4SCC must contain only capital letters and digits) //raiseerror exec
         } if
     } for
 
@@ -14651,7 +16438,7 @@ bind def
     /checksum checksumrow 6 mod 6 mul checksumcol 6 mod add def
     validatecheck {
         barcode barlen get //royalmail.barchars checksum get ne {
-            (bwipp.royalmailBadCheckDigit#14654) (Incorrect RM4SCC check digit provided) //raiseerror exec
+            (bwipp.royalmailBadCheckDigit#16441) (Incorrect RM4SCC check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -14681,6 +16468,8 @@ bind def
     % Put end character
     %
     encstr barlen 4 mul 5 add //royalmail.encs 37 get putinterval
+
+    height -1 eq { /height 0.175 def } if
 
     /bbs encstr length array def
     /bhs encstr length array def
@@ -14714,6 +16503,12 @@ bind def
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -14740,14 +16535,15 @@ bind def
 % --EXOP: includetext custinfoenc=character
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2026033100 89437 92458
-%%BeginData:        299 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp auspost 0.0 2026042100 103095 109571
+%%BeginData:        328 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /auspost { /bwipjs_auspost (start-global) def  % begin
 
@@ -14848,10 +16644,24 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 0.175 def
+    /height -1.0 def
+    /width 0 def
     /custinfoenc (character) def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -14862,18 +16672,18 @@ bind def
 %psc     //auspost.latevars /init get exec
 
     custinfoenc (character) ne custinfoenc (numeric) ne and {
-        (bwipp.auspostBadCustinfoEncoding#14865) (Customer information encoding must be either character or numeric) //raiseerror exec
+        (bwipp.auspostBadCustinfoEncoding#16675) (Customer information encoding must be either character or numeric) //raiseerror exec
     } if
 
     /barlen barcode length def
     barlen 10 lt {
-        (bwipp.auspostTooShort#14870) (The data length must be at least 10) //raiseerror exec
+        (bwipp.auspostTooShort#16680) (The data length must be at least 10) //raiseerror exec
     } if
 
 
     //auspost.fcclen barlen 2 ge { barcode 0 2 getinterval } { () } ifelse
     2 copy known not {
-        pop pop (bwipp.auspostBadFCC#14876) (Must begin with an FCC, either 11, 45, 59, 62, 87 or 92) //raiseerror exec
+        pop pop (bwipp.auspostBadFCC#16686) (Must begin with an FCC, either 11, 45, 59, 62, 87 or 92) //raiseerror exec
     } if
     get /encstr exch string def
 
@@ -14886,7 +16696,7 @@ bind def
         barcode 2 8 getinterval { dup 48 lt exch 57 gt or { pop false exit } if } forall
     } repeat
     not {
-        (bwipp.auspostIncompleteDPID#14889) (The DPID must be 8 digits) //raiseerror exec
+        (bwipp.auspostIncompleteDPID#16699) (The DPID must be 8 digits) //raiseerror exec
     } if
 
     %
@@ -14894,8 +16704,14 @@ bind def
     %
     barlen 10 sub custinfoenc (numeric) eq {2} {3} ifelse mul
     encstr length 22 sub 14 sub gt {
-        (bwipp.auspostTooLong#14897) (The message is too long) //raiseerror exec
+        (bwipp.auspostTooLong#16707) (The message is too long) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /auspost ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     %
     % Put start character
@@ -14928,7 +16744,7 @@ bind def
             /i exch def
             //auspost.encs barcode i 10 add get
             dup dup 48 lt exch 57 gt or {
-                pop pop (bwipp.auspostInvalidCustinfoDigit#14931) (The customer information data contains a non-digit character) //raiseerror exec
+                pop pop (bwipp.auspostInvalidCustinfoDigit#16747) (The customer information data contains a non-digit character) //raiseerror exec
             } if
             48 sub 64 add get
             encstr i 2 mul 22 add 3 2 roll putinterval
@@ -14939,7 +16755,7 @@ bind def
             /i exch def
             barcode i 10 add 1 getinterval //auspost.barchars exch search
             not {
-                pop (bwipp.auspostInvalidCustinfoCharacter#14942) (The customer information contains an invalid character) //raiseerror exec
+                pop (bwipp.auspostInvalidCustinfoCharacter#16758) (The customer information contains an invalid character) //raiseerror exec
             } if
             length /indx exch def
             pop pop
@@ -14994,6 +16810,8 @@ bind def
     encstr encstr length 14 sub checkcode putinterval
     encstr encstr length 2 sub //auspost.encs 74 get putinterval
 
+    height -1 eq { /height 0.175 def } if
+
     /bbs encstr length array def
     /bhs encstr length array def
     0 1 encstr length 1 sub {
@@ -15026,6 +16844,12 @@ bind def
         /txt [ [barcode 2 barlen 2 sub getinterval 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -15052,14 +16876,15 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2026033100 68377 71605
-%%BeginData:        143 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp kix 0.0 2026042100 76161 79428
+%%BeginData:        173 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /kix { /bwipjs_kix (start-global) def  % begin
 
@@ -15112,9 +16937,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 0.175 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -15125,11 +16964,11 @@ bind def
 %psc     //kix.latevars /init get exec
 
     barcode () eq {
-        (bwipp.kixEmptyData#15128) (The data must not be empty) //raiseerror exec
+        (bwipp.kixEmptyData#16967) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.kixInputTooLong#15132) (The input data is too long) //raiseerror exec
+        (bwipp.kixInputTooLong#16971) (The input data is too long) //raiseerror exec
     } if
 
     %
@@ -15137,11 +16976,18 @@ bind def
     %
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.kixBadCharacter#15140) (KIX must contain only capital letters and digits) //raiseerror exec
+            (bwipp.kixBadCharacter#16979) (KIX must contain only capital letters and digits) //raiseerror exec
         } if
     } for
 
     /barlen barcode length def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /kix ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
     /encstr barlen 4 mul string def
 
     0 1 barlen 1 sub {
@@ -15149,6 +16995,8 @@ bind def
         /indx charvals barcode i 1 getinterval get def
         encstr i 4 mul //kix.encs indx get putinterval
     } for
+
+    height -1 eq { /height 0.175 def } if
 
     /bbs encstr length array def
     /bhs encstr length array def
@@ -15182,6 +17030,12 @@ bind def
         /txt [ [barcode 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -15208,14 +17062,15 @@ bind def
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2026033100 70169 73346
-%%BeginData:        180 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp japanpost 0.0 2026042100 78951 82167
+%%BeginData:        209 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /japanpost { /bwipjs_japanpost (start-global) def  % begin
 
@@ -15238,9 +17093,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 0.175 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -15249,7 +17118,7 @@ bind def
 %psc     def
 
     barcode () eq {
-        (bwipp.japanpostEmptyData#15252) (The data must not be empty) //raiseerror exec
+        (bwipp.japanpostEmptyData#17121) (The data must not be empty) //raiseerror exec
     } if
 
     %
@@ -15259,11 +17128,17 @@ bind def
         dup dup 48 ge exch 57 le and exch  % 0-9
         dup dup 65 ge exch 90 le and exch  % A-Z
         45 eq or or not {                  % "-"
-            (bwipp.japanpostBadCharacter#15262) (Japan Post must contain only digits, capital letters and the dash symbol) //raiseerror exec
+            (bwipp.japanpostBadCharacter#17131) (Japan Post must contain only digits, capital letters and the dash symbol) //raiseerror exec
         } if
     } forall
 
     /barlen barcode length def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /japanpost ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /encstr 20 1 add 3 mul 4 add string def
     /digits 20 array def
@@ -15311,7 +17186,7 @@ bind def
     } for
 
     not {
-        (bwipp.japanpostTooLong#15314) (The input is too long) //raiseerror exec
+        (bwipp.japanpostTooLong#17189) (The input is too long) //raiseerror exec
     } if
 
     %
@@ -15338,6 +17213,8 @@ bind def
     % Put end character
     %
     encstr 20 1 add 3 mul 2 add //japanpost.encs 20 get putinterval
+
+    height -1 eq { /height 0.175 def } if
 
     /bbs 21 3 mul 4 add array def
     /bhs bbs length array def
@@ -15375,6 +17252,12 @@ bind def
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -15401,14 +17284,15 @@ bind def
 % --EXOP: includetext includecheck includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2026033100 91284 97807
-%%BeginData:        178 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp msi 0.0 2026042100 102064 108626
+%%BeginData:        207 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /msi { /bwipjs_msi (start-global) def  % begin
 
@@ -15446,13 +17330,27 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.msiinputTooLong#15455) (The input data is too long) //raiseerror exec
+        (bwipp.msiinputTooLong#17353) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -15461,11 +17359,11 @@ bind def
 %psc     def
 
     checktype (unset) ne includecheck not and {
-        (bwipp.msiCheckTypeWithoutCheck#15464) (checktype requires includecheck) //raiseerror exec
+        (bwipp.msiCheckTypeWithoutCheck#17362) (checktype requires includecheck) //raiseerror exec
     } if
 
     badmod11 checktype (mod11) ne checktype (ncrmod11) ne and checktype (mod1110) ne and checktype (ncrmod1110) ne and and {
-        (bwipp.msiBadMod11Mismatch#15468) (badmod11 requires checktype with mod11) //raiseerror exec
+        (bwipp.msiBadMod11Mismatch#17366) (badmod11 requires checktype with mod11) //raiseerror exec
     } if
 
     checktype (unset) eq { /checktype (mod10) def } if
@@ -15475,12 +17373,18 @@ bind def
     %
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.msiBadCharacter#15478) (MSI must contain only digits) //raiseerror exec
+            (bwipp.msiBadCharacter#17376) (MSI must contain only digits) //raiseerror exec
         } if
     } forall
 
     /barlen barcode length def     % Length of the code
     /txtlen barlen def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /msi ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /mod10 {
         /code exch def
@@ -15500,7 +17404,7 @@ bind def
             badmod11 {
                 pop code length 2 add string dup 0 code putinterval dup code length (10) putinterval
             } {
-                pop (bwipp.msiBadMod11NotSpecified#15503) (mod11 check digit is 10 but badmod11 not specified) //raiseerror exec
+                pop (bwipp.msiBadMod11NotSpecified#17407) (mod11 check digit is 10 but badmod11 not specified) //raiseerror exec
             } ifelse
         } {
             code length 1 add string dup 0 code putinterval dup code length 4 -1 roll 48 add put
@@ -15516,7 +17420,7 @@ bind def
             badmod11 {
                 pop code length 2 add string dup 0 code putinterval dup code length (10) putinterval
             } {
-                pop (bwipp.msiBadMod11NotSpecified#15519) (mod11 check digit is 10 but badmod11 not specified) //raiseerror exec
+                pop (bwipp.msiBadMod11NotSpecified#17423) (mod11 check digit is 10 but badmod11 not specified) //raiseerror exec
             } ifelse
         } {
             code length 1 add string dup 0 code putinterval dup code length 4 -1 roll 48 add put
@@ -15528,7 +17432,7 @@ bind def
     %
     includecheck {
         //msi.checkfunc checktype 2 copy known not {
-            pop pop (bwipp.msiBadCharacter#15531) (MSI checktype must be mod10, mod1010, mod11, ncrmod11, mod1110 or ncrmod1110) //raiseerror exec
+            pop pop (bwipp.msiBadCharacter#17435) (MSI checktype must be mod10, mod1010, mod11, ncrmod11, mod1110 or ncrmod1110) //raiseerror exec
         } if
         get barcode exch exec /barcode exch def
         /barlen barcode length def
@@ -15557,6 +17461,8 @@ bind def
     %
     sbs barlen 8 mul 2 add //msi.encs 11 get putinterval
 
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
     /sbs [sbs {48 sub} forall]
@@ -15566,6 +17472,12 @@ bind def
         /txt [ [barcode 0 txtlen getinterval 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -15592,14 +17504,15 @@ bind def
 % --EXOP: includetext includecheckintext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2026033100 74049 77091
-%%BeginData:        190 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp plessey 0.0 2026042100 83177 89690
+%%BeginData:        219 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /plessey { /bwipjs_plessey (start-global) def  % begin
 
@@ -15657,9 +17570,23 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -15670,11 +17597,11 @@ bind def
 %psc     //plessey.latevars /init get exec
 
     barcode () eq {
-        (bwipp.plesseyEmptyData#15673) (The data must not be empty) //raiseerror exec
+        (bwipp.plesseyEmptyData#17600) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.plesseyInputTooLong#15677) (The input data is too long) //raiseerror exec
+        (bwipp.plesseyInputTooLong#17604) (The input data is too long) //raiseerror exec
     } if
 
     %
@@ -15682,15 +17609,21 @@ bind def
     %
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.plesseyBadCharacter#15685) (Plessey must contain only digits and letters A B C D E F) //raiseerror exec
+            (bwipp.plesseyBadCharacter#17612) (Plessey must contain only digits and letters A B C D E F) //raiseerror exec
         } if
     } for
 
     validatecheck barcode length 2 lt and {
-        (bwipp.plesseyBadLength#15690) (Plessey with check digits must be at least 2 characters) //raiseerror exec
+        (bwipp.plesseyBadLength#17617) (Plessey with check digits must be at least 2 characters) //raiseerror exec
     } if
 
     /barlen barcode length validatecheck {2 sub} if def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /plessey ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     %
     % Calculate the checksums
@@ -15726,7 +17659,7 @@ bind def
     validatecheck {
         barcode barlen get //plessey.barchars checksum1 get ne
         barcode barlen 1 add get //plessey.barchars checksum2 get ne or {
-            (bwipp.plesseyBadCheckDigits#15729) (Incorrect Plessey check digits provided) //raiseerror exec
+            (bwipp.plesseyBadCheckDigits#17662) (Incorrect Plessey check digits provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -15760,6 +17693,8 @@ bind def
     %
     sbs barlen 8 mul 24 add //plessey.encs unidirectional {18} {17} ifelse get putinterval
 
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
     /sbs [sbs {48 sub} forall]
@@ -15769,6 +17704,12 @@ bind def
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -15795,15 +17736,16 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2026033100 74196 77364
-%%BeginData:        188 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp telepen 0.0 2026042100 89058 81985
+%%BeginData:        219 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /telepen { /bwipjs_telepen (start-global) def  % begin
 
@@ -15853,14 +17795,28 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
     /parse false def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.telepeninputTooLong#15863) (The input data is too long) //raiseerror exec
+        (bwipp.telepeninputTooLong#17819) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -15881,8 +17837,14 @@ bind def
     options (parse) undef
 
     numeric barlen 2 mod 0 ne and {
-        (bwipp.telepenNumericOddLength#15884) (Telepen Numeric must have an even length) //raiseerror exec
+        (bwipp.telepenNumericOddLength#17840) (Telepen Numeric must have an even length) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /telepen ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /sbs barlen 16 mul 48 add string def
 
@@ -15910,7 +17872,7 @@ bind def
                     17 add
                 } ifelse
                 dup -1 eq {
-                    pop (bwipp.telepenInvalidNumericCharacter#15913) (Telepen Numeric may contain only digits, or X in even positions) //raiseerror exec
+                    pop (bwipp.telepenInvalidNumericCharacter#17875) (Telepen Numeric may contain only digits, or X in even positions) //raiseerror exec
                 } if
                 /indx exch def
                 % numeric pair displayed via barcode
@@ -15922,7 +17884,7 @@ bind def
         } {  % ASCII mode
             /indx barcode i get def
             indx 127 gt {
-                (bwipp.telepenInvalidAlphaCharacter#15925) (Telepen Alpha characters must have ordinal values 0 to 127) //raiseerror exec
+                (bwipp.telepenInvalidAlphaCharacter#17887) (Telepen Alpha characters must have ordinal values 0 to 127) //raiseerror exec
             } if
             /i i 1 add def
         } ifelse
@@ -15961,15 +17923,25 @@ bind def
         text i c 32 ge c 126 le and { c } { 32 } ifelse put
     } for
 
+    /sbs [sbs {48 sub} forall] def
+
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
-    /sbs [sbs {48 sub} forall]
+    /sbs sbs
     /bhs [sbs length 1 add 2 idiv {height} repeat]
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     includetext {
         /txt [ [text 0 0 text1font text1size] ]
         /text1xalign (center)
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -15996,7 +17968,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2026033100 65890 65714
+%%BeginResource: uk.co.terryburton.bwipp telepennumeric 0.0 2026042100 66404 69562
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -16056,15 +18028,16 @@ bind def
 % --EXOP: version=b inkspread=-0.5 parsefnc includetext
 % --RNDR: renlinear
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2026033100 119409 129045
-%%BeginData:        492 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp posicode 0.0 2026042100 135853 128422
+%%BeginData:        521 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /posicode { /bwipjs_posicode (start-global) def  % begin
 
@@ -16243,7 +18216,8 @@ bind def
     /text1size 10.0 def
     /text1xoffset 0.0 def
     /textyoffset -8.0 def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
     /encoding (auto) def
     /version (a) def
     /checkoffset 0 def
@@ -16251,12 +18225,31 @@ bind def
     /parse false def
     /parsefnc false def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.posicodeinputTooLong#16258) (The input data is too long) //raiseerror exec
+        (bwipp.posicodeinputTooLong#18245) (The input data is too long) //raiseerror exec
     } if
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /posicode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
@@ -16266,7 +18259,7 @@ bind def
 %psc     //posicode.latevars /init get exec
 
     version (a) ne version (b) ne and version (limiteda) ne and version (limitedb) ne and {
-        (bwipp.posicodeInvalidVersion#16269) (The version must be either a, b, limiteda or limitedb) //raiseerror exec
+        (bwipp.posicodeInvalidVersion#18262) (The version must be either a, b, limiteda or limitedb) //raiseerror exec
     } if
 
     /charmaps version (a) eq version (b) eq or {//posicode.charmapsnormal} {//posicode.charmapslimited} ifelse def
@@ -16285,7 +18278,7 @@ bind def
     version (limiteda) eq version (limitedb) eq or {
         0 1 barcode length 1 sub {
             barcode exch 1 getinterval 0 get set0 exch known not {
-                (bwipp.posicodeBadCharacter#16288) (Posicode limited must contain only digits, capital letters, and the symbols - and .) //raiseerror exec
+                (bwipp.posicodeBadCharacter#18281) (Posicode limited must contain only digits, capital letters, and the symbols - and .) //raiseerror exec
             } if
         } for
     } if
@@ -16303,14 +18296,14 @@ bind def
             } forall { pop exit } if
             cvi /cw exch def
             cw 45 gt {
-                (bwipp.posicodeBadRawCodeword#16306) (Raw codewords must be 0 to 45) //raiseerror exec
+                (bwipp.posicodeBadRawCodeword#18299) (Raw codewords must be 0 to 45) //raiseerror exec
             } if
             cws j cw put
             /i i 4 add def
             /j j 1 add def
         } loop
         i barcode length ne {
-            (bwipp.posicodeBadRawFormat#16313) (Raw codewords must be formatted as ^NNN) //raiseerror exec
+            (bwipp.posicodeBadRawFormat#18306) (Raw codewords must be formatted as ^NNN) //raiseerror exec
         } if
         /cws cws 0 j getinterval def
         /text () def
@@ -16526,6 +18519,8 @@ bind def
     length j add /j exch def
     /sbs sbs 0 j getinterval def
 
+    height -1 eq { /height 1.0 def } if
+
     <<
     /ren /renlinear
     /sbs [sbs {48 sub} forall]
@@ -16535,6 +18530,12 @@ bind def
     /text1xalign (center)
     /borderleft  << /a 0.0  /b 0.0  /limiteda 12.0  /limitedb 13.0 >> version get
     /borderright << /a 0.0  /b 0.0  /limiteda 12.0  /limitedb 13.0 >> version get
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -16561,16 +18562,17 @@ bind def
 % --EXOP: columns=8
 % --RNDR: renmatrix
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2026033100 147009 152997
-%%BeginData:        647 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp codablockf 0.0 2026042100 160078 155812
+%%BeginData:        669 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /codablockf { /bwipjs_codablockf (start-global) def  % begin
 
 /codablockf.swa -1 def  /codablockf.swb -2 def  /codablockf.swc -3 def  /codablockf.sft -4 def
@@ -16708,8 +18710,20 @@ bind def
     /sepheight 1 def
     /parse false def
     /parsefnc false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -16717,26 +18731,32 @@ bind def
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
 
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /codablockf ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
 %psc     //codablockf.latevars /init get exec
 
     barcode length 25000 gt {
-        (bwipp.codablockfinputTooLong#16723) (The input data is too long) //raiseerror exec
+        (bwipp.codablockfinputTooLong#18743) (The input data is too long) //raiseerror exec
     } if
 
     columns 4 lt columns 62 gt or {
-        (bwipp.codablockfBadColumns#16727) (Codablock F must have 4 to 62 columns) //raiseerror exec
+        (bwipp.codablockfBadColumns#18747) (Codablock F must have 4 to 62 columns) //raiseerror exec
     } if
 
     rows -1 ne rows 2 lt rows 44 gt or and {
-        (bwipp.codablockfBadRows#16731) (Codablock F must have 2 to 44 rows) //raiseerror exec
+        (bwipp.codablockfBadRows#18751) (Codablock F must have 2 to 44 rows) //raiseerror exec
     } if
 
     rowheight 8 lt rowheight 50 gt or {
-        (bwipp.codablockfBadRowHeight#16735) (Codablock F must have rowheight from 8 to 50) //raiseerror exec
+        (bwipp.codablockfBadRowHeight#18755) (Codablock F must have rowheight from 8 to 50) //raiseerror exec
     } if
 
     sepheight 1 lt sepheight 5 gt or {
-        (bwipp.codablockfBadSepHeight#16739) (Codablock F must have sepheight from 1 to 5) //raiseerror exec
+        (bwipp.codablockfBadSepHeight#18759) (Codablock F must have sepheight from 1 to 5) //raiseerror exec
     } if
 
     /c columns 4 ge columns 62 le and {columns} {8} ifelse def
@@ -16900,7 +18920,7 @@ bind def
         lastrow {exit} if
 
         r 44 gt {
-            (bwipp.codablockfTooBig#16903) (Maximum length exceeded) //raiseerror exec
+            (bwipp.codablockfTooBig#18923) (Maximum length exceeded) //raiseerror exec
         } if
 
         %
@@ -17119,7 +19139,7 @@ bind def
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#17122) cws //raiseerror exec } if
+    { (bwipp.debugcws#19142) cws //raiseerror exec } if
 
     %
     % Derive the bits for each row
@@ -17139,12 +19159,13 @@ bind def
     } for
 
     %
-    % Populate the bitmap
+    % Populate the bitmap with one copy of each unique row
     %
     /symwid c 11 mul 57 add def
     /symhgt sepheight r 1 add mul r rowheight mul add def
-    symwid symhgt mul { array } stopped {
-        pop (bwipp.codablockfSymbolTooLarge#17147) (The symbol size exceeds the implementation limits) //raiseerror exec
+    /numcomprows r 2 mul 1 add def
+    symwid numcomprows mul { array } stopped {
+        pop (bwipp.codablockfSymbolTooLarge#19168) (The symbol size exceeds the implementation limits) //raiseerror exec
     } if /pixs exch def
 
     % Reusable row templates
@@ -17155,46 +19176,48 @@ bind def
         1 1 0 0 0 1 1 1 0 1 0 1 1
     ] def
 
-    /pos 0 def
+    /rowmult numcomprows array def
+    /pos 0 def  /ri 0 def
 
     % Top separator
-    sepheight {
-        pixs pos allone putinterval
-        /pos pos symwid add def
-    } repeat
+    pixs pos allone putinterval
+    /pos pos symwid add def
+    rowmult ri sepheight put  /ri ri 1 add def
 
     % Data rows with separators
     0 1 r 2 sub {
         /i exch def
-        rowheight {
-            pixs pos rowbits i get putinterval
-            /pos pos symwid add def
-        } repeat
-        sepheight {
-            pixs pos seprow putinterval
-            /pos pos symwid add def
-        } repeat
+        pixs pos rowbits i get putinterval
+        /pos pos symwid add def
+        rowmult ri rowheight put  /ri ri 1 add def
+        pixs pos seprow putinterval
+        /pos pos symwid add def
+        rowmult ri sepheight put  /ri ri 1 add def
     } for
 
     % Last data row
-    rowheight {
-        pixs pos rowbits r 1 sub get putinterval
-        /pos pos symwid add def
-    } repeat
+    pixs pos rowbits r 1 sub get putinterval
+    /pos pos symwid add def
+    rowmult ri rowheight put  /ri ri 1 add def
 
     % Bottom separator
-    sepheight {
-        pixs pos allone putinterval
-        /pos pos symwid add def
-    } repeat
+    pixs pos allone putinterval
+    rowmult ri sepheight put
 
     <<
     /ren /renmatrix
     /pixs pixs
     /pixx symwid
     /pixy symhgt
+    /rowmult rowmult
     /height symhgt 72 div
     /width symwid 72 div
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -17221,16 +19244,17 @@ bind def
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2026033100 173428 175617
-%%BeginData:        849 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code16k 0.0 2026042100 185709 188128
+%%BeginData:        871 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 33 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /code16k { /bwipjs_code16k (start-global) def  % begin
 
 /code16k.swa  -1 def  /code16k.swb  -2 def  /code16k.swc  -3 def
@@ -17402,12 +19426,24 @@ bind def
     /raw false def
     /parse false def
     /parsefnc false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.code16kinputTooLong#17410) (The input data is too long) //raiseerror exec
+        (bwipp.code16kinputTooLong#19446) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -17415,18 +19451,24 @@ bind def
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
 
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /code16k ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
 %psc     //code16k.latevars /init get exec
 
     rows 0 ne rows 2 lt rows 16 gt or and {
-        (bwipp.code16kBadRows#17421) (Code 16K must have 2 to 16 rows) //raiseerror exec
+        (bwipp.code16kBadRows#19463) (Code 16K must have 2 to 16 rows) //raiseerror exec
     } if
 
     rowheight 8 lt rowheight 50 gt or {
-        (bwipp.code16kBadRowHeight#17425) (Code 16K must have rowheight from 8 to 50) //raiseerror exec
+        (bwipp.code16kBadRowHeight#19467) (Code 16K must have rowheight from 8 to 50) //raiseerror exec
     } if
 
     sepheight 1 lt sepheight 5 gt or {
-        (bwipp.code16kBadSepHeight#17429) (Code 16K must have sepheight from 1 to 5) //raiseerror exec
+        (bwipp.code16kBadSepHeight#19471) (Code 16K must have sepheight from 1 to 5) //raiseerror exec
     } if
 
     sam -1 ne {
@@ -17437,7 +19479,7 @@ bind def
             sam 10 idiv sam 10 mod gt { pop false exit } if
         } repeat
         not {
-            (bwipp.code16kBadSAM#17440) (SAM must be formatted as "NM" for Nth of M symbols, from 2 to 9 symbols) //raiseerror exec
+            (bwipp.code16kBadSAM#19482) (SAM must be formatted as "NM" for Nth of M symbols, from 2 to 9 symbols) //raiseerror exec
         } if
     } if
 
@@ -17456,14 +19498,14 @@ bind def
             } forall { pop exit } if
             cvi /cw exch def
             cw 106 gt {
-                (bwipp.code16kBadRawCodeword#17459) (Raw codewords must be 0 to 106) //raiseerror exec
+                (bwipp.code16kBadRawCodeword#19501) (Raw codewords must be 0 to 106) //raiseerror exec
             } if
             cws j cw put
             /i i 4 add def
             /j j 1 add def
         } loop
         i barcode length ne {
-            (bwipp.code16kBadRawFormat#17466) (Raw codewords must be formatted as ^NNN) //raiseerror exec
+            (bwipp.code16kBadRawFormat#19508) (Raw codewords must be formatted as ^NNN) //raiseerror exec
         } if
         /cws cws 0 j getinterval def
 
@@ -17951,7 +19993,7 @@ bind def
     } forall
 
     okay not {
-        (bwipp.code16kNoValidSymbol#17954) (Maximum length exceeded or data too large for given options) //raiseerror exec
+        (bwipp.code16kNoValidSymbol#19996) (Maximum length exceeded or data too large for given options) //raiseerror exec
     } if
 
     %
@@ -17975,7 +20017,7 @@ bind def
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#17978) cws //raiseerror exec } if
+    { (bwipp.debugcws#20020) cws //raiseerror exec } if
 
     sam -1 eq sam 10 idiv 2 mod 1 eq or {
         /stopencs //code16k.stopencsodd def
@@ -18006,57 +20048,60 @@ bind def
     } for
 
     %
-    % Populate the bitmap
+    % Populate the bitmap with one copy of each unique row
     %
     /symhgt sepheight r 1 add mul r rowheight mul add def
-    81 symhgt mul { array } stopped {
-        pop (bwipp.code16kSymbolTooLarge#18013) (The symbol size exceeds the implementation limits) //raiseerror exec
+    /numcomprows r 2 mul 1 add def
+    81 numcomprows mul { array } stopped {
+        pop (bwipp.code16kSymbolTooLarge#20056) (The symbol size exceeds the implementation limits) //raiseerror exec
     } if /pixs exch def
 
     % Reusable row templates
     /allone [ 81 {1} repeat ] def
     /seprow [ 10 {0} repeat 70 {1} repeat 0 ] def
 
-    /pos 0 def
+    /rowmult numcomprows array def
+    /pos 0 def  /ri 0 def
 
     % Top separator
-    sepheight {
-        pixs pos allone putinterval
-        /pos pos 81 add def
-    } repeat
+    pixs pos allone putinterval
+    /pos pos 81 add def
+    rowmult ri sepheight put  /ri ri 1 add def
 
     % Data rows with separators
     0 1 r 2 sub {
         /i exch def
-        rowheight {
-            pixs pos rowbits i get putinterval
-            /pos pos 81 add def
-        } repeat
-        sepheight {
-            pixs pos seprow putinterval
-            /pos pos 81 add def
-        } repeat
+        pixs pos rowbits i get putinterval
+        /pos pos 81 add def
+        rowmult ri rowheight put  /ri ri 1 add def
+        pixs pos seprow putinterval
+        /pos pos 81 add def
+        rowmult ri sepheight put  /ri ri 1 add def
     } for
 
     % Last data row
-    rowheight {
-        pixs pos rowbits r 1 sub get putinterval
-        /pos pos 81 add def
-    } repeat
+    pixs pos rowbits r 1 sub get putinterval
+    /pos pos 81 add def
+    rowmult ri rowheight put  /ri ri 1 add def
 
     % Bottom separator
-    sepheight {
-        pixs pos allone putinterval
-        /pos pos 81 add def
-    } repeat
+    pixs pos allone putinterval
+    rowmult ri sepheight put
 
     <<
     /ren /renmatrix
     /pixs pixs
     /pixx 81
     /pixy symhgt
+    /rowmult rowmult
     /height symhgt 72 div
     /width 81 72 div
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -18083,16 +20128,17 @@ bind def
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2026033100 250911 253460
-%%BeginData:       1165 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp code49 0.0 2026042100 260364 259707
+%%BeginData:       1200 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /code49 { /bwipjs_code49 (start-global) def  % begin
 
 /code49.s1 -1 def /code49.s2 -2 def /code49.fn1 -3 def /code49.fn2 -4 def /code49.fn3 -5 def /code49.ns -6 def
@@ -18910,16 +20956,28 @@ dup [ exch 16 exch 1 32 getinterval aload pop ] /code49.weighty exch readonly de
     /sepheight 1 def
     /parse false def
     /parsefnc false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode () eq {
-        (bwipp.code49emptyData#18918) (The data must not be empty) //raiseerror exec
+        (bwipp.code49emptyData#20976) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.code49inputTooLong#18922) (The input data is too long) //raiseerror exec
+        (bwipp.code49inputTooLong#20980) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -18927,22 +20985,28 @@ dup [ exch 16 exch 1 32 getinterval aload pop ] /code49.weighty exch readonly de
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
 
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /code49 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
 %psc     //code49.latevars /init get exec
 
     rows 0 ne rows 2 lt rows 8 gt or and {
-        (bwipp.code49badRows#18933) (Code 49 must have 2 to 8 rows) //raiseerror exec
+        (bwipp.code49badRows#20997) (Code 49 must have 2 to 8 rows) //raiseerror exec
     } if
 
     rowheight 8 lt rowheight 50 gt or {
-        (bwipp.code49badRowHeight#18937) (Code 49 must have rowheight from 8 to 50) //raiseerror exec
+        (bwipp.code49badRowHeight#21001) (Code 49 must have rowheight from 8 to 50) //raiseerror exec
     } if
 
     sepheight 1 lt sepheight 5 gt or {
-        (bwipp.code49badSepHeight#18941) (Code 49 must have sepheight from 1 to 5) //raiseerror exec
+        (bwipp.code49badSepHeight#21005) (Code 49 must have sepheight from 1 to 5) //raiseerror exec
     } if
 
     append sam -1 ne and {
-        (bwipp.code49samAndAppend#18945) (sam and append cannot be specified together) //raiseerror exec
+        (bwipp.code49samAndAppend#21009) (sam and append cannot be specified together) //raiseerror exec
     } if
 
     sam -1 ne {
@@ -18953,7 +21017,7 @@ dup [ exch 16 exch 1 32 getinterval aload pop ] /code49.weighty exch readonly de
             sam 10 idiv sam 10 mod gt { pop false exit } if
         } repeat
         not {
-            (bwipp.code49badSAM#18956) (SAM must be formatted as "NM" for Nth of M symbols, from 2 to 9 symbols) //raiseerror exec
+            (bwipp.code49badSAM#21020) (SAM must be formatted as "NM" for Nth of M symbols, from 2 to 9 symbols) //raiseerror exec
         } if
     } if
 
@@ -18972,7 +21036,7 @@ dup [ exch 16 exch 1 32 getinterval aload pop ] /code49.weighty exch readonly de
 
     msg {
         127 gt {
-            (bwipp.code49badCharacter#18975) (Code 49 can only support ASCII characters with values 0 to 127) //raiseerror exec
+            (bwipp.code49badCharacter#21039) (Code 49 can only support ASCII characters with values 0 to 127) //raiseerror exec
         } if
     } forall
 
@@ -19105,7 +21169,7 @@ dup [ exch 16 exch 1 32 getinterval aload pop ] /code49.weighty exch readonly de
     } forall
 
     okay not {
-        (bwipp.code49noValidSymbol#19108) (Maximum length exceeded) //raiseerror exec
+        (bwipp.code49noValidSymbol#21172) (Maximum length exceeded) //raiseerror exec
     } if
 
     %
@@ -19187,7 +21251,7 @@ dup [ exch 16 exch 1 32 getinterval aload pop ] /code49.weighty exch readonly de
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#19190) ccs //raiseerror exec } if
+    { (bwipp.debugcws#21254) ccs //raiseerror exec } if
 
     %
     % Derive the bits for each row
@@ -19215,26 +21279,42 @@ dup [ exch 16 exch 1 32 getinterval aload pop ] /code49.weighty exch readonly de
     } for
 
     %
-    % Populate the bitmap
+    % Populate the bitmap with one copy of each unique row
     %
+    /numcomprows r 2 mul 1 add def
     /pixs [
-        81 sepheight mul {1} repeat
+        81 {1} repeat
         0 1 r 2 sub {
             /i exch def
-            rowheight {rowbits i get aload pop} repeat
-            sepheight {10 {0} repeat 70 {1} repeat 0} repeat
+            rowbits i get aload pop
+            10 {0} repeat 70 {1} repeat 0
         } for
-        rowheight {rowbits r 1 sub get aload pop} repeat
-        81 sepheight mul {1} repeat
+        rowbits r 1 sub get aload pop
+        81 {1} repeat
+    ] def
+    /symhgt sepheight r 1 add mul r rowheight mul add def
+
+    /rowmult [
+        sepheight
+        0 1 r 2 sub { pop rowheight sepheight } for
+        rowheight
+        sepheight
     ] def
 
     <<
     /ren /renmatrix
     /pixs pixs
     /pixx 81
-    /pixy pixs length 81 idiv
-    /height pixs length 81 idiv 72 div
+    /pixy symhgt
+    /rowmult rowmult
+    /height symhgt 72 div
     /width 81 72 div
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -19261,14 +21341,15 @@ bind def
 %psc % --EXOP: height=0.5 includetext
 %psc % --RNDR: renlinear
 %psc % --FMLY: Less-used Symbols
-%psc %%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2026033100 123400 140660
-%psc %%BeginData:        274 ASCII Lines
+%psc %%BeginResource: uk.co.terryburton.bwipp channelcode 0.0 2026042100 145816 151587
+%psc %%BeginData:        303 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 %psc 
@@ -19374,9 +21455,23 @@ bind def
 %psc     /shortfinder false def
 %psc     /includetext false def
 %psc     /includecheck false def
-%psc     /height 1.0 def
+%psc     /height -1.0 def
+%psc     /width 0 def
+%psc 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+%psc     /modunit 1 def
 %psc 
 %psc     /apply //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+%psc 
 %psc     /barcode exch def
 %psc 
 %psc     /_render
@@ -19400,6 +21495,12 @@ bind def
 %psc     barcode cvi //channelcode.maxvals barlen 2 sub get gt {
 %psc         /bwipp.channelcodeTooBig (The Channel Code value is too big for the number of channels) //raiseerror exec
 %psc     } if
+%psc 
+%psc     %
+%psc     % Apply AST spec overrides and resolve physical specification
+%psc     %
+%psc     /channelcode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 %psc 
 %psc     %
 %psc     % Tail-call optimisation FTW!
@@ -19505,6 +21606,8 @@ bind def
 %psc         check aload pop
 %psc     ] def
 %psc 
+%psc     /height /resolve_height //render exec dup -1 eq { pop 1.0 } if def
+%psc 
 %psc     %
 %psc     % Create the human readable text
 %psc     %
@@ -19523,6 +21626,12 @@ bind def
 %psc     /text1xalign (center)
 %psc     /borderleft 1.0
 %psc     /borderright 2.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
 %psc     /opt options
 %psc     >>
 %psc 
@@ -19547,14 +21656,15 @@ bind def
 % --EXAM: 11099
 % --EXOP: inkspread=-0.25 showborder borderleft=0 borderright=0
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2026033100 60882 64115
-%%BeginData:         85 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp flattermarken 0.0 2026042100 64176 70880
+%%BeginData:        114 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 /flattermarken { /bwipjs_flattermarken (start-global) def  % begin
 
@@ -19575,13 +21685,27 @@ bind def
     /text1font (OCR-B) def
     /text1size 10.0 def
     /textyoffset -8.0 def
-    /height 0.3 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 500 gt {
-        (bwipp.flattermarkeninputTooLong#19584) (The input data is too long) //raiseerror exec
+        (bwipp.flattermarkeninputTooLong#21708) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -19594,11 +21718,17 @@ bind def
     %
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.flattermarkenBadCharacter#19597) (Flattermarken must contain only digits) //raiseerror exec
+            (bwipp.flattermarkenBadCharacter#21721) (Flattermarken must contain only digits) //raiseerror exec
         } if
     } forall
 
     /barlen barcode length def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /flattermarken ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
     /sbs barlen 4 mul string def
 
@@ -19612,6 +21742,8 @@ bind def
         sbs i 4 mul enc putinterval
     } for
 
+    height -1 eq { /height 0.3 def } if
+
     <<
     /ren /renlinear
     /sbs [sbs {48 sub} forall]
@@ -19619,6 +21751,12 @@ bind def
     /bbs [sbs length 1 add 2 idiv {0} repeat]
     /txt [ [barcode 0 0 text1font text1size] ]
     /text1xalign (center)
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -19644,25 +21782,40 @@ bind def
 % --EXAM: 331132131313411122131311333213114131131221323
 % --EXOP: height=0.5
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2026033100 58628 61944
-%%BeginData:         57 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp raw 0.0 2026042100 61564 68351
+%%BeginData:         86 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /raw {
 
-    4 dict begin
+    16 dict begin
 %psc {
 
     /dontdraw false def
-    /height 1.0 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -19674,20 +21827,34 @@ bind def
     % Validate input
     %
     barcode length 2500 gt {
-        (bwipp.rawinputTooLong#19677) (The input data is too long) //raiseerror exec
+        (bwipp.rawinputTooLong#21830) (The input data is too long) //raiseerror exec
     } if
 
     barcode {
         dup 49 lt exch 57 gt or {
-            (bwipp.rawBadCharacter#19682) (Raw must contain only digits 1 to 9) //raiseerror exec
+            (bwipp.rawBadCharacter#21835) (Raw must contain only digits 1 to 9) //raiseerror exec
         } if
     } forall
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /raw ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    height -1 eq { /height 1.0 def } if
 
     <<
     /ren /renlinear
     /sbs [barcode {48 sub} forall]
     /bhs [barcode length 1 add 2 idiv {height} repeat]
     /bbs [barcode length 1 add 2 idiv {0} repeat]
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -19713,14 +21880,15 @@ bind def
 % --EXAM: FATDAFTDAD
 % --EXOP:
 % --RNDR: renlinear
-%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2026033100 61712 65085
-%%BeginData:         83 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp daft 0.0 2026042100 68728 72052
+%%BeginData:        112 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /daft {
@@ -19729,9 +21897,23 @@ bind def
 %psc {
 
     /dontdraw false def
-    /height 0.175 def
+    /height -1.0 def
+    /width 0 def
+
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -19740,20 +21922,28 @@ bind def
 %psc     def
 
     barcode () eq {
-        (bwipp.daftEmptyData#19743) (The data must not be empty) //raiseerror exec
+        (bwipp.daftEmptyData#21925) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 2500 gt {
-        (bwipp.daftinputTooLong#19747) (The input data is too long) //raiseerror exec
+        (bwipp.daftinputTooLong#21929) (The input data is too long) //raiseerror exec
     } if
 
     barcode {
         dup 68 ne exch dup 65 ne exch dup 70 ne exch 84 ne and and and {
-            (bwipp.daftBadCharacter#19752) (DAFT must contain only characters D, A, F and T) //raiseerror exec
+            (bwipp.daftBadCharacter#21934) (DAFT must contain only characters D, A, F and T) //raiseerror exec
         } if
     } forall
 
     /barlen barcode length def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /daft ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    height -1 eq { /height 0.175 def } if
 
     /bbs barlen array def
     /bhs barlen array def
@@ -19783,6 +21973,12 @@ bind def
     /bbs bbs
     /bhs bhs
     /sbs [bhs length 1 sub {1.44 1.872} repeat 1.44]
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -19809,14 +22005,15 @@ bind def
 % --EXOP:
 % --RNDR: renlinear renmatrix
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2026033100 736243 735653
-%%BeginData:         93 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp symbol 0.0 2026042100 739709 742710
+%%BeginData:        120 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 33 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 /symbol { /bwipjs_symbol (start-global) def  % begin
@@ -19870,7 +22067,21 @@ bind def
 
     /dontdraw false def
 
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xmin -1.0 def  /xnom -1.0 def  /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
+
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -19882,14 +22093,26 @@ bind def
     % Validate input
     %
     barcode length 50 gt {
-        (bwipp.symbolinputTooLong#19885) (The input data is too long) //raiseerror exec
+        (bwipp.symbolinputTooLong#22096) (The input data is too long) //raiseerror exec
     } if
 
     //symbol.symbols barcode known not {
-        (bwipp.symbolUnknownSymbol#19889) (Unknown symbol name provided) //raiseerror exec
+        (bwipp.symbolUnknownSymbol#22100) (Unknown symbol name provided) //raiseerror exec
     } if
 
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /symbol ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
     //symbol.symbols barcode get exec
+    dup /strictspec strictspec put
+    dup /loosespec loosespec put
+    dup /xdim xdim put
+    dup /xmin xmin put
+    dup /xmax xmax put
+    dup /modunit modunit put
     dup /opt options put
 
     _render { dup /ren get //symbol.renmap exch get exec } if
@@ -19909,24 +22132,26 @@ bind def
 % --END ENCODER symbol--
 
 % --BEGIN ENCODER pdf417--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecprime render renmatrix--
 % --DESC: PDF417
 % --EXAM: This is PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2026033100 262124 267169
-%%BeginData:       1214 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp pdf417 0.0 2026042100 272173 274300
+%%BeginData:       1216 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 33 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecprime dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /pdf417 { /bwipjs_pdf417 (start-global) def  % begin
 
 %psc /pdf417 [/before /after] //setuphooks exec
@@ -20405,14 +22630,32 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
     /raw false def
     /parse false def
     /parsefnc false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /pdf417 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //pdf417.after exec
 
@@ -20421,35 +22664,35 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
 %psc     (input.validate) //pdf417.before exec
 
     barcode () eq {
-        (bwipp.pdf417emptyData#20424) (The data must not be empty) //raiseerror exec
+        (bwipp.pdf417emptyData#22667) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 12500 gt {
-        (bwipp.pdf417inputTooLong#20428) (The input data is too long) //raiseerror exec
+        (bwipp.pdf417inputTooLong#22671) (The input data is too long) //raiseerror exec
     } if
 
     eclevel -1 ne eclevel 0 lt eclevel 8 gt or and {
-        (bwipp.pdf417InvalidErrorCorrectionLevel#20432) (Valid error correction levels are 0 to 8) //raiseerror exec
+        (bwipp.pdf417InvalidErrorCorrectionLevel#22675) (Valid error correction levels are 0 to 8) //raiseerror exec
     } if
 
     ccc raw and {
-        (bwipp.pdf417cccAndRaw#20436) (Cannot combine ccc and raw) //raiseerror exec
+        (bwipp.pdf417cccAndRaw#22679) (Cannot combine ccc and raw) //raiseerror exec
     } if
 
     ccc compact and {
-        (bwipp.pdf417cccAndCompact#20440) (Cannot combine ccc and compact) //raiseerror exec
+        (bwipp.pdf417cccAndCompact#22683) (Cannot combine ccc and compact) //raiseerror exec
     } if
 
     rows 0 ne rows 3 lt rows 90 gt or and {
-        (bwipp.pdf417invalidRows#20444) (There must be between 3 and 90 rows) //raiseerror exec
+        (bwipp.pdf417invalidRows#22687) (There must be between 3 and 90 rows) //raiseerror exec
     } if
 
     columns 0 ne columns 1 lt columns 30 gt or and {
-        (bwipp.pdf417invalidColumns#20448) (There must be between 1 and 30 columns) //raiseerror exec
+        (bwipp.pdf417invalidColumns#22691) (There must be between 1 and 30 columns) //raiseerror exec
     } if
 
     rowmult 0 le rowmult 50 gt or {
-        (bwipp.pdf417badRowMult#20452) (The row multiplier must be greater than 0 and at most 50) //raiseerror exec
+        (bwipp.pdf417badRowMult#22695) (The row multiplier must be greater than 0 and at most 50) //raiseerror exec
     } if
 
 %psc     (input.validate) //pdf417.after exec
@@ -20468,14 +22711,14 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
             } forall { pop exit } if
             cvi /cw exch def
             cw 928 gt {
-                (bwipp.pdf417badRawCodeword#20471) (Raw codewords must be 0 to 928) //raiseerror exec
+                (bwipp.pdf417badRawCodeword#22714) (Raw codewords must be 0 to 928) //raiseerror exec
             } if
             datcws j cw put
             /i i 4 add def
             /j j 1 add def
         } loop
         i barcode length ne {
-            (bwipp.pdf417badRawFormat#20478) (Raw codewords must be formatted as ^NNN) //raiseerror exec
+            (bwipp.pdf417badRawFormat#22721) (Raw codewords must be formatted as ^NNN) //raiseerror exec
         } if
         /datcws datcws 0 j getinterval def
     } if
@@ -20891,7 +23134,7 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
             } { dup 811799 le {  % ECI 810900 - 811799
                 925 exch 810900 sub 2 array astore
             } {
-                pop (bwipp.pdf417badECI#20894) (PDF417 supports ECIs 000000 to 811799) //raiseerror exec
+                pop (bwipp.pdf417badECI#23137) (PDF417 supports ECIs 000000 to 811799) //raiseerror exec
             } ifelse } ifelse } ifelse
         } def
 
@@ -20936,7 +23179,7 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
     /m datcws length def
 
     m 926 gt {
-      (bwipp.pdf417dataTooLong#20939) (The data is too long) //raiseerror exec
+      (bwipp.pdf417dataTooLong#23182) (The data is too long) //raiseerror exec
     } if
 
     %
@@ -20975,7 +23218,7 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
     % Symbol cannot exceed 90 rows
     %
     r 90 gt {
-      (bwipp.pdf417insufficientCapacity#20978) (Insufficient capacity in the symbol) //raiseerror exec
+      (bwipp.pdf417insufficientCapacity#23221) (Insufficient capacity in the symbol) //raiseerror exec
     } if
 
     %
@@ -20999,50 +23242,29 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
 %psc     (ecc.cws) //pdf417.before exec
 
     %
-    % Create codewords array with one extra working space element and add padding
+    % Create codewords array sized for data + ECC, and add padding
     %
     /n c r mul k sub def
     n 928 gt {
-        (bwipp.pdf417insufficientCapacity#21006) (Insufficient capacity in the symbol) //raiseerror exec
+        (bwipp.pdf417insufficientCapacity#23249) (Insufficient capacity in the symbol) //raiseerror exec
     } if
-    /cws c r mul 1 add array def
+    /cws c r mul array def
     cws 0 n put
     cws 1 datcws putinterval
     cws m 1 add [ n m sub 1 sub {900} repeat ] putinterval
-    cws n [ k {0} repeat 0 ] putinterval
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#21016) cws 0 n getinterval //raiseerror exec } if
+    { (bwipp.debugcws#23258) cws 0 n getinterval //raiseerror exec } if
 
     %
-    % Derive the error codewords
+    % Derive the error codewords directly into cws[n..n+k)
     %
-    0 1 n 1 sub {  % i
-        cws exch get cws n get add 929 mod       % t = (cws[i] + cws[n]) mod 929
-        0 1 k 1 sub {  % j
-            cws n 2 index add 2 copy 1 add get   % ... cws n+j cws[n+j+1]
-            929                                  % ... 929
-            5 index                              % ... t
-            coeffs k 8 -1 roll sub 1 sub get     % ... coeffs[k-j-1]
-            mul 929 mod                          % p = (t * coeffs[k-j-1]) mod 929
-            sub add 929 mod put                  % cws[n+j] = (cws[n+j+1] + (929 - p)) mod 929
-        } for
-        pop  % t
-    } for
-    n 1 n k add {  % i
-         cws exch 2 copy get                     % ... cws i cws[i]
-         929 exch sub 929 mod put                % cws[i] = (929 - cws[i]) mod 929
-    } for
-
-    %
-    % Trim the working space from the end of the codewords
-    %
-    /cws cws 0 cws length 1 sub getinterval def
+    {cws exch get} n coeffs k cws n k getinterval 929 //rsecprime exec
 
     options /debugecc known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugecc#21045) cws n k getinterval //raiseerror exec } if
+    { (bwipp.debugecc#23267) cws n k getinterval //raiseerror exec } if
 
 %psc     (ecc.cws) //pdf417.after exec
 
@@ -21065,8 +23287,8 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
     } {
         /rwid 17 c mul 17 add 17 add 17 add 18 add def
     } ifelse
-    rwid r mul rowmult mul { array } stopped {
-        pop (bwipp.pdf417PixsTooLarge#21069) (The resulting symbol with the given rowmult exceeds the implementation maximum array size) //raiseerror exec
+    rwid r mul { array } stopped {
+        pop (bwipp.pdf417PixsTooLarge#23291) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec
     } if /pixs exch def
 
     0 1 r 1 sub {
@@ -21085,7 +23307,7 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
             /rcw i 3 idiv 30 mul eclevel 3 mul add r 1 sub 3 mod add def
         } if
 
-        [
+        pixs i rwid mul [
             1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 0 0
             lcw i 3 mod cwtobits aload pop
             cws c i mul c getinterval { i 3 mod cwtobits aload pop } forall
@@ -21095,11 +23317,7 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
                 rcw i 3 mod cwtobits aload pop
                 1 1 1 1 1 1 1 0 1 0 0 0 1 0 1 0 0 1
             } ifelse
-        ]
-        0 1 rowmult 1 sub {
-            i rowmult mul add rwid mul pixs exch 2 index putinterval
-        } for
-        pop
+        ] putinterval
     } for
 
 %psc     (matrix.layout) //pdf417.after exec
@@ -21109,12 +23327,19 @@ pdf417.coeffscachemax pdf417.coeffscachelimit //fifocache exec /pdf417.coeffscac
     /pixs pixs
     /pixx rwid
     /pixy r rowmult mul
+    /rowmult [ r { rowmult } repeat ]
     /height r rowmult mul 72 div
     /width rwid 72 div
     /borderleft 2.0
     /borderright 2.0
     /bordertop 2.0
     /borderbottom 2.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -21136,13 +23361,13 @@ bind def
 % --END ENCODER pdf417--
 
 % --BEGIN ENCODER pdf417compact--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix pdf417--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecprime render renmatrix pdf417--
 % --DESC: Compact PDF417
 % --EXAM: This is compact PDF417
 % --EXOP: columns=2
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2026033100 75929 72376
+%%BeginResource: uk.co.terryburton.bwipp pdf417compact 0.0 2026042100 78660 71779
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -21196,24 +23421,26 @@ bind def
 % --END ENCODER pdf417compact--
 
 % --BEGIN ENCODER micropdf417--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecprime render renmatrix--
 % --DESC: MicroPDF417
 % --EXAM: MicroPDF417
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2026033100 288981 289513
-%%BeginData:       1332 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp micropdf417 0.0 2026042100 294878 296732
+%%BeginData:       1334 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 33 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecprime dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /micropdf417 { /bwipjs_micropdf417 (start-global) def  % begin
 
 %psc /micropdf417 [/before /after] //setuphooks exec
@@ -21771,14 +23998,32 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
     /raw false def
     /parse false def
     /parsefnc false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /micropdf417 ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //micropdf417.after exec
 
@@ -21787,19 +24032,19 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
 %psc     (input.validate) //micropdf417.before exec
 
     barcode () eq {
-        (bwipp.micropdf417emptyData#21790) (The data must not be empty) //raiseerror exec
+        (bwipp.micropdf417emptyData#24035) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 5000 gt {
-        (bwipp.micropdf417inputTooLong#21794) (The input data is too long) //raiseerror exec
+        (bwipp.micropdf417inputTooLong#24039) (The input data is too long) //raiseerror exec
     } if
 
     rowmult 0 le rowmult 50 gt or {
-        (bwipp.micropdf417badRowMult#21798) (The row multiplier must be greater than 0 and at most 50) //raiseerror exec
+        (bwipp.micropdf417badRowMult#24043) (The row multiplier must be greater than 0 and at most 50) //raiseerror exec
     } if
 
     cca ccb and cca raw and ccb raw and or or {
-        (bwipp.micropdf417ccaAndCcb#21802) (Cannot combine cca, ccb and raw) //raiseerror exec
+        (bwipp.micropdf417ccaAndCcb#24047) (Cannot combine cca, ccb and raw) //raiseerror exec
     } if
 
     %
@@ -21815,13 +24060,13 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
                     dup 48 lt exch 57 gt or { pop false } if
                 } forall
                 not {
-                    pop pop (bwipp.micropdf417BadVersionBadRowOrColumn#21818) (version must be formatted as RxC) //raiseerror exec
+                    pop pop (bwipp.micropdf417BadVersionBadRowOrColumn#24063) (version must be formatted as RxC) //raiseerror exec
                 } if
             } forall
             /rows exch cvi def
             /columns exch cvi def
         } {
-            pop (bwipp.micropdf417badVersionFormat#21824) (version must be formatted as RxC) //raiseerror exec
+            pop (bwipp.micropdf417badVersionFormat#24069) (version must be formatted as RxC) //raiseerror exec
         } ifelse
     } if
 
@@ -21841,14 +24086,14 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
             } forall { pop exit } if
             cvi /cw exch def
             cw 928 gt {
-                (bwipp.micropdf417badRawCodeword#21844) (Raw codewords must be 0 to 928) //raiseerror exec
+                (bwipp.micropdf417badRawCodeword#24089) (Raw codewords must be 0 to 928) //raiseerror exec
             } if
             datcws j cw put
             /i i 4 add def
             /j j 1 add def
         } loop
         i barcode length ne {
-            (bwipp.micropdf417badCcaRawFormat#21851) (Raw codewords must be formatted as ^NNN) //raiseerror exec
+            (bwipp.micropdf417badCcaRawFormat#24096) (Raw codewords must be formatted as ^NNN) //raiseerror exec
         } if
         /datcws datcws 0 j getinterval def
     } if
@@ -22291,7 +24536,7 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
             } { dup 811799 le {  % ECI 810900 - 811799
                 925 exch 810900 sub 2 array astore
             } {
-                pop (bwipp.pdf417badECI#22294) (PDF417 supports ECIs 000000 to 811799) //raiseerror exec
+                pop (bwipp.pdf417badECI#24539) (PDF417 supports ECIs 000000 to 811799) //raiseerror exec
             } ifelse } ifelse } ifelse
         } def
 
@@ -22377,7 +24622,7 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
     } forall
 
     okay not {
-        (bwipp.micropdf417noValidSymbol#22380) (Maximum length exceeded or invalid size) //raiseerror exec
+        (bwipp.micropdf417noValidSymbol#24625) (Maximum length exceeded or invalid size) //raiseerror exec
     } if
 
 %psc     (metrics.selection) //micropdf417.after exec
@@ -22392,47 +24637,26 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
 %psc     (ecc.cws) //micropdf417.before exec
 
     %
-    % Create codewords array with one extra working space element and add padding
+    % Create codewords array sized for data + ECC, and add padding
     %
     /m datcws length def
     /n c r mul k sub def
-    /cws c r mul 1 add array def
+    /cws c r mul array def
     cws 0 datcws putinterval
     cws m [ n m sub {900} repeat ] putinterval
-    cws n [ k {0} repeat 0 ] putinterval
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#22406) cws 0 n getinterval //raiseerror exec } if
+    { (bwipp.debugcws#24650) cws 0 n getinterval //raiseerror exec } if
 
     %
-    % Derive the error codewords
+    % Derive the error codewords directly into cws[n..n+k)
     %
-    0 1 n 1 sub {  % i
-        cws exch get cws n get add 929 mod       % t = (cws[i] + cws[n]) mod 929
-        0 1 k 1 sub {  % j
-            cws n 2 index add 2 copy 1 add get   % ... cws n+j cws[n+j+1]
-            929                                  % ... 929
-            5 index                              % ... t
-            coeffs k 8 -1 roll sub 1 sub get     % ... coeffs[k-j-1]
-            mul 929 mod                          % p = (t * coeffs[k-j-1]) mod 929
-            sub add 929 mod put                  % cws[n+j] = (cws[n+j+1] + (929 - p)) mod 929
-        } for
-        pop  % t
-    } for
-    n 1 n k add {  % i
-         cws exch 2 copy get                     % ... cws i cws[i]
-         929 exch sub 929 mod put                % cws[i] = (929 - cws[i]) mod 929
-    } for
-
-    %
-    % Trim the working space from the end of the codewords
-    %
-    /cws cws 0 cws length 1 sub getinterval def
+    {cws exch get} n coeffs k cws n k getinterval 929 //rsecprime exec
 
     options /debugecc known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugecc#22435) cws n k getinterval //raiseerror exec } if
+    { (bwipp.debugecc#24659) cws n k getinterval //raiseerror exec } if
 
 %psc     (ecc.cws) //micropdf417.after exec
 
@@ -22461,14 +24685,14 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
     %
     /rwid //micropdf417.rwids c 1 sub get def
     c 3 eq cca and {/rwid 72 def} if
-    rwid r mul rowmult mul { array } stopped {
-        pop (bwipp.micropdf417PixsTooLarge#22465) (The resulting symbol with the given rowmult exceeds the implementation maximum array size) //raiseerror exec
+    rwid r mul { array } stopped {
+        pop (bwipp.micropdf417PixsTooLarge#24689) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec
     } if /pixs exch def
 
     0 1 r 1 sub {
         /i exch def
         /clst i rapl add 1 sub 3 mod def
-        [
+        pixs i rwid mul [
             c 1 eq {
                 i rapl add 1 sub 52 mod 0 raptobits aload pop
                 cws i get clst cwtobits aload pop
@@ -22500,11 +24724,7 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
                 i rapr add 1 sub 52 mod 0 raptobits aload pop
             } if
             1
-        ]
-        0 1 rowmult 1 sub {
-            i rowmult mul add rwid mul pixs exch 2 index putinterval
-        } for
-        pop
+        ] putinterval
     } for
 
 %psc     (matrix.layout) //micropdf417.after exec
@@ -22514,12 +24734,19 @@ micropdf417.coeffscachemax micropdf417.coeffscachelimit //fifocache exec /microp
     /pixs pixs
     /pixx rwid
     /pixy r rowmult mul
+    /rowmult [ r { rowmult } repeat ]
     /height r rowmult mul 72 div
     /width rwid 72 div
     /borderleft 1.0
     /borderright 1.0
     /bordertop 1.0
     /borderbottom 1.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -22541,24 +24768,26 @@ bind def
 % --END ENCODER micropdf417--
 
 % --BEGIN ENCODER datamatrix--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix--
 % --DESC: Data Matrix
 % --EXAM: This is Data Matrix!
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2026033100 414097 415180
-%%BeginData:       1154 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp datamatrix 0.0 2026042100 425678 427608
+%%BeginData:       1178 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 33 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecbinary dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /datamatrix { /bwipjs_datamatrix (start-global) def  % begin
 
 %psc /datamatrix [/before /after] //setuphooks exec
@@ -22887,14 +25116,36 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
     /c40headerlength -1 def
     /raw false def
     /dmre false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    /modunit 2 def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /default_modunit 2 copy known {get /modunit exch def} {pop pop} ifelse
+%psc     } {pop} ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /datamatrix ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //datamatrix.after exec
 
@@ -22906,15 +25157,15 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
 %psc     (input.validate) //datamatrix.before exec
 
     barcode () eq {
-        (bwipp.datamatrixEmptyData#22909) (The data must not be empty) //raiseerror exec
+        (bwipp.datamatrixEmptyData#25160) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 15000 gt {
-        (bwipp.datamatrixinputTooLong#22913) (The input data is too long) //raiseerror exec
+        (bwipp.datamatrixinputTooLong#25164) (The input data is too long) //raiseerror exec
     } if
 
     version (unset) ne rows 0 ne columns 0 ne or and {
-        (bwipp.datamatrixVersionRowsCols#22917) (rows and columns must not be given if version is specified) //raiseerror exec
+        (bwipp.datamatrixVersionRowsCols#25168) (rows and columns must not be given if version is specified) //raiseerror exec
     } if
 
     %
@@ -22930,14 +25181,14 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
                     dup 48 lt exch 57 gt or { pop false } if
                 } forall
                 not {
-                    pop pop (bwipp.datamatrixVersionBadRowOrColumn#22933) (version must be formatted as RxC) //raiseerror exec
+                    pop pop (bwipp.datamatrixVersionBadRowOrColumn#25184) (version must be formatted as RxC) //raiseerror exec
                 } if
             } forall
             /rows exch cvi def
             /columns exch cvi def
             /format rows columns eq { (square) } { (rectangle) } ifelse def
         } {
-            pop (bwipp.datamatrixVersionFormat#22940) (version must be formatted as RxC) //raiseerror exec
+            pop (bwipp.datamatrixVersionFormat#25191) (version must be formatted as RxC) //raiseerror exec
         } ifelse
     } {
         format (unset) eq {
@@ -22946,7 +25197,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
     } ifelse
 
     format (square) ne format (rectangle) ne and {
-        (bwipp.datamatrixInvalidFormat#22949) (The format must be either square or rectangle) //raiseerror exec
+        (bwipp.datamatrixInvalidFormat#25200) (The format must be either square or rectangle) //raiseerror exec
     } if
 
 %psc     (input.validate) //datamatrix.after exec
@@ -22989,7 +25240,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
 
     /getnumremcws {
         dup numremcws length ge {
-            pop (bwipp.datamatrixTooMuchData#22992) (The input data exceeds the symbol capacity) //raiseerror exec
+            pop (bwipp.datamatrixTooMuchData#25243) (The input data exceeds the symbol capacity) //raiseerror exec
         } if
         numremcws exch get
     } def
@@ -23006,14 +25257,14 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
             } forall { pop exit } if
             cvi /cw exch def
             cw 255 gt {
-                (bwipp.datamatrixBadRawCodeword#23009) (Raw codewords must be 0 to 255) //raiseerror exec
+                (bwipp.datamatrixBadRawCodeword#25260) (Raw codewords must be 0 to 255) //raiseerror exec
             } if
             cws j cw put
             /i i 4 add def
             /j j 1 add def
         } loop
         i barcode length ne {
-            (bwipp.datamatrixBadRawFormat#23016) (Raw codewords must be formatted as ^NNN) //raiseerror exec
+            (bwipp.datamatrixBadRawFormat#25267) (Raw codewords must be formatted as ^NNN) //raiseerror exec
         } if
         /cws cws 0 j getinterval def
 
@@ -23064,6 +25315,8 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
         %
 %psc         (input.encoding) //datamatrix.before exec
 
+        c40headerlength msglen gt { /c40headerlength msglen def } if  % Make sure it's bounded as may increment
+
         /numD      [ msglen {0} repeat 0 ] def
         /nextXterm [ msglen {0} repeat 9999 ] def
         /nextNonX  [ msglen {0} repeat 9999 ] def
@@ -23111,12 +25364,13 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
             mode //datamatrix.B eq {/bc 0.0 def} if
             1 {  % common exit
                 isECI i get {//datamatrix.A exit} if  % ECI only in ASCII
-                c40headerlength -1 ne i c40headerlength lt and {//datamatrix.C exit} if  % C40 only for c40headerlength characters
+                i c40headerlength lt {//datamatrix.C exit} if  % C40 only for c40headerlength characters
+                /isfnc1 msg i get //datamatrix.fnc1 eq def
                 /k 0 def {  % loop
                     i k add msglen eq {
                         [/ac /cc /tc /xc /ec /bc] {dup load ceiling def} forall
                         true [   cc tc xc ec bc] {ac exch le and} forall {//datamatrix.A exit} if
-                        true [ac cc tc xc ec   ] {bc exch lt and} forall {//datamatrix.B exit} if
+                        true [ac cc tc xc ec   ] {bc exch lt and} forall {isfnc1 {//datamatrix.A} {//datamatrix.B} ifelse exit} if
                         true [ac cc tc xc    bc] {ec exch lt and} forall {//datamatrix.E exit} if
                         true [ac cc    xc ec bc] {tc exch lt and} forall {//datamatrix.T exit} if
                         true [ac cc tc    ec bc] {xc exch lt and} forall {//datamatrix.X exit} if
@@ -23131,8 +25385,8 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
                     /bc bc isFN {4 add} {1 add} ifelse def
                     k 4 ge {
                         true [   cc tc xc ec bc] {ac 1 add exch le and} forall {//datamatrix.A exit} if
-                        bc 1 add ac le {//datamatrix.B exit} if
-                        true [   cc tc xc ec   ] {bc 1 add exch lt and} forall {//datamatrix.B exit} if
+                        bc 1 add ac le {isfnc1 {//datamatrix.A} {//datamatrix.B} ifelse exit} if
+                        true [   cc tc xc ec   ] {bc 1 add exch lt and} forall {isfnc1 {//datamatrix.A} {//datamatrix.B} ifelse exit} if
                         true [ac cc tc xc    bc] {ec 1 add exch lt and} forall {//datamatrix.E exit} if
                         true [ac cc    xc ec bc] {tc 1 add exch lt and} forall {//datamatrix.T exit} if
                         true [ac cc tc    ec bc] {xc 1 add exch lt and} forall {//datamatrix.X exit} if
@@ -23148,7 +25402,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
 
         /addtocws {
             dup length j add cws length gt {
-                pop (bwipp.datamatrixTooMuchData#23151) (The input data exceeds the symbol capacity) //raiseerror exec
+                pop (bwipp.datamatrixTooMuchData#25405) (The input data exceeds the symbol capacity) //raiseerror exec
             } if
             dup cws exch j exch putinterval
             /j exch length j add def
@@ -23181,7 +25435,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
                     /i i 1 add def
                     exit
                 } if
-                numD i get 2 ge {
+                i c40headerlength ge numD i get 2 ge and {
                     2 string dup 0 msg i get put dup 1 msg i 1 add get put Avals exch get addtocws
                     /i i 2 add def
                     exit
@@ -23288,7 +25542,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
                 } if
                 encvals mode get msg i get get
                 dup length p add ctxvals length gt {
-                    pop (bwipp.datamatrixTooMuchData#23291) (The input data exceeds the symbol capacity) //raiseerror exec
+                    pop (bwipp.datamatrixTooMuchData#25545) (The input data exceeds the symbol capacity) //raiseerror exec
                 } if
                 dup ctxvals exch p exch putinterval
                 /p exch length p add def
@@ -23309,6 +25563,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
                 ] CTXvalstocws addtocws
                 [//datamatrix.unlcw] addtocws
                 /mode //datamatrix.A def
+                /c40headerlength -1 def  % Disable when backtracking
                 % Encode something to avoid latching immediately back
                 i msglen ne isECI i get not and {
                     numD i get 2 ge {
@@ -23350,7 +25605,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
                 i msglen eq {exit} if
                 Evals msg i get known not {exit} if
                 p edifactvals length ge {
-                    (bwipp.datamatrixTooMuchData#23353) (The input data exceeds the symbol capacity) //raiseerror exec
+                    (bwipp.datamatrixTooMuchData#25608) (The input data exceeds the symbol capacity) //raiseerror exec
                 } if
                 p 4 mod 0 eq {
                     msglen i sub 2 le {  % Check end of data condition
@@ -23389,6 +25644,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
                 } if
                 edifactvals 0 p getinterval Evalstocws addtocws
                 /mode //datamatrix.A def
+                /c40headerlength -1 def  % Disable when backtracking
                 % Encode something to avoid latching immediately back
                 i msglen ne isECI i get not and {
                     numD i get 2 ge {
@@ -23408,7 +25664,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
                 i msglen eq {exit} if
                 lookup mode ne {exit} if
                 p bvals length ge {
-                    (bwipp.datamatrixTooMuchData#23411) (The input data exceeds the symbol capacity) //raiseerror exec
+                    (bwipp.datamatrixTooMuchData#25667) (The input data exceeds the symbol capacity) //raiseerror exec
                 } if
                 bvals p msg i get put
                 /p p 1 add def
@@ -23437,7 +25693,15 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
         % Derive the codewords
         %
         /cws 1558 array def
-        /mode //datamatrix.A def /i 0 def /j 0 def {
+        /mode //datamatrix.A def /i 0 def /j 0 def
+        % FNC1 in 1st position must be in ASCII to be GS1
+        msg 0 get //datamatrix.fnc1 eq {
+            Avals //datamatrix.fnc1 get addtocws
+            /i 1 def
+            % Compensate c40headerlength if any
+            c40headerlength 0 gt { /c40headerlength c40headerlength 1 add def } if
+        } if
+        {
             i msglen ge {exit} if
             //datamatrix.encfuncs mode get load exec
         } loop
@@ -23462,7 +25726,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#23465) cws //raiseerror exec } if
+    { (bwipp.debugcws#25729) cws //raiseerror exec } if
 
 %psc     (input.encoding) //datamatrix.after exec
 
@@ -23494,7 +25758,7 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
     } forall
 
     okay not {
-        (bwipp.datamatrixNoValidSymbol#23497) (Maximum length exceeded or invalid size) //raiseerror exec
+        (bwipp.datamatrixNoValidSymbol#25761) (Maximum length exceeded or invalid size) //raiseerror exec
     } if
 
     %
@@ -23507,46 +25771,23 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
 %psc     (ecc.cws) //datamatrix.before exec
 
     %
-    % De-interleave the codewords into blocks
+    % Calculate the error correction codewords for each block. Data is read
+    % directly from cws via interleaved indexing.
     %
-    /cwbs rsbl array def  % Array of data codeword blocks
-    /ecbs rsbl array def  % Array of error correction blocks
+    /ecbs rsbl array def
+    /ecpb rscw rsbl idiv def
     0 1 rsbl 1 sub {
-        /i exch def
+        /blk exch def
         cws length 1558 ne {
             /cwbsize cws length rsbl idiv def
         } {
-            i 7 le {/cwbsize 156 def} {/cwbsize 155 def} ifelse
+            blk 7 le {/cwbsize 156 def} {/cwbsize 155 def} ifelse
         } ifelse
-        /cwb cwbsize array def
-        0 1 cwbsize 1 sub {
-            /j exch def
-            cwb j cws j rsbl mul i add get put
-        } for
-        cwbs i cwb put
-        ecbs i [ rscw rsbl idiv {0} repeat ] put
-    } for
-
-    %
-    % Calculate the error correction codewords for each block
-    %
-    0 1 cwbs length 1 sub {
-        /i exch def
-        /cwb cwbs i get def
-        /ecb ecbs i get def
-        /rsnc-1 ecb length 1 sub def
-        0 1 cwb length 1 sub {  % i
-            cwb exch get ecb 0 get xor                   % t = cwb[i] ^ ecb[0]
-            rsnc-1 -1 1 {  % j
-                ecb rsnc-1 2 index sub 2 copy 1 add get  % ... ecb rsnc-1-j ecb[rnsc-1-j]
-                4 index                                  % ... t
-                coeffs 6 -1 roll get                     % ... coeffs[j]
-                //datamatrix.rsprod exec                 % p = t * coeffs[j]
-                xor put                                  % ecb[rnsc-1-j] = p ^ ecb[rnsc-1-j]
-            } for
-            ecb rsnc-1 2 index coeffs 0 get //datamatrix.rsprod exec put  % ecb[rnnc-1] = t * coeffs[0]
-            pop
-        } for
+        ecbs blk
+        /lfsr ecpb array def
+        {cws exch rsbl mul blk add get} cwbsize coeffs ecpb lfsr //datamatrix.rsprod //rsecbinary exec
+        lfsr
+        put
     } for
 
     %
@@ -23559,10 +25800,14 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
         ] def
     } if
 
+    options /debugecc known
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+    { (bwipp.debugecc#25805) [ ecbs {aload pop} forall ] //raiseerror exec } if
+
     %
     % Extend codewords with the interleaved error correction codes
     %
-    /cws [ cws aload pop rscw {0} repeat ] def
+    /cws cws length rscw add array dup 0 cws putinterval def
     0 1 rscw 1 sub {
         /i exch def
         cws ncws i add ecbs i rsbl mod get i rsbl idiv get put
@@ -23681,12 +25926,18 @@ datamatrix.coeffscachemax datamatrix.coeffscachelimit //fifocache exec /datamatr
     /pixs pixs
     /pixx cols
     /pixy rows
-    /height rows 2 mul 72 div
-    /width cols 2 mul 72 div
+    /height rows modunit mul 72 div
+    /width cols modunit mul 72 div
     /borderleft 1.0
     /borderright 1.0
     /bordertop 1.0
     /borderbottom 1.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -23708,13 +25959,13 @@ bind def
 % --END ENCODER datamatrix--
 
 % --BEGIN ENCODER datamatrixrectangular--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix datamatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix datamatrix--
 % --DESC: Data Matrix Rectangular
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2026033100 72529 72416
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangular 0.0 2026042100 78710 71821
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -23768,13 +26019,13 @@ bind def
 % --END ENCODER datamatrixrectangular--
 
 % --BEGIN ENCODER datamatrixrectangularextension--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix datamatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix datamatrix--
 % --DESC: Data Matrix Rectangular Extension
 % --EXAM: 1234
 % --EXOP: version=8x96
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2026033100 72554 72432
+%%BeginResource: uk.co.terryburton.bwipp datamatrixrectangularextension 0.0 2026042100 78735 71837
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -23828,13 +26079,13 @@ bind def
 % --END ENCODER datamatrixrectangularextension--
 
 % --BEGIN ENCODER mailmark--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix datamatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix datamatrix--
 % --DESC: Royal Mail Mailmark
 % --EXAM: JGB 012100123412345678AB19XY1A 0             www.xyz.com
 % --EXOP: type=29
 % --RNDR: renmatrix
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2026033100 77321 77204
+%%BeginResource: uk.co.terryburton.bwipp mailmark 0.0 2026042100 83638 80073
 %%BeginData:         96 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -23892,7 +26143,7 @@ bind def
     % Map the given type to a format and version of Data Matrix
     %
     /type load dup (7) ne exch dup (9) ne exch (29) ne and and {
-        (bwipp.mailmarkBadType#23895) (Royal Mail Mailmark type must be 7, 9 or 29) //raiseerror exec
+        (bwipp.mailmarkBadType#26146) (Royal Mail Mailmark type must be 7, 9 or 29) //raiseerror exec
     } if
     //mailmark.typetoversion /type load get /version exch def
     //mailmark.typetoformat  /type load get /format exch def
@@ -23901,10 +26152,10 @@ bind def
     % Validate the input
     %
     barcode length 45 lt {
-        (bwipp.mailmarkBadLength#23904) (Royal Mail Mailmark must contain at least 45 characters of Mailmark formatted data, including any required space padding) //raiseerror exec
+        (bwipp.mailmarkBadLength#26155) (Royal Mail Mailmark must contain at least 45 characters of Mailmark formatted data, including any required space padding) //raiseerror exec
     } if
     barcode 0 4 getinterval (JGB ) ne {
-        (bwipp.mailmarkBadIndicator#23907) (Royal Mail Mailmark must begin with JGB<space> identifier) //raiseerror exec
+        (bwipp.mailmarkBadIndicator#26158) (Royal Mail Mailmark must begin with JGB<space> identifier) //raiseerror exec
     } if
 
     %
@@ -23937,14 +26188,14 @@ bind def
 % --END ENCODER mailmark--
 
 % --BEGIN ENCODER qrcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix--
 % --DESC: QR Code
 % --EXAM: http://goo.gl/0bis
 % --EXOP: eclevel=M
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2026033100 837639 836159
-%%BeginData:       1819 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp qrcode 0.0 2026042100 845817 845467
+%%BeginData:       1837 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
@@ -23953,7 +26204,9 @@ bind def
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecbinary dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 /qrcode { /bwipjs_qrcode (start-global) def  % begin
 
@@ -24605,6 +26858,15 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
 %psc     (input.processoptions) //qrcode.before exec
 
     /dontdraw false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
     /format (unset) def    % full or micro. rMQR symbols are specified using version
     /version (unset) def   % 1-40 or M1-M4 or R7x43, etc
     /eclevel (unset) def   % full: L, M, Q, H; micro: L, M, Q; rmqr: M, H
@@ -24615,12 +26877,25 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
     /suppresskanjimode true def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    /modunit 2 def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /default_modunit 2 copy known {get /modunit exch def} {pop pop} ifelse
+%psc     } {pop} ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /qrcode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //qrcode.after exec
 
@@ -24632,11 +26907,11 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
 %psc     (input.validate) //qrcode.before exec
 
     barcode () eq {
-        (bwipp.qrcodeEmptyData#24635) (The data must not be empty) //raiseerror exec
+        (bwipp.qrcodeEmptyData#26910) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 30000 gt {
-        (bwipp.qrcodeinputTooLong#24639) (The input data is too long) //raiseerror exec
+        (bwipp.qrcodeinputTooLong#26914) (The input data is too long) //raiseerror exec
     } if
 
     %
@@ -24656,11 +26931,11 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
     } ifelse
 
     format (full) ne format (micro) ne format (rmqr) ne and and {
-        (bwipp.qrcodeInvalidFormat#24659) (The format must be either full, micro or rmqr) //raiseerror exec
+        (bwipp.qrcodeInvalidFormat#26934) (The format must be either full, micro or rmqr) //raiseerror exec
     } if
 
     format (rmqr) eq version (unset) eq and {
-        (bwipp.qrcodeRMQRwithoutVersion#24663) (A version must be provided for RMQR) //raiseerror exec
+        (bwipp.qrcodeRMQRwithoutVersion#26938) (A version must be provided for RMQR) //raiseerror exec
     } if
 
     %
@@ -24669,16 +26944,16 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
     eclevel (unset) eq {/eclevel format (micro) ne {(M)} {(L)} ifelse def} if
 
     eclevel (L) ne eclevel (M) ne eclevel (Q) ne eclevel (H) ne and and and {
-        (bwipp.qrcodeInvalidEClevel#24672) (Error correction level must be either L, M, Q, or H) //raiseerror exec
+        (bwipp.qrcodeInvalidEClevel#26947) (Error correction level must be either L, M, Q, or H) //raiseerror exec
     } if
 
     mask -1 ne format (rmqr) eq and {
-        (bwipp.qrcodeRMQRmask#24676) (A mask cannot be supplied for RMQR) //raiseerror exec
+        (bwipp.qrcodeRMQRmask#26951) (A mask cannot be supplied for RMQR) //raiseerror exec
     } if
 
     mask -1 ne {
         mask 1 lt mask format (full) eq {8} {4} ifelse gt or {
-            (bwipp.qrcodeBadMask#24681) (An invalid mask was supplied) //raiseerror exec
+            (bwipp.qrcodeBadMask#26956) (An invalid mask was supplied) //raiseerror exec
         } if
     } if
 
@@ -24733,7 +27008,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
         } if
         in length 11 mul 2 idiv 1 add
         { string } stopped {
-            pop (bwipp.qrcodeInputTooLarge#24736) (The input data exceeds the implementation limits) //raiseerror exec
+            pop (bwipp.qrcodeInputTooLarge#27011) (The input data exceeds the implementation limits) //raiseerror exec
         } if /out exch def
         /k 0 def /m 0 def {
             k in length eq {exit} if
@@ -24754,7 +27029,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
         /in exch def
         in length 10 mul 3 idiv 1 add
         { string } stopped {
-            pop (bwipp.qrcodeInputTooLarge#24757) (The input data exceeds the implementation limits) //raiseerror exec
+            pop (bwipp.qrcodeInputTooLarge#27032) (The input data exceeds the implementation limits) //raiseerror exec
         } if /out exch def
         /k 0 def /m 0 def {
             k in length eq {exit} if
@@ -24783,7 +27058,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
         } if
         in length 8 mul
         { string } stopped {
-            pop (bwipp.qrcodeInputTooLarge#24786) (The input data exceeds the implementation limits) //raiseerror exec
+            pop (bwipp.qrcodeInputTooLarge#27061) (The input data exceeds the implementation limits) //raiseerror exec
         } if /out exch def
         0 1 in length 1 sub {
             /k exch def
@@ -24797,7 +27072,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
         /in exch def
         in length 2 idiv 13 mul
         { string } stopped {
-            pop (bwipp.qrcodeInputTooLarge#24800) (The input data exceeds the implementation limits) //raiseerror exec
+            pop (bwipp.qrcodeInputTooLarge#27075) (The input data exceeds the implementation limits) //raiseerror exec
         } if /out exch def
         /k 0 def /m 0 def {
             k in length eq {exit} if
@@ -24824,7 +27099,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
 
     /addtobits {
         dup length j add bits length gt {
-            pop (bwipp.qrcodeNoValidSymbol#24827) (Maximum length exceeded or invalid content) //raiseerror exec
+            pop (bwipp.qrcodeNoValidSymbol#27102) (Maximum length exceeded or invalid content) //raiseerror exec
         } if
         dup bits j 3 -1 roll putinterval
         length j add /j exch def
@@ -24923,12 +27198,12 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
         //qrcode.versetmap format get version 2 copy known not {
             pop pop
             format (full) eq {
-                (bwipp.qrcodeInvalidFullVersion#24926) (Valid versions for QR Code symbols are 1 to 40) //raiseerror exec
+                (bwipp.qrcodeInvalidFullVersion#27201) (Valid versions for QR Code symbols are 1 to 40) //raiseerror exec
             } {
             format (micro) eq {
-                (bwipp.qrcodeInvalidMicroVersion#24929) (Valid versions for Micro QR Code symbols are M1 to M4) //raiseerror exec
+                (bwipp.qrcodeInvalidMicroVersion#27204) (Valid versions for Micro QR Code symbols are M1 to M4) //raiseerror exec
             } {  % rmqr
-                (bwipp.qrcodeInvalidRMQRversion#24931) (Invalid version for an RMQR symbol) //raiseerror exec
+                (bwipp.qrcodeInvalidRMQRversion#27206) (Invalid version for an RMQR symbol) //raiseerror exec
             } ifelse } ifelse
         } if
         get [ exch ] /verset exch def
@@ -25083,7 +27358,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
 
     options /debugbitseqs known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugbitseqs#25086) msgbits //raiseerror exec } if
+    { (bwipp.debugbitseqs#27361) msgbits //raiseerror exec } if
 
     %
     % Lookup the most appropriate symbol specification
@@ -25130,7 +27405,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
     } for
 
     okay not {
-        (bwipp.qrcodeNoValidSymbol#25133) (Maximum length exceeded or invalid content) //raiseerror exec
+        (bwipp.qrcodeNoValidSymbol#27408) (Maximum length exceeded or invalid content) //raiseerror exec
     } if
 
     /format frmt def
@@ -25209,7 +27484,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#25212) cws //raiseerror exec } if
+    { (bwipp.debugcws#27487) cws //raiseerror exec } if
 
 %psc     (input.encoding) //qrcode.after exec
 
@@ -25229,21 +27504,9 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
 
     /rscodes {
         /rscws exch def
-        /rsnd rscws length def
-        /rscws [ rscws aload pop ecpb {0} repeat ] def
-        0 1 rsnd 1 sub {  % m
-            rscws 1 index get                               % k = rscws[m]
-            0 1 ecpb 1 sub {  % j
-                rscws 3 index 2 index add 1 add 2 copy get  % ... rcws m+j+1 rscws[m+j+1]
-                coeffs ecpb 6 -1 roll sub 1 sub get         % ... coeffs[ecpb-j-1]
-                4 index                                     % ... k
-                //qrcode.rsprod exec                        % p = coeffs[ecpb-j-1] * k
-                xor put                                     % rscws[m+j+1] = rscws[m+j+1] ^ p
-            } for
-            pop  % k
-            pop  % m
-        } for
-        rscws rsnd ecpb getinterval
+        /lfsr ecpb array def
+        {rscws exch get} rscws length coeffs ecpb lfsr //qrcode.rsprod //rsecbinary exec
+        lfsr
     } def
 
     %
@@ -25311,7 +27574,7 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
 
     options /debugecc known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugecc#25314) cws //raiseerror exec } if
+    { (bwipp.debugecc#27577) cws //raiseerror exec } if
 
 %psc     (ecc.cws) //qrcode.after exec
 
@@ -25742,12 +28005,18 @@ qrcode.coeffscachemax qrcode.coeffscachelimit //fifocache exec /qrcode.coeffscac
     /pixs pixs
     /pixx cols
     /pixy rows
-    /height rows 2 mul 72 div
-    /width cols 2 mul 72 div
+    /height rows modunit mul 72 div
+    /width cols modunit mul 72 div
     /borderleft format (full) eq {4.0} {2.0} ifelse
     /borderright format (full) eq {4.0} {2.0} ifelse
     /bordertop format (full) eq {4.0} {2.0} ifelse
     /borderbottom format (full) eq {4.0} {2.0} ifelse
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -25769,13 +28038,13 @@ bind def
 % --END ENCODER qrcode--
 
 % --BEGIN ENCODER swissqrcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix qrcode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix qrcode--
 % --DESC: Swiss QR Code
 % --EXAM:
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Payments
-%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2026033100 76873 76826
+%%BeginResource: uk.co.terryburton.bwipp swissqrcode 0.0 2026042100 83190 79711
 %%BeginData:        139 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -25819,7 +28088,7 @@ bind def
     % Validate the input length
     %
     barcode length 997 gt {
-        (bwipp.swissqrcodeBadLength#25822) (Swiss QR Code input must not exceed 997 digits) //raiseerror exec
+        (bwipp.swissqrcodeBadLength#28091) (Swiss QR Code input must not exceed 997 digits) //raiseerror exec
     } if
 
     %
@@ -25921,13 +28190,13 @@ bind def
 % --END ENCODER swissqrcode--
 
 % --BEGIN ENCODER microqrcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix qrcode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix qrcode--
 % --DESC: Micro QR Code
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2026033100 72389 72374
+%%BeginResource: uk.co.terryburton.bwipp microqrcode 0.0 2026042100 78658 71779
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -25981,13 +28250,13 @@ bind def
 % --END ENCODER microqrcode--
 
 % --BEGIN ENCODER rectangularmicroqrcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix qrcode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix qrcode--
 % --DESC: Rectangular Micro QR Code
 % --EXAM: 1234
 % --EXOP: version=R17x139
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2026033100 72432 72406
+%%BeginResource: uk.co.terryburton.bwipp rectangularmicroqrcode 0.0 2026042100 78701 71811
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -26041,14 +28310,14 @@ bind def
 % --END ENCODER rectangularmicroqrcode--
 
 % --BEGIN ENCODER maxicode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache renmaximatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary renmaximatrix--
 % --DESC: MaxiCode
 % --EXAM: [)>^03001^02996152382802^029840^029001^0291Z00004951^029UPSN^02906X610^029159^0291234567^0291/1^029^029Y^029634 ALPHA DR^029PITTSBURGH^029PA^029^004
 % --EXOP: mode=2 parse
 % --RNDR: renmaximatrix
 % --FMLY: Postal Symbols
-%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2026033100 241306 256534
-%%BeginData:       1122 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp maxicode 0.0 2026042100 259578 258180
+%%BeginData:       1140 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
@@ -26057,7 +28326,9 @@ bind def
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecbinary dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmaximatrix dup /uk.co.terryburton.bwipp findresource put
 /maxicode { /bwipjs_maxicode (start-global) def  % begin
 
@@ -26340,6 +28611,16 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
 %psc     (input.processoptions) //maxicode.before exec
 
     /dontdraw false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+    /modunit 2 def
     /mode -1 def
     /sam -1 def
     /parse false def
@@ -26347,12 +28628,20 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
     /legacyencoder false def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /maxicode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //maxicode.after exec
 
@@ -26361,16 +28650,16 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
 %psc     (input.validate) //maxicode.before exec
 
     barcode () eq {
-        (bwipp.maxicodeEmptyData#26364) (The data must not be empty) //raiseerror exec
+        (bwipp.maxicodeEmptyData#28653) (The data must not be empty) //raiseerror exec
     } if
 
     % 93 max alphanumeric; 4x for ^NNN parse expansion
     barcode length 1000 gt {
-        (bwipp.maxicodeinputTooLong#26369) (The input data is too long) //raiseerror exec
+        (bwipp.maxicodeinputTooLong#28658) (The input data is too long) //raiseerror exec
     } if
 
     mode -1 ne mode 2 lt mode 6 gt or and {
-       (bwipp.maxicodeBadMode#26373) (Mode must be 2 to 6) //raiseerror exec
+       (bwipp.maxicodeBadMode#28662) (Mode must be 2 to 6) //raiseerror exec
     } if
 
     sam -1 ne {
@@ -26381,7 +28670,7 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
             sam 10 idiv sam 10 mod gt { pop false exit } if
         } repeat
         not {
-            (bwipp.maxicodeBadSAM#26384) (SAM must be formatted as "NM" for Nth of M symbols, from 2 to 8 symbols) //raiseerror exec
+            (bwipp.maxicodeBadSAM#28673) (SAM must be formatted as "NM" for Nth of M symbols, from 2 to 8 symbols) //raiseerror exec
         } if
     } if
 
@@ -26447,7 +28736,7 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
                     pcode { dup 48 lt exch 57 gt or { pop false exit } if } forall
                 } repeat
                 not {
-                    pop (bwipp.maxicodeBadMode2PostCode#26450) (A mode 2 postcode must not be empty or exceed 9 digits) //raiseerror exec
+                    pop (bwipp.maxicodeBadMode2PostCode#28739) (A mode 2 postcode must not be empty or exceed 9 digits) //raiseerror exec
                 } if
             } {  % mode=3
                 true
@@ -26461,11 +28750,11 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
                     } forall
                 } repeat
                 not {
-                    pop (bwipp.maxicodeBadMode3PostCode#26464) (A mode 3 postcode must not be empty or exceed 6 characters) //raiseerror exec
+                    pop (bwipp.maxicodeBadMode3PostCode#28753) (A mode 3 postcode must not be empty or exceed 6 characters) //raiseerror exec
                 } if
             } ifelse
         } {
-            pop (bwipp.maxicodeExpectedPostCode#26468) (Expected postcode followed by group separator character) //raiseerror exec
+            pop (bwipp.maxicodeExpectedPostCode#28757) (Expected postcode followed by group separator character) //raiseerror exec
         } ifelse
         <1d> search {
             /ccode exch def pop
@@ -26475,10 +28764,10 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
                 ccode { dup 48 lt exch 57 gt or { pop false exit } if } forall
             } repeat
             not {
-                pop (bwipp.maxicodeBadCountryCode#26478) (Country code must be three digits) //raiseerror exec
+                pop (bwipp.maxicodeBadCountryCode#28767) (Country code must be three digits) //raiseerror exec
             } if
         } {
-            pop (bwipp.maxicodeExpectedCountryCode#26481) (Expected country code followed by group separator character) //raiseerror exec
+            pop (bwipp.maxicodeExpectedCountryCode#28770) (Expected country code followed by group separator character) //raiseerror exec
         } ifelse
         <1d> search {
             /scode exch def pop
@@ -26488,10 +28777,10 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
                 scode { dup 48 lt exch 57 gt or { pop false exit } if } forall
             } repeat
             not {
-                pop (bwipp.maxicodeBadServiceClass#26491) (Service class must be three digits) //raiseerror exec
+                pop (bwipp.maxicodeBadServiceClass#28780) (Service class must be three digits) //raiseerror exec
             } if
         } {
-            pop (bwipp.maxicodeExpectedServiceClass#26494) (Expected service class followed by group separator character) //raiseerror exec
+            pop (bwipp.maxicodeExpectedServiceClass#28783) (Expected service class followed by group separator character) //raiseerror exec
         } ifelse
         /barcode exch def
 
@@ -26948,7 +29237,7 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
     mode 2 eq mode 3 eq or {
 
         encmsg length 84 gt {
-            (bwipp.maxicodeMode23TooLong#26951) (The secondary message is too long) //raiseerror exec
+            (bwipp.maxicodeMode23TooLong#29240) (The secondary message is too long) //raiseerror exec
         } if
 
         %
@@ -27033,7 +29322,7 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
 
         /cws [ mode 5 eq {78} {94} ifelse {padval} repeat ] def
         encmsg length cws length 1 sub gt {
-            (bwipp.maxicodeMode56TooLong#27036) (The message is too long) //raiseerror exec
+            (bwipp.maxicodeMode56TooLong#29325) (The message is too long) //raiseerror exec
         } if
         cws 0 mode put
         cws 1 encmsg putinterval
@@ -27066,23 +29355,9 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
         %
         % Calculate the error correction codewords
         %
-        /ecb [ rsnum {0} repeat ] def
-        /rsnc-1 ecb length 1 sub def
-        0 1 cwb length 1 sub {  % i
-            cwb exch get ecb 0 get xor                   % t = cwb[i] ^ ecb[0]
-            rsnc-1 -1 1 {  % j
-                ecb rsnc-1 2 index sub 2 copy 1 add get  % ... ecb rsnc-1-j ecb[rsnc-1-j+1]
-                4 index                                  % ... t
-                coeffs 6 -1 roll get                     % ... coeffs[j]
-                //maxicode.rsprod exec                   % p = t * coeffs[j]
-                xor put                                  % ecb[rsnc-1-j] = p ^ ecb[rsnc-1-j+1]
-            } for
-            ecb rsnc-1 2 index coeffs 0 get
-            //maxicode.rsprod exec put                   % ecb[rsnc-1] = t * coeffs[0]
-            pop  % t
-        } for
-
-        ecb
+        /lfsr rsnum array def
+        {cwb exch get} cwb length coeffs rsnum lfsr //maxicode.rsprod //rsecbinary exec
+        lfsr
 
     } def
 
@@ -27105,18 +29380,24 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
     /secchk [ 0 1 scodes 1 sub { dup secochk exch get exch secechk exch get } for ] def
 
     %
-    % Concatenate the data into final codewords
+    % Compute primary parity and concatenate the data into final codewords
     %
+    /prichk pri 10 rscodes exec def
+
     /codewords [
         pri aload pop
-        pri 10 rscodes exec aload pop
+        prichk aload pop
         sec aload pop
         secchk aload pop
     ] def
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#27119) codewords //raiseerror exec } if
+    { (bwipp.debugcws#29396) codewords //raiseerror exec } if
+
+    options /debugecc known
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+    { (bwipp.debugecc#29400) [ prichk aload pop secchk aload pop ] //raiseerror exec } if
 
 %psc     (ecc.cws) //maxicode.after exec
 
@@ -27155,6 +29436,12 @@ maxicode.coeffscachemax maxicode.coeffscachelimit //fifocache exec /maxicode.coe
     /borderright 1.0
     /bordertop 1.0
     /borderbottom 1.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -27176,24 +29463,26 @@ bind def
 % --END ENCODER maxicode--
 
 % --BEGIN ENCODER azteccode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix--
 % --DESC: Aztec Code
 % --EXAM: This is Aztec Code
 % --EXOP: format=full
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2026033100 274865 274696
-%%BeginData:       1093 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp azteccode 0.0 2026042100 289287 287668
+%%BeginData:       1112 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 33 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecbinary dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /azteccode { /bwipjs_azteccode (start-global) def  % begin
 
 %psc /azteccode [/before /after] //setuphooks exec
@@ -27468,14 +29757,36 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
     /raw false def
     /parse false def
     /parsefnc false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    /modunit 2 def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /default_modunit 2 copy known {get /modunit exch def} {pop pop} ifelse
+%psc     } {pop} ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /azteccode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //azteccode.after exec
 
@@ -27484,66 +29795,66 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
 %psc     (input.validate) //azteccode.before exec
 
     barcode () eq {
-        (bwipp.aztecEmptyData#27487) (The data must not be empty) //raiseerror exec
+        (bwipp.aztecEmptyData#29798) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 20000 gt {
-        (bwipp.azteccodeinputTooLong#27491) (The input data is too long) //raiseerror exec
+        (bwipp.azteccodeinputTooLong#29802) (The input data is too long) //raiseerror exec
     } if
 
     eclevel 5 lt eclevel 95 gt or {
-        (bwipp.aztecInvalidEClevel#27495) (The EC percentage must be from 5 to 95) //raiseerror exec
+        (bwipp.aztecInvalidEClevel#29806) (The EC percentage must be from 5 to 95) //raiseerror exec
     } if
 
     ecaddchars 3 lt {
-        (bwipp.aztecInvalidECaddChars#27499) (The number of additional EC codewords must be 3 or more) //raiseerror exec
+        (bwipp.aztecInvalidECaddChars#29810) (The number of additional EC codewords must be 3 or more) //raiseerror exec
     } if
 
     format (full) ne format (compact) ne format (rune) ne and and {
-        (bwipp.aztecInvalidFormat#27503) (The format must be either full, compact or rune) //raiseerror exec
+        (bwipp.aztecInvalidFormat#29814) (The format must be either full, compact or rune) //raiseerror exec
     } if
 
     format (full) eq {
         readerinit layers 1 lt layers 22 gt or and {
-            (bwipp.aztecFullInitInvalidLayers#27508) (Full-range symbols for reader programming must specify from 1 to 22 layers) //raiseerror exec
+            (bwipp.aztecFullInitInvalidLayers#29819) (Full-range symbols for reader programming must specify from 1 to 22 layers) //raiseerror exec
         } if
         layers -1 ne layers 1 lt layers 32 gt or and {
-            (bwipp.aztecFullInvalidLayers#27511) (Layers for full-range symbols must be from 1 to 32) //raiseerror exec
+            (bwipp.aztecFullInvalidLayers#29822) (Layers for full-range symbols must be from 1 to 32) //raiseerror exec
         } if
     } if
 
     format (compact) eq {
         readerinit {
             layers -1 ne layers 1 ne and {
-                (bwipp.aztecCompactInitInvalidLayers#27518) (Compact symbols for reader programming must have 1 layer) //raiseerror exec
+                (bwipp.aztecCompactInitInvalidLayers#29829) (Compact symbols for reader programming must have 1 layer) //raiseerror exec
             } if
             /layers 1 def
         } if
         layers -1 ne layers 1 lt layers 4 gt or and {
-            (bwipp.aztecCompactInvalidLayers#27523) (Layers for compact symbols must be from 1 to 4) //raiseerror exec
+            (bwipp.aztecCompactInvalidLayers#29834) (Layers for compact symbols must be from 1 to 4) //raiseerror exec
         } if
     } if
 
     format (rune) eq {
         layers -1 ne {
-            (bwipp.aztecRuneInvalidLayers#27529) (It is not valid to specify layers for runes) //raiseerror exec
+            (bwipp.aztecRuneInvalidLayers#29840) (It is not valid to specify layers for runes) //raiseerror exec
         } if
         readerinit {
-            (bwipp.aztecRuneReaderInit#27532) (Reader initialisation is not compactible with Aztec Runes) //raiseerror exec
+            (bwipp.aztecRuneReaderInit#29843) (Reader initialisation is not compactible with Aztec Runes) //raiseerror exec
         } if
         barcode length 0 eq {
-            (bwipp.aztecRuneNotNumeric#27535) (Aztec runes must be numeric) //raiseerror exec
+            (bwipp.aztecRuneNotNumeric#29846) (Aztec runes must be numeric) //raiseerror exec
         } if
         barcode {
             dup 48 lt exch 57 gt or {
-                (bwipp.aztecRuneNotNumeric#27539) (Aztec runes must be numeric) //raiseerror exec
+                (bwipp.aztecRuneNotNumeric#29850) (Aztec runes must be numeric) //raiseerror exec
             } if
         } forall
         barcode length 3 gt {
-            (bwipp.aztecRuneInvalid#27543) (Aztec runes must be 0 to 255) //raiseerror exec
+            (bwipp.aztecRuneInvalid#29854) (Aztec runes must be 0 to 255) //raiseerror exec
         } if
         barcode cvi dup 0 lt exch 255 gt or {
-            (bwipp.aztecRuneInvalid#27546) (Aztec runes must be 0 to 255) //raiseerror exec
+            (bwipp.aztecRuneInvalid#29857) (Aztec runes must be 0 to 255) //raiseerror exec
         } if
     } if
 
@@ -27597,10 +29908,10 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
         /maxseqlen msglen 4 mul def
 
         /seq0 [ 6 { maxseqlen { array } stopped {
-            pop (bwipp.azteccodeInputTooLarge#27600) (The input data exceeds the implementation limits) //raiseerror exec
+            pop (bwipp.azteccodeInputTooLarge#29911) (The input data exceeds the implementation limits) //raiseerror exec
         } if } repeat ] def
         /seq1 [ 6 { maxseqlen { array } stopped {
-            pop (bwipp.azteccodeInputTooLarge#27603) (The input data exceeds the implementation limits) //raiseerror exec
+            pop (bwipp.azteccodeInputTooLarge#29914) (The input data exceeds the implementation limits) //raiseerror exec
         } if } repeat ] def
         /len0 6 array def  0 1 5 { len0 exch 0 put } for
         /len1 6 array def
@@ -27866,7 +30177,7 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
         /addtomsgbits {
             /v exch def
             j v length add msgbits length gt {
-                (bwipp.aztecNoValidSymbol#27869) (Maximum length exceeded) //raiseerror exec
+                (bwipp.aztecNoValidSymbol#30180) (Maximum length exceeded) //raiseerror exec
             } if
             msgbits j v putinterval
             /j j v length add def
@@ -27877,7 +30188,7 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
         %
         /state //azteccode.u def
         minseq { string } stopped {
-            pop (bwipp.azteccodeInputTooLarge#27880) (The input data exceeds the implementation limits) //raiseerror exec
+            pop (bwipp.azteccodeInputTooLarge#30191) (The input data exceeds the implementation limits) //raiseerror exec
         } if /msgbits exch def
         /i 0 def /j 0 def {
             i seq length ge {exit} if
@@ -27946,7 +30257,7 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
 
     options /debugbits known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugbits#27949) msgbits //raiseerror exec } if
+    { (bwipp.debugbits#30260) msgbits //raiseerror exec } if
 
     %
     % Lookup the most appropriate symbol specification
@@ -27970,7 +30281,7 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
     } forall
 
     okay not {
-        (bwipp.aztecNoValidSymbol#27973) (Maximum length exceeded) //raiseerror exec
+        (bwipp.aztecNoValidSymbol#30284) (Maximum length exceeded) //raiseerror exec
     } if
 
     /layers mlyr def
@@ -28013,12 +30324,13 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#28016) cws //raiseerror exec } if
+    { (bwipp.debugcws#30327) cws //raiseerror exec } if
 
 %psc     (input.encoding) //azteccode.after exec
 
     %
-    % Reed-Solomon algorithm
+    % Reed-Solomon algorithm. Returns rsnc ECC codewords. The GF parameters
+    % (and hence rsprod) vary with rsbt, so both are bound per call.
     %
     /rscodes {
 
@@ -28047,27 +30359,9 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
         /coeffs rsnc rsbt //azteccode.coeffscachefetch exec def
 %psc         (ecc.coeffs) //azteccode.after exec
 
-        %
-        % Extend the input with the error correction values
-        %
-        /nd rscws length def
-        /rscws [ rscws aload pop rsnc {0} repeat 0 ] def
-        0 1 nd 1 sub {  % i
-            rscws exch get rscws nd get xor          % k = rscws[i] ^ rscw[nd]
-            0 1 rsnc 1 sub {  % j
-                dup
-                rscws exch nd add 2 copy 1 add get   % ... rscws nd+j rscws[nd+j+1]
-                coeffs rsnc 6 -1 roll sub 1 sub get  % ... coeffs[rsnc-1-j]
-                4 index                              % ... k
-                rsprod xor put                       % rscws[nd+j] = rscws[nd+j+1] ^ (coeffs[rsnc-1-j] * k)
-            } for
-            pop  % k
-        } for
-
-        %
-        % Return all but the last codeword
-        %
-        rscws 0 rscws length 1 sub getinterval
+        /lfsr rsnc array def
+        {rscws exch get} rscws length coeffs rsnc lfsr /rsprod load //rsecbinary exec
+        lfsr
 
 %psc         (ecc.cws) //azteccode.after exec
 
@@ -28085,7 +30379,7 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
             mode 2#0000000011110000 and -4 bitshift
             mode 2#0000000000001111 and
         ] def
-        /mode mode 6 4 rscodes def
+        /mode [ mode aload pop mode 6 4 rscodes aload pop ] def
     } if
     format (compact) eq {
         /mode layers 1 sub 6 bitshift cws length 1 sub add def
@@ -28094,7 +30388,7 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
             mode 2#11110000 and -4 bitshift
             mode 2#00001111 and
         ] def
-        /mode mode 5 4 rscodes def
+        /mode [ mode aload pop mode 5 4 rscodes aload pop ] def
     } if
     format (rune) eq {
         /mode barcode cvi def
@@ -28102,7 +30396,7 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
             mode 2#11110000 and -4 bitshift
             mode 2#00001111 and
         ] def
-        /mode mode 5 4 rscodes def
+        /mode [ mode aload pop mode 5 4 rscodes aload pop ] def
         /mode [mode {2#1010 xor} forall] def  % Invert alternate bits
     } if
     /modebits mode length 4 mul string def
@@ -28115,7 +30409,13 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
     %
     % Extend the data codewords with error correction codewords to create the bit string for the data
     %
-    /cws cws ncws cws length sub bpcw rscodes def
+    /ecws cws ncws cws length sub bpcw rscodes def
+
+    options /debugecc known
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+    { (bwipp.debugecc#30416) ecws //raiseerror exec } if
+
+    /cws [ cws aload pop ecws aload pop ] def
     format (full) eq {
         /databits layers layers mul 16 mul layers 112 mul add string def
     } {
@@ -28259,8 +30559,14 @@ azteccode.coeffscachemax azteccode.coeffscachelimit //fifocache exec /azteccode.
     /pixs pixs
     /pixx size
     /pixy size
-    /height size 2 mul 72 div
-    /width size 2 mul 72 div
+    /height size modunit mul 72 div
+    /width size modunit mul 72 div
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -28282,13 +30588,13 @@ bind def
 % --END ENCODER azteccode--
 
 % --BEGIN ENCODER azteccodecompact--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix azteccode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix azteccode--
 % --DESC: Compact Aztec Code
 % --EXAM: 1234
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2026033100 72417 72485
+%%BeginResource: uk.co.terryburton.bwipp azteccodecompact 0.0 2026042100 75254 75234
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -28342,13 +30648,13 @@ bind def
 % --END ENCODER azteccodecompact--
 
 % --BEGIN ENCODER aztecrune--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix azteccode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix azteccode--
 % --DESC: Aztec Runes
 % --EXAM: 1
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2026033100 72386 72461
+%%BeginResource: uk.co.terryburton.bwipp aztecrune 0.0 2026042100 75223 75210
 %%BeginData:         47 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -28402,24 +30708,26 @@ bind def
 % --END ENCODER aztecrune--
 
 % --BEGIN ENCODER codeone--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix--
 % --DESC: Code One
 % --EXAM: Code One
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2026033100 271190 275723
-%%BeginData:       1195 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp codeone 0.0 2026042100 284559 289919
+%%BeginData:       1207 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 33 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecbinary dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /codeone { /bwipjs_codeone (start-global) def  % begin
 
 %psc /codeone [/before /after] //setuphooks exec
@@ -28758,18 +31066,40 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
     /version (unset) def
     /parse false def
     /parsefnc false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 4000 gt {
-        (bwipp.codeoneinputTooLong#28766) (The input data is too long) //raiseerror exec
+        (bwipp.codeoneinputTooLong#31085) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    /modunit 2 def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /default_modunit 2 copy known {get /modunit exch def} {pop pop} ifelse
+%psc     } {pop} ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /codeone ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //codeone.after exec
 
@@ -28779,7 +31109,7 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
 
     version (unset) ne {
         //codeone.versionopts version known not {
-            (bwipp.codeoneBadVersion#28782) (version must be A to H, T-16, T-32, T-48, S-10, S-20 or S-30) //raiseerror exec
+            (bwipp.codeoneBadVersion#31112) (version must be A to H, T-16, T-32, T-48, S-10, S-20 or S-30) //raiseerror exec
         } if
     } if
 
@@ -28794,13 +31124,13 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
 
         barcode {
             dup 48 lt exch 57 gt or {
-                (bwipp.codeoneStypeNonDigit#28797) (S-Type symbols can only contain digits) //raiseerror exec
+                (bwipp.codeoneStypeNonDigit#31127) (S-Type symbols can only contain digits) //raiseerror exec
             } if
         } forall
 
         /barlen barcode length def
         barlen 18 gt {
-            (bwipp.codeoneStypeTooLong#28803) (Maximum length exceeded) //raiseerror exec
+            (bwipp.codeoneStypeTooLong#31133) (Maximum length exceeded) //raiseerror exec
         } if
 
 %psc         (input.validate.stype) //codeone.after exec
@@ -28976,7 +31306,7 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
 
         /getnumremcws {
             dup numremcws length ge {
-                pop (bwipp.codeoneTooLong#28979) (Maximum length exceeded) //raiseerror exec
+                pop (bwipp.codeoneTooLong#31309) (Maximum length exceeded) //raiseerror exec
             } if
             numremcws exch get
         } def
@@ -29051,7 +31381,7 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
 
         /addtocws {
             dup length j add 1480 gt {
-                pop (bwipp.codeoneTooLong#29054) (Maximum length exceeded) //raiseerror exec
+                pop (bwipp.codeoneTooLong#31384) (Maximum length exceeded) //raiseerror exec
             } if
             dup cws exch j exch putinterval
             /j exch length j add def
@@ -29235,7 +31565,7 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
                 } if
                 encvals mode get msg i get get
                 dup length p add ctxvals length gt {
-                    pop (bwipp.codeoneTooLong#29238) (Maximum length exceeded) //raiseerror exec
+                    pop (bwipp.codeoneTooLong#31568) (Maximum length exceeded) //raiseerror exec
                 } if
                 dup ctxvals exch p exch putinterval
                 /p exch length p add def
@@ -29357,7 +31687,7 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
                 msg i get 0 lt {exit} if  % Function character
                 lookup mode ne {exit} if
                 p bvals length ge {
-                    (bwipp.codeoneTooLong#29360) (Maximum length exceeded) //raiseerror exec
+                    (bwipp.codeoneTooLong#31690) (Maximum length exceeded) //raiseerror exec
                 } if
                 bvals p msg i get put
                 /p p 1 add def
@@ -29414,7 +31744,7 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
     } forall
 
     okay not {
-        (bwipp.codeoneNoValidSymbol#29417) (Maximum length exceeded) //raiseerror exec
+        (bwipp.codeoneNoValidSymbol#31747) (Maximum length exceeded) //raiseerror exec
     } if
 
     %
@@ -29428,7 +31758,7 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#29431) cws //raiseerror exec } if
+    { (bwipp.debugcws#31761) cws //raiseerror exec } if
 
     %
     % Fetch the coefficients
@@ -29441,45 +31771,27 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
 %psc     (ecc.cws) //codeone.before exec
 
     %
-    % De-interleave the codewords into blocks
+    % Reed-Solomon algorithm. Each block's data is read directly from cws via
+    % interleaved indexing.
     %
-    /cwbs rsbl array def  % Array of data codeword blocks
-    /ecbs rsbl array def  % Array of error correction blocks
+    /ecbs rsbl array def
     0 1 rsbl 1 sub {
-        /i exch def
-        /cwb dcpb array def
-        0 1 dcpb 1 sub {
-            /j exch def
-            cwb j cws j rsbl mul i add get put
-        } for
-        cwbs i cwb put
+        /blk exch def
+        ecbs blk
+        /lfsr ecpb array def
+        {cws exch rsbl mul blk add get} dcpb coeffs ecpb lfsr //codeone.rsprod //rsecbinary exec
+        lfsr
+        put
     } for
 
-    %
-    % Reed-Solomon algorithm to derive the error correction codewords
-    %
-    0 1 cwbs length 1 sub {
-        /i exch def
-        /rscws [ cwbs i get aload pop ecpb {0} repeat ] def
-        0 1 dcpb 1 sub {  % m
-            rscws 1 index get                               % k = rscws[m]
-            0 1 ecpb 1 sub {  % j
-                rscws 3 index 2 index add 1 add 2 copy get  % ... rscws m+j+1 rscws[m+j+1]
-                coeffs ecpb 6 -1 roll sub 1 sub get         % ... coeffs[ecpb-j-1]
-                4 index                                     % ... k
-                //codeone.rsprod exec                       % p = coeffs[ecpb-j-1] * k
-                xor put                                     % rscws[m+j+1] = rscws[m+j+1] ^ p
-            } for
-            pop  % k
-            pop  % m
-        } for
-        ecbs i rscws dcpb ecpb getinterval put
-    } for
+    options /debugecc known
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+    { (bwipp.debugecc#31789) [ ecbs {aload pop} forall ] //raiseerror exec } if
 
     %
     % Extend codewords with the interleaved error correction codes
     %
-    /cws [ cws aload pop rscw {0} repeat ] def
+    /cws cws length rscw add array dup 0 cws putinterval def
     0 1 rscw 1 sub {
         /i exch def
         cws dcws i add ecbs i rsbl mod get i rsbl idiv get put
@@ -29581,14 +31893,20 @@ codeone.coeffscachemax codeone.coeffscachelimit //fifocache exec /codeone.coeffs
     /pixs pixs
     /pixx cols
     /pixy rows
-    /height rows 72 div 2 mul
-    /width cols 72 div 2 mul
+    /height rows modunit mul 72 div
+    /width cols modunit mul 72 div
     stype ttype or {
         /borderleft 1.0
         /borderright 1.0
         /bordertop 0.0
         /borderbottom 1.0
     } if
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -29610,24 +31928,26 @@ bind def
 % --END ENCODER codeone--
 
 % --BEGIN ENCODER hanxin--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix--
 % --DESC: Han Xin Code
 % --EXAM: This is Han Xin
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2026033100 506124 510705
-%%BeginData:       1091 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp hanxin 0.0 2026042100 516448 515621
+%%BeginData:       1102 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecbinary dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /hanxin { /bwipjs_hanxin (start-global) def  % begin
 
 %psc /hanxin [/before /after] //setuphooks exec
@@ -30156,14 +32476,36 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
     /parse false def
     /parsefnc false def
     /mask -1 def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    /modunit 2 def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /default_modunit 2 copy known {get /modunit exch def} {pop pop} ifelse
+%psc     } {pop} ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /hanxin ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //hanxin.after exec
 
@@ -30172,11 +32514,11 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
 %psc     (input.validate) //hanxin.before exec
 
     barcode () eq {
-        (bwipp.hanxinEmptyData#30175) (The data must not be empty) //raiseerror exec
+        (bwipp.hanxinEmptyData#32517) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 14000 gt {
-        (bwipp.hanxinInputTooLong#30179) (The input data is too long) //raiseerror exec
+        (bwipp.hanxinInputTooLong#32521) (The input data is too long) //raiseerror exec
     } if
 
     version (unset) ne {
@@ -30187,7 +32529,7 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
             } if
         } if
         not {
-            (bwipp.hanxinInvalidVersion#30190) (Valid versions are 1 to 84) //raiseerror exec
+            (bwipp.hanxinInvalidVersion#32532) (Valid versions are 1 to 84) //raiseerror exec
         } if
     } if
 
@@ -30197,12 +32539,12 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
         } if
     } if
     not {
-        (bwipp.hanxinInvalidErrorCorrectionLevel#30200) (Valid error correction levels are L1 to L4) //raiseerror exec
+        (bwipp.hanxinInvalidErrorCorrectionLevel#32542) (Valid error correction levels are L1 to L4) //raiseerror exec
     } if
 
     mask -1 ne {
         mask 1 lt mask 4 gt or {
-            (bwipp.hanxinInvalidErrorCorrectionLevel#30205) (The valid masks are 1 to 4) //raiseerror exec
+            (bwipp.hanxinInvalidErrorCorrectionLevel#32547) (The valid masks are 1 to 4) //raiseerror exec
         } if
     } if
 
@@ -30234,11 +32576,11 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
     % Encode the data using byte mode encoding
     %
     4 13 add msglen 8 mul add { string } stopped {
-        pop (bwipp.hanxinInputTooLarge#30237) (The input data exceeds the implementation limits) //raiseerror exec
+        pop (bwipp.hanxinInputTooLarge#32579) (The input data exceeds the implementation limits) //raiseerror exec
     } if /bits exch def
     bits 0 (0011) putinterval
     msglen 1 13 bitshift ge {  % Exceeds 13-bit character count field
-        (bwipp.hanxinInputTooLarge#30241) (The input data exceeds the maximum symbol capacity) //raiseerror exec
+        (bwipp.hanxinInputTooLarge#32583) (The input data exceeds the maximum symbol capacity) //raiseerror exec
     } if
     bits 4 msglen 13 tobin putinterval
     0 1 msglen 1 sub {
@@ -30271,7 +32613,7 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
     } forall
 
     okay not {
-        (bwipp.hanxinNoValidSymbol#30274) (Maximum length exceeded or invalid content) //raiseerror exec
+        (bwipp.hanxinNoValidSymbol#32616) (Maximum length exceeded or invalid content) //raiseerror exec
     } if
 
     /version vers def
@@ -30318,30 +32660,12 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
 %psc         (ecc.coeffs) //hanxin.after exec
 
         %
-        % Extend the input with the error correction values
+        % Calculate the error correction codewords
         %
 %psc         (ecc.cws) //hanxin.before exec
-
-        /nd rscws length def
-        /rscws [ rscws aload pop rsnc {0} repeat 0 ] def
-        0 1 nd 1 sub {  % i
-            rscws exch get rscws nd get xor          % k = rscws[i] ^ rscws[nd]
-            0 1 rsnc 1 sub {  % j
-                dup
-                rscws exch nd add 2 copy 1 add get   % ... rscws nd+j rscws[nd+j+1]
-                coeffs rsnc 6 -1 roll sub 1 sub get  % ... coeffs[rsnc-1-j]
-                4 index                              % ... k
-                //hanxin.rsprod exec                 % p = coeffs[rsnc-1-j] * k
-                xor put                              % rscws[nd+j] = rscws[nd+j+1] ^ p
-            } for
-            pop  % k
-        } for
-
-        %
-        % Return all but the last codeword
-        %
-        rscws 0 rscws length 1 sub getinterval
-
+        /lfsr rsnc array def
+        {rscws exch get} rscws length coeffs rsnc lfsr //hanxin.rsprod //rsecbinary exec
+        lfsr
 %psc         (ecc.cws) //hanxin.after exec
 
     } def
@@ -30353,23 +32677,24 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
     /ecwsb dcwsb length array def
     /in 0 def  /out 0 def
     e1nb {
-        cws in e1dcws getinterval e1ecws 8 rscodes
-        dup 0 e1dcws getinterval dcwsb exch out exch put
-        e1dcws e1ecws getinterval ecwsb exch out exch put
+        cws in e1dcws getinterval dup dcwsb out 3 -1 roll put
+        e1ecws 8 rscodes ecwsb out 3 -1 roll put
         /in in e1dcws add def  /out out 1 add def
     } repeat
     e2nb {
-        cws in e2dcws getinterval e2ecws 8 rscodes
-        dup 0 e2dcws getinterval dcwsb exch out exch put
-        e2dcws e2ecws getinterval ecwsb exch out exch put
+        cws in e2dcws getinterval dup dcwsb out 3 -1 roll put
+        e2ecws 8 rscodes ecwsb out 3 -1 roll put
         /in in e2dcws add def  /out out 1 add def
     } repeat
     e3nb {
-        cws in e3dcws getinterval e3ecws 8 rscodes
-        dup 0 e3dcws getinterval dcwsb exch out exch put
-        e3dcws e3ecws getinterval ecwsb exch out exch put
+        cws in e3dcws getinterval dup dcwsb out 3 -1 roll put
+        e3ecws 8 rscodes ecwsb out 3 -1 roll put
         /in in e3dcws add def  /out out 1 add def
     } repeat
+
+    options /debugecc known
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+    { (bwipp.debugecc#32697) [ ecwsb {aload pop} forall ] //raiseerror exec } if
 
 %psc     (codewords.finalise) //hanxin.before exec
 
@@ -30405,7 +32730,7 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#30408) cws //raiseerror exec } if
+    { (bwipp.debugcws#32733) cws //raiseerror exec } if
 
 %psc     (codewords.finalise) //hanxin.after exec
 
@@ -30665,14 +32990,12 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
     % Add the function information
     %
     /funval size 21 sub 2 idiv 20 add 4 mul eclval add 4 mul bestmaskval add def
-    [ funval 16#0F00 and -8 bitshift
-      funval 16#00F0 and -4 bitshift
-      funval 16#000F and ]
-    4 4 rscodes /funvals exch def
+    /fundata [ funval 16#0F00 and -8 bitshift
+               funval 16#00F0 and -4 bitshift
+               funval 16#000F and ] def
     /funbits [
-        funvals {
-            4 tobin {48 sub} forall
-        } forall
+        fundata { 4 tobin {48 sub} forall } forall
+        fundata 4 4 rscodes { 4 tobin {48 sub} forall } forall
         0 1 0 1 0 1
     ] def
     0 1 functionmap length 1 sub {
@@ -30687,12 +33010,18 @@ hanxin.coeffscachemax hanxin.coeffscachelimit //fifocache exec /hanxin.coeffscac
     /pixs pixs
     /pixx size
     /pixy size
-    /height size 2 mul 72 div
-    /width size 2 mul 72 div
+    /height size modunit mul 72 div
+    /width size modunit mul 72 div
     /borderleft 3.0
     /borderright 3.0
     /bordertop 3.0
     /borderbottom 3.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -30714,24 +33043,26 @@ bind def
 % --END ENCODER hanxin--
 
 % --BEGIN ENCODER dotcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecprime render renmatrix--
 % --DESC: DotCode
 % --EXAM: This is DotCode
 % --EXOP: inkspread=0.16
 % --RNDR: renmatrix
 % --FMLY: Less-used Symbols
-%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2026033100 303209 304362
-%%BeginData:       1277 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp dotcode 0.0 2026042100 318205 317028
+%%BeginData:       1304 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 32 dict
+%psc 33 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecprime dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /dotcode { /bwipjs_dotcode (start-global) def  % begin
 
 %psc /dotcode [/before /after] //setuphooks exec
@@ -30900,7 +33231,10 @@ bind def
         } for
         pop  % i
     } for
-    coeffs
+    % Flip to standard g(x) form: drop the leading 1 and reverse coeffs[1..NC]
+    % so the constant term ends up at index 0.
+    NC -1 1 { coeffs exch get } for
+    NC array astore
 } bind def
 
 %
@@ -30942,18 +33276,40 @@ dotcode.coeffscachemax dotcode.coeffscachelimit //fifocache exec /dotcode.coeffs
     /raw false def
     /fast false def
     /mask -1 def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 4000 gt {
-        (bwipp.dotcodeinputTooLong#30950) (The input data is too long) //raiseerror exec
+        (bwipp.dotcodeinputTooLong#33295) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    /modunit 2 def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /default_modunit 2 copy known {get /modunit exch def} {pop pop} ifelse
+%psc     } {pop} ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /dotcode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //dotcode.after exec
 
@@ -30963,18 +33319,18 @@ dotcode.coeffscachemax dotcode.coeffscachelimit //fifocache exec /dotcode.coeffs
 
     rows -1 ne {
         rows 5 lt {
-            (bwipp.dotcodeBadRows#30966) (There must be at least 5 rows) //raiseerror exec
+            (bwipp.dotcodeBadRows#33322) (There must be at least 5 rows) //raiseerror exec
         } if
     } if
 
     columns -1 ne {
         columns 5 lt {
-            (bwipp.dotcodeBadColumns#30972) (There must be at least 5 columns) //raiseerror exec
+            (bwipp.dotcodeBadColumns#33328) (There must be at least 5 columns) //raiseerror exec
         } if
     } if
 
     rows -1 ne columns -1 ne and rows columns add 2 mod 1 ne and {
-        (bwipp.dotcodeRowsColumnsBadParity#30977) (Sum of rows and columns must be odd) //raiseerror exec
+        (bwipp.dotcodeRowsColumnsBadParity#33333) (Sum of rows and columns must be odd) //raiseerror exec
     } if
 
     %
@@ -30985,13 +33341,13 @@ dotcode.coeffscachemax dotcode.coeffscachelimit //fifocache exec /dotcode.coeffs
     } if
     ratio -1 ne {
         ratio 0 le {
-            (bwipp.dotcodeRatio#30988) (The ratio must be greater than 0) //raiseerror exec
+            (bwipp.dotcodeRatio#33344) (The ratio must be greater than 0) //raiseerror exec
         } if
     } if
 
     mask -1 ne {
         mask 0 lt mask 3 gt or {
-            (bwipp.dotcodeBadMask#30994) (Valid mask values are 0 to 3) //raiseerror exec
+            (bwipp.dotcodeBadMask#33350) (Valid mask values are 0 to 3) //raiseerror exec
         } if
     } if
 
@@ -31603,13 +33959,13 @@ dotcode.coeffscachemax dotcode.coeffscachelimit //fifocache exec /dotcode.coeffs
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#31606) cws //raiseerror exec } if
+    { (bwipp.debugcws#33962) cws //raiseerror exec } if
 
     %
     % Check that the codewords will fit in the symbol
     %
     nw 9 mul ndots 2 sub gt {
-        (bwipp.dotcodeTooLong#31612) (Maximum length exceeded) //raiseerror exec
+        (bwipp.dotcodeTooLong#33968) (Maximum length exceeded) //raiseerror exec
     } if
 
 %psc     (input.encoding) //dotcode.after exec
@@ -31643,7 +33999,7 @@ dotcode.coeffscachemax dotcode.coeffscachelimit //fifocache exec /dotcode.coeffs
     % Construct the template
     %
     rows columns mul { array } stopped {
-        pop (bwipp.dotcodeSymbolTooLarge#31646) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec
+        pop (bwipp.dotcodeSymbolTooLarge#34002) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec
     } if /outline exch def
     0 1 rows 1 sub {
         /y exch def
@@ -31834,32 +34190,26 @@ dotcode.coeffscachemax dotcode.coeffscachelimit //fifocache exec /dotcode.coeffs
 
 %psc             (ecc.cws) //dotcode.before exec
 
-            0 1 ND 1 sub {  % i
-                rscws exch offset get                                     % ... rscws[offset(i)]
-                rscws ND offset get                                       % ... rscws[offset(ND)]
-                add 113 mod                                               % t = (rscws[offset(i)] + rscws[offset(ND)]) mod 113
-                0 1 NC 2 sub {  % j
-                    rscws ND 2 index add dup offset exch                  % ... rscws offset(ND+j) ND+j
-                    1 add offset rscws exch get 113 add                   % ... rscws[offset(ND+j+1)]+113
-                    4 index                                               % ... t
-                    coeffs 6 -1 roll 1 add get                            % ... coeffs[j+1]
-                    mul 113 mod                                           % p = (t * coeffs[j+1]) mod 113
-                    sub 113 mod put                                       % rscws[offset(ND+j)] = (rscws[offset(ND+j+1)]+113 - p) mod 113
-                } for
-                rscws ND NC add 1 sub offset                              % ... rscws offset(ND+NC-1)
-                113                                                       % ... 113
-                3 index                                                   % ... t
-                coeffs NC get                                             % ... coeffs[NC]
-                mul 113 mod                                               % p = (t * coeffs[NC]) mod 113
-                sub 113 mod put                                           % rscws[offset(ND+NC-1)] = (113 - p) mod 113
-                pop  % t
+            %
+            % Compute ECC via the shared rsecprime helper. Data lives at
+            % interleaved positions rscws[offset(0..ND-1)]; ECC goes back to
+            % rscws[offset(ND..NW-1)]. The helper leaves codewords in the
+            % spec's negated form in lfsr[0..NC), so no post-pass is needed.
+            %
+            /lfsr NC array def
+            {step mul start add rscws exch get} ND coeffs NC lfsr 113 //rsecprime exec
+            0 1 NC 1 sub {
+                /j exch def
+                rscws ND j add offset lfsr j get put
             } for
-
-            ND 1 NW 1 sub { dup rscws exch offset 113 rscws 5 -1 roll offset get sub 113 mod put } for
 
 %psc             (ecc.cws) //dotcode.after exec
 
         } for
+
+        options /debugecc known
+%psc         /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+        { (bwipp.debugecc#34212) rscws //raiseerror exec } if
 
 %psc         (matrix.layout) //dotcode.before exec
 
@@ -31977,12 +34327,18 @@ dotcode.coeffscachemax dotcode.coeffscachelimit //fifocache exec /dotcode.coeffs
     /pixs pixs
     /pixx columns
     /pixy rows
-    /height rows 2 mul 72 div
-    /width columns 2 mul 72 div
+    /height rows modunit mul 72 div
+    /width columns modunit mul 72 div
     /borderleft 3.0
     /borderright 3.0
     /bordertop 3.0
     /borderbottom 3.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -32004,24 +34360,26 @@ bind def
 % --END ENCODER dotcode--
 
 % --BEGIN ENCODER ultracode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecprime render renmatrix--
 % --DESC: Ultracode
 % --EXAM: Awesome colours!
 % --EXOP: eclevel=EC2
 % --RNDR: renmatrix
 % --FMLY: Two-dimensional symbols
-%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2026033100 140928 143032
-%%BeginData:        505 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ultracode 0.0 2026042100 147671 150458
+%%BeginData:        510 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /fifocache dup /uk.co.terryburton.bwipp findresource put
+%psc dup /rsecprime dup /uk.co.terryburton.bwipp findresource put
 %psc dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 /ultracode { /bwipjs_ultracode (start-global) def  % begin
 
 %psc /ultracode [/before /after] //setuphooks exec
@@ -32209,14 +34567,36 @@ ultracode.coeffscachemax ultracode.coeffscachelimit //fifocache exec /ultracode.
     /link1 0 def
     /raw false def
     /rev 2 def             % Ultracode specification revision
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
+
+    /modunit 2 def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /default_modunit 2 copy known {get /modunit exch def} {pop pop} ifelse
+%psc     } {pop} ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /ultracode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
 
 %psc     (input.processoptions) //ultracode.after exec
 
@@ -32226,11 +34606,11 @@ ultracode.coeffscachemax ultracode.coeffscachelimit //fifocache exec /ultracode.
 
     % 282 max codewords; 4x for ^NNN parse expansion
     barcode length 2500 gt {
-        (bwipp.ultracodeinputTooLong#32229) (The input data is too long) //raiseerror exec
+        (bwipp.ultracodeinputTooLong#34609) (The input data is too long) //raiseerror exec
     } if
 
     rev dup 1 ne exch 2 ne and {
-        (bwipp.ultracodeInvalidRevision#32233) (Valid revisions are 1 and 2) //raiseerror exec
+        (bwipp.ultracodeInvalidRevision#34613) (Valid revisions are 1 and 2) //raiseerror exec
     } if
 
     eclevel length 3 eq dup {
@@ -32239,7 +34619,7 @@ ultracode.coeffscachemax ultracode.coeffscachelimit //fifocache exec /ultracode.
        } if
     } if
     not {
-        (bwipp.ultracodeInvalidErrorCorrectionLevel#32242) (Valid error correction levels are EC1 to EC5, and EC0 for legacy revision 1) //raiseerror exec
+        (bwipp.ultracodeInvalidErrorCorrectionLevel#34622) (Valid error correction levels are EC1 to EC5, and EC0 for legacy revision 1) //raiseerror exec
     } if
 
 %psc     (input.validate) //ultracode.after exec
@@ -32258,14 +34638,14 @@ ultracode.coeffscachemax ultracode.coeffscachelimit //fifocache exec /ultracode.
             } forall { pop exit } if
             cvi /cw exch def
             cw 284 gt {
-                (bwipp.ultracodeBadRawCodeword#32261) (Raw codewords must be 0 to 284) //raiseerror exec
+                (bwipp.ultracodeBadRawCodeword#34641) (Raw codewords must be 0 to 284) //raiseerror exec
             } if
             dcws j cw put
             /i i 4 add def
             /j j 1 add def
         } loop
         i barcode length ne {
-            (bwipp.ultracodeBadRawFormat#32268) (Raw codewords must be formatted as ^NNN) //raiseerror exec
+            (bwipp.ultracodeBadRawFormat#34648) (Raw codewords must be formatted as ^NNN) //raiseerror exec
         } if
         /dcws dcws 0 j getinterval def
 
@@ -32307,7 +34687,7 @@ ultracode.coeffscachemax ultracode.coeffscachelimit //fifocache exec /ultracode.
 
     options /debugcws known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugcws#32310) dcws //raiseerror exec } if
+    { (bwipp.debugcws#34690) dcws //raiseerror exec } if
 
 %psc     (metrics.selection) //ultracode.before exec
 
@@ -32337,7 +34717,7 @@ ultracode.coeffscachemax ultracode.coeffscachelimit //fifocache exec /ultracode.
     } forall
 
     okay not {
-        (bwipp.ultracodeNoValidSymbol#32340) (Maximum length exceeded or invalid content) //raiseerror exec
+        (bwipp.ultracodeNoValidSymbol#34720) (Maximum length exceeded or invalid content) //raiseerror exec
     } if
 
     %
@@ -32370,41 +34750,16 @@ ultracode.coeffscachemax ultracode.coeffscachelimit //fifocache exec /ultracode.
 %psc     (ecc.cws) //ultracode.before exec
 
     %
-    % Reed-Solomon error correction
+    % Reed-Solomon error correction over GF(283). Input is the concatenation
+    % [start, mcc, acc, dcws...].
     %
-    /rsseq [
-        start
-        mcc
-        acc
-        dcws aload pop
-        qcc {0} repeat
-        0  % Working space
-    ] def
-
-    %
-    % Derive the error codewords
-    %
-    0 1 n 1 sub {  % i
-        rsseq exch get rsseq n get add 283 mod    % t = (rsseq[i] + rsseq[n]) mod 283
-        0 1 k 1 sub {  % j
-            rsseq n 2 index add 2 copy 1 add get  % ... rsseq n+j rsseq[n+j+1]
-            283                                   % ... 283
-            5 index                               % ... t
-            coeffs k 8 -1 roll sub 1 sub get      % ... coeffs[k-j-1]
-            mul 283 mod                           % p = (t * coeffs[k-j-1]) mod 283
-            sub add 283 mod put                   % rsseq[n+j] = (rsseq[n+j+1] + (283 - p)) mod 283
-        } for
-        pop  % t
-    } for
-    n 1 n k add {  % i
-         rsseq exch 2 copy get                    % ... rsseq i rsseq[i]
-         283 exch sub 283 mod put                 % rsseq[i] = (283 - rsseq[i]) mod 283
-    } for
-    /ecws rsseq n k getinterval def
+    /rsdata [ start mcc acc dcws aload pop ] def
+    /ecws k array def
+    {rsdata exch get} n coeffs k ecws 283 //rsecprime exec
 
     options /debugecc known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugecc#32407) ecws //raiseerror exec } if
+    { (bwipp.debugecc#34762) ecws //raiseerror exec } if
 
 %psc     (ecc.cws) //ultracode.after exec
 
@@ -32494,13 +34849,19 @@ ultracode.coeffscachemax ultracode.coeffscachelimit //fifocache exec /ultracode.
     /pixs pixs
     /pixx columns
     /pixy rows
-    /height rows 72 div 2 mul
-    /width columns 72 div 2 mul
+    /height rows modunit mul 72 div
+    /width columns modunit mul 72 div
     /colormap //ultracode.colormap
     /borderleft 1.0
     /borderright 1.0
     /bordertop 1.0
     /borderbottom 1.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
     /opt options
     >>
 
@@ -32521,370 +34882,393 @@ bind def
 %%EndResource
 % --END ENCODER ultracode--
 
-% --BEGIN ENCODER jabcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor render renmatrix--
-% --DESC: JAB Code (Beta)
-% --EXAM: This is JAB Code
-% --EXOP: eclevel=6
-% --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2026033100 322929 324373
-%%BeginData:       1406 ASCII Lines
+%psc % --BEGIN ENCODER jabcode--
+%psc % --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor render renmatrix--
+%psc % --DESC: JAB Code (Beta)
+%psc % --EXAM: This is JAB Code
+%psc % --EXOP: eclevel=6
+%psc % --RNDR: renmatrix
+%psc %%BeginResource: uk.co.terryburton.bwipp jabcode 0.0 2026042100 333340 331324
+%psc %%BeginData:       1435 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
-/jabcode { /bwipjs_jabcode (start-global) def  % begin
-
-/jabcode.metavfmap [ 0 1 2 2 3 3 3 3 ] readonly def
-/jabcode.metavlensq [ 2 2 3 4 ] readonly def
-/jabcode.metavlenrect [ 4 6 8 10 ] readonly def
-/jabcode.slavemetamap [ 10 12 14 14 16 16 16 16 ] readonly def
-/jabcode.coderates [ 0.67 0.63 0.57 0.55 0.50 0.43 0.34 0.25 0.20 0.17 0.14 ] readonly def
-/jabcode.metavfadj [ 0 4 8 16 ] readonly def
-/jabcode.algnpos_default [ 3 17 ] readonly def
-
-% Computed to avoid integer literals > 2^31 that break packager binarisation
-/jabcode.bit31  1 31 bitshift def          % 16#80000000
-/jabcode.mask32 1 32 bitshift 1 sub def    % 16#ffffffff
-
-/jabcode.fpat_master [
-    [ 1 1 1 0 0 ]
-    [ 1 2 2 0 0 ]
-    [ 1 2 1 2 1 ]
-    [ 0 0 2 2 1 ]
-    [ 0 0 1 1 1 ]
-] readonly def
-
-/jabcode.fpat_slave [
-    [ 0 0 0 0 0 ]
-    [ 0 2 2 0 0 ]
-    [ 0 2 1 2 0 ]
-    [ 0 0 2 2 0 ]
-    [ 0 0 0 0 0 ]
-] readonly def
-
-%
-% Master palette maps
-%
-/jabcode.palettemap1_master [
-    [  4  1 ] [  4  2 ] [  5  1 ] [  5  2 ] [  2  4 ] [  2  5 ] [  1  4 ] [  1  5 ]  % 0-7
-    [ -2  1 ] [ -2  2 ] [ -1  1 ] [ -1  2 ] [ -4  4 ] [ -4  5 ] [ -5  4 ] [ -5  5 ]  % 8-15
-] readonly def
-
-/jabcode.palettemap2_master [
-    [ -4 -5 ] [ -4 -4 ] [ -5 -5 ] [ -5 -4 ] [ -2 -2 ] [ -2 -1 ] [ -1 -2 ] [ -1 -1 ]  % 0-7
-    [  2 -5 ] [  2 -4 ] [  1 -5 ] [  1 -4 ] [  4 -2 ] [  4 -1 ] [  5 -2 ] [  5 -1 ]  % 8-15
-] readonly def
-
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
+%psc begin
+%psc 
+%psc /jabcode.metavfmap [ 0 1 2 2 3 3 3 3 ] readonly def
+%psc /jabcode.metavlensq [ 2 2 3 4 ] readonly def
+%psc /jabcode.metavlenrect [ 4 6 8 10 ] readonly def
+%psc /jabcode.slavemetamap [ 10 12 14 14 16 16 16 16 ] readonly def
+%psc /jabcode.coderates [ 0.67 0.63 0.57 0.55 0.50 0.43 0.34 0.25 0.20 0.17 0.14 ] readonly def
+%psc /jabcode.metavfadj [ 0 4 8 16 ] readonly def
+%psc /jabcode.algnpos_default [ 3 17 ] readonly def
+%psc 
+%psc % Computed to avoid integer literals > 2^31 that break packager binarisation
+%psc /jabcode.bit31  1 31 bitshift def          % 16#80000000
+%psc /jabcode.mask32 1 32 bitshift 1 sub def    % 16#ffffffff
+%psc 
+%psc /jabcode.fpat.master [
+%psc     [ 1 1 1 0 0 ]
+%psc     [ 1 2 2 0 0 ]
+%psc     [ 1 2 1 2 1 ]
+%psc     [ 0 0 2 2 1 ]
+%psc     [ 0 0 1 1 1 ]
+%psc ] readonly def
+%psc 
+%psc /jabcode.fpat.slave [
+%psc     [ 0 0 0 0 0 ]
+%psc     [ 0 2 2 0 0 ]
+%psc     [ 0 2 1 2 0 ]
+%psc     [ 0 0 2 2 0 ]
+%psc     [ 0 0 0 0 0 ]
+%psc ] readonly def
+%psc 
+%psc %
+%psc % Master palette maps
+%psc %
+%psc /jabcode.palettemap1.master [
+%psc     [  4  1 ] [  4  2 ] [  5  1 ] [  5  2 ] [  2  4 ] [  2  5 ] [  1  4 ] [  1  5 ]  % 0-7
+%psc     [ -2  1 ] [ -2  2 ] [ -1  1 ] [ -1  2 ] [ -4  4 ] [ -4  5 ] [ -5  4 ] [ -5  5 ]  % 8-15
+%psc ] readonly def
+%psc 
+%psc /jabcode.palettemap2.master [
+%psc     [ -4 -5 ] [ -4 -4 ] [ -5 -5 ] [ -5 -4 ] [ -2 -2 ] [ -2 -1 ] [ -1 -2 ] [ -1 -1 ]  % 0-7
+%psc     [  2 -5 ] [  2 -4 ] [  1 -5 ] [  1 -4 ] [  4 -2 ] [  4 -1 ] [  5 -2 ] [  5 -1 ]  % 8-15
+%psc ] readonly def
+%psc 
 %psc /jabcode.latevars dup 32 dict def load /init {
-
+%psc 
 %psc     currentglobal
 %psc     true setglobal
-
+%psc 
 %psc     //jabcode.latevars begin
-
-    %
-    % Build color-dependent data for each color mode
-    %
-    /coloridx 7 dict def
-    /palettes 7 dict def
-    /palettelayouts 7 dict def
-
-    %
-    % Special case: 4 colors
-    %
-    coloridx 4 << /bi 0 /gi 1 /mi 2 /yi 3 /ki 4 /wi 5 >> put
-    palettes 4 << 0 (0000FF) 1 (00FF00) 2 (FF00FF) 3 (FFFF00) 4 (000000) 5 (FFFFFF) >> put
-    palettelayouts 4 [0 1 2 3] put
-
-    %
-    % 8 - 256 color cases
-    %
-    /rgbres <<
-             % r g b   Graduations
-          8  [ 2 2 2 ]
-         16  [ 4 2 2 ]
-         32  [ 4 4 2 ]
-         64  [ 4 4 4 ]
-        128  [ 8 4 4 ]
-        256  [ 8 8 4 ]
-    >> readonly def
-
-    [ 8 16 32 64 128 256 ] {
-
-        /ncolors exch def
-
-        /rvals rgbres ncolors get 0 get [ exch 1 sub dup 0 exch 1 exch {255 2 index div mul round cvi exch} for pop ] def
-        /gvals rgbres ncolors get 1 get [ exch 1 sub dup 0 exch 1 exch {255 2 index div mul round cvi exch} for pop ] def
-        /bvals rgbres ncolors get 2 get [ exch 1 sub dup 0 exch 1 exch {255 2 index div mul round cvi exch} for pop ] def
-
-        /idx 8 dict def
-
-        /palette ncolors dict def
-        /layout 64 ncolors 2 copy gt {exch} if pop array def
-        /i 0 def /j 8 def
-
-        rvals { /r exch def gvals { /g exch def bvals { /b exch def
-            /rgb r 16 bitshift g 8 bitshift or b or def
-
-            %
-            % Build coloridx
-            %
-            rgb 16#000000 eq {idx /ki i put} if
-            rgb 16#0000FF eq {idx /bi i put} if
-            rgb 16#00FF00 eq {idx /gi i put} if
-            rgb 16#00FFFF eq {idx /ci i put} if
-            rgb 16#FF0000 eq {idx /ri i put} if
-            rgb 16#FF00FF eq {idx /mi i put} if
-            rgb 16#FFFF00 eq {idx /yi i put} if
-            rgb 16#FFFFFF eq {idx /wi i put} if
-
-            %
-            % Build palette
-            %
-            rgb (000000) 6 string copy dup 3 -1 roll 16 6 string cvrs
-            dup length 6 exch sub exch putinterval
-            palette exch i exch put
-
-            %
-            % Build palettelayout (non-primary colors for slots 8+)
-            %
-            rgb 16#000000 ne rgb 16#0000FF ne and rgb 16#00FF00 ne and
-            rgb 16#00FFFF ne and rgb 16#FF0000 ne and rgb 16#FF00FF ne and
-            rgb 16#FFFF00 ne and rgb 16#FFFFFF ne and {
-                ncolors 64 le
-                ncolors 128 eq r 0 eq r 73 eq or r 182 eq or r 255 eq or and
-                ncolors 256 eq r 0 eq r 73 eq or r 182 eq or r 255 eq or and
-                    g 0 eq g 73 eq or g 182 eq or g 255 eq or and
-                or or {
-                    layout j i put
-                    /j j 1 add def
-                } if
-            } if
-
-            /i i 1 add def
-        } forall } forall } forall
-
-        %
-        % Fill primary color slots in palettelayout
-        %
-        layout 0 [idx /ki get idx /bi get idx /gi get idx /ci get
-                  idx /ri get idx /mi get idx /yi get idx /wi get] putinterval
-
-        coloridx ncolors idx put
-        palettes ncolors palette put
-        palettelayouts ncolors layout put
-
-    } forall
-
-    %
-    % Build remaining color-dependent arrays from coloridx
-    %
-    /fmapmaster <<
-        coloridx {
-            /idx exch def
-            /c exch def
-            c [
-                [-1 idx /bi get idx /yi get]
-                [-1 idx /yi get idx /bi get]
-                [-1 idx /gi get idx /mi get]
-                [-1 idx /mi get idx /gi get]
-            ]
-        } forall
-    >> def
-
-    /fmapslave <<
-        coloridx {
-            /idx exch def
-            /c exch def
-            /ki idx /ki get def
-            /wi idx /wi get def
-            c [
-                [-1 ki wi]
-                [-1 ki wi]
-                [-1 ki wi]
-                [-1 ki wi]
-            ]
-        } forall
-    >> def
-
-    /algnpat0s <<
-        coloridx {
-            /idx exch def
-            /c exch def
-            /ki idx /ki get def
-            /wi idx /wi get def
-            c [
-                [ki ki -1]
-                [ki wi ki]
-                [-1 ki ki]
-            ]
-        } forall
-    >> def
-
-    /algnpat1s <<
-        coloridx {
-            /idx exch def
-            /c exch def
-            /ki idx /ki get def
-            /wi idx /wi get def
-            c [
-                [-1 ki ki]
-                [ki wi ki]
-                [ki ki -1]
-            ]
-        } forall
-    >> def
-
-    /metacoloridxs <<
-        coloridx {
-            /idx exch def
-            /c exch def
-            c c 4 eq {
-                [idx /bi get idx /gi get idx /mi get idx /yi get]
-            } {
-                [
-                    idx /ki get idx /bi get idx /gi get idx /ci get
-                    idx /ri get idx /mi get idx /yi get idx /wi get
-                ]
-            } ifelse
-        } forall
-    >> def
-
-    %
-    % Metadata and palette coordinate maps
-    %
-    /metadatamap.master [
-        [  % Expanded to [ x y ] [ -x y ] [ -x -y ] [ x -y ]
-            % Metadata and palette
-            [ 6 1 ] [ 6 2 ] [ 6 3 ] [ 6 4 ] [ 6 5 ] [ 6 6 ] [ 5 6 ] [ 4 6 ] [ 3 6 ] [ 2 6 ]  %  0-39
-            [ 1 6 ] [ 7 1 ] [ 7 2 ] [ 7 3 ] [ 7 4 ] [ 7 5 ] [ 7 6 ] [ 7 7 ] [ 6 7 ] [ 5 7 ]  % 40-79
-            % Palette only
-            [  4  7 ] [  3  7 ] [  2  7 ] [  1  7 ] [  8  1 ] [  8  2 ] [  8  3 ] [  8  4 ]  % 16-31
-            [  8  5 ] [  8  6 ] [  8  7 ] [  8  8 ] [  7  8 ] [  6  8 ] [  5  8 ] [  4  8 ]  % 32-47
-            [  3  8 ] [  2  8 ] [  1  8 ] [  9  1 ] [  9  2 ] [  9  3 ] [  9  4 ] [  9  5 ]  % 48-63
-        ] {
-            aload pop /y exch def /x exch def
-            [ x y ] [ x neg y ] [ x neg y neg ] [ x y neg ]
-        } forall
-    ] def
-
-    %
-    % Slave metadatamap
-    %
-    /metadatamap.slave [
-        1 1 19 {
-            /i exch def
-            [ 0 i ] [ 1 i ]
-        } for
-        5 1 12 {
-            /i exch def
-            [ 2 i ] [ 3 i ]
-        } for
-    ] def
-
-    %
-    % Slave palette maps
-    %
-    /palettemap1.slave [
-         5  1 12 { [ exch 4 exch ] } for
-        12 -1  5 { [ exch 5 exch ] } for
-         5  1 12 { [ exch 6 exch ] } for
-        12 -1  5 { [ exch 7 exch ] } for
-    ] def
-    /palettemap2.slave [
-        palettemap1.slave { [ exch aload pop neg exch neg exch ] } forall
-    ] def
-
+%psc 
+%psc     %
+%psc     % Build color-dependent data for each color mode
+%psc     %
+%psc     /coloridx 7 dict def
+%psc     /palettes 7 dict def
+%psc     /palettelayouts 7 dict def
+%psc 
+%psc     %
+%psc     % Special case: 4 colors
+%psc     %
+%psc     coloridx 4 << /bi 0 /gi 1 /mi 2 /yi 3 /ki 4 /wi 5 >> put
+%psc     palettes 4 << 0 (0000FF) 1 (00FF00) 2 (FF00FF) 3 (FFFF00) 4 (000000) 5 (FFFFFF) >> put
+%psc     palettelayouts 4 [0 1 2 3] put
+%psc 
+%psc     %
+%psc     % 8 - 256 color cases
+%psc     %
+%psc     /rgbres <<
+%psc              % r g b   Graduations
+%psc           8  [ 2 2 2 ]
+%psc          16  [ 4 2 2 ]
+%psc          32  [ 4 4 2 ]
+%psc          64  [ 4 4 4 ]
+%psc         128  [ 8 4 4 ]
+%psc         256  [ 8 8 4 ]
+%psc     >> readonly def
+%psc 
+%psc     [ 8 16 32 64 128 256 ] {
+%psc 
+%psc         /ncolors exch def
+%psc 
+%psc         /rvals rgbres ncolors get 0 get [ exch 1 sub dup 0 exch 1 exch {255 2 index div mul round cvi exch} for pop ] def
+%psc         /gvals rgbres ncolors get 1 get [ exch 1 sub dup 0 exch 1 exch {255 2 index div mul round cvi exch} for pop ] def
+%psc         /bvals rgbres ncolors get 2 get [ exch 1 sub dup 0 exch 1 exch {255 2 index div mul round cvi exch} for pop ] def
+%psc 
+%psc         /idx 8 dict def
+%psc 
+%psc         /palette ncolors dict def
+%psc         /layout 64 ncolors 2 copy gt {exch} if pop array def
+%psc         /i 0 def /j 8 def
+%psc 
+%psc         rvals { /r exch def gvals { /g exch def bvals { /b exch def
+%psc             /rgb r 16 bitshift g 8 bitshift or b or def
+%psc 
+%psc             %
+%psc             % Build coloridx
+%psc             %
+%psc             rgb 16#000000 eq {idx /ki i put} if
+%psc             rgb 16#0000FF eq {idx /bi i put} if
+%psc             rgb 16#00FF00 eq {idx /gi i put} if
+%psc             rgb 16#00FFFF eq {idx /ci i put} if
+%psc             rgb 16#FF0000 eq {idx /ri i put} if
+%psc             rgb 16#FF00FF eq {idx /mi i put} if
+%psc             rgb 16#FFFF00 eq {idx /yi i put} if
+%psc             rgb 16#FFFFFF eq {idx /wi i put} if
+%psc 
+%psc             %
+%psc             % Build palette
+%psc             %
+%psc             rgb (000000) 6 string copy dup 3 -1 roll 16 6 string cvrs
+%psc             dup length 6 exch sub exch putinterval
+%psc             palette exch i exch put
+%psc 
+%psc             %
+%psc             % Build palettelayout (non-primary colors for slots 8+)
+%psc             %
+%psc             rgb 16#000000 ne rgb 16#0000FF ne and rgb 16#00FF00 ne and
+%psc             rgb 16#00FFFF ne and rgb 16#FF0000 ne and rgb 16#FF00FF ne and
+%psc             rgb 16#FFFF00 ne and rgb 16#FFFFFF ne and {
+%psc                 ncolors 64 le
+%psc                 ncolors 128 eq r 0 eq r 73 eq or r 182 eq or r 255 eq or and
+%psc                 ncolors 256 eq r 0 eq r 73 eq or r 182 eq or r 255 eq or and
+%psc                     g 0 eq g 73 eq or g 182 eq or g 255 eq or and
+%psc                 or or {
+%psc                     layout j i put
+%psc                     /j j 1 add def
+%psc                 } if
+%psc             } if
+%psc 
+%psc             /i i 1 add def
+%psc         } forall } forall } forall
+%psc 
+%psc         %
+%psc         % Fill primary color slots in palettelayout
+%psc         %
+%psc         layout 0 [idx /ki get idx /bi get idx /gi get idx /ci get
+%psc                   idx /ri get idx /mi get idx /yi get idx /wi get] putinterval
+%psc 
+%psc         coloridx ncolors idx put
+%psc         palettes ncolors palette put
+%psc         palettelayouts ncolors layout put
+%psc 
+%psc     } forall
+%psc 
+%psc     %
+%psc     % Build remaining color-dependent arrays from coloridx
+%psc     %
+%psc     /fmapmaster <<
+%psc         coloridx {
+%psc             /idx exch def
+%psc             /c exch def
+%psc             c [
+%psc                 [-1 idx /bi get idx /yi get]
+%psc                 [-1 idx /yi get idx /bi get]
+%psc                 [-1 idx /gi get idx /mi get]
+%psc                 [-1 idx /mi get idx /gi get]
+%psc             ]
+%psc         } forall
+%psc     >> def
+%psc 
+%psc     /fmapslave <<
+%psc         coloridx {
+%psc             /idx exch def
+%psc             /c exch def
+%psc             /ki idx /ki get def
+%psc             /wi idx /wi get def
+%psc             c [
+%psc                 [-1 ki wi]
+%psc                 [-1 ki wi]
+%psc                 [-1 ki wi]
+%psc                 [-1 ki wi]
+%psc             ]
+%psc         } forall
+%psc     >> def
+%psc 
+%psc     /algnpat0s <<
+%psc         coloridx {
+%psc             /idx exch def
+%psc             /c exch def
+%psc             /ki idx /ki get def
+%psc             /wi idx /wi get def
+%psc             c [
+%psc                 [ki ki -1]
+%psc                 [ki wi ki]
+%psc                 [-1 ki ki]
+%psc             ]
+%psc         } forall
+%psc     >> def
+%psc 
+%psc     /algnpat1s <<
+%psc         coloridx {
+%psc             /idx exch def
+%psc             /c exch def
+%psc             /ki idx /ki get def
+%psc             /wi idx /wi get def
+%psc             c [
+%psc                 [-1 ki ki]
+%psc                 [ki wi ki]
+%psc                 [ki ki -1]
+%psc             ]
+%psc         } forall
+%psc     >> def
+%psc 
+%psc     /metacoloridxs <<
+%psc         coloridx {
+%psc             /idx exch def
+%psc             /c exch def
+%psc             c c 4 eq {
+%psc                 [idx /bi get idx /gi get idx /mi get idx /yi get]
+%psc             } {
+%psc                 [
+%psc                     idx /ki get idx /bi get idx /gi get idx /ci get
+%psc                     idx /ri get idx /mi get idx /yi get idx /wi get
+%psc                 ]
+%psc             } ifelse
+%psc         } forall
+%psc     >> def
+%psc 
+%psc     %
+%psc     % Metadata and palette coordinate maps
+%psc     %
+%psc     /metadatamap.master [
+%psc         [  % Expanded to [ x y ] [ -x y ] [ -x -y ] [ x -y ]
+%psc             % Metadata and palette
+%psc             [ 6 1 ] [ 6 2 ] [ 6 3 ] [ 6 4 ] [ 6 5 ] [ 6 6 ] [ 5 6 ] [ 4 6 ] [ 3 6 ] [ 2 6 ]  %  0-39
+%psc             [ 1 6 ] [ 7 1 ] [ 7 2 ] [ 7 3 ] [ 7 4 ] [ 7 5 ] [ 7 6 ] [ 7 7 ] [ 6 7 ] [ 5 7 ]  % 40-79
+%psc             % Palette only
+%psc             [  4  7 ] [  3  7 ] [  2  7 ] [  1  7 ] [  8  1 ] [  8  2 ] [  8  3 ] [  8  4 ]  % 16-31
+%psc             [  8  5 ] [  8  6 ] [  8  7 ] [  8  8 ] [  7  8 ] [  6  8 ] [  5  8 ] [  4  8 ]  % 32-47
+%psc             [  3  8 ] [  2  8 ] [  1  8 ] [  9  1 ] [  9  2 ] [  9  3 ] [  9  4 ] [  9  5 ]  % 48-63
+%psc         ] {
+%psc             aload pop /y exch def /x exch def
+%psc             [ x y ] [ x neg y ] [ x neg y neg ] [ x y neg ]
+%psc         } forall
+%psc     ] def
+%psc 
+%psc     %
+%psc     % Slave metadatamap
+%psc     %
+%psc     /metadatamap.slave [
+%psc         1 1 19 {
+%psc             /i exch def
+%psc             [ 0 i ] [ 1 i ]
+%psc         } for
+%psc         5 1 12 {
+%psc             /i exch def
+%psc             [ 2 i ] [ 3 i ]
+%psc         } for
+%psc     ] def
+%psc 
+%psc     %
+%psc     % Slave palette maps
+%psc     %
+%psc     /palettemap1.slave [
+%psc          5  1 12 { [ exch 4 exch ] } for
+%psc         12 -1  5 { [ exch 5 exch ] } for
+%psc          5  1 12 { [ exch 6 exch ] } for
+%psc         12 -1  5 { [ exch 7 exch ] } for
+%psc     ] def
+%psc     /palettemap2.slave [
+%psc         palettemap1.slave { [ exch aload pop neg exch neg exch ] } forall
+%psc     ] def
+%psc 
 %psc     /init { //jabcode.latevars {def} forall } def
-
+%psc 
 %psc     end
-
+%psc 
 %psc     //jabcode.latevars /init get exec
-
+%psc 
 %psc     setglobal
-
+%psc 
 %psc } bind put
-
+%psc 
 %psc /uk.co.terryburton.bwipp.global_ctx dup where {
 %psc     exch get /preload known {//jabcode.latevars /init get exec} if
 %psc } {pop} ifelse
-
-/bwipjs_jabcode (end-global) def  % jabcode {
-
-    256 dict begin
-%psc {
-
-    /dontdraw false def
-    /rows -1 def
-    /columns -1 def
-    /slave false def
-    /colors 16 def
-    /eclevel 6 def  % 0-10
-    /raw false def
-    /parse false def
-    /parsefnc false def
-    /mask -1 def    % 0-7
-
-    //processoptions exec /options exch def
-    /barcode exch def
-
-    //jabcode.bit31 0 le {  % 1 31 bitshift <= 0 implies 32-bit integers
-        (bwipp.jabcodeRequires64bit#32837) (JAB Code requires a 64-bit PostScript interpreter) //raiseerror exec
-    } if
-
-    barcode length 8000 gt {
-        (bwipp.jabcodeinputTooLong#32841) (The input data is too long) //raiseerror exec
-    } if
-
-    eclevel 0 lt eclevel 10 gt or {
-        (bwipp.jabcodeInvalidEclevel#32845) (Error correction level must be 0 to 10) //raiseerror exec
-    } if
-
-    mask -1 ne { mask 0 lt mask 7 gt or {
-        (bwipp.jabcodeInvalidMask#32849) (Mask must be 0 to 7) //raiseerror exec
-    } if } if
-
-    colors dup dup 4 lt exch 256 gt or          % Range check
-    exch dup 1 sub and 0 ne or {                % Power of 2 check
-        (bwipp.jabcodeInvalidColors#32854) (Colors must be 4, 8, 16, 32, 64, 128 or 256) //raiseerror exec
-    } if
-
-    rows -1 ne { rows 21 lt rows 145 gt or {
-        (bwipp.jabcodeInvalidRowSize#32858) (Rows must be 21 to 145) //raiseerror exec
-    } if } if
-
-    columns -1 ne { columns 21 lt columns 145 gt or {
-        (bwipp.jabcodeInvalidColumnSize#32862) (Columns must be 21 to 145) //raiseerror exec
-    } if } if
-
-    /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
+%psc 
+%psc /jabcode {
+%psc 
+%psc     256 dict begin
+%psc     {
+%psc 
+%psc     /dontdraw false def
+%psc     /rows -1 def
+%psc     /columns -1 def
+%psc     /slave false def
+%psc     /colors 16 def
+%psc     /eclevel 6 def  % 0-10
+%psc     /raw false def
+%psc     /parse false def
+%psc     /parsefnc false def
+%psc     /mask -1 def    % 0-7
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc 
+%psc     /apply //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+%psc 
+%psc     /barcode exch def
+%psc 
+%psc     //jabcode.bit31 0 le {  % 1 31 bitshift <= 0 implies 32-bit integers
+%psc         /bwipp.jabcodeRequires64bit (JAB Code requires a 64-bit PostScript interpreter) //raiseerror exec
+%psc     } if
+%psc 
+%psc     barcode length 8000 gt {
+%psc         /bwipp.jabcodeinputTooLong (The input data is too long) //raiseerror exec
+%psc     } if
+%psc 
+%psc     eclevel 0 lt eclevel 10 gt or {
+%psc         /bwipp.jabcodeInvalidEclevel (Error correction level must be 0 to 10) //raiseerror exec
+%psc     } if
+%psc 
+%psc     mask -1 ne { mask 0 lt mask 7 gt or {
+%psc         /bwipp.jabcodeInvalidMask (Mask must be 0 to 7) //raiseerror exec
+%psc     } if } if
+%psc 
+%psc     colors dup dup 4 lt exch 256 gt or          % Range check
+%psc     exch dup 1 sub and 0 ne or {                % Power of 2 check
+%psc         /bwipp.jabcodeInvalidColors (Colors must be 4, 8, 16, 32, 64, 128 or 256) //raiseerror exec
+%psc     } if
+%psc 
+%psc     rows -1 ne { rows 21 lt rows 145 gt or {
+%psc         /bwipp.jabcodeInvalidRowSize (Rows must be 21 to 145) //raiseerror exec
+%psc     } if } if
+%psc 
+%psc     columns -1 ne { columns 21 lt columns 145 gt or {
+%psc         /bwipp.jabcodeInvalidColumnSize (Columns must be 21 to 145) //raiseerror exec
+%psc     } if } if
+%psc 
+%psc     /_render
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
+%psc 
+%psc     /modunit 2 def
+%psc     /uk.co.terryburton.bwipp.global_ctx dup where {
+%psc         exch get /default_modunit 2 copy known {get /modunit exch def} {pop pop} ifelse
+%psc     } {pop} ifelse
+%psc 
+%psc     %
+%psc     % Apply AST spec overrides and resolve physical specification
+%psc     %
+%psc     /jabcode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc 
 %psc     //jabcode.latevars /init get exec
-
-    /databpm colors ln 2 ln div round cvi def
-    /metabpm colors dup 8 gt {pop 8} if ln 2 ln div round cvi def
-
-    %
-    % Parse the input
-    %
-    /fncvals <<
-        /parse parse
-        /parsefnc parsefnc
-    >> def
-    barcode fncvals //parseinput exec /msg exch def
-    /msglen msg length def
-
-    %
-    % Wide array support, as needed
-    %
+%psc 
+%psc     /databpm colors ln 2 ln div round cvi def
+%psc     /metabpm colors dup 8 gt {pop 8} if ln 2 ln div round cvi def
+%psc 
+%psc     %
+%psc     % Parse the input
+%psc     %
+%psc     /fncvals <<
+%psc         /parse parse
+%psc         /parsefnc parsefnc
+%psc     >> def
+%psc     barcode fncvals //parseinput exec /msg exch def
+%psc     /msglen msg length def
+%psc 
+%psc     %
+%psc     % Wide array support, as needed
+%psc     %
 %psc     {65536 array} stopped {
 %psc         pop
 %psc         /arrayw {
@@ -32901,1051 +35285,1057 @@ bind def
 %psc         /putw   {put}   def
 %psc         /copyw  {copy}  def
 %psc     } ifelse
-
-    /addtobits {
-        dup bits j 3 -1 roll putinterval
-        length j add /j exch def
-    } def
-
-    /tofixedbits {  % Zero padded base 2 string
-        (0000000000000) 13 string copy dup 4 -1 roll 2 13 string cvrs
-        dup length 4 index exch sub exch putinterval
-        0 3 -1 roll getinterval
-    } def
-
-    %
-    % Encode the data using byte mode encoding and terminate with EOM
-    %
-    /bits 7 msglen 15 le {4} {17} ifelse add msglen 8 mul add 12 add string def
-    /j 0 def
-    31 5 tofixedbits addtobits  % MS
-    (00) addtobits              % S/B
-    msglen 15 le {
-        msglen 4 tofixedbits addtobits
-    } {
-        (0000) addtobits
-        msglen 16 sub 13 tofixedbits addtobits
-    } ifelse
-    0 1 msglen 1 sub {
-        msg exch get 8 tofixedbits addtobits
-    } for
-    28 5 tofixedbits addtobits  % L/L
-    31 5 tofixedbits addtobits  % MS
-    (11) addtobits              % EOM
-
-    % TODO Cascade
-    options /debugbits known
+%psc 
+%psc     /addtobits {
+%psc         dup bits j 3 -1 roll putinterval
+%psc         length j add /j exch def
+%psc     } def
+%psc 
+%psc     /tofixedbits {  % Zero padded base 2 string
+%psc         (0000000000000) 13 string copy dup 4 -1 roll 2 13 string cvrs
+%psc         dup length 4 index exch sub exch putinterval
+%psc         0 3 -1 roll getinterval
+%psc     } def
+%psc 
+%psc     %
+%psc     % Encode the data using byte mode encoding and terminate with EOM
+%psc     %
+%psc     /bits 7 msglen 15 le {4} {17} ifelse add msglen 8 mul add 12 add string def
+%psc     /j 0 def
+%psc     31 5 tofixedbits addtobits  % MS
+%psc     (00) addtobits              % S/B
+%psc     msglen 15 le {
+%psc         msglen 4 tofixedbits addtobits
+%psc     } {
+%psc         (0000) addtobits
+%psc         msglen 16 sub 13 tofixedbits addtobits
+%psc     } ifelse
+%psc     0 1 msglen 1 sub {
+%psc         msg exch get 8 tofixedbits addtobits
+%psc     } for
+%psc     28 5 tofixedbits addtobits  % L/L
+%psc     31 5 tofixedbits addtobits  % MS
+%psc     (11) addtobits              % EOM
+%psc 
+%psc     % TODO Cascade
+%psc     options /debugbits known
 %psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
-    { (bwipp.debugbits#32939) [ bits {48 sub} forall ] //raiseerror exec } if
-
-    /diffside 21 def
-    /sameshape false def
-    /sameecc false def
-    /hasslaves false def
-
-    %
-    % Determine the metrics for a symbol of a given size
-    %
-    /metrics {
-        /mc exch def  /mr exch def
-        mc mr mul                                      % All modules
-        mc 25 sub 16 idiv 2 add mr 25 sub 16 idiv 2 add
-        mul 4 sub 7 mul                                % Alignment modules
-        64 colors 2 copy gt {exch} if pop 2 mul        % Palette modules
-        slave {7} {17} ifelse 4 mul                    % Finder modules
-
-        %
-        % Metadata bits and modules
-        %
-        slave not {  % Master
-            /metass mr mc eq {0} {1} ifelse def
-            mr mc 2 copy lt {exch} if pop
-            21 sub 16 idiv //jabcode.metavfmap exch get  /metavf exch def
-            /metavlen metass 0 eq {//jabcode.metavlensq} {//jabcode.metavlenrect} ifelse metavf get def
-            /metaelen metavf 2 mul 10 add def
-            7                                          % II:  SS VF MSK SF
-            metavlen add metaelen add                  % III: V E
-            hasslaves {4 add} if                       % III: S
-            2 mul                                      % LDPC
-            metabpm div ceiling cvi
-            dup metabpm mul 6 add /nummetabits exch def
-            6 add                                      % I:   Nc into 6 modules
-        } {  % Slave
-            3                                          % I:   SS SE SF
-            sameshape not {5 add} if                   % II:  V
-            hasslaves     {3 add} if                   % II:  S
-            sameecc not {
-                mr mc 2 copy lt {exch} if pop
-                21 sub 16 idiv //jabcode.slavemetamap exch get
-                dup /metaelen exch def
-                add                                    % III: E
-            } if
-            2 mul                                      % LDPC
-            metabpm div ceiling cvi
-            dup metabpm mul /nummetabits exch def
-        } ifelse
-
-        dup              /nummetamodules exch def
-        add add add sub  /numdatamodules exch def
-        /numdatabits numdatamodules databpm mul def
-    } def
-
-    %
-    % Select a symbol size sufficient to carry the message
-    %
-    /coderate //jabcode.coderates eclevel get def
-    /grosslen bits length coderate div ceiling cvi def
-    /snapsize {ceiling cvi 18 sub dup 0 lt {pop 0} if 4 idiv 4 mul 21 add} def
-
-    rows -1 eq columns -1 eq and {        % Square if neither rows or columns fixed
-        /size grosslen sqrt snapsize def
-        {
-            size 145 gt {
-                (bwipp.jabcodeNoValidSymbol#33004) (Maximum length exceeded or invalid content) //raiseerror exec
-            } if
-            size size metrics
-            grosslen numdatabits le {exit} if
-            /size size 4 add def
-        } loop
-        /rows size def
-        /columns size def
-    } {
-        columns -1 eq rows -1 ne and {     % Fixed height
-            /columns grosslen rows div snapsize def
-            {
-                columns 145 gt {
-                    (bwipp.jabcodeNoValidSymbol#33017) (Maximum length exceeded or invalid content) //raiseerror exec
-                } if
-                rows columns metrics
-                grosslen numdatabits le {exit} if
-                /columns columns 4 add def
-            } loop
-        } if
-        rows -1 eq columns -1 ne and {     % Fixed width
-            /rows grosslen columns div snapsize def
-            {
-                rows 145 gt {
-                    (bwipp.jabcodeNoValidSymbol#33028) (Maximum length exceeded or invalid content) //raiseerror exec
-                } if
-                rows columns metrics
-                grosslen numdatabits le {exit} if
-                /rows rows 4 add def
-            } loop
-        } if
-        rows -1 ne columns -1 ne and {     % Fixed height and width
-            rows columns metrics
-        } if
-    } ifelse
-    /C numdatabits def
-    /cols columns def
-
-    rows 145 gt cols 145 gt or {
-        (bwipp.jabcodeNoValidSymbol#33043) (Maximum length exceeded or invalid content) //raiseerror exec
-    } if
-
-    %
-    % Pick ECC params to maximally fill symbol
-    %
-    /min C def
-    3 1 8 {
-        /i exch def
-        i 1 add 1 9 {
-            /j exch def
-            /dist C j idiv j mul C j idiv i mul sub bits length sub def
-            dist min lt dist 0 ge and {
-                /datawc i def
-                /datawr j def
-                /min dist def
-            } if
-        } for
-    } for
-
-    %
-    % Extend the encoded data to fill the required data length
-    %
-    C datawr idiv datawr mul C datawr idiv datawc mul sub
-    { string } stopped {
-        pop (bwipp.jabcodeSymbolTooLarge#33068) (The resulting symbol exceeds the maximum string or array size) //raiseerror exec
-    } if /tmpbits exch def
-    tmpbits 0 bits putinterval
-    bits length 1 tmpbits length 1 sub {
-        dup 1 sub tmpbits exch get dup 2 mod 0 eq {1 add} {1 sub} ifelse
-        tmpbits 3 1 roll put
-    } for
-    /bits tmpbits def
-
-    %
-    % Avoid 15-bit overflow when multiplying the digits by stealing from the second digit
-    % m = 6364136223846793005 = 0x 5851 f42d 4c95 7f2d
-    %
-    /m0 16#5851 16#1 add def  /m1 16#f42d 16#10000 sub def  /m2 16#4c95 def  /m3 16#7f2d def
-
-    /lcg64_temper {
-
-        %
-        % Multiply seed by 6364136223846793005 then add 1
-        %
-        /p00 m0 s0 mul def  /p01 m0 s1 mul def  /p02 m0 s2 mul def  /p03 m0 s3 mul def
-        /p10 m1 s0 mul def  /p11 m1 s1 mul def  /p12 m1 s2 mul def  /p13 m1 s3 mul def
-        /p20 m2 s0 mul def  /p21 m2 s1 mul def  /p22 m2 s2 mul def  /p23 m2 s3 mul def
-        /p30 m3 s0 mul def  /p31 m3 s1 mul def  /p32 m3 s2 mul def  /p33 m3 s3 mul def
-
-        /s3 p33 16#10000 mod                     1 add def  % 1 added here
-        /s2 p32 16#10000 mod p33 16#10000 idiv add
-            p23 16#10000 mod                       add def
-        /s1 p31 16#10000 mod p32 16#10000 idiv add
-            p22 16#10000 mod p23 16#10000 idiv add add
-            p13 16#10000 mod                       add def
-        /s0 p30 16#10000 mod p31 16#10000 idiv add
-            p21 16#10000 mod p22 16#10000 idiv add add
-            p12 16#10000 mod p13 16#10000 idiv add add
-            p03 16#10000 mod                       add def
-
-        %
-        % Simplify carry by making each digit positive by borrowing from more significant digit
-        %
-        /s3 s3 16#10000 add def
-        /s2 s2 16#ffff  add def
-        /s1 s1 16#ffff  add def
-        /s0 s0 16#ffff  add def
-
-        %
-        % Carry
-        %
-        /s2 s3 16#10000 idiv s2 add def  /s3 s3 16#10000 mod def
-        /s1 s2 16#10000 idiv s1 add def  /s2 s2 16#10000 mod def
-        /s0 s1 16#10000 idiv s0 add def  /s1 s1 16#10000 mod def
-                                         /s0 s0 16#10000 mod def
-        %
-        % Temper most significant 32 bits
-        %
-        s0 16#8000 sub 16#10000 mul s1 add //jabcode.bit31 xor
-        //jabcode.mask32 and
-        dup -11 bitshift xor
-        dup   7 bitshift 16#62d3a980 neg and xor  % 0x9D2C5680 - 0x100000000
-        dup  15 bitshift 16#103a0000 neg and xor  % 0xEFC60000 - 0x100000000
-        //jabcode.mask32 and
-        dup -18 bitshift xor
-
-    } def
-
-    /createMatrixA {
-
-        /nb_pcb wr 4 lt {Pg_sub_block 2 idiv} {Pg_sub_block wr idiv wc mul} ifelse def
-        /offset Pg_sub_block 32 div ceiling cvi def
-        /effwidth offset 32 mul def
-        /matrixA offset nb_pcb mul arrayw def
-        0 1 offset nb_pcb mul 1 sub {matrixA exch 0 putw} for
-        /permutation Pg_sub_block array def
-        0 1 Pg_sub_block 1 sub {permutation exch dup put} for
-
-        0 1 Pg_sub_block wr idiv 1 sub {
-            /i exch def
-            0 1 wr 1 sub {
-                /j exch def
-                matrixA i effwidth wr add mul j add 32 idiv
-                2 copy getw 1 31 i effwidth wr add mul j add 32 mod sub bitshift or putw
-            } for
-        } for
-
-        %
-        % Pseudorandom permutation
-        %
-        /s0 16#0000 def  /s1 16#0000 def  /s2 16#000B def  /s3 16#FC39 def  % s=785465
-        1 1 wc 1 sub {
-            /i exch def
-            /off_index Pg_sub_block wr idiv i mul def
-            0 1 Pg_sub_block 1 sub {
-                /j exch def
-                lcg64_temper
-                dup 0 lt {//jabcode.bit31 xor 2147483648.0 add} if
-                4294967296.0 div Pg_sub_block j sub mul cvi  % (float)UINT32_MAX = 65536.0 * 65536
-                /pos exch def
-                0 1 Pg_sub_block wr idiv 1 sub {
-                    /k exch def
-                    matrixA off_index k add offset mul j 32 idiv add
-                    2 copy getw
-                        matrixA permutation pos get 32 idiv k offset mul add getw
-                        31      permutation pos get 32 mod  sub neg bitshift 1 and
-                        31 j                        32 mod  sub bitshift
-                    or putw
-                } for
-                permutation pos permutation Pg_sub_block 1 sub j sub 2 copy get permutation pos get
-                exch 4 1 roll   % p b p a p[a] p[b] -> p b p[a] p a p[b]
-                put put
-            } for
-        } for
-
-    } def
-
-    /createMetadataMatrixA {
-
-        /nb_pcb Pg_sub_block 2 idiv def
-        /offset Pg_sub_block 32 div ceiling cvi def
-        /matrixA offset nb_pcb mul arrayw def
-        0 1 offset nb_pcb mul 1 sub {matrixA exch 0 putw} for
-        /permutation Pg_sub_block array def
-        0 1 Pg_sub_block 1 sub {permutation exch dup put} for
-
-        %
-        % Pseudorandom permutation
-        %
-        /s0 16#0000 def  /s1 16#0000 def  /s2 16#0000 def  /s3 16#9691 def  % s=38545
-        /nb_once nb_pcb wc div Pg_sub_block mul 3 add cvi nb_pcb idiv def
-        0 1 nb_pcb 1 sub {
-            /i exch def
-            0 1 nb_once 1 sub {
-                /j exch def
-                lcg64_temper
-                dup 0 lt {//jabcode.bit31 xor 2147483648.0 add} if
-                4294967296.0 div Pg_sub_block j sub mul cvi  % (float)UINT32_MAX = 65536.0 * 65536
-                /pos exch def
-                matrixA i offset mul permutation pos get 32 idiv add
-                2 copy getw 1 31 permutation pos get 32 mod sub bitshift or putw
-                permutation pos permutation Pg_sub_block 1 sub j sub 2 copy get permutation pos get
-                exch 4 1 roll   % p b p a p[a] p[b] -> p b p[a] p a p[b]
-                put put
-            } for
-        } for
-
-    } def
-
-    /GaussJordan {
-
-        /nb_pcb wr 4 lt {Pg_sub_block 2 idiv} {Pg_sub_block wr idiv wc mul} ifelse def
-        /offset Pg_sub_block 32 div ceiling cvi def
-        /matrixH matrixA dup length array copyw def
-        /column_arrangement [ Pg_sub_block       {0}     repeat ] def
-        /processed_column   [ Pg_sub_block       {false} repeat ] def
-        /zero_lines_nb      [ nb_pcb             {0}     repeat ] def
-        /swap_col           [ Pg_sub_block 2 mul {0}     repeat ] def
-        /zero_lines 0 def
-
-        /loop0 0 def
-        0 1 nb_pcb 1 sub {
-            /i exch def
-            /pivot_column Pg_sub_block 1 add def
-            0 1 Pg_sub_block 1 sub {
-                /j exch def
-                matrixH offset 32 mul i mul j add 32 idiv getw
-                31 offset 32 mul i mul j add 32 mod sub neg bitshift 1 and 1 eq {
-                    /pivot_column j def
-                    exit
-                } if
-            } for
-            pivot_column Pg_sub_block lt {
-                processed_column   pivot_column true put
-                column_arrangement pivot_column i put
-                pivot_column nb_pcb ge {
-                    swap_col loop0 2 mul pivot_column put
-                    /loop0 loop0 1 add def
-                } if
-                /off_index  pivot_column 32 idiv def
-                /off_index1 pivot_column 32 mod def
-                0 1 nb_pcb 1 sub {
-                    /j exch def
-                    i j ne {
-                        matrixH off_index j offset mul add getw
-                        31 off_index1 sub neg bitshift 1 and 1 eq {
-                            0 1 offset 1 sub {
-                                /k exch def
-                                matrixH offset j mul k add
-                                2 copy getw matrixH offset i mul k add getw xor putw
-                            } for
-                        } if
-                    } if
-                } for
-            } {
-                zero_lines_nb zero_lines i put
-                /zero_lines zero_lines 1 add def
-            } ifelse
-        } for
-
-        /matrix_rank nb_pcb zero_lines sub def
-        /loop2 0 def
-        matrix_rank 1 nb_pcb 1 sub {
-            /i exch def
-            column_arrangement i get 0 gt {
-                0 1 nb_pcb 1 sub {
-                    /j exch def
-                    processed_column j get not {
-                        column_arrangement j column_arrangement i get put
-                        column_arrangement i 0 put
-                        processed_column   j true put
-                        processed_column   i false put
-                        swap_col loop0 2 mul       i put
-                        swap_col loop0 2 mul 1 add j put
-                        column_arrangement i j put
-                        /loop0 loop0 1 add def
-                        /loop2 loop2 1 add def
-                        exit
-                    } if
-                } for
-            } if
-        } for
-
-        /loop1 0 def
-        0 1 nb_pcb 1 sub {
-            /kl exch def
-            processed_column kl get not loop1 loop0 loop2 sub lt and {
-                column_arrangement kl column_arrangement swap_col loop1 2 mul get get put
-                processed_column kl true put
-                swap_col loop1 2 mul 1 add kl put
-                /loop1 loop1 1 add def
-            } if
-        } for
-
-        /loop1 0 def
-        0 1 nb_pcb 1 sub {
-            /kl exch def
-            processed_column kl get not {
-                column_arrangement kl zero_lines_nb loop1 get put
-                /loop1 loop1 1 add def
-            } if
-        } for
-
-        0 1 nb_pcb 1 sub {
-            /i exch def
-            0 1 offset 1 sub {
-                /j exch def
-                matrixH column_arrangement i get offset mul j add getw
-                matrixA exch i offset mul j add exch putw
-            } for
-        } for
-
-        /tmp 0 def
-        0 1 loop0 1 sub {
-            /i exch def
-            0 1 nb_pcb 1 sub {
-                /j exch def
-                matrixA swap_col i 2 mul get 32 idiv j offset mul add getw
-                31 swap_col i 2 mul get 32 mod sub neg bitshift 1 and neg tmp xor 1 and
-                tmp xor /tmp exch def
-                matrixA     swap_col i 2 mul       get 32 idiv j offset mul add
-                2 copy getw
-                    matrixA swap_col i 2 mul 1 add get 32 idiv j offset mul add getw
-                    31      swap_col i 2 mul 1 add get 32 mod  sub neg bitshift 1 and neg
-                    matrixA swap_col i 2 mul       get 32 idiv j offset mul add getw xor
-                    1 31    swap_col i 2 mul       get 32 mod  sub     bitshift and
-                xor putw
-                matrixA swap_col i 2 mul 1 add get 32 idiv j offset mul add
-                2 copy getw
-                    tmp 1 and neg
-                    matrixA swap_col i 2 mul 1 add get 32 idiv j offset mul add getw xor
-                    1 31    swap_col i 2 mul 1 add get 32 mod  sub     bitshift and
-                xor putw
-            } for
-        } for
-
-    } def
-
-    /createGeneratorMatrix {
-
-        /pn Pg_sub_block matrix_rank sub def
-        /offset pn 32 div ceiling cvi def
-        /effwidth offset 32 mul def
-        /offset_cap Pg_sub_block 32 div ceiling cvi def
-        /G offset Pg_sub_block mul arrayw def
-        0 1 offset Pg_sub_block mul 1 sub {
-            G exch 0 putw
-        } for
-        0 1 pn 1 sub {
-            /i exch def
-            G Pg_sub_block pn sub i add offset mul i 32 idiv add
-            2 copy getw 1 31 i 32 mod sub bitshift or putw
-        } for
-        /matrix_index Pg_sub_block pn sub def
-        /loop0 0 def
-        0 1 Pg_sub_block pn sub effwidth mul 1 sub {
-            /i exch def
-            matrix_index Pg_sub_block ge {
-                /loop0 loop0 1 add def
-                /matrix_index Pg_sub_block pn sub def
-            } if
-            i effwidth mod pn lt {
-                G i 32 idiv
-                2 copy getw
-                    matrixA matrix_index 32 idiv offset_cap loop0 mul add getw
-                    31      matrix_index 32 mod sub neg bitshift 1 and neg
-                    G       i            32 idiv getw xor
-                    1 31    i            32 mod sub     bitshift and
-                xor putw
-                /matrix_index matrix_index 1 add def
-            } if
-        } for
-
-    } def
-
-    /ldpc {
-
-        /wr exch def
-        /wc exch def
-        [ exch {48 sub} forall ] /data exch def
-
-        /Pn data length def
-        wr -1 ne {  % Message data
-            /Pg Pn wr mul wr wc sub div ceiling wr div ceiling wr mul cvi def
-            /nb_sub_blocks Pg 2700 idiv 1 add def
-            /Pg_sub_block  Pg nb_sub_blocks idiv wr idiv wr mul def
-            /Pn_sub_block  Pg_sub_block wr wc sub mul wr idiv def
-            /nb_sub_blocks Pg Pg_sub_block idiv def
-            /encoding_iterations Pg Pg_sub_block idiv Pn_sub_block nb_sub_blocks mul Pn lt {1 sub} if def
-            createMatrixA
-        } {         % Metadata
-            /Pg Pn 2 mul def
-            /nb_sub_blocks 1 def
-            /Pg_sub_block  Pg def
-            /Pn_sub_block  Pn def
-            /encoding_iterations 1 def
-            createMetadataMatrixA
-        } ifelse
-        GaussJordan
-        createGeneratorMatrix
-
-        Pg { array } stopped {
-            pop (bwipp.jabcodeSymbolTooLarge#33406) (The resulting symbol exceeds the maximum string or array size) //raiseerror exec
-        } if /ecc_encoded_data exch def
-
-        /offset Pg_sub_block matrix_rank sub 32 div ceiling cvi def
-        0 1 encoding_iterations 1 sub {
-            /iter exch def
-            0 1 Pg_sub_block 1 sub {
-                /i exch def
-                /temp 0 def
-                /loop0 0 def
-                /offset_index offset i mul def
-                iter Pn_sub_block mul 1 iter 1 add Pn_sub_block mul 1 sub {
-                    data exch get
-                    G offset_index loop0 32 idiv add getw 31 loop0 32 mod sub neg bitshift 1 and and
-                    /temp exch temp xor def
-                    /loop0 loop0 1 add def
-                } for
-                ecc_encoded_data i iter Pg_sub_block mul add temp put
-            } for
-        } for
-
-        encoding_iterations nb_sub_blocks ne {
-            /start      encoding_iterations Pn_sub_block mul def
-            /last_index encoding_iterations Pg_sub_block mul def
-            /Pg_sub_block Pg encoding_iterations Pg_sub_block mul sub def
-            /Pn_sub_block Pg_sub_block wr wc sub mul wr idiv def
-            createMatrixA
-            GaussJordan
-            createGeneratorMatrix
-            /offset Pg_sub_block matrix_rank sub 32 div ceiling cvi def
-            0 1 Pg_sub_block 1 sub {
-                /i exch def
-                /temp 0 def
-                /loop0 0 def
-                /offset_index offset i mul def
-                start 1 Pn 1 sub {
-                    data exch get
-                    G offset_index loop0 32 idiv add getw 31 loop0 32 mod sub neg bitshift 1 and and
-                    /temp exch temp xor def
-                    /loop0 loop0 1 add def
-                } for
-                ecc_encoded_data i last_index add temp put
-            } for
-        } if
-
-        Pg { string } stopped {
-            pop (bwipp.jabcodeSymbolTooLarge#33452) (The resulting symbol exceeds the maximum string or array size) //raiseerror exec
-        } if /out exch def
-        0 1 Pg 1 sub {
-            dup ecc_encoded_data exch get
-            out 3 1 roll 48 add put
-        } for
-        out
-
-    } def
-
-    %
-    % Replace data bitstream with LDPC error correction stream
-    %
-    /bits bits datawc datawr ldpc def
-
-    %
-    % Interleave via pseudorandom permutation
-    %
-    /s0 16#0000 def  /s1 16#0000 def  /s2 16#0003 def  /s3 16#75C7 def  % s=226759
-    bits length 1 sub -1 1 {
-        /l exch def
-        lcg64_temper
-        dup 0 lt {//jabcode.bit31 xor 2147483648.0 add} if
-        4294967296.0 div l 1 add mul cvi  % (float)UINT32_MAX = 65536.0 * 65536
-        /r exch def
-        bits l get bits r get
-        bits exch l exch put
-        bits exch r exch put
-    } for
-
-    %
-    % Append padding bits to the interleaved, ECC encoded data up to capacity
-    %
-    C { string } stopped {
-        pop (bwipp.jabcodeSymbolTooLarge#33486) (The resulting symbol exceeds the maximum string or array size) //raiseerror exec
-    } if /tmpbits exch def
-    tmpbits 0 bits putinterval
-    /j bits length def
-    C j sub 1 add 2 idiv {
-        tmpbits j 48 put
-        j 1 add C lt {tmpbits j 1 add 49 put} if
-        /j j 2 add def
-    } repeat
-    /bits tmpbits def
-
-    %
-    % Define the color palette from precomputed data
-    %
-    /cidx coloridx colors get def
-    /bi cidx /bi get def  /gi cidx /gi get def
-    /mi cidx /mi get def  /yi cidx /yi get def
-    /ki cidx /ki get def  /wi cidx /wi get def
-    /palette palettes colors get def
-    /palettelayout palettelayouts colors get def
-    /metacolorindex metacoloridxs colors get def
-
-    %
-    % Create the pixel map
-    %
-    /pixs [rows cols mul {-1} repeat] def
-    /jmv {cols mul add} def
-
-    %
-    % Finder patterns
-    %
-    /fpat slave {//jabcode.fpat_slave} {//jabcode.fpat_master} ifelse def
-    /fmap slave {fmapslave} {fmapmaster} ifelse colors get def
-    0 1 4 {
-      /y exch def
-      0 1 4 {
-        /x exch def
-        /fpb fpat y get x get def
-        pixs x 1 add y 1 add                     jmv fmap 0 get fpb get put
-        pixs x 1 add           rows y sub 2 sub  jmv fmap 1 get fpb get put
-        pixs x cols add 6 sub  y 1 add           jmv fmap 2 get fpb get put
-        pixs x cols add 6 sub  rows y sub 2 sub  jmv fmap 3 get fpb get put
-      } for
-    } for
-
-    %
-    % Alignment patterns
-    %
-    /algnpat0 algnpat0s colors get def
-    /algnpat1 algnpat1s colors get def
-
-    /num cols 16 div round cvi 1 sub def
-    /algnrpos //jabcode.algnpos_default def
-    num 0 gt {
-        /algnrpos [ 0 1 num {cols 7 sub num div mul cvi 3 add} for ] def
-    } if
-    /num rows 16 div round cvi 1 sub def
-    /algncpos //jabcode.algnpos_default def
-    num 0 gt {
-        /algncpos [ 0 1 num {rows 7 sub num div mul cvi 3 add} for ] def
-    } if
-    /putalgnpat {
-        /pp exch def
-        /py exch def
-        /px exch def
-        0 1 2 {
-            /pb exch def
-            0 1 2 {
-                /pa exch def
-                pixs px pa add py pb add jmv pp pb get pa get put
-            } for
-        } for
-    } def
-    0 1 algncpos length 1 sub {
-        /j exch def
-        /y algncpos j get def
-        0 1 algnrpos length 1 sub {
-            /i exch def
-            /x algnrpos i get def
-            pixs x y jmv get -1 eq {
-                x 1 sub y 1 sub i j add 2 mod 0 eq {algnpat0} {algnpat1} ifelse putalgnpat
-            } if
-        } for
-    } for
-
-    %
-    % Copy precomputed maps for normalisation
-    %
-    /normalisemap { [ exch { aload pop 2 array astore } forall ] } def
-    slave not {
-        /metadatamap metadatamap.master normalisemap def
-        /palettemap1 //jabcode.palettemap1_master normalisemap def
-        /palettemap2 //jabcode.palettemap2_master normalisemap def
-    } {  % Slave
-        /metadatamap metadatamap.slave normalisemap def
-        /palettemap1 palettemap1.slave normalisemap def
-        /palettemap2 palettemap2.slave normalisemap def
-    } ifelse
-
-    %
-    % Normalise wrapping
-    %
-    metadatamap {
-        dup 0 get dup 0 lt {cols add 1 sub 1 index 0 3 -1 roll put} {pop} ifelse
-        dup 1 get dup 0 lt {rows add 1 sub 1 index 1 3 -1 roll put} {pop} ifelse
-        pop
-    } forall
-    palettemap1 {
-        dup 0 get dup 0 lt {cols add 1 sub 1 index 0 3 -1 roll put} {pop} ifelse
-        dup 1 get dup 0 lt {rows add 1 sub 1 index 1 3 -1 roll put} {pop} ifelse
-        pop
-    } forall
-    palettemap2 {
-        dup 0 get dup 0 lt {cols add 1 sub 1 index 0 3 -1 roll put} {pop} ifelse
-        dup 1 get dup 0 lt {rows add 1 sub 1 index 1 3 -1 roll put} {pop} ifelse
-        pop
-    } forall
-
-    %
-    % Reserve the metadata modules to be placed once mask is determined
-    %
-    0 1 nummetamodules 1 sub {
-        pixs exch metadatamap exch get aload pop jmv 0 put
-    } for
-
-    %
-    % Place the color palette
-    %
-    slave not {
-        % Up to first 16 colors into finder slots
-        0 1 16 colors 2 copy gt {exch} if pop 1 sub {
-            /i exch def
-            palettelayout i get dup
-            pixs exch palettemap1 i get aload pop jmv exch put
-            pixs exch palettemap2 i get aload pop jmv exch put
-        } for
-        /i 16 def
-    } {
-        /i 0 def
-    } ifelse
-
-    %
-    % Continue palette placement after end of metadata modules
-    %
-    /j nummetamodules def
-    i 2 palettelayout length 1 sub {
-        /i exch def
-        palettelayout i get dup
-        pixs exch metadatamap j       get aload pop jmv exch put
-        pixs exch metadatamap j 2 add get aload pop jmv exch put
-        palettelayout i 1 add get dup
-        pixs exch metadatamap j 1 add get aload pop jmv exch put
-        pixs exch metadatamap j 3 add get aload pop jmv exch put
-        /j j 4 add def
-    } for
-
-    %
-    % Calculate the mask patterns applied to data modules
-    %
-    /maskfuncs [
-        {add colors mod}
-        {pop colors mod}
-        {exch pop colors mod}
-        {3 idiv exch 2 idiv add colors mod}
-        {2 idiv exch 3 idiv add colors mod}
-        {add dup 2 idiv exch 3 idiv add colors mod}
-        {2 copy exch dup mul mul 7 mod 3 1 roll exch dup mul add 2 mul 19 mod add colors mod}
-        {2 copy dup mul mul 5 mod 3 1 roll dup mul exch 2 mul add 13 mod add colors mod}
-    ] def
-    mask -1 ne {  % User specifies a mask
-        /maskfuncs [maskfuncs mask get] def
-        /bestmaskval mask def
-    } if
-    /masks maskfuncs length array def
-    0 1 masks length 1 sub {
-        /m exch def
-        /mask rows cols mul array def
-        0 1 rows 1 sub {
-            /j exch def
-            0 1 cols 1 sub {
-                /i exch def
-                pixs i j jmv get -1 eq {i j maskfuncs m get exec} {0} ifelse
-                mask i j jmv 3 -1 roll put
-            } for
-        } for
-        masks m mask put
-    } for
-
-    %
-    % Walk the symbol placing the data bitstream
-    %
-    /posx 0 def  /posy 0 def
-    /i 0 def
-    { % loop
-        posx cols eq {exit} if
-        pixs posx posy jmv get -1 eq {
-            bits i databpm getinterval 0 exch {48 sub add 2 mul} forall 2 idiv
-            pixs posx posy jmv 3 -1 roll put
-            /i i databpm add def
-        } if
-        /posy posy 1 add def
-        posy rows eq {/posy 0 def /posx posx 1 add def} if
-    } loop
-
-    %
-    % Evaluate runlength encoded rows or columns in full symbols
-    %
-    /evalrle {
-        /scrle exch def
-        /scr1 0 def  /scr3 0 def
-        0 2 scrle length 2 sub {
-            /j exch def
-            scrle j 1 add get -1 ne {  % Skip over voids
-                % Detect runs of 5 or more like modules, except in voids
-                scrle j get dup 5 ge {2 sub /scr1 exch scr1 add def} {pop} ifelse
-                % Detect finder pattern
-                j 4 ge j scrle length 5 sub le and {
-                    scrle j 4 sub 10 getinterval                     % n1 c1 ... n5 c5
-                    dup {1 eq} forall pop 4 {exch pop and} repeat {  % n{1-5}=1
-                        mark exch aload pop
-                        8 index dup 6 index eq exch 2 index eq and   % c1=c3=c5
-                        7 index 4 index eq and {                     % c2=c4
-                            2 index  /c4 exch def  /c5 exch def
-                            c4 bi eq c5 yi eq and  c4 yi eq c5 bi eq and
-                            c4 gi eq c5 mi eq and  c4 mi eq c5 gi eq and
-                            or or or {/scr3 scr3 100 add def} if
-                        } if
-                        cleartomark
-                    } {pop} ifelse
-                } if
-            } if
-        } for
-        scr1 scr3
-    } def
-
-    /evalmask {
-        /sym exch def
-
-        /n1 0 def /n2 0 def /n3 0 def
-        /rle rows cols 2 copy lt {exch} if pop 2 mul 2 add array def
-        /lastpairs cols array def
-        /thispairs cols array def
-
-        %
-        % Runlength encode and evaluate each column
-        %
-        0 1 cols 1 sub {
-            /i exch def
-            mark 0 -1
-            i cols rows cols mul 1 sub {
-                sym exch get 2 copy eq {pop exch 1 add exch} {1 exch} ifelse
-            } for
-            rle 0 counttomark 2 sub getinterval astore
-            evalrle n3 add /n3 exch def n1 add /n1 exch def
-            pop
-        } for
-
-        0 1 rows 1 sub {
-            /i exch def
-
-            %
-            % Runlength encode and evaluate each row
-            %
-            /symrow sym i cols mul cols getinterval def
-            mark 0 -1
-            symrow {
-                2 copy eq {pop exch 1 add exch} {1 exch} ifelse
-            } forall
-            rle 0 counttomark 2 sub getinterval astore
-            evalrle n3 add /n3 exch def n1 add /n1 exch def
-            pop
-
-            %
-            % Count and score same coloured blocks
-            %
-            /lastpairs thispairs /thispairs lastpairs def def
-            -1 symrow {exch 2 copy ne {pop -1 exch} if} forall
-            pop
-            thispairs astore pop
-            i 0 gt {
-                mark
-                lastpairs aload pop thispairs aload pop
-                n2 cols { exch dup -1 ne { cols 1 add index eq {3 add} if } {pop} ifelse } repeat
-                /n2 exch def
-                cleartomark
-            } if
-        } for
-
-        n1 n2 add n3 add
-    } def
-
-    %
-    % Evaluate the masked symbols to find the most suitable
-    %
-    /bestscore 999999999 def
-    0 1 masks length 1 sub {
-        /m exch def
-        /masksym rows cols mul array def
-        0 1 rows cols mul 1 sub {
-            /i exch def
-            masksym i pixs i get masks m get i get xor put
-        } for
-        masks length 1 ne {
-            masksym evalmask /score exch def
-            score bestscore lt {
-                /bestsym masksym def
-                /bestmaskval m def
-                /bestscore score def
-            } if
-        } {
-            /bestsym masksym def
-        } ifelse
-    } for
-    /pixs bestsym def
-    /metamask bestmaskval def
-
-    %
-    % Derive the metadata bitstream
-    %
-    /addtometapart {
-        dup metapart p 3 -1 roll putinterval
-        length p add /p exch def
-    } def
-
-    /addtometabits {
-        dup metabits q 3 -1 roll putinterval
-        length q add /q exch def
-    } def
-
-    /metapart 40 string def
-    /metabits nummetabits string def
-    /p 0 def  /q 0 def
-    slave not {
-
-        %
-        % Part I
-        %
-        colors ln 2 ln div round cvi 1 sub
-        3 tofixedbits addtometapart                                 % Nc
-        metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
-
-        %
-        % Part II
-        %
-        metass   1 tofixedbits addtometapart                        % SS
-        metavf   2 tofixedbits addtometapart                        % VF
-        metamask 3 tofixedbits addtometapart                        % MSK
-        hasslaves {(1)} {(0)} ifelse addtometapart                  % SF
-        metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
-
-        %
-        % Part III
-        %
-        metass 0 eq {  % Square
-            cols 17 sub 4 idiv //jabcode.metavfadj metavf get sub 1 sub
-            metavlen tofixedbits addtometapart                      % V
-        } {  % Rectangular
-            cols 17 sub 4 idiv 1 sub
-            metavlen 2 idiv tofixedbits addtometapart               % V1
-            rows 17 sub 4 idiv 1 sub
-            metavlen 2 idiv tofixedbits addtometapart               % V2
-        } ifelse
-        datawc 3 sub metaelen 2 idiv tofixedbits addtometapart      % E1
-        datawr 4 sub metaelen 2 idiv tofixedbits addtometapart      % E2
-        hasslaves {  % TODO Cascading
-            0 4 tofixedbits addtometapart                           % S
-        } if
-        metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
-
-    } {  % slave
-
-        %
-        % Part I
-        %
-        sameshape {0} {1} ifelse 1 tofixedbits addtometapart        % SS
-        sameecc   {0} {1} ifelse 1 tofixedbits addtometapart        % SE
-        hasslaves {1} {0} ifelse 1 tofixedbits addtometapart        % SF
-        metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
-
-        %
-        % Part II
-        %
-        sameshape not {
-            diffside 17 sub 4 idiv 1 sub
-            5 tofixedbits addtometapart                             % V
-        } if
-        hasslaves {  % TODO Cascading
-            0 3 tofixedbits addtometapart                           % S
-        } if
-        metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
-
-        %
-        % Part III
-        %
-        sameecc not {
-            datawc 3 sub metaelen 2 idiv tofixedbits addtometapart  % E1
-            datawr 4 sub metaelen 2 idiv tofixedbits addtometapart  % E2
-        } if
-        metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
-
-    } ifelse
-    q 1 nummetabits 1 sub {  % Pad with 0s
-        metabits exch 48 put
-    } for
-
-    %
-    % Place the metadata
-    %
-    /i 0 def  /j 0 def
-    slave not {  % Two-color encoding of Part I (Nc) in master symbols
-        metabits i 6 getinterval {
-            colors 4 eq {[bi yi]} {[ki wi]} ifelse exch 48 sub get
-            pixs metadatamap j get aload pop jmv 3 -1 roll put
-            /j j 1 add def
-        } forall
-        /i i 6 add def
-    } if
-    nummetabits i sub metabpm idiv {
-        metabits i metabpm getinterval 0 exch {48 sub add 2 mul} forall 2 idiv
-        metacolorindex exch get
-        pixs metadatamap j get aload pop jmv 3 -1 roll put
-        /i i metabpm add def
-        /j j 1 add def
-    } repeat
-
-    <<
-    /ren /renmatrix
-    /pixs pixs
-    /pixx cols
-    /pixy rows
-    /colormap palette
-    /height rows 2 mul 72 div
-    /width  cols 2 mul 72 div
-    /borderleft 0.0
-    /borderright 0.0
-    /bordertop 0.0
-    /borderbottom 0.0
-    /opt options
-    >>
-
-    _render //renmatrix if
-
+%psc     and { /bwipp.debugbits [ bits {48 sub} forall ] //raiseerror exec } if
+%psc 
+%psc     /diffside 21 def
+%psc     /sameshape false def
+%psc     /sameecc false def
+%psc     /hasslaves false def
+%psc 
+%psc     %
+%psc     % Determine the metrics for a symbol of a given size
+%psc     %
+%psc     /metrics {
+%psc         /mc exch def  /mr exch def
+%psc         mc mr mul                                      % All modules
+%psc         mc 25 sub 16 idiv 2 add mr 25 sub 16 idiv 2 add
+%psc         mul 4 sub 7 mul                                % Alignment modules
+%psc         64 colors 2 copy gt {exch} if pop 2 mul        % Palette modules
+%psc         slave {7} {17} ifelse 4 mul                    % Finder modules
+%psc 
+%psc         %
+%psc         % Metadata bits and modules
+%psc         %
+%psc         slave not {  % Master
+%psc             /metass mr mc eq {0} {1} ifelse def
+%psc             mr mc 2 copy lt {exch} if pop
+%psc             21 sub 16 idiv //jabcode.metavfmap exch get  /metavf exch def
+%psc             /metavlen metass 0 eq {//jabcode.metavlensq} {//jabcode.metavlenrect} ifelse metavf get def
+%psc             /metaelen metavf 2 mul 10 add def
+%psc             7                                          % II:  SS VF MSK SF
+%psc             metavlen add metaelen add                  % III: V E
+%psc             hasslaves {4 add} if                       % III: S
+%psc             2 mul                                      % LDPC
+%psc             metabpm div ceiling cvi
+%psc             dup metabpm mul 6 add /nummetabits exch def
+%psc             6 add                                      % I:   Nc into 6 modules
+%psc         } {  % Slave
+%psc             3                                          % I:   SS SE SF
+%psc             sameshape not {5 add} if                   % II:  V
+%psc             hasslaves     {3 add} if                   % II:  S
+%psc             sameecc not {
+%psc                 mr mc 2 copy lt {exch} if pop
+%psc                 21 sub 16 idiv //jabcode.slavemetamap exch get
+%psc                 dup /metaelen exch def
+%psc                 add                                    % III: E
+%psc             } if
+%psc             2 mul                                      % LDPC
+%psc             metabpm div ceiling cvi
+%psc             dup metabpm mul /nummetabits exch def
+%psc         } ifelse
+%psc 
+%psc         dup              /nummetamodules exch def
+%psc         add add add sub  /numdatamodules exch def
+%psc         /numdatabits numdatamodules databpm mul def
+%psc     } def
+%psc 
+%psc     %
+%psc     % Select a symbol size sufficient to carry the message
+%psc     %
+%psc     /coderate //jabcode.coderates eclevel get def
+%psc     /grosslen bits length coderate div ceiling cvi def
+%psc     /snapsize {ceiling cvi 18 sub dup 0 lt {pop 0} if 4 idiv 4 mul 21 add} def
+%psc 
+%psc     rows -1 eq columns -1 eq and {        % Square if neither rows or columns fixed
+%psc         /size grosslen sqrt snapsize def
+%psc         {
+%psc             size 145 gt {
+%psc                 /bwipp.jabcodeNoValidSymbol (Maximum length exceeded or invalid content) //raiseerror exec
+%psc             } if
+%psc             size size metrics
+%psc             grosslen numdatabits le {exit} if
+%psc             /size size 4 add def
+%psc         } loop
+%psc         /rows size def
+%psc         /columns size def
+%psc     } {
+%psc         columns -1 eq rows -1 ne and {     % Fixed height
+%psc             /columns grosslen rows div snapsize def
+%psc             {
+%psc                 columns 145 gt {
+%psc                     /bwipp.jabcodeNoValidSymbol (Maximum length exceeded or invalid content) //raiseerror exec
+%psc                 } if
+%psc                 rows columns metrics
+%psc                 grosslen numdatabits le {exit} if
+%psc                 /columns columns 4 add def
+%psc             } loop
+%psc         } if
+%psc         rows -1 eq columns -1 ne and {     % Fixed width
+%psc             /rows grosslen columns div snapsize def
+%psc             {
+%psc                 rows 145 gt {
+%psc                     /bwipp.jabcodeNoValidSymbol (Maximum length exceeded or invalid content) //raiseerror exec
+%psc                 } if
+%psc                 rows columns metrics
+%psc                 grosslen numdatabits le {exit} if
+%psc                 /rows rows 4 add def
+%psc             } loop
+%psc         } if
+%psc         rows -1 ne columns -1 ne and {     % Fixed height and width
+%psc             rows columns metrics
+%psc         } if
+%psc     } ifelse
+%psc     /C numdatabits def
+%psc     /cols columns def
+%psc 
+%psc     rows 145 gt cols 145 gt or {
+%psc         /bwipp.jabcodeNoValidSymbol (Maximum length exceeded or invalid content) //raiseerror exec
+%psc     } if
+%psc 
+%psc     %
+%psc     % Pick ECC params to maximally fill symbol
+%psc     %
+%psc     /min C def
+%psc     3 1 8 {
+%psc         /i exch def
+%psc         i 1 add 1 9 {
+%psc             /j exch def
+%psc             /dist C j idiv j mul C j idiv i mul sub bits length sub def
+%psc             dist min lt dist 0 ge and {
+%psc                 /datawc i def
+%psc                 /datawr j def
+%psc                 /min dist def
+%psc             } if
+%psc         } for
+%psc     } for
+%psc 
+%psc     %
+%psc     % Extend the encoded data to fill the required data length
+%psc     %
+%psc     C datawr idiv datawr mul C datawr idiv datawc mul sub
+%psc     { string } stopped {
+%psc         pop /bwipp.jabcodeSymbolTooLarge (The resulting symbol exceeds the maximum string or array size) //raiseerror exec
+%psc     } if /tmpbits exch def
+%psc     tmpbits 0 bits putinterval
+%psc     bits length 1 tmpbits length 1 sub {
+%psc         dup 1 sub tmpbits exch get dup 2 mod 0 eq {1 add} {1 sub} ifelse
+%psc         tmpbits 3 1 roll put
+%psc     } for
+%psc     /bits tmpbits def
+%psc 
+%psc     %
+%psc     % Avoid 15-bit overflow when multiplying the digits by stealing from the second digit
+%psc     % m = 6364136223846793005 = 0x 5851 f42d 4c95 7f2d
+%psc     %
+%psc     /m0 16#5851 16#1 add def  /m1 16#f42d 16#10000 sub def  /m2 16#4c95 def  /m3 16#7f2d def
+%psc 
+%psc     /lcg64_temper {
+%psc 
+%psc         %
+%psc         % Multiply seed by 6364136223846793005 then add 1
+%psc         %
+%psc         /p00 m0 s0 mul def  /p01 m0 s1 mul def  /p02 m0 s2 mul def  /p03 m0 s3 mul def
+%psc         /p10 m1 s0 mul def  /p11 m1 s1 mul def  /p12 m1 s2 mul def  /p13 m1 s3 mul def
+%psc         /p20 m2 s0 mul def  /p21 m2 s1 mul def  /p22 m2 s2 mul def  /p23 m2 s3 mul def
+%psc         /p30 m3 s0 mul def  /p31 m3 s1 mul def  /p32 m3 s2 mul def  /p33 m3 s3 mul def
+%psc 
+%psc         /s3 p33 16#10000 mod                     1 add def  % 1 added here
+%psc         /s2 p32 16#10000 mod p33 16#10000 idiv add
+%psc             p23 16#10000 mod                       add def
+%psc         /s1 p31 16#10000 mod p32 16#10000 idiv add
+%psc             p22 16#10000 mod p23 16#10000 idiv add add
+%psc             p13 16#10000 mod                       add def
+%psc         /s0 p30 16#10000 mod p31 16#10000 idiv add
+%psc             p21 16#10000 mod p22 16#10000 idiv add add
+%psc             p12 16#10000 mod p13 16#10000 idiv add add
+%psc             p03 16#10000 mod                       add def
+%psc 
+%psc         %
+%psc         % Simplify carry by making each digit positive by borrowing from more significant digit
+%psc         %
+%psc         /s3 s3 16#10000 add def
+%psc         /s2 s2 16#ffff  add def
+%psc         /s1 s1 16#ffff  add def
+%psc         /s0 s0 16#ffff  add def
+%psc 
+%psc         %
+%psc         % Carry
+%psc         %
+%psc         /s2 s3 16#10000 idiv s2 add def  /s3 s3 16#10000 mod def
+%psc         /s1 s2 16#10000 idiv s1 add def  /s2 s2 16#10000 mod def
+%psc         /s0 s1 16#10000 idiv s0 add def  /s1 s1 16#10000 mod def
+%psc                                          /s0 s0 16#10000 mod def
+%psc         %
+%psc         % Temper most significant 32 bits
+%psc         %
+%psc         s0 16#8000 sub 16#10000 mul s1 add //jabcode.bit31 xor
+%psc         //jabcode.mask32 and
+%psc         dup -11 bitshift xor
+%psc         dup   7 bitshift 16#62d3a980 neg and xor  % 0x9D2C5680 - 0x100000000
+%psc         dup  15 bitshift 16#103a0000 neg and xor  % 0xEFC60000 - 0x100000000
+%psc         //jabcode.mask32 and
+%psc         dup -18 bitshift xor
+%psc 
+%psc     } def
+%psc 
+%psc     /createMatrixA {
+%psc 
+%psc         /nb_pcb wr 4 lt {Pg_sub_block 2 idiv} {Pg_sub_block wr idiv wc mul} ifelse def
+%psc         /offset Pg_sub_block 32 div ceiling cvi def
+%psc         /effwidth offset 32 mul def
+%psc         /matrixA offset nb_pcb mul arrayw def
+%psc         0 1 offset nb_pcb mul 1 sub {matrixA exch 0 putw} for
+%psc         /permutation Pg_sub_block array def
+%psc         0 1 Pg_sub_block 1 sub {permutation exch dup put} for
+%psc 
+%psc         0 1 Pg_sub_block wr idiv 1 sub {
+%psc             /i exch def
+%psc             0 1 wr 1 sub {
+%psc                 /j exch def
+%psc                 matrixA i effwidth wr add mul j add 32 idiv
+%psc                 2 copy getw 1 31 i effwidth wr add mul j add 32 mod sub bitshift or putw
+%psc             } for
+%psc         } for
+%psc 
+%psc         %
+%psc         % Pseudorandom permutation
+%psc         %
+%psc         /s0 16#0000 def  /s1 16#0000 def  /s2 16#000B def  /s3 16#FC39 def  % s=785465
+%psc         1 1 wc 1 sub {
+%psc             /i exch def
+%psc             /off_index Pg_sub_block wr idiv i mul def
+%psc             0 1 Pg_sub_block 1 sub {
+%psc                 /j exch def
+%psc                 lcg64_temper
+%psc                 dup 0 lt {//jabcode.bit31 xor 2147483648.0 add} if
+%psc                 4294967296.0 div Pg_sub_block j sub mul cvi  % (float)UINT32_MAX = 65536.0 * 65536
+%psc                 /pos exch def
+%psc                 0 1 Pg_sub_block wr idiv 1 sub {
+%psc                     /k exch def
+%psc                     matrixA off_index k add offset mul j 32 idiv add
+%psc                     2 copy getw
+%psc                         matrixA permutation pos get 32 idiv k offset mul add getw
+%psc                         31      permutation pos get 32 mod  sub neg bitshift 1 and
+%psc                         31 j                        32 mod  sub bitshift
+%psc                     or putw
+%psc                 } for
+%psc                 permutation pos permutation Pg_sub_block 1 sub j sub 2 copy get permutation pos get
+%psc                 exch 4 1 roll   % p b p a p[a] p[b] -> p b p[a] p a p[b]
+%psc                 put put
+%psc             } for
+%psc         } for
+%psc 
+%psc     } def
+%psc 
+%psc     /createMetadataMatrixA {
+%psc 
+%psc         /nb_pcb Pg_sub_block 2 idiv def
+%psc         /offset Pg_sub_block 32 div ceiling cvi def
+%psc         /matrixA offset nb_pcb mul arrayw def
+%psc         0 1 offset nb_pcb mul 1 sub {matrixA exch 0 putw} for
+%psc         /permutation Pg_sub_block array def
+%psc         0 1 Pg_sub_block 1 sub {permutation exch dup put} for
+%psc 
+%psc         %
+%psc         % Pseudorandom permutation
+%psc         %
+%psc         /s0 16#0000 def  /s1 16#0000 def  /s2 16#0000 def  /s3 16#9691 def  % s=38545
+%psc         /nb_once nb_pcb wc div Pg_sub_block mul 3 add cvi nb_pcb idiv def
+%psc         0 1 nb_pcb 1 sub {
+%psc             /i exch def
+%psc             0 1 nb_once 1 sub {
+%psc                 /j exch def
+%psc                 lcg64_temper
+%psc                 dup 0 lt {//jabcode.bit31 xor 2147483648.0 add} if
+%psc                 4294967296.0 div Pg_sub_block j sub mul cvi  % (float)UINT32_MAX = 65536.0 * 65536
+%psc                 /pos exch def
+%psc                 matrixA i offset mul permutation pos get 32 idiv add
+%psc                 2 copy getw 1 31 permutation pos get 32 mod sub bitshift or putw
+%psc                 permutation pos permutation Pg_sub_block 1 sub j sub 2 copy get permutation pos get
+%psc                 exch 4 1 roll   % p b p a p[a] p[b] -> p b p[a] p a p[b]
+%psc                 put put
+%psc             } for
+%psc         } for
+%psc 
+%psc     } def
+%psc 
+%psc     /GaussJordan {
+%psc 
+%psc         /nb_pcb wr 4 lt {Pg_sub_block 2 idiv} {Pg_sub_block wr idiv wc mul} ifelse def
+%psc         /offset Pg_sub_block 32 div ceiling cvi def
+%psc         /matrixH matrixA dup length array copyw def
+%psc         /column_arrangement [ Pg_sub_block       {0}     repeat ] def
+%psc         /processed_column   [ Pg_sub_block       {false} repeat ] def
+%psc         /zero_lines_nb      [ nb_pcb             {0}     repeat ] def
+%psc         /swap_col           [ Pg_sub_block 2 mul {0}     repeat ] def
+%psc         /zero_lines 0 def
+%psc 
+%psc         /loop0 0 def
+%psc         0 1 nb_pcb 1 sub {
+%psc             /i exch def
+%psc             /pivot_column Pg_sub_block 1 add def
+%psc             0 1 Pg_sub_block 1 sub {
+%psc                 /j exch def
+%psc                 matrixH offset 32 mul i mul j add 32 idiv getw
+%psc                 31 offset 32 mul i mul j add 32 mod sub neg bitshift 1 and 1 eq {
+%psc                     /pivot_column j def
+%psc                     exit
+%psc                 } if
+%psc             } for
+%psc             pivot_column Pg_sub_block lt {
+%psc                 processed_column   pivot_column true put
+%psc                 column_arrangement pivot_column i put
+%psc                 pivot_column nb_pcb ge {
+%psc                     swap_col loop0 2 mul pivot_column put
+%psc                     /loop0 loop0 1 add def
+%psc                 } if
+%psc                 /off_index  pivot_column 32 idiv def
+%psc                 /off_index1 pivot_column 32 mod def
+%psc                 0 1 nb_pcb 1 sub {
+%psc                     /j exch def
+%psc                     i j ne {
+%psc                         matrixH off_index j offset mul add getw
+%psc                         31 off_index1 sub neg bitshift 1 and 1 eq {
+%psc                             0 1 offset 1 sub {
+%psc                                 /k exch def
+%psc                                 matrixH offset j mul k add
+%psc                                 2 copy getw matrixH offset i mul k add getw xor putw
+%psc                             } for
+%psc                         } if
+%psc                     } if
+%psc                 } for
+%psc             } {
+%psc                 zero_lines_nb zero_lines i put
+%psc                 /zero_lines zero_lines 1 add def
+%psc             } ifelse
+%psc         } for
+%psc 
+%psc         /matrix_rank nb_pcb zero_lines sub def
+%psc         /loop2 0 def
+%psc         matrix_rank 1 nb_pcb 1 sub {
+%psc             /i exch def
+%psc             column_arrangement i get 0 gt {
+%psc                 0 1 nb_pcb 1 sub {
+%psc                     /j exch def
+%psc                     processed_column j get not {
+%psc                         column_arrangement j column_arrangement i get put
+%psc                         column_arrangement i 0 put
+%psc                         processed_column   j true put
+%psc                         processed_column   i false put
+%psc                         swap_col loop0 2 mul       i put
+%psc                         swap_col loop0 2 mul 1 add j put
+%psc                         column_arrangement i j put
+%psc                         /loop0 loop0 1 add def
+%psc                         /loop2 loop2 1 add def
+%psc                         exit
+%psc                     } if
+%psc                 } for
+%psc             } if
+%psc         } for
+%psc 
+%psc         /loop1 0 def
+%psc         0 1 nb_pcb 1 sub {
+%psc             /kl exch def
+%psc             processed_column kl get not loop1 loop0 loop2 sub lt and {
+%psc                 column_arrangement kl column_arrangement swap_col loop1 2 mul get get put
+%psc                 processed_column kl true put
+%psc                 swap_col loop1 2 mul 1 add kl put
+%psc                 /loop1 loop1 1 add def
+%psc             } if
+%psc         } for
+%psc 
+%psc         /loop1 0 def
+%psc         0 1 nb_pcb 1 sub {
+%psc             /kl exch def
+%psc             processed_column kl get not {
+%psc                 column_arrangement kl zero_lines_nb loop1 get put
+%psc                 /loop1 loop1 1 add def
+%psc             } if
+%psc         } for
+%psc 
+%psc         0 1 nb_pcb 1 sub {
+%psc             /i exch def
+%psc             0 1 offset 1 sub {
+%psc                 /j exch def
+%psc                 matrixH column_arrangement i get offset mul j add getw
+%psc                 matrixA exch i offset mul j add exch putw
+%psc             } for
+%psc         } for
+%psc 
+%psc         /tmp 0 def
+%psc         0 1 loop0 1 sub {
+%psc             /i exch def
+%psc             0 1 nb_pcb 1 sub {
+%psc                 /j exch def
+%psc                 matrixA swap_col i 2 mul get 32 idiv j offset mul add getw
+%psc                 31 swap_col i 2 mul get 32 mod sub neg bitshift 1 and neg tmp xor 1 and
+%psc                 tmp xor /tmp exch def
+%psc                 matrixA     swap_col i 2 mul       get 32 idiv j offset mul add
+%psc                 2 copy getw
+%psc                     matrixA swap_col i 2 mul 1 add get 32 idiv j offset mul add getw
+%psc                     31      swap_col i 2 mul 1 add get 32 mod  sub neg bitshift 1 and neg
+%psc                     matrixA swap_col i 2 mul       get 32 idiv j offset mul add getw xor
+%psc                     1 31    swap_col i 2 mul       get 32 mod  sub     bitshift and
+%psc                 xor putw
+%psc                 matrixA swap_col i 2 mul 1 add get 32 idiv j offset mul add
+%psc                 2 copy getw
+%psc                     tmp 1 and neg
+%psc                     matrixA swap_col i 2 mul 1 add get 32 idiv j offset mul add getw xor
+%psc                     1 31    swap_col i 2 mul 1 add get 32 mod  sub     bitshift and
+%psc                 xor putw
+%psc             } for
+%psc         } for
+%psc 
+%psc     } def
+%psc 
+%psc     /createGeneratorMatrix {
+%psc 
+%psc         /pn Pg_sub_block matrix_rank sub def
+%psc         /offset pn 32 div ceiling cvi def
+%psc         /effwidth offset 32 mul def
+%psc         /offset_cap Pg_sub_block 32 div ceiling cvi def
+%psc         /G offset Pg_sub_block mul arrayw def
+%psc         0 1 offset Pg_sub_block mul 1 sub {
+%psc             G exch 0 putw
+%psc         } for
+%psc         0 1 pn 1 sub {
+%psc             /i exch def
+%psc             G Pg_sub_block pn sub i add offset mul i 32 idiv add
+%psc             2 copy getw 1 31 i 32 mod sub bitshift or putw
+%psc         } for
+%psc         /matrix_index Pg_sub_block pn sub def
+%psc         /loop0 0 def
+%psc         0 1 Pg_sub_block pn sub effwidth mul 1 sub {
+%psc             /i exch def
+%psc             matrix_index Pg_sub_block ge {
+%psc                 /loop0 loop0 1 add def
+%psc                 /matrix_index Pg_sub_block pn sub def
+%psc             } if
+%psc             i effwidth mod pn lt {
+%psc                 G i 32 idiv
+%psc                 2 copy getw
+%psc                     matrixA matrix_index 32 idiv offset_cap loop0 mul add getw
+%psc                     31      matrix_index 32 mod sub neg bitshift 1 and neg
+%psc                     G       i            32 idiv getw xor
+%psc                     1 31    i            32 mod sub     bitshift and
+%psc                 xor putw
+%psc                 /matrix_index matrix_index 1 add def
+%psc             } if
+%psc         } for
+%psc 
+%psc     } def
+%psc 
+%psc     /ldpc {
+%psc 
+%psc         /wr exch def
+%psc         /wc exch def
+%psc         [ exch {48 sub} forall ] /data exch def
+%psc 
+%psc         /Pn data length def
+%psc         wr -1 ne {  % Message data
+%psc             /Pg Pn wr mul wr wc sub div ceiling wr div ceiling wr mul cvi def
+%psc             /nb_sub_blocks Pg 2700 idiv 1 add def
+%psc             /Pg_sub_block  Pg nb_sub_blocks idiv wr idiv wr mul def
+%psc             /Pn_sub_block  Pg_sub_block wr wc sub mul wr idiv def
+%psc             /nb_sub_blocks Pg Pg_sub_block idiv def
+%psc             /encoding_iterations Pg Pg_sub_block idiv Pn_sub_block nb_sub_blocks mul Pn lt {1 sub} if def
+%psc             createMatrixA
+%psc         } {         % Metadata
+%psc             /Pg Pn 2 mul def
+%psc             /nb_sub_blocks 1 def
+%psc             /Pg_sub_block  Pg def
+%psc             /Pn_sub_block  Pn def
+%psc             /encoding_iterations 1 def
+%psc             createMetadataMatrixA
+%psc         } ifelse
+%psc         GaussJordan
+%psc         createGeneratorMatrix
+%psc 
+%psc         Pg { array } stopped {
+%psc             pop /bwipp.jabcodeSymbolTooLarge (The resulting symbol exceeds the maximum string or array size) //raiseerror exec
+%psc         } if /ecc_encoded_data exch def
+%psc 
+%psc         /offset Pg_sub_block matrix_rank sub 32 div ceiling cvi def
+%psc         0 1 encoding_iterations 1 sub {
+%psc             /iter exch def
+%psc             0 1 Pg_sub_block 1 sub {
+%psc                 /i exch def
+%psc                 /temp 0 def
+%psc                 /loop0 0 def
+%psc                 /offset_index offset i mul def
+%psc                 iter Pn_sub_block mul 1 iter 1 add Pn_sub_block mul 1 sub {
+%psc                     data exch get
+%psc                     G offset_index loop0 32 idiv add getw 31 loop0 32 mod sub neg bitshift 1 and and
+%psc                     /temp exch temp xor def
+%psc                     /loop0 loop0 1 add def
+%psc                 } for
+%psc                 ecc_encoded_data i iter Pg_sub_block mul add temp put
+%psc             } for
+%psc         } for
+%psc 
+%psc         encoding_iterations nb_sub_blocks ne {
+%psc             /start      encoding_iterations Pn_sub_block mul def
+%psc             /last_index encoding_iterations Pg_sub_block mul def
+%psc             /Pg_sub_block Pg encoding_iterations Pg_sub_block mul sub def
+%psc             /Pn_sub_block Pg_sub_block wr wc sub mul wr idiv def
+%psc             createMatrixA
+%psc             GaussJordan
+%psc             createGeneratorMatrix
+%psc             /offset Pg_sub_block matrix_rank sub 32 div ceiling cvi def
+%psc             0 1 Pg_sub_block 1 sub {
+%psc                 /i exch def
+%psc                 /temp 0 def
+%psc                 /loop0 0 def
+%psc                 /offset_index offset i mul def
+%psc                 start 1 Pn 1 sub {
+%psc                     data exch get
+%psc                     G offset_index loop0 32 idiv add getw 31 loop0 32 mod sub neg bitshift 1 and and
+%psc                     /temp exch temp xor def
+%psc                     /loop0 loop0 1 add def
+%psc                 } for
+%psc                 ecc_encoded_data i last_index add temp put
+%psc             } for
+%psc         } if
+%psc 
+%psc         Pg { string } stopped {
+%psc             pop /bwipp.jabcodeSymbolTooLarge (The resulting symbol exceeds the maximum string or array size) //raiseerror exec
+%psc         } if /out exch def
+%psc         0 1 Pg 1 sub {
+%psc             dup ecc_encoded_data exch get
+%psc             out 3 1 roll 48 add put
+%psc         } for
+%psc         out
+%psc 
+%psc     } def
+%psc 
+%psc     %
+%psc     % Replace data bitstream with LDPC error correction stream
+%psc     %
+%psc     /bits bits datawc datawr ldpc def
+%psc 
+%psc     %
+%psc     % Interleave via pseudorandom permutation
+%psc     %
+%psc     /s0 16#0000 def  /s1 16#0000 def  /s2 16#0003 def  /s3 16#75C7 def  % s=226759
+%psc     bits length 1 sub -1 1 {
+%psc         /l exch def
+%psc         lcg64_temper
+%psc         dup 0 lt {//jabcode.bit31 xor 2147483648.0 add} if
+%psc         4294967296.0 div l 1 add mul cvi  % (float)UINT32_MAX = 65536.0 * 65536
+%psc         /r exch def
+%psc         bits l get bits r get
+%psc         bits exch l exch put
+%psc         bits exch r exch put
+%psc     } for
+%psc 
+%psc     %
+%psc     % Append padding bits to the interleaved, ECC encoded data up to capacity
+%psc     %
+%psc     C { string } stopped {
+%psc         pop /bwipp.jabcodeSymbolTooLarge (The resulting symbol exceeds the maximum string or array size) //raiseerror exec
+%psc     } if /tmpbits exch def
+%psc     tmpbits 0 bits putinterval
+%psc     /j bits length def
+%psc     C j sub 1 add 2 idiv {
+%psc         tmpbits j 48 put
+%psc         j 1 add C lt {tmpbits j 1 add 49 put} if
+%psc         /j j 2 add def
+%psc     } repeat
+%psc     /bits tmpbits def
+%psc 
+%psc     %
+%psc     % Define the color palette from precomputed data
+%psc     %
+%psc     /cidx coloridx colors get def
+%psc     /bi cidx /bi get def  /gi cidx /gi get def
+%psc     /mi cidx /mi get def  /yi cidx /yi get def
+%psc     /ki cidx /ki get def  /wi cidx /wi get def
+%psc     /palette palettes colors get def
+%psc     /palettelayout palettelayouts colors get def
+%psc     /metacolorindex metacoloridxs colors get def
+%psc 
+%psc     %
+%psc     % Create the pixel map
+%psc     %
+%psc     /pixs [rows cols mul {-1} repeat] def
+%psc     /jmv {cols mul add} def
+%psc 
+%psc     %
+%psc     % Finder patterns
+%psc     %
+%psc     /fpat slave {//jabcode.fpat.slave} {//jabcode.fpat.master} ifelse def
+%psc     /fmap slave {fmapslave} {fmapmaster} ifelse colors get def
+%psc     0 1 4 {
+%psc       /y exch def
+%psc       0 1 4 {
+%psc         /x exch def
+%psc         /fpb fpat y get x get def
+%psc         pixs x 1 add y 1 add                     jmv fmap 0 get fpb get put
+%psc         pixs x 1 add           rows y sub 2 sub  jmv fmap 1 get fpb get put
+%psc         pixs x cols add 6 sub  y 1 add           jmv fmap 2 get fpb get put
+%psc         pixs x cols add 6 sub  rows y sub 2 sub  jmv fmap 3 get fpb get put
+%psc       } for
+%psc     } for
+%psc 
+%psc     %
+%psc     % Alignment patterns
+%psc     %
+%psc     /algnpat0 algnpat0s colors get def
+%psc     /algnpat1 algnpat1s colors get def
+%psc 
+%psc     /num cols 16 div round cvi 1 sub def
+%psc     /algnrpos //jabcode.algnpos_default def
+%psc     num 0 gt {
+%psc         /algnrpos [ 0 1 num {cols 7 sub num div mul cvi 3 add} for ] def
+%psc     } if
+%psc     /num rows 16 div round cvi 1 sub def
+%psc     /algncpos //jabcode.algnpos_default def
+%psc     num 0 gt {
+%psc         /algncpos [ 0 1 num {rows 7 sub num div mul cvi 3 add} for ] def
+%psc     } if
+%psc     /putalgnpat {
+%psc         /pp exch def
+%psc         /py exch def
+%psc         /px exch def
+%psc         0 1 2 {
+%psc             /pb exch def
+%psc             0 1 2 {
+%psc                 /pa exch def
+%psc                 pixs px pa add py pb add jmv pp pb get pa get put
+%psc             } for
+%psc         } for
+%psc     } def
+%psc     0 1 algncpos length 1 sub {
+%psc         /j exch def
+%psc         /y algncpos j get def
+%psc         0 1 algnrpos length 1 sub {
+%psc             /i exch def
+%psc             /x algnrpos i get def
+%psc             pixs x y jmv get -1 eq {
+%psc                 x 1 sub y 1 sub i j add 2 mod 0 eq {algnpat0} {algnpat1} ifelse putalgnpat
+%psc             } if
+%psc         } for
+%psc     } for
+%psc 
+%psc     %
+%psc     % Copy precomputed maps for normalisation
+%psc     %
+%psc     /normalisemap { [ exch { aload pop 2 array astore } forall ] } def
+%psc     slave not {
+%psc         /metadatamap metadatamap.master normalisemap def
+%psc         /palettemap1 //jabcode.palettemap1.master normalisemap def
+%psc         /palettemap2 //jabcode.palettemap2.master normalisemap def
+%psc     } {  % Slave
+%psc         /metadatamap metadatamap.slave normalisemap def
+%psc         /palettemap1 palettemap1.slave normalisemap def
+%psc         /palettemap2 palettemap2.slave normalisemap def
+%psc     } ifelse
+%psc 
+%psc     %
+%psc     % Normalise wrapping
+%psc     %
+%psc     metadatamap {
+%psc         dup 0 get dup 0 lt {cols add 1 sub 1 index 0 3 -1 roll put} {pop} ifelse
+%psc         dup 1 get dup 0 lt {rows add 1 sub 1 index 1 3 -1 roll put} {pop} ifelse
+%psc         pop
+%psc     } forall
+%psc     palettemap1 {
+%psc         dup 0 get dup 0 lt {cols add 1 sub 1 index 0 3 -1 roll put} {pop} ifelse
+%psc         dup 1 get dup 0 lt {rows add 1 sub 1 index 1 3 -1 roll put} {pop} ifelse
+%psc         pop
+%psc     } forall
+%psc     palettemap2 {
+%psc         dup 0 get dup 0 lt {cols add 1 sub 1 index 0 3 -1 roll put} {pop} ifelse
+%psc         dup 1 get dup 0 lt {rows add 1 sub 1 index 1 3 -1 roll put} {pop} ifelse
+%psc         pop
+%psc     } forall
+%psc 
+%psc     %
+%psc     % Reserve the metadata modules to be placed once mask is determined
+%psc     %
+%psc     0 1 nummetamodules 1 sub {
+%psc         pixs exch metadatamap exch get aload pop jmv 0 put
+%psc     } for
+%psc 
+%psc     %
+%psc     % Place the color palette
+%psc     %
+%psc     slave not {
+%psc         % Up to first 16 colors into finder slots
+%psc         0 1 16 colors 2 copy gt {exch} if pop 1 sub {
+%psc             /i exch def
+%psc             palettelayout i get dup
+%psc             pixs exch palettemap1 i get aload pop jmv exch put
+%psc             pixs exch palettemap2 i get aload pop jmv exch put
+%psc         } for
+%psc         /i 16 def
+%psc     } {
+%psc         /i 0 def
+%psc     } ifelse
+%psc 
+%psc     %
+%psc     % Continue palette placement after end of metadata modules
+%psc     %
+%psc     /j nummetamodules def
+%psc     i 2 palettelayout length 1 sub {
+%psc         /i exch def
+%psc         palettelayout i get dup
+%psc         pixs exch metadatamap j       get aload pop jmv exch put
+%psc         pixs exch metadatamap j 2 add get aload pop jmv exch put
+%psc         palettelayout i 1 add get dup
+%psc         pixs exch metadatamap j 1 add get aload pop jmv exch put
+%psc         pixs exch metadatamap j 3 add get aload pop jmv exch put
+%psc         /j j 4 add def
+%psc     } for
+%psc 
+%psc     %
+%psc     % Calculate the mask patterns applied to data modules
+%psc     %
+%psc     /maskfuncs [
+%psc         {add colors mod}
+%psc         {pop colors mod}
+%psc         {exch pop colors mod}
+%psc         {3 idiv exch 2 idiv add colors mod}
+%psc         {2 idiv exch 3 idiv add colors mod}
+%psc         {add dup 2 idiv exch 3 idiv add colors mod}
+%psc         {2 copy exch dup mul mul 7 mod 3 1 roll exch dup mul add 2 mul 19 mod add colors mod}
+%psc         {2 copy dup mul mul 5 mod 3 1 roll dup mul exch 2 mul add 13 mod add colors mod}
+%psc     ] def
+%psc     mask -1 ne {  % User specifies a mask
+%psc         /maskfuncs [maskfuncs mask get] def
+%psc         /bestmaskval mask def
+%psc     } if
+%psc     /masks maskfuncs length array def
+%psc     0 1 masks length 1 sub {
+%psc         /m exch def
+%psc         /mask rows cols mul array def
+%psc         0 1 rows 1 sub {
+%psc             /j exch def
+%psc             0 1 cols 1 sub {
+%psc                 /i exch def
+%psc                 pixs i j jmv get -1 eq {i j maskfuncs m get exec} {0} ifelse
+%psc                 mask i j jmv 3 -1 roll put
+%psc             } for
+%psc         } for
+%psc         masks m mask put
+%psc     } for
+%psc 
+%psc     %
+%psc     % Walk the symbol placing the data bitstream
+%psc     %
+%psc     /posx 0 def  /posy 0 def
+%psc     /i 0 def
+%psc     { % loop
+%psc         posx cols eq {exit} if
+%psc         pixs posx posy jmv get -1 eq {
+%psc             bits i databpm getinterval 0 exch {48 sub add 2 mul} forall 2 idiv
+%psc             pixs posx posy jmv 3 -1 roll put
+%psc             /i i databpm add def
+%psc         } if
+%psc         /posy posy 1 add def
+%psc         posy rows eq {/posy 0 def /posx posx 1 add def} if
+%psc     } loop
+%psc 
+%psc     %
+%psc     % Evaluate runlength encoded rows or columns in full symbols
+%psc     %
+%psc     /evalrle {
+%psc         /scrle exch def
+%psc         /scr1 0 def  /scr3 0 def
+%psc         0 2 scrle length 2 sub {
+%psc             /j exch def
+%psc             scrle j 1 add get -1 ne {  % Skip over voids
+%psc                 % Detect runs of 5 or more like modules, except in voids
+%psc                 scrle j get dup 5 ge {2 sub /scr1 exch scr1 add def} {pop} ifelse
+%psc                 % Detect finder pattern
+%psc                 j 4 ge j scrle length 5 sub le and {
+%psc                     scrle j 4 sub 10 getinterval                     % n1 c1 ... n5 c5
+%psc                     dup {1 eq} forall pop 4 {exch pop and} repeat {  % n{1-5}=1
+%psc                         mark exch aload pop
+%psc                         8 index dup 6 index eq exch 2 index eq and   % c1=c3=c5
+%psc                         7 index 4 index eq and {                     % c2=c4
+%psc                             2 index  /c4 exch def  /c5 exch def
+%psc                             c4 bi eq c5 yi eq and  c4 yi eq c5 bi eq and
+%psc                             c4 gi eq c5 mi eq and  c4 mi eq c5 gi eq and
+%psc                             or or or {/scr3 scr3 100 add def} if
+%psc                         } if
+%psc                         cleartomark
+%psc                     } {pop} ifelse
+%psc                 } if
+%psc             } if
+%psc         } for
+%psc         scr1 scr3
+%psc     } def
+%psc 
+%psc     /evalmask {
+%psc         /sym exch def
+%psc 
+%psc         /n1 0 def /n2 0 def /n3 0 def
+%psc         /rle rows cols 2 copy lt {exch} if pop 2 mul 2 add array def
+%psc         /lastpairs cols array def
+%psc         /thispairs cols array def
+%psc 
+%psc         %
+%psc         % Runlength encode and evaluate each column
+%psc         %
+%psc         0 1 cols 1 sub {
+%psc             /i exch def
+%psc             mark 0 -1
+%psc             i cols rows cols mul 1 sub {
+%psc                 sym exch get 2 copy eq {pop exch 1 add exch} {1 exch} ifelse
+%psc             } for
+%psc             rle 0 counttomark 2 sub getinterval astore
+%psc             evalrle n3 add /n3 exch def n1 add /n1 exch def
+%psc             pop
+%psc         } for
+%psc 
+%psc         0 1 rows 1 sub {
+%psc             /i exch def
+%psc 
+%psc             %
+%psc             % Runlength encode and evaluate each row
+%psc             %
+%psc             /symrow sym i cols mul cols getinterval def
+%psc             mark 0 -1
+%psc             symrow {
+%psc                 2 copy eq {pop exch 1 add exch} {1 exch} ifelse
+%psc             } forall
+%psc             rle 0 counttomark 2 sub getinterval astore
+%psc             evalrle n3 add /n3 exch def n1 add /n1 exch def
+%psc             pop
+%psc 
+%psc             %
+%psc             % Count and score same coloured blocks
+%psc             %
+%psc             /lastpairs thispairs /thispairs lastpairs def def
+%psc             -1 symrow {exch 2 copy ne {pop -1 exch} if} forall
+%psc             pop
+%psc             thispairs astore pop
+%psc             i 0 gt {
+%psc                 mark
+%psc                 lastpairs aload pop thispairs aload pop
+%psc                 n2 cols { exch dup -1 ne { cols 1 add index eq {3 add} if } {pop} ifelse } repeat
+%psc                 /n2 exch def
+%psc                 cleartomark
+%psc             } if
+%psc         } for
+%psc 
+%psc         n1 n2 add n3 add
+%psc     } def
+%psc 
+%psc     %
+%psc     % Evaluate the masked symbols to find the most suitable
+%psc     %
+%psc     /bestscore 999999999 def
+%psc     0 1 masks length 1 sub {
+%psc         /m exch def
+%psc         /masksym rows cols mul array def
+%psc         0 1 rows cols mul 1 sub {
+%psc             /i exch def
+%psc             masksym i pixs i get masks m get i get xor put
+%psc         } for
+%psc         masks length 1 ne {
+%psc             masksym evalmask /score exch def
+%psc             score bestscore lt {
+%psc                 /bestsym masksym def
+%psc                 /bestmaskval m def
+%psc                 /bestscore score def
+%psc             } if
+%psc         } {
+%psc             /bestsym masksym def
+%psc         } ifelse
+%psc     } for
+%psc     /pixs bestsym def
+%psc     /metamask bestmaskval def
+%psc 
+%psc     %
+%psc     % Derive the metadata bitstream
+%psc     %
+%psc     /addtometapart {
+%psc         dup metapart p 3 -1 roll putinterval
+%psc         length p add /p exch def
+%psc     } def
+%psc 
+%psc     /addtometabits {
+%psc         dup metabits q 3 -1 roll putinterval
+%psc         length q add /q exch def
+%psc     } def
+%psc 
+%psc     /metapart 40 string def
+%psc     /metabits nummetabits string def
+%psc     /p 0 def  /q 0 def
+%psc     slave not {
+%psc 
+%psc         %
+%psc         % Part I
+%psc         %
+%psc         colors ln 2 ln div round cvi 1 sub
+%psc         3 tofixedbits addtometapart                                 % Nc
+%psc         metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
+%psc 
+%psc         %
+%psc         % Part II
+%psc         %
+%psc         metass   1 tofixedbits addtometapart                        % SS
+%psc         metavf   2 tofixedbits addtometapart                        % VF
+%psc         metamask 3 tofixedbits addtometapart                        % MSK
+%psc         hasslaves {(1)} {(0)} ifelse addtometapart                  % SF
+%psc         metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
+%psc 
+%psc         %
+%psc         % Part III
+%psc         %
+%psc         metass 0 eq {  % Square
+%psc             cols 17 sub 4 idiv //jabcode.metavfadj metavf get sub 1 sub
+%psc             metavlen tofixedbits addtometapart                      % V
+%psc         } {  % Rectangular
+%psc             cols 17 sub 4 idiv 1 sub
+%psc             metavlen 2 idiv tofixedbits addtometapart               % V1
+%psc             rows 17 sub 4 idiv 1 sub
+%psc             metavlen 2 idiv tofixedbits addtometapart               % V2
+%psc         } ifelse
+%psc         datawc 3 sub metaelen 2 idiv tofixedbits addtometapart      % E1
+%psc         datawr 4 sub metaelen 2 idiv tofixedbits addtometapart      % E2
+%psc         hasslaves {  % TODO Cascading
+%psc             0 4 tofixedbits addtometapart                           % S
+%psc         } if
+%psc         metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
+%psc 
+%psc     } {  % slave
+%psc 
+%psc         %
+%psc         % Part I
+%psc         %
+%psc         sameshape {0} {1} ifelse 1 tofixedbits addtometapart        % SS
+%psc         sameecc   {0} {1} ifelse 1 tofixedbits addtometapart        % SE
+%psc         hasslaves {1} {0} ifelse 1 tofixedbits addtometapart        % SF
+%psc         metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
+%psc 
+%psc         %
+%psc         % Part II
+%psc         %
+%psc         sameshape not {
+%psc             diffside 17 sub 4 idiv 1 sub
+%psc             5 tofixedbits addtometapart                             % V
+%psc         } if
+%psc         hasslaves {  % TODO Cascading
+%psc             0 3 tofixedbits addtometapart                           % S
+%psc         } if
+%psc         metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
+%psc 
+%psc         %
+%psc         % Part III
+%psc         %
+%psc         sameecc not {
+%psc             datawc 3 sub metaelen 2 idiv tofixedbits addtometapart  % E1
+%psc             datawr 4 sub metaelen 2 idiv tofixedbits addtometapart  % E2
+%psc         } if
+%psc         metapart 0 p getinterval 2 -1 ldpc addtometabits  /p 0 def
+%psc 
+%psc     } ifelse
+%psc     q 1 nummetabits 1 sub {  % Pad with 0s
+%psc         metabits exch 48 put
+%psc     } for
+%psc 
+%psc     %
+%psc     % Place the metadata
+%psc     %
+%psc     /i 0 def  /j 0 def
+%psc     slave not {  % Two-color encoding of Part I (Nc) in master symbols
+%psc         metabits i 6 getinterval {
+%psc             colors 4 eq {[bi yi]} {[ki wi]} ifelse exch 48 sub get
+%psc             pixs metadatamap j get aload pop jmv 3 -1 roll put
+%psc             /j j 1 add def
+%psc         } forall
+%psc         /i i 6 add def
+%psc     } if
+%psc     nummetabits i sub metabpm idiv {
+%psc         metabits i metabpm getinterval 0 exch {48 sub add 2 mul} forall 2 idiv
+%psc         metacolorindex exch get
+%psc         pixs metadatamap j get aload pop jmv 3 -1 roll put
+%psc         /i i metabpm add def
+%psc         /j j 1 add def
+%psc     } repeat
+%psc 
+%psc     <<
+%psc     /ren /renmatrix
+%psc     /pixs pixs
+%psc     /pixx cols
+%psc     /pixy rows
+%psc     /colormap palette
+%psc     /height rows modunit mul 72 div
+%psc     /width  cols modunit mul 72 div
+%psc     /borderleft 0.0
+%psc     /borderright 0.0
+%psc     /bordertop 0.0
+%psc     /borderbottom 0.0
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+%psc     /opt options
+%psc     >>
+%psc 
+%psc     _render //renmatrix if
+%psc 
 %psc     } stopped {end stop} if
-    end
-
-}
+%psc     end
+%psc 
+%psc }
 %psc [/barcode] {null def} forall
-bind def
-%psc /jabcode dup load /uk.co.terryburton.bwipp defineresource pop
+%psc bind def
+%psc %psc /jabcode dup load /uk.co.terryburton.bwipp defineresource pop
 %psc end
 %psc /setpacking where {pop setpacking} if
 %psc setglobal
-%%EndData
-%%EndResource
-% --END ENCODER jabcode--
+%psc %%EndData
+%psc %%EndResource
+%psc % --END ENCODER jabcode--
 
 % --BEGIN ENCODER gs1-cc--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renmatrix micropdf417 pdf417--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renmatrix micropdf417 pdf417--
 % --DESC: GS1 Composite 2D Component
 % --EXAM: (01)09521234543213(3103)000123
 % --EXOP: ccversion=b cccolumns=4
 % --RNDR: renmatrix
-%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2026033100 218264 217530
+%%BeginResource: uk.co.terryburton.bwipp gs1-cc 0.0 2026042100 220918 220301
 %%BeginData:        715 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -34110,16 +36500,16 @@ bind def
 %psc     //gs1-cc.latevars /init get exec
 
     ccversion (a) ne ccversion (b) ne and ccversion (c) ne and {
-        (bwipp.gs1ccBadCCversion#34113) (ccversion must be a, b or c) //raiseerror exec
+        (bwipp.gs1ccBadCCversion#36503) (ccversion must be a, b or c) //raiseerror exec
     } if
 
     cccolumns 30 gt {
-        (bwipp.gs1ccColumnsTooBig#34117) (The maximum number of composite component columns is 30) //raiseerror exec
+        (bwipp.gs1ccColumnsTooBig#36507) (The maximum number of composite component columns is 30) //raiseerror exec
     } if
 
     lintype () ne {
         //gs1-cc.lintypecccolumns lintype known not {
-            (bwipp.gs1ccBadLinType#34122) (The lintype is not recognised) //raiseerror exec
+            (bwipp.gs1ccBadLinType#36512) (The lintype is not recognised) //raiseerror exec
         } if
     } if
 
@@ -34129,10 +36519,10 @@ bind def
     cccolumns -1 eq {
         lintype (gs1-128) eq ccversion (c) eq and {
             linwidth 0 lt {
-                (bwipp.gs1ccMissingLinWidth#34132) (linwidth must be set for a GS1-128 with a CC-C composite component) //raiseerror exec
+                (bwipp.gs1ccMissingLinWidth#36522) (linwidth must be set for a GS1-128 with a CC-C composite component) //raiseerror exec
             } if
             linwidth 68 lt {
-                (bwipp.gs1ccMinimumLinWidth#34135) (Minimum linwidth for a GS1-128 with a CC-C composite component is 68) //raiseerror exec
+                (bwipp.gs1ccMinimumLinWidth#36525) (Minimum linwidth for a GS1-128 with a CC-C composite component is 68) //raiseerror exec
             } if
             linwidth 68 eq { 1 } { linwidth 52 sub 17 idiv } ifelse  % Ensure cccolumns != 0 if minimum linwidth
         } {
@@ -34143,13 +36533,13 @@ bind def
 
     ccversion (c) ne {
         cccolumns 2 lt cccolumns 4 gt or {
-            (bwipp.gs1ccBadColumns#34146) (CC-A and CC-B require 2 to 4 columns) //raiseerror exec
+            (bwipp.gs1ccBadColumns#36536) (CC-A and CC-B require 2 to 4 columns) //raiseerror exec
         } if
     } if
 
     lintype () ne ccversion (c) ne and {
         cccolumns //gs1-cc.lintypecccolumns lintype get lt {
-            (bwipp.gs1ccColumnsTooSmall#34152) (The cccolumns value is too small for the linear symbology) //raiseerror exec
+            (bwipp.gs1ccColumnsTooSmall#36542) (The cccolumns value is too small for the linear symbology) //raiseerror exec
         } if
     } if
 
@@ -34416,7 +36806,7 @@ bind def
         dup /raw ne {exch get} {pop} ifelse
         [ exch {48 sub} forall ]
         dup length dup j add gpfenc length gt {
-            pop pop (bwipp.gs1ccDataTooLarge#34419) (Data too large for the composite component) //raiseerror exec
+            pop pop (bwipp.gs1ccDataTooLarge#36809) (Data too large for the composite component) //raiseerror exec
         } if
         exch gpfenc exch j exch putinterval
         /j exch j add def
@@ -34553,7 +36943,7 @@ bind def
     %
     cdf length gpf length add rembits
     dup -1 eq {
-        pop (bwipp.gs1ccDataTooLarge#34556) (Data too large for the composite component) //raiseerror exec
+        pop (bwipp.gs1ccDataTooLarge#36946) (Data too large for the composite component) //raiseerror exec
     } if
     /pad exch array def
     pad length 0 gt {
@@ -34667,24 +37057,24 @@ bind def
 % --END ENCODER gs1-cc--
 
 % --BEGIN ENCODER ean13composite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix ean5 ean2 ean13 micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix ean5 ean2 ean13 micropdf417 pdf417 gs1-cc--
 % --DESC: EAN-13 Composite
 % --EXAM: 9520123456788|(99)1234-abcd
 % --EXOP: includetext
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2026033100 109957 113388
-%%BeginData:        164 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean13composite 0.0 2026042100 136949 143655
+%%BeginData:        264 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean13 dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /ean13composite {
@@ -34693,20 +37083,34 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+    /guardwhitespace false def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -34716,8 +37120,26 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#34719) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#37123) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /ean13composite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (ean13) put
     options (inkspreadv) 0.0 put
@@ -34732,102 +37154,170 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //ean13 exec
-    usematrix not {
+    /linsym exch def
+    /sbs linsym /sbs get def
+    /bhs linsym /bhs get def
+    /bbs linsym /bbs get def
+    /linwidth 0 sbs {cvi add} forall def
 
-        //renlinear exec
 
-        currentpoint
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
 
-        %
-        % Plot the 2D part
-        %
-        -3 78 rmoveto comp options //gs1-cc exec //renmatrix exec
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        %
-        % Plot the separator
-        %
-        72 add exch 1 sub exch moveto <<
-            /ren /renmatrix
-            /pixs [
-                0 1  93 {0} repeat  1 0
-                1 0  93 {0} repeat  0 1
-                0 1  93 {0} repeat  1 0
-            ]
-            /pixx 97
-            /pixy 3
-            /height 6 72 div
-            /width 97 72 div
-            /opt options
-        >> //renmatrix exec
+    %
+    % Construct the composite symbol from the linear and 2D parts
+    %
 
+    /linpad [ ccpixx 97 sub {0} repeat ] def
+
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll linpad length 1 add add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
+
+    /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
+    diff 0 gt {  % Left align composite
+        /ccrpad [ diff {0} repeat ] def
+        /pixx ccpixx diff add def
     } {
-        /linsym exch def
-        /sbs linsym /sbs get def
-        /bhs linsym /bhs get def
-        /bbs linsym /bbs get def
-        /linwidth 0 sbs {cvi add} forall def
-
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
-
-        /linpad [ ccpixx 97 sub {0} repeat ] def
-
-        /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
-        diff 0 gt {  % Left align composite
-            /ccrpad [ diff {0} repeat ] def
-            /pixx ccpixx diff add def
-        } {
-            /ccrpad 0 array def
-            /pixx ccpixx def
-        } ifelse
-
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {
-                /i exch def
-                ccpixs i ccpixx getinterval aload pop ccrpad aload pop
-            } for
-            2 { linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop } repeat
-            2 { linpad aload pop 1 0  93 {0} repeat  0 1 ccrpad aload pop } repeat
-            2 { linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop } repeat
-            71 -1 0 {
-                /y exch def
-                linpad aload pop
-                0
-                0 1 sbs length 1 sub {
-                    /i exch def
-                    i 2 mod 0 eq {
-                        % Don't print when bbs > y || (bbs + bhs) < y (i.e. add-on or includetext offsets)
-                        bbs i 2 idiv get 72 mul dup y gt exch bhs i 2 idiv get 72 mul add y lt or {
-                            sbs i get cvi {0} repeat
-                        } {
-                            sbs i get cvi {1} repeat
-                        } ifelse
-                    } {
-                        sbs i get cvi {0} repeat
-                    } ifelse
-                } for
-                diff 0 lt {0} if  % Allow for middle separator overhang on RHS if no add-on
-            } for
-        ] def
-
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
-
-        _render //renmatrix if
+        /ccrpad 0 array def
+        /pixx ccpixx def
     } ifelse
+
+    /ccrows ccrowmult length def
+
+    % Pre-compute bbs and bbs+bhs in row units to avoid repeated calculation
+    /nbars sbs length 1 add 2 idiv def
+    /bbsrow nbars array def
+    /bhsrow nbars array def
+    0 1 nbars 1 sub {
+        /b exch def
+        bbsrow b bbs b get 72 mul cvi put
+        bhsrow b bbsrow b get bhs b get 72 mul add put
+    } for
+
+    % Main symbol bars extend to full height connecting to separator; add-on bars keep their height
+    /linheight 0 bhsrow { ceiling cvi 2 copy lt { exch } if pop } forall def
+    /lindescent 0 bbsrow { floor cvi 2 copy gt { exch } if pop } forall def
+    txt { dup 2 get lindescent neg add 2 exch put } forall
+    /mainbars nbars def
+    0 1 sbs length 1 sub {
+        dup sbs exch get type /realtype eq { 1 add 2 idiv /mainbars exch def exit } { pop } ifelse
+    } for
+    0 1 mainbars 1 sub { bhsrow exch linheight put } for
+
+    % Rasterize linear rows, deduplicating identical adjacent rows using a string buffer
+    /rowbuf pixx string def
+    /prevrow () def  /linrowmult 72 array def  /lri 0 def
+    /linpixs [
+        linheight 1 sub -1 lindescent {
+            /y exch def
+            /p 0 def
+            linpad { rowbuf p 3 -1 roll put /p p 1 add def } forall
+            rowbuf p 0 put  /p p 1 add def
+            0 1 sbs length 1 sub {
+                /i exch def
+                i 2 mod 0 eq {
+                    bbsrow i 2 idiv get y gt bhsrow i 2 idiv get y lt or { 0 } { 1 } ifelse
+                } { 0 } ifelse
+                sbs i get cvi { rowbuf p 2 index put /p p 1 add def } repeat pop
+            } for
+            diff 0 lt { rowbuf p 0 put /p p 1 add def } if
+            rowbuf prevrow eq {
+                linrowmult lri 1 sub 2 copy get 1 add put  % Bump multiplier
+            } {
+                prevrow length 0 gt { prevrow {} forall } if  % Commit previous batch
+                /prevrow rowbuf pixx string copy def
+                linrowmult lri 1 put  /lri lri 1 add def
+            } ifelse
+        } for
+        prevrow {} forall  % Commit final batch
+    ] def
+    /linrowmult linrowmult 0 lri getinterval def
+
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {
+            /i exch def
+            ccpixs i ccpixx getinterval aload pop ccrpad aload pop
+        } for
+        linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop
+        linpad aload pop 1 0  93 {0} repeat  0 1 ccrpad aload pop
+        linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop
+        linpixs aload pop
+    ] def
+    /rowmult [ ccrowmult aload pop 2 2 2 linrowmult aload pop ] def
+    /pixy 0 rowmult {add} forall def
+
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse linpad length 1 add sub
+        1  % CC-A QZ; left inset 0
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse pixx linpad length sub 1 sub linwidth sub sub
+        1 ccrpad length sub  % CC-A QZ; right inset ccrpad
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse lindescent add def
+
+    % Guard positions adjusted for linear offset within matrix
+    /guardleftpos linsym /guardleftpos 2 copy known { get linpad length 1 add sub } { pop pop 0 } ifelse def
+    /guardleftypos linsym /guardleftypos 2 copy known { get lindescent neg add } { pop pop 0 } ifelse def
+    /guardrightpos linsym /guardrightpos 2 copy known { get linpad length 1 add linwidth add pixx sub add } { pop pop 0 } ifelse def
+    /guardrightypos linsym /guardrightypos 2 copy known { get lindescent neg add } { pop pop 0 } ifelse def
+
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
+
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /guardwhitespace guardwhitespace
+    /guardleftpos guardleftpos
+    /guardleftypos guardleftypos
+    /guardrightpos guardrightpos
+    /guardrightypos guardrightypos
+    /guardwidth guardwidth
+    /guardheight guardheight
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
+
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -34844,24 +37334,24 @@ bind def
 % --END ENCODER ean13composite--
 
 % --BEGIN ENCODER ean8composite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix ean5 ean2 ean8 micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix ean5 ean2 ean8 micropdf417 pdf417 gs1-cc--
 % --DESC: EAN-8 Composite
 % --EXAM: 95200002|(21)A12345678
 % --EXOP: includetext
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2026033100 110258 113586
-%%BeginData:        169 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp ean8composite 0.0 2026042100 137031 140201
+%%BeginData:        260 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 5 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /ean8 dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /ean8composite {
@@ -34870,20 +37360,34 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+    /guardwhitespace false def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -34893,8 +37397,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#34896) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#37400) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /ean8composite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     %
     % Get the result of encoding with ean8 and gs1-cc
@@ -34912,104 +37433,164 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //ean8 exec
-    usematrix not {
+    /linsym exch def
+    /sbs linsym /sbs get def
+    /bhs linsym /bhs get def
+    /bbs linsym /bbs get def
+    /linwidth 0 sbs {cvi add} forall def
 
-        //renlinear exec
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linpad [ ccpixx 69 sub {0} repeat ] def
 
-        %
-        % Plot the 2D part
-        %
-        comp options //gs1-cc exec
-        dup (pixx) get 70 exch sub 78 rmoveto
-        //renmatrix exec
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll linpad length 1 add add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-        %
-        % Plot the separator
-        %
-        72 add exch 1 sub exch moveto <<
-            /ren /renmatrix
-            /pixs [
-                0 1  65 {0} repeat  1 0
-                1 0  65 {0} repeat  0 1
-                0 1  65 {0} repeat  1 0
-            ]
-            /pixx 69
-            /pixy 3
-            /height 6 72 div
-            /width 69 72 div
-            /opt options
-        >> //renmatrix exec
-
+    /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
+    diff 0 gt {  % Left align composite
+        /ccrpad [ diff {0} repeat ] def
+        /pixx ccpixx diff add def
     } {
-        /linsym exch def
-        /sbs linsym /sbs get def
-        /bhs linsym /bhs get def
-        /bbs linsym /bbs get def
-        /linwidth 0 sbs {cvi add} forall def
-
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
-
-        /linpad [ ccpixx 69 sub {0} repeat ] def
-
-        /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
-        diff 0 gt {  % Left align composite
-            /ccrpad [ diff {0} repeat ] def
-            /pixx ccpixx diff add def
-        } {
-            /ccrpad 0 array def
-            /pixx ccpixx def
-        } ifelse
-
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {
-                /i exch def
-                ccpixs i ccpixx getinterval aload pop ccrpad aload pop
-            } for
-            2 { linpad aload pop 0 1  65 {0} repeat  1 0 ccrpad aload pop } repeat
-            2 { linpad aload pop 1 0  65 {0} repeat  0 1 ccrpad aload pop } repeat
-            2 { linpad aload pop 0 1  65 {0} repeat  1 0 ccrpad aload pop } repeat
-            71 -1 0 {
-                /y exch def
-                linpad aload pop
-                0
-                0 1 sbs length 1 sub {
-                    /i exch def
-                    i 2 mod 0 eq {
-                        % Don't print when bbs > y || (bbs + bhs) < y (i.e. add-on or includetext offsets)
-                        bbs i 2 idiv get 72 mul dup y gt exch bhs i 2 idiv get 72 mul add y lt or {
-                            sbs i get cvi {0} repeat
-                        } {
-                            sbs i get cvi {1} repeat
-                        } ifelse
-                    } {
-                        sbs i get cvi {0} repeat
-                    } ifelse
-                } for
-                diff 0 lt {0} if  % Allow for middle separator overhang on RHS if no add-on
-            } for
-        ] def
-
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
-
-        _render //renmatrix if
+        /ccrpad 0 array def
+        /pixx ccpixx def
     } ifelse
+
+    /ccrows ccrowmult length def
+
+    % Pre-compute bbs and bbs+bhs in row units to avoid repeated calculation
+    /nbars sbs length 1 add 2 idiv def
+    /bbsrow nbars array def
+    /bhsrow nbars array def
+    0 1 nbars 1 sub {
+        /b exch def
+        bbsrow b bbs b get 72 mul cvi put
+        bhsrow b bbsrow b get bhs b get 72 mul add put
+    } for
+
+    % Main symbol bars extend to full height connecting to separator; add-on bars keep their height
+    /linheight 0 bhsrow { ceiling cvi 2 copy lt { exch } if pop } forall def
+    /lindescent 0 bbsrow { floor cvi 2 copy gt { exch } if pop } forall def
+    txt { dup 2 get lindescent neg add 2 exch put } forall
+    /mainbars nbars def
+    0 1 sbs length 1 sub {
+        dup sbs exch get type /realtype eq { 1 add 2 idiv /mainbars exch def exit } { pop } ifelse
+    } for
+    0 1 mainbars 1 sub { bhsrow exch linheight put } for
+
+    % Rasterize linear rows, deduplicating identical adjacent rows using a string buffer
+    /rowbuf pixx string def
+    /prevrow () def  /linrowmult 72 array def  /lri 0 def
+    /linpixs [
+        linheight 1 sub -1 lindescent {
+            /y exch def
+            /p 0 def
+            linpad { rowbuf p 3 -1 roll put /p p 1 add def } forall
+            rowbuf p 0 put  /p p 1 add def
+            0 1 sbs length 1 sub {
+                /i exch def
+                i 2 mod 0 eq {
+                    bbsrow i 2 idiv get y gt bhsrow i 2 idiv get y lt or { 0 } { 1 } ifelse
+                } { 0 } ifelse
+                sbs i get cvi { rowbuf p 2 index put /p p 1 add def } repeat pop
+            } for
+            diff 0 lt { rowbuf p 0 put /p p 1 add def } if
+            rowbuf prevrow eq {
+                linrowmult lri 1 sub 2 copy get 1 add put  % Bump multiplier
+            } {
+                prevrow length 0 gt { prevrow {} forall } if  % Commit previous batch
+                /prevrow rowbuf pixx string copy def
+                linrowmult lri 1 put  /lri lri 1 add def
+            } ifelse
+        } for
+        prevrow {} forall  % Commit final batch
+    ] def
+    /linrowmult linrowmult 0 lri getinterval def
+
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {
+            /i exch def
+            ccpixs i ccpixx getinterval aload pop ccrpad aload pop
+        } for
+        linpad aload pop 0 1  65 {0} repeat  1 0 ccrpad aload pop
+        linpad aload pop 1 0  65 {0} repeat  0 1 ccrpad aload pop
+        linpad aload pop 0 1  65 {0} repeat  1 0 ccrpad aload pop
+        linpixs aload pop
+    ] def
+    /rowmult [ ccrowmult aload pop 2 2 2 linrowmult aload pop ] def
+    /pixy 0 rowmult {add} forall def
+
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse linpad length 1 add sub
+        1  % CC-A QZ; left inset 0
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse pixx linpad length sub 1 sub linwidth sub sub
+        1 ccrpad length sub  % CC-A QZ; right inset ccrpad
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse lindescent add def
+
+    % Guard positions adjusted for linear offset within matrix
+    /guardleftpos linsym /guardleftpos 2 copy known { get linpad length 1 add sub } { pop pop 0 } ifelse def
+    /guardleftypos linsym /guardleftypos 2 copy known { get lindescent neg add } { pop pop 0 } ifelse def
+    /guardrightpos linsym /guardrightpos 2 copy known { get linpad length 1 add linwidth add pixx sub add } { pop pop 0 } ifelse def
+    /guardrightypos linsym /guardrightypos 2 copy known { get lindescent neg add } { pop pop 0 } ifelse def
+
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
+
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /guardwhitespace guardwhitespace
+    /guardleftpos guardleftpos
+    /guardleftypos guardleftypos
+    /guardrightpos guardrightpos
+    /guardrightypos guardrightypos
+    /guardwidth guardwidth
+    /guardheight guardheight
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
+
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -35026,24 +37607,24 @@ bind def
 % --END ENCODER ean8composite--
 
 % --BEGIN ENCODER upcacomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix ean5 ean2 upca micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix ean5 ean2 upca micropdf417 pdf417 gs1-cc--
 % --DESC: UPC-A Composite
 % --EXAM: 012345000058|(99)1234-abcd
 % --EXOP: includetext
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2026033100 113991 110455
-%%BeginData:        164 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp upcacomposite 0.0 2026042100 137456 140802
+%%BeginData:        257 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
 %psc 8 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /upca dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /upcacomposite {
@@ -35052,20 +37633,34 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+    /guardwhitespace false def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -35075,8 +37670,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#35078) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#37673) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /upcacomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (ean13) put
     options (inkspreadv) 0.0 put
@@ -35091,102 +37703,164 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //upca exec
-    usematrix not {
+    /linsym exch def
+    /sbs linsym /sbs get def
+    /bhs linsym /bhs get def
+    /bbs linsym /bbs get def
+    /linwidth 0 sbs {cvi add} forall def
 
-        //renlinear exec
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linpad [ ccpixx 97 sub {0} repeat ] def
 
-        %
-        % Plot the 2D part
-        %
-        -3 78 rmoveto comp options //gs1-cc exec //renmatrix exec
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll linpad length 1 add add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-        %
-        % Plot the separator
-        %
-        72 add exch 1 sub exch moveto <<
-            /ren /renmatrix
-            /pixs [
-                0 1  93 {0} repeat  1 0
-                1 0  93 {0} repeat  0 1
-                0 1  93 {0} repeat  1 0
-            ]
-            /pixx 97
-            /pixy 3
-            /height 6 72 div
-            /width 97 72 div
-            /opt options
-        >> //renmatrix exec
-
+    /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
+    diff 0 gt {  % Left align composite
+        /ccrpad [ diff {0} repeat ] def
+        /pixx ccpixx diff add def
     } {
-        /linsym exch def
-        /sbs linsym /sbs get def
-        /bhs linsym /bhs get def
-        /bbs linsym /bbs get def
-        /linwidth 0 sbs {cvi add} forall def
-
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
-
-        /linpad [ ccpixx 97 sub {0} repeat ] def
-
-        /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
-        diff 0 gt {  % Left align composite
-            /ccrpad [ diff {0} repeat ] def
-            /pixx ccpixx diff add def
-        } {
-            /ccrpad 0 array def
-            /pixx ccpixx def
-        } ifelse
-
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {
-                /i exch def
-                ccpixs i ccpixx getinterval aload pop ccrpad aload pop
-            } for
-            2 { linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop } repeat
-            2 { linpad aload pop 1 0  93 {0} repeat  0 1 ccrpad aload pop } repeat
-            2 { linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop } repeat
-            71 -1 0 {
-                /y exch def
-                linpad aload pop
-                0
-                0 1 sbs length 1 sub {
-                    /i exch def
-                    i 2 mod 0 eq {
-                        % Don't print when bbs > y || (bbs + bhs) < y (i.e. add-on or includetext offsets)
-                        bbs i 2 idiv get 72 mul dup y gt exch bhs i 2 idiv get 72 mul add y lt or {
-                            sbs i get cvi {0} repeat
-                        } {
-                            sbs i get cvi {1} repeat
-                        } ifelse
-                    } {
-                        sbs i get cvi {0} repeat
-                    } ifelse
-                } for
-                diff 0 lt {0} if  % Allow for middle separator overhang on RHS if no add-on
-            } for
-        ] def
-
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
-
-        _render //renmatrix if
+        /ccrpad 0 array def
+        /pixx ccpixx def
     } ifelse
+
+    /ccrows ccrowmult length def
+
+    % Pre-compute bbs and bbs+bhs in row units to avoid repeated calculation
+    /nbars sbs length 1 add 2 idiv def
+    /bbsrow nbars array def
+    /bhsrow nbars array def
+    0 1 nbars 1 sub {
+        /b exch def
+        bbsrow b bbs b get 72 mul cvi put
+        bhsrow b bbsrow b get bhs b get 72 mul add put
+    } for
+
+    % Main symbol bars extend to full height connecting to separator; add-on bars keep their height
+    /linheight 0 bhsrow { ceiling cvi 2 copy lt { exch } if pop } forall def
+    /lindescent 0 bbsrow { floor cvi 2 copy gt { exch } if pop } forall def
+    txt { dup 2 get lindescent neg add 2 exch put } forall
+    /mainbars nbars def
+    0 1 sbs length 1 sub {
+        dup sbs exch get type /realtype eq { 1 add 2 idiv /mainbars exch def exit } { pop } ifelse
+    } for
+    0 1 mainbars 1 sub { bhsrow exch linheight put } for
+
+    % Rasterize linear rows, deduplicating identical adjacent rows using a string buffer
+    /rowbuf pixx string def
+    /prevrow () def  /linrowmult 72 array def  /lri 0 def
+    /linpixs [
+        linheight 1 sub -1 lindescent {
+            /y exch def
+            /p 0 def
+            linpad { rowbuf p 3 -1 roll put /p p 1 add def } forall
+            rowbuf p 0 put  /p p 1 add def
+            0 1 sbs length 1 sub {
+                /i exch def
+                i 2 mod 0 eq {
+                    bbsrow i 2 idiv get y gt bhsrow i 2 idiv get y lt or { 0 } { 1 } ifelse
+                } { 0 } ifelse
+                sbs i get cvi { rowbuf p 2 index put /p p 1 add def } repeat pop
+            } for
+            diff 0 lt { rowbuf p 0 put /p p 1 add def } if
+            rowbuf prevrow eq {
+                linrowmult lri 1 sub 2 copy get 1 add put  % Bump multiplier
+            } {
+                prevrow length 0 gt { prevrow {} forall } if  % Commit previous batch
+                /prevrow rowbuf pixx string copy def
+                linrowmult lri 1 put  /lri lri 1 add def
+            } ifelse
+        } for
+        prevrow {} forall  % Commit final batch
+    ] def
+    /linrowmult linrowmult 0 lri getinterval def
+
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {
+            /i exch def
+            ccpixs i ccpixx getinterval aload pop ccrpad aload pop
+        } for
+        linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop
+        linpad aload pop 1 0  93 {0} repeat  0 1 ccrpad aload pop
+        linpad aload pop 0 1  93 {0} repeat  1 0 ccrpad aload pop
+        linpixs aload pop
+    ] def
+    /rowmult [ ccrowmult aload pop 2 2 2 linrowmult aload pop ] def
+    /pixy 0 rowmult {add} forall def
+
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse linpad length 1 add sub
+        1  % CC-A QZ; left inset 0
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse pixx linpad length sub 1 sub linwidth sub sub
+        1 ccrpad length sub  % CC-A QZ; right inset ccrpad
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse lindescent add def
+
+    % Guard positions adjusted for linear offset within matrix
+    /guardleftpos linsym /guardleftpos 2 copy known { get linpad length 1 add sub } { pop pop 0 } ifelse def
+    /guardleftypos linsym /guardleftypos 2 copy known { get lindescent neg add } { pop pop 0 } ifelse def
+    /guardrightpos linsym /guardrightpos 2 copy known { get linpad length 1 add linwidth add pixx sub add } { pop pop 0 } ifelse def
+    /guardrightypos linsym /guardrightypos 2 copy known { get lindescent neg add } { pop pop 0 } ifelse def
+
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
+
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /guardwhitespace guardwhitespace
+    /guardleftpos guardleftpos
+    /guardleftypos guardleftypos
+    /guardrightpos guardrightpos
+    /guardrightypos guardrightypos
+    /guardwidth guardwidth
+    /guardheight guardheight
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
+
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -35203,24 +37877,24 @@ bind def
 % --END ENCODER upcacomposite--
 
 % --BEGIN ENCODER upcecomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix ean5 ean2 upce micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix ean5 ean2 upce micropdf417 pdf417 gs1-cc--
 % --DESC: UPC-E Composite
 % --EXAM: 01234558|(15)021231
 % --EXOP: includetext
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2026033100 114006 110454
-%%BeginData:        164 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp upcecomposite 0.0 2026042100 136855 140113
+%%BeginData:        257 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /upce dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /upcecomposite {
@@ -35229,20 +37903,34 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+    /guardwhitespace false def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -35252,8 +37940,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#35255) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#37943) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /upcecomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (upce) put
     options (inkspreadv) 0.0 put
@@ -35268,102 +37973,164 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //upce exec
-    usematrix not {
+    /linsym exch def
+    /sbs linsym /sbs get def
+    /bhs linsym /bhs get def
+    /bbs linsym /bbs get def
+    /linwidth 0 sbs {cvi add} forall def
 
-        //renlinear exec
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linpad [ ccpixx 53 sub {0} repeat ] def
 
-        %
-        % Plot the 2D part
-        %
-        -3 78 rmoveto comp options //gs1-cc exec //renmatrix exec
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll linpad length 1 add add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-        %
-        % Plot the separator
-        %
-        72 add exch 1 sub exch moveto <<
-            /ren /renmatrix
-            /pixs [
-                0 1  49 {0} repeat  1 0
-                1 0  49 {0} repeat  0 1
-                0 1  49 {0} repeat  1 0
-            ]
-            /pixx 53
-            /pixy 3
-            /height 6 72 div
-            /width 53 72 div
-            /opt options
-        >> //renmatrix exec
-
+    /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
+    diff 0 gt {  % Left align composite
+        /ccrpad [ diff {0} repeat ] def
+        /pixx ccpixx diff add def
     } {
-        /linsym exch def
-        /sbs linsym /sbs get def
-        /bhs linsym /bhs get def
-        /bbs linsym /bbs get def
-        /linwidth 0 sbs {cvi add} forall def
-
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
-
-        /linpad [ ccpixx 53 sub {0} repeat ] def
-
-        /diff linwidth linpad length add 1 add ccpixx sub def  % An add-on can make linear wider than composite
-        diff 0 gt {  % Left align composite
-            /ccrpad [ diff {0} repeat ] def
-            /pixx ccpixx diff add def
-        } {
-            /ccrpad 0 array def
-            /pixx ccpixx def
-        } ifelse
-
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {
-                /i exch def
-                ccpixs i ccpixx getinterval aload pop ccrpad aload pop
-            } for
-            2 { linpad aload pop 0 1  49 {0} repeat  1 0 ccrpad aload pop } repeat
-            2 { linpad aload pop 1 0  49 {0} repeat  0 1 ccrpad aload pop } repeat
-            2 { linpad aload pop 0 1  49 {0} repeat  1 0 ccrpad aload pop } repeat
-            71 -1 0 {
-                /y exch def
-                linpad aload pop
-                0
-                0 1 sbs length 1 sub {
-                    /i exch def
-                    i 2 mod 0 eq {
-                        % Don't print when bbs > y || (bbs + bhs) < y (i.e. add-on or includetext offsets)
-                        bbs i 2 idiv get 72 mul dup y gt exch bhs i 2 idiv get 72 mul add y lt or {
-                            sbs i get cvi {0} repeat
-                        } {
-                            sbs i get cvi {1} repeat
-                        } ifelse
-                    } {
-                        sbs i get cvi {0} repeat
-                    } ifelse
-                } for
-                diff 0 lt {0} if  % Allow for middle separator overhang on RHS if no add-on
-            } for
-        ] def
-
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
-
-        _render //renmatrix if
+        /ccrpad 0 array def
+        /pixx ccpixx def
     } ifelse
+
+    /ccrows ccrowmult length def
+
+    % Pre-compute bbs and bbs+bhs in row units to avoid repeated calculation
+    /nbars sbs length 1 add 2 idiv def
+    /bbsrow nbars array def
+    /bhsrow nbars array def
+    0 1 nbars 1 sub {
+        /b exch def
+        bbsrow b bbs b get 72 mul cvi put
+        bhsrow b bbsrow b get bhs b get 72 mul add put
+    } for
+
+    % Main symbol bars extend to full height connecting to separator; add-on bars keep their height
+    /linheight 0 bhsrow { ceiling cvi 2 copy lt { exch } if pop } forall def
+    /lindescent 0 bbsrow { floor cvi 2 copy gt { exch } if pop } forall def
+    txt { dup 2 get lindescent neg add 2 exch put } forall
+    /mainbars nbars def
+    0 1 sbs length 1 sub {
+        dup sbs exch get type /realtype eq { 1 add 2 idiv /mainbars exch def exit } { pop } ifelse
+    } for
+    0 1 mainbars 1 sub { bhsrow exch linheight put } for
+
+    % Rasterize linear rows, deduplicating identical adjacent rows using a string buffer
+    /rowbuf pixx string def
+    /prevrow () def  /linrowmult 72 array def  /lri 0 def
+    /linpixs [
+        linheight 1 sub -1 lindescent {
+            /y exch def
+            /p 0 def
+            linpad { rowbuf p 3 -1 roll put /p p 1 add def } forall
+            rowbuf p 0 put  /p p 1 add def
+            0 1 sbs length 1 sub {
+                /i exch def
+                i 2 mod 0 eq {
+                    bbsrow i 2 idiv get y gt bhsrow i 2 idiv get y lt or { 0 } { 1 } ifelse
+                } { 0 } ifelse
+                sbs i get cvi { rowbuf p 2 index put /p p 1 add def } repeat pop
+            } for
+            diff 0 lt { rowbuf p 0 put /p p 1 add def } if
+            rowbuf prevrow eq {
+                linrowmult lri 1 sub 2 copy get 1 add put  % Bump multiplier
+            } {
+                prevrow length 0 gt { prevrow {} forall } if  % Commit previous batch
+                /prevrow rowbuf pixx string copy def
+                linrowmult lri 1 put  /lri lri 1 add def
+            } ifelse
+        } for
+        prevrow {} forall  % Commit final batch
+    ] def
+    /linrowmult linrowmult 0 lri getinterval def
+
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {
+            /i exch def
+            ccpixs i ccpixx getinterval aload pop ccrpad aload pop
+        } for
+        linpad aload pop 0 1  49 {0} repeat  1 0 ccrpad aload pop
+        linpad aload pop 1 0  49 {0} repeat  0 1 ccrpad aload pop
+        linpad aload pop 0 1  49 {0} repeat  1 0 ccrpad aload pop
+        linpixs aload pop
+    ] def
+    /rowmult [ ccrowmult aload pop 2 2 2 linrowmult aload pop ] def
+    /pixy 0 rowmult {add} forall def
+
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse linpad length 1 add sub
+        1  % CC-A QZ; left inset 0
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse pixx linpad length sub 1 sub linwidth sub sub
+        1 ccrpad length sub  % CC-A QZ; right inset ccrpad
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse lindescent add def
+
+    % Guard positions adjusted for linear offset within matrix
+    /guardleftpos linsym /guardleftpos 2 copy known { get linpad length 1 add sub } { pop pop 0 } ifelse def
+    /guardleftypos linsym /guardleftypos 2 copy known { get lindescent neg add } { pop pop 0 } ifelse def
+    /guardrightpos linsym /guardrightpos 2 copy known { get linpad length 1 add linwidth add pixx sub add } { pop pop 0 } ifelse def
+    /guardrightypos linsym /guardrightypos 2 copy known { get lindescent neg add } { pop pop 0 } ifelse def
+
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
+
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /guardwhitespace guardwhitespace
+    /guardleftpos guardleftpos
+    /guardleftypos guardleftypos
+    /guardrightpos guardrightpos
+    /guardrightypos guardrightypos
+    /guardwidth guardwidth
+    /guardheight guardheight
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
+
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -35380,24 +38147,24 @@ bind def
 % --END ENCODER upcecomposite--
 
 % --BEGIN ENCODER databaromnicomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix databaromni micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix databaromni micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Omnidirectional Composite
 % --EXAM: (01)09521234543213|(11)990102
 % --EXOP:
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2026033100 105694 108937
-%%BeginData:        166 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databaromnicomposite 0.0 2026042100 120505 120308
+%%BeginData:        221 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databaromni dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 /databaromnicomposite { /bwipjs_databaromnicomposite (start-global) def  % begin
 
@@ -35411,20 +38178,31 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -35434,8 +38212,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#35437) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#38215) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databaromnicomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (databaromni) put
     options (linkage) true put
@@ -35451,13 +38246,13 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //databaromni exec
     dup (sbs) get /linsbs exch def
     dup (bhs) get 0 get 72 mul /linheight exch def
-    usematrix not { //renlinear exec } { pop } ifelse
+    /linsym exch def
 
     %
     % Plot the separator
@@ -35490,59 +38285,86 @@ bind def
     sep sep length 4 sub //databaromnicomposite.seppad putinterval
     18 sepfinder 64 sepfinder
 
-    usematrix not {
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linpixs [ 0  % Begin with left guard space
+        linsbs { cvi 1 index 0 eq {{1}} {{0}} ifelse repeat } forall  % Alternates i 1/0's
+    ] def
+    /sep [ 0 sep aload pop ] def  % Offset by 1
 
-        %
-        % Plot the 2D part
-        %
-        -5 linheight 1 add rmoveto comp options //gs1-cc exec //renmatrix exec
+    /linheight linheight cvi def
+    /ccrows ccrowmult length def
+    % ccpixx is 99 for both 4-col CC-A and 4-col CC-B; linpixs length is 96
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space
+            /i exch def
+            ccpixs i ccpixx getinterval aload pop 0
+        } for
+        0 0 0 0 sep aload pop 0 0 0 0 linpixs aload pop  % Left pad with 4 spaces
+    ] def
+    /rowmult [ ccrowmult aload pop 1 linheight ] def
+    /pixx ccpixx 1 add def  % 100
 
-        linheight add moveto <<
-            /ren /renmatrix
-            /pixs sep
-            /pixx sep length
-            /pixy 1
-            /height 1 72 div
-            /width sep length 72 div
-            /opt options
-        >> //renmatrix exec
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll pixx linpixs length sub 1 add add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-    } {
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
+    /pixy 0 rowmult {add} forall def
 
-        /linpixs [ 0  % Begin with left guard space
-            linsbs { cvi 1 index 0 eq {{1}} {{0}} ifelse repeat } forall  % Alternates i 1/0's
-        ] def
-        /sep [ 0 sep aload pop ] def  % Offset by 1
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse pixx linpixs length sub 1 add sub
+        1  % CC QZ; left inset 0
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse  % right inset 0
+        0  % CC QZ 1; right inset 1
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse def
 
-        /linheight linheight cvi def
-        % ccpixx is 99 for both 4-col CC-A and 4-col CC-B; linpixs length is 96
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space
-                /i exch def
-                ccpixs i ccpixx getinterval aload pop 0
-            } for
-            0 0 0 0 sep aload pop linheight { 0 0 0 0 linpixs aload pop } repeat  % Left pad with 4 spaces
-        ] def
-        /pixx ccpixx 1 add def  % 100
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
 
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
 
-        _render //renmatrix if
-    } ifelse
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -35559,20 +38381,21 @@ bind def
 % --END ENCODER databaromnicomposite--
 
 % --BEGIN ENCODER databarstackedcomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix databaromni databarstacked micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix databaromni databarstacked micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Stacked Composite
 % --EXAM: (01)09521234543213|(17)010200
 % --EXOP:
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2026033100 106851 110072
-%%BeginData:        161 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarstackedcomposite 0.0 2026042100 121597 121387
+%%BeginData:        220 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databarstacked dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
@@ -35589,20 +38412,31 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -35612,8 +38446,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#35615) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#38449) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarstackedcomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (databarstacked) put
     options (linkage) true put
@@ -35629,13 +38480,15 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //databarstacked exec
     dup (pixs) get 0 2 index (pixx) get getinterval /bot exch def
     dup (pixy) get /linheight exch def
-    usematrix not { //renmatrix exec } { /pixs get /linpixs exch def } ifelse
+    /linsym exch def
+    /linpixs linsym /pixs get def
+    /linrowmult linsym /rowmult get def
 
     %
     % Plot the separator
@@ -35665,58 +38518,86 @@ bind def
     sep sep length 4 sub //databarstackedcomposite.seppad putinterval
     18 sepfinder
 
-    usematrix not {
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linwidth sep length def  % 50
+    /ccrows ccrowmult length def
+    % ccpixx is 55 for both 2-col CC-A and 2-col CC-B
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space
+            /i exch def
+            0 ccpixs i ccpixx getinterval aload pop
+        } for
+        sep aload pop 0 0 0 0 0 0
+        0 linwidth linpixs length 1 sub {  % Right pad linear with 6 spaces
+            /i exch def
+            linpixs i linwidth getinterval aload pop 0 0 0 0 0 0
+        } for
+    ] def
+    /rowmult [ ccrowmult aload pop 1 linrowmult aload pop ] def
+    /pixx ccpixx 1 add def  % 56
 
-        %
-        % Plot the 2D part
-        %
-        1 linheight 1 add rmoveto comp options //gs1-cc exec //renmatrix exec
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 5 array astore  % No x offset needed; linear at column 0
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-        linheight add moveto <<
-            /ren /renmatrix
-            /pixs sep
-            /pixx sep length
-            /pixy 1
-            /height 1 72 div
-            /width sep length 72 div
-            /opt options
-        >> //renmatrix exec
+    /pixy 0 rowmult {add} forall def
 
-    } {
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
+    % Quiet zone borders: T=2D, L/R=max(1D,2D), B=1D
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 0 } ifelse  % linear left inset 0
+        1 1 sub  % CC QZ; left inset 1
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 0 } ifelse pixx linwidth sub sub  % linear right inset
+        1  % CC QZ; right inset 0
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse def
 
-        /linwidth sep length def  % 50
-        % ccpixx is 55 for both 2-col CC-A and 2-col CC-B
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space
-                /i exch def
-                0 ccpixs i ccpixx getinterval aload pop
-            } for
-            sep aload pop 0 0 0 0 0 0
-            0 linwidth linpixs length 1 sub {  % Right pad linear with 6 spaces
-                /i exch def
-                linpixs i linwidth getinterval aload pop 0 0 0 0 0 0
-            } for
-        ] def
-        /pixx ccpixx 1 add def  % 56
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
 
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
 
-        _render //renmatrix if
-    } ifelse
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -35733,20 +38614,21 @@ bind def
 % --END ENCODER databarstackedcomposite--
 
 % --BEGIN ENCODER databarstackedomnicomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix databaromni databarstackedomni micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix databaromni databarstackedomni micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Stacked Omnidirectional Composite
 % --EXAM: (01)03612345678904|(11)990102
 % --EXOP:
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2026033100 106891 110096
-%%BeginData:        161 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarstackedomnicomposite 0.0 2026042100 121633 121499
+%%BeginData:        220 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databarstackedomni dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
@@ -35763,20 +38645,31 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -35786,8 +38679,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#35789) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#38682) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarstackedomnicomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (databarstackedomni) put
     options (linkage) true put
@@ -35803,13 +38713,15 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //databarstackedomni exec
     dup (pixs) get 0 2 index (pixx) get getinterval /bot exch def
     dup (pixy) get /linheight exch def
-    usematrix not { //renmatrix exec } { /pixs get /linpixs exch def } ifelse
+    /linsym exch def
+    /linpixs linsym /pixs get def
+    /linrowmult linsym /rowmult get def
 
     %
     % Plot the separator
@@ -35839,58 +38751,86 @@ bind def
     sep sep length 4 sub //databarstackedomnicomposite.seppad putinterval
     18 sepfinder
 
-    usematrix not {
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linwidth sep length def  % 50
+    /ccrows ccrowmult length def
+    % ccpixx is 55 for both 2-col CC-A and 2-col CC-B
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space
+            /i exch def
+            0 ccpixs i ccpixx getinterval aload pop
+        } for
+        sep aload pop 0 0 0 0 0 0
+        0 linwidth linpixs length 1 sub {  % Right pad linear with 6 spaces
+            /i exch def
+            linpixs i linwidth getinterval aload pop 0 0 0 0 0 0
+        } for
+    ] def
+    /rowmult [ ccrowmult aload pop 1 linrowmult aload pop ] def
+    /pixx ccpixx 1 add def  % 56
 
-        %
-        % Plot the 2D part
-        %
-        1 linheight 1 add rmoveto comp options //gs1-cc exec //renmatrix exec
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 5 array astore  % No x offset needed; linear at column 0
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-        linheight add moveto <<
-            /ren /renmatrix
-            /pixs sep
-            /pixx sep length
-            /pixy 1
-            /height 1 72 div
-            /width sep length 72 div
-            /opt options
-        >> //renmatrix exec
+    /pixy 0 rowmult {add} forall def
 
-    } {
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
+    % Quiet zone borders: T=2D, L/R=max(1D,2D), B=1D
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 0 } ifelse  % linear left inset 0
+        1 1 sub  % CC QZ; left inset 1
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 0 } ifelse pixx linwidth sub sub  % linear right inset
+        1  % CC QZ; right inset 0
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse def
 
-        /linwidth sep length def  % 50
-        % ccpixx is 55 for both 2-col CC-A and 2-col CC-B
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space
-                /i exch def
-                0 ccpixs i ccpixx getinterval aload pop
-            } for
-            sep aload pop 0 0 0 0 0 0
-            0 linwidth linpixs length 1 sub {  % Right pad linear with 6 spaces
-                /i exch def
-                linpixs i linwidth getinterval aload pop 0 0 0 0 0 0
-            } for
-        ] def
-        /pixx ccpixx 1 add def  % 56
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
 
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
 
-        _render //renmatrix if
-    } ifelse
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -35907,24 +38847,24 @@ bind def
 % --END ENCODER databarstackedomnicomposite--
 
 % --BEGIN ENCODER databartruncatedcomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix databaromni databartruncated micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix databaromni databartruncated micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Truncated Composite
 % --EXAM: (01)09521234543213|(11)990102
 % --EXOP:
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2026033100 107788 110974
-%%BeginData:        167 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databartruncatedcomposite 0.0 2026042100 123178 123033
+%%BeginData:        222 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 16 dict
+%psc 17 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databartruncated dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 /databartruncatedcomposite { /bwipjs_databartruncatedcomposite (start-global) def  % begin
 
@@ -35939,20 +38879,31 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -35962,8 +38913,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#35965) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#38916) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databartruncatedcomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (databartruncated) put
     options (linkage) true put
@@ -35979,13 +38947,13 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //databartruncated exec
     dup (sbs) get /linsbs exch def
     dup (bhs) get 0 get 72 mul /linheight exch def
-    usematrix not { //renlinear exec } { pop } ifelse
+    /linsym exch def
 
     %
     % Plot the separator
@@ -36018,59 +38986,86 @@ bind def
     sep sep length 4 sub //databaromnicomposite.seppadright putinterval
     18 sepfinder 64 sepfinder
 
-    usematrix not {
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linpixs [ 0  % Begin with left guard space
+        linsbs { cvi 1 index 0 eq {{1}} {{0}} ifelse repeat } forall  % Alternates i 1/0's
+    ] def
+    /sep [ 0 sep aload pop ] def  % Offset by 1
 
-        %
-        % Plot the 2D part
-        %
-        -5 linheight 1 add rmoveto comp options //gs1-cc exec //renmatrix exec
+    /linheight linheight cvi def
+    /ccrows ccrowmult length def
+    % ccpixx is 99 for both 4-col CC-A and 4-col CC-B; linpixs length is 96
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space
+            /i exch def
+            ccpixs i ccpixx getinterval aload pop 0
+        } for
+        0 0 0 0 sep aload pop 0 0 0 0 linpixs aload pop  % Left pad with 4 spaces
+    ] def
+    /rowmult [ ccrowmult aload pop 1 linheight ] def
+    /pixx ccpixx 1 add def  % 100
 
-        linheight add moveto <<
-            /ren /renmatrix
-            /pixs sep
-            /pixx sep length
-            /pixy 1
-            /height 1 72 div
-            /width sep length 72 div
-            /opt options
-        >> //renmatrix exec
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll pixx linpixs length sub 1 add add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-    } {
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
+    /pixy 0 rowmult {add} forall def
 
-        /linpixs [ 0  % Begin with left guard space
-            linsbs { cvi 1 index 0 eq {{1}} {{0}} ifelse repeat } forall  % Alternates i 1/0's
-        ] def
-        /sep [ 0 sep aload pop ] def  % Offset by 1
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse pixx linpixs length sub 1 add sub
+        1  % CC QZ; left inset 0
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse  % right inset 0
+        0  % CC QZ 1; right inset 1
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse def
 
-        /linheight linheight cvi def
-        % ccpixx is 99 for both 4-col CC-A and 4-col CC-B; linpixs length is 96
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space
-                /i exch def
-                ccpixs i ccpixx getinterval aload pop 0
-            } for
-            0 0 0 0 sep aload pop linheight { 0 0 0 0 linpixs aload pop } repeat  % Left pad with 4 spaces
-        ] def
-        /pixx ccpixx 1 add def  % 100
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
 
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
 
-        _render //renmatrix if
-    } ifelse
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -36087,24 +39082,24 @@ bind def
 % --END ENCODER databartruncatedcomposite--
 
 % --BEGIN ENCODER databarlimitedcomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix databarlimited micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix databarlimited micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Limited Composite
 % --EXAM: (01)09521234543213|(21)abcdefghijklmnopqrst
 % --EXOP:
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2026033100 104107 107375
-%%BeginData:        156 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarlimitedcomposite 0.0 2026042100 119143 122302
+%%BeginData:        210 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databarlimited dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 /databarlimitedcomposite { /bwipjs_databarlimitedcomposite (start-global) def  % begin
 
@@ -36117,20 +39112,31 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -36140,8 +39146,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#36143) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#39149) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarlimitedcomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (databarlimited) put
     options (linkage) true put
@@ -36157,13 +39180,13 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //databarlimited exec
     dup (sbs) get /linsbs exch def
     dup (bhs) get 0 get 72 mul /linheight exch def
-    usematrix not { //renlinear exec } { pop } ifelse
+    /linsym exch def
 
     %
     % Plot the separator
@@ -36174,72 +39197,98 @@ bind def
     sep 0 //databarlimitedcomposite.sepleft putinterval
     sep sep length 9 sub //databarlimitedcomposite.sepright putinterval  % 4 + 5 right guard spaces
 
-    usematrix not {
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linpixs [ 0  % Begin with left guard space
+        linsbs 0 linsbs length 1 add 2 idiv 2 mul 1 sub getinterval  % Discard trailing space (even-length sbs)
+        { cvi 1 index 0 eq {{1}} {{0}} ifelse repeat } forall
+    ] def
+    /sep [ 0 sep 0 linpixs length 1 sub getinterval aload pop ] def  % Offset by 1; trim to match
 
-        %
-        % Plot the 2D part
-        %
-        comp options //gs1-cc exec
-        dup (pixx) get 72 exch sub linheight 1 add rmoveto
-        //renmatrix exec
-
-        linheight add moveto <<
-            /ren /renmatrix
-            /pixs sep
-            /pixx sep length
-            /pixy 1
-            /height 1 72 div
-            /width sep length 72 div
-            /opt options
-        >> //renmatrix exec
-
-    } {
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
-
-        /linpixs [ 0  % Begin with left guard space
-            linsbs { cvi 1 index 0 eq {{1}} {{0}} ifelse repeat } forall  % Alternates i 1/0's
+    /linheight linheight cvi def
+    /ccrows ccrowmult length def
+    % ccpixx is 72 for CC-A and 82 for CC-B; linpixs length is 74
+    ccpixx 72 eq {  % 3-col CC-A
+        /pixs [
+            0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space & right pad with 1 space
+                /i exch def
+                0 ccpixs i ccpixx getinterval aload pop 0
+            } for
+            sep aload pop linpixs aload pop
         ] def
-        /sep [ 0 sep aload pop ] def  % Offset by 1
-
-        /linheight linheight cvi def
-        % ccpixx is 72 for CC-A and 82 for CC-B; linpixs length is 79
-        ccpixx 72 eq {  % 3-col CC-A
-            /pixs [
-                0 ccpixx ccpixs length 1 sub {  % Left pad composite with 1 space & right pad with 1 space + 5 right guard spaces
-                    /i exch def
-                    0 ccpixs i ccpixx getinterval aload pop 0 0 0 0 0 0
-                } for
-                sep aload pop linheight { linpixs aload pop } repeat
-            ] def
-            /pixx linpixs length def  % 79
-        } {  % 3-col CC-B
-            /pixs [
-                0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space + 5 right guard spaces
-                    /i exch def
-                    ccpixs i ccpixx getinterval aload pop 0 0 0 0 0 0
-                } for
-                0 0 0 0 0 0 0 0 0 sep aload pop linheight { 0 0 0 0 0 0 0 0 0 linpixs aload pop } repeat  % Left pad with 9 spaces
-            ] def
-            /pixx ccpixx 6 add def  % 88
-        } ifelse
-
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
-
-        _render //renmatrix if
+        /pixx linpixs length def  % 74
+    } {  % 3-col CC-B
+        /pixs [
+            0 ccpixx ccpixs length 1 sub {  % Right pad composite with 1 space
+                /i exch def
+                ccpixs i ccpixx getinterval aload pop 0
+            } for
+            0 0 0 0 0 0 0 0 0 sep aload pop 0 0 0 0 0 0 0 0 0 linpixs aload pop  % Left pad with 9 spaces
+        ] def
+        /pixx ccpixx 1 add def  % 83
     } ifelse
+    /rowmult [ ccrowmult aload pop 1 linheight ] def
+
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll pixx linpixs length sub 1 add add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
+
+    /pixy 0 rowmult {add} forall def
+
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse pixx linpixs length sub 1 add sub
+        1 pixx ccpixx sub 1 sub sub  % CC QZ; left inset pixx-ccpixx-1
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse  % right inset 0
+        0  % CC QZ 1; right inset 1
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse def
+
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
+
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
+
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -36256,24 +39305,24 @@ bind def
 % --END ENCODER databarlimitedcomposite--
 
 % --BEGIN ENCODER databarexpandedcomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix databarexpanded micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix databarexpanded micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Expanded Composite
 % --EXAM: (01)09521234543213(3103)001234|(91)1A2B3C4D5E
 % --EXOP:
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2026033100 109276 109121
-%%BeginData:        161 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedcomposite 0.0 2026042100 120179 116620
+%%BeginData:        217 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databarexpanded dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /databarexpandedcomposite {
@@ -36282,20 +39331,31 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -36305,8 +39365,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#36308) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#39368) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarexpandedcomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (databarexpanded) put
     options (linkage) true put
@@ -36322,13 +39399,13 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //databarexpanded exec
     dup (sbs) get /linsbs exch def
     dup (bhs) get 0 get 72 mul /linheight exch def
-    usematrix not { //renlinear exec } { pop } ifelse
+    /linsym exch def
 
     %
     % Plot the separator
@@ -36360,60 +39437,88 @@ bind def
         69 98 bot length 13 sub {} for
     ] {sepfinder} forall
 
-    usematrix not {
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linpixs [ 0  % Begin with left guard space
+        linsbs { cvi 1 index 0 eq {{1}} {{0}} ifelse repeat } forall  % Alternates i 1/0's
+    ] def
+    /sep [ 0 sep aload pop ] def  % Offset by 1
 
-        %
-        % Plot the 2D part
-        %
-        1 linheight 1 add rmoveto comp options //gs1-cc exec //renmatrix exec
+    /linheight linheight cvi def
+    /ccrows ccrowmult length def
+    /diff linpixs length ccpixx sub def  % Minimum linpixs length is 102, ccpixx is 99
+    /ccrpad [ diff 2 sub {0} repeat ] def
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {
+            /i exch def
+            0 0 ccpixs i ccpixx getinterval aload pop ccrpad aload pop
+        } for
+        sep aload pop linpixs aload pop
+    ] def
+    /rowmult [ ccrowmult aload pop 1 linheight ] def
 
-        linheight add moveto <<
-            /ren /renmatrix
-            /pixs sep
-            /pixx sep length
-            /pixy 1
-            /height 1 72 div
-            /width sep length 72 div
-            /opt options
-        >> //renmatrix exec
+    /pixx linpixs length def
 
-    } {
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll pixx linpixs length sub 1 add add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-        /linpixs [ 0  % Begin with left guard space
-            linsbs { cvi 1 index 0 eq {{1}} {{0}} ifelse repeat } forall  % Alternates i 1/0's
-        ] def
-        /sep [ 0 sep aload pop ] def  % Offset by 1
+    /pixy 0 rowmult {add} forall def
 
-        /linheight linheight cvi def
-        /diff linpixs length ccpixx sub def  % Minimum linpixs length is 102, ccpixx is 99
-        /ccrpad [ diff 2 sub {0} repeat ] def
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {
-                /i exch def
-                0 0 ccpixs i ccpixx getinterval aload pop ccrpad aload pop
-            } for
-            sep aload pop linheight { linpixs aload pop } repeat
-        ] def
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse pixx linpixs length sub 1 add sub
+        1 2 sub  % CC QZ; left inset 2
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse  % right inset 0
+        1 ccrpad length sub  % CC QZ; right inset ccrpad
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse def
 
-        /pixx linpixs length def
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
 
-        _render //renmatrix if
-    } ifelse
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
+
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -36430,20 +39535,21 @@ bind def
 % --END ENCODER databarexpandedcomposite--
 
 % --BEGIN ENCODER databarexpandedstackedcomposite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix databarexpanded databarexpandedstacked micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix databarexpanded databarexpandedstacked micropdf417 pdf417 gs1-cc--
 % --DESC: GS1 DataBar Expanded Stacked Composite
 % --EXAM: (01)09521234543213(10)ABCDEF|(21)12345678
 % --EXOP: segments=4
-% --RNDR: renmatrix renlinear
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2026033100 107236 110400
-%%BeginData:        155 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp databarexpandedstackedcomposite 0.0 2026042100 121694 121523
+%%BeginData:        213 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /databarexpandedstacked dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
@@ -36458,20 +39564,31 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -36481,8 +39598,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#36484) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#39601) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /databarexpandedstackedcomposite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (lintype) (databarexpandedstacked) put
     options (linkage) true put
@@ -36498,13 +39632,15 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Plot the linear part
+    % Generate metrics for the linear part
     %
     /bwipp_dontdraw true def
     linear options //databarexpandedstacked exec
     dup (pixs) get 0 2 index (pixx) get getinterval /bot exch def
     dup (pixy) get /linheight exch def
-    usematrix not { //renmatrix exec } { /pixs get /linpixs exch def } ifelse
+    /linsym exch def
+    /linpixs linsym /pixs get def
+    /linrowmult linsym /rowmult get def
 
     %
     % Plot the separator
@@ -36533,55 +39669,82 @@ bind def
         70 98 bot length 13 sub {} for
     ] {sepfinder} forall
 
-    usematrix not {
+    %
+    % Generate metrics for the 2D part
+    %
+%psc     options (strictspec) undef
+%psc     options (loosespec) undef
+%psc     options (propspec) undef
+    comp options //gs1-cc exec /compsym exch def
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /pixx sep length def
+    /cclpad [ pixx ccpixx sub 1 add 2 idiv {0} repeat ] def  % Add 1 to allow for odd difference
+    /ccrpad [ pixx ccpixx sub 2 idiv {0} repeat ] def
+    /ccrows ccrowmult length def
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {  % Centre align composite
+            /i exch def
+            cclpad aload pop ccpixs i ccpixx getinterval aload pop ccrpad aload pop
+        } for
+        sep aload pop linpixs aload pop
+    ] def
+    /rowmult [ ccrowmult aload pop 1 linrowmult aload pop ] def
 
-        %
-        % Plot the 2D part
-        %
-        bot 0 get 0 eq {2} {0} ifelse linheight 1 add rmoveto
-        comp options //gs1-cc exec //renmatrix exec
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 5 array astore  % No x offset needed; linear at column 0
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
 
-        linheight add moveto <<
-            /ren /renmatrix
-            /pixs sep
-            /pixx sep length
-            /pixy 1
-            /height 1 72 div
-            /width sep length 72 div
-            /opt options
-        >> //renmatrix exec
+    /pixy 0 rowmult {add} forall def
 
-    } {
-        comp options //gs1-cc exec /compsym exch def
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
+    % Quiet zone borders: T=2D, L/R=max(1D,2D), B=1D
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 0 } ifelse  % linear left inset 0
+        1 cclpad length sub  % CC QZ; left inset cclpad
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 0 } ifelse  % linear right inset 0
+        1 ccrpad length sub  % CC QZ; right inset ccrpad
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop 1 def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse def
 
-        /pixx sep length def
-        /cclpad [ pixx ccpixx sub 1 add 2 idiv {0} repeat ] def  % Add 1 to allow for odd difference
-        /ccrpad [ pixx ccpixx sub 2 idiv {0} repeat ] def
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {  % Centre align composite
-                /i exch def
-                cclpad aload pop ccpixs i ccpixx getinterval aload pop ccrpad aload pop
-            } for
-            sep aload pop linpixs aload pop
-        ] def
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
 
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
 
-        _render //renmatrix if
-    } ifelse
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -36598,24 +39761,24 @@ bind def
 % --END ENCODER databarexpandedstackedcomposite--
 
 % --BEGIN ENCODER gs1-128composite--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renlinear renmatrix code128 gs1-128 micropdf417 pdf417 gs1-cc--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renlinear renmatrix code128 gs1-128 micropdf417 pdf417 gs1-cc--
 % --DESC: GS1-128 Composite
 % --EXAM: (00)095287654321012346|(02)09521234543213(37)24(10)1234567ABCDEFG
 % --EXOP: ccversion=c
-% --RNDR: renlinear renmatrix
+% --RNDR: renmatrix
 % --FMLY: GS1 Composite Symbols
-%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2026033100 111468 118288
-%%BeginData:        181 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1-128composite 0.0 2026042100 126520 126284
+%%BeginData:        234 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 8 dict
+%psc 9 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-128 dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1-cc dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
-%psc dup /renlinear dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /gs1-128composite {
@@ -36624,20 +39787,31 @@ bind def
 %psc {
 
     /dontdraw false def
-    /usematrix false def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /strictspec false def
+    /width 0 def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
+%psc     /hnom -1.0 def
+    /modunit 1 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
 %psc         dontdraw /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledontdraw known} {pop false} ifelse and
 %psc         /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse or not
 %psc     def
-
-    _render not { /usematrix true def } if
 
     %
     % Split the linear and composite parts
@@ -36647,8 +39821,25 @@ bind def
         pop
         /comp exch def
     } {
-        pop (bwipp.missingCompositeComponent#36650) (A Composite Component must be provided following a pipe character) //raiseerror exec
+        pop (bwipp.missingCompositeComponent#39824) (A Composite Component must be provided following a pipe character) //raiseerror exec
     } ifelse
+
+    %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1-128composite ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (propspec) propspec put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
+%psc     options (hnom) hnom put
+%psc     options (modunit) modunit put
 
     options (inkspreadv) 0.0 put
     options (dontlint) true put
@@ -36662,7 +39853,7 @@ bind def
     /ai //gs1process exec pop pop pop
 
     %
-    % Dummy plot of linear part with CC-A to get width
+    % Dummy linear metrics with CC-A to get width
     %
     options (linkagea) true put
     /bwipp_dontdraw true def
@@ -36670,7 +39861,7 @@ bind def
     (sbs) get 0 exch {add} forall /linwidth exch def
 
     %
-    % Create 2D part and determine type
+    % Generate metrics for the 2D part
     %
     options (lintype) (gs1-128) put
     options (linwidth) linwidth put
@@ -36679,7 +39870,7 @@ bind def
     compsym (borderbottom) 0 put
 
     %
-    % Plot linear part
+    % Generate metrics for the linear part
     %
     linktype (a) eq {
         options (linkagea) true put
@@ -36691,7 +39882,7 @@ bind def
     linear << options {} forall >> //gs1-128 exec
     dup (sbs) get /linsbs exch def
     dup (bhs) get 0 get 72 mul /linheight exch def
-    usematrix not { //renlinear exec } { pop } ifelse
+    /linsym exch def
 
     %
     % Plot the separator
@@ -36701,7 +39892,7 @@ bind def
     counttomark 1 sub array astore /sep exch def pop pop
 
     %
-    % Plot the 2D part
+    % Construct the composite symbol from the linear and 2D parts
     %
     linktype (a) eq {
         /s linwidth 2 sub 11 idiv def
@@ -36711,71 +39902,96 @@ bind def
         /x -7 def
     } ifelse
 
-    usematrix not {
+    /ccpixs compsym /pixs get def
+    /ccrowmult compsym /rowmult get def
+    /ccpixx compsym /pixx get def
 
-        currentpoint
+    /linpixs [
+        linsbs { 1 index 1 eq {{0}} {{1}} ifelse repeat } forall  % Alternates i 1/0's (linsbs always begins with "2")
+    ] def
 
-        x linheight 1 add rmoveto compsym //renmatrix exec
-
-        linheight add moveto <<
-            /ren /renmatrix
-            /pixs sep
-            /pixx sep length
-            /pixy 1
-            /height 1 72 div
-            /width sep length 72 div
-            /opt options
-        >> //renmatrix exec
-
-    } {
-        /ccpixs compsym /pixs get def
-        /ccpixx compsym /pixx get def
-
-        /linpixs [
-            linsbs { 1 index 1 eq {{0}} {{1}} ifelse repeat } forall  % Alternates i 1/0's (linsbs always begins with "2")
-        ] def
-
-        x 0 gt {  % Left pad composite
-            /cclpad [ x {0} repeat ] def
-            /linlpad 0 array def
-        } {  % Left pad linear
-            /cclpad 0 array def
-            /linlpad [ x neg {0} repeat ] def
-        } ifelse
-
-        /diff linwidth ccpixx x add sub def
-        diff 0 gt {  % Right pad composite
-            /ccrpad [ diff {0} repeat ] def
-            /linrpad 0 array def
-        } {  % Right pad linear
-            /ccrpad 0 array def
-            /linrpad [ diff neg {0} repeat ] def
-        } ifelse
-
-        /linheight linheight cvi def
-        /pixs [
-            0 ccpixx ccpixs length 1 sub {
-                /i exch def
-                cclpad aload pop ccpixs i ccpixx getinterval aload pop ccrpad aload pop
-            } for
-            linlpad aload pop sep aload pop linrpad aload pop
-            linheight { linlpad aload pop linpixs aload pop linrpad aload pop } repeat
-        ] def
-
-        /pixx cclpad length ccpixx add ccrpad length add def
-        /pixy pixs length pixx idiv def
-        <<
-        /ren /renmatrix
-        /pixs pixs
-        /pixx pixx
-        /pixy pixy
-        /height pixy 72 div
-        /width pixx 72 div
-        /opt options
-        >>
-
-        _render //renmatrix if
+    x 0 gt {  % Left pad composite
+        /cclpad [ x {0} repeat ] def
+        /linlpad 0 array def
+    } {  % Left pad linear
+        /cclpad 0 array def
+        /linlpad [ x neg {0} repeat ] def
     } ifelse
+
+    /diff linwidth ccpixx x add sub def
+    diff 0 gt {  % Right pad composite
+        /ccrpad [ diff {0} repeat ] def
+        /linrpad 0 array def
+    } {  % Right pad linear
+        /ccrpad 0 array def
+        /linrpad [ diff neg {0} repeat ] def
+    } ifelse
+
+    /txt [
+        linsym /txt 2 copy known { get {
+            aload pop 4 -1 roll linlpad length add 4 1 roll 5 array astore
+        } forall } { pop pop } ifelse
+    ] def
+    /text1xalign linsym /text1xalign 2 copy known { get } { pop pop (unset) } ifelse def
+    /text1yalign linsym /text1yalign 2 copy known { get } { pop pop (unset) } ifelse def
+
+    /linheight linheight cvi def
+    /ccrows ccrowmult length def
+    /pixs [
+        0 ccpixx ccpixs length 1 sub {
+            /i exch def
+            cclpad aload pop ccpixs i ccpixx getinterval aload pop ccrpad aload pop
+        } for
+        linlpad aload pop sep aload pop linrpad aload pop
+        linlpad aload pop linpixs aload pop linrpad aload pop
+    ] def
+    /rowmult [ ccrowmult aload pop 1 linheight ] def
+
+    /pixx cclpad length ccpixx add ccrpad length add def
+    /pixy 0 rowmult {add} forall def
+
+    /ccqz linktype (a) eq { 1 } { 2 } ifelse def
+    /borderleft
+        linsym /borderleft 2 copy known { get } { pop pop 10 } ifelse linlpad length sub
+        ccqz cclpad length sub
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /borderright
+        linsym /borderright 2 copy known { get } { pop pop 10 } ifelse linrpad length sub
+        ccqz ccrpad length sub
+        2 copy lt { exch } if pop dup 0 lt { pop 0 } if
+    def
+    /bordertop ccqz def
+    /borderbottom linsym /borderbottom 2 copy known { get } { pop pop 0 } ifelse def
+
+    % Height is already applied to the linear bars via bhs; don't let renmatrix rescale
+    options /height undef
+
+    <<
+    /ren /renmatrix
+    /pixs pixs
+    /pixx pixx
+    /pixy pixy
+    /rowmult rowmult
+    /height pixy 72 div
+    /width pixx 72 div
+    /borderleft borderleft
+    /borderright borderright
+    /bordertop bordertop
+    /borderbottom borderbottom
+    /txt txt
+    /text1xalign text1xalign
+    /text1yalign text1yalign
+%psc     /strictspec strictspec
+%psc     /loosespec loosespec
+%psc     /xdim xdim
+%psc     /xmin xmin
+%psc     /xmax xmax
+%psc     /modunit modunit
+    /opt options
+    >>
+
+    _render //renmatrix if
 
 %psc     } stopped {end stop} if
     end
@@ -36792,21 +40008,22 @@ bind def
 % --END ENCODER gs1-128composite--
 
 % --BEGIN ENCODER gs1datamatrix--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renmatrix datamatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecbinary render renmatrix datamatrix--
 % --DESC: GS1 Data Matrix
 % --EXAM: (01)09521234543213(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2026033100 83935 80338
-%%BeginData:         93 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrix 0.0 2026042100 89119 85639
+%%BeginData:        119 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 6 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -36820,12 +40037,23 @@ bind def
     /dontlint false def
     /lintreqs true def
     /gssep false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 4000 gt {
-        (bwipp.gs1datamatrixinputTooLong#36828) (The input data is too long) //raiseerror exec
+        (bwipp.gs1datamatrixinputTooLong#40056) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -36870,10 +40098,24 @@ bind def
     /barcode barcode 0 j getinterval def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1datamatrix ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with datamatrix
     %
     options (parse) undef
+%psc     options (ast) undef
+%psc     options (mag) undef
     options (parsefnc) true put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
 
     /bwipp_dontdraw true def
     barcode options //datamatrix exec /args exch def
@@ -36898,21 +40140,22 @@ bind def
 % --END ENCODER gs1datamatrix--
 
 % --BEGIN ENCODER gs1datamatrixrectangular--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renmatrix datamatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecbinary render renmatrix datamatrix--
 % --DESC: GS1 Data Matrix Rectangular
 % --EXAM: (01)09521234543213(17)120508(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2026033100 84141 80522
-%%BeginData:         94 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1datamatrixrectangular 0.0 2026042100 89314 85823
+%%BeginData:        120 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 6 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -36926,12 +40169,23 @@ bind def
     /lintreqs true def
     /dontdraw false def
     /gssep false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 4000 gt {
-        (bwipp.gs1datamatrixrectangularinputTooLong#36934) (The input data is too long) //raiseerror exec
+        (bwipp.gs1datamatrixrectangularinputTooLong#40188) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -36976,11 +40230,25 @@ bind def
     /barcode barcode 0 j getinterval def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1datamatrixrectangular ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with datamatrix
     %
     options (parse) undef
+%psc     options (ast) undef
+%psc     options (mag) undef
     options (parsefnc) true put
     options (format) (rectangle) put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
 
     /bwipp_dontdraw true def
     barcode options //datamatrix exec /args exch def
@@ -37005,27 +40273,29 @@ bind def
 % --END ENCODER gs1datamatrixrectangular--
 
 % --BEGIN ENCODER gs1dldatamatrix--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renmatrix datamatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecbinary render renmatrix datamatrix--
 % --DESC: GS1 Digital Link Data Matrix
 % --EXAM: https://id.gs1.org/01/09521234543213/22/ABC%2D123?99=XYZ-987
 % --EXOP: includetext
 % --RNDR: renmatrix
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2026033100 81796 78324
-%%BeginData:         77 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1dldatamatrix 0.0 2026042100 87666 84121
+%%BeginData:        104 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 7 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /datamatrix dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /gs1dldatamatrix {
 
-    16 dict begin
+    17 dict begin
 %psc {
 
     /includetext false def
@@ -37033,8 +40303,19 @@ bind def
     /dontlint false def
     /lintreqs true def
     /dontdraw false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -37063,9 +40344,23 @@ bind def
     hri key length 2 add val putinterval
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1dldatamatrix ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with datamatrix
     %
     options (parse) undef
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
     /bwipp_dontdraw true def
     barcode options //datamatrix exec /args exch def
 
@@ -37095,21 +40390,22 @@ bind def
 % --END ENCODER gs1dldatamatrix--
 
 % --BEGIN ENCODER gs1qrcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renmatrix qrcode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecbinary render renmatrix qrcode--
 % --DESC: GS1 QR Code
 % --EXAM: (01)09521234543213(8200)http://www.abc.net(10)ABCD1234(410)9501101020917
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2026033100 83597 80014
-%%BeginData:         92 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1qrcode 0.0 2026042100 88989 85623
+%%BeginData:        120 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 5 dict
+%psc 6 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -37122,12 +40418,24 @@ bind def
     /dontlint false def
     /lintreqs true def
     /dontdraw false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /hdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 4000 gt {
-        (bwipp.gs1qrcodeinputTooLong#37130) (The input data is too long) //raiseerror exec
+        (bwipp.gs1qrcodeinputTooLong#40438) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -37172,10 +40480,25 @@ bind def
     /barcode barcode 0 j getinterval def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1qrcode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with qrcode
     %
     options (parse) undef
+%psc     options (ast) undef
+%psc     options (mag) undef
     options (parsefnc) true put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (hdim) hdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
 
     /bwipp_dontdraw true def
     barcode options //qrcode exec /args exch def
@@ -37200,27 +40523,29 @@ bind def
 % --END ENCODER gs1qrcode--
 
 % --BEGIN ENCODER gs1dlqrcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renmatrix qrcode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecbinary render renmatrix qrcode--
 % --DESC: GS1 Digital Link QR Code
 % --EXAM: HTTPS://ID.GS1.ORG/01/09521234543213/22/ABC%2D123?99=XYZ-987
 % --EXOP: includetext
 % --RNDR: renmatrix
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2026033100 81772 78304
-%%BeginData:         77 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1dlqrcode 0.0 2026042100 87542 84101
+%%BeginData:        104 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 7 dict
+%psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /parseinput dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /qrcode dup /uk.co.terryburton.bwipp findresource put
 %psc begin
 /gs1dlqrcode {
 
-    16 dict begin
+    17 dict begin
 %psc {
 
     /includetext false def
@@ -37228,8 +40553,19 @@ bind def
     /dontlint false def
     /lintreqs true def
     /dontdraw false def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -37258,9 +40594,23 @@ bind def
     hri key length 2 add val putinterval
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1dlqrcode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with qrcode
     %
     options (parse) undef
+%psc     options (ast) undef
+%psc     options (mag) undef
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
     /bwipp_dontdraw true def
     barcode options //qrcode exec /args exch def
 
@@ -37290,21 +40640,22 @@ bind def
 % --END ENCODER gs1dlqrcode--
 
 % --BEGIN ENCODER gs1dotcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache render renmatrix dotcode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput gs1process setanycolor fifocache rsecprime render renmatrix dotcode--
 % --DESC: GS1 DotCode
 % --EXAM: (235)5vBZIF%!<B;?oa%(01)09521234543213(8008)19052001
 % --EXOP: rows=16
 % --RNDR: renmatrix
 % --FMLY: Supply Chain
-%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2026033100 83566 80083
-%%BeginData:         92 ASCII Lines
+%%BeginResource: uk.co.terryburton.bwipp gs1dotcode 0.0 2026042100 88751 85278
+%%BeginData:        118 ASCII Lines
 %psc currentglobal
 %psc true setglobal
 %psc /setpacking where {pop currentpacking true setpacking} if
-%psc 4 dict
+%psc 6 dict
 %psc dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 %psc dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 %psc dup /gs1process dup /uk.co.terryburton.bwipp findresource put
+%psc dup /render dup /uk.co.terryburton.bwipp findresource put
 %psc dup /renmatrix dup /uk.co.terryburton.bwipp findresource put
 %psc dup /dotcode dup /uk.co.terryburton.bwipp findresource put
 %psc begin
@@ -37317,12 +40668,23 @@ bind def
     /parse false def
     /dontlint false def
     /lintreqs true def
+%psc     /strictspec false def
+%psc     /propspec false def
+%psc     /loosespec false def
+%psc     /mag 1.0 def
+%psc     /xdim -1.0 def
+%psc     /ast (default) def
+%psc     /xnom -1.0 def
+%psc     /xmin -1.0 def
+%psc     /xmax -1.0 def
 
     //processoptions exec /options exch def
+%psc     /global_encoder_defaults //render exec
+
     /barcode exch def
 
     barcode length 4000 gt {
-        (bwipp.gs1dotcodeinputTooLong#37325) (The input data is too long) //raiseerror exec
+        (bwipp.gs1dotcodeinputTooLong#40687) (The input data is too long) //raiseerror exec
     } if
 
     /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def
@@ -37367,10 +40729,24 @@ bind def
     /barcode barcode 0 j getinterval def
 
     %
+    % Apply AST spec overrides and resolve physical specification
+    %
+%psc     /gs1dotcode ast /apply_ast //render exec not { //raiseerror exec } if
+%psc     /resolve_strictspec //render exec
+
+    %
     % Get the result of encoding with dotcode
     %
     options (parse) undef
+%psc     options (ast) undef
+%psc     options (mag) undef
     options (parsefnc) true put
+%psc     options (strictspec) strictspec put
+%psc     options (loosespec) loosespec put
+%psc     options (xdim) xdim put
+%psc     options (xnom) xnom put
+%psc     options (xmin) xmin put
+%psc     options (xmax) xmax put
 
     /bwipp_dontdraw true def
     barcode options //dotcode exec /args exch def
@@ -37401,7 +40777,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2026033100 73230 73068
+%%BeginResource: uk.co.terryburton.bwipp hibccode39 0.0 2026042100 78374 78212
 %%BeginData:        132 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -37468,11 +40844,11 @@ bind def
 %psc     //hibccode39.latevars /init get exec
 
     barcode () eq {
-        (bwipp.hibccode39emptyData#37471) (The data must not be empty) //raiseerror exec
+        (bwipp.hibccode39emptyData#40847) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.hibccode39inputTooLong#37475) (The input data is too long) //raiseerror exec
+        (bwipp.hibccode39inputTooLong#40851) (The input data is too long) //raiseerror exec
     } if
 
     %
@@ -37480,7 +40856,7 @@ bind def
     %
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibccode39badCharacter#37483) (HIBC Code 39 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibccode39badCharacter#40859) (HIBC Code 39 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -37494,7 +40870,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibccode39.barchars checksum get ne {
-            (bwipp.hibccode39badCheckDigit#37497) (Incorrect HIBC Code 39 check digit provided) //raiseerror exec
+            (bwipp.hibccode39badCheckDigit#40873) (Incorrect HIBC Code 39 check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -37546,7 +40922,7 @@ bind def
 % --EXOP: includetext
 % --RNDR: renlinear
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2026033100 84646 80754
+%%BeginResource: uk.co.terryburton.bwipp hibccode128 0.0 2026042100 84598 80706
 %%BeginData:        128 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -37610,11 +40986,11 @@ bind def
 %psc     //hibccode128.latevars /init get exec
 
     barcode () eq {
-        (bwipp.hibccode128emptyData#37613) (The data must not be empty) //raiseerror exec
+        (bwipp.hibccode128emptyData#40989) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 500 gt {
-        (bwipp.hibccode128inputTooLong#37617) (The input data is too long) //raiseerror exec
+        (bwipp.hibccode128inputTooLong#40993) (The input data is too long) //raiseerror exec
     } if
 
     %
@@ -37622,7 +40998,7 @@ bind def
     %
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibccode128badCharacter#37625) (HIBC Code 128 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibccode128badCharacter#41001) (HIBC Code 128 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -37636,7 +41012,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibccode128.barchars checksum get ne {
-            (bwipp.hibccode128badCheckDigit#37639) (Incorrect HIBC Code 128 check digit provided) //raiseerror exec
+            (bwipp.hibccode128badCheckDigit#41015) (Incorrect HIBC Code 128 check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -37681,13 +41057,13 @@ bind def
 % --END ENCODER hibccode128--
 
 % --BEGIN ENCODER hibcdatamatrix--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix datamatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix datamatrix--
 % --DESC: HIBC Data Matrix
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2026033100 85095 81438
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrix 0.0 2026042100 87932 84275
 %%BeginData:        116 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -37750,16 +41126,16 @@ bind def
     % Validate the input
     %
     barcode () eq {
-        (bwipp.hibcdatamatrixEmptyData#37753) (The data must not be empty) //raiseerror exec
+        (bwipp.hibcdatamatrixEmptyData#41129) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 15000 gt {
-        (bwipp.hibcdatamatrixinputTooLong#37757) (The input data is too long) //raiseerror exec
+        (bwipp.hibcdatamatrixinputTooLong#41133) (The input data is too long) //raiseerror exec
     } if
 
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibcdatamatrixBadCharacter#37762) (HIBC Data Matrix must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibcdatamatrixBadCharacter#41138) (HIBC Data Matrix must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -37773,7 +41149,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibcdatamatrix.barchars checksum get ne {
-            (bwipp.hibcdatamatrixBadCheckDigit#37776) (Incorrect HIBC Data Matrix check digit provided) //raiseerror exec
+            (bwipp.hibcdatamatrixBadCheckDigit#41152) (Incorrect HIBC Data Matrix check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -37810,13 +41186,13 @@ bind def
 % --END ENCODER hibcdatamatrix--
 
 % --BEGIN ENCODER hibcdatamatrixrectangular--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix datamatrix--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix datamatrix--
 % --DESC: HIBC Data Matrix Rectangular
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2026033100 85364 81630
+%%BeginResource: uk.co.terryburton.bwipp hibcdatamatrixrectangular 0.0 2026042100 88201 84571
 %%BeginData:        117 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -37879,16 +41255,16 @@ bind def
     % Validate the input
     %
     barcode () eq {
-        (bwipp.hibcdatamatrixrectangularEmptyData#37882) (The data must not be empty) //raiseerror exec
+        (bwipp.hibcdatamatrixrectangularEmptyData#41258) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 15000 gt {
-        (bwipp.hibcdatamatrixrectangularinputTooLong#37886) (The input data is too long) //raiseerror exec
+        (bwipp.hibcdatamatrixrectangularinputTooLong#41262) (The input data is too long) //raiseerror exec
     } if
 
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibcdatamatrixrectangularBadCharacter#37891) (HIBC Data Matrix Rectangular must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibcdatamatrixrectangularBadCharacter#41267) (HIBC Data Matrix Rectangular must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -37902,7 +41278,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibcdatamatrixrectangular.barchars checksum get ne {
-            (bwipp.hibcdatamatrixrectangularBadCheckDigit#37905) (Incorrect HIBC Data Matrix Rectangular check digit provided) //raiseerror exec
+            (bwipp.hibcdatamatrixrectangularBadCheckDigit#41281) (Incorrect HIBC Data Matrix Rectangular check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -37940,13 +41316,13 @@ bind def
 % --END ENCODER hibcdatamatrixrectangular--
 
 % --BEGIN ENCODER hibcpdf417--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix pdf417--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecprime render renmatrix pdf417--
 % --DESC: HIBC PDF417
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2026033100 88790 81639
+%%BeginResource: uk.co.terryburton.bwipp hibcpdf417 0.0 2026042100 88089 84474
 %%BeginData:        118 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -38010,16 +41386,16 @@ bind def
     % Validate the input
     %
     barcode () eq {
-        (bwipp.hibcpdf417EmptyData#38013) (The data must not be empty) //raiseerror exec
+        (bwipp.hibcpdf417EmptyData#41389) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 12500 gt {
-        (bwipp.hibcpdf417inputTooLong#38017) (The input data is too long) //raiseerror exec
+        (bwipp.hibcpdf417inputTooLong#41393) (The input data is too long) //raiseerror exec
     } if
 
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibcpdf417BadCharacter#38022) (HIBC PDF417 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibcpdf417BadCharacter#41398) (HIBC PDF417 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -38033,7 +41409,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibcpdf417.barchars checksum get ne {
-            (bwipp.hibcpdf417BadCheckDigit#38036) (Incorrect HIBC PDF417 check digit provided) //raiseerror exec
+            (bwipp.hibcpdf417BadCheckDigit#41412) (Incorrect HIBC PDF417 check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -38071,13 +41447,13 @@ bind def
 % --END ENCODER hibcpdf417--
 
 % --BEGIN ENCODER hibcmicropdf417--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix micropdf417--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecprime render renmatrix micropdf417--
 % --DESC: HIBC MicroPDF417
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2026033100 85324 81674
+%%BeginResource: uk.co.terryburton.bwipp hibcmicropdf417 0.0 2026042100 88159 84613
 %%BeginData:        118 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -38141,16 +41517,16 @@ bind def
     % Validate the input
     %
     barcode () eq {
-        (bwipp.hibcmicropdf417EmptyData#38144) (The data must not be empty) //raiseerror exec
+        (bwipp.hibcmicropdf417EmptyData#41520) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 5000 gt {
-        (bwipp.hibcmicropdf417inputTooLong#38148) (The input data is too long) //raiseerror exec
+        (bwipp.hibcmicropdf417inputTooLong#41524) (The input data is too long) //raiseerror exec
     } if
 
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibcmicropdf417BadCharacter#38153) (HIBC MicroPDF417 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibcmicropdf417BadCharacter#41529) (HIBC MicroPDF417 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -38164,7 +41540,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibcmicropdf417.barchars checksum get ne {
-            (bwipp.hibcmicropdf417BadCheckDigit#38167) (Incorrect HIBC MicroPDF417 check digit provided) //raiseerror exec
+            (bwipp.hibcmicropdf417BadCheckDigit#41543) (Incorrect HIBC MicroPDF417 check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -38202,13 +41578,13 @@ bind def
 % --END ENCODER hibcmicropdf417--
 
 % --BEGIN ENCODER hibcqrcode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix qrcode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix qrcode--
 % --DESC: HIBC QR Code
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2026033100 85031 81410
+%%BeginResource: uk.co.terryburton.bwipp hibcqrcode 0.0 2026042100 87868 84247
 %%BeginData:        112 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -38269,16 +41645,16 @@ bind def
 
     % Validate the input
     barcode () eq {
-        (bwipp.hibcqrcodeEmptyData#38272) (The data must not be empty) //raiseerror exec
+        (bwipp.hibcqrcodeEmptyData#41648) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 30000 gt {
-        (bwipp.hibcqrcodeinputTooLong#38276) (The input data is too long) //raiseerror exec
+        (bwipp.hibcqrcodeinputTooLong#41652) (The input data is too long) //raiseerror exec
     } if
 
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibcqrcodeBadCharacter#38281) (HIBC QR Code must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibcqrcodeBadCharacter#41657) (HIBC QR Code must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -38292,7 +41668,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibcqrcode.barchars checksum get ne {
-            (bwipp.hibcqrcodeBadCheckDigit#38295) (Incorrect HIBC QR Code check digit provided) //raiseerror exec
+            (bwipp.hibcqrcodeBadCheckDigit#41671) (Incorrect HIBC QR Code check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -38333,7 +41709,7 @@ bind def
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2026033100 82676 78667
+%%BeginResource: uk.co.terryburton.bwipp hibccodablockf 0.0 2026042100 79092 78619
 %%BeginData:        116 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -38396,16 +41772,16 @@ bind def
     % Validate the input
     %
     barcode () eq {
-        (bwipp.hibccodablockfEmptyData#38399) (The data must not be empty) //raiseerror exec
+        (bwipp.hibccodablockfEmptyData#41775) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 25000 gt {
-        (bwipp.hibccodablockfinputTooLong#38403) (The input data is too long) //raiseerror exec
+        (bwipp.hibccodablockfinputTooLong#41779) (The input data is too long) //raiseerror exec
     } if
 
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibccodablockfBadCharacter#38408) (HIBC Codablock F must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibccodablockfBadCharacter#41784) (HIBC Codablock F must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -38419,7 +41795,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibccodablockf.barchars checksum get ne {
-            (bwipp.hibccodablockfBadCheckDigit#38422) (Incorrect HIBC Codablock F check digit provided) //raiseerror exec
+            (bwipp.hibccodablockfBadCheckDigit#41798) (Incorrect HIBC Codablock F check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -38456,13 +41832,13 @@ bind def
 % --END ENCODER hibccodablockf--
 
 % --BEGIN ENCODER hibcazteccode--
-% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache render renmatrix azteccode--
+% --REQUIRES preamble raiseerror setuphooks processoptions parseinput setanycolor fifocache rsecbinary render renmatrix azteccode--
 % --DESC: HIBC Aztec Code
 % --EXAM: A999BJC5D6E71
 % --EXOP:
 % --RNDR: renmatrix
 % --FMLY: Pharmaceutical Symbols
-%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2026033100 85073 81431
+%%BeginResource: uk.co.terryburton.bwipp hibcazteccode 0.0 2026042100 87910 84268
 %%BeginData:        116 ASCII Lines
 %psc currentglobal
 %psc true setglobal
@@ -38525,16 +41901,16 @@ bind def
     % Validate the input
     %
     barcode () eq {
-        (bwipp.hibcazteccodeEmptyData#38528) (The data must not be empty) //raiseerror exec
+        (bwipp.hibcazteccodeEmptyData#41904) (The data must not be empty) //raiseerror exec
     } if
 
     barcode length 16000 gt {
-        (bwipp.hibcazteccodeinputTooLong#38532) (The input data is too long) //raiseerror exec
+        (bwipp.hibcazteccodeinputTooLong#41908) (The input data is too long) //raiseerror exec
     } if
 
     0 1 barcode length 1 sub {
         barcode exch 1 getinterval charvals exch known not {
-            (bwipp.hibcazteccodeBadCharacter#38537) (HIBC Aztec Code must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
+            (bwipp.hibcazteccodeBadCharacter#41913) (HIBC Aztec Code must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec
         } if
     } for
 
@@ -38548,7 +41924,7 @@ bind def
     /checksum checksum 43 mod def
     validatecheck {
         barcode barlen get //hibcazteccode.barchars checksum get ne {
-            (bwipp.hibcazteccodeBadCheckDigit#38551) (Incorrect HIBC Aztec Code check digit provided) //raiseerror exec
+            (bwipp.hibcazteccodeBadCheckDigit#41927) (Incorrect HIBC Aztec Code check digit provided) //raiseerror exec
         } if
         /barcode barcode 0 barlen getinterval def
     } if
@@ -38618,15 +41994,15 @@ bind def
 
     % Validate the input
     barcode length 2 lt barcode length 7 gt or {
-        (bwipp.channelcodeBadLength#38621) (Channel Code must be 2 to 7 digits) //raiseerror exec
+        (bwipp.channelcodeBadLength#41997) (Channel Code must be 2 to 7 digits) //raiseerror exec
     } if
     barcode {
         dup 48 lt exch 57 gt or {
-            (bwipp.channelcodeBadCharacter#38625) (Channel Code must contain only digits) //raiseerror exec
+            (bwipp.channelcodeBadCharacter#42001) (Channel Code must contain only digits) //raiseerror exec
         } if
     } forall
     barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {
-        (bwipp.channelcodeTooBig#38629) (The Channel Code value is too big for the number of channels) //raiseerror exec
+        (bwipp.channelcodeTooBig#42005) (The Channel Code value is too big for the number of channels) //raiseerror exec
     } if
 
     /nextb {
@@ -38739,6 +42115,48 @@ bind def
 %%EndData
 %%EndResource
 % --END ENCODER channelcode--
+
+/renderguards {
+
+    /pixx exch def
+
+    guardwidth 0 lt guardwidth 20 gt or {
+        (bwipp.renderBadGuardwidth#42124) (guardwidth must be from 0 to 20) //raiseerror exec
+    } if
+
+    guardheight 0 lt guardheight 20 gt or {
+        (bwipp.renderBadGuardheight#42128) (guardheight must be from 0 to 20) //raiseerror exec
+    } if
+
+    guardleftpos -50 lt guardleftpos 150 gt or {
+        (bwipp.renderBadGuardleftpos#42132) (guardleftpos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardleftypos -50 lt guardleftypos 150 gt or {
+        (bwipp.renderBadGuardleftypos#42136) (guardleftypos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardrightpos -50 lt guardrightpos 150 gt or {
+        (bwipp.renderBadGuardrightpos#42140) (guardrightpos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardrightypos -50 lt guardrightypos 150 gt or {
+        (bwipp.renderBadGuardrightypos#42144) (guardrightypos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardwhitespace {
+        (OCR-B) guardheight 2 mul selectfont
+        guardleftpos 0 ne {
+            guardleftpos neg 2 sub guardleftypos guardheight 2 div sub 1.25 sub moveto
+            (<) show
+        } if
+        guardrightpos 0 ne {
+            guardrightpos pixx add guardwidth sub 1 sub guardrightypos guardheight 2 div sub 1.25 sub moveto
+            (>) show
+        } if
+    } if
+
+} bind def
 % --BEGIN RESOURCE render--
 % --REQUIRES preamble processoptions setanycolor--
 %%BeginResource: uk.co.terryburton.bwipp render 0.0 2026033100 204797 210987
@@ -38799,7 +42217,7 @@ bind def
     /pixy exch def
     /pixx exch def
 
-    /makeerr {  % /errname (errmsg) => (bwipp.PFXerrname#38802) (PFXerrmsg)
+    /makeerr {  % /errname (errmsg) => (bwipp.PFXerrname#42220) (PFXerrmsg)
 
         /makeerr.msg exch def
         /makeerr.name exch 128 string cvs def
@@ -38864,7 +42282,7 @@ bind def
                     moveto dup length 1 eq { xoff yoff rmoveto } if show
                 } forall
             } stopped {
-                (bwipp.fontTooSmall#38867) (The font size is too small) false exit
+                (bwipp.fontTooSmall#42285) (The font size is too small) false exit
             } if
 
             true exit
@@ -39079,69 +42497,69 @@ bind def
     } for
 
     inkspread -1 lt inkspread 1 gt or {
-        (bwipp.renlinearBadInkspread#39082) (inkspread must be from -1 to 1) //raiseerror exec
+        (bwipp.renlinearBadInkspread#42500) (inkspread must be from -1 to 1) //raiseerror exec
     } if
 
     borderleft -1 lt borderleft 50 gt or {
-        (bwipp.renlinearBadBorderleft#39086) (borderleft must be from -1 to 50) //raiseerror exec
+        (bwipp.renlinearBadBorderleft#42504) (borderleft must be from -1 to 50) //raiseerror exec
     } if
 
     borderright -1 lt borderright 50 gt or {
-        (bwipp.renlinearBadBorderright#39090) (borderright must be from -1 to 50) //raiseerror exec
+        (bwipp.renlinearBadBorderright#42508) (borderright must be from -1 to 50) //raiseerror exec
     } if
 
     bordertop -1 lt bordertop 50 gt or {
-        (bwipp.renlinearBadBordertop#39094) (bordertop must be from -1 to 50) //raiseerror exec
+        (bwipp.renlinearBadBordertop#42512) (bordertop must be from -1 to 50) //raiseerror exec
     } if
 
     borderbottom -1 lt borderbottom 50 gt or {
-        (bwipp.renlinearBadBorderbottom#39098) (borderbottom must be from -1 to 50) //raiseerror exec
+        (bwipp.renlinearBadBorderbottom#42516) (borderbottom must be from -1 to 50) //raiseerror exec
     } if
 
     borderwidth 0 lt borderwidth 10 gt or {
-        (bwipp.renlinearBadBorderwidth#39102) (borderwidth must be from 0 to 10) //raiseerror exec
+        (bwipp.renlinearBadBorderwidth#42520) (borderwidth must be from 0 to 10) //raiseerror exec
     } if
 
     barratio 0.1 lt barratio 5 gt or {
-        (bwipp.renlinearBadBarratio#39106) (barratio must be from 0.1 to 5) //raiseerror exec
+        (bwipp.renlinearBadBarratio#42524) (barratio must be from 0.1 to 5) //raiseerror exec
     } if
 
     spaceratio 0.1 lt spaceratio 5 gt or {
-        (bwipp.renlinearBadSpaceratio#39110) (spaceratio must be from 0.1 to 5) //raiseerror exec
+        (bwipp.renlinearBadSpaceratio#42528) (spaceratio must be from 0.1 to 5) //raiseerror exec
     } if
 
     width 0 ne { width 0.01 lt width 20 gt or {
-        (bwipp.renlinearBadWidth#39114) (width must be 0 or from 0.01 to 20) //raiseerror exec
+        (bwipp.renlinearBadWidth#42532) (width must be 0 or from 0.01 to 20) //raiseerror exec
     } if } if
 
     guardwidth 0 lt guardwidth 20 gt or {
-        (bwipp.renlinearBadGuardwidth#39118) (guardwidth must be from 0 to 20) //raiseerror exec
+        (bwipp.renlinearBadGuardwidth#42536) (guardwidth must be from 0 to 20) //raiseerror exec
     } if
 
     guardheight 0 lt guardheight 20 gt or {
-        (bwipp.renlinearBadGuardheight#39122) (guardheight must be from 0 to 20) //raiseerror exec
+        (bwipp.renlinearBadGuardheight#42540) (guardheight must be from 0 to 20) //raiseerror exec
     } if
 
     guardleftpos -50 lt guardleftpos 150 gt or {
-        (bwipp.renlinearBadGuardleftpos#39126) (guardleftpos must be from -50 to 150) //raiseerror exec
+        (bwipp.renlinearBadGuardleftpos#42544) (guardleftpos must be from -50 to 150) //raiseerror exec
     } if
 
     guardleftypos -50 lt guardleftypos 150 gt or {
-        (bwipp.renlinearBadGuardleftypos#39130) (guardleftypos must be from -50 to 150) //raiseerror exec
+        (bwipp.renlinearBadGuardleftypos#42548) (guardleftypos must be from -50 to 150) //raiseerror exec
     } if
 
     guardrightpos -50 lt guardrightpos 150 gt or {
-        (bwipp.renlinearBadGuardrightpos#39134) (guardrightpos must be from -50 to 150) //raiseerror exec
+        (bwipp.renlinearBadGuardrightpos#42552) (guardrightpos must be from -50 to 150) //raiseerror exec
     } if
 
     guardrightypos -50 lt guardrightypos 150 gt or {
-        (bwipp.renlinearBadGuardrightypos#39138) (guardrightypos must be from -50 to 150) //raiseerror exec
+        (bwipp.renlinearBadGuardrightypos#42556) (guardrightypos must be from -50 to 150) //raiseerror exec
     } if
 
     sbs length 0 ne {
         sbs length 1 add 2 idiv  % nbars
         bhs length 1 index lt bbs length 2 index lt or
-        { pop (bwipp.renlinearBadBarHeightArrays#39144) (The bar height and baseline arrays must be at least as long as the number of bars) //raiseerror exec } if
+        { pop (bwipp.renlinearBadBarHeightArrays#42562) (The bar height and baseline arrays must be at least as long as the number of bars) //raiseerror exec } if
         pop
     } if
 
@@ -39244,17 +42662,7 @@ bind def
     %
     % Display the guard elements
     %
-    guardwhitespace {
-		(OCR-B) guardheight 2 mul selectfont
-        guardleftpos 0 ne {
-            guardleftpos neg 2 sub guardleftypos guardheight 2 div sub 1.25 sub moveto
-			(<) show
-        } if
-        guardrightpos 0 ne {
-            guardrightpos pixx add guardwidth sub 1 sub guardrightypos guardheight 2 div sub 1.25 sub moveto
-			(>) show
-        } if
-    } if
+    pixx //renderguards exec
 
     grestore
 
@@ -39323,6 +42731,13 @@ bind def
     /bordertop 0.0 def
     /borderbottom 0.0 def
     /borderwidth 0.5 def
+    /guardwhitespace false def
+    /guardleftpos 0.0 def
+    /guardleftypos 0.0 def
+    /guardrightpos 0.0 def
+    /guardrightypos 0.0 def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
 
     {def} forall
     opt currentdict /opt undef //processoptions exec pop
@@ -39331,6 +42746,23 @@ bind def
     inkspread null eq {/inkspread 0 def} if
     inkspreadh null eq {/inkspreadh inkspread def} if
     inkspreadv null eq {/inkspreadv inkspread def} if
+
+    % Default rowmult to all 1s if not provided
+    currentdict /rowmult known not {
+        /rowmult [ pixy { 1 } repeat ] def
+    } if
+
+    % Inflate the pixels
+    /bufnew pixx pixy mul array def
+    /bufoff 0 def
+    /pixoff 0 def
+    rowmult {
+        { bufnew bufoff pixs pixoff pixx getinterval putinterval
+          /bufoff bufoff pixx add def
+        } repeat
+        /pixoff pixoff pixx add def
+    } forall
+    /pixs bufnew def
 
     %
     % Input validation
@@ -39345,51 +42777,51 @@ bind def
     } for
 
     inkspread -1 lt inkspread 1 gt or {
-        (bwipp.renmatrixBadInkspread#39348) (inkspread must be from -1 to 1) //raiseerror exec
+        (bwipp.renmatrixBadInkspread#42780) (inkspread must be from -1 to 1) //raiseerror exec
     } if
 
     inkspreadh -1 lt inkspreadh 1 gt or {
-        (bwipp.renmatrixBadInkspreadh#39352) (inkspreadh must be from -1 to 1) //raiseerror exec
+        (bwipp.renmatrixBadInkspreadh#42784) (inkspreadh must be from -1 to 1) //raiseerror exec
     } if
 
     inkspreadv -1 lt inkspreadv 1 gt or {
-        (bwipp.renmatrixBadInkspreadv#39356) (inkspreadv must be from -1 to 1) //raiseerror exec
+        (bwipp.renmatrixBadInkspreadv#42788) (inkspreadv must be from -1 to 1) //raiseerror exec
     } if
 
     borderleft -1 lt borderleft 50 gt or {
-        (bwipp.renmatrixBadBorderleft#39360) (borderleft must be from -1 to 50) //raiseerror exec
+        (bwipp.renmatrixBadBorderleft#42792) (borderleft must be from -1 to 50) //raiseerror exec
     } if
 
     borderright -1 lt borderright 50 gt or {
-        (bwipp.renmatrixBadBorderright#39364) (borderright must be from -1 to 50) //raiseerror exec
+        (bwipp.renmatrixBadBorderright#42796) (borderright must be from -1 to 50) //raiseerror exec
     } if
 
     bordertop -1 lt bordertop 50 gt or {
-        (bwipp.renmatrixBadBordertop#39368) (bordertop must be from -1 to 50) //raiseerror exec
+        (bwipp.renmatrixBadBordertop#42800) (bordertop must be from -1 to 50) //raiseerror exec
     } if
 
     borderbottom -1 lt borderbottom 50 gt or {
-        (bwipp.renmatrixBadBorderbottom#39372) (borderbottom must be from -1 to 50) //raiseerror exec
+        (bwipp.renmatrixBadBorderbottom#42804) (borderbottom must be from -1 to 50) //raiseerror exec
     } if
 
     borderwidth 0 lt borderwidth 10 gt or {
-        (bwipp.renmatrixBadBorderwidth#39376) (borderwidth must be from 0 to 10) //raiseerror exec
+        (bwipp.renmatrixBadBorderwidth#42808) (borderwidth must be from 0 to 10) //raiseerror exec
     } if
 
     width 0.01 lt width 50 gt or {
-        (bwipp.renmatrixBadWidth#39380) (width must be from 0.01 to 50) //raiseerror exec
+        (bwipp.renmatrixBadWidth#42812) (width must be from 0.01 to 50) //raiseerror exec
     } if
 
     height 0.01 lt height 50 gt or {
-        (bwipp.renmatrixBadHeight#39384) (height must be from 0.01 to 50) //raiseerror exec
+        (bwipp.renmatrixBadHeight#42816) (height must be from 0.01 to 50) //raiseerror exec
     } if
 
     pixx 0 le pixy 0 le or {
-        (bwipp.renmatrixBadDimensions#39388) (The symbol dimensions must be positive) //raiseerror exec
+        (bwipp.renmatrixBadDimensions#42820) (The symbol dimensions must be positive) //raiseerror exec
     } if
 
     pixs length pixx pixy mul lt {
-        (bwipp.renmatrixBadPixelData#39392) (The pixel data is shorter than the symbol dimensions require) //raiseerror exec
+        (bwipp.renmatrixBadPixelData#42824) (The pixel data is shorter than the symbol dimensions require) //raiseerror exec
     } if
 
     /xyget { pixx mul add pixs exch get} def
@@ -39486,6 +42918,11 @@ bind def
         } if
     } for
 
+    %
+    % Display the guard elements
+    %
+    pixx //renderguards exec
+
     grestore
 
     end
@@ -39534,27 +42971,27 @@ bind def
     inkspread null eq {/inkspread 0 def} if
 
     inkspread -1 lt inkspread 1 gt or {
-        (bwipp.renmaximatrixBadInkspread#39537) (inkspread must be from -1 to 1) //raiseerror exec
+        (bwipp.renmaximatrixBadInkspread#42974) (inkspread must be from -1 to 1) //raiseerror exec
     } if
 
     borderleft -1 lt borderleft 50 gt or {
-        (bwipp.renmaximatrixBadBorderleft#39541) (borderleft must be from -1 to 50) //raiseerror exec
+        (bwipp.renmaximatrixBadBorderleft#42978) (borderleft must be from -1 to 50) //raiseerror exec
     } if
 
     borderright -1 lt borderright 50 gt or {
-        (bwipp.renmaximatrixBadBorderright#39545) (borderright must be from -1 to 50) //raiseerror exec
+        (bwipp.renmaximatrixBadBorderright#42982) (borderright must be from -1 to 50) //raiseerror exec
     } if
 
     bordertop -1 lt bordertop 50 gt or {
-        (bwipp.renmaximatrixBadBordertop#39549) (bordertop must be from -1 to 50) //raiseerror exec
+        (bwipp.renmaximatrixBadBordertop#42986) (bordertop must be from -1 to 50) //raiseerror exec
     } if
 
     borderbottom -1 lt borderbottom 50 gt or {
-        (bwipp.renmaximatrixBadBorderbottom#39553) (borderbottom must be from -1 to 50) //raiseerror exec
+        (bwipp.renmaximatrixBadBorderbottom#42990) (borderbottom must be from -1 to 50) //raiseerror exec
     } if
 
     borderwidth 0 lt borderwidth 10 gt or {
-        (bwipp.renmaximatrixBadBorderwidth#39557) (borderwidth must be from 0 to 10) //raiseerror exec
+        (bwipp.renmaximatrixBadBorderwidth#42994) (borderwidth must be from 0 to 10) //raiseerror exec
     } if
 
     gsave

@@ -1114,9 +1114,12 @@ function PSC(pscode, flags) {
     $.cvi = function() {
         need(1);
         if (st[sp-1].type & TYPE_NUMMASK) {
-            // Round towards zero
-            st[sp-1] = { type:TYPE_INTVAL, expr:'~~' + parens(st[sp-1].expr),
-                         seq:++seq };
+            let expr = st[sp-1].expr;
+            // Avoid emitting ~~$(ceil,flr,pow)( ... )
+            if (!/^\$(?:ceil|flr|pow)/.test(expr)) {
+                // Round towards zero
+                st[sp-1] = { type:TYPE_INTVAL, expr:'~~' + parens(expr), seq:++seq };
+            }
         } else {
             // javascript's string-to-number functionality does not perfectly
             // sync with postscript's.  Specifically, nul-chars on the end of

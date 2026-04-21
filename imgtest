@@ -40,10 +40,10 @@ echo "<h1>$pngname</h1>"
 
 node <<-@EOF
 const fs = require('fs');
-const proof = fs.readFileSync('proofs/$pngname');
-const image = fs.readFileSync('tests/$pngname');
-const bwipp = fs.readFileSync('proofs/$sym.png');
+const proof = readfile('proofs/$pngname');
+const bwipp = readfile('bwipp/$pngname');
 
+let image   = fs.readFileSync('tests/$pngname');
 let svgtext = fs.readFileSync('tests/$svgname', 'utf8');
 let svgdims = /viewBox=['"]\d+ \d+ (\d+) (\d+)/.exec(svgtext);
 svgtext = svgtext.replace(/viewBox=/, 'width="' + svgdims[1] + 'px" height="' + svgdims[2] + 'px" viewBox=');
@@ -64,6 +64,74 @@ console.log('<div class="bwipp">');
 console.log('<img src="data:image/png;base64,' + bwipp.toString('base64') + '"><br>');
 console.log('postscript: ' + bwipp.readUInt32BE(16) + ' x ' + bwipp.readUInt32BE(20));
 console.log('</div>');
+
+function readfile(path) {
+    try {
+        return fs.readFileSync(path);
+    } catch (e) {
+        return Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAASwAAABkCAMAAAAL3/3yAAAAAXNSR0IArs4c6QAAAARnQU1BAACx'+
+        'jwv8YQUAAALlUExURf/////x8f/e3v/Q0P/j4//29v/R0f/k5P/39/+amv9OTv9PT/9QUP9eXv+s'+
+        'rP+5uf9UVP8+Pv9JSf9ycv/Kyv99ff8wMP8GBv8AAP8KCv9BQf+Li//V1f9TU/9MTP9/f/+trf9R'+
+        'Uf9LS//Hx/96ev8uLv8FBf8LC/9DQ/+Njf/X1/9kZP83N/8oKP+UlP9hYf8pKf8/P/+pqf+Tk/9f'+
+        'X/+1tf88PP9KSv+Cgv9NTf91df+Ghv+mpv/n5/+goP+Wlv9zc//ExP/Fxf8iIv/09P95ef+wsP8y'+
+        'Mv/IyP8gIP9sbP8bG/9wcP+MjP+lpf8REf/z8/8xMf/g4P8HB//i4v/o6P+4uP8WFv/U1P9nZ/9x'+
+        'cf9mZv8YGP/T0/9qav/b2/81Nf87O//9/f/l5f9HR/+Xl//Ly/82Nv86Ov8hIf9XV/8SEv8TE/+0'+
+        'tP/MzP++vv8fH//f3//d3f/a2v/4+P/c3P/AwP/Bwf/Y2P+Kiv8aGv9YWP/S0v+9vf+Ojv8JCf8D'+
+        'A//y8v8zM//s7P9aWv+fn/8dHf9lZf94eP+3t/8NDf93d/+8vP+Fhf/m5v9dXf/u7v8kJP/Ozv8e'+
+        'Hv/w8P8ICP9ERP8EBP/Dw/+IiP9iYv/q6v8BAf84OP+QkP9VVf8sLP9paf8VFf98fP90dP+zs/8q'+
+        'Kv+Pj/+rq/8rK/8UFP8ODv85Of80NP9FRf9gYP+Dg/+cnP+EhP9cXP97e/+Zmf8jI/+vr//Pz/9o'+
+        'aP+oqP/Gxv9ra/9tbf+dnf+bm/8mJv9GRv/p6f89Pf/19f8cHP8CAv9ubv+Rkf/7+/8lJf/v7/8Q'+
+        'EP/h4f+env/5+f9bW/8PD//6+v8tLf+urv+hof+kpP+np/+qqv/W1v92dv8nJ/+/v/+2tv+7u/+B'+
+        'gf+Hh/8MDP9AQP/Cwv+AgP/8/P+YmP9CQv8vL//t7f9WVv+Jif+Vlf/Z2f+6uv+iov8XF/9+fv+j'+
+        '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',
+        'base64');
+    }
+}
 @EOF
 if [ ! -z "$msg" ] ; then
     echo "<br><span>$msg</span>"

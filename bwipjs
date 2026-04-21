@@ -3,7 +3,6 @@
 
 var fs = require('fs');
 var bwipjs = require('.');
-var symdesc = require('./lib/symdesc');
 
 function usage() {
     let bmark = bwipjs.BWIPJS_VERSION == "__BWIPJS_VERS__"
@@ -219,8 +218,9 @@ if (process.argv.length < 5) {
     } else if (process.argv[2] == '--version') {
         console.log('bwipjs: ' + bwipjs.BWIPJS_VERSION + '\nBWIPP: ' + bwipjs.BWIPP_VERSION);
     } else if (process.argv[2] == '--symbols') {
-        for (var sym in symdesc) {
-            console.log('    ' + sym + ' : ' + symdesc[sym]);
+        var symlist = bwipjs.symbolList.slice().sort((a,b) => a.bcid.localeCompare(b.bcid));
+        for (let i = 0; i < symlist.length; i++) {
+            console.log('    ' + symlist[i].bcid + ' : ' + symlist[i].desc);
         }
     } else {
         usage();

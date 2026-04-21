@@ -1,9 +1,10 @@
-% --REQUIRES preamble processoptions setanycolor--
-%%BeginData:        443 ASCII Lines
+% --REQUIRES preamble raiseerror processoptions setanycolor--
+%%BeginData:       1193 ASCII Lines
 currentglobal
 true setglobal
 /setpacking where {pop currentpacking true setpacking} if
-32 dict
+48 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
 dup /processoptions dup /uk.co.terryburton.bwipp findresource put
 dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
 begin
@@ -75,9 +76,9 @@ begin
 %
 %  Validate a single text option dict
 %
-%  grp textdict /validateoptions //render exec => bool [errorname errorstring |]
+%  grp textdict /validatetextoptions //render exec => bool [errorname errorstring |]
 %
-/render.validateoptions {
+/render.validatetextoptions {
 
     16 dict begin
 
@@ -358,6 +359,438 @@ begin
 } bind def
 
 %
+%  Render text groups 1-9
+%
+/render.textgroups {
+
+    4 dict begin
+
+    /pixy exch def
+    /pixx exch def
+
+    /ok true def
+    1 1 9 {
+        /textgrp exch def
+        textopts textgrp 1 sub get () get () ne              % Has manual contents
+        textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
+        {
+            textopts textgrp 1 sub get
+            dup (txt) textgrp 1 eq { txt } { [] } ifelse put
+            dup dup () get (content) exch put
+            pixx pixy textgrp 4 -1 roll //render.rendertext exec
+            not { /ok false def exit } if
+        } if
+    } for
+    ok
+
+    end
+
+} bind def
+
+%
+%  Application Specification Tables (ASTs)
+%
+/render.ast <<
+
+    /ean13 <<
+        /default                         << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+        /gs1.sst1             1 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.70 >>
+        /gs1.sst3             1 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.70 >>
+        /gs1.sst4             5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+        /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.70 >>
+        /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 22.85 >>
+    >>
+    /upca 1 index
+    /upce 1 index
+    /isbn 1 index
+    /ismn 1 index
+    /issn 1 index
+    /ean13composite 1 index
+    /upcacomposite 1 index
+    /upcecomposite 1 index
+
+    /ean8 <<
+        /default                         << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+        /gs1.sst1             1 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 36.46 >>
+        /gs1.sst3             1 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 36.46 >>
+        /gs1.sst4             5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+        /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 36.46 >>
+        /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 18.23 >>
+    >>
+    /ean8composite 1 index
+
+    /itf14 <<
+        /default                         << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+        /gs1.sst2             1 index  % << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+        /gs1.sst4                        << /xmin 0.250  /xnom 0.495  /xmax 0.495  /hnom 12.70 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.495  /xmax 0.495  /hnom 12.70 >>
+        /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+        /gs1.sst10                       << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 12.70 >>
+    >>
+
+    /gs1-128 <<
+        /default                         << /xmin 0.170               /xmax 1.016              >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+        /gs1.sst4                        << /xmin 0.250  /xnom 0.495  /xmax 0.495  /hnom 12.70 >>
+        /gs1.sst5                        << /xmin 0.495  /xnom 0.495  /xmax 0.940  /hnom 31.75 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.495  /xmax 0.495  /hnom 12.70 >>
+        /gs1.sst8             7 index  % << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+        /gs1.sst9                        << /xmin 0.250  /xnom 0.250  /xmax 0.495  /hnom 12.70 >>
+        /gs1.sst10                       << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 12.70 >>
+        /gs1.sst11                       << /xmin 0.170  /xnom 0.250  /xmax 0.495  /hnom 12.70 >>
+        /gs1.sst12.group      7 index  % << /xmin 0.495  /xnom 0.495  /xmax 1.016  /hnom 31.75 >>
+        /gs1.sst12.logistic  13 index  % << /xmin 0.495  /xnom 0.495  /xmax 0.940  /hnom 31.75 >>
+        /gs1.sst13                       << /xmin 0.495               /xmax 0.940  /hnom 12.70 >>
+    >>
+    /gs1-128composite 1 index
+
+    /databaromni <<
+        /default                         << /xmin 0.170               /xmax 0.660              >>
+        /gs1.sst1                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 15.19 >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 21.78 >>
+        /gs1.sst3                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 30.36 >>
+        /gs1.sst4                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 10.89 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom  6.60 >>
+        /gs1.sst8             7 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 21.78 >>
+        /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 10.89 >>
+    >>
+    /databaromnicomposite 1 index
+
+    /databartruncated <<
+        /default                         << /xmin 0.170               /xmax 0.660             >>
+        /gs1.sst4                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 4.29 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 2.60 >>
+        /gs1.sst8                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 8.58 >>
+        /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 4.29 >>
+    >>
+    /databartruncatedcomposite 1 index
+
+    /databarstacked <<
+        /default                         << /xmin 0.170               /xmax 0.660             >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 8.58 >>
+        /gs1.sst4             3 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 4.29 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 2.60 >>
+        /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 8.58 >>
+        /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 4.29 >>
+    >>
+    /databarstackedcomposite 1 index
+
+    /databarstackedomni <<
+        /default                         << /xmin 0.170               /xmax 0.660              >>
+        /gs1.sst1                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 31.37 >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.54 >>
+        /gs1.sst3                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 62.70 >>
+        /gs1.sst4                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 27.78 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 13.80 >>
+        /gs1.sst8             7 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 45.54 >>
+        /gs1.sst10                       << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 27.78 >>
+    >>
+    /databarstackedomnicomposite 1 index
+
+    /databarlimited <<
+        /default                         << /xmin 0.170               /xmax 0.660             >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 6.60 >>
+        /gs1.sst4                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 3.30 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 2.00 >>
+        /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 6.60 >>
+        /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 3.30 >>
+    >>
+    /databarlimitedcomposite 1 index
+
+    /databarexpanded <<
+        /default                         << /xmin 0.170               /xmax 0.660              >>
+        /gs1.sst1                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 11.23 >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 22.44 >>
+        /gs1.sst3             1 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 22.44 >>
+        /gs1.sst4             5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 11.23 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom  6.80 >>
+        /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 22.44 >>
+        /gs1.sst10            5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 11.23 >>
+        /gs1.sst11            1 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 11.23 >>
+    >>
+    /databarexpandedcomposite 1 index
+
+    /databarexpandedstacked <<
+        /default                         << /xmin 0.170               /xmax 0.660              >>
+        /gs1.sst1                        << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 23.44 >>
+        /gs1.sst2                        << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 46.86 >>
+        /gs1.sst3             1 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 46.86 >>
+        /gs1.sst4             5 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 23.44 >>
+        /gs1.sst6                        << /xmin 0.170  /xnom 0.200  /xmax 0.660  /hnom 14.20 >>
+        /gs1.sst8             5 index  % << /xmin 0.495  /xnom 0.660  /xmax 0.660  /hnom 46.86 >>
+        /gs1.sst10           11 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 23.44 >>
+        /gs1.sst11            1 index  % << /xmin 0.264  /xnom 0.330  /xmax 0.660  /hnom 23.44 >>
+    >>
+    /databarexpandedstackedcomposite 1 index
+    /gs1northamericancoupon 1 index
+
+    /gs1datamatrix <<
+        /default                         << /xmin 0.100               /xmax 3.500              >>
+        /gs1.sst1                        << /xmin 0.375  /xnom 0.625  /xmax 0.990              >>
+        /gs1.sst1.ai8200                 << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+        /gs1.sst1.dl          1 index  % << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+        /gs1.sst2                        << /xmin 0.743  /xnom 0.743  /xmax 1.500              >>
+        /gs1.sst4                        << /xmin 0.380  /xnom 0.380  /xmax 0.495              >>
+        /gs1.sst5             3 index  % << /xmin 0.743  /xnom 0.743  /xmax 1.500              >>
+        /gs1.sst6                        << /xmin 0.254  /xnom 0.380  /xmax 0.990              >>
+        /gs1.sst7                        << /xmin 0.254  /xnom 0.300  /xmax 0.615              >>
+        /gs1.sst7.dpm.a                  << /xmin 0.100  /xnom 0.200  /xmax 0.300              >>
+        /gs1.sst7.dpm.b                  << /xmin 0.200  /xnom 0.300  /xmax 0.495              >>
+        /gs1.sst8                        << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+        /gs1.sst9            13 index  % << /xmin 0.380  /xnom 0.380  /xmax 0.495              >>
+        /gs1.sst10                       << /xmin 0.396  /xnom 0.495  /xmax 0.990              >>
+        /gs1.sst11                       << /xmin 0.254  /xnom 0.380  /xmax 0.495              >>
+        /gs1.sst12.trade                 << /xmin 0.380  /xnom 0.380  /xmax 0.990              >>
+        /gs1.sst12.group      9 index  % << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+        /gs1.sst12.logistic   1 index  % << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+        /gs1.sst13                       << /xmin 0.495               /xmax 3.500              >>
+    >>
+    /gs1datamatrixrectangular 1 index
+    /gs1datamatrixrectangularextension 1 index
+
+    /gs1qrcode <<
+        /default                         << /xmin 0.254               /xmax 3.500              >>
+        /gs1.sst1                        << /xmin 0.375  /xnom 0.625  /xmax 0.990              >>
+        /gs1.sst1.ai8200                 << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+        /gs1.sst1.dl          1 index  % << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+        /gs1.sst2                        << /xmin 0.743  /xnom 0.743  /xmax 1.500              >>
+        /gs1.sst4                        << /xmin 0.380  /xnom 0.380  /xmax 0.495              >>
+        /gs1.sst5             3 index  % << /xmin 0.743  /xnom 0.743  /xmax 1.500              >>
+        /gs1.sst7                        << /xmin 0.254  /xnom 0.300  /xmax 0.615              >>
+        /gs1.sst8                        << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+        /gs1.sst9             7 index  % << /xmin 0.380  /xnom 0.380  /xmax 0.495              >>
+        /gs1.sst11                       << /xmin 0.254  /xnom 0.380  /xmax 0.495              >>
+        /gs1.sst12.trade                 << /xmin 0.380  /xnom 0.380  /xmax 0.990              >>
+        /gs1.sst12.group      7 index  % << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+        /gs1.sst12.logistic   1 index  % << /xmin 0.750  /xnom 0.750  /xmax 1.520              >>
+        /gs1.sst13                       << /xmin 0.495               /xmax 3.500              >>
+    >>
+
+    /gs1dotcode <<
+        /default                         << /xmin 0.380  /xnom 0.380  /xmax 0.990              >>
+        /gs1.sst12.trade      1 index  % << /xmin 0.380  /xnom 0.380  /xmax 0.990              >>
+    >>
+
+    /gs1dldatamatrix <<
+        /default                         << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+        /gs1.sst1.dl          1 index  % << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+    >>
+
+    /gs1dlqrcode <<
+        /default                         << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+        /gs1.sst1.dl          1 index  % << /xmin 0.396  /xnom 0.495  /xmax 0.743              >>
+    >>
+
+    % ISO/AIM symbology defaults (non-GS1)
+
+    /code39 <<
+        /default                         << /xmin 0.191                                        >>
+    >>
+    /interleaved2of5 <<
+        /default                         << /xmin 0.191                                        >>
+    >>
+
+    /qrcode <<
+        /default                         << /xmin 0.250                                        >>
+    >>
+
+    /datamatrix <<
+        /default                         << /xmin 0.250                                        >>
+    >>
+
+    /pharmacode <<
+        /default                         << /xnom 0.500                            /hnom 8.000 >>
+    >>
+
+    /maxicode <<
+        /default                         <<              /xnom 0.880                           >>
+    >>
+
+    % Postal symbology defaults
+
+    /onecode <<
+        /default                         << /xmin 0.381  /xnom 0.508  /xmax 0.635  /hnom 3.683 >>
+    >>
+
+>> readonly def
+
+%
+%  Set xmin, xnom, xmax and hnom based on AST for an encoder
+%
+/render.apply_ast {
+
+    currentdict
+    4 dict begin
+
+    /tgt exch def
+
+    /astname exch def
+    /encname exch def
+
+    1 {  % Common exit
+
+        //render.ast encname 2 copy known not {
+            pop pop astname /default eq exit
+        } if
+
+        get astname 2 copy known not { pop pop astname /default eq exit } if
+
+        get {  % key value
+            tgt 2 index known {
+                tgt 2 index get -1 eq {
+                    tgt 3 1 roll put
+                } {  % Skip if already defined
+                    pop pop
+                } ifelse
+            } {  % Key not in caller's dict; skip
+                pop pop
+            } ifelse
+        } forall
+
+        true
+
+    } repeat
+
+    dup not {
+        pop /bwipp.renderUnknownAST
+        [ (Unknown AST ") astname (" for ) encname 40 string cvs ]
+        dup 0 exch { length add } forall string
+        exch 0 exch { dup length 2 index add 3 index 4 2 roll putinterval } forall pop
+        false
+    } if
+
+    end
+
+} bind def
+
+%
+%  Validate effective X dimension against spec bounds (low-level)
+%
+%  xdim xmin xmax => true | /errorname (info) false
+%
+/render.validate_xdim {
+    3 dict begin
+    /max exch def /min exch def /dim exch def
+    min -1 ne dim min lt and {
+        /bwipp.renderXdimTooSmall
+        [ (Effective X-dimension ) dim 20 string cvs (mm is below the minimum ) min 20 string cvs (mm for the ast) ]
+    } {
+        max -1 ne dim max gt and {
+            /bwipp.renderXdimTooLarge
+            [ (Effective X-dimension ) dim 20 string cvs (mm is above the maximum ) max 20 string cvs (mm for the ast) ]
+        } {
+            null null  % Sentinel: ok
+        } ifelse
+    } ifelse
+    dup null eq { pop pop true } {
+        dup 0 exch {length add} forall string
+        exch 0 exch { dup length 2 index add 3 index 4 2 roll putinterval } forall pop
+        false
+    } ifelse
+    end
+} bind def
+
+%
+%  Resolve strictspec dimensions
+%
+/render.resolve_strictspec {
+    % Validate spec mode mutual exclusivity (outermost encoder only)
+    /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse not {
+        strictspec loosespec and {
+            /bwipp.renderSpecModeMutex (strictspec and loosespec are mutually exclusive) //raiseerror exec
+        } if
+        strictspec propspec and {
+            /bwipp.renderSpecModeMutex (strictspec and propspec are mutually exclusive) //raiseerror exec
+        } if
+        loosespec propspec and {
+            /bwipp.renderSpecModeMutex (loosespec and propspec are mutually exclusive) //raiseerror exec
+        } if
+    } if
+    loosespec { /strictspec true def } if
+    % Validate spec options are not orphaned (outermost encoder only)
+    /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse not {
+        strictspec not {
+            xdim -1 ne {
+                /bwipp.renderOrphanedXdim (xdim requires strictspec or loosespec) //raiseerror exec
+            } if
+            currentdict /hdim known { hdim -1 ne } { false } ifelse {
+                /bwipp.renderOrphanedHdim (hdim requires strictspec or loosespec) //raiseerror exec
+            } if
+            mag 1.0 ne {
+                /bwipp.renderOrphanedMag (mag requires strictspec or loosespec) //raiseerror exec
+            } if
+        } if
+        strictspec not propspec not and {
+            currentdict /ast known { ast (default) ne } { false } ifelse {
+                /bwipp.renderOrphanedAST (ast requires strictspec, loosespec, or propspec) //raiseerror exec
+            } if
+        } if
+    } if
+    strictspec {
+        /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse not {
+            currentdict /height known { height -1.0 ne } { false } ifelse
+            currentdict /width known { width 0 ne } { false } ifelse
+            or {
+                loosespec { /loosespec false def /strictspec false def } {
+                    /bwipp.renderStrictspecDimOverride (width and height options are not compatible with strictspec; use xdim and hdim to directly specify physical dimensions) //raiseerror exec
+                } ifelse
+            } if
+        } if
+    } if
+    strictspec {
+        mag 1.0 ne xdim -1 ne currentdict /hdim known { hdim -1 ne } { false } ifelse or and {
+            /bwipp.renderMagExclusive (use either mag \(to scale nominal dimensions\) or explicit xdim/hdim options, not both) //raiseerror exec
+        } if
+        xdim -1 eq {
+            xnom -1 eq {
+                loosespec { /strictspec false def } {
+                    /bwipp.renderNeedXnom (strictspec requires a nominal X-dimension to be defined for the application or for xdim to be supplied) //raiseerror exec
+                } ifelse
+            } if
+            strictspec { /xdim xnom mag mul def } if
+        } if
+        strictspec {
+            currentdict /hdim known currentdict /hnom known and {
+                hdim -1 eq hnom -1 ne and {
+                    /hdim hnom mag mul def
+                } if
+            } if
+            xdim xmin xmax //render.validate_xdim exec not {
+                loosespec { pop pop } { //raiseerror exec } ifelse
+            } if
+        } if
+    } if
+} bind def
+
+%
+%  Resolve linear bar height from spec proportions
+%
+%  Returns derived height, current height, or -1 sentinel
+%
+/render.resolve_height {
+    currentdict /hdim known { hdim -1 ne } { false } ifelse strictspec and {
+        % strictspec with resolved hdim: derive from hdim/xdim
+        hdim xdim div modunit mul 72 div
+    } {
+        hnom -1 ne strictspec propspec or and {
+            xnom -1 eq {
+                /bwipp.renderHnomNeedXnom (Proportional bar height derivation requires a nominal X-dimension to be defined for the application or for xdim to be supplied) //raiseerror exec
+            } if
+            hnom xnom div modunit mul
+                strictspec not { round } if  % Pixel-lock derived height
+            72 div
+            propspec { height -1.0 ne { height mul } if } if  % height is a multiplier under propspec
+        } {
+            height
+        } ifelse
+    } ifelse
+} bind def
+
+%
 %  Snap module boundaries to device pixel grid
 %
 /render.gridfit {
@@ -365,23 +798,42 @@ begin
     16 dict begin
 
     %
-    %  0 => no snap; +/- N => round/floor to nearest multiple of N
+    %  magnitude: user units per module (e.g. 1 or 2)
+    %  xdim: target X in mm (0 = no spec bounds checking)
+    %  xmin: minimum X in mm (-1 = no minimum)
+    %  xmax: maximum X in mm (-1 = no maximum)
+    %  usefloor: true=floor (for forced width); false=round
+    %  snapy: true=snap y independently; false=uniform with x
     %
-    /snapy exch def       % true: snap y independently; false: uniform with x
-    /mode exch def        % ±N: round/floor to nearest multiple of N
+    /snapy exch def
+    /usefloor exch def
+    /xmax exch def
+    /xmin exch def
+    /xdim exch def
+    /mag exch def
 
-    % val mode => factor; clamps to minimum 1 granularity unit
-    /snapdim {
-        /sdmode exch def /val exch def
-        val sdmode abs div
-        sdmode 0 gt { round } { floor } ifelse
+    % val => snapped; snaps to whole device pixels per module, clamps to minimum 1
+    /snapto {  % val mode => snapped
+        /snapmode exch def
+        mag div
+        snapmode 0 eq {
+            round
+        } { snapmode 1 eq {
+            floor
+        } {  % 2
+            ceiling
+        } ifelse } ifelse
         dup 0 le { pop 1 } if
-        sdmode abs mul val div
+        mag mul
     } def
 
+    % snapped => effective X; compute effective X dimension from snapped device pixels
+    /effx { xdim mul 1 0 gridmatrix dtransform abs exch abs 2 copy lt {exch} if pop div } def
+
     %
-    %  Detect device x and y resolution via default matrix
+    %  Determine device resolution
     %
+    /usergriddpi griddpi 0 ne def
     gsave matrix defaultmatrix setmatrix
     72 0 dtransform abs exch abs 2 copy lt {exch} if pop /hwxres exch def
     0 72 dtransform abs exch abs 2 copy lt {exch} if pop /hwyres exch def
@@ -389,9 +841,14 @@ begin
     griddpi 0 eq { /griddpi hwxres def } if
 
     %
-    % Guard against bogus device (nullpage ~3e16)
+    % Guard against bogus auto-detected resolution (skip unless user provided griddpi)
     %
-    hwxres 1 gt hwxres 100000 lt and hwyres 1 gt hwyres 100000 lt and and {
+    1 {  % Common exit
+
+        hwxres 1 gt hwxres 100000 lt and hwyres 1 gt hwyres 100000 lt and and not {
+            usergriddpi not { true exit } if
+            /hwxres griddpi def /hwyres griddpi def  % Bogus hardware but user knows the target DPI
+        } if
 
         %
         %  CTM scaled to target DPI pixel coordinates, per axis
@@ -409,16 +866,298 @@ begin
         %  Snap module dimensions to whole target pixels
         %
         1 0 gridmatrix dtransform abs exch abs 2 copy lt {exch} if pop
-        mode snapdim
+
+        % Snap mode used for x (0=round, 1=floor, 2=ceiling). The snapy
+        % branch replays this against the y-axis devpx so square matrix
+        % symbols stay square when the x-axis retry bumps to floor/ceiling.
+        /xsnapmode 0 def
+
+        xdim 0 ne {  % strictspec is provided
+            /devpx exch def
+            /snapped devpx 0 snapto def
+            snapped effx xmin xmax //render.validate_xdim exec
+            not {
+                pop pop  % Discard error details
+                /snap1 snapped def
+                devpx mag div dup floor sub 0.5 lt { 2 } { 1 } ifelse
+                dup /xsnapmode exch def
+                devpx exch snapto /snapped exch def
+                snapped effx xmin xmax //render.validate_xdim exec
+                not {
+                    pop pop  % Discard error details
+                    loosespec {
+                        % Pick whichever snap is closest to being in spec
+                        /eff1 snap1 effx def  /eff2 snapped effx def
+                        /dist {  % eff => distance outside [xmin,xmax]
+                            0
+                            xmin -1 ne { xmin 2 index sub dup 0 gt { add } { pop } ifelse } if
+                            xmax -1 ne { 1 index xmax sub dup 0 gt { add } { pop } ifelse } if
+                            exch pop
+                        } def
+                        eff1 dist eff2 dist lt { /snapped snap1 def /xsnapmode 0 def } if
+                    } {
+                        /bwipp.renderGridfitXdimOutOfSpec
+                        [ (No X-dimension within the permissible range )
+                          xmin 20 string cvs ( to )
+                          xmax 20 string cvs (mm produces a fixed pixel grid at )
+                          griddpi cvi 20 string cvs ( DPI)
+                        ] dup 0 exch {length add} forall string
+                        exch 0 exch { dup length 2 index add 3 index 4 2 roll putinterval } forall pop
+                        false exit
+                    } ifelse
+                } if
+            } if
+            snapped devpx div
+        } {  % No strictspec
+            dup mag div usefloor { floor } { round } ifelse dup 0 le { pop 1 } if mag mul exch div
+        } ifelse
+
         snapy {
             0 1 gridmatrix dtransform abs exch abs 2 copy lt {exch} if pop
-            mode snapdim
+            dup xsnapmode snapto exch div
         } { dup } ifelse
+
         scale
 
-    } if
+        true
+
+    } repeat  % Common exit
 
     end
+
+} bind def
+
+%
+%  Apply defaults from global context for properties common to all encoders
+%  Guarded by _dontdraw so sub-encoders do not re-read global defaults
+%
+/render.global_encoder_defaults {
+    /uk.co.terryburton.bwipp._dontdraw dup where {exch get} {pop false} ifelse not {
+        /uk.co.terryburton.bwipp.global_ctx dup where {
+            exch get
+            dup /loosespec  2 copy known { get { /loosespec  true def } if } { pop pop } ifelse
+            dup /strictspec 2 copy known { get { /strictspec true def } if } { pop pop } ifelse
+                /propspec 2 copy known { get { /propspec true def } if } { pop pop } ifelse
+        } {pop} ifelse
+    } if
+} bind def
+
+%
+%  Apply defaults from global context for properties common to all renderers
+%
+/render.global_renderer_defaults {
+
+    /uk.co.terryburton.bwipp.global_ctx dup where {
+        exch get  % ctx
+        barcolor        (unset) eq { dup /default_barcolor        2 copy known {get /barcolor        exch def} {pop pop} ifelse } if
+        backgroundcolor (unset) eq { dup /default_backgroundcolor 2 copy known {get /backgroundcolor exch def} {pop pop} ifelse } if
+        bordercolor     (unset) eq { dup /default_bordercolor     2 copy known {get /bordercolor     exch def} {pop pop} ifelse } if
+        inkspread       null eq    { dup /default_inkspread       2 copy known {get /inkspread       exch def} {pop pop} ifelse } if
+        griddpi         0 eq       { dup /default_griddpi         2 copy known {get /griddpi         exch def} {pop pop} ifelse } if
+        gridfit         false eq   { dup /default_gridfit         2 copy known {get /gridfit         exch def} {pop pop} ifelse } if
+        pop
+    } { pop } ifelse
+
+} bind def
+
+%
+%  Validate common renderer options
+%
+/render.validate_common {
+
+    /textopts where {
+        pop
+        1 1 9 {
+            textopts 1 index 1 sub get
+            //render.validatetextoptions exec not { //raiseerror exec } if
+        } for
+    } if
+
+    inkspread -1 lt inkspread 1 gt or {
+        /bwipp.renderBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
+    } if
+
+    borderleft -1 lt borderleft 50 gt or {
+        /bwipp.renderBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderright -1 lt borderright 50 gt or {
+        /bwipp.renderBadBorderright (borderright must be from -1 to 50) //raiseerror exec
+    } if
+
+    bordertop -1 lt bordertop 50 gt or {
+        /bwipp.renderBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderbottom -1 lt borderbottom 50 gt or {
+        /bwipp.renderBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderwidth 0 lt borderwidth 10 gt or {
+        /bwipp.renderBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
+    } if
+
+    griddpi 0 ne { griddpi 30 lt griddpi 9600 gt or {
+        /bwipp.renderBadGriddpi (griddpi must be 0 or from 30 to 9600) //raiseerror exec
+    } if } if
+
+} bind def
+
+%
+%  Draw border, bearer bars, and background
+%
+/render.renderborder {
+
+    16 dict begin
+
+    /yspread exch def
+    /xspread exch def
+    /pixy exch def
+    /pixx exch def
+
+    /showbearer /showbearer where { /showbearer get } { false } ifelse def
+
+    %
+    % Corner geometry
+    %
+    showborder showbearer or {
+        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+    } {
+        /tl [ borderleft neg xspread add                  pixy bordertop add yspread sub           ] def
+        /tr [ pixx borderright add xspread sub            pixy bordertop add yspread sub           ] def
+        /bl [ borderleft neg xspread add                  borderbottom neg yspread add             ] def
+        /br [ pixx borderright add xspread sub            borderbottom neg yspread add             ] def
+    } ifelse
+
+    1 {  % Common exit
+
+        %
+        % Background fill
+        %
+        backgroundcolor (unset) ne {
+            gsave
+            newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+            backgroundcolor //setanycolor exec not {
+                grestore
+                /bwipp.renderBadBackgroundColor (Invalid background color) false exit
+            } if fill
+            grestore
+        } if
+
+        %
+        % Bearer bars (horizontal rules at top and bottom)
+        %
+        showbearer {
+            borderwidth inkspread gt {
+                gsave
+                newpath
+                bl aload pop moveto br aload pop lineto
+                tl aload pop moveto tr aload pop lineto
+                bordercolor (unset) ne {
+                    bordercolor //setanycolor exec not {
+                        grestore
+                        /bwipp.renderBadBorderColor (Invalid border color) false exit
+                    } if
+                } if
+                borderwidth inkspread sub setlinewidth stroke
+                grestore
+            } if
+        } if
+
+        %
+        % Border (eofill rectangle frame)
+        %
+        showborder showbearer not and {
+            /hw borderwidth inkspread sub 2 div def
+            hw 0 gt {
+                gsave
+                bordercolor (unset) ne {
+                    bordercolor //setanycolor exec not {
+                        grestore
+                        /bwipp.renderBadBorderColor (Invalid border color) false exit
+                    } if
+                } if
+                newpath
+                bl aload pop hw sub exch hw sub exch moveto
+                br aload pop hw sub exch hw add exch lineto
+                tr aload pop hw add exch hw add exch lineto
+                tl aload pop hw add exch hw sub exch lineto closepath
+                bl aload pop hw add exch hw add exch moveto
+                tl aload pop hw sub exch hw add exch lineto
+                tr aload pop hw sub exch hw sub exch lineto
+                br aload pop hw add exch hw sub exch lineto closepath
+                eofill
+                grestore
+            } if
+        } if
+
+        true exit
+
+    } repeat
+
+    end
+
+} bind def
+
+%
+%  Draw whitespace guard brackets
+%
+%  pixx /renderguards //render exec
+%
+/render.renderguards {
+
+    /pixx exch def
+
+    1 {  % Common exit
+
+        guardwidth 0 lt guardwidth 20 gt or {
+            /bwipp.renderBadGuardwidth (guardwidth must be from 0 to 20) false exit
+        } if
+
+        guardheight 0 lt guardheight 20 gt or {
+            /bwipp.renderBadGuardheight (guardheight must be from 0 to 20) false exit
+        } if
+
+        guardleftpos -50 lt guardleftpos 150 gt or {
+            /bwipp.renderBadGuardleftpos (guardleftpos must be from -50 to 150) false exit
+        } if
+
+        guardleftypos -50 lt guardleftypos 150 gt or {
+            /bwipp.renderBadGuardleftypos (guardleftypos must be from -50 to 150) false exit
+        } if
+
+        guardrightpos -50 lt guardrightpos 150 gt or {
+            /bwipp.renderBadGuardrightpos (guardrightpos must be from -50 to 150) false exit
+        } if
+
+        guardrightypos -50 lt guardrightypos 150 gt or {
+            /bwipp.renderBadGuardrightypos (guardrightypos must be from -50 to 150) false exit
+        } if
+
+        guardwhitespace {
+            0.75 setlinewidth
+            guardleftpos 0 ne {
+                newpath
+                guardleftpos neg guardwidth add guardleftypos guardheight 2 div add moveto
+                guardwidth neg guardheight -2 div rlineto
+                guardwidth guardheight -2 div rlineto
+                stroke
+            } if
+            guardrightpos 0 ne {
+                newpath
+                guardrightpos pixx add guardwidth sub guardrightypos guardheight 2 div add moveto
+                guardwidth guardheight -2 div rlineto
+                guardwidth neg guardheight -2 div rlineto
+                stroke
+            } if
+        } if
+
+        true exit
+
+    } repeat
 
 } bind def
 
@@ -426,10 +1165,21 @@ begin
 %  Dispatcher table
 %
 /render.dispatch <<
-    /groupoptions     //render.groupoptions
-    /rendertext       //render.rendertext
-    /validateoptions  //render.validateoptions
-    /gridfit          //render.gridfit
+    /apply_ast            //render.apply_ast
+    /ast                  //render.ast
+    /groupoptions         //render.groupoptions
+    /textgroups           //render.textgroups
+    /rendertext           //render.rendertext
+    /validatetextoptions  //render.validatetextoptions
+    /gridfit              //render.gridfit
+    /global_encoder_defaults  //render.global_encoder_defaults
+    /global_renderer_defaults //render.global_renderer_defaults
+    /validate_common      //render.validate_common
+    /renderborder         //render.renderborder
+    /renderguards         //render.renderguards
+    /validate_xdim        //render.validate_xdim
+    /resolve_strictspec     //render.resolve_strictspec
+    /resolve_height       //render.resolve_height
 >> readonly def
 
 /render {
