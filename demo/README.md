@@ -10,6 +10,14 @@ ones) are available.  An exhaustive list of supported barcode types can be
 found at the end of this document.  Barcodes are generated as PNG images (node-js and react-native)
 or to a canvas (browser) or as SVG (all platforms).
 
+> Note to users of `ean2`,`ean5`,`ean8`,`ean13`,`upca`,`upce`,`isbn`, ....  A recent release
+> of BWIPP added the `guarddescent` option, which changed final image height.  Prior to the
+> new release, symbol height was determined by the long "guard" bars.  New releases
+> determine height using the short bars.  The resulting image height increases by 5px at
+> `scale=1`, 10px at `scale=2`, etc.  To achieve the old image height, decrease `height` by 1.75mm
+> or set `height` to 23.6mm if using the default.  This change appears in version 4.10.
+
+
 > Version 4.8 includes the new text layout features provided in recent releases of BWIPP.  If you use
 > a custom drawing interface and want to take advantage of the new capabilities, see the 
 > [example drawing object](https://github.com/metafloor/bwip-js/wiki/Annotated-Example-Drawing-Object)
@@ -17,8 +25,8 @@ or to a canvas (browser) or as SVG (all platforms).
 
 ## Status 
 
-* Current bwip-js version is 4.9.2 (2026-04-13)
-* Current BWIPP version is 2026-03-31
+* Current bwip-js version is 4.10.0 (2026-04-21)
+* Current BWIPP version is 2026-04-21
 * Node.js compatibility: 6.0
 * Browser compatibility: Edge, Firefox, Chrome
 
