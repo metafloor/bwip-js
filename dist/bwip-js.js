@@ -40,7 +40,7 @@
     }
 }(typeof self !== 'undefined' ? self : this, function () {
 // exports.js
-const BWIPJS_VERSION = '4.10.0 (2026-04-21)';
+const BWIPJS_VERSION = '4.10.1 (2026-04-22)';
 
 // Context insensitive canvas element test.
 function IsCanvas(elt) {
@@ -502,7 +502,7 @@ function $cvs(s, v) {
     for (var i = 0, l = v.length; i < l; i++) {
         s[i] = v.charCodeAt(i);
     }
-    $k[$j++] = i < s.length ? s.subarray(0, i) : s;
+    return i < s.length ? s.subarray(0, i) : s;
 }
 // cvi operator - converts a numeric string value to integer/real.
 function $cvi(s) {

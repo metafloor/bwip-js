@@ -1,4 +1,4 @@
-// Type definitions for bwip-js  4.10.0 (2026-04-21)
+// Type definitions for bwip-js  4.10.1 (2026-04-22)
 //
 // THIS DEFINITION FILE IS MACHINE GENERATED - DO NOT EDIT
 //
@@ -421,9 +421,6 @@ declare namespace BwipJs {
     export function itf14(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
     export function itf14<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function itf14<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
-    export function jabcode(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
-    export function jabcode<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
-    export function jabcode<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
     export function japanpost(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
     export function japanpost<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function japanpost<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
