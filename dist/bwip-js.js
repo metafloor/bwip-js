@@ -502,7 +502,7 @@ function $cvs(s, v) {
     for (var i = 0, l = v.length; i < l; i++) {
         s[i] = v.charCodeAt(i);
     }
-    $k[$j++] = i < s.length ? s.subarray(0, i) : s;
+    return i < s.length ? s.subarray(0, i) : s;
 }
 // cvi operator - converts a numeric string value to integer/real.
 function $cvi(s) {

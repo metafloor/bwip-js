@@ -499,10 +499,6 @@ declare namespace BwipJs {
     export function itf14(opts: RenderOptions, callback: ToDataURLCallback): void;
     export function itf14<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function itf14<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
-    export function jabcode(opts: RenderOptions): Promise<DataURL>;
-    export function jabcode(opts: RenderOptions, callback: ToDataURLCallback): void;
-    export function jabcode<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
-    export function jabcode<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
     export function japanpost(opts: RenderOptions): Promise<DataURL>;
     export function japanpost(opts: RenderOptions, callback: ToDataURLCallback): void;
     export function japanpost<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;

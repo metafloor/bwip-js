@@ -13,12 +13,12 @@ chmod -x barcode.ps
 echo 'function bwipp_lookup(symbol) {'
 echo '  if (!symbol) { throw new Error("bwipp.undefinedEncoder: bcid is not defined"); }'
 echo '  switch (symbol.replace(/-/g, "_")) {'
-grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u |\
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | sort -u |\
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    case "\1":return bwipp_\1;/' -e 's/-/_/g'
 echo '  }'
 echo '  throw new Error("bwipp.unknownEncoder: unknown encoder name: " + symbol);'
 echo '}'
-) > barcode-lookup.js
+) | grep -v jabcode > barcode-lookup.js
 
 ##
 ## Create the symbol list
