@@ -3,7 +3,7 @@
 ##
 ## usage: runtest symbol text opts
 ##
-## Use BWIPP with ghostscript to compare bwipjs rendering.  Since we cannot 
+## Use BWIPP with ghostscript to compare bwipjs rendering.  Since we cannot
 ## ensure pixel for pixel rendering between the two (especially considering
 ## fonts), we compare the encoding arrays that are passed to the renderers.
 ##
@@ -34,16 +34,9 @@ JSOUT=tests/$tid.jsout
 ## First ghostscript and modified BWIPP
 cat tests/barcode.ps - > tests/runtest.ps <<@EOF
 0 0 moveto
-($pstext) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec
-count { 
-    % Order of printing must match the nodejs code.
-    dup { exch (pixs) eq { == } { pop } ifelse } forall
-    dup { exch (sbs) eq { == } { pop } ifelse } forall
-    dup { exch (bbs) eq { == } { pop } ifelse } forall
-    dup { exch (bhs) eq { == } { pop } ifelse } forall
-    pop
-} repeat
+($pstext) ($(echo "$opts" | sed -e 's/ !\w\w*//')) /$sym /uk.co.terryburton.bwipp findresource exec
 @EOF
+##cp tests/runtest.ps tests/$tid.ps
 
 ## Ghostscript prints integer floats as e.g. "1.0" whereas javascript prints
 ## them as simply "1".
@@ -51,42 +44,12 @@ count {
 ## significant digits after the decimal place.  Normalize to three.
 ## pharmacode2 produces nulls in its arrays.  ghostscript prints null where as
 ## javascript prints nothing.  Remove nulls.
-cat - <<@EOF > tests/nsed.js
-const fs = require('fs');
-
-function filt(line) {
-    process.stdout.write(
-        line.replace(/\d+(\.\d+)?/g, function(s) {
-            return (+s).toFixed(3).replace(/(\.000|00|0)$/, '');
-        })
-        .replace(/null/g, ''), 'binary');
-}
-
-let ptl = '';
-process.stdin.resume();
-process.stdin.setEncoding('binary');
-process.stdin.on('data', (data) => {
-    ptl += data.toString('binary');
-    let eol = ptl.indexOf('\n');
-    while (eol >= 0) {
-        filt(ptl.substr(0, eol+1));
-        ptl = ptl.substr(eol+1);
-        eol = ptl.indexOf('\n');
-    }
-});
-process.stdin.on('end', () => {
-    ptl && filt(ptl);
-    process.exit(0);
-});
-@EOF
-
-gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' -e 's/null//g' > $GSOUT
-##gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | node tests/nsed.js > $GSOUT
+gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g'  -e 's/\(\.[1-9]*\)00*\([^0-9]\)/\1\2/g' -e 's/null//g' > $GSOUT
 
 ## Node/bwip-js
 (
-node <<@EOF
-var bwipjs = require('.');
+cat <<@EOF
+var bwipjs = require('..');
 
 try {
     var stack = bwipjs.raw("$sym", "$jstext", "$opts");
@@ -112,8 +75,9 @@ try {
     }
     process.exit();
 }
+//console.dir(stack, { depth:9 });
 // Order of printing must match the ghostscript code.
-for (var i = stack.length-1; i >= 0; i--) {
+for (var i = 0; i < stack.length; i++) {
     var o = stack[i];
     if (o.pixs) { console.log('[' + o.pixs.join(' ') + ']'); }
     if (o.sbs) { console.log('[' + o.sbs.join(' ') + ']'); }
@@ -121,10 +85,10 @@ for (var i = stack.length-1; i >= 0; i--) {
     if (o.bhs) { console.log('[' + o.bhs.join(' ') + ']'); }
 }
 @EOF
-) | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' > $JSOUT
-##) | node tests/nsed.js > $JSOUT
+) > tests/runtest.js
+node tests/runtest.js | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g' -e 's/\(\.[1-9]*\)00*\([^0-9]\)/\1\2/g' > $JSOUT
 
-## diff ignoring whitespace (-b) differences. 
+## diff ignoring whitespace (-b) differences.
 diff -qb $GSOUT $JSOUT
 if [ $? != 0 ] ; then
     echo "!!!!"
@@ -138,4 +102,3 @@ if [ $? != 0 ] ; then
 fi
 
 exit 0
-

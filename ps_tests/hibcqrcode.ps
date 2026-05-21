@@ -1,0 +1,65 @@
+/runtest_hibcqrcode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2024 Terry Burton
+%
+
+% ANSI/HIBC 2.6-2016
+
+
+%%/hibcqrcode dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) hibcqrcode
+} /bwipp.hibcqrcodeEmptyData isError
+
+{ () (dontdraw validatecheck) hibcqrcode
+} /bwipp.hibcqrcodeEmptyData isError
+
+{ 30001 string (dontdraw) hibcqrcode
+} /bwipp.hibcqrcodeinputTooLong isError
+
+{ (,) (dontdraw) hibcqrcode
+} /bwipp.hibcqrcodeBadCharacter isError
+
+{ (H123ABC01234567890E) (dontdraw validatecheck) hibcqrcode  % Check digit should be 'D'
+} /bwipp.hibcqrcodeBadCheckDigit isError
+
+{ (/) (dontdraw validatecheck) hibcqrcode  % Check digit should be '+'
+} /bwipp.hibcqrcodeBadCheckDigit isError
+
+
+% Example
+
+(H123ABC01234567890D) (dontdraw validatecheck) hibcqrcode /pixs get  % Figure C5, same
+[
+    1 1 1 1 1 1 1 0 1 0 1 0 0 0 1 1 1 1 1 1 1
+    1 0 0 0 0 0 1 0 0 1 0 0 1 0 1 0 0 0 0 0 1
+    1 0 1 1 1 0 1 0 1 0 1 1 0 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 0 0 1 0 1 0 1 0 1 1 1 0 1
+    1 0 1 1 1 0 1 0 0 0 0 1 1 0 1 0 1 1 1 0 1
+    1 0 0 0 0 0 1 0 1 1 1 0 0 0 1 0 0 0 0 0 1
+    1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1
+    0 0 0 0 0 0 0 0 0 1 1 0 1 0 0 0 0 0 0 0 0
+    1 0 1 0 0 0 1 1 0 0 0 1 0 0 0 1 0 0 1 0 1
+    0 0 0 1 1 0 0 0 1 1 1 1 0 0 1 0 0 0 0 1 0
+    0 0 0 1 0 1 1 0 0 1 0 1 1 0 0 1 1 1 1 1 0
+    0 1 1 1 0 0 0 0 1 1 0 0 0 0 1 1 0 1 0 1 0
+    0 0 0 1 0 1 1 0 1 1 1 1 1 1 0 1 1 0 1 1 1
+    0 0 0 0 0 0 0 0 1 0 1 1 0 0 0 0 0 1 1 1 1
+    1 1 1 1 1 1 1 0 1 1 1 1 1 1 0 1 1 1 0 0 1
+    1 0 0 0 0 0 1 0 0 1 0 1 1 1 1 0 0 0 0 0 1
+    1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 1 0 1 0 1 0
+    1 0 1 1 1 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0
+    1 0 1 1 1 0 1 0 1 1 0 1 0 1 1 0 0 1 1 1 1
+    1 0 0 0 0 0 1 0 0 1 0 0 1 0 1 1 1 1 0 0 1
+    1 1 1 1 1 1 1 0 1 1 1 1 0 1 1 0 0 1 1 1 1
+] debugIsEqual
+end
+} bind def

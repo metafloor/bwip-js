@@ -1,0 +1,81 @@
+/runtest_aztecrune {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+% ISO/IEC 24778:2008
+
+
+%%/aztecrune dup /uk.co.terryburton.bwipp findresource cvx def
+
+/eq_tmpl {
+    3 1 roll { _arg0_ _arg1_ aztecrune /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    isEqual
+} def
+
+/er_tmpl {
+    3 1 roll { _arg0_ _arg1_ aztecrune /pixs get }
+    dup 3 -1 roll 1 exch put
+    dup 3 -1 roll 0 exch put
+    exch isError
+} def
+
+
+% Aztec Runes
+
+(0) (dontdraw)
+[
+    1 1 1 0 1 0 1 0 1 0 1
+    1 1 1 1 1 1 1 1 1 1 1
+    0 1 0 0 0 0 0 0 0 1 0
+    1 1 0 1 1 1 1 1 0 1 1
+    0 1 0 1 0 0 0 1 0 1 0
+    1 1 0 1 0 1 0 1 0 1 1
+    0 1 0 1 0 0 0 1 0 1 0
+    1 1 0 1 1 1 1 1 0 1 1
+    0 1 0 0 0 0 0 0 0 1 0
+    0 1 1 1 1 1 1 1 1 1 1
+    0 0 1 0 1 0 1 0 1 0 0
+] eq_tmpl
+
+(255) (dontdraw)
+[
+    1 1 0 1 0 1 0 1 0 0 1
+    1 1 1 1 1 1 1 1 1 1 1
+    0 1 0 0 0 0 0 0 0 1 1
+    1 1 0 1 1 1 1 1 0 1 1
+    1 1 0 1 0 0 0 1 0 1 1
+    0 1 0 1 0 1 0 1 0 1 1
+    0 1 0 1 0 0 0 1 0 1 0
+    1 1 0 1 1 1 1 1 0 1 1
+    1 1 0 0 0 0 0 0 0 1 0
+    0 1 1 1 1 1 1 1 1 1 1
+    0 0 1 1 0 0 1 1 1 0 0
+] eq_tmpl
+
+%
+% Error tests
+%
+
+% Must be numeric
+(/) (dontdraw) /bwipp.aztecRuneNotNumeric er_tmpl
+(:) (dontdraw) /bwipp.aztecRuneNotNumeric er_tmpl
+
+% Must be 0-255
+(256) (dontdraw)  /bwipp.aztecRuneInvalid er_tmpl
+(1000) (dontdraw) /bwipp.aztecRuneInvalid er_tmpl
+
+% Layers not valid for runes
+(0) (layers=1 dontdraw) /bwipp.aztecRuneInvalidLayers er_tmpl
+
+% Reader init not compatible with runes
+(0) (readerinit dontdraw) /bwipp.aztecRuneReaderInit er_tmpl
+end
+} bind def

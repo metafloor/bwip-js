@@ -1,0 +1,111 @@
+%!PS
+
+% vim: set sw=4 sts=4 et:
+
+%
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+% Enable debug options for testing
+/uk.co.terryburton.bwipp.global_ctx << /enabledebug true /enabledontdraw true >> def
+
+/_isEqual {
+    2 copy type exch type ne {/testError pstack quit} if
+    dup type dup /arraytype eq exch /stringtype eq or {
+        2 copy
+        length exch length ne {/testError pstack quit} if
+        dup length 1 sub 0 exch 1 exch {
+            dup 3 index exch get exch 2 index exch get  % ... a b
+            2 copy type /realtype eq exch type /realtype eq or {
+                sub abs 0.0001 gt {/testError pstack quit} if
+            } {
+                ne {/testError pstack quit} if
+            } ifelse
+        } for
+    } {
+        2 copy ne {/testError pstack quit} if
+    } ifelse
+    pop pop
+} bind def
+
+/_isError {
+    exch pop
+    2 copy ne {/testError pstack quit} if
+    pop pop
+} bind def
+
+/_debugIsEqual {
+    2 copy
+    length exch length ne {/testError pstack quit} if
+    dup length 1 sub 0 exch 1 exch {
+        dup 3 index exch get exch 2 index exch get  % ... a b
+        2 copy type /realtype eq exch type /realtype eq or {
+            sub abs 0.0001 gt {/testError pstack quit} if
+        } {
+            ne {/testError pstack quit} if
+        } ifelse
+    } for
+    pop
+    pop pop
+} bind def
+
+% Accept success or bwipp.* error; fail on interpreter errors
+/_fuzzTest {
+    expectedResults 2 eq {
+        % Stopped: errorname errorinfo expect
+        pop pop  % errorname
+        128 string cvs (bwipp.) anchorsearch {
+            pop pop
+        } {
+            pop /testError pstack quit
+        } ifelse
+    } {
+        % Success: result expect
+        pop pop
+    } ifelse
+} bind def
+
+/_doTest {
+  /test exch def
+  /expect exch def
+  /cmd exch def
+  /cds countdictstack def
+  /wasglobal currentglobal def
+  /testStart /cmd load   % Put useful debugging info on stack
+  count /depth exch def  % Record stack depth after debug items
+  0 dict begin
+  {
+      cmd exec
+      1                  % Normal exit: Expect result
+  } stopped {
+      $error /errorname get     % Put error details on the stack
+      $error /errorname () put  % and clear the error dictionary
+      $error /errorinfo get
+      $error /errorinfo () put
+      2                  % Stopped: Expect errorname and errorinfo
+  } if
+  end
+  /expectedResults exch def
+  count depth sub expectedResults ne {
+      /stackImbalance pstack quit
+  } if
+  expect /test load exec
+  clear                                % Clear the operand stack
+  countdictstack cds sub dup 0 ne {    % Detect dict stack imbalance
+      (   dict leak: ) print dup = flush
+      {end} repeat
+  } {pop} ifelse
+  currentglobal wasglobal ne {         % Detect VM allocation mode leak
+      (   global VM leak) = flush
+      wasglobal setglobal
+  } if
+} bind def
+
+/isEqual { //_isEqual //_doTest exec } def
+/isError { //_isError //_doTest exec } def
+/debugIsEqual { //_debugIsEqual //_doTest exec } def
+/fuzzTest { null //_fuzzTest //_doTest exec } def
+

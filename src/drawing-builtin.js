@@ -158,7 +158,7 @@ function DrawingBuiltin() {
 
         // Polygons are used to draw the connected regions in a 2d barcode.
         // These will always be unstroked, filled, orthogonal shapes.
-        // 
+        //
         // You will see a series of polygon() calls, followed by a fill().
         polygon : function(pts) {
             var npts = pts.length;
@@ -293,8 +293,9 @@ function DrawingBuiltin() {
             gs_xyclip = null;
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
-        // font is an object with properties { name, width, height, dx }
+        // font is an object with properties { name, width, height, rotate, dx }
         // width and height are the font cell size.
+        // rotate is one of 0, 90, 180, 270 (default is zero)
         // dx is extra space requested between characters (usually zero).
         text : function(x, y, str, rgb, font) {
             x = x|0;
@@ -308,11 +309,22 @@ function DrawingBuiltin() {
             var fwidth  = font.width|0;
             var fheight = font.height|0;
             var dx      = font.dx|0;
+
+            // Since the SVG drawing must use a local rotation, we'll do it here as well.
+            var tx0 = 0, tx1 = 0, ty0 = 0, ty1 = 0;
+            switch (font.rotate) {
+            case 90:  tx1 =  1; ty0 = -1; break;
+            case 180: tx0 = -1; ty1 = -1; break;
+            case 270: tx1 = -1; ty0 =  1; break;
+            default:  tx0 =  1; ty1 =  1; break;
+            }
+
+            var gx = 0;
             for (var k = 0; k < str.length; k++) {
                 var ch = str.charCodeAt(k);
                 var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
 
-                var gt = y - glyph.top;
+                var gt = -glyph.top;
                 var gl = glyph.left;
                 var gw = glyph.width;
                 var gh = glyph.height;
@@ -323,11 +335,15 @@ function DrawingBuiltin() {
                     for (var j = 0; j < gh; j++) {
                         var a = gb[go + j * gw + i];
                         if (a) {
-                            set(x+gl+i, gt+j, a);
+                            var xx = gx+gl+i;
+                            var yy = gt+j;
+                            var tx = tx0 * xx + tx1 * yy;
+                            var ty = ty0 * xx + ty1 * yy;
+                            set(x+tx, y+ty, a);
                         }
                     }
                 }
-                x += glyph.advance + dx;
+                gx += glyph.advance + dx;
             }
         },
         // Called after all drawing is complete.
@@ -451,7 +467,7 @@ function DrawingBuiltin() {
         for (var y = left.min, max = left.length-1; y <= max; y++) {
             addPoint(left[y], y);
         }
-        // The points we calculated are "inside".  The fill algorithm excludes 
+        // The points we calculated are "inside".  The fill algorithm excludes
         // right edges, so +1 on each x.
         for (var y = right.min, max = right.length-1; y <= max; y++) {
             addPoint(right[y]+1, y);
@@ -489,7 +505,7 @@ function DrawingBuiltin() {
         for (var n = 0, npts = pts.length; n < npts; n++) {
             var xn = pts[n];
             if (xn > x) {
-                return !wn; 
+                return !wn;
             } else if (xn == x) {
                 return wn;
             }

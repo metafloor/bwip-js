@@ -36,11 +36,11 @@ if (cluster.isMaster) {
         console.log('worker ' + worker.process.pid + ' died');
         nworkers--;
         nwaiting++;
-        setTimeout(function() { 
+        setTimeout(function() {
                 cluster.fork();
                 nwaiting--;
                 nworkers++;
-            }, 1000 * nwaiting); 
+            }, 1000 * nwaiting);
     });
 } else {
     // All the workers will share the HTTP server

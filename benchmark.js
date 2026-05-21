@@ -2,21 +2,24 @@
 //
 // bwipjs benchmarker
 //
-// Usage: node [--expose-gc] benchmark [--verbose] [--use-v#.#]
+// Usage: node benchmark [--verbose] [--use-v#.#]
+"use strict";
+
 var fs = require('fs');
 
 // Keep output to a minimum
 var verbose = process.argv.indexOf('--verbose') > 0;
 
 var version = process.argv.reduce((acc, val) => {
-        let m = /^--use-v(\d+\.\d+)/.exec(val);
+        var m = /^--use-v(\d+\.\d+)/.exec(val);
         if (m) {
             return m[1];
         }
         return acc;
     }, null);
 
-var bwipjs = version ? require('bwipjs-' + version) : require('.');
+var bwipjs = version ? require('../bwip-js-vers/bwipjs-' + version) : require('.');
+console.log('Running bwip-js ' + (version ? 'v' + version : 'latest'));
 
 // Use a seedable PRNG so we generate the same random strings for each
 // run.
@@ -43,9 +46,9 @@ function alpha(x) {
 
 // Return a GTIN check-digited string
 function gtin(x) {
-    let val = ('000000000000000' + '1' +  numeric(x-2)).slice(-17);
-    let sum = 0;
-    for (let i = 0; i < 17; i++) {
+    var val = ('000000000000000' + '1' +  numeric(x-2)).slice(-17);
+    var sum = 0;
+    for (var i = 0; i < 17; i++) {
         sum += ((i&1) ? 1 : 3) * val[i];
     }
     sum = sum % 10;
@@ -131,7 +134,8 @@ function genround() {
     a.push({ bcid:'upce',   text:'0' + numeric(6),  _t:1 });
 
     a.push({ bcid:'ean13',  text:numeric(12) + ' ' + numeric(5),    _t:1 });
-    a.push({ bcid:'ean8',   text:numeric(7) + ' ' + numeric(2),     _t:1 });
+    //a.push({ bcid:'ean8',   text:numeric(7) + ' ' + numeric(2),     _t:1 });
+    a.push({ bcid:'ean8',   text:numeric(7),     _t:1 });
     a.push({ bcid:'upca',   text:numeric(11) + ' ' + numeric(5),    _t:1 });
     a.push({ bcid:'upce',   text:'0' + numeric(6) + ' ' + numeric(2),   _t:1 });
 
@@ -227,74 +231,117 @@ function genround() {
     return a;
 }
 
-/*async*/function runround(times) {
+function runround(times, callback) {
     times.msecs = times.msecs || 0;
     times.count = times.count || 0;
+    times.node = process.version;
 
     var round = genround();
-    return new Promise((resolve, reject) => {
-        run(0);
+    run(0);
 
-        function run(i) {
-            if (verbose) {
-                console.log(round[i]);
-            }
-            var id = round[i].bcid;
-            var t0 = process.hrtime();
-            bwipjs.toBuffer(round[i], (err, png) => {
-                var t1 = process.hrtime(t0);
-                if (err) {
-                    if (!/bwipp.unknownEncoder/.test(err)) {
-                        reject(err);
-                    }
-                } else {
-                    if (!times[id]) {
-                        times[id] = { id:id, count:0, msecs:0 };
-                    }
-                    var rec = times[id];
-                    rec.count++;
-                    rec.msecs += t1[0] * 1000 + t1[1] / 1000000;
-                    times.msecs += t1[0] * 1000 + t1[1] / 1000000;
-                    times.count++;
-                }
-                global.gc && global.gc();
-                if (++i == round.length) {
-                    resolve(true);
-                } else{
-                    run(i);
-                }
-            });
+    function run(i) {
+        if (verbose) {
+            console.log(round[i]);
         }
-    });
+        var id = round[i].bcid;
+        if (!times[id]) {
+            times[id] = { id:id, count:0, msecs:0 };
+        }
+        var t0 = process.hrtime();
+        bwipjs.toBuffer(round[i], (err, png) => {
+            var t1 = process.hrtime(t0);
+            if (err) {
+                if (!/bwipp.unknownEncoder/.test(err) && !/Bar code type ".*" unknown/.test(err)) {
+                    console.log(err);
+                    process.exit(1);
+                }
+            } else {
+                var sym = times[id];
+                sym.count++;
+                sym.msecs += Math.round(t1[0] * 1000 + t1[1] / 1000000)
+                //sym.msecs += Number((t1 - t0) / 1000n) / 1000;
+                //sym.encoding += Number(bwipjs.metrics.encode) / 1000;
+                //sym.rendering += Number(bwipjs.metrics.render) / 1000;
+
+                times.msecs += Math.round(t1[0] * 1000 + t1[1] / 1000000)
+                times.count++;
+            }
+            if (++i == round.length) {
+                setTimeout(callback, 100);
+            } else{
+                run(i);
+            }
+        });
+    }
 }
 
-(async () => {
-    try {
-        // Warm up the js engine
-        console.log('Warming up....');
-        for (var i = 0; i < 10; i++) {
-            var t0 = Date.now();
-            await runround({});
-            var t1 = Date.now();
-            console.log('warmup round ' + i + ' in ' + (t1-t0) + ' msecs');
+// Warm up the js engine
+function warmup() {
+    console.log('Warming up....');
+
+    var i = 0;
+    var t0 = Date.now();
+    runround({}, loop);
+
+    function loop() {
+        var t1 = Date.now();
+        console.log('warmup round ' + i + ' in ' + (t1-t0) + ' msecs');
+        if (++i == 10) {
+            benchmark();
+        } else {
+            t0 = Date.now();
+            runround({}, loop);
         }
 
-        // Now the actual benchmark
-        var times = {};
-        for (var i = 0; i < 25; i++) {
-            var t0 = Date.now();
-            await runround(times);
-            var t1 = Date.now();
-            console.log('round ' + i + ' in ' + (t1-t0) + ' msecs');
+    }
+}
+
+// Now the actual benchmark
+function benchmark() {
+    var times = {};
+    var i = 0;
+    var t0 = Date.now();
+    runround(times, loop);
+
+    function loop() {
+        var t1 = Date.now();
+        console.log('round ' + i + ' in ' + (t1-t0) + ' msecs');
+        if (++i == 20) {
+            complete(times);
+        } else {
+            t0 = Date.now();
+            runround(times, loop);
         }
-    } catch (e) {
-        console.log(e);
-        process.exit(1);
+    }
+}
+
+
+function complete(times) {
+    // Display the results
+    console.log('Total accrued time: ' + (times.msecs/1000).toFixed(3) +
+                ' seconds');
+
+    if (version) {
+        fs.writeFileSync('bench-v' + version + '.json', JSON.stringify(times, null, ' '), 'binary');
+        console.log('wrote: bench-v' + version + '.json');
+    } else {
+        fs.writeFileSync('bench-latest.json', JSON.stringify(times, null, ' '), 'binary');
+        console.log('wrote: bench-latest.json');
     }
 
-        // Display the results
-        console.log('Total accrued time: ' + (times.msecs/1000).toFixed(3) +
-                    ' seconds');
+    /*
+    var arr = [];
+    for (var id in bwipjs.times) {
+        arr.push([ id, bwipjs.times[id] ]);
+    }
+    arr.sort((a,b) => b[1] - a[1]);
+    for (var i = 0; i < arr.length; i++) {
+        var elt = arr[i];
+        console.log(elt[0].padEnd(50, '.') + ' ' + elt[1]);
+    }
+    */
+}
 
-        fs.writeFileSync('bench-stats.json', JSON.stringify(times, null, ' '), 'binary');
-})();
+// Start the async ball rolling
+warmup();
+

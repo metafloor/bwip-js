@@ -1,0 +1,52 @@
+/runtest_code39ext {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2024 Terry Burton
+%
+
+% ISO/IEC 16388:2007
+
+
+%%/code39ext dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) code39ext
+} /bwipp.code39emptyData isError
+
+{ () (dontdraw validatecheck) code39ext
+} /bwipp.code39emptyData isError
+
+{ (^161) (dontdraw parse) code39ext
+} /bwipp.code39extBadCharacter isError
+
+{ (Z1.) (dontdraw validatecheck) code39ext
+} /bwipp.code39badCheckDigit isError
+
+{ 501 string (dontdraw) code39ext } /bwipp.code39extinputTooLong isError
+
+
+% Examples
+
+{ (,I) (dontdraw validatecheck) code39ext /sbs get
+} [ 1 3 1 1 3 1 3 1 1 1 1 3 1 3 1 1 1 3 1 1 1 1 3 1 1 1 1 3 3 1 1 1 3 1 1 3 3 1 1 1 1 3 1 1 3 1 3 1 1 1 ] debugIsEqual
+
+
+% Regression: rangecheck when txt is single-string entry
+
+{ (Code39 Ext!) (includetext) code39ext } { true } true isEqual
+
+{ (Code39 Ext!) (includetext hidestars) code39ext } { true } true isEqual
+
+{ (Code39 Ext!) (includetext includecheck) code39ext } { true } true isEqual
+
+{ (Code39 Ext!) (includetext includecheck includecheckintext) code39ext } { true } true isEqual
+
+{ (Code39 Ext!) (includetext includecheck includecheckintext hidestars) code39ext } { true } true isEqual
+end
+} bind def

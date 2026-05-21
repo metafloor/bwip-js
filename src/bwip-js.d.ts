@@ -46,7 +46,7 @@ declare namespace BwipJs {
         borderleft?: number | undefined;
         borderright?: number | undefined;
         bordertop?: number | undefined;
-        boraderbottom?: number | undefined;
+        borderbottom?: number | undefined;
 
         barcolor?: string | undefined;
         backgroundcolor?: string | undefined;
@@ -90,6 +90,12 @@ declare namespace BwipJs {
     export interface RawOptions extends BwippOptions {
         bcid: string;
         text: string;
+    }
+    export interface SymbolDesc {
+        bcid: string;
+        desc: string;
+        text: string;
+        opts: string;
     }
     export interface DrawingContext<T> {
         setopts?(options: RenderOptions): void;
@@ -135,9 +141,10 @@ declare namespace BwipJs {
     ):
         | Array<{ bbs: number[]; bhs: number[]; sbs: number[] }>
         | Array<{ pixs: number[]; pixx: number; pixy: number; height: number; width: number }>;
-        
+
     export const BWIPP_VERSION: string;
     export const BWIPJS_VERSION: string;
+    export const symbolList: readonly SymbolDesc[];
 
     // wrapper around FontLib.loadFont()
     export function loadFont(name: string, data: string | Uint8Array): void;
@@ -182,7 +189,7 @@ declare namespace BwipJs {
     }
     export function toSVG(opts: RenderOptions): string;
     export function drawingSVG(): DrawingContext<string>;
-    
+
     // platform-specific exports
 }
 

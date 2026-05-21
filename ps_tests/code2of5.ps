@@ -1,0 +1,48 @@
+/runtest_code2of5 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2024 Terry Burton
+%
+
+%%/code2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) code2of5
+} /bwipp.code2of5emptyData isError
+
+{ () (dontdraw validatecheck) code2of5
+} /bwipp.code2of5emptyData isError
+
+{ (A) (dontdraw) code2of5
+} /bwipp.code2of5badCharacter isError
+
+{ (876543211) (dontdraw validatecheck) code2of5  % Check digit should be '2'
+} /bwipp.code2of5badCheckDigit isError
+
+{ (0) (dontdraw version=blah) code2of5
+} /bwipp.code2of5badVersion isError
+
+{ 501 string (dontdraw) code2of5 } /bwipp.code2of5inputTooLong isError
+
+
+% Examples
+
+{ (0) (dontdraw) code2of5 /sbs get
+} [ 3 1 3 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 1 1 3 ] debugIsEqual
+
+{ (0) (dontdraw validatecheck) code2of5 /sbs get  % Degenerate case with check digit only still allowed
+} [ 3 1 3 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 1 1 3 ] debugIsEqual
+
+{ (876543212) (dontdraw validatecheck) code2of5 /sbs get
+} [ 3 1 3 1 1 1 3 1 1 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 3 1 3 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 3 1 3 1 1 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 3 1 3 1 1 1 3 ] debugIsEqual
+
+{ (87654321) (dontdraw) code2of5 /sbs get
+} [ 3 1 3 1 1 1 3 1 1 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 3 1 1 1 3 1 3 1 1 1 1 1 3 1 1 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 3 1 3 1 3 1 1 1 1 1 1 1 1 1 3 1 1 1 1 1 3 1 3 1 1 1 1 1 1 1 3 1 3 1 1 1 3 ] debugIsEqual
+end
+} bind def

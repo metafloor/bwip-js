@@ -1,4 +1,3 @@
-
 // exports.js
 const BWIPJS_VERSION = '__BWIPJS_VERS__';
 
@@ -15,10 +14,15 @@ require('stream');  // fix for https://github.com/nodejs/node/issues/37021
 function Request(req, res, extra) {
     var opts = url.parse(req.url, true).query;
 
-    // Convert boolean empty parameters to true
+    // Convert empty !parameters to false.
+    // Convert empty parameters to true.
     for (var id in opts) {
         if (opts[id] === '') {
-            opts[id] = true;
+            if (id[0] == '!') {
+                opts[id.substr(1)] = false;
+            } else {
+                opts[id] = true;
+            }
         }
     }
 
@@ -89,58 +93,64 @@ function _ToAny(encoder, opts, drawing) {
     }
 }
 //@@BEGIN-BROWSER-EXPORTS@@
+// Context insensitive canvas element test.
+function IsCanvas(elt) {
+    return elt && /HTMLCanvasElement|OffscreenCanvas/.test(Object.getPrototypeOf(elt).constructor.name);
+}
 // bwipjs.toCanvas(canvas, options)
 // bwipjs.toCanvas(options, canvas)
 //
 // Uses the built-in canvas drawing.
 //
-// `canvas` can be an HTMLCanvasElement or an ID string or unique selector string.
+// `canvas` can be an HTMLCanvasElement|OffscreenCanvas or
+// an ID string or unique selector string.
 // `options` are a bwip-js/BWIPP options object.
 //
 // This function is synchronous and throws on error.
 //
-// Returns the HTMLCanvasElement.
+// Returns the canvas element.
 function ToCanvas(cvs, opts) {
-    if (typeof opts == 'string' || opts instanceof HTMLCanvasElement) {
+    if (typeof opts == 'string' || IsCanvas(opts)) {
         let tmp = cvs;
         cvs = opts;
         opts = tmp;
     }
-    return _ToAny(bwipp_lookup(opts.bcid), opts, cvs); 
+    return _ToAny(bwipp_lookup(opts.bcid), opts, cvs);
 }
 // Entry point for the symbol-specific exports
 //
 // Polymorphic internal interface
 // _ToAny(encoder, string, opts) : HTMLCanvasElement
 // _ToAny(encoder, HTMLCanvasElement, opts) : HTMLCanvasElement
+// _ToAny(encoder, OffscreenCanvas, opts) : OffscreenCanvas
 // _ToAny(encoder, opts, string) : HTMLCanvasElement
-// _ToAny(encoder, opts, HTMLCanvasElement) : HTMLCanvasElement
+// _ToAny(encoder, opts, OffscreenCanvas) : OffscreenCanvas
 // _ToAny(encoder, opts, drawing) : any
 //
 // 'string` can be either an `id` or query selector returning a single canvas element.
 function _ToAny(encoder, opts, drawing) {
     if (typeof opts == 'string') {
         var canvas = document.getElementById(opts) || document.querySelector(opts);
-        if (!(canvas instanceof HTMLCanvasElement)) {
+        if (!IsCanvas(canvas)) {
             throw new Error('bwipjs: `' + opts + '`: not a canvas');
         }
         opts = drawing;
         drawing = DrawingCanvas(canvas);
-    } else if (opts instanceof HTMLCanvasElement) {
+    } else if (IsCanvas(opts)) {
         var canvas = opts;
         opts = drawing;
         drawing = DrawingCanvas(canvas);
     } else if (typeof drawing == 'string') {
         var canvas = document.getElementById(drawing) || document.querySelector(drawing);
-        if (!(canvas instanceof HTMLCanvasElement)) {
+        if (!IsCanvas(canvas)) {
             throw new Error('bwipjs: `' + drawing + '`: not a canvas');
         }
         drawing = DrawingCanvas(canvas);
-    } else if (drawing instanceof HTMLCanvasElement) {
+    } else if (IsCanvas(drawing)) {
         drawing = DrawingCanvas(drawing);
     } else if (!drawing || typeof drawing != 'object' || !drawing.init) {
         throw new Error('bwipjs: not a canvas or drawing object');
-    } 
+    }
     return _Render(encoder, opts, drawing);
 }
 //@@BEGIN-REACT-NV-EXPORTS@@
@@ -308,14 +318,21 @@ function FixupOptions(opts) {
 
     return opts;
 
+    // a is the most specific padding value, e.g. paddingleft
+    // b is the next most specific value, e.g. paddingwidth
+    // c is the general padding value.
+    // s is the scale, either scalex or scaley
     function padding(a, b, c, s) {
         if (a != null) {
-            return a*s;
+            a = a >>> 0;
+            return a*s >>> 0;
         }
         if (b != null) {
-            return b*s;
+            b = b >>> 0;
+            return b*s >>> 0;
         }
-        return c*s || 0;
+        c = c >>> 0;
+        return (c*s >>> 0) || 0;
     }
 }
 
@@ -417,7 +434,7 @@ function ToRaw(bcid, text, options) {
     }
 
     // The drawing interface is just needed for the pre-init() calls.
-    // Don't need to fixup the options - drawing specific.
+    // Don't need to fixup the drawing specific options.
     var drawing = DrawingBuiltin();
     drawing.setopts(options);
 
@@ -426,23 +443,15 @@ function ToRaw(bcid, text, options) {
 
     // bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
     // are not a typical/expected return value.  Convert to plain-old-objects.
-    var ids = { pixs:1, pixx:1, pixy:1, sbs:1, bbs:1, bhs:1, width:1, height:1 };
+    var ids = { pixs:1, pixx:1, pixy:1, sbs:1, bbs:1, bhs:1, txt:1, width:1, height:1 };
     for (var i = 0; i < stack.length; i++) {
         var elt = stack[i];
         if (elt instanceof Map) {
             var obj = {};
-            // Could they make Maps any harder to iterate over???
             for (var keys = elt.keys(), size = elt.size, k = 0; k < size; k++) {
                 var id = keys.next().value;
                 if (ids[id]) {
-                    var val = elt.get(id);
-                    if (val instanceof Array) {
-                        // The postscript arrays have extra named properties
-                        // to emulate array views.  Return cleaned up arrays.
-                        obj[id] = val.b.slice(val.o, val.o + val.length);
-                    } else {
-                        obj[id] = val;
-                    }
+                    obj[id] = pod(elt.get(id));
                 }
             }
             stack[i] = obj;
@@ -452,4 +461,20 @@ function ToRaw(bcid, text, options) {
         }
     }
     return stack;
+
+    function pod(val) {
+        if (val instanceof Array) {
+            // The postscript arrays have extra named properties
+            // to emulate array views.  Return cleaned up arrays.
+            val = val.b.slice(val.o, val.o + val.length);
+
+            // Walk the array and convert each element
+            for (let j = 0, l = val.length; j < l; j++) {
+                val[j] = pod(val[j]);
+            }
+        } else if (val instanceof Uint8Array) {
+            val = String.fromCharCode.apply(null, val);
+        }
+        return val;
+    }
 }

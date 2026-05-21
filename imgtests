@@ -28,6 +28,9 @@ fi
 ##
 rm -f tests/*.png 2>/dev/null
 
+## Capture all output to a log file
+{
+
 ##
 ## Test number seed
 ##
@@ -64,6 +67,7 @@ h1 {
 div.main {
     padding-left:    1em;
     padding-bottom:  5px;
+    white-space:     nowrap;
 }
 div.main ~ div.main {
     border-top: 2px solid #777;
@@ -77,21 +81,57 @@ div.main > div {
     padding:        10px;
     text-align:     center;
 }
-img {
+img, svg {
     padding: 1px;
     border:  1px solid blue;
 }
 span {
     padding:   5px;
 }
+.dot {
+    width:          14px;
+    height:         4px;
+    border-radius:  7px;
+    position:       fixed;
+    right:          1px;
+    background-color: #d00;
+}
 </style>
 <script type="text/javascript">
 window.addEventListener('load', () => {
     if (window.devicePixelRatio) {
         let sheet = document.styleSheets[0];
-        sheet.insertRule('img { zoom: ' + (1 / window.devicePixelRatio) + '; }');
+        sheet.insertRule('img, svg { zoom: ' + (1 / window.devicePixelRatio) + '; }');
     }
+    window.addEventListener('resize', onresize);
+    onresize();
 });
+function onresize() {
+    let dots = document.body.querySelectorAll('div.dot');
+    for (let i = 0; i < dots.length; i++) {
+        document.body.removeChild(dots[i]);
+    }
+
+    let divs = document.body.querySelectorAll('div.main');
+    let marks = [];
+    for (let i = 0; i < divs.length; i++) {
+        let div = divs[i];
+        if (/error/.test(div.className)) {
+            marks.push(div.offsetTop + div.offsetHeight / 2);
+        }
+    }
+
+    // The 60 is height of up arrow + height of down arrow + height of 
+    // bottom horizontal scrollbar.  Roughly.
+    let mult = (window.innerHeight - 60) / document.body.offsetHeight;
+    for (let i = 0; i < marks.length; i++) {
+        let mark = marks[i];
+        let dot = document.createElement('div');
+        dot.className = 'dot';
+        dot.style.top = (mark*mult + 20) + 'px';
+        document.body.appendChild(dot);
+    }
+}
 </script>
 </head>
 <body>
@@ -113,11 +153,15 @@ cat <<@EOF >> imgtests.html
 ##
 ## END OF TEST CASES
 ##
-echo 
+echo
 echo "-----------------------"
 echo "Number of tests: $NTESTS"
 echo "Number of failures: $NFAILS"
 echo "-----------------------"
 echo
-echo "imgtests.html to view results"
 
+} | tee imgtests.log 2>&1
+
+echo "Use imgtests.html to view results"
+echo "Test output saved to imgtests.log"
+exit 0

@@ -1,0 +1,26 @@
+/runtest_itf14 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/itf14 dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (0 952 1234 54321 3) (dontdraw) itf14 /sbs get
+} [ 1 1 1 1 1 1 1 2 2 1 2 2 1 1 2 1 1 2 2 1 1 1 1 2 2 1 1 2 1 1 1 1 2 2 2 1 2 1 1 2 1 1 1 2 2 1 1 1 2 2 1 1 1 2 2 1 2 2 1 1 1 1 1 2 2 2 1 2 1 1 1 1 2 1 2 1 1 1 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (123456789012) (dontdraw) itf14 } /bwipp.itf14badLength isError
+{ (123456789012345) (dontdraw) itf14 } /bwipp.itf14badLength isError
+{ (095212345432A3) (dontdraw) itf14 } /bwipp.itf14badCharacter isError
+{ (09521234543210) (dontdraw) itf14 } /bwipp.itf14badCheckDigit isError
+end
+} bind def

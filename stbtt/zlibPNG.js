@@ -107,8 +107,8 @@ module.exports = function (width, height, bgcolor) {
 			}
 		}
 
-		_gray = _gray && 
-			((clr >>> 16) & 0xff) == (clr & 0xff) && 
+		_gray = _gray &&
+			((clr >>> 16) & 0xff) == (clr & 0xff) &&
 			((clr >>> 8) & 0xff) == (clr & 0xff);
 		_trans = _trans || (clr >>> 24) < 255;
 
@@ -169,7 +169,7 @@ module.exports = function (width, height, bgcolor) {
 			} else if (_ncolors <= 256) {
 				length += 12 + 3*_ncolors;		// PLTE
 				if (_trans)
-				  length += 12 + _ncolors;		// tRNS		
+				  length += 12 + _ncolors;		// tRNS
 			}
 
 			// Emulate a byte-stream

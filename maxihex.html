@@ -5,9 +5,9 @@
 <title>Maxi Code Hex</title>
 </head>
 <body>
-<b>Scale:&nbsp;</b> <input type="number" min=1 max=10 step=1 id="scaleX" value=2 
+<b>Scale:&nbsp;</b> <input type="number" min=1 max=10 step=1 id="scaleX" value=2
                     style="width:3em">
-                    <input type="number" min=1 max=10 step=1 id="scaleY" value=2 
+                    <input type="number" min=1 max=10 step=1 id="scaleY" value=2
                     style="width:3em">
 <button onclick="draw()">Draw</button>
 
@@ -129,26 +129,26 @@ function draw() {
     let rx = (2 * sx)|0;
     let ry = (2 * sy)|0;
     paths = [];
-    ellipse(x-rx, y-ry, x+rx, y+ry, true); 
+    ellipse(x-rx, y-ry, x+rx, y+ry, true);
     rx = (2 * sx + 1 * mwidth * 0.76)|0;
     ry = (2 * sx + 1 * mwidth * 0.76 * sy / sx)|0;
-    ellipse(x-rx, y-ry, x+rx, y+ry, false); 
+    ellipse(x-rx, y-ry, x+rx, y+ry, false);
     fill(paths);
     paths = [];
     rx = (2 * sx + 2 * mwidth * 0.76)|0;
     ry = (2 * sx + 2 * mwidth * 0.76 * sy / sx)|0;
-    ellipse(x-rx, y-ry, x+rx, y+ry, true); 
+    ellipse(x-rx, y-ry, x+rx, y+ry, true);
     rx = (2 * sx + 3 * mwidth * 0.76)|0;
     ry = (2 * sx + 3 * mwidth * 0.76 * sy / sx)|0;
-    ellipse(x-rx, y-ry, x+rx, y+ry, false); 
+    ellipse(x-rx, y-ry, x+rx, y+ry, false);
     fill(paths);
     paths = [];
     rx = (2 * sx + 4 * mwidth * 0.76)|0;
     ry = (2 * sx + 4 * mwidth * 0.76 * sy / sx)|0;
-    ellipse(x-rx, y-ry, x+rx, y+ry, true); 
+    ellipse(x-rx, y-ry, x+rx, y+ry, true);
     rx = (2 * sx + 5 * mwidth * 0.76)|0;
     ry = (2 * sx + 5 * mwidth * 0.76 * sy / sx)|0;
-    ellipse(x-rx, y-ry, x+rx, y+ry, false); 
+    ellipse(x-rx, y-ry, x+rx, y+ry, false);
     fill(paths);
 
     canvasRings(sx, sy);
@@ -335,7 +335,7 @@ function ellipse(x0, y0, x1, y1, dir) {
     // Left and right edges
     var left = [], right = [];
     right.dir = !!dir;
-    left.dir = !dir; 
+    left.dir = !dir;
     left.min = right.min = Infinity;
     left.max = right.max = -Infinity;
     left.ref = right.ref = [];

@@ -1,0 +1,38 @@
+/runtest_ismn {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+%%/ismn dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (979-0-2605-3211-3) (dontdraw) ismn /sbs get
+} [ 1 1 1 1 3 1 2 2 1 1 3 1 1 2 3 2 1 2 2 4 1 1 1 3 2 1 1 1 1 1 1 1 1 2 3 1 1 4 1 1 2 1 2 2 2 2 2 1 2 2 2 1 1 4 1 1 1 1 1 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (979-0-2605-321) (dontdraw) ismn } /bwipp.ismnBadLength isError
+{ (979-0-2605-3211-3 123) (dontdraw) ismn } /bwipp.ismnBadAddOnLength isError
+{ (978-0-2605-3211-5) (dontdraw) ismn } /bwipp.ismn13badPrefix isError
+{ (979-0--605-3211-3) (dontdraw) ismn } /bwipp.ismn13adjacentDashes isError
+{ (979-0-260532114-3) (dontdraw) ismn } /bwipp.ismn13numDashesDigits isError
+{ (979-0-2605-321A-3) (dontdraw) ismn } /bwipp.ismn13character15 isError
+{ (979-0-2605-321133) (dontdraw) ismn } /bwipp.ismn13character16 isError
+{ (979-0-2605-3211-A) (dontdraw) ismn } /bwipp.ismn13character17 isError
+{ (979-0-2605-3211-0) (dontdraw) ismn } /bwipp.ismnBadCheckDigit isError
+{ (X-2605-3211-4) (dontdraw) ismn } /bwipp.ismn10badPrefix isError
+{ (M-A605-3211-4) (dontdraw) ismn } /bwipp.ismn10character3 isError
+{ (M-2--5-3211-4) (dontdraw) ismn } /bwipp.ismn10adjacentDashes isError
+{ (M-260532110-4) (dontdraw) ismn } /bwipp.ismn10numDashesDigits isError
+{ (M-2605-321A-4) (dontdraw) ismn } /bwipp.ismn10character11 isError
+{ (M-2605-321144) (dontdraw) ismn } /bwipp.ismn10character12 isError
+{ (M-2605-3211-?) (dontdraw) ismn } /bwipp.ismn10character13 isError
+end
+} bind def

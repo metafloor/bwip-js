@@ -1,0 +1,26 @@
+/runtest_channelcode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/channelcode dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (3493) (dontdraw) channelcode /sbs get
+} [ 1 1 1 1 1 1 1 1 1 5 4 1 1 1 2 1 1 1 1 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (1) (dontdraw) channelcode } /bwipp.channelcodeBadLength isError
+{ (12345678) (dontdraw) channelcode } /bwipp.channelcodeBadLength isError
+{ (12A4) (dontdraw) channelcode } /bwipp.channelcodeBadCharacter isError
+{ (7742863) (dontdraw) channelcode } /bwipp.channelcodeTooBig isError
+end
+} bind def

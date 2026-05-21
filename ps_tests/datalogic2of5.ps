@@ -1,0 +1,25 @@
+/runtest_datalogic2of5 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2024 Terry Burton
+%
+
+%%/datalogic2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) datalogic2of5
+} /bwipp.code2of5emptyData isError
+
+
+% Examples
+
+{ (87654321) (dontdraw) datalogic2of5 /sbs get
+} [ 1 1 1 1 3 1 1 3 1 1 1 1 1 3 3 1 1 3 3 1 1 1 3 1 3 1 1 1 1 1 3 1 3 1 3 3 1 1 1 1 1 3 1 1 3 1 3 1 1 1 3 1 3 1 1 ] debugIsEqual
+end
+} bind def

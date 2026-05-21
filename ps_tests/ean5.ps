@@ -1,0 +1,24 @@
+/runtest_ean5 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/ean5 dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (90200) (dontdraw) ean5 /sbs get
+} [ 1 1 2 2 1 1 3 1 1 3 2 1 1 1 1 2 1 2 2 1 1 3 2 1 1 1 1 1 1 2 3 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (1234) (dontdraw) ean5 } /bwipp.ean5badLength isError
+{ (ABCDE) (dontdraw) ean5 } /bwipp.ean5badCharacter isError
+end
+} bind def

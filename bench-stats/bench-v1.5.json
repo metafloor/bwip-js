@@ -1,0 +1,210 @@
+{
+ "msecs": 10227,
+ "count": 1340,
+ "node": "v8.17.0",
+ "code128": {
+  "id": "code128",
+  "count": 60,
+  "msecs": 298
+ },
+ "code39": {
+  "id": "code39",
+  "count": 40,
+  "msecs": 230
+ },
+ "code93": {
+  "id": "code93",
+  "count": 40,
+  "msecs": 122
+ },
+ "ean13": {
+  "id": "ean13",
+  "count": 40,
+  "msecs": 141
+ },
+ "ean8": {
+  "id": "ean8",
+  "count": 40,
+  "msecs": 95
+ },
+ "upca": {
+  "id": "upca",
+  "count": 40,
+  "msecs": 135
+ },
+ "upce": {
+  "id": "upce",
+  "count": 40,
+  "msecs": 84
+ },
+ "ean13composite": {
+  "id": "ean13composite",
+  "count": 20,
+  "msecs": 122
+ },
+ "ean8composite": {
+  "id": "ean8composite",
+  "count": 20,
+  "msecs": 99
+ },
+ "upcacomposite": {
+  "id": "upcacomposite",
+  "count": 20,
+  "msecs": 107
+ },
+ "upcecomposite": {
+  "id": "upcecomposite",
+  "count": 20,
+  "msecs": 97
+ },
+ "sscc18": {
+  "id": "sscc18",
+  "count": 20,
+  "msecs": 91
+ },
+ "itf14": {
+  "id": "itf14",
+  "count": 20,
+  "msecs": 65
+ },
+ "onecode": {
+  "id": "onecode",
+  "count": 20,
+  "msecs": 47
+ },
+ "planet": {
+  "id": "planet",
+  "count": 20,
+  "msecs": 28
+ },
+ "postnet": {
+  "id": "postnet",
+  "count": 20,
+  "msecs": 30
+ },
+ "royalmail": {
+  "id": "royalmail",
+  "count": 20,
+  "msecs": 26
+ },
+ "japanpost": {
+  "id": "japanpost",
+  "count": 20,
+  "msecs": 35
+ },
+ "azteccode": {
+  "id": "azteccode",
+  "count": 100,
+  "msecs": 1031
+ },
+ "datamatrix": {
+  "id": "datamatrix",
+  "count": 100,
+  "msecs": 1024
+ },
+ "pdf417": {
+  "id": "pdf417",
+  "count": 100,
+  "msecs": 684
+ },
+ "qrcode": {
+  "id": "qrcode",
+  "count": 100,
+  "msecs": 2515
+ },
+ "hanxin": {
+  "id": "hanxin",
+  "count": 100,
+  "msecs": 1434
+ },
+ "databarexpanded": {
+  "id": "databarexpanded",
+  "count": 20,
+  "msecs": 93
+ },
+ "databarexpandedcomposite": {
+  "id": "databarexpandedcomposite",
+  "count": 20,
+  "msecs": 151
+ },
+ "databarexpandedstacked": {
+  "id": "databarexpandedstacked",
+  "count": 20,
+  "msecs": 119
+ },
+ "databarexpandedstackedcomposite": {
+  "id": "databarexpandedstackedcomposite",
+  "count": 20,
+  "msecs": 180
+ },
+ "databarlimited": {
+  "id": "databarlimited",
+  "count": 20,
+  "msecs": 30
+ },
+ "databarlimitedcomposite": {
+  "id": "databarlimitedcomposite",
+  "count": 20,
+  "msecs": 90
+ },
+ "databaromni": {
+  "id": "databaromni",
+  "count": 20,
+  "msecs": 41
+ },
+ "databaromnicomposite": {
+  "id": "databaromnicomposite",
+  "count": 20,
+  "msecs": 100
+ },
+ "databarstacked": {
+  "id": "databarstacked",
+  "count": 20,
+  "msecs": 28
+ },
+ "databarstackedcomposite": {
+  "id": "databarstackedcomposite",
+  "count": 20,
+  "msecs": 84
+ },
+ "databarstackedomni": {
+  "id": "databarstackedomni",
+  "count": 20,
+  "msecs": 70
+ },
+ "databarstackedomnicomposite": {
+  "id": "databarstackedomnicomposite",
+  "count": 20,
+  "msecs": 128
+ },
+ "databartruncated": {
+  "id": "databartruncated",
+  "count": 20,
+  "msecs": 31
+ },
+ "databartruncatedcomposite": {
+  "id": "databartruncatedcomposite",
+  "count": 20,
+  "msecs": 101
+ },
+ "gs1-128composite": {
+  "id": "gs1-128composite",
+  "count": 20,
+  "msecs": 162
+ },
+ "maxicode": {
+  "id": "maxicode",
+  "count": 20,
+  "msecs": 279
+ },
+ "ultracode": {
+  "id": "ultracode",
+  "count": 0,
+  "msecs": 0
+ },
+ "dotcode": {
+  "id": "dotcode",
+  "count": 0,
+  "msecs": 0
+ }
+}

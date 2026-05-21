@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ $# != 3 ] ; then
+    echo "Usage: bwippdiff encoder file1 file2"
+    echo "Example: bwippdiff code39ext barcode.ps /tmp/barcode.ps"
+    exit 1
+fi
+
+NAME=$1
+FILE1=$2
+FILE2=$3
+
+if [ "$FILE1" = . ] ; then
+    $FILE1=$(basename $FILE2);
+elif [ "$FILE2" = . ] ; then
+    $FILE2=$(basename $FILE1);
+fi
+
+if [ ! -f "$FILE1" ] ; then
+    echo "$FILE1: could not access"
+    exit 1
+fi
+if [ ! -f "$FILE2" ] ; then
+    echo "$FILE2: could not access"
+    exit 1
+fi
+
+awk "/--BEGIN [A-Z][A-Z]* $NAME--/,/--END [A-Z][A-Z]* $NAME--/" $FILE1 > /tmp/bwippdiff-1.$$
+awk "/--BEGIN [A-Z][A-Z]* $NAME--/,/--END [A-Z][A-Z]* $NAME--/" $FILE2 > /tmp/bwippdiff-2.$$
+
+diff /tmp/bwippdiff-1.$$ /tmp/bwippdiff-2.$$
+
+rm -f /tmp/bwipdiff-*.$$
+exit 0

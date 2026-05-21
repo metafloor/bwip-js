@@ -1,0 +1,27 @@
+/runtest_pharmacode {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/pharmacode dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (117480) (dontdraw) pharmacode /sbs get
+} [ 4.2525 2.835 4.2525 2.835 1.4175 2.835 1.4175 2.835 4.2525 2.835 1.4175 2.835 4.2525 2.835 1.4175 2.835 4.2525 2.835 4.2525 2.835 4.2525 2.835 1.4175 2.835 4.2525 2.835 1.4175 2.835 1.4175 2.835 4.2525 2.835 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ () (dontdraw) pharmacode } /bwipp.pharmacodeBadLength isError
+{ (1234567) (dontdraw) pharmacode } /bwipp.pharmacodeBadLength isError
+{ (12A4) (dontdraw) pharmacode } /bwipp.pharmacodeBadCharacter isError
+{ (2) (dontdraw) pharmacode } /bwipp.pharmacodeBadValue isError
+{ (131071) (dontdraw) pharmacode } /bwipp.pharmacodeBadValue isError
+end
+} bind def

@@ -23,6 +23,11 @@ function DrawingSVG() {
     var clips = [];
     var lines = {};
 
+    // We adjust the drawing coordinates by 0.5px when stroke width is odd.
+    // But this creates an odd effect with scale.  When scale is even, we
+    // need to add 0.5; when scale is odd, subtract 0.5.
+    var scalex, scaley;
+
     // Magic number to approximate an ellipse/circle using 4 cubic beziers.
     var ELLIPSE_MAGIC = 0.55228475 - 0.00045;
 
@@ -43,6 +48,8 @@ function DrawingSVG() {
 
         // Make no adjustments
         scale(sx, sy) {
+            scalex = sx;
+            scaley = sy;
         },
         // Measure text.
         // `font` is the font name typically OCR-A or OCR-B.
@@ -56,15 +63,19 @@ function DrawingSVG() {
             var width = 0;
             var ascent = 0;
             var descent = 0;
-            for (var i = 0; i < str.length; i++) {
+            for (var i = 0, l = str.length; i < l; i++) {
                 var ch = str.charCodeAt(i);
-                var glyph = FontLib.getpaths(fontid, ch, fwidth, fheight);
+                var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
                 if (!glyph) {
                     continue;
                 }
-                ascent  = Math.max(ascent, glyph.ascent);
-                descent = Math.max(descent, -glyph.descent);
-                width  += glyph.advance;
+                ascent  = Math.max(ascent, glyph.top);
+                descent = Math.max(descent, glyph.height - glyph.top);
+                if (i == l-1) {
+                    width += glyph.left + glyph.width;
+                } else {
+                    width += glyph.advance;
+                }
             }
             return { width, ascent, descent };
         },
@@ -105,28 +116,37 @@ function DrawingSVG() {
         // Unconnected stroked lines are used to draw the bars in linear barcodes.
         // No line cap should be applied.  These lines are always orthogonal.
         line(x0, y0, x1, y1, lw, rgb) {
-            // Try to get non-blurry lines...
             x0 = x0|0;
             y0 = y0|0;
             x1 = x1|0;
             y1 = y1|0;
-            lw = Math.round(lw);
+            lw = Math.round(lw) || 1;
 
             // Try to keep the lines "crisp" by using with the SVG line drawing spec to
-            // our advantage.
+            // our advantage and adjust the coordinates by half pixel when stroke width
+            // is odd.  Work around an odd effect with scale.  When scale is even, we
+            // need to add 0.5; when scale is odd, subtract 0.5.
             if (lw & 1) {
                 if (x0 == x1) {
-                    x0 += 0.5;
-                    x1 += 0.5;
+                    let dx = (scalex&1) ? -0.5 : 0.5;
+                    x0 += dx;
+                    x1 += dx;
                 }
                 if (y0 == y1) {
-                    y0 += 0.5;
-                    y1 += 0.5;
+                    let dy = (scaley&1) ? -0.5 : 0.5;
+                    y0 += dy;
+                    y1 += dy;
                 }
+            }
+            // The svg path does not include the start pixel, but the built-in drawing does.
+            if (x0 == x1) {
+                y0++;
+            } else if (y0 == y1) {
+                x0++;
             }
 
             // Group together all lines of the same width and emit as single paths.
-            // Dramatically reduces resulting text size.
+            // Dramatically reduces the svg text size.
             var key = '' + lw + '#' + rgb;
             if (!lines[key]) {
                 lines[key] = '<path stroke="#' + rgb + '" stroke-width="' + lw + '" d="';
@@ -177,7 +197,8 @@ function DrawingSVG() {
                     'Z';
         },
         // PostScript's default fill rule is non-zero but there are never intersecting
-        // regions so use even-odd as it is easier to work with.
+        // regions. The built-in drawing uses even-odd for simplicity - we match that
+        // to be consistent.
         fill(rgb) {
             if (path) {
                 // Ignore `fill` "black" if BG is "transparent"
@@ -211,10 +232,14 @@ function DrawingSVG() {
             clipid = '';
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
-        // font is an object with properties { name, width, height, dx }
+        // font is an object with properties { name, width, height, rotate, dx }
         // width and height are the font cell size.
+        // rotate is one of 0, 90, 180, 270 (default 0).
         // dx is extra space requested between characters (usually zero).
         text(x, y, str, rgb, font) {
+            x = x|0;
+            y = y|0;
+            var x0 = x, y0 = y;
             var fontid  = FontLib.lookup(font.name);
             var fwidth  = font.width|0;
             var fheight = font.height|0;
@@ -227,11 +252,12 @@ function DrawingSVG() {
                     continue;
                 }
                 if (glyph.length) {
-                    // A glyph is composed of sequence of curve and line segments.
-                    // M is move-to
-                    // L is line-to
-                    // Q is quadratic bezier curve-to
-                    // C is cubic bezier curve-to
+                    // A glyph is composed of a sequence of curve and line segments.
+                    // `type` is one of:
+                    //   M is move-to
+                    //   L is line-to
+                    //   Q is quadratic bezier curve-to
+                    //   C is cubic bezier curve-to
                     for (var i = 0, l = glyph.length; i < l; i++) {
                         let seg = glyph[i];
                         if (seg.type == 'M' || seg.type == 'L') {
@@ -248,13 +274,24 @@ function DrawingSVG() {
                     // Close the shape
                     path += 'Z';
                 }
-                x += glyph.advance + dx;
+                // getglyph() provides slightly different metrics than getpaths().  Keep
+                // it consistent with the built-in drawing.
+                x += FontLib.getglyph(fontid, ch, fwidth, fheight).advance + dx;
             }
             if (path) {
                 // Ignore `fill` "black" if BG is "transparent"
                 svg += '<path d="' + path + '"' +
-                            (!opts.hasOwnProperty('backgroundcolor') && /^0{6}$/.test(''+rgb) ? '' : ' fill="#' + rgb + '"') +
-                            ' />\n';
+                            (!opts.hasOwnProperty('backgroundcolor') && /^0{6}$/.test(''+rgb)
+                            ? ''
+                            : ' fill="#' + rgb + '"')
+                            ;
+                if (font.rotate) {
+                    // Note the '-' on the rotate.
+                    // Postscript rotates anti-clockwise for positive values.
+                    // SVG rotates clockwise for positive values.
+                    svg += ' transform="rotate(-' + font.rotate + ' ' + transform(x0, y0) + ')"';
+                }
+                svg += ' />\n';
             }
         },
         // Called after all drawing is complete.  The return value from this method

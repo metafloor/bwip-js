@@ -2,34 +2,49 @@
 % --REQUIRES preamble raiseerror--
 %%BeginResource: uk.co.terryburton.bwipp renlinear 0.0 2015021800 76908 76502
 %%BeginData:        237 ASCII Lines
-%% /setpacking where {pop currentpacking true setpacking} if
-%% 1 dict
-%% dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
-%% begin
+/setpacking where {pop currentpacking true setpacking} if
+8 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+dup /render dup /uk.co.terryburton.bwipp findresource put
+begin
+
+/renlinear.xalignopts <<
+    /offleft dup  /left dup  /center dup  /right dup  /offright dup /justify dup
+>> readonly def
+
+/renlinear.yalignopts <<
+    /above dup  /top dup  /center dup  /bottom dup  /below dup /justify dup
+>> readonly def
+
+/renlinear.directionoptions <<
+    /forward dup  /backward dup  /upward dup  /downward dup
+>> readonly def
+
 /renlinear {
-    20 dict begin          % Confine variables to local scope
+    64 dict begin
 
-    %%/args exch def   % We are given some arguments
-
+    %
     % Default options
+    %
     /sbs [] def
     /bhs [] def
     /bbs [] def
     /txt [] def
-    /barcolor (unset) def
+
+    % text{1-9}* options with common defaults
+    //inittextoptions exec
+
+    % Overrides permitting encoder-positioned text
+    /text1xalign (unset) def
+    /text1yalign (unset) def
+
     /includetext false def
-    /textcolor (unset) def
-    /textxalign (unset) def
-    /textyalign (unset) def
-    /textfont (Courier) def
-    /textsize 10.0 def
-    /textxoffset 0.0 def
-    /textyoffset 0.0 def
-    /textgaps 0.0 def
-    /alttext () def
+    /barcolor (unset) def
+    %%/backgroundcolor (unset) def
     /bordercolor (unset) def
-    /backgroundcolor (unset) def
-    /inkspread 0.0 def      % Was 0.15
+    /inkspread null def
     /width 0.0 def
     /barratio 1.0 def
     /spaceratio 1.0 def
@@ -37,25 +52,102 @@
     /showbearer false def
     /borderleft 10.0 def
     /borderright 10.0 def
-    /bordertop 1.0 def      % Was 0.0
-    /borderbottom 1.0 def   % Was 0.0
+    /bordertop 1.0 def    %% bwipp 0.0
+    /borderbottom 1.0 def %% bwipp 0.0
     /borderwidth 0.5 def
     /guardwhitespace false def
     /guardleftpos 0.0 def
     /guardleftypos 0.0 def
     /guardrightpos 0.0 def
     /guardrightypos 0.0 def
-    /guardwidth 7.0 def     % Was 5.0
+    /guardwidth 5.0 def
     /guardheight 7.0 def
 
     {def} forall
     opt currentdict /opt undef //processoptions exec pop
+    /textopts //grouptextoptions exec def
 
-    textsize 0 le {
-        /bwipp.renlinearBadTextsize (The font size must be greater than zero) //raiseerror exec
+    %
+    % Input validation
+    %
+
+    % Validate text{1-9}* options
+    1 1 9 {
+        /textgrp exch def
+        textgrp textopts textgrp 1 sub get
+        //validatetext exec not { //raiseerror exec } if
+    } for
+
+    inkspread -1 lt inkspread 1 gt or {
+        /bwipp.renlinearBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
     } if
-    
+
+    borderleft -1 lt borderleft 50 gt or {
+        /bwipp.renlinearBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderright -1 lt borderright 50 gt or {
+        /bwipp.renlinearBadBorderright (borderright must be from -1 to 50) //raiseerror exec
+    } if
+
+    bordertop -1 lt bordertop 50 gt or {
+        /bwipp.renlinearBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderbottom -1 lt borderbottom 50 gt or {
+        /bwipp.renlinearBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderwidth 0 lt borderwidth 10 gt or {
+        /bwipp.renlinearBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
+    } if
+
+    barratio 0.1 lt barratio 5 gt or {
+        /bwipp.renlinearBadBarratio (barratio must be from 0.1 to 5) //raiseerror exec
+    } if
+
+    spaceratio 0.1 lt spaceratio 5 gt or {
+        /bwipp.renlinearBadSpaceratio (spaceratio must be from 0.1 to 5) //raiseerror exec
+    } if
+
+    width 0 ne { width 0.01 lt width 20 gt or {
+        /bwipp.renlinearBadWidth (width must be 0 or from 0.01 to 20) //raiseerror exec
+    } if } if
+
+    guardwidth 0 lt guardwidth 20 gt or {
+        /bwipp.renlinearBadGuardwidth (guardwidth must be from 0 to 20) //raiseerror exec
+    } if
+
+    guardheight 0 lt guardheight 20 gt or {
+        /bwipp.renlinearBadGuardheight (guardheight must be from 0 to 20) //raiseerror exec
+    } if
+
+    guardleftpos -50 lt guardleftpos 150 gt or {
+        /bwipp.renlinearBadGuardleftpos (guardleftpos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardleftypos -50 lt guardleftypos 150 gt or {
+        /bwipp.renlinearBadGuardleftypos (guardleftypos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardrightpos -50 lt guardrightpos 150 gt or {
+        /bwipp.renlinearBadGuardrightpos (guardrightpos must be from -50 to 150) //raiseerror exec
+    } if
+
+    guardrightypos -50 lt guardrightypos 150 gt or {
+        /bwipp.renlinearBadGuardrightypos (guardrightypos must be from -50 to 150) //raiseerror exec
+    } if
+
+    sbs length 0 ne {
+        sbs length 1 add 2 idiv  % nbars
+        bhs length 1 index lt bbs length 2 index lt or
+        { pop /bwipp.renlinearBadBarHeightArrays (The bar height and baseline arrays must be at least as long as the number of bars) //raiseerror exec } if
+        pop
+    } if
+
+    %
     % Create bar elements and put them into the bars array
+    %
     /bars sbs length 1 add 2 idiv array def
     /pixx 0 def /pixy 0 def
     0 1 sbs length 1 add 2 idiv 2 mul 2 sub {
@@ -87,7 +179,9 @@
         width 72 mul pixx div 1 scale
     } if
 
+    %
     % Display the border and background
+    %
     % background is handled by the bwip-js drawing interface.
     %backgroundcolor (unset) ne {
     %    gsave
@@ -109,24 +203,16 @@
         grestore
     } {
     showborder {
-        % This is the original showborder code from the old renlinear.
-        % It better spaces the border around the symbol.
-        %newpath
-        %borderleft neg borderbottom neg moveto
-        %pixx borderleft add borderright add 0 rlineto
-        %0 pixy borderbottom add bordertop add rlineto
-        %pixx borderleft add borderright add neg 0 rlineto
-        %0 pixy borderbottom add bordertop add neg rlineto
-        %closepath
-
         gsave
         newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
         bordercolor (unset) ne { bordercolor setanycolor } if
         borderwidth setlinewidth stroke
         grestore
     } if } ifelse
-   
+
+    %
     % Display the bars for elements in the bars array
+    %
     gsave
     0 setlinecap
     barcolor (unset) ne { barcolor setanycolor } if
@@ -138,88 +224,36 @@
         } ifelse
     } forall
     grestore
-    
-    % Display the text for elements in the text array
-    textcolor (unset) ne { textcolor setanycolor } if
-    includetext {
-        textxalign (unset) eq textyalign (unset) eq and alttext () eq and {
-            /s 0 def /fn () def
-            txt {
-                {} forall
-                2 copy s ne exch fn ne or {
-                    2 copy /s exch def /fn exch def            
-					selectfont
-                } {
-                    pop pop
-                } ifelse
-                moveto show
-            } forall
-        } {
-            textfont textsize selectfont
-            alttext () eq {
-                /txt [ txt { 0 get {} forall } forall ] def
-                /tstr txt length string def
-                0 1 txt length 1 sub { dup txt exch get tstr 3 1 roll put } for
-            } {
-                /tstr alttext def
-            } ifelse
 
-            % Find true ascent of font
-            tstr length 0 eq {
-                0
-            } {
-                gsave
-                newpath 0 0 moveto (0) false charpath pathbbox
-                4 1 roll pop pop pop
-                grestore
-                %%currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-                %%currentfont /StrokeWidth known and {
-                %%  currentfont /StrokeWidth get 2 div 0 exch
-                %%  currentfont /FontMatrix get dtransform
-                %%  dup mul exch dup mul add sqrt
-                %%  add
-                %%} if
-            } ifelse
-            /textascent exch def
-            /textwidth tstr stringwidth pop tstr length 1 sub textgaps mul add def
+    %
+    % Display text{1-9}
+    %
+    1 1 9 {
+        /textgrp exch def
+        textopts textgrp 1 sub get () get () ne              % Has manual contents
+        textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
+        {
+            textopts textgrp 1 sub get
+            dup dup () get (content) exch put
+            dup (txt) textgrp 1 eq { txt } { [] } ifelse put
+            pixx pixy textgrp 4 -1 roll //rendertext exec
+            not { grestore //raiseerror exec } if
+        } if
+    } for
 
-            /textxpos textxoffset pixx textwidth sub 2 div add def
-            textxalign (left) eq { /textxpos textxoffset def } if
-            textxalign (right) eq { /textxpos pixx textxoffset sub textwidth sub def } if
-            textxalign (offleft) eq { /textxpos textwidth textxoffset add neg def } if
-            textxalign (offright) eq { /textxpos pixx textxoffset add def } if
-            textxalign (justify) eq textwidth pixx lt and {
-                /textxpos 0 def
-                /textgaps pixx textwidth sub tstr length 1 sub div def
-            } if
-            /textypos textyoffset textascent add 1 add neg def
-            textyalign (above) eq { /textypos textyoffset pixy add 1 add def } if
-            textyalign (center) eq { /textypos textyoffset pixy textascent sub 2 div add def } if
-            textxpos textypos moveto textgaps 0 tstr ashow
-        } ifelse
-    } if    
-
+    %
     % Display the guard elements
-    guardwhitespace {
-		(OCR-B) guardheight 2 mul selectfont
-        guardleftpos 0 ne {
-            guardleftpos neg 2 sub guardleftypos guardheight 2 div sub 1.25 sub moveto
-			(<) show
-        } if
-        guardrightpos 0 ne {
-            guardrightpos pixx add guardwidth sub 1 add guardrightypos guardheight 2 div sub 1.25 sub moveto
-			(>) show
-        } if
-    } if
-    
+    %
+    pixx //renderguards exec
+
     grestore
-    
+
     end
 
 } bind def
-%% /renlinear dup load /uk.co.terryburton.bwipp defineresource pop
-%% end
-%% /setpacking where {pop setpacking} if
+/renlinear dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
 %%EndData
 %%EndResource
 % --END RENDERER renlinear--

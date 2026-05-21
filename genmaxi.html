@@ -120,7 +120,7 @@ function render() {
     if (scale <= 2) {
         drawHex(prctx1, (radius - 0.75) * gridsize, '#f0f0f0', false);
     } else {
-        drawHex(prctx1, (radius - Math.floor(scale/3))*gridsize, '#f0f0f0', false); 
+        drawHex(prctx1, (radius - Math.floor(scale/3))*gridsize, '#f0f0f0', false);
     }
     let pcts0 = calcPcts(prcvs0, prctx0);
     let pcts1 = calcPcts(prcvs1, prctx1);
@@ -262,7 +262,7 @@ function render() {
             }
         }
     }
-                
+
     function drawPixels(prcvs, prctx, pcts) {
         prctx.fillStyle = 'black';
 

@@ -1,0 +1,25 @@
+/runtest_interleaved2of5 {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/interleaved2of5 dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (2401234567) (includecheck dontdraw) interleaved2of5 /sbs get
+} [ 1 1 1 1 1 1 1 2 2 1 2 1 1 2 1 1 1 1 2 2 1 2 2 1 2 1 1 2 1 1 1 1 2 2 2 1 2 1 1 2 1 1 1 2 2 1 1 2 2 2 1 1 1 1 1 1 1 2 1 2 2 1 2 1 2 1 1 1 ] isEqual
+
+
+%
+% Error tests
+%
+
+{ (123A5) (dontdraw) interleaved2of5 } /bwipp.interleaved2of5badCharacter isError
+
+{ 501 string (dontdraw) interleaved2of5 } /bwipp.interleaved2of5inputTooLong isError
+end
+} bind def

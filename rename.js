@@ -39,7 +39,7 @@ var mins = {
 
 // Minify.  We do not take the usual minify route where variable names
 // are re-written (randomly shortened).  That makes trying to debug
-// a run-time error way too difficult.  Besides, the cross-compiler 
+// a run-time error way too difficult.  Besides, the cross-compiler
 // already uses fairly terse variable naming.
 
 // Map the long function names (postscript operators) to their abbreviations.

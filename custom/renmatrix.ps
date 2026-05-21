@@ -1,0 +1,261 @@
+% --BEGIN RENDERER renmatrix--
+% --REQUIRES preamble raiseerror processoptions--
+%%BeginResource: uk.co.terryburton.bwipp renmatrix 0.0 2025041900 118278 116442
+%%BeginData:        408 ASCII Lines
+/setpacking where {pop currentpacking true setpacking} if
+8 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /setuphooks dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+dup /rendertext dup /uk.co.terryburton.bwipp findresource put
+begin
+
+/renmatrix.xalignopts <<
+    /offleft dup  /left dup  /center dup  /right dup  /offright dup /justify dup
+>> readonly def
+
+/renmatrix.yalignopts <<
+    /above dup  /top dup  /center dup  /bottom dup  /below dup /justify dup
+>> readonly def
+
+/renmatrix.directionoptions <<
+    /forward dup  /backward dup  /upward dup  /downward dup
+>> readonly def
+
+/renmatrix {
+
+    20 dict begin
+
+    % Default options
+    /width 1.0 def
+    /height 1.0 def
+    /barcolor (unset) def
+    %%/backgroundcolor (unset) def
+    /bordercolor (unset) def
+    /colormap (unset) def
+    /dotty false def
+    /inkspread null def    % real sentinel
+    /inkspreadh null def   % real sentinel
+    /inkspreadv null def   % real sentinel
+    /txt [] def
+
+    % text{1-9}* options with common defaults
+    //inittextoptions exec
+
+    % Overrides permitting encoder-positioned text
+    /text1xalign (unset) def
+    /text1yalign (unset) def
+
+    /includetext false def
+    /showborder false def
+    /borderleft 0.0 def
+    /borderright 0.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.5 def
+    /guardwhitespace false def
+    /guardleftpos 0.0 def
+    /guardleftypos 0.0 def
+    /guardrightpos 0.0 def
+    /guardrightypos 0.0 def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
+
+    {def} forall
+    opt currentdict /opt undef //processoptions exec pop
+    /textopts //grouptextoptions exec def
+
+    inkspread null eq {/inkspread 0.15 def} if
+    inkspreadh null eq {/inkspreadh inkspread def} if
+    inkspreadv null eq {/inkspreadv inkspread def} if
+
+    % Default rowmult to all 1s if not provided
+    currentdict /rowmult known not {
+        /rowmult [ pixy { 1 } repeat ] def
+    } if
+
+    % Inflate the pixels
+    /bufnew pixx pixy mul array def
+    /bufoff 0 def
+    /pixoff 0 def
+    rowmult {
+        { bufnew bufoff pixs pixoff pixx getinterval putinterval
+          /bufoff bufoff pixx add def
+        } repeat
+        /pixoff pixoff pixx add def
+    } forall
+    /pixs bufnew def
+
+    %
+    % Input validation
+    %
+    (input.validate) //renmatrix.before exec
+
+    % Validate text{1-9}* options
+    1 1 9 {
+        /textgrp exch def
+        textgrp textopts textgrp 1 sub get
+        //validatetext exec not { //raiseerror exec } if
+    } for
+
+    inkspread -1 lt inkspread 1 gt or {
+        /bwipp.renmatrixBadInkspread (inkspread must be from -1 to 1) //raiseerror exec
+    } if
+
+    inkspreadh -1 lt inkspreadh 1 gt or {
+        /bwipp.renmatrixBadInkspreadh (inkspreadh must be from -1 to 1) //raiseerror exec
+    } if
+
+    inkspreadv -1 lt inkspreadv 1 gt or {
+        /bwipp.renmatrixBadInkspreadv (inkspreadv must be from -1 to 1) //raiseerror exec
+    } if
+
+    borderleft -1 lt borderleft 50 gt or {
+        /bwipp.renmatrixBadBorderleft (borderleft must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderright -1 lt borderright 50 gt or {
+        /bwipp.renmatrixBadBorderright (borderright must be from -1 to 50) //raiseerror exec
+    } if
+
+    bordertop -1 lt bordertop 50 gt or {
+        /bwipp.renmatrixBadBordertop (bordertop must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderbottom -1 lt borderbottom 50 gt or {
+        /bwipp.renmatrixBadBorderbottom (borderbottom must be from -1 to 50) //raiseerror exec
+    } if
+
+    borderwidth 0 lt borderwidth 10 gt or {
+        /bwipp.renmatrixBadBorderwidth (borderwidth must be from 0 to 10) //raiseerror exec
+    } if
+
+    width 0.01 lt width 50 gt or {
+        /bwipp.renmatrixBadWidth (width must be from 0.01 to 50) //raiseerror exec
+    } if
+
+    height 0.01 lt height 50 gt or {
+        /bwipp.renmatrixBadHeight (height must be from 0.01 to 50) //raiseerror exec
+    } if
+
+    pixx 0 le pixy 0 le or {
+        /bwipp.renmatrixBadDimensions (The symbol dimensions must be positive) //raiseerror exec
+    } if
+
+    pixs length pixx pixy mul lt {
+        /bwipp.renmatrixBadPixelData (The pixel data is shorter than the symbol dimensions require) //raiseerror exec
+    } if
+
+    /xyget { pixx mul add pixs exch get} def
+    /drawlayerdots {
+
+        /pixsorig pixs def
+        /pixs exch def
+
+        newpath
+        0 1 pixs length 1 sub {
+            dup pixx mod /x exch def
+            pixx idiv /y exch def
+            x y xyget 1 eq {
+               x 0.5 add pixy y sub 0.5 sub moveto
+               x 0.5 add pixy y sub 0.5 sub 0.5 inkspread sub 0 360 arc
+            } if
+        } for
+        fill
+
+        /pixs pixsorig def
+
+    } def
+
+    gsave
+
+    currentpoint translate
+
+    /inkspread  inkspread  2 div def
+    /inkspreadh inkspreadh 2 div def
+    /inkspreadv inkspreadv 2 div def
+
+    %
+    % Force symbol to given width
+    %
+    width pixx div 72 mul height pixy div 72 mul scale
+
+    %
+    % Display the border and background
+    %
+    showborder {
+        /tl [ borderleft borderwidth 2 div add neg        pixy bordertop add borderwidth 2 div add ] def
+        /tr [ pixx borderright add borderwidth 2 div add  pixy bordertop add borderwidth 2 div add ] def
+        /bl [ borderleft borderwidth 2 div add neg        borderbottom borderwidth 2 div add neg   ] def
+        /br [ pixx borderright add borderwidth 2 div add  borderbottom borderwidth 2 div add neg   ] def
+    } {  % No need to extend background when there is no border
+        /tl [ borderleft neg inkspread add                pixy bordertop add inkspread sub         ] def
+        /tr [ pixx borderright add inkspread sub          pixy bordertop add inkspread sub         ] def
+        /bl [ borderleft neg inkspread add                borderbottom neg inkspread add           ] def
+        /br [ pixx borderright add inkspread sub          borderbottom neg inkspread add           ] def
+    } ifelse
+%%    backgroundcolor (unset) ne {
+%%        gsave
+%%        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+%%        backgroundcolor setanycolor fill
+%%        grestore
+%%    } if
+    showborder {
+        gsave
+        newpath bl aload pop moveto [ br tr tl ] { aload pop lineto } forall closepath
+        bordercolor (unset) ne { bordercolor setanycolor } if
+        borderwidth inkspread 2 mul sub setlinewidth stroke
+        grestore
+    } if
+
+    % Display the matrix
+    colormap (unset) eq {
+        /colormap << 1 barcolor >> def
+    } if
+
+    %
+    % Display the matrix
+    %
+    colormap {
+        dup (unset) ne { setanycolor } { pop } ifelse
+        /key exch def
+        [
+            pixs { key eq {1} {0} ifelse } forall
+        ] dotty {drawlayerdots} {drawlayer} ifelse
+    } forall
+
+    %
+    % Display the text
+    %
+    1 1 9 {
+        /textgrp exch def
+        textopts textgrp 1 sub get () get () ne              % Has manual contents
+        textgrp 1 eq txt length 0 gt and includetext and or  % or text1 with encoder txt and includetext
+        {
+            textopts textgrp 1 sub get
+            dup (txt) txt put
+            dup dup () get (content) exch put
+            pixx pixy textgrp 4 -1 roll //rendertext exec
+            not { grestore //raiseerror exec } if
+        } if
+    } for
+
+    %
+    % Display the guard elements
+    %
+    pixx //renderguards exec
+
+    grestore
+
+    end
+
+}
+[/barcode] {null def} forall
+bind def
+/renmatrix dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+%%EndData
+%%EndResource
+% --END RENDERER renmatrix--

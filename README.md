@@ -47,7 +47,3 @@ See the [Version 1.0 Release Announcement](https://github.com/metafloor/bwip-js/
     `$ ./mkdist`
 
   - Your newly minted code is in the dist/ directory.
-
-
-
-

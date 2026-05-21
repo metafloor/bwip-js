@@ -1,0 +1,259 @@
+% --BEGIN RESOURCE render--
+% --REQUIRES preamble processoptions setanycolor--
+%%BeginResource: uk.co.terryburton.bwipp render 0.0 2026033100 204797 210987
+%%BeginData:        443 ASCII Lines
+currentglobal
+true setglobal
+/setpacking where {pop currentpacking true setpacking} if
+32 dict
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+begin
+
+% Text position lookup table
+/rendertext.positions <<
+%   direction
+%       x-align                                     y-align
+    (forward) <<
+        (offleft)  {      tw neg nudge sub } bind   (below)   {      th neg nudge sub } bind
+        (left)     {      0                } bind   (bottom)  {      0                } bind
+        (xcenter)  { pixx tw sub 2 div     } bind   (ycenter) { pixy th sub 2 div     } bind
+        (right)    { pixx tw sub           } bind   (top)     { pixy th sub           } bind
+        (offright) { pixx        nudge add } bind   (above)   { pixy        nudge add } bind
+    >>
+    (backward) <<
+        (offleft)  {      0      nudge sub } bind   (below)   {      0      nudge sub } bind
+        (left)     {      tw               } bind   (bottom)  {      th               } bind
+        (xcenter)  { pixx tw add 2 div     } bind   (ycenter) { pixy th add 2 div     } bind
+        (right)    { pixx                  } bind   (top)     { pixy                  } bind
+        (offright) { pixx tw add nudge add } bind   (above)   { pixy th add nudge add } bind
+    >>
+    (upward) <<
+        (offleft)  {      0      nudge sub } bind   (below)   {      tw neg nudge sub } bind
+        (left)     {      th               } bind   (bottom)  {      0                } bind
+        (xcenter)  { pixx th add 2 div     } bind   (ycenter) { pixy tw sub 2 div     } bind
+        (right)    { pixx                  } bind   (top)     { pixy tw sub           } bind
+        (offright) { pixx th add nudge add } bind   (above)   { pixy        nudge add } bind
+    >>
+    (downward) <<
+        (offleft)  {      th neg nudge sub } bind   (below)   {      0      nudge sub } bind
+        (left)     {      0                } bind   (bottom)  {      tw               } bind
+        (xcenter)  { pixx th sub 2 div     } bind   (ycenter) { pixy tw add 2 div     } bind
+        (right)    { pixx th sub           } bind   (top)     { pixy                  } bind
+        (offright) { pixx        nudge add } bind   (above)   { pixy tw add nudge add } bind
+    >>
+>> readonly def
+
+%
+%  Render a single text element
+%
+%  pixx pixy grp textdict /rendertext //render exec => bool [errorname errorstring |]
+%
+/rendertext {
+
+    %%begin            % td on dict stack
+    32 dict begin splay %% push td on dict
+
+    /grp exch def
+    /pixy exch def
+    /pixx exch def
+
+    /makeerr {  % /errname (errmsg) => /bwipp.PFXerrname (PFXerrmsg)
+
+        /makeerr.msg exch def
+        /makeerr.name exch 128 string cvs def
+
+        grp 1 eq {
+            (text)
+        } {
+        grp 2 eq {
+            (extratext)
+        } {
+            5 string dup 0 (text) putinterval dup 4 grp 48 add put
+        } ifelse } ifelse
+        /makeerr.pfx exch def
+
+        makeerr.pfx length 6 add makeerr.name length add string
+        dup 0 (bwipp.) putinterval
+        dup 6 makeerr.pfx putinterval
+        dup makeerr.pfx length 6 add makeerr.name putinterval
+        cvn
+
+        makeerr.pfx length makeerr.msg length add string
+        dup 0 makeerr.pfx putinterval
+        dup makeerr.pfx length makeerr.msg putinterval
+
+    } def
+
+    /positiontext {
+        /th exch def
+        /tw exch def
+        /nudge 1 def
+        //rendertext.positions exch get dup
+        4 -1 roll dup (center) eq {pop (xcenter)} if get exec exch
+        3 -1 roll dup (center) eq {pop (ycenter)} if get exec
+    } def
+
+    1 {  % Common exit
+
+        %
+        % Encoder-positioned text
+        %
+        txt length 0 gt xalign (unset) eq and yalign (unset) eq and content () eq and {
+
+            color (unset) ne { color //setanycolor exec not { false exit } if } if
+
+            /s 0 def /fn () def /xoff 0 def /yoff 0 def
+            {
+                txt {
+                    aload pop
+                    2 copy s ne exch fn ne or {
+                        dup 0 le {
+                            pop pop pop pop pop stop
+                        } if
+                        2 copy /s exch def /fn exch def
+                        selectfont
+                        % Ink-centre offsets for single-char positioning
+                        (0) stringwidth pop 2 div neg /xoff exch def
+                        gsave newpath 0 0 moveto (0) false charpath pathbbox grestore
+                        exch pop add 2 div neg /yoff exch def pop
+                    } {
+                        pop pop
+                    } ifelse
+                    moveto dup length 1 eq { xoff yoff rmoveto } if show
+                } forall
+            } stopped {
+                /bwipp.fontTooSmall (The font size is too small) false exit
+            } if
+
+            true exit
+
+        } if
+
+        %
+        % Text content with alignment
+        %
+
+        % Extract text from txt array if content empty but txt available
+        content () eq txt length 0 gt and {
+            /txtchars [ txt { 0 get {} forall } forall ] def
+            /tstr txtchars length string def
+            0 1 txtchars length 1 sub {
+                dup txtchars exch get tstr 3 1 roll put
+            } for
+            /content tstr def
+        } if
+
+        % Nothing to render
+        content () eq { true exit } if
+
+        % Space replacement
+        subspace () ne subspace length 1 ne and {
+            /subspaceBad (subspace option must be a single character) makeerr false exit
+        } if
+        subspace () ne {
+            0 1 content length 1 sub {
+                dup
+                content exch 1 getinterval subspace exch search {
+                    content 4 index 32 put pop pop
+                } if
+                pop pop
+            } for
+        } if
+
+        % Split into lines
+        split () ne content () ne and {
+            split length 1 ne {
+                /splitBad (split option must be a single character) makeerr false exit
+            } if
+            /textlines [
+                content {
+                    split search { exch pop exch } { exit } ifelse
+                } loop
+            ] def
+        } {
+            /textlines [ content ] def
+        } ifelse
+
+        color (unset) ne { color //setanycolor exec not { false exit } if } if
+
+        font size selectfont
+
+        % Find true ascent of font
+        content length 0 eq {
+            0
+        } {
+            gsave
+            newpath 0 0 moveto (0) false charpath pathbbox
+            4 1 roll pop pop pop
+            grestore
+            currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+            currentfont /StrokeWidth known and {
+                currentfont /StrokeWidth get 2 div 0 exch
+                currentfont /FontMatrix get dtransform
+                dup mul exch dup mul add sqrt
+                add
+            } if
+        } ifelse
+        /textascent exch def
+
+        /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall content length 1 sub gaps mul add def
+        /textheight textlines length dup textascent mul exch 1 sub linegaps mul add def
+
+        xalign (unset) eq { /xalign (center) def } if
+        yalign (unset) eq { /yalign (below)  def } if
+
+        xalign (justify) eq {
+            direction (forward) ne direction (backward) ne and {
+                /xjustify (xalign=justify requires forward or backward text) makeerr false exit
+            } if
+            textwidth pixx lt content length 1 gt and {
+                /gaps pixx textwidth sub content length 1 sub div def
+                /xalign direction (forward) eq { (left) } { (right) } ifelse def
+            } {
+                /gaps 0.0 def
+                /xalign (center) def
+            } ifelse
+        } if
+
+        yalign (justify) eq {
+            direction (upward) ne direction (downward) ne and {
+                /yjustify (yalign=justify requires upward or downward text) makeerr false exit
+            } if
+            textwidth pixy lt content length 1 gt and {
+                /gaps pixy textwidth sub content length 1 sub div def
+                /yalign direction (upward) eq { (bottom) } { (top) } ifelse def
+            } {
+                /gaps 0.0 def
+                /yalign (center) def
+            } ifelse
+        } if
+
+        xalign yalign direction textwidth textheight positiontext exec moveto
+        xoffset yoffset rmoveto
+        gsave
+        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> direction get rotate
+        currentpoint translate
+        0 1 textlines length 1 sub {
+            /i exch def
+            0 0 textascent linegaps add i mul add moveto
+            gaps 0 textlines dup length i sub 1 sub get ashow
+        } for
+        grestore
+
+        true exit
+
+    } repeat
+
+    end
+    %%end  % td
+
+} bind def
+[/barcode] {null def} forall
+/rendertext dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+setglobal
+%%EndData
+%%EndResource
+% --END RESOURCE render--

@@ -1,0 +1,130 @@
+#!/bin/bash
+## Make pstests.js
+
+## Setup the external refs.  All of these get prefixed with bwipp_ during
+## cross-compile.
+PSFUNCS=$(grep -E '% --BEGIN (ENCODER|RENDERER|RESOURCE)' barcode.ps | sed -e 's,% --BEGIN [A-Z][A-Z]*\s*\(.*\)--,\1,' | tr '\n' ' ')
+
+## These are defined in test_utils.ps
+PSFUNCS="$PSFUNCS _doTest _isEqual _isError _debugIsEqual"
+
+## The names of modules to not test
+IFS="|"
+SKIP=("fifocache${IFS}preamble${IFS}processoptions${IFS}raiseerror${IFS}renlinear${IFS}renmatrix${IFS}renmaximatrix${IFS}setanycolor${IFS}setuphooks")
+
+rm -f ps_tests/* 2>/dev/null
+
+##
+## Cross-compile test_utils.ps
+##
+## Change:
+##      /uk.co.terryburton.bwipp.global_ctx << /enabledebug true /enabledontdraw true >> def
+## To:
+##      $enabledontdraw true def
+echo "compiling test_utils..."
+cp ../postscriptbarcode/tests/ps_tests/test_utils.ps ps_tests
+node <<@EOF
+const fs  = require('node:fs');
+const PSOPS = require('./psc-opers.js');
+const PSLEX = require('./psc-lex.js');
+const PSFUNCS = "$PSFUNCS".trim().split(/ /g);
+const psc = require('./psc.js');
+const pstext = fs.readFileSync('ps_tests/test_utils.ps', 'binary')
+                .replace(/\/uk.co.terryburton.bwipp.global_ctx <<.*>> def/, '$enabledontdraw true def');
+const flags  = "$*".split(' ');
+fs.writeFileSync('ps_tests/test_utils.js', psc(pstext, flags), 'binary');
+@EOF
+
+##
+## Cross-compile the unit tests
+##
+for path in ../postscriptbarcode/tests/ps_tests/*.ps.test ; do
+    name=$(basename $path .ps.test)
+    if [[ "${IFS}${SKIP[*]}${IFS}" =~ "${IFS}${name}${IFS}" ]]; then
+        echo "skipping $name..."
+        continue
+    fi
+    jsname=$(echo "$name" | tr '-' '_')
+
+    (
+    echo "/runtest_$jsname {"
+    echo '20 dict begin'
+    cat ../postscriptbarcode/tests/ps_tests/$name.ps.test |
+        sed -e 's,/[a-zA-Z0-9_-]* dup /uk.co.terryburton.bwipp findresource cvx def,%%&,' |
+        sed -e 's,uk.co.terryburton.bwipp.global_ctx /[a-zA-Z0-9-]*\.cachelimit,%%&,'
+    echo 'end'
+    echo '} bind def';
+    ) > ps_tests/$name.ps
+
+    ## Fix the "code patching" done by the postscript test scripts.
+    ## In postscript, executable blocks are just arrays of tokens that can be modified.
+    ## But with our emulation, those token streams are converted to javascript functions
+    ## and cannot be modified at runtime.
+    ## Here's a typical example:
+    ##  /eq_tmpl {
+    ##      3 1 roll { 0 0 upcecomposite /pixs get }   % 0 0 are placeholders to be patched
+    ##      dup 3 -1 roll 1 exch put
+    ##      dup 3 -1 roll 0 exch put
+    ##      isEqual
+    ##  } def
+    ## We change the { 0 0 upcecomposite... to be { _arg0_ _arg1_ upcecomposite ...
+    ##
+    ## And provide a custom $put() that sets the args when putting into a function object.
+    ##
+    ## The placeholders can vary
+    ##      exch { 0 (dontdraw semi) bc412 /sbs get } dup 3 -1 roll 0 exch put
+    ##      { 0 1 codeone /pixs known } dup 3 -1 roll 0 exch put  % Substitute data for placeholder 0
+    node <<@EOF
+    const fs = require('fs');
+    let text = fs.readFileSync('ps_tests/$name.ps', 'utf-8')
+                .replace(/ [{] ([0-9]) ([0-9]) $name /g, ' { _arg0_ _arg1_ $name ')
+                .replace(/ [{] ([0-9]) ([^}]+) $name /g, ' { _arg0_ \$2 $name ')
+                .replace(/ [{] ([^}]+) ([0-9]) $name /g, ' { \$1 _arg1_ $name ')
+                // processoptions uses this fun idiom { 0 exec } and it is index 4 in the packedarray.
+                .replace(/ 0 exec /g, ' _arg4_ exec ')
+                ;
+    fs.writeFileSync('ps_tests/$name.ps', text);
+@EOF
+
+    ##
+    ## Cross-compile 
+    ##
+    echo "compiling $name..."
+    node <<@EOF
+    const fs  = require('node:fs');
+    const PSOPS = require('./psc-opers.js');
+    const PSLEX = require('./psc-lex.js');
+    const PSFUNCS = "$PSFUNCS".trim().split(/ /g);
+    const psc = require('./psc.js');
+    const pstext = fs.readFileSync('ps_tests/$name.ps', 'binary');
+    const flags  = "$*".split(' ');
+    fs.writeFileSync('ps_tests/$name.js', psc(pstext, flags) +
+        'console.log("$name...")\\n' +
+        'bwipp_runtest_$jsname();\\n\\n', 'binary');
+@EOF
+
+    if [ ! -f ps_tests/$name.js ] ; then
+        echo "psc.js exited with error."
+        exit 1
+    fi
+
+done
+
+echo "finalizing..."
+
+##
+## Build the monolithic test script
+##
+sed -e 's/$_.suppresskanjimode = true/$_.suppresskanjimode = false/' src/bwipp.js > pstests.tmp
+cat pstests-utils.js ps_tests/test_utils.js >> pstests.tmp
+
+## There are random moveto's in the test code
+cat ps_tests/*.js | sed -e 's,^ *\$\$\.moveto.*,//&,' >> pstests.tmp
+
+js-beautify --preserve-newlines pstests.tmp > pstests.js
+
+## js-beautify does not put a ending newline on the file
+echo "" >> pstests.js
+
+rm -f pstests.tmp
+rm -f bwippdefs.ps

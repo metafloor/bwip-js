@@ -1,0 +1,26 @@
+/runtest_planet {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/planet dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (01234567890) (dontdraw) planet /bhs get
+} [ 0.125 0.05 0.05 0.125 0.125 0.125 0.125 0.125 0.125 0.05 0.05 0.125 0.125 0.05 0.125 0.05 0.125 0.125 0.05 0.05 0.125 0.125 0.05 0.125 0.125 0.05 0.125 0.05 0.125 0.05 0.125 0.125 0.05 0.05 0.125 0.125 0.05 0.125 0.125 0.125 0.05 0.05 0.125 0.125 0.05 0.125 0.05 0.125 0.05 0.125 0.125 0.05 0.05 0.125 0.125 0.125 0.125 0.05 0.125 0.05 0.125 0.125 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (1234567890) (dontdraw) planet } /bwipp.planetBadLength isError
+{ (123456789012) (dontdraw) planet } /bwipp.planetBadLength isError
+{ (0123456789A) (dontdraw) planet } /bwipp.planetBadCharacter isError
+{ (012345678901) (validatecheck dontdraw) planet } /bwipp.planetBadCheckDigit isError
+end
+} bind def

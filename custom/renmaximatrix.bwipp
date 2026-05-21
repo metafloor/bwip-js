@@ -1,0 +1,152 @@
+% --REQUIRES preamble raiseerror setuphooks processoptions setanycolor render--
+%%BeginData:        148 ASCII Lines
+currentglobal
+true setglobal
+/setpacking where {pop currentpacking true setpacking} if
+4 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+dup /render dup /uk.co.terryburton.bwipp findresource put
+begin
+/renmaximatrix {
+
+    32 dict begin
+    {
+
+    %
+    % Default options
+    %
+    /includetext false def
+    /barcolor (unset) def
+    /backgroundcolor (unset) def
+    /bordercolor (unset) def
+    /inkspread null def
+    /showborder false def
+    /borderleft 0.0 def
+    /borderright 0.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.5 def
+    /txt [] def
+
+    % text{1-9}* options with common defaults
+    (text) 9 /groupoptions //render exec /generategroup //processoptions exec
+
+    % Overrides permitting encoder-positioned text
+    /text1xalign (unset) def
+    /text1yalign (unset) def
+
+    /gridfit false def
+    /griddpi 0 def
+    /strictspec false def
+    /loosespec false def
+    /xdim -1.0 def
+    /xmin -1.0 def
+    /xmax -1.0 def
+    /modunit 2 def
+
+    {def} forall
+    opt currentdict /opt undef /apply //processoptions exec /options exch def
+    /global_renderer_defaults //render exec
+
+    % Collect text options into an array
+    /textopts (text) 9 /groupoptions //render exec /collectgroup //processoptions exec def
+
+    griddpi 0 ne { /gridfit true def } if
+    inkspread null eq { /inkspread 0.15 def } if
+
+    %
+    % Validate options
+    %
+    /validate_common //render exec
+
+    options /debughexagons known
+    /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+    and { /bwipp.debughexagons pixs //raiseerror exec } if
+
+    gsave
+
+    currentpoint translate
+
+    2.4945 dup scale  % from 1pt to 0.88mm
+
+    %
+    % Scale to physical specification dimensions
+    %
+    strictspec {
+        xdim 72 mul 25.4 div 2.4945 div dup scale  % Relative to existing 2.4945 scale
+        /inkspread inkspread 2.4945 mul 25.4 mul xdim 72 mul div def  % Fixed physical amount
+    } if
+
+    %
+    % Grid fit: uniform even-pixel snap preserves hex aspect ratio
+    %
+    gridfit {
+        2 strictspec { xdim xmin xmax } { 0 -1 -1 } ifelse
+        false false /gridfit //render exec
+        not { grestore //raiseerror exec } if
+    } if
+
+
+    %
+    % Display the border and background
+    %
+    30 29 inkspread inkspread /renderborder //render exec  % 30x29 hex grid
+    not { grestore //raiseerror exec } if
+
+    barcolor (unset) ne { barcolor //setanycolor exec not { grestore //raiseerror exec } if } if
+
+    /g 0.06 inkspread add def
+
+    0.5 0.5774 translate
+
+    newpath
+    pixs {
+        dup
+        /x exch 30 mod def
+        /y exch 30 idiv def
+        y 2 mod 0 eq {x} {x 0.5 add} ifelse
+        32 y sub 0.8661 mul
+        moveto
+        0              0.5774 g       sub rmoveto
+       -0.5 g add     -0.2887 g 2 div add rlineto
+        0             -0.5774 g       add rlineto
+        0.5 g sub     -0.2887 g 2 div add rlineto
+        0.5 g sub      0.2887 g 2 div sub rlineto
+        0              0.5774 g       sub rlineto
+       -0.5 g add      0.2887 g 2 div sub rlineto
+        closepath
+    } forall
+    fill
+
+    %
+    % Plot the locator symbol
+    %
+    newpath 14 13.8576 0.5774 inkspread add 0 360 arc closepath
+            14 13.8576 1.3359 inkspread sub 360 0 arcn closepath fill
+    newpath 14 13.8576 2.1058 inkspread add 0 360 arc closepath
+            14 13.8576 2.8644 inkspread sub 360 0 arcn closepath fill
+    newpath 14 13.8576 3.6229 inkspread add 0 360 arc closepath
+            14 13.8576 4.3814 inkspread sub 360 0 arcn closepath fill
+
+    %
+    % Display text{1-9}
+    %
+    30 29 /textgroups //render exec
+    not { grestore //raiseerror exec } if
+
+    grestore
+
+    } stopped {end stop} if
+    end
+
+}
+[/barcode] {null def} forall
+bind def
+/renmaximatrix dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+setglobal
+%%EndData
+%%EndResource

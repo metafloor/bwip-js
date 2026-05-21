@@ -1,9 +1,9 @@
 // bwip-js/examples/threaded.js
 //
 // Threaded node.js HTTP server that renders bar code images using bwip-js.
-// 
+//
 // Node 10.5+ only.
-// 
+//
 // Node 10.5 Usage:
 //   node --experimental-worker threaded [address:port] ...
 //
@@ -110,10 +110,15 @@ const bwipjs = (function() {
 worker.parentPort.on('message', (requestUrl) => {
     let opts = url.parse(requestUrl, true).query;
 
-    // Convert boolean empty parameters to true
+    // Convert empty parameters to true.
+    // Convert empty !parameters to false.
     for (let id in opts) {
         if (opts[id] === '') {
-            opts[id] = true;
+            if (id[0] == '!') {
+                opts[id.substr(1)] = false;
+            } else {
+                opts[id] = true;
+            }
         }
     }
 

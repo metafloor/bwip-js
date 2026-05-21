@@ -1,0 +1,52 @@
+/runtest_plessey {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2026 Terry Burton
+%
+
+%%/plessey dup /uk.co.terryburton.bwipp findresource cvx def
+
+
+% Input validation
+
+{ () (dontdraw) plessey
+} /bwipp.plesseyEmptyData isError
+
+{ () (dontdraw validatecheck) plessey
+} /bwipp.plesseyEmptyData isError
+
+{ (G) (dontdraw) plessey
+} /bwipp.plesseyBadCharacter isError
+
+{ (1234ABCDEFDF) (dontdraw validatecheck) plessey  % Check digits should be "CF"
+} /bwipp.plesseyBadCheckDigits isError
+
+{ (1234ABCDEFCE) (dontdraw validatecheck) plessey
+} /bwipp.plesseyBadCheckDigits isError
+
+{ (01) (dontdraw validatecheck) plessey  % Check digits should be "00"
+} /bwipp.plesseyBadCheckDigits isError
+
+{ (A) (dontdraw validatecheck) plessey  % Too short for validatecheck (need 2+)
+} /bwipp.plesseyBadLength isError
+
+{ 501 string (dontdraw) plessey } /bwipp.plesseyInputTooLong isError
+
+
+% Examples
+
+(1234ABCDEFCF) (dontdraw validatecheck) plessey /sbs get
+[
+    3 2 3 2 1 4 3 2 3 2 1 4 1 4 1 4 1 4 3 2 1 4 1 4 3 2 3 2 1 4 1 4 1 4 1 4 3 2 1 4 1 4 3 2 1 4 3 2 3 2 3 2 1 4 3 2 1 4 1 4 3 2 3 2 3 2 1 4 3 2 3 2 1 4 3 2 3 2 3 2 3 2 3 2 3 2 3 2 1 4 1 4 3 2 3 2 3 2 3 2 3 2 3 2 5 4 1 4 1 2 3 2 3
+] debugIsEqual
+
+(00) (dontdraw validatecheck) plessey /sbs get  % Degenerate case with check digits only still allowed
+[
+    3 2 3 2 1 4 3 2 1 4 1 4 1 4 1 4 1 4 1 4 1 4 1 4 5 4 1 4 1 2 3 2 3
+] debugIsEqual
+end
+} bind def

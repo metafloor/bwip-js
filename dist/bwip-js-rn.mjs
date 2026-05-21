@@ -2,10 +2,10 @@
 //
 //    http://metafloor.github.io/bwip-js
 //
-// Copyright (c) 2011-2024 Mark Warren
+// Copyright (c) 2011-2026 Mark Warren
 //
 // This file contains code automatically generated from:
-// Barcode Writer in Pure PostScript - Version 2024-01-03
+// Barcode Writer in Pure PostScript - Version 2026-04-21
 // Copyright (c) 2004-2024 Terry Burton
 //
 // The MIT License
@@ -30,8 +30,7 @@
 //
 "use strict";
 
-import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_jabcode,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
-
+import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_symlist,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
 // exports.js
 const BWIPJS_VERSION = '__BWIPJS_VERS__';
 
@@ -198,14 +197,21 @@ function FixupOptions(opts) {
 
     return opts;
 
+    // a is the most specific padding value, e.g. paddingleft
+    // b is the next most specific value, e.g. paddingwidth
+    // c is the general padding value.
+    // s is the scale, either scalex or scaley
     function padding(a, b, c, s) {
         if (a != null) {
-            return a*s;
+            a = a >>> 0;
+            return a*s >>> 0;
         }
         if (b != null) {
-            return b*s;
+            b = b >>> 0;
+            return b*s >>> 0;
         }
-        return c*s || 0;
+        c = c >>> 0;
+        return (c*s >>> 0) || 0;
     }
 }
 
@@ -307,7 +313,7 @@ function ToRaw(bcid, text, options) {
     }
 
     // The drawing interface is just needed for the pre-init() calls.
-    // Don't need to fixup the options - drawing specific.
+    // Don't need to fixup the drawing specific options.
     var drawing = DrawingBuiltin();
     drawing.setopts(options);
 
@@ -316,23 +322,15 @@ function ToRaw(bcid, text, options) {
 
     // bwip-js uses Maps to emulate PostScript dictionary objects; but Maps
     // are not a typical/expected return value.  Convert to plain-old-objects.
-    var ids = { pixs:1, pixx:1, pixy:1, sbs:1, bbs:1, bhs:1, width:1, height:1 };
+    var ids = { pixs:1, pixx:1, pixy:1, sbs:1, bbs:1, bhs:1, txt:1, width:1, height:1 };
     for (var i = 0; i < stack.length; i++) {
         var elt = stack[i];
         if (elt instanceof Map) {
             var obj = {};
-            // Could they make Maps any harder to iterate over???
             for (var keys = elt.keys(), size = elt.size, k = 0; k < size; k++) {
                 var id = keys.next().value;
                 if (ids[id]) {
-                    var val = elt.get(id);
-                    if (val instanceof Array) {
-                        // The postscript arrays have extra named properties
-                        // to emulate array views.  Return cleaned up arrays.
-                        obj[id] = val.b.slice(val.o, val.o + val.length);
-                    } else {
-                        obj[id] = val;
-                    }
+                    obj[id] = pod(elt.get(id));
                 }
             }
             stack[i] = obj;
@@ -342,6 +340,22 @@ function ToRaw(bcid, text, options) {
         }
     }
     return stack;
+
+    function pod(val) {
+        if (val instanceof Array) {
+            // The postscript arrays have extra named properties
+            // to emulate array views.  Return cleaned up arrays.
+            val = val.b.slice(val.o, val.o + val.length);
+
+            // Walk the array and convert each element
+            for (let j = 0, l = val.length; j < l; j++) {
+                val[j] = pod(val[j]);
+            }
+        } else if (val instanceof Uint8Array) {
+            val = String.fromCharCode.apply(null, val);
+        }
+        return val;
+    }
 }
 // file : bwipjs.js
 //
@@ -373,18 +387,24 @@ function BWIPJS(drawing) {
 
 // All graphics state that must be saved/restored is given a prefix of g_
 BWIPJS.prototype.reset = function() {
-    // Current Transform Matrix - since we don't do rotation, we can fake
-    // the matrix math
-    this.g_tdx  = 0;        // CTM x-offset
-    this.g_tdy  = 0;        // CTM y-offset
-    this.g_tsx  = 1;        // CTM x-scale factor
-    this.g_tsy  = 1;        // CTM y-scale factor
+    // Current Transform Matrix
+    this.g_m0 = 1;
+    this.g_m1 = 0;
+    this.g_m2 = 0;
+    this.g_m3 = 1;
+    this.g_m4 = 0;
+    this.g_m5 = 0;
+
+    // Keep scale and rotateion distinct for the drawing interface
+    this.g_tsx  = 1;        // x-scale factor
+    this.g_tsy  = 1;        // y-scale factor
+    this.g_rot  = 0;        // text rotation (0, 90, 180 , 270)
 
     this.g_posx = 0;        // current x position
     this.g_posy = 0;        // current y position
     this.g_penw = 1;        // current line/pen width
     this.g_path = [];       // current path
-    this.g_font = null;     // current font object
+    this.g_font = null;     // current font
     this.g_rgb  = [0,0,0];  // current color (black)
     this.g_clip = false;    // clip region active
 };
@@ -438,20 +458,37 @@ BWIPJS.prototype.restore = function() {
 //  coordinates corresponding to the current point according to the current
 //  value of the CTM. Thus, if a current point is set and then the CTM is
 //  changed, the coordinates returned by currentpoint will be different
-//  from those that were originally specified for the point. 
+//  from those that were originally specified for the point.
 BWIPJS.prototype.currpos = function() {
-    return { x:(this.g_posx-this.g_tdx)/this.g_tsx,
-             y:(this.g_posy-this.g_tdy)/this.g_tsy
+    return { x:(this.g_posx-this.g_m4)/this.g_tsx,
+             y:(this.g_posy-this.g_m5)/this.g_tsy
         };
 };
 BWIPJS.prototype.currfont = function() {
     return this.g_font;
 };
+// rotate is only used with text/fonts and limited to the angles 0, 90, 180, 270.
+BWIPJS.prototype.rotate = function(rot) {
+    this.g_rot += rot;
+
+    var cos = round(Math.cos(rot * Math.PI / 180));
+    var sin = round(Math.sin(rot * Math.PI / 180));
+    var m0 = this.g_m0 * cos + this.g_m2 * sin;
+    var m1 = this.g_m1 * cos + this.g_m3 * sin;
+    var m2 = this.g_m0 * -sin + this.g_m2 * cos;
+    var m3 = this.g_m1 * -sin + this.g_m3 * cos;
+    this.g_m0 = m0;
+    this.g_m1 = m1;
+    this.g_m2 = m2;
+    this.g_m3 = m3;
+};
 BWIPJS.prototype.translate = function(x, y) {
-    this.g_tdx = this.g_tsx * x;
-    this.g_tdy = this.g_tsy * y;
+    this.g_m4 += this.g_tsx * x;
+    this.g_m5 += this.g_tsy * y;
 };
 BWIPJS.prototype.scale = function(x, y) {
+    var sx = this.g_tsx;
+    var sy = this.g_tsy;
     this.g_tsx *= x;
     this.g_tsy *= y;
     var sxy = this.drawing.scale(this.g_tsx, this.g_tsy);
@@ -459,6 +496,10 @@ BWIPJS.prototype.scale = function(x, y) {
         this.g_tsx = sxy[0];
         this.g_tsy = sxy[1];
     }
+    this.g_m0 *= this.g_tsx / sx;
+    this.g_m1 *= this.g_tsx / sx;
+    this.g_m2 *= this.g_tsy / sy;
+    this.g_m3 *= this.g_tsy / sy;
 };
 BWIPJS.prototype.setlinewidth = function(w) {
     this.g_penw = w;
@@ -492,7 +533,7 @@ BWIPJS.prototype.setcolor = function(s) {
         return;
     }
     if (!/^(?:#?[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|[0-9a-fA-F]{8})$/.test(s)) {
-        throw new Error('bwip-js: invalid color: ' + s); 
+        throw new Error('bwip-js: invalid color: ' + s);
     }
     if (s[0] == '#') {
         s = s.substr(1);
@@ -570,18 +611,18 @@ BWIPJS.prototype.closepath = function() {
     }
 };
 BWIPJS.prototype.moveto = function(x,y) {
-    this.g_posx = this.g_tdx + this.g_tsx * x;
-    this.g_posy = this.g_tdy + this.g_tsy * y;
+    this.g_posx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
 };
 BWIPJS.prototype.rmoveto = function(x,y) {
-    this.g_posx += this.g_tsx * x;
-    this.g_posy += this.g_tsy * y;
+    this.g_posx += this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy += this.g_m1 * x + this.g_m3 * y + this.g_m5;
 };
 BWIPJS.prototype.lineto = function(x,y) {
     var x0 = round(this.g_posx);
     var y0 = round(this.g_posy);
-    this.g_posx = this.g_tdx + this.g_tsx * x;
-    this.g_posy = this.g_tdy + this.g_tsy * y;
+    this.g_posx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
     var x1 = round(this.g_posx);
     var y1 = round(this.g_posy);
 
@@ -590,8 +631,8 @@ BWIPJS.prototype.lineto = function(x,y) {
 BWIPJS.prototype.rlineto = function(x,y) {
     var x0 = round(this.g_posx);
     var y0 = round(this.g_posy);
-    this.g_posx += this.g_tsx * x;
-    this.g_posy += this.g_tsy * y;
+    this.g_posx += this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    this.g_posy += this.g_m1 * x + this.g_m3 * y + this.g_m5;
     var x1 = round(this.g_posx);
     var y1 = round(this.g_posy);
 
@@ -607,14 +648,14 @@ BWIPJS.prototype.arc = function(x,y,r,sa,ea,ccw) {
         throw new Error('arc: not a full circle (' + sa + ',' + ea + ')');
     }
 
-    x = this.g_tdx + this.g_tsx * x;
-    y = this.g_tdy + this.g_tsy * y;
+    var xx = this.g_m0 * x + this.g_m2 * y + this.g_m4;
+    var yy = this.g_m1 * x + this.g_m3 * y + this.g_m5;
 
     // e == ellipse
     var rx = r * this.g_tsx;
     var ry = r * this.g_tsy;
-    this.g_path.push({ op:'e', x0:x-rx, y0:y-ry, x1:x+rx, y1:y+ry,
-                                x:x, y:y, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw });
+    this.g_path.push({ op:'e', x0:xx-rx, y0:yy-ry, x1:xx+rx, y1:yy+ry,
+                       x:xx, y:yy, rx:rx, ry:ry, sa:sa, ea:ea, ccw:ccw });
 };
 BWIPJS.prototype.stringwidth = function(str) {
     var tsx  = this.g_tsx;
@@ -666,10 +707,10 @@ BWIPJS.prototype.pathbbox = function() {
     }
 
     // Convert to user-space coordinates
-    var rv = {  llx:(llx-this.g_tdx)/this.g_tsx,
-                lly:(lly-this.g_tdy)/this.g_tsy,
-                urx:(urx-this.g_tdx)/this.g_tsx,
-                ury:(ury-this.g_tdy)/this.g_tsy };
+    var rv = {  llx:(llx-this.g_m4)/this.g_tsx,
+                lly:(lly-this.g_m5)/this.g_tsy,
+                urx:(urx-this.g_m4)/this.g_tsx,
+                ury:(ury-this.g_m5)/this.g_tsy };
     return rv;
 };
 // Tranforms the pts array to standard (not y-inverted), unscalled values.
@@ -787,17 +828,20 @@ BWIPJS.prototype.stroke = function() {
 
                 // Top and left edges are "inside" the polygon.
                 // Bottom and right edges are outside.
+
+                // outside, counter-clockwise
                 self.drawing.polygon([
                         [ x0-bigw2, y0-bigh2 ],
                         [ x0-bigw2, y1+bigh2+1 ],
                         [ x1+bigw2+1, y1+bigh2+1 ],
-                        [ x1+bigw2+1, y0-bigh2 ]
+                        [ x1+bigw2+1, y0-bigh2 ],
                     ]);
+                // inside, clockwise
                 self.drawing.polygon([
                         [ x0+remw2, y0+remh2 ],
-                        [ x0+remw2, y1-remh2+1 ],
-                        [ x1-remw2+1, y1-remh2+1 ],
                         [ x1-remw2+1, y0+remh2 ],
+                        [ x1-remw2+1, y1-remh2+1 ],
+                        [ x0+remw2, y1-remh2+1 ],
                     ]);
                 self.drawing.fill(rgb);
             }
@@ -878,8 +922,26 @@ BWIPJS.prototype.clip = function() {
     });
 };
 
+// Our replacement for the renmatrix drawlayer functionality.
+BWIPJS.prototype.drawlayer = function(pix, width, height) {
+    // The pix array is in y-inverted postscript orientation.
+    let paths = tracepaths(pix, width, height);
+
+    this.newpath();
+    for (let i = 0, il = paths.length; i < il; i++) {
+        let path = paths[i];
+        this.moveto(path[0][0], path[0][1]);
+        for (let j = 1, jl = path.length; j < jl; j++) {
+            let pt = path[j];
+            this.lineto(pt[0], pt[1]);
+        }
+        this.closepath();
+    }
+    this.fill();
+};
+
 // The pix array is in standard (not y-inverted postscript) orientation.
-BWIPJS.prototype.maxicode = function(pix) {
+BWIPJS.prototype.showmaxicode = function(pix) {
     var tsx = this.g_tsx;
     var tsy = this.g_tsy;
     var rgb = this.getRGB();
@@ -936,9 +998,9 @@ BWIPJS.prototype.maxicode = function(pix) {
             y *= tsy * 3;
             y += tsy * 2 - h/2;
             y = y|0;
-            
+
             // Build bottom up so the drawing is top-down.
-            var pts = [ [ x-0.5, y-- ] ]; 
+            var pts = [ [ x-0.5, y-- ] ];
             y -= qh-1;
             pts.push([x-1-w2, y--]);
             y -= vh;
@@ -994,8 +1056,9 @@ BWIPJS.prototype.show = function(str, dx, dy) {
     }
 
     // Capture current graphics state
-    var tsx  = this.g_tsx;
-    var tsy  = this.g_tsy;
+    var rot  = this.g_rot;
+    var tsx  = rot == 90 || rot == 270 ? this.g_tsy : this.g_tsx;
+    var tsy  = rot == 90 || rot == 270 ? this.g_tsx : this.g_tsy;
     var name = this.g_font.FontName || 'OCR-B';
     var size = (this.g_font.FontSize || 10);
     var szx  = size * tsx;
@@ -1004,26 +1067,35 @@ BWIPJS.prototype.show = function(str, dx, dy) {
     var posy = this.g_posy;
     var rgb  = this.getRGB();
 
-    // The string can be either a uint8-string or regular string.
-    str = this.toUCS2(this.jsstring(str));
-
     // Convert dx,dy to device space
     dx = tsx * dx || 0;
     dy = tsy * dy || 0;
 
+    // The string can be either a uint8-string or regular string.
+    str = this.toUCS2(this.jsstring(str));
+
     // Bounding box.
-    var base = posy + dy;
+    // BWIPP rotates, then translates to currentpoint, before rendering the text.
+    // Therefore, the bbox values must match the rotation.
     var bbox = this.drawing.measure(str, name, szx, szy);
     var width = bbox.width + (str.length-1) * dx;
-    this.bbox(posx, base-bbox.descent+1, posx+width-1, base+bbox.ascent);
-    this.g_posx += width;
+    if (rot == 90) { // upward
+        this.bbox(posx-dy+bbox.descent-1, posy, posx-dy-bbox.ascent, posy+width-1);
+    } else if (rot == 180) { // backward
+        this.bbox(posx, posy-dy+bbox.descent-1, posx-width+1, posy-dy-bbox.ascent);
+    } else if (rot == 270) { // downward
+        this.bbox(posx+dy-bbox.descent+1, posy, posx+dy+bbox.ascent, posy-width+1);
+    } else {
+        rot = 0;
+        this.bbox(posx, posy+dy-bbox.descent+1, posx+width-1, posy+dy+bbox.ascent);
+        this.g_posx += width;
+    }
 
     var self = this;
     self.cmds.push(function() {
-        // self.transform()
         var x = posx - self.minx;
         var y = self.maxy - posy;
-        self.drawing.text(x, y, str, rgb, { name:name, width:szx, height:szy, dx:dx });
+        self.drawing.text(x, y, str, rgb, { name:name, width:szx, height:szy, rotate:rot, dx:dx });
     });
 };
 // drawing surface bounding box
@@ -1057,6 +1129,177 @@ BWIPJS.prototype.render = function() {
 
 return BWIPJS;
 })();   // BWIPJS closure
+// 4-connected path tracing
+
+function tracepaths(pixs, width, height, inkspreadh, inkspreadv) {
+    let dx = inkspreadh||0;
+    let dy = inkspreadv||0;
+
+    // The pixs array is in y-inverted postscript orientation.
+    // Convert to an array of arrays.
+    let grid = new Array(height+1);
+    let yoff = 0;
+    for (let y = height-1; y >= 0; y--) {
+        let row = new Uint8Array(width);
+        for (let x = 0; x < width; x++) {
+            row[x] = pixs[yoff + x] ? 1 : 0;
+        }
+        grid[y] = row;
+        yoff += width;
+    }
+    // Add a row before/after so we can blindly access the grid.
+    // We don't need actual zero-padding around the pixels.
+    // All accesses are "cast to integer" with bit-&, so undefined
+    // get converted to zero.
+    grid[-1] = [];
+    grid[height] = [];
+
+    let paths = [];
+    for (let y = 0; y < height; y++) {
+        let last = 0;
+        for (let x = 0; x < width; x++) {
+            // The last&9 verifies the edge was not traced ccw (dir == 8).
+            if ((last&9) == 0 && grid[y][x] == 1) {
+                paths.push(tracecw(x, y, []));  // clockwise for outside
+            // The last&5 verifies the edge was not traced cw (dir == 4).
+            } else if ((last&5) == 1 && grid[y][x] == 0) {
+                paths.push(traceccw(x, y, [])); // counter-clockwise for inside
+            }
+            last = grid[y][x];
+        }
+    }
+    return paths;
+
+    // Trace outside edges clockwise
+    function tracecw(x, y, path) {
+        path.push([ x+dx, y+dy ]);
+
+        // 2 == top edge
+        // 4 == right edge
+        // 2 == top edge
+        // 4 == right edge
+        // 8 == bottom edge
+        // 16 == left edge
+        let dir = 2;
+        for (;;) {
+            if (grid[y][x] & dir) {
+                path.pop();
+                return path;
+            }
+            grid[y][x] |= dir;
+
+            if (dir == 2) { // top edge rightward
+                if (grid[y][x+1] & 1) {
+                    if (grid[y-1][x+1] & 1) {
+                        path.push([ x+1-dx, y+dy, 'H' ]);
+                        dir = 16;
+                    }
+                    x++;
+                } else {
+                    path.push([ x+1-dx, y+dy, 'H' ]);
+                    dir = 4;
+                }
+            } else if (dir == 4) {  // right edge downward
+                if (grid[y+1][x] & 1) {
+                    if (grid[y+1][x+1] & 1) {
+                        path.push([ x+1-dx, y+1-dy, 'V' ]);
+                        dir = 2;
+                    }
+                    y++;
+                } else {
+                    path.push([ x+1-dx, y+1-dy, 'V' ]);
+                    dir = 8;
+                }
+            } else if (dir == 8) { // bottom edge leftward
+                if (grid[y][x-1] & 1) {
+                    if (grid[y+1][x-1] & 1) {
+                        path.push([ x+dx, y+1-dy, 'H' ]);
+                        dir = 4;
+                    }
+                    x--;
+                } else {
+                    path.push([ x+dx, y+1-dy, 'H' ]);
+                    dir = 16;
+                }
+            } else { // left edge upward
+                if (grid[y-1][x] & 1) {
+                    if (grid[y-1][x-1] & 1) {
+                        path.push([ x+dx, y+dy, 'V' ]);
+                        dir = 8;
+                    }
+                    y--;
+                } else {
+                    path.push([ x+dx, y+dy, 'V' ]);
+                    dir = 2;
+                }
+            }
+        }
+    }
+
+    // Trace inside edges counter clockwise
+    function traceccw(x, y, path) {
+        path.push([ x-dx, y-dy ]);
+
+        // 2 == left edge
+        // 4 == bottom edge
+        // 8 == right edge
+        // 16 == top edge
+        let dir = 2;
+        for (;;) {
+            if (grid[y][x] & dir) {
+                path.pop();
+                return path;
+            }
+            grid[y][x] |= dir;
+
+            if (dir == 2) { // left edge downward
+                if ((grid[y+1][x] & 1) == 0) {
+                    if ((grid[y+1][x-1] & 1) == 0) {
+                        path.push([ x-dx, y+1+dy ]);
+                        dir = 16;
+                    }
+                    y++;
+                } else {
+                    path.push([ x-dx, y+1+dy ]);
+                    dir = 4;
+                }
+            } else if (dir == 4) {  // bottom edge rightward
+                if ((grid[y][x+1] & 1) == 0) {
+                    if ((grid[y+1][x+1] & 1) == 0) {
+                        path.push([ x+1+dx, y+1+dy ]);
+                        dir = 2;
+                    }
+                    x++;
+                } else {
+                    path.push([ x+1+dx, y+1+dy ]);
+                    dir = 8;
+                }
+            } else if (dir == 8) { // right edge upward
+                if ((grid[y-1][x] & 1) == 0) {
+                    if ((grid[y-1][x+1] & 1) == 0) {
+                        path.push([ x+1+dx, y-dy ]);
+                        dir = 4;
+                    }
+                    y--;
+                } else {
+                    path.push([ x+1+dx, y-dy ]);
+                    dir = 16;
+                }
+            } else { // top edge leftward
+                if ((grid[y][x-1] & 1) == 0) {
+                    if ((grid[y-1][x-1] & 1) == 0) {
+                        path.push([ x-dx, y-dy ]);
+                        dir = 8;
+                    }
+                    x--;
+                } else {
+                    path.push([ x-dx, y-dy ]);
+                    dir = 2;
+                }
+            }
+        }
+    }
+}
 // drawing-builtin.js
 //
 // The aliased (except the fonts) graphics used by drawing-canvas.js and
@@ -1217,7 +1460,7 @@ function DrawingBuiltin() {
 
         // Polygons are used to draw the connected regions in a 2d barcode.
         // These will always be unstroked, filled, orthogonal shapes.
-        // 
+        //
         // You will see a series of polygon() calls, followed by a fill().
         polygon : function(pts) {
             var npts = pts.length;
@@ -1352,8 +1595,9 @@ function DrawingBuiltin() {
             gs_xyclip = null;
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
-        // font is an object with properties { name, width, height, dx }
+        // font is an object with properties { name, width, height, rotate, dx }
         // width and height are the font cell size.
+        // rotate is one of 0, 90, 180, 270 (default is zero)
         // dx is extra space requested between characters (usually zero).
         text : function(x, y, str, rgb, font) {
             x = x|0;
@@ -1367,11 +1611,22 @@ function DrawingBuiltin() {
             var fwidth  = font.width|0;
             var fheight = font.height|0;
             var dx      = font.dx|0;
+
+            // Since the SVG drawing must use a local rotation, we'll do it here as well.
+            var tx0 = 0, tx1 = 0, ty0 = 0, ty1 = 0;
+            switch (font.rotate) {
+            case 90:  tx1 =  1; ty0 = -1; break;
+            case 180: tx0 = -1; ty1 = -1; break;
+            case 270: tx1 = -1; ty0 =  1; break;
+            default:  tx0 =  1; ty1 =  1; break;
+            }
+
+            var gx = 0;
             for (var k = 0; k < str.length; k++) {
                 var ch = str.charCodeAt(k);
                 var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
 
-                var gt = y - glyph.top;
+                var gt = -glyph.top;
                 var gl = glyph.left;
                 var gw = glyph.width;
                 var gh = glyph.height;
@@ -1382,11 +1637,15 @@ function DrawingBuiltin() {
                     for (var j = 0; j < gh; j++) {
                         var a = gb[go + j * gw + i];
                         if (a) {
-                            set(x+gl+i, gt+j, a);
+                            var xx = gx+gl+i;
+                            var yy = gt+j;
+                            var tx = tx0 * xx + tx1 * yy;
+                            var ty = ty0 * xx + ty1 * yy;
+                            set(x+tx, y+ty, a);
                         }
                     }
                 }
-                x += glyph.advance + dx;
+                gx += glyph.advance + dx;
             }
         },
         // Called after all drawing is complete.
@@ -1510,7 +1769,7 @@ function DrawingBuiltin() {
         for (var y = left.min, max = left.length-1; y <= max; y++) {
             addPoint(left[y], y);
         }
-        // The points we calculated are "inside".  The fill algorithm excludes 
+        // The points we calculated are "inside".  The fill algorithm excludes
         // right edges, so +1 on each x.
         for (var y = right.min, max = right.length-1; y <= max; y++) {
             addPoint(right[y]+1, y);
@@ -1548,7 +1807,7 @@ function DrawingBuiltin() {
         for (var n = 0, npts = pts.length; n < npts; n++) {
             var xn = pts[n];
             if (xn > x) {
-                return !wn; 
+                return !wn;
             } else if (xn == x) {
                 return wn;
             }
@@ -1587,7 +1846,7 @@ var PNG_CRC = (function() {
     return precalc;
 })();
 
-// This has been moved to the nodejs-only section of exports.js due to 
+// This has been moved to the nodejs-only section of exports.js due to
 // react-native polyfills.
 //var PNG_ZLIB = require('zlib');
 
@@ -1622,7 +1881,7 @@ function DrawingZlibPng(callback, maybe) {
         image_width = width;
         image_height = height;
 
-        // Set background 
+        // Set background
         if (/^[0-9a-fA-F]{6}$/.test(''+opts.backgroundcolor)) {
             var rgb = opts.backgroundcolor;
             fillRGB(parseInt(rgb.substr(0,2), 16),
@@ -1796,6 +2055,11 @@ function DrawingSVG() {
     var clips = [];
     var lines = {};
 
+    // We adjust the drawing coordinates by 0.5px when stroke width is odd.
+    // But this creates an odd effect with scale.  When scale is even, we
+    // need to add 0.5; when scale is odd, subtract 0.5.
+    var scalex, scaley;
+
     // Magic number to approximate an ellipse/circle using 4 cubic beziers.
     var ELLIPSE_MAGIC = 0.55228475 - 0.00045;
 
@@ -1816,6 +2080,8 @@ function DrawingSVG() {
 
         // Make no adjustments
         scale(sx, sy) {
+            scalex = sx;
+            scaley = sy;
         },
         // Measure text.
         // `font` is the font name typically OCR-A or OCR-B.
@@ -1829,15 +2095,19 @@ function DrawingSVG() {
             var width = 0;
             var ascent = 0;
             var descent = 0;
-            for (var i = 0; i < str.length; i++) {
+            for (var i = 0, l = str.length; i < l; i++) {
                 var ch = str.charCodeAt(i);
-                var glyph = FontLib.getpaths(fontid, ch, fwidth, fheight);
+                var glyph = FontLib.getglyph(fontid, ch, fwidth, fheight);
                 if (!glyph) {
                     continue;
                 }
-                ascent  = Math.max(ascent, glyph.ascent);
-                descent = Math.max(descent, -glyph.descent);
-                width  += glyph.advance;
+                ascent  = Math.max(ascent, glyph.top);
+                descent = Math.max(descent, glyph.height - glyph.top);
+                if (i == l-1) {
+                    width += glyph.left + glyph.width;
+                } else {
+                    width += glyph.advance;
+                }
             }
             return { width, ascent, descent };
         },
@@ -1878,28 +2148,37 @@ function DrawingSVG() {
         // Unconnected stroked lines are used to draw the bars in linear barcodes.
         // No line cap should be applied.  These lines are always orthogonal.
         line(x0, y0, x1, y1, lw, rgb) {
-            // Try to get non-blurry lines...
             x0 = x0|0;
             y0 = y0|0;
             x1 = x1|0;
             y1 = y1|0;
-            lw = Math.round(lw);
+            lw = Math.round(lw) || 1;
 
             // Try to keep the lines "crisp" by using with the SVG line drawing spec to
-            // our advantage.
+            // our advantage and adjust the coordinates by half pixel when stroke width
+            // is odd.  Work around an odd effect with scale.  When scale is even, we
+            // need to add 0.5; when scale is odd, subtract 0.5.
             if (lw & 1) {
                 if (x0 == x1) {
-                    x0 += 0.5;
-                    x1 += 0.5;
+                    let dx = (scalex&1) ? -0.5 : 0.5;
+                    x0 += dx;
+                    x1 += dx;
                 }
                 if (y0 == y1) {
-                    y0 += 0.5;
-                    y1 += 0.5;
+                    let dy = (scaley&1) ? -0.5 : 0.5;
+                    y0 += dy;
+                    y1 += dy;
                 }
+            }
+            // The svg path does not include the start pixel, but the built-in drawing does.
+            if (x0 == x1) {
+                y0++;
+            } else if (y0 == y1) {
+                x0++;
             }
 
             // Group together all lines of the same width and emit as single paths.
-            // Dramatically reduces resulting text size.
+            // Dramatically reduces the svg text size.
             var key = '' + lw + '#' + rgb;
             if (!lines[key]) {
                 lines[key] = '<path stroke="#' + rgb + '" stroke-width="' + lw + '" d="';
@@ -1956,7 +2235,8 @@ function DrawingSVG() {
                     'Z';
         },
         // PostScript's default fill rule is non-zero but there are never intersecting
-        // regions so use even-odd as it is easier to work with.
+        // regions. The built-in drawing uses even-odd for simplicity - we match that
+        // to be consistent.
         fill(rgb) {
             if (path) {
                 svg += path + '" fill="#' + rgb + '" fill-rule="evenodd"' +
@@ -1988,10 +2268,14 @@ function DrawingSVG() {
             clipid = '';
         },
         // Draw text with optional inter-character spacing.  `y` is the baseline.
-        // font is an object with properties { name, width, height, dx }
+        // font is an object with properties { name, width, height, rotate, dx }
         // width and height are the font cell size.
+        // rotate is one of 0, 90, 180, 270 (default 0).
         // dx is extra space requested between characters (usually zero).
         text(x, y, str, rgb, font) {
+            x = x|0;
+            y = y|0;
+            var x0 = x, y0 = y;
             var fontid  = FontLib.lookup(font.name);
             var fwidth  = font.width|0;
             var fheight = font.height|0;
@@ -2004,11 +2288,12 @@ function DrawingSVG() {
                     continue;
                 }
                 if (glyph.length) {
-                    // A glyph is composed of sequence of curve and line segments.
-                    // M is move-to
-                    // L is line-to
-                    // Q is quadratic bezier curve-to
-                    // C is cubic bezier curve-to
+                    // A glyph is composed of a sequence of curve and line segments.
+                    // `type` is one of:
+                    //   M is move-to
+                    //   L is line-to
+                    //   Q is quadratic bezier curve-to
+                    //   C is cubic bezier curve-to
                     for (var i = 0, l = glyph.length; i < l; i++) {
                         let seg = glyph[i];
                         if (seg.type == 'M' || seg.type == 'L') {
@@ -2025,10 +2310,20 @@ function DrawingSVG() {
                     // Close the shape
                     path += 'Z';
                 }
-                x += glyph.advance + dx;
+                // getglyph() provides slightly different metrics than getpaths().  Keep
+                // it consistent with the built-in drawing.
+                x += FontLib.getglyph(fontid, ch, fwidth, fheight).advance + dx;
             }
             if (path) {
-                svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
+                if (font.rotate) {
+                    // Note the '-' on the rotate.
+                    // Postscript rotates anti-clockwise for positive values.
+                    // SVG rotates clockwise for positive values.
+                    svg += '<path d="' + path + '" fill="#' + rgb + '" transform="rotate(-' +
+                            font.rotate + ' ' + transform(x0, y0) + ')" />\n';
+                } else {
+                    svg += '<path d="' + path + '" fill="#' + rgb + '" />\n';
+                }
             }
         },
         // Called after all drawing is complete.  The return value from this method
@@ -2142,7 +2437,7 @@ var FontLib = (function() {
         }
 
         // In the cache?
-        var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height; 
+        var cachekey = '' + fontid + 'c' + charcode + 'w' + width + 'h' + height;
         var glyph = glyphcache[cachekey];
         if (glyph) {
             // Unthread from the MRU
@@ -2155,7 +2450,7 @@ var FontLib = (function() {
             glyph.next = sntl.next;
             glyph.prev = sntl;
             sntl.next = glyph;
-            
+
             return glyph;
         }
 
@@ -2164,7 +2459,7 @@ var FontLib = (function() {
                                                    height * font.bwipjs_multy / 100) ||
                     STBTT.GetGlyph(font, 0, width * font.bwipjs_multx / 100,
                                                    height * font.bwipjs_multy / 100);
-        
+
         glyph.bytes = glyph.pixels;
         glyph.cachekey = cachekey;
         glyph.offset = 0;
@@ -2233,7 +2528,6 @@ var FontLib = (function() {
 function LoadFont() {
     return FontLib.loadFont.apply(FontLib, Array.prototype.slice.call(arguments));
 }
-
 // bwip-js/stb_trutype.js
 //
 // JavaScript implementation of stb_truetype.h @ https://github.com/nothings/stb.
@@ -4229,7 +4523,6 @@ export function isbn(opts,dwg) { return _ToAny(bwipp_isbn,opts,dwg); };
 export function ismn(opts,dwg) { return _ToAny(bwipp_ismn,opts,dwg); };
 export function issn(opts,dwg) { return _ToAny(bwipp_issn,opts,dwg); };
 export function itf14(opts,dwg) { return _ToAny(bwipp_itf14,opts,dwg); };
-export function jabcode(opts,dwg) { return _ToAny(bwipp_jabcode,opts,dwg); };
 export function japanpost(opts,dwg) { return _ToAny(bwipp_japanpost,opts,dwg); };
 export function kix(opts,dwg) { return _ToAny(bwipp_kix,opts,dwg); };
 export function leitcode(opts,dwg) { return _ToAny(bwipp_leitcode,opts,dwg); };
@@ -4267,10 +4560,10 @@ export function upce(opts,dwg) { return _ToAny(bwipp_upce,opts,dwg); };
 export function upcecomposite(opts,dwg) { return _ToAny(bwipp_upcecomposite,opts,dwg); };
 export { ToDataURL as toDataURL, ToSVG as toSVG, Render as render, LoadFont as loadFont,
          DrawingDataURL as drawingDataURL, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
     toDataURL:ToDataURL, toSVG:ToSVG, render:Render, raw:ToRaw,
-    drawingDataURL:DrawingDataURL, drawingSVG:DrawingSVG,
+    drawingDataURL:DrawingDataURL, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };

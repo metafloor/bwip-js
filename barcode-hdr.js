@@ -2,11 +2,29 @@
 //
 // This code is injected above the cross-compiled barcode.js.
 
-// The BWIPJS object (graphics interface)
-var $$ = null;
+var $$ = null;  // The BWIPJS object (graphics interface)
 var $j = 0;     // stack pointer
 var $k = [];    // operand stack
 var $_ = {};    // base of the dictionary stack
+
+// If you add a global variable here, add it to bwippdefs in psc.js replacing the
+// bwipp_ prefix with $-sign.
+// All globals must be referenced with $-sign prefix in the ps code.  They are handled
+// special in the cross-compiler.
+var bwipp_enabledontdraw = false;  // Used by the BWIPP pstests - always false in production
+var bwipp_error = new Map;         // The postscript system error dict
+
+// Aliases from Math ops
+const $abs = Math.abs;
+const $ceil = Math.ceil;
+const $flr = Math.floor;
+const $log = Math.log;
+const $pow = Math.pow
+const $rnd = Math.round;
+const $sqrt = Math.sqrt;
+
+// Code instrumenting
+const $metrics = {};
 
 // Array ctor
 //  $a()    : Build a new array up to the Infinity-marker on the stack.
@@ -25,7 +43,7 @@ function $a(a) {
         for (var i = 0, l = a.length; i < l; i++) {
             a[i] = null;
         }
-    } 
+    }
     a.b = a;    // base array
     a.o = 0;    // offset into base
     return a;
@@ -77,7 +95,7 @@ function $s(v) {
         v = ''+v;
     }
     var s = new Uint8Array(v.length);
-    for (var i = 0; i < v.length; i++) {
+    for (var i = 0, l = v.length; i < l; i++) {
         s[i] = v.charCodeAt(i);
     }
     return s;
@@ -147,16 +165,16 @@ function $cvs(s,v) {
     for (var i = 0, l = v.length; i < l; i++) {
         s[i] = v.charCodeAt(i);
     }
-    $k[$j++] = i < s.length ? s.subarray(0, i) : s;
+    return i < s.length ? s.subarray(0, i) : s;
 }
-// cvi operator - converts a numeric string value to integer.
+// cvi operator - converts a numeric string value to integer/real.
 function $cvi(s) {
     if (s instanceof Uint8Array) {
         // nul-chars on the end of a string are ignored by postscript but cause javascript
         // to return a zero result.
-        return String.fromCharCode.apply(null,s).replace(/\0+$/, '')|0;
+        return $flr(String.fromCharCode.apply(null,s).replace(/\0+$/, ''));
     }
-    return (''+s)|0;
+    return $flr(''+s);
 }
 
 // cvrs operator - convert a number to a radix string
@@ -167,25 +185,27 @@ function $cvrs(s,n,r) {
     return $strcpy(s,(~~n).toString(r).toUpperCase());
 }
 
-// cvx - convert to executable.
-// This is only used by BWIPP to convert <XX> string literals.
-function $cvx(s) {
-    s = $z(s)
-    var m = /^\s*<((?:[0-9a-fA-F]{2})+)>\s*$/.exec(s);
-    if (!m) {
-        throw new Error('cvx: not a <HH> hex string literal');
+// cvx operator
+// BWIPP uses this to bind a function to ...args
+// The operand must be an array with a function as its last element.
+// All other elements get pushed on the stack before invoking the
+// function.
+function $cvx(a) {
+    if (!(a instanceof Array)) {
+        throw new Error('cvx: not arraytype');
     }
-    var h = m[1];
-    var l = h.length >> 1;
-    var u = new Uint8Array(l);
-    for (var i = 0, j = 0; i < l; i++) {
-        var c0 = h.charCodeAt(j++);
-        var c1 = h.charCodeAt(j++);
-        u[i] = ((c0 < 58 ? c0 - 48 : (c0 & 15) + 9) << 4) +
-                (c1 < 58 ? c1 - 48 : (c1 & 15) + 9);
+    if (typeof a[a.length-1] !== 'function') {
+        throw new Error('cvx: last array element not function');
     }
-    return u;
+    const last = a.length-1;
+    return function() {
+        for (let i = 0; i < last; i++) {
+            $k[$j++] = a[i];
+        }
+        a[last]();
+    };
 }
+
 
 // get operator
 //  s : source
@@ -200,10 +220,56 @@ function $get(s,k) {
     if (s instanceof Array) {
         return s.b[s.o+k];
     }
+    // Map or Object - need a string key
     if (k instanceof Uint8Array) {
-        return s.get($z(k));
+        k = $z(k);
     }
-    return s.get(k);
+    if (s instanceof Map) {
+        return s.get(k);
+    }
+    return s[k];
+}
+
+// known operator
+function $has(v,k) {
+    if (v instanceof Uint8Array) {
+        return k < v.length;
+    }
+    if (typeof v === 'string') {
+        return k < v.length;
+    }
+    if (v instanceof Array) {
+        return k < v.length;
+    }
+    // Map or Object - need a string key
+    if (k instanceof Uint8Array) {
+        k = $z(k);
+    }
+    if (v instanceof Map) {
+        return v.has(k);
+    }
+    return k in v;
+}
+
+// undef operator
+//  d : dict
+//  k : key
+function $del(d,k) {
+    if (d instanceof Map) {
+        if (k instanceof Uint8Array) {
+            d.delete($z(k));
+        } else {
+            d.delete(k);
+        }
+    } else if (typeof d == 'object') {
+        if (k instanceof Uint8Array) {
+            delete d[$z(k)];
+        } else {
+            delete d[k];
+        }
+    } else {
+        throw new Error('undef-not-a-dict-' + (typeof d));
+    }
 }
 
 // put operator
@@ -215,11 +281,17 @@ function $put(d,k,v) {
         d[k] = v;
     } else if (d instanceof Array) {
         d.b[d.o+k] = v;
-    } else if (typeof d == 'object') {
+    } else if (d instanceof Map) {
         if (k instanceof Uint8Array) {
             d.set($z(k), v);
         } else {
             d.set(k, v);
+        }
+    } else if (typeof d == 'object') {
+        if (k instanceof Uint8Array) {
+            d[$z(k)] = v;
+        } else {
+            d[k] = v;
         }
     } else {
         throw new Error('put-not-writable-' + (typeof d));
@@ -276,6 +348,17 @@ function $puti(d,o,s) {
     }
 }
 
+// see rendertext
+function $splay() {
+    var map = $k[--$j];
+    for (var keys = map.keys(), i = 0, l = map.size; i < l; i++) {
+        var id = keys.next().value;
+        if (id && typeof id === 'string') {
+            $_[id] = map.get(id);
+        }
+    }
+}
+
 // type operator
 function $type(v) {
     // null can be mis-typed - get it out of the way
@@ -284,7 +367,10 @@ function $type(v) {
     }
     var t = typeof v;
     if (t == 'number') {
-        return v % 1 ? 'realtype' : 'integertype';
+        if (isFinite(v)) {
+            return v % 1 ? 'realtype' : 'integertype';
+        }
+        return 'marktype';
     }
     if (t == 'boolean') {
         return 'booleantype';
@@ -302,7 +388,6 @@ function $type(v) {
     // filetype
     // fonttype
     // gstatetype
-    // marktype (v === Infinity)
     // nametype
     // savetype
 }
@@ -321,7 +406,7 @@ function $anchorsearch(str, seek) {
         var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
         i = str[0] == cd ? 1 : ls;
     } else if (seek.length <= ls) {
-        // Slow path, 
+        // Slow path,
         if (!(seek instanceof Uint8Array)) {
             seek = $s(seek);
         }
@@ -353,7 +438,7 @@ function $search(str, seek) {
         var cd = seek instanceof Uint8Array ? seek[0] : seek.charCodeAt(0);
         for (var i = 0; i < ls && str[i] != cd; i++) ;
     } else {
-        // Slow path, 
+        // Slow path,
         if (!(seek instanceof Uint8Array)) {
             seek = $s(seek);
         }
@@ -509,15 +594,21 @@ function $or(a, b) {    // or
     return (typeof a === 'boolean') ? a || b : a | b;
 }
 function $xo(a, b) {    // xor
-    return (typeof a === 'boolean') ? !a && b || a && !b : a ^ b;
+    return (typeof a === 'boolean') ? a != b : a ^ b;
 }
 function $nt(a) {
     return typeof a == 'boolean' ? !a : ~a;
 }
-// emulate single-precision floating-point (pseudo-polyfill for Math.fround)
+function $bs(v,n) {
+    // 64-bit shifts
+    return n < 0 ? $flr(v / $pow(2, -n)) : v * $pow(2, n);
+}
+// emulate single-precision floating-point.  This is not Math.fround().
+// More like ffloor()...
 var $f = (function (fa) {
-    return function(v) {
-        return Number.isInteger(v) ? v : (fa[0] = v, fa[0]);
+    return (v)=>{
+        //return Number.isInteger(v) ? v : (fa[0] = v, fa[0]);
+        return (v|0) == v ? v : (fa[0] = v, fa[0]);
     };
 })(new Float32Array(1));
 
@@ -525,46 +616,157 @@ var $f = (function (fa) {
 function bwipp_raiseerror() {
     var info = $k[--$j];
     var name = $k[--$j];
-    throw new Error($z(name) + ": " + $z(info));
+    bwipp_error.set('errorname', name);
+    bwipp_error.set('errorinfo', info);
+
+    if (typeof info == 'string' || info instanceof Uint8Array) {
+        throw new Error($z(name) + ": " + $z(info));
+    } else {
+        throw $z(name);
+    }
 }
 
+// This list was taken from BWIPP 2026-03-31
+const _textOptions = new Map([
+    [ '',           "" ],
+    [ 'subspace',   "" ],
+    [ 'split',      "" ],
+    [ 'linegaps',   1.2 ],
+    [ 'color',      "unset" ],
+    [ 'xalign',     "left" ],
+    [ 'yalign',     "above" ],
+    [ 'direction',  "forward" ],
+    [ 'font',       "OCR-B" ],
+    [ 'size',       10.0 ],
+    [ 'xoffset',    0.0 ],
+    [ 'yoffset',    0.0 ],
+    [ 'gaps',       0.0 ],
+]);
+
+
+// processoptions.generate
+// The BWIPP code uses currentdict as a user dict, which we do not support.
+// It also pulls in render.groupoptions which is not visible due to the
+// code transforms.
+function bwipp_inittextoptions() {
+    for (var grp = 1; grp <= 9; grp++) {
+        var map = _textOptions;
+        for (var keys = map.keys(), i = 0, l = map.size; i < l; i++) { 
+            var id = keys.next().value;
+            $_['text' + grp + id] = map.get(id); 
+        }
+    }
+}
+
+// processoptions.collectgroup
+function bwipp_grouptextoptions() {
+    var a = $a(9);
+    var map = _textOptions;
+    for (var grp = 1; grp <= 9; grp++) {
+        var dict = new Map;
+        var pfx = 'text' + grp; 
+        for (var keys = map.keys(), i = 0, l = map.size; i < l; i++) { 
+            var id = keys.next().value;
+            dict.set(id, $_[pfx + id]);
+        }
+        $put(a, grp-1, dict);
+    }
+    $k[$j++] = a;
+}
+
+// This list was taken from BWIPP 2026-03-31
+const _textAliases = {
+    alttext:              'text1',
+    alttextsubspace:      'text1subspace',
+    alttextsplit:         'text1split',
+    textlinegaps:         'text1linegaps',
+    textcolor:            'text1color',
+    textxalign:           'text1xalign',
+    textyalign:           'text1yalign',
+    textdirection:        'text1direction',
+    textfont:             'text1font',
+    textsize:             'text1size',
+    textxoffset:          'text1xoffset',
+    textyoffset:          'text1yoffset',
+    textgaps:             'text1gaps',
+    extratext:            'text2',
+    extratextsubspace:    'text2subspace',
+    extratextsplit:       'text2split',
+    extratextlinegaps:    'text2linegaps',
+    extratextcolor:       'text2color',
+    extratextxalign:      'text2xalign',
+    extratextyalign:      'text2yalign',
+    extratextdirection:   'text2direction',
+    extratextfont:        'text2font',
+    extratextsize:        'text2size',
+    extratextxoffset:     'text2xoffset',
+    extratextyoffset:     'text2yoffset',
+    extratextgaps:        'text2gaps',
+};
+
 // This is a replacement for the BWIPP processoptions function.
-// We cannot use the BWIPP version due to two reasons:
+// We cannot use the BWIPP version for several reasons:
 // - legacy code allows strings to be numbers and numbers to be strings
 // - in javascript, there is no way to tell the difference between a real
 //   number that is an integer, and an actual integer.
+// - (alt|extra)text must be uint8array due to the bwipp option 
+//   (alt|extra)subspace, which requires the text to be writable.
 //
-// options currentdict processoptions exec -> options
+// Invoked as:
+//      options //processoptions exec -> options
 function bwipp_processoptions() {
-    var dict = $k[--$j];
     var opts = $k[$j-1];
-    var map = opts instanceof Map;
-    for (var id in dict) {
-        var val;
-        if (map) {
-            if (!opts.has(id)) {
-                continue;
+    if (opts instanceof Uint8Array) {
+        opts = $z(opts);
+    }
+    if (typeof opts === 'string') {
+        let vals = opts.trim().split(/ +/g)
+        $k[$j-1] = opts = new Map();
+        for (let i = 0; i < vals.length; i++) {
+            let pair = vals[i].split('=');
+            if (pair.length === 1) {
+                opts.set(pair[0], true);
+            } else {
+                opts.set(pair[0], pair[1]);
             }
-            val = opts.get(id);
-        } else {
-            if (!opts.hasOwnProperty(id)) {
-                continue;
-            }
-            val = opts[id];
         }
-        var def = dict[id];
+    }
+    // BWIPP does not raiseerror on these (text1* and text2* override alttext* and extratext*)
+    if (opts.has('alttext') && opts.has('text1')) {
+        throw new Error('bwipp.invalidTextOptions: alttext and text1 are mutually exclusive');
+    }
+    if (opts.has('extratext') && opts.has('text2')) {
+        throw new Error('bwipp.invalidTextOptions: extratext and text2 are mutually exclusive');
+    }
+    // alttext* -> text1*, extratext* -> text2*
+    for (var keys = opts.keys(), i = 0, l = opts.size; i < l; i++) { 
+        var id = keys.next().value;
+        if (_textAliases[id]) {
+            opts.set(_textAliases[id], opts.get(id));
+            if (/^(?:alt|extra)text/.test(id)) {
+                opts.delete(id);
+            }
+        }
+    }
+    for (var id in $_) {
+        var val;
+        if (!opts.has(id)) {
+            continue;
+        }
+        val = opts.get(id);
+        var def = $_[id];
         var typ = typeof def;
 
         // null is a placeholder for realtype
-        if (def == null || typ == 'number') {
-            // This allows for numeric strings
+        if (def === null || typ == 'number') {
+            // Allow numeric strings to be numbers
             if (!isFinite(+val)) {
-                throw new Error('bwipp.invalidOptionType: ' + id + 
+                throw new Error('bwipp.invalidOptionType: ' + id +
                         ': not a realtype: ' + val);
             }
             if (typeof val == 'string') {
                 val = +val;
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
             }
         } else if (typ == 'boolean') {
             if (val !== true && val !== false) {
@@ -572,39 +774,110 @@ function bwipp_processoptions() {
                 // interpretation of boolean.
                 if (val == null || (val|0) === val) {
                     val = !!val;
-                } else if (val == 'true') {
+                } else if (val === 'true') {
                     val = true;
-                } else if (val == 'false') {
+                } else if (val === 'false') {
                     val = false;
                 } else {
-                    throw new Error('bwipp.invalidOptionType: ' + id + 
+                    throw new Error('bwipp.invalidOptionType: ' + id +
                             ': not a booleantype: ' + val);
                 }
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
             }
         } else if (typ == 'string' || def instanceof Uint8Array) {
-            // This allows numbers to be strings
+            // Allow numbers to be strings
             if (typeof val == 'number') {
                 val = ''+val;
-                map ? opts.set(id, val) : (opts[id] = val);
+                opts.set(id, val);
+            } else if (/^text\d$/.test(id) && typeof val === 'string') {
+                // BWIPP 2025-06-13 introduced textsubspace which allows replacing
+                // a marker character with space.  This requires the text to be a
+                // uint8array otherwise we get
+                //      Error: put-not-writable-string
+                val = $s(val);
+                opts.set(id, val);
             } else if (typeof val != 'string' && !(val instanceof Uint8Array)) {
-                throw new Error('bwipp.invalidOptionType: ' + id + 
+                throw new Error('bwipp.invalidOptionType: ' + id +
                         ': not a stringtype: ' + val);
             }
         }
         // Set the option into the dictionary
-        dict[id] = val;
+        $_[id] = val;
     }
 }
 
-// Replacement for loadctx which contains complex postscript operations
-// that we don't implement correctly.
-// f is a reference to the enclosing function.
-function bwipp_loadctx(f) {
-    if (!f.$ctx) {
-        f.$ctx = {};
-    }
-    var next = Object.getPrototypeOf($_);
-    Object.setPrototypeOf(f.$ctx, next);
-    Object.setPrototypeOf($_, f.$ctx);
+// Replacement for fifocache constructor.  We can't use the postscript version
+// because it creates a user defined dict << ... >>> and fetch installs it as
+// the current dictionary...
+//    /fifocache {
+//        8 dict begin
+//    
+//        /limit exch def
+//        /max exch def
+//        /cache max dict def
+//        /fifo max array def
+//        /state << /head 0 /cnt 0 /total 0 >> def
+//        /fetch currentdict [
+//            exch { //fifocache.fetch exec } aload pop
+//        ] cvx def
+//    
+//        currentdict  % Leave this on the stack
+//        end
+//    } bind def
+function bwipp_fifocache() {
+    var limit = $k[--$j];
+    var max = $k[--$j];
+    var dict = {
+        limit:limit, max:max, cache:new Map(), fifo:[],
+        state:{ head:0, cnt:0, total:0 },
+        fetch() {
+            $k[$j++] = dict;
+            bwipp_fifocache_fetch();
+        },
+    };
+    $k[$j++] = dict;
 }
+
+function bwipp_fifocache_fetch() {
+    var self = $k[--$j];
+    var cardfn = $k[--$j];
+    var genfn = $k[--$j];
+    var key = $k[--$j];
+    if (key instanceof Uint8Array) {
+        key = String.fromCharCode.apply(null,key);
+    }
+    var cache = self.cache;
+    if (cache.has(key)) {
+        $k[$j++] = cache.get(key);
+        return;
+    }
+    var fifo = self.fifo;
+    var max = self.max;
+    var limit = self.limit;
+    genfn();
+    var result = $k[$j-1];
+    cardfn();
+    var card = $k[--$j];
+    var state = self.state; // { head:0, cnt:0, total:0 }
+    if (card < limit) {
+        for (;;) {
+            if (state.total + card <= limit && state.cnt < max) {
+                break;
+            }
+            var oldkey = fifo[state.head];
+            $k[$j++] = cache.get(oldkey);
+            cardfn();
+            state.total = state.total - $k[--$j];
+            cache.delete(oldkey);
+            state.head = (state.head + 1) % max;
+            state.cnt--;
+        }
+        cache.set(key, result);
+        fifo[(state.head + state.cnt) % max] = key;
+        state.cnt++;
+        state.total = state.total + card;
+    }
+    $k[$j++] = result;
+}
+
+

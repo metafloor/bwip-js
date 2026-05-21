@@ -63,11 +63,11 @@ function showcode(ev, ident) {
             a[i].className = 'codeblock';
         }
     }
-    // Activate the selected 
+    // Activate the selected
     ident = ident || ev.target.href.replace(/^.*#/, '');
     console.log(ev.target);
     document.querySelectorAll('div.codeblock.' + ident)[0].className += ' show';
-    document.querySelectorAll('a.codelink.' + ident)[0].className += ' show'; 
+    document.querySelectorAll('a.codelink.' + ident)[0].className += ' show';
 
     if (history.replaceState) {
         history.replaceState(null, null, '#' + ident);

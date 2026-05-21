@@ -1,0 +1,25 @@
+/runtest_symbol {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/symbol dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (fima) (dontdraw) symbol /sbs get
+} [ 2.25 2.25 2.25 11.25 2.25 11.25 2.25 2.25 2.25 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ 51 string (dontdraw) symbol } /bwipp.symbolinputTooLong isError
+
+{ (unknown) (dontdraw) symbol } /bwipp.symbolUnknownSymbol isError
+end
+} bind def

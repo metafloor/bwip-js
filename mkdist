@@ -67,9 +67,9 @@ cp dist/bwip-js.js dist/bwip-js-gen.mjs
 
 ## This returns the list of bwipp exports
 bwipp_exports() {
-    grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+    grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
         sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/bwipp_\1/' -e 's/-/_/g' | tr -s '[:space:]' ','
-    echo "bwipp_lookup,bwipp_encode,BWIPP_VERSION"
+    echo "bwipp_lookup,bwipp_symlist,bwipp_encode,BWIPP_VERSION"
 }
 
 ## Finish the bwipp.mjs module
@@ -119,24 +119,24 @@ exports REACT-NV >> dist/bwip-js-rn.mjs
 exports GENERIC >> dist/bwip-js-gen.mjs
 
 ## nodejs common-js
-cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.js 
+cat src/bwipp.js src/bwipjs.js src/tracepaths.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.js
 
 ## nodejs and react-native ESMs
-cat src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.mjs 
-cat src/bwipjs.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-rn.mjs 
+cat src/bwipjs.js src/tracepaths.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-node.mjs
+cat src/bwipjs.js src/tracepaths.js src/drawing-builtin.js src/drawing-zlibpng.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-rn.mjs
 
 # change the require()s to imports for the node esm (\x27 == apos)
 sed -i -E -e 's/var (\w+)\s*=\s*require\((\x27\w+\x27)\)/import \1 from \2/' dist/bwip-js-node.mjs
 sed -i -E -e 's/require\((\x27\w+\x27)\)/import \1/' dist/bwip-js-node.mjs
 
 ## browser UMD
-cat src/bwipp.js src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js 
+cat src/bwipp.js src/bwipjs.js src/tracepaths.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.js
 
 ## browser ESM
-cat src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.mjs 
+cat src/bwipjs.js src/tracepaths.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js.mjs
 
 ## generic ESM
-cat src/bwipjs.js src/drawing-builtin.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-gen.mjs 
+cat src/bwipjs.js src/tracepaths.js src/drawing-builtin.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js >> dist/bwip-js-gen.mjs
 
 ##
 ## Shorten the postscript operator names rather than use random variable
@@ -147,7 +147,7 @@ uglifyjs bwipp-min.js >> dist/bwip-js-min.js
 rm -f bwipp-min.js
 
 ## browser minified - minified exports and no drawing-zlibpng.js
-exports BROWSER | cat - src/bwipjs.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js 
+exports BROWSER | cat - src/bwipjs.js src/tracepaths.js src/drawing-builtin.js src/drawing-canvas.js src/drawing-svg.js src/fontlib.js src/stb_truetype.js | uglifyjs --mangle >> dist/bwip-js-min.js
 
 ## nodejs and react-native postamble
 for file in dist/bwip-js-node.js dist/bwip-js-node.mjs dist/bwip-js-rn.mjs ; do
@@ -242,7 +242,7 @@ function toUint8Array(data) {
     }
     throw new ReferenceError("data must be a binary or base64 encoded string or Uint8Array");
 }
-toUint8Array.b64map = (function() { 
+toUint8Array.b64map = (function() {
     var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
     var map = {};
     for (var i = 0; i < 64; i++) {
@@ -262,72 +262,74 @@ module.exports = {
     request:Request, toBuffer:ToBuffer, toSVG:ToSVG, render:Render, raw:ToRaw,
     drawingZlibPng:DrawingZlibPng, drawingSVG:DrawingSVG,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib:FontLib,
+    symbolList:bwipp_symlist,
     BWIPJS_VERSION:BWIPJS_VERSION, BWIPP_VERSION:BWIPP_VERSION,
+    _metrics:\$metrics,
 };
 @EOF
 
 # exports for the ESM node version
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _ToAny(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js-node.mjs
 
 cat - <<@EOF >> dist/bwip-js-node.mjs
 export { ToBuffer as toBuffer, ToSVG as toSVG, Render as render, LoadFont as loadFont,
          DrawingZlibPng as drawingZlibPng, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
     request:Request, toBuffer:ToBuffer, toSVG:ToSVG, render:Render, raw:ToRaw,
-    drawingZlibPng:DrawingZlibPng, drawingSVG:DrawingSVG,
+    drawingZlibPng:DrawingZlibPng, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };
 @EOF
 
 # exports for the ESM browser version
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _ToAny(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js.mjs
 
 cat - <<@EOF >> dist/bwip-js.mjs
 export { ToCanvas as toCanvas, ToSVG as toSVG, Render as render, LoadFont as loadFont,
          DrawingCanvas as drawingCanvas, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
     toCanvas:ToCanvas, toSVG:ToSVG, render:Render, raw:ToRaw,
-    drawingCanvas:DrawingCanvas, drawingSVG:DrawingSVG,
+    drawingCanvas:DrawingCanvas, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };
 @EOF
 
 # exports for the react-native ESM version
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _ToAny(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js-rn.mjs
 
 cat - <<@EOF >> dist/bwip-js-rn.mjs
 export { ToDataURL as toDataURL, ToSVG as toSVG, Render as render, LoadFont as loadFont,
          DrawingDataURL as drawingDataURL, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
     toDataURL:ToDataURL, toSVG:ToSVG, render:Render, raw:ToRaw,
-    drawingDataURL:DrawingDataURL, drawingSVG:DrawingSVG,
+    drawingDataURL:DrawingDataURL, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };
 @EOF
 
 # exports for the generic ESM version
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/export function \1(opts,dwg) { return _Render(bwipp_\1,opts,dwg); };/' \
         -e 's/-/_/g' >> dist/bwip-js-gen.mjs
 
 cat - <<@EOF >> dist/bwip-js-gen.mjs
 export { ToSVG as toSVG, Render as render, LoadFont as loadFont, DrawingSVG as drawingSVG,
-         BWIPJS_VERSION, BWIPP_VERSION,
+         bwipp_symlist as symbolList, BWIPJS_VERSION, BWIPP_VERSION,
 };
 export default {
-    toSVG:ToSVG, render:Render, raw:ToRaw, drawingSVG:DrawingSVG,
+    toSVG:ToSVG, render:Render, raw:ToRaw, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
     fixupOptions:FixupOptions, loadFont:LoadFont, FontLib, BWIPJS_VERSION, BWIPP_VERSION,
 };
 @EOF
@@ -337,7 +339,7 @@ for file in  dist/bwip-js.js dist/bwip-js-min.js ; do
 cat - <<@EOF >> $file
     return {
         toCanvas:ToCanvas, toSVG:ToSVG, render:Render, raw:ToRaw,
-        drawingCanvas:DrawingCanvas, drawingSVG:DrawingSVG,
+        drawingCanvas:DrawingCanvas, drawingSVG:DrawingSVG, symbolList:bwipp_symlist,
         fixupOptions:FixupOptions, loadFont:LoadFont, FontLib:FontLib,
         BWIPJS_VERSION:BWIPJS_VERSION, BWIPP_VERSION:BWIPP_VERSION,
     };
@@ -355,9 +357,9 @@ cat - <<@EOF
 # drawing => Promise<any>
 # drawing => any
 (
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;/' -e 's/-/_/g'
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;/' -e 's/-/_/g'
 ) | sort
 echo
@@ -366,14 +368,15 @@ echo
 
 function browsertypes {
 cat - <<@EOF
-    export function toCanvas(canvas: string | HTMLCanvasElement, opts: RenderOptions): HTMLCanvasElement;
-    export function drawingCanvas(canvas: string | HTMLCanvasElement): DrawingContext<HTMLCanvasElement>;
+    type CanvasType = HTMLCanvasElement | OffscreenCanvas;
+    export function toCanvas(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
+    export function drawingCanvas(canvas: string | CanvasType): DrawingContext<CanvasType>;
 
 @EOF
 # toCanvas => canvas
 (
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
-    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(canvas: string | HTMLCanvasElement, opts: RenderOptions): HTMLCanvasElement;/' -e 's/-/_/g'
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
+    sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(canvas: string | CanvasType, opts: RenderOptions): CanvasType;/' -e 's/-/_/g'
 drawingtypes
 ) | sort
 }
@@ -391,9 +394,9 @@ cat - <<@EOF
 # toBuffer => Promise<Buffer>
 # toBuffer callback
 (
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions): Promise<Buffer>;/' -e 's/-/_/g'
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, callback: ToBufferCallback): void;/' -e 's/-/_/g'
 drawingtypes
 ) | sort
@@ -413,9 +416,9 @@ cat - <<@EOF
 # toDataURL => Promise<DataURL>
 # toDataURL callback
 (
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions): Promise<DataURL>;/' -e 's/-/_/g'
-grep -E '% --BEGIN ENCODER .*--' barcode.psc | sort -u | \
+grep -E '% --BEGIN ENCODER .*--' barcode.ps | grep -v jabcode | sort -u | \
     sed -e 's/^.*BEGIN ENCODER \(.*\)--.*/    export function \1(opts: RenderOptions, callback: ToDataURLCallback): void;/' -e 's/-/_/g'
 drawingtypes
 ) | sort

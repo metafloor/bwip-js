@@ -66,7 +66,7 @@ for (var i = 0; i < lines.length; i++) {
         if (a && data[a[2]]) {
             taken = data[a[2]];
             stats.push({ symbol:a[2], branches:1, taken:1 });
-            html += '<div class="codeblock ' + a[2] + '">\n' + 
+            html += '<div class="codeblock ' + a[2] + '">\n' +
                     '    ' + a[1] + '<b id="' + a[2] + '">' + a[2] + '</b>' +
                         a[3] + '\n';
             i+= 4;  // skip the coverage boilerplate
@@ -196,10 +196,10 @@ function showcode(ev, ident) {
             a[i].className = 'codeblock';
         }
     }
-    // Activate the selected 
+    // Activate the selected
     ident = ident || ev.target.href.replace(/^.*#/, '');
     document.querySelectorAll('div.codeblock.' + ident)[0].className += ' show';
-    document.querySelectorAll('a.codelink.' + ident)[0].className += ' show'; 
+    document.querySelectorAll('a.codelink.' + ident)[0].className += ' show';
 
     if (history.replaceState) {
         history.replaceState(null, null, '#' + ident);

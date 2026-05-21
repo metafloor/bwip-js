@@ -1,0 +1,25 @@
+/runtest_flattermarken {
+20 dict begin
+% Barcode Writer in Pure PostScript
+% https://bwipp.terryburton.co.uk
+%
+% vim: set sw=4 sts=4 et:
+%
+% Copyright (c) 2004-2025 Terry Burton
+%
+
+%%/flattermarken dup /uk.co.terryburton.bwipp findresource cvx def
+
+{ (11099) (dontdraw) flattermarken /sbs get
+} [ 0 0 1 8 0 0 1 8 0 9 0 0 0 8 1 0 0 8 1 0 ] debugIsEqual
+
+
+%
+% Error tests
+%
+
+{ (123A5) (dontdraw) flattermarken } /bwipp.flattermarkenBadCharacter isError
+
+{ 501 string (dontdraw) flattermarken } /bwipp.flattermarkeninputTooLong isError
+end
+} bind def

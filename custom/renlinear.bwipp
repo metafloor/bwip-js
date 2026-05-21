@@ -1,0 +1,223 @@
+% --REQUIRES preamble raiseerror processoptions setanycolor render--
+%%BeginData:        219 ASCII Lines
+currentglobal
+true setglobal
+/setpacking where {pop currentpacking true setpacking} if
+8 dict
+dup /raiseerror dup /uk.co.terryburton.bwipp findresource put
+dup /processoptions dup /uk.co.terryburton.bwipp findresource put
+dup /setanycolor dup /uk.co.terryburton.bwipp findresource put
+dup /render dup /uk.co.terryburton.bwipp findresource put
+begin
+
+/renlinear {
+
+    256 dict begin
+    {
+
+    %
+    % Default options
+    %
+    /sbs [] def
+    /bhs [] def
+    /bbs [] def
+    /txt [] def
+
+    % text{1-9}* options with common defaults
+    (text) 9 /groupoptions //render exec /generategroup //processoptions exec
+
+    % Overrides permitting encoder-positioned text
+    /text1xalign (unset) def
+    /text1yalign (unset) def
+
+    /includetext false def
+    /barcolor (unset) def
+    /backgroundcolor (unset) def
+    /bordercolor (unset) def
+    /inkspread null def
+    /width 0.0 def
+    /barratio 1.0 def
+    /spaceratio 1.0 def
+    /showborder false def
+    /showbearer false def
+    /borderleft 10.0 def
+    /borderright 10.0 def
+    /bordertop 0.0 def
+    /borderbottom 0.0 def
+    /borderwidth 0.5 def
+    /guardwhitespace false def
+    /guardleftpos 0.0 def
+    /guardleftypos 0.0 def
+    /guardrightpos 0.0 def
+    /guardrightypos 0.0 def
+    /guardwidth 5.0 def
+    /guardheight 7.0 def
+    /gridfit false def
+    /griddpi 0 def
+    /strictspec false def
+    /loosespec false def
+    /xdim -1.0 def
+    /xmin -1.0 def
+    /xmax -1.0 def
+    /modunit 1 def
+
+    {def} forall
+    opt currentdict /opt undef /apply //processoptions exec /options exch def
+    /global_renderer_defaults //render exec
+
+    % Collect text options into an array
+    /textopts (text) 9 /groupoptions //render exec /collectgroup //processoptions exec def
+
+    griddpi 0 ne { /gridfit true def } if
+    inkspread null eq { /inkspread 0.15 def } if
+
+    % Adjust inkspread to fixed physical amount under strictspec
+    strictspec { /inkspread inkspread modunit mul 25.4 mul xdim 72 mul div def } if
+
+    % Auto-disable gridfit for fractional-width bars (postal, pharmacode)
+    gridfit {
+        sbs {
+            dup floor sub abs 0.001 gt { /gridfit false def exit } if
+        } forall
+        barratio floor barratio ne spaceratio floor spaceratio ne or {
+            /gridfit false def
+        } if
+    } if
+
+    %
+    % Validate input
+    %
+
+    /validate_common //render exec
+
+    barratio 0.1 lt barratio 5 gt or {
+        /bwipp.renlinearBadBarratio (barratio must be from 0.1 to 5) //raiseerror exec
+    } if
+
+    spaceratio 0.1 lt spaceratio 5 gt or {
+        /bwipp.renlinearBadSpaceratio (spaceratio must be from 0.1 to 5) //raiseerror exec
+    } if
+
+    width 0 ne { width 0.01 lt width 20 gt or {
+        /bwipp.renlinearBadWidth (width must be 0 or from 0.01 to 20) //raiseerror exec
+    } if } if
+
+    sbs length 0 ne {
+        sbs length 1 add 2 idiv  % nbars
+        bhs length 1 index lt bbs length 2 index lt or
+        { pop /bwipp.renlinearBadBarHeightArrays (The bar height and baseline arrays must be at least as long as the number of bars) //raiseerror exec } if
+        pop
+    } if
+
+    %
+    % Create bar elements and put them into the bars array
+    %
+    /bars sbs length 1 add 2 idiv array def
+    /pixx 0 def /pixy 0 def
+    0 1 sbs length 1 add 2 idiv 2 mul 2 sub {
+        /i exch def
+        i 2 mod 0 eq {           % i is even
+            /d sbs i get barratio mul barratio sub 1 add def  % d = digit*r-r+1
+            sbs i get 0 ne {
+                /h bhs i 2 idiv get 72 mul def  % Height from bhs
+                /c d 2 div pixx add def         % Centre of the bar = pixx + d/2
+                /y bbs i 2 idiv get 72 mul def  % Baseline from bbs
+                /w d inkspread sub def          % bar width = digit - inkspread
+                bars i 2 idiv [h c y w] put     % Add the bar entry
+                h y add pixy gt {/pixy h y add def} if
+            } {
+                bars i 2 idiv -1 put            % Dummy entry
+            } ifelse
+        } {
+            /d sbs i get spaceratio mul spaceratio sub 1 add def  % d = digit*r-r+1
+        } ifelse
+        /pixx pixx d add def  % pixx += d
+    } for
+
+    options /debugbars known
+    /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse
+    and { /bwipp.debugbars [ bars { dup -1 ne { aload pop } { pop } ifelse } forall ] //raiseerror exec } if
+
+    gsave
+
+    currentpoint translate
+
+    %
+    % Force symbol to given width
+    %
+    width 0 ne pixx 0 ne and {
+        width 72 mul pixx div 1 scale
+    } if
+
+    %
+    % Scale to physical specification dimensions
+    %
+    strictspec {
+        xdim 72 mul 25.4 div modunit div dup scale
+    } if
+
+    %
+    % Grid fit: snap module boundaries to device pixel grid
+    %
+    gridfit {
+        1 strictspec { xdim xmin xmax } { 0 -1 -1 } ifelse
+        width 0 ne  % Floor when width forced
+        false /gridfit //render exec
+        not { grestore //raiseerror exec } if
+    } if
+
+
+    %
+    % Display the border and background
+    %
+    pixx pixy inkspread 0 /renderborder //render exec  % No inkspread in y for bars
+    not { grestore //raiseerror exec } if
+
+    %
+    % Display the bars for elements in the bars array
+    %
+    gsave
+    barcolor (unset) ne { barcolor //setanycolor exec not { grestore grestore //raiseerror exec } if } if
+    newpath
+    bars {
+        dup -1 ne {
+            aload pop  % h x y w
+            2 index 1 index 2 div sub 2 index moveto
+            0 4 index rlineto
+            dup 0 rlineto
+            0 4 index neg rlineto
+            closepath
+            pop pop pop pop
+        } {
+            pop
+        } ifelse
+    } forall
+    fill
+    grestore
+
+    %
+    % Display text{1-9}
+    %
+    pixx pixy /textgroups //render exec
+    not { grestore //raiseerror exec } if
+
+    %
+    % Display the guard elements
+    %
+    pixx /renderguards //render exec
+    not { grestore //raiseerror exec } if
+
+    grestore
+
+    } stopped {end stop} if
+    end
+
+}
+[/barcode] {null def} forall
+bind def
+/renlinear dup load /uk.co.terryburton.bwipp defineresource pop
+end
+/setpacking where {pop setpacking} if
+setglobal
+%%EndData
+%%EndResource
