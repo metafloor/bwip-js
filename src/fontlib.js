@@ -1,7 +1,7 @@
 // fontlib.js
 var FontLib = (function() {
     var fonts = [];
-    var names = {};
+    var names = {};     // keyed by all uppercase font name
     var glyphcache = {};
     var glyphmru = {};
     var glyphcount = 0;
@@ -40,13 +40,18 @@ var FontLib = (function() {
             throw new Error("bwipjs: loadFont: invalid number of arguments");
         }
 
+        name = name.toUpperCase();
         var font = STBTT.InitFont(toUint8Array(data));
         font.bwipjs_name = name;
         font.bwipjs_multx = multx;
         font.bwipjs_multy = multy;
 
-        var fontid = fonts.push(font)-1;
-        names[name.toUpperCase()] = fontid;
+        var fontid = names[name];
+        if (fontid == null) {
+            names[name] = fontid = fonts.push(font)-1;
+        } else {
+            fonts[fontid] = font;
+        }
         return fontid;
     }
 
