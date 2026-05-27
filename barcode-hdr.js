@@ -39,7 +39,11 @@ function $a(a) {
         a=$k.splice(i+1,$j-1-i);
         $j=i;
     } else if (!(a instanceof Array)) {
-        a=new Array(+arguments[0]);
+        var len = arguments[0]|0;
+        if (len >= 1<<16) {
+            throw new Error('array-limit-check');
+        }
+        a=new Array(len);
         for (var i = 0, l = a.length; i < l; i++) {
             a[i] = null;
         }
@@ -749,11 +753,10 @@ function bwipp_processoptions() {
         }
     }
     for (var id in $_) {
-        var val;
         if (!opts.has(id)) {
             continue;
         }
-        val = opts.get(id);
+        var val = opts.get(id);
         var def = $_[id];
         var typ = typeof def;
 
@@ -800,6 +803,9 @@ function bwipp_processoptions() {
                 throw new Error('bwipp.invalidOptionType: ' + id +
                         ': not a stringtype: ' + val);
             }
+        } else if (Object.prototype.toString.call(val) !== Object.prototype.toString.call(def)) {
+            var m = /\[object (\w+)\]/.exec(Object.prototype.toString.call(def)) || [ , 'unknown' ];
+            throw new Error('bwipp.invalidOptionType: ' + id + ': expected ' + m[1].toLowerCase() + 'type');
         }
         // Set the option into the dictionary
         $_[id] = val;
