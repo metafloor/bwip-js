@@ -22708,6 +22708,7 @@ div span:hover {
 <code></code>
 <code>    //processoptions exec /options exch def</code>
 <code>%psc     /global_encoder_defaults //render exec</code>
+<code>    options /rowmult undef</code>
 <code></code>
 <code>    /barcode exch def</code>
 <code></code>
@@ -22729,35 +22730,35 @@ div span:hover {
 <code>%psc     (input.validate) //pdf417.before exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.pdf417emptyData#22667) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.pdf417emptyData#22668) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 12500 gt {</code>
-<code>        (bwipp.pdf417inputTooLong#22671) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.pdf417inputTooLong#22672) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    eclevel -1 ne eclevel 0 lt eclevel 8 gt or and {</code>
-<code>        (bwipp.pdf417InvalidErrorCorrectionLevel#22675) (Valid error correction levels are 0 to 8) //raiseerror exec</code>
+<code>        (bwipp.pdf417InvalidErrorCorrectionLevel#22676) (Valid error correction levels are 0 to 8) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    ccc raw and {</code>
-<code>        (bwipp.pdf417cccAndRaw#22679) (Cannot combine ccc and raw) //raiseerror exec</code>
+<code>        (bwipp.pdf417cccAndRaw#22680) (Cannot combine ccc and raw) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    ccc compact and {</code>
-<code>        (bwipp.pdf417cccAndCompact#22683) (Cannot combine ccc and compact) //raiseerror exec</code>
+<code>        (bwipp.pdf417cccAndCompact#22684) (Cannot combine ccc and compact) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    rows 0 ne rows 3 lt rows 90 gt or and {</code>
-<code>        (bwipp.pdf417invalidRows#22687) (There must be between 3 and 90 rows) //raiseerror exec</code>
+<code>        (bwipp.pdf417invalidRows#22688) (There must be between 3 and 90 rows) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    columns 0 ne columns 1 lt columns 30 gt or and {</code>
-<code>        (bwipp.pdf417invalidColumns#22691) (There must be between 1 and 30 columns) //raiseerror exec</code>
+<code>        (bwipp.pdf417invalidColumns#22692) (There must be between 1 and 30 columns) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    rowmult 0 le rowmult 50 gt or {</code>
-<code>        (bwipp.pdf417badRowMult#22695) (The row multiplier must be greater than 0 and at most 50) //raiseerror exec</code>
+<code>        (bwipp.pdf417badRowMult#22696) (The row multiplier must be greater than 0 and at most 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>%psc     (input.validate) //pdf417.after exec</code>
@@ -22776,14 +22777,14 @@ div span:hover {
 <code>            } forall { pop exit } if</code>
 <code>            cvi /cw exch def</code>
 <code>            cw 928 gt {</code>
-<code>                (bwipp.pdf417badRawCodeword#22714) (Raw codewords must be 0 to 928) //raiseerror exec</code>
+<code>                (bwipp.pdf417badRawCodeword#22715) (Raw codewords must be 0 to 928) //raiseerror exec</code>
 <code>            } if</code>
 <code>            datcws j cw put</code>
 <code>            /i i 4 add def</code>
 <code>            /j j 1 add def</code>
 <code>        } loop</code>
 <code>        i barcode length ne {</code>
-<code>            (bwipp.pdf417badRawFormat#22721) (Raw codewords must be formatted as ^NNN) //raiseerror exec</code>
+<code>            (bwipp.pdf417badRawFormat#22722) (Raw codewords must be formatted as ^NNN) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /datcws datcws 0 j getinterval def</code>
 <code>    } if</code>
@@ -23199,7 +23200,7 @@ div span:hover {
 <code>            } { dup 811799 le {  % ECI 810900 - 811799</code>
 <code>                925 exch 810900 sub 2 array astore</code>
 <code>            } {</code>
-<code>                pop (bwipp.pdf417badECI#23137) (PDF417 supports ECIs 000000 to 811799) //raiseerror exec</code>
+<code>                pop (bwipp.pdf417badECI#23138) (PDF417 supports ECIs 000000 to 811799) //raiseerror exec</code>
 <code>            } ifelse } ifelse } ifelse</code>
 <code>        } def</code>
 <code></code>
@@ -23244,7 +23245,7 @@ div span:hover {
 <code>    /m datcws length def</code>
 <code></code>
 <code>    m 926 gt {</code>
-<code>      (bwipp.pdf417dataTooLong#23182) (The data is too long) //raiseerror exec</code>
+<code>      (bwipp.pdf417dataTooLong#23183) (The data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -23283,7 +23284,7 @@ div span:hover {
 <code>    % Symbol cannot exceed 90 rows</code>
 <code>    %</code>
 <code>    r 90 gt {</code>
-<code>      (bwipp.pdf417insufficientCapacity#23221) (Insufficient capacity in the symbol) //raiseerror exec</code>
+<code>      (bwipp.pdf417insufficientCapacity#23222) (Insufficient capacity in the symbol) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -23311,7 +23312,7 @@ div span:hover {
 <code>    %</code>
 <code>    /n c r mul k sub def</code>
 <code>    n 928 gt {</code>
-<code>        (bwipp.pdf417insufficientCapacity#23249) (Insufficient capacity in the symbol) //raiseerror exec</code>
+<code>        (bwipp.pdf417insufficientCapacity#23250) (Insufficient capacity in the symbol) //raiseerror exec</code>
 <code>    } if</code>
 <code>    /cws c r mul array def</code>
 <code>    cws 0 n put</code>
@@ -23320,7 +23321,7 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#23258) cws 0 n getinterval //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#23259) cws 0 n getinterval //raiseerror exec } if</code>
 <code></code>
 <code>    %</code>
 <code>    % Derive the error codewords directly into cws[n..n+k)</code>
@@ -23329,7 +23330,7 @@ div span:hover {
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#23267) cws n k getinterval //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#23268) cws n k getinterval //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (ecc.cws) //pdf417.after exec</code>
 <code></code>
@@ -23353,7 +23354,7 @@ div span:hover {
 <code>        /rwid 17 c mul 17 add 17 add 17 add 18 add def</code>
 <code>    } ifelse</code>
 <code>    rwid r mul { array } stopped {</code>
-<code>        pop (bwipp.pdf417PixsTooLarge#23291) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec</code>
+<code>        pop (bwipp.pdf417PixsTooLarge#23292) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec</code>
 <code>    } if /pixs exch def</code>
 <code></code>
 <code>    0 1 r 1 sub {</code>
@@ -24076,6 +24077,7 @@ div span:hover {
 <code></code>
 <code>    //processoptions exec /options exch def</code>
 <code>%psc     /global_encoder_defaults //render exec</code>
+<code>    options /rowmult undef</code>
 <code></code>
 <code>    /barcode exch def</code>
 <code></code>
@@ -24097,19 +24099,19 @@ div span:hover {
 <code>%psc     (input.validate) //micropdf417.before exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.micropdf417emptyData#24035) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.micropdf417emptyData#24037) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 5000 gt {</code>
-<code>        (bwipp.micropdf417inputTooLong#24039) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.micropdf417inputTooLong#24041) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    rowmult 0 le rowmult 50 gt or {</code>
-<code>        (bwipp.micropdf417badRowMult#24043) (The row multiplier must be greater than 0 and at most 50) //raiseerror exec</code>
+<code>        (bwipp.micropdf417badRowMult#24045) (The row multiplier must be greater than 0 and at most 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    cca ccb and cca raw and ccb raw and or or {</code>
-<code>        (bwipp.micropdf417ccaAndCcb#24047) (Cannot combine cca, ccb and raw) //raiseerror exec</code>
+<code>        (bwipp.micropdf417ccaAndCcb#24049) (Cannot combine cca, ccb and raw) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -24125,13 +24127,13 @@ div span:hover {
 <code>                    dup 48 lt exch 57 gt or { pop false } if</code>
 <code>                } forall</code>
 <code>                not {</code>
-<code>                    pop pop (bwipp.micropdf417BadVersionBadRowOrColumn#24063) (version must be formatted as RxC) //raiseerror exec</code>
+<code>                    pop pop (bwipp.micropdf417BadVersionBadRowOrColumn#24065) (version must be formatted as RxC) //raiseerror exec</code>
 <code>                } if</code>
 <code>            } forall</code>
 <code>            /rows exch cvi def</code>
 <code>            /columns exch cvi def</code>
 <code>        } {</code>
-<code>            pop (bwipp.micropdf417badVersionFormat#24069) (version must be formatted as RxC) //raiseerror exec</code>
+<code>            pop (bwipp.micropdf417badVersionFormat#24071) (version must be formatted as RxC) //raiseerror exec</code>
 <code>        } ifelse</code>
 <code>    } if</code>
 <code></code>
@@ -24151,14 +24153,14 @@ div span:hover {
 <code>            } forall { pop exit } if</code>
 <code>            cvi /cw exch def</code>
 <code>            cw 928 gt {</code>
-<code>                (bwipp.micropdf417badRawCodeword#24089) (Raw codewords must be 0 to 928) //raiseerror exec</code>
+<code>                (bwipp.micropdf417badRawCodeword#24091) (Raw codewords must be 0 to 928) //raiseerror exec</code>
 <code>            } if</code>
 <code>            datcws j cw put</code>
 <code>            /i i 4 add def</code>
 <code>            /j j 1 add def</code>
 <code>        } loop</code>
 <code>        i barcode length ne {</code>
-<code>            (bwipp.micropdf417badCcaRawFormat#24096) (Raw codewords must be formatted as ^NNN) //raiseerror exec</code>
+<code>            (bwipp.micropdf417badCcaRawFormat#24098) (Raw codewords must be formatted as ^NNN) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /datcws datcws 0 j getinterval def</code>
 <code>    } if</code>
@@ -24601,7 +24603,7 @@ div span:hover {
 <code>            } { dup 811799 le {  % ECI 810900 - 811799</code>
 <code>                925 exch 810900 sub 2 array astore</code>
 <code>            } {</code>
-<code>                pop (bwipp.pdf417badECI#24539) (PDF417 supports ECIs 000000 to 811799) //raiseerror exec</code>
+<code>                pop (bwipp.pdf417badECI#24541) (PDF417 supports ECIs 000000 to 811799) //raiseerror exec</code>
 <code>            } ifelse } ifelse } ifelse</code>
 <code>        } def</code>
 <code></code>
@@ -24687,7 +24689,7 @@ div span:hover {
 <code>    } forall</code>
 <code></code>
 <code>    okay not {</code>
-<code>        (bwipp.micropdf417noValidSymbol#24625) (Maximum length exceeded or invalid size) //raiseerror exec</code>
+<code>        (bwipp.micropdf417noValidSymbol#24627) (Maximum length exceeded or invalid size) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>%psc     (metrics.selection) //micropdf417.after exec</code>
@@ -24712,7 +24714,7 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#24650) cws 0 n getinterval //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#24652) cws 0 n getinterval //raiseerror exec } if</code>
 <code></code>
 <code>    %</code>
 <code>    % Derive the error codewords directly into cws[n..n+k)</code>
@@ -24721,7 +24723,7 @@ div span:hover {
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#24659) cws n k getinterval //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#24661) cws n k getinterval //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (ecc.cws) //micropdf417.after exec</code>
 <code></code>
@@ -24751,7 +24753,7 @@ div span:hover {
 <code>    /rwid //micropdf417.rwids c 1 sub get def</code>
 <code>    c 3 eq cca and {/rwid 72 def} if</code>
 <code>    rwid r mul { array } stopped {</code>
-<code>        pop (bwipp.micropdf417PixsTooLarge#24689) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec</code>
+<code>        pop (bwipp.micropdf417PixsTooLarge#24691) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec</code>
 <code>    } if /pixs exch def</code>
 <code></code>
 <code>    0 1 r 1 sub {</code>
@@ -25222,15 +25224,15 @@ div span:hover {
 <code>%psc     (input.validate) //datamatrix.before exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.datamatrixEmptyData#25160) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.datamatrixEmptyData#25162) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 15000 gt {</code>
-<code>        (bwipp.datamatrixinputTooLong#25164) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.datamatrixinputTooLong#25166) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    version (unset) ne rows 0 ne columns 0 ne or and {</code>
-<code>        (bwipp.datamatrixVersionRowsCols#25168) (rows and columns must not be given if version is specified) //raiseerror exec</code>
+<code>        (bwipp.datamatrixVersionRowsCols#25170) (rows and columns must not be given if version is specified) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -25246,14 +25248,14 @@ div span:hover {
 <code>                    dup 48 lt exch 57 gt or { pop false } if</code>
 <code>                } forall</code>
 <code>                not {</code>
-<code>                    pop pop (bwipp.datamatrixVersionBadRowOrColumn#25184) (version must be formatted as RxC) //raiseerror exec</code>
+<code>                    pop pop (bwipp.datamatrixVersionBadRowOrColumn#25186) (version must be formatted as RxC) //raiseerror exec</code>
 <code>                } if</code>
 <code>            } forall</code>
 <code>            /rows exch cvi def</code>
 <code>            /columns exch cvi def</code>
 <code>            /format rows columns eq { (square) } { (rectangle) } ifelse def</code>
 <code>        } {</code>
-<code>            pop (bwipp.datamatrixVersionFormat#25191) (version must be formatted as RxC) //raiseerror exec</code>
+<code>            pop (bwipp.datamatrixVersionFormat#25193) (version must be formatted as RxC) //raiseerror exec</code>
 <code>        } ifelse</code>
 <code>    } {</code>
 <code>        format (unset) eq {</code>
@@ -25262,7 +25264,7 @@ div span:hover {
 <code>    } ifelse</code>
 <code></code>
 <code>    format (square) ne format (rectangle) ne and {</code>
-<code>        (bwipp.datamatrixInvalidFormat#25200) (The format must be either square or rectangle) //raiseerror exec</code>
+<code>        (bwipp.datamatrixInvalidFormat#25202) (The format must be either square or rectangle) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>%psc     (input.validate) //datamatrix.after exec</code>
@@ -25305,7 +25307,7 @@ div span:hover {
 <code></code>
 <code>    /getnumremcws {</code>
 <code>        dup numremcws length ge {</code>
-<code>            pop (bwipp.datamatrixTooMuchData#25243) (The input data exceeds the symbol capacity) //raiseerror exec</code>
+<code>            pop (bwipp.datamatrixTooMuchData#25245) (The input data exceeds the symbol capacity) //raiseerror exec</code>
 <code>        } if</code>
 <code>        numremcws exch get</code>
 <code>    } def</code>
@@ -25322,14 +25324,14 @@ div span:hover {
 <code>            } forall { pop exit } if</code>
 <code>            cvi /cw exch def</code>
 <code>            cw 255 gt {</code>
-<code>                (bwipp.datamatrixBadRawCodeword#25260) (Raw codewords must be 0 to 255) //raiseerror exec</code>
+<code>                (bwipp.datamatrixBadRawCodeword#25262) (Raw codewords must be 0 to 255) //raiseerror exec</code>
 <code>            } if</code>
 <code>            cws j cw put</code>
 <code>            /i i 4 add def</code>
 <code>            /j j 1 add def</code>
 <code>        } loop</code>
 <code>        i barcode length ne {</code>
-<code>            (bwipp.datamatrixBadRawFormat#25267) (Raw codewords must be formatted as ^NNN) //raiseerror exec</code>
+<code>            (bwipp.datamatrixBadRawFormat#25269) (Raw codewords must be formatted as ^NNN) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /cws cws 0 j getinterval def</code>
 <code></code>
@@ -25467,7 +25469,7 @@ div span:hover {
 <code></code>
 <code>        /addtocws {</code>
 <code>            dup length j add cws length gt {</code>
-<code>                pop (bwipp.datamatrixTooMuchData#25405) (The input data exceeds the symbol capacity) //raiseerror exec</code>
+<code>                pop (bwipp.datamatrixTooMuchData#25407) (The input data exceeds the symbol capacity) //raiseerror exec</code>
 <code>            } if</code>
 <code>            dup cws exch j exch putinterval</code>
 <code>            /j exch length j add def</code>
@@ -25607,7 +25609,7 @@ div span:hover {
 <code>                } if</code>
 <code>                encvals mode get msg i get get</code>
 <code>                dup length p add ctxvals length gt {</code>
-<code>                    pop (bwipp.datamatrixTooMuchData#25545) (The input data exceeds the symbol capacity) //raiseerror exec</code>
+<code>                    pop (bwipp.datamatrixTooMuchData#25547) (The input data exceeds the symbol capacity) //raiseerror exec</code>
 <code>                } if</code>
 <code>                dup ctxvals exch p exch putinterval</code>
 <code>                /p exch length p add def</code>
@@ -25670,7 +25672,7 @@ div span:hover {
 <code>                i msglen eq {exit} if</code>
 <code>                Evals msg i get known not {exit} if</code>
 <code>                p edifactvals length ge {</code>
-<code>                    (bwipp.datamatrixTooMuchData#25608) (The input data exceeds the symbol capacity) //raiseerror exec</code>
+<code>                    (bwipp.datamatrixTooMuchData#25610) (The input data exceeds the symbol capacity) //raiseerror exec</code>
 <code>                } if</code>
 <code>                p 4 mod 0 eq {</code>
 <code>                    msglen i sub 2 le {  % Check end of data condition</code>
@@ -25729,7 +25731,7 @@ div span:hover {
 <code>                i msglen eq {exit} if</code>
 <code>                lookup mode ne {exit} if</code>
 <code>                p bvals length ge {</code>
-<code>                    (bwipp.datamatrixTooMuchData#25667) (The input data exceeds the symbol capacity) //raiseerror exec</code>
+<code>                    (bwipp.datamatrixTooMuchData#25669) (The input data exceeds the symbol capacity) //raiseerror exec</code>
 <code>                } if</code>
 <code>                bvals p msg i get put</code>
 <code>                /p p 1 add def</code>
@@ -25791,7 +25793,7 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#25729) cws //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#25731) cws //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (input.encoding) //datamatrix.after exec</code>
 <code></code>
@@ -25823,7 +25825,7 @@ div span:hover {
 <code>    } forall</code>
 <code></code>
 <code>    okay not {</code>
-<code>        (bwipp.datamatrixNoValidSymbol#25761) (Maximum length exceeded or invalid size) //raiseerror exec</code>
+<code>        (bwipp.datamatrixNoValidSymbol#25763) (Maximum length exceeded or invalid size) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -25867,7 +25869,7 @@ div span:hover {
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#25805) [ ecbs {aload pop} forall ] //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#25807) [ ecbs {aload pop} forall ] //raiseerror exec } if</code>
 <code></code>
 <code>    %</code>
 <code>    % Extend codewords with the interleaved error correction codes</code>
@@ -26208,7 +26210,7 @@ div span:hover {
 <code>    % Map the given type to a format and version of Data Matrix</code>
 <code>    %</code>
 <code>    /type load dup (7) ne exch dup (9) ne exch (29) ne and and {</code>
-<code>        (bwipp.mailmarkBadType#26146) (Royal Mail Mailmark type must be 7, 9 or 29) //raiseerror exec</code>
+<code>        (bwipp.mailmarkBadType#26148) (Royal Mail Mailmark type must be 7, 9 or 29) //raiseerror exec</code>
 <code>    } if</code>
 <code>    //mailmark.typetoversion /type load get /version exch def</code>
 <code>    //mailmark.typetoformat  /type load get /format exch def</code>
@@ -26217,10 +26219,10 @@ div span:hover {
 <code>    % Validate the input</code>
 <code>    %</code>
 <code>    barcode length 45 lt {</code>
-<code>        (bwipp.mailmarkBadLength#26155) (Royal Mail Mailmark must contain at least 45 characters of Mailmark formatted data, including any required space padding) //raiseerror exec</code>
+<code>        (bwipp.mailmarkBadLength#26157) (Royal Mail Mailmark must contain at least 45 characters of Mailmark formatted data, including any required space padding) //raiseerror exec</code>
 <code>    } if</code>
 <code>    barcode 0 4 getinterval (JGB ) ne {</code>
-<code>        (bwipp.mailmarkBadIndicator#26158) (Royal Mail Mailmark must begin with JGB&lt;space&gt; identifier) //raiseerror exec</code>
+<code>        (bwipp.mailmarkBadIndicator#26160) (Royal Mail Mailmark must begin with JGB&lt;space&gt; identifier) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -26972,11 +26974,11 @@ div span:hover {
 <code>%psc     (input.validate) //qrcode.before exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.qrcodeEmptyData#26910) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.qrcodeEmptyData#26912) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 30000 gt {</code>
-<code>        (bwipp.qrcodeinputTooLong#26914) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.qrcodeinputTooLong#26916) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -26996,11 +26998,11 @@ div span:hover {
 <code>    } ifelse</code>
 <code></code>
 <code>    format (full) ne format (micro) ne format (rmqr) ne and and {</code>
-<code>        (bwipp.qrcodeInvalidFormat#26934) (The format must be either full, micro or rmqr) //raiseerror exec</code>
+<code>        (bwipp.qrcodeInvalidFormat#26936) (The format must be either full, micro or rmqr) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    format (rmqr) eq version (unset) eq and {</code>
-<code>        (bwipp.qrcodeRMQRwithoutVersion#26938) (A version must be provided for RMQR) //raiseerror exec</code>
+<code>        (bwipp.qrcodeRMQRwithoutVersion#26940) (A version must be provided for RMQR) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -27009,16 +27011,16 @@ div span:hover {
 <code>    eclevel (unset) eq {/eclevel format (micro) ne {(M)} {(L)} ifelse def} if</code>
 <code></code>
 <code>    eclevel (L) ne eclevel (M) ne eclevel (Q) ne eclevel (H) ne and and and {</code>
-<code>        (bwipp.qrcodeInvalidEClevel#26947) (Error correction level must be either L, M, Q, or H) //raiseerror exec</code>
+<code>        (bwipp.qrcodeInvalidEClevel#26949) (Error correction level must be either L, M, Q, or H) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    mask -1 ne format (rmqr) eq and {</code>
-<code>        (bwipp.qrcodeRMQRmask#26951) (A mask cannot be supplied for RMQR) //raiseerror exec</code>
+<code>        (bwipp.qrcodeRMQRmask#26953) (A mask cannot be supplied for RMQR) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    mask -1 ne {</code>
 <code>        mask 1 lt mask format (full) eq {8} {4} ifelse gt or {</code>
-<code>            (bwipp.qrcodeBadMask#26956) (An invalid mask was supplied) //raiseerror exec</code>
+<code>            (bwipp.qrcodeBadMask#26958) (An invalid mask was supplied) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -27073,7 +27075,7 @@ div span:hover {
 <code>        } if</code>
 <code>        in length 11 mul 2 idiv 1 add</code>
 <code>        { string } stopped {</code>
-<code>            pop (bwipp.qrcodeInputTooLarge#27011) (The input data exceeds the implementation limits) //raiseerror exec</code>
+<code>            pop (bwipp.qrcodeInputTooLarge#27013) (The input data exceeds the implementation limits) //raiseerror exec</code>
 <code>        } if /out exch def</code>
 <code>        /k 0 def /m 0 def {</code>
 <code>            k in length eq {exit} if</code>
@@ -27094,7 +27096,7 @@ div span:hover {
 <code>        /in exch def</code>
 <code>        in length 10 mul 3 idiv 1 add</code>
 <code>        { string } stopped {</code>
-<code>            pop (bwipp.qrcodeInputTooLarge#27032) (The input data exceeds the implementation limits) //raiseerror exec</code>
+<code>            pop (bwipp.qrcodeInputTooLarge#27034) (The input data exceeds the implementation limits) //raiseerror exec</code>
 <code>        } if /out exch def</code>
 <code>        /k 0 def /m 0 def {</code>
 <code>            k in length eq {exit} if</code>
@@ -27123,7 +27125,7 @@ div span:hover {
 <code>        } if</code>
 <code>        in length 8 mul</code>
 <code>        { string } stopped {</code>
-<code>            pop (bwipp.qrcodeInputTooLarge#27061) (The input data exceeds the implementation limits) //raiseerror exec</code>
+<code>            pop (bwipp.qrcodeInputTooLarge#27063) (The input data exceeds the implementation limits) //raiseerror exec</code>
 <code>        } if /out exch def</code>
 <code>        0 1 in length 1 sub {</code>
 <code>            /k exch def</code>
@@ -27137,7 +27139,7 @@ div span:hover {
 <code>        /in exch def</code>
 <code>        in length 2 idiv 13 mul</code>
 <code>        { string } stopped {</code>
-<code>            pop (bwipp.qrcodeInputTooLarge#27075) (The input data exceeds the implementation limits) //raiseerror exec</code>
+<code>            pop (bwipp.qrcodeInputTooLarge#27077) (The input data exceeds the implementation limits) //raiseerror exec</code>
 <code>        } if /out exch def</code>
 <code>        /k 0 def /m 0 def {</code>
 <code>            k in length eq {exit} if</code>
@@ -27164,7 +27166,7 @@ div span:hover {
 <code></code>
 <code>    /addtobits {</code>
 <code>        dup length j add bits length gt {</code>
-<code>            pop (bwipp.qrcodeNoValidSymbol#27102) (Maximum length exceeded or invalid content) //raiseerror exec</code>
+<code>            pop (bwipp.qrcodeNoValidSymbol#27104) (Maximum length exceeded or invalid content) //raiseerror exec</code>
 <code>        } if</code>
 <code>        dup bits j 3 -1 roll putinterval</code>
 <code>        length j add /j exch def</code>
@@ -27263,12 +27265,12 @@ div span:hover {
 <code>        //qrcode.versetmap format get version 2 copy known not {</code>
 <code>            pop pop</code>
 <code>            format (full) eq {</code>
-<code>                (bwipp.qrcodeInvalidFullVersion#27201) (Valid versions for QR Code symbols are 1 to 40) //raiseerror exec</code>
+<code>                (bwipp.qrcodeInvalidFullVersion#27203) (Valid versions for QR Code symbols are 1 to 40) //raiseerror exec</code>
 <code>            } {</code>
 <code>            format (micro) eq {</code>
-<code>                (bwipp.qrcodeInvalidMicroVersion#27204) (Valid versions for Micro QR Code symbols are M1 to M4) //raiseerror exec</code>
+<code>                (bwipp.qrcodeInvalidMicroVersion#27206) (Valid versions for Micro QR Code symbols are M1 to M4) //raiseerror exec</code>
 <code>            } {  % rmqr</code>
-<code>                (bwipp.qrcodeInvalidRMQRversion#27206) (Invalid version for an RMQR symbol) //raiseerror exec</code>
+<code>                (bwipp.qrcodeInvalidRMQRversion#27208) (Invalid version for an RMQR symbol) //raiseerror exec</code>
 <code>            } ifelse } ifelse</code>
 <code>        } if</code>
 <code>        get [ exch ] /verset exch def</code>
@@ -27423,7 +27425,7 @@ div span:hover {
 <code></code>
 <code>    options /debugbitseqs known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugbitseqs#27361) msgbits //raiseerror exec } if</code>
+<code>    { (bwipp.debugbitseqs#27363) msgbits //raiseerror exec } if</code>
 <code></code>
 <code>    %</code>
 <code>    % Lookup the most appropriate symbol specification</code>
@@ -27470,7 +27472,7 @@ div span:hover {
 <code>    } for</code>
 <code></code>
 <code>    okay not {</code>
-<code>        (bwipp.qrcodeNoValidSymbol#27408) (Maximum length exceeded or invalid content) //raiseerror exec</code>
+<code>        (bwipp.qrcodeNoValidSymbol#27410) (Maximum length exceeded or invalid content) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /format frmt def</code>
@@ -27549,7 +27551,7 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#27487) cws //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#27489) cws //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (input.encoding) //qrcode.after exec</code>
 <code></code>
@@ -27639,7 +27641,7 @@ div span:hover {
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#27577) cws //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#27579) cws //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (ecc.cws) //qrcode.after exec</code>
 <code></code>
@@ -28153,7 +28155,7 @@ div span:hover {
 <code>    % Validate the input length</code>
 <code>    %</code>
 <code>    barcode length 997 gt {</code>
-<code>        (bwipp.swissqrcodeBadLength#28091) (Swiss QR Code input must not exceed 997 digits) //raiseerror exec</code>
+<code>        (bwipp.swissqrcodeBadLength#28093) (Swiss QR Code input must not exceed 997 digits) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -28715,16 +28717,16 @@ div span:hover {
 <code>%psc     (input.validate) //maxicode.before exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.maxicodeEmptyData#28653) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.maxicodeEmptyData#28655) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    % 93 max alphanumeric; 4x for ^NNN parse expansion</code>
 <code>    barcode length 1000 gt {</code>
-<code>        (bwipp.maxicodeinputTooLong#28658) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.maxicodeinputTooLong#28660) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    mode -1 ne mode 2 lt mode 6 gt or and {</code>
-<code>       (bwipp.maxicodeBadMode#28662) (Mode must be 2 to 6) //raiseerror exec</code>
+<code>       (bwipp.maxicodeBadMode#28664) (Mode must be 2 to 6) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    sam -1 ne {</code>
@@ -28735,7 +28737,7 @@ div span:hover {
 <code>            sam 10 idiv sam 10 mod gt { pop false exit } if</code>
 <code>        } repeat</code>
 <code>        not {</code>
-<code>            (bwipp.maxicodeBadSAM#28673) (SAM must be formatted as "NM" for Nth of M symbols, from 2 to 8 symbols) //raiseerror exec</code>
+<code>            (bwipp.maxicodeBadSAM#28675) (SAM must be formatted as "NM" for Nth of M symbols, from 2 to 8 symbols) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -28801,7 +28803,7 @@ div span:hover {
 <code>                    pcode { dup 48 lt exch 57 gt or { pop false exit } if } forall</code>
 <code>                } repeat</code>
 <code>                not {</code>
-<code>                    pop (bwipp.maxicodeBadMode2PostCode#28739) (A mode 2 postcode must not be empty or exceed 9 digits) //raiseerror exec</code>
+<code>                    pop (bwipp.maxicodeBadMode2PostCode#28741) (A mode 2 postcode must not be empty or exceed 9 digits) //raiseerror exec</code>
 <code>                } if</code>
 <code>            } {  % mode=3</code>
 <code>                true</code>
@@ -28815,11 +28817,11 @@ div span:hover {
 <code>                    } forall</code>
 <code>                } repeat</code>
 <code>                not {</code>
-<code>                    pop (bwipp.maxicodeBadMode3PostCode#28753) (A mode 3 postcode must not be empty or exceed 6 characters) //raiseerror exec</code>
+<code>                    pop (bwipp.maxicodeBadMode3PostCode#28755) (A mode 3 postcode must not be empty or exceed 6 characters) //raiseerror exec</code>
 <code>                } if</code>
 <code>            } ifelse</code>
 <code>        } {</code>
-<code>            pop (bwipp.maxicodeExpectedPostCode#28757) (Expected postcode followed by group separator character) //raiseerror exec</code>
+<code>            pop (bwipp.maxicodeExpectedPostCode#28759) (Expected postcode followed by group separator character) //raiseerror exec</code>
 <code>        } ifelse</code>
 <code>        &lt;1d&gt; search {</code>
 <code>            /ccode exch def pop</code>
@@ -28829,10 +28831,10 @@ div span:hover {
 <code>                ccode { dup 48 lt exch 57 gt or { pop false exit } if } forall</code>
 <code>            } repeat</code>
 <code>            not {</code>
-<code>                pop (bwipp.maxicodeBadCountryCode#28767) (Country code must be three digits) //raiseerror exec</code>
+<code>                pop (bwipp.maxicodeBadCountryCode#28769) (Country code must be three digits) //raiseerror exec</code>
 <code>            } if</code>
 <code>        } {</code>
-<code>            pop (bwipp.maxicodeExpectedCountryCode#28770) (Expected country code followed by group separator character) //raiseerror exec</code>
+<code>            pop (bwipp.maxicodeExpectedCountryCode#28772) (Expected country code followed by group separator character) //raiseerror exec</code>
 <code>        } ifelse</code>
 <code>        &lt;1d&gt; search {</code>
 <code>            /scode exch def pop</code>
@@ -28842,10 +28844,10 @@ div span:hover {
 <code>                scode { dup 48 lt exch 57 gt or { pop false exit } if } forall</code>
 <code>            } repeat</code>
 <code>            not {</code>
-<code>                pop (bwipp.maxicodeBadServiceClass#28780) (Service class must be three digits) //raiseerror exec</code>
+<code>                pop (bwipp.maxicodeBadServiceClass#28782) (Service class must be three digits) //raiseerror exec</code>
 <code>            } if</code>
 <code>        } {</code>
-<code>            pop (bwipp.maxicodeExpectedServiceClass#28783) (Expected service class followed by group separator character) //raiseerror exec</code>
+<code>            pop (bwipp.maxicodeExpectedServiceClass#28785) (Expected service class followed by group separator character) //raiseerror exec</code>
 <code>        } ifelse</code>
 <code>        /barcode exch def</code>
 <code></code>
@@ -29302,7 +29304,7 @@ div span:hover {
 <code>    mode 2 eq mode 3 eq or {</code>
 <code></code>
 <code>        encmsg length 84 gt {</code>
-<code>            (bwipp.maxicodeMode23TooLong#29240) (The secondary message is too long) //raiseerror exec</code>
+<code>            (bwipp.maxicodeMode23TooLong#29242) (The secondary message is too long) //raiseerror exec</code>
 <code>        } if</code>
 <code></code>
 <code>        %</code>
@@ -29387,7 +29389,7 @@ div span:hover {
 <code></code>
 <code>        /cws [ mode 5 eq {78} {94} ifelse {padval} repeat ] def</code>
 <code>        encmsg length cws length 1 sub gt {</code>
-<code>            (bwipp.maxicodeMode56TooLong#29325) (The message is too long) //raiseerror exec</code>
+<code>            (bwipp.maxicodeMode56TooLong#29327) (The message is too long) //raiseerror exec</code>
 <code>        } if</code>
 <code>        cws 0 mode put</code>
 <code>        cws 1 encmsg putinterval</code>
@@ -29458,11 +29460,11 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#29396) codewords //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#29398) codewords //raiseerror exec } if</code>
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#29400) [ prichk aload pop secchk aload pop ] //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#29402) [ prichk aload pop secchk aload pop ] //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (ecc.cws) //maxicode.after exec</code>
 <code></code>
@@ -29860,66 +29862,66 @@ div span:hover {
 <code>%psc     (input.validate) //azteccode.before exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.aztecEmptyData#29798) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.aztecEmptyData#29800) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 20000 gt {</code>
-<code>        (bwipp.azteccodeinputTooLong#29802) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.azteccodeinputTooLong#29804) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    eclevel 5 lt eclevel 95 gt or {</code>
-<code>        (bwipp.aztecInvalidEClevel#29806) (The EC percentage must be from 5 to 95) //raiseerror exec</code>
+<code>        (bwipp.aztecInvalidEClevel#29808) (The EC percentage must be from 5 to 95) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    ecaddchars 3 lt {</code>
-<code>        (bwipp.aztecInvalidECaddChars#29810) (The number of additional EC codewords must be 3 or more) //raiseerror exec</code>
+<code>        (bwipp.aztecInvalidECaddChars#29812) (The number of additional EC codewords must be 3 or more) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    format (full) ne format (compact) ne format (rune) ne and and {</code>
-<code>        (bwipp.aztecInvalidFormat#29814) (The format must be either full, compact or rune) //raiseerror exec</code>
+<code>        (bwipp.aztecInvalidFormat#29816) (The format must be either full, compact or rune) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    format (full) eq {</code>
 <code>        readerinit layers 1 lt layers 22 gt or and {</code>
-<code>            (bwipp.aztecFullInitInvalidLayers#29819) (Full-range symbols for reader programming must specify from 1 to 22 layers) //raiseerror exec</code>
+<code>            (bwipp.aztecFullInitInvalidLayers#29821) (Full-range symbols for reader programming must specify from 1 to 22 layers) //raiseerror exec</code>
 <code>        } if</code>
 <code>        layers -1 ne layers 1 lt layers 32 gt or and {</code>
-<code>            (bwipp.aztecFullInvalidLayers#29822) (Layers for full-range symbols must be from 1 to 32) //raiseerror exec</code>
+<code>            (bwipp.aztecFullInvalidLayers#29824) (Layers for full-range symbols must be from 1 to 32) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
 <code>    format (compact) eq {</code>
 <code>        readerinit {</code>
 <code>            layers -1 ne layers 1 ne and {</code>
-<code>                (bwipp.aztecCompactInitInvalidLayers#29829) (Compact symbols for reader programming must have 1 layer) //raiseerror exec</code>
+<code>                (bwipp.aztecCompactInitInvalidLayers#29831) (Compact symbols for reader programming must have 1 layer) //raiseerror exec</code>
 <code>            } if</code>
 <code>            /layers 1 def</code>
 <code>        } if</code>
 <code>        layers -1 ne layers 1 lt layers 4 gt or and {</code>
-<code>            (bwipp.aztecCompactInvalidLayers#29834) (Layers for compact symbols must be from 1 to 4) //raiseerror exec</code>
+<code>            (bwipp.aztecCompactInvalidLayers#29836) (Layers for compact symbols must be from 1 to 4) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
 <code>    format (rune) eq {</code>
 <code>        layers -1 ne {</code>
-<code>            (bwipp.aztecRuneInvalidLayers#29840) (It is not valid to specify layers for runes) //raiseerror exec</code>
+<code>            (bwipp.aztecRuneInvalidLayers#29842) (It is not valid to specify layers for runes) //raiseerror exec</code>
 <code>        } if</code>
 <code>        readerinit {</code>
-<code>            (bwipp.aztecRuneReaderInit#29843) (Reader initialisation is not compactible with Aztec Runes) //raiseerror exec</code>
+<code>            (bwipp.aztecRuneReaderInit#29845) (Reader initialisation is not compactible with Aztec Runes) //raiseerror exec</code>
 <code>        } if</code>
 <code>        barcode length 0 eq {</code>
-<code>            (bwipp.aztecRuneNotNumeric#29846) (Aztec runes must be numeric) //raiseerror exec</code>
+<code>            (bwipp.aztecRuneNotNumeric#29848) (Aztec runes must be numeric) //raiseerror exec</code>
 <code>        } if</code>
 <code>        barcode {</code>
 <code>            dup 48 lt exch 57 gt or {</code>
-<code>                (bwipp.aztecRuneNotNumeric#29850) (Aztec runes must be numeric) //raiseerror exec</code>
+<code>                (bwipp.aztecRuneNotNumeric#29852) (Aztec runes must be numeric) //raiseerror exec</code>
 <code>            } if</code>
 <code>        } forall</code>
 <code>        barcode length 3 gt {</code>
-<code>            (bwipp.aztecRuneInvalid#29854) (Aztec runes must be 0 to 255) //raiseerror exec</code>
+<code>            (bwipp.aztecRuneInvalid#29856) (Aztec runes must be 0 to 255) //raiseerror exec</code>
 <code>        } if</code>
 <code>        barcode cvi dup 0 lt exch 255 gt or {</code>
-<code>            (bwipp.aztecRuneInvalid#29857) (Aztec runes must be 0 to 255) //raiseerror exec</code>
+<code>            (bwipp.aztecRuneInvalid#29859) (Aztec runes must be 0 to 255) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -29973,10 +29975,10 @@ div span:hover {
 <code>        /maxseqlen msglen 4 mul def</code>
 <code></code>
 <code>        /seq0 [ 6 { maxseqlen { array } stopped {</code>
-<code>            pop (bwipp.azteccodeInputTooLarge#29911) (The input data exceeds the implementation limits) //raiseerror exec</code>
+<code>            pop (bwipp.azteccodeInputTooLarge#29913) (The input data exceeds the implementation limits) //raiseerror exec</code>
 <code>        } if } repeat ] def</code>
 <code>        /seq1 [ 6 { maxseqlen { array } stopped {</code>
-<code>            pop (bwipp.azteccodeInputTooLarge#29914) (The input data exceeds the implementation limits) //raiseerror exec</code>
+<code>            pop (bwipp.azteccodeInputTooLarge#29916) (The input data exceeds the implementation limits) //raiseerror exec</code>
 <code>        } if } repeat ] def</code>
 <code>        /len0 6 array def  0 1 5 { len0 exch 0 put } for</code>
 <code>        /len1 6 array def</code>
@@ -30242,7 +30244,7 @@ div span:hover {
 <code>        /addtomsgbits {</code>
 <code>            /v exch def</code>
 <code>            j v length add msgbits length gt {</code>
-<code>                (bwipp.aztecNoValidSymbol#30180) (Maximum length exceeded) //raiseerror exec</code>
+<code>                (bwipp.aztecNoValidSymbol#30182) (Maximum length exceeded) //raiseerror exec</code>
 <code>            } if</code>
 <code>            msgbits j v putinterval</code>
 <code>            /j j v length add def</code>
@@ -30253,7 +30255,7 @@ div span:hover {
 <code>        %</code>
 <code>        /state //azteccode.u def</code>
 <code>        minseq { string } stopped {</code>
-<code>            pop (bwipp.azteccodeInputTooLarge#30191) (The input data exceeds the implementation limits) //raiseerror exec</code>
+<code>            pop (bwipp.azteccodeInputTooLarge#30193) (The input data exceeds the implementation limits) //raiseerror exec</code>
 <code>        } if /msgbits exch def</code>
 <code>        /i 0 def /j 0 def {</code>
 <code>            i seq length ge {exit} if</code>
@@ -30322,7 +30324,7 @@ div span:hover {
 <code></code>
 <code>    options /debugbits known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugbits#30260) msgbits //raiseerror exec } if</code>
+<code>    { (bwipp.debugbits#30262) msgbits //raiseerror exec } if</code>
 <code></code>
 <code>    %</code>
 <code>    % Lookup the most appropriate symbol specification</code>
@@ -30346,7 +30348,7 @@ div span:hover {
 <code>    } forall</code>
 <code></code>
 <code>    okay not {</code>
-<code>        (bwipp.aztecNoValidSymbol#30284) (Maximum length exceeded) //raiseerror exec</code>
+<code>        (bwipp.aztecNoValidSymbol#30286) (Maximum length exceeded) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /layers mlyr def</code>
@@ -30389,7 +30391,7 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#30327) cws //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#30329) cws //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (input.encoding) //azteccode.after exec</code>
 <code></code>
@@ -30478,7 +30480,7 @@ div span:hover {
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#30416) ecws //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#30418) ecws //raiseerror exec } if</code>
 <code></code>
 <code>    /cws [ cws aload pop ecws aload pop ] def</code>
 <code>    format (full) eq {</code>
@@ -31147,7 +31149,7 @@ div span:hover {
 <code>    /barcode exch def</code>
 <code></code>
 <code>    barcode length 4000 gt {</code>
-<code>        (bwipp.codeoneinputTooLong#31085) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.codeoneinputTooLong#31087) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def</code>
@@ -31174,7 +31176,7 @@ div span:hover {
 <code></code>
 <code>    version (unset) ne {</code>
 <code>        //codeone.versionopts version known not {</code>
-<code>            (bwipp.codeoneBadVersion#31112) (version must be A to H, T-16, T-32, T-48, S-10, S-20 or S-30) //raiseerror exec</code>
+<code>            (bwipp.codeoneBadVersion#31114) (version must be A to H, T-16, T-32, T-48, S-10, S-20 or S-30) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -31189,13 +31191,13 @@ div span:hover {
 <code></code>
 <code>        barcode {</code>
 <code>            dup 48 lt exch 57 gt or {</code>
-<code>                (bwipp.codeoneStypeNonDigit#31127) (S-Type symbols can only contain digits) //raiseerror exec</code>
+<code>                (bwipp.codeoneStypeNonDigit#31129) (S-Type symbols can only contain digits) //raiseerror exec</code>
 <code>            } if</code>
 <code>        } forall</code>
 <code></code>
 <code>        /barlen barcode length def</code>
 <code>        barlen 18 gt {</code>
-<code>            (bwipp.codeoneStypeTooLong#31133) (Maximum length exceeded) //raiseerror exec</code>
+<code>            (bwipp.codeoneStypeTooLong#31135) (Maximum length exceeded) //raiseerror exec</code>
 <code>        } if</code>
 <code></code>
 <code>%psc         (input.validate.stype) //codeone.after exec</code>
@@ -31371,7 +31373,7 @@ div span:hover {
 <code></code>
 <code>        /getnumremcws {</code>
 <code>            dup numremcws length ge {</code>
-<code>                pop (bwipp.codeoneTooLong#31309) (Maximum length exceeded) //raiseerror exec</code>
+<code>                pop (bwipp.codeoneTooLong#31311) (Maximum length exceeded) //raiseerror exec</code>
 <code>            } if</code>
 <code>            numremcws exch get</code>
 <code>        } def</code>
@@ -31446,7 +31448,7 @@ div span:hover {
 <code></code>
 <code>        /addtocws {</code>
 <code>            dup length j add 1480 gt {</code>
-<code>                pop (bwipp.codeoneTooLong#31384) (Maximum length exceeded) //raiseerror exec</code>
+<code>                pop (bwipp.codeoneTooLong#31386) (Maximum length exceeded) //raiseerror exec</code>
 <code>            } if</code>
 <code>            dup cws exch j exch putinterval</code>
 <code>            /j exch length j add def</code>
@@ -31630,7 +31632,7 @@ div span:hover {
 <code>                } if</code>
 <code>                encvals mode get msg i get get</code>
 <code>                dup length p add ctxvals length gt {</code>
-<code>                    pop (bwipp.codeoneTooLong#31568) (Maximum length exceeded) //raiseerror exec</code>
+<code>                    pop (bwipp.codeoneTooLong#31570) (Maximum length exceeded) //raiseerror exec</code>
 <code>                } if</code>
 <code>                dup ctxvals exch p exch putinterval</code>
 <code>                /p exch length p add def</code>
@@ -31752,7 +31754,7 @@ div span:hover {
 <code>                msg i get 0 lt {exit} if  % Function character</code>
 <code>                lookup mode ne {exit} if</code>
 <code>                p bvals length ge {</code>
-<code>                    (bwipp.codeoneTooLong#31690) (Maximum length exceeded) //raiseerror exec</code>
+<code>                    (bwipp.codeoneTooLong#31692) (Maximum length exceeded) //raiseerror exec</code>
 <code>                } if</code>
 <code>                bvals p msg i get put</code>
 <code>                /p p 1 add def</code>
@@ -31809,7 +31811,7 @@ div span:hover {
 <code>    } forall</code>
 <code></code>
 <code>    okay not {</code>
-<code>        (bwipp.codeoneNoValidSymbol#31747) (Maximum length exceeded) //raiseerror exec</code>
+<code>        (bwipp.codeoneNoValidSymbol#31749) (Maximum length exceeded) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -31823,7 +31825,7 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#31761) cws //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#31763) cws //raiseerror exec } if</code>
 <code></code>
 <code>    %</code>
 <code>    % Fetch the coefficients</code>
@@ -31851,7 +31853,7 @@ div span:hover {
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#31789) [ ecbs {aload pop} forall ] //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#31791) [ ecbs {aload pop} forall ] //raiseerror exec } if</code>
 <code></code>
 <code>    %</code>
 <code>    % Extend codewords with the interleaved error correction codes</code>
@@ -32579,11 +32581,11 @@ div span:hover {
 <code>%psc     (input.validate) //hanxin.before exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hanxinEmptyData#32517) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hanxinEmptyData#32519) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 14000 gt {</code>
-<code>        (bwipp.hanxinInputTooLong#32521) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hanxinInputTooLong#32523) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    version (unset) ne {</code>
@@ -32594,7 +32596,7 @@ div span:hover {
 <code>            } if</code>
 <code>        } if</code>
 <code>        not {</code>
-<code>            (bwipp.hanxinInvalidVersion#32532) (Valid versions are 1 to 84) //raiseerror exec</code>
+<code>            (bwipp.hanxinInvalidVersion#32534) (Valid versions are 1 to 84) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -32604,12 +32606,12 @@ div span:hover {
 <code>        } if</code>
 <code>    } if</code>
 <code>    not {</code>
-<code>        (bwipp.hanxinInvalidErrorCorrectionLevel#32542) (Valid error correction levels are L1 to L4) //raiseerror exec</code>
+<code>        (bwipp.hanxinInvalidErrorCorrectionLevel#32544) (Valid error correction levels are L1 to L4) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    mask -1 ne {</code>
 <code>        mask 1 lt mask 4 gt or {</code>
-<code>            (bwipp.hanxinInvalidErrorCorrectionLevel#32547) (The valid masks are 1 to 4) //raiseerror exec</code>
+<code>            (bwipp.hanxinInvalidErrorCorrectionLevel#32549) (The valid masks are 1 to 4) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -32641,11 +32643,11 @@ div span:hover {
 <code>    % Encode the data using byte mode encoding</code>
 <code>    %</code>
 <code>    4 13 add msglen 8 mul add { string } stopped {</code>
-<code>        pop (bwipp.hanxinInputTooLarge#32579) (The input data exceeds the implementation limits) //raiseerror exec</code>
+<code>        pop (bwipp.hanxinInputTooLarge#32581) (The input data exceeds the implementation limits) //raiseerror exec</code>
 <code>    } if /bits exch def</code>
 <code>    bits 0 (0011) putinterval</code>
 <code>    msglen 1 13 bitshift ge {  % Exceeds 13-bit character count field</code>
-<code>        (bwipp.hanxinInputTooLarge#32583) (The input data exceeds the maximum symbol capacity) //raiseerror exec</code>
+<code>        (bwipp.hanxinInputTooLarge#32585) (The input data exceeds the maximum symbol capacity) //raiseerror exec</code>
 <code>    } if</code>
 <code>    bits 4 msglen 13 tobin putinterval</code>
 <code>    0 1 msglen 1 sub {</code>
@@ -32678,7 +32680,7 @@ div span:hover {
 <code>    } forall</code>
 <code></code>
 <code>    okay not {</code>
-<code>        (bwipp.hanxinNoValidSymbol#32616) (Maximum length exceeded or invalid content) //raiseerror exec</code>
+<code>        (bwipp.hanxinNoValidSymbol#32618) (Maximum length exceeded or invalid content) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /version vers def</code>
@@ -32759,7 +32761,7 @@ div span:hover {
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#32697) [ ecwsb {aload pop} forall ] //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#32699) [ ecwsb {aload pop} forall ] //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (codewords.finalise) //hanxin.before exec</code>
 <code></code>
@@ -32795,7 +32797,7 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#32733) cws //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#32735) cws //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (codewords.finalise) //hanxin.after exec</code>
 <code></code>
@@ -33357,7 +33359,7 @@ div span:hover {
 <code>    /barcode exch def</code>
 <code></code>
 <code>    barcode length 4000 gt {</code>
-<code>        (bwipp.dotcodeinputTooLong#33295) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.dotcodeinputTooLong#33297) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def</code>
@@ -33384,18 +33386,18 @@ div span:hover {
 <code></code>
 <code>    rows -1 ne {</code>
 <code>        rows 5 lt {</code>
-<code>            (bwipp.dotcodeBadRows#33322) (There must be at least 5 rows) //raiseerror exec</code>
+<code>            (bwipp.dotcodeBadRows#33324) (There must be at least 5 rows) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
 <code>    columns -1 ne {</code>
 <code>        columns 5 lt {</code>
-<code>            (bwipp.dotcodeBadColumns#33328) (There must be at least 5 columns) //raiseerror exec</code>
+<code>            (bwipp.dotcodeBadColumns#33330) (There must be at least 5 columns) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
 <code>    rows -1 ne columns -1 ne and rows columns add 2 mod 1 ne and {</code>
-<code>        (bwipp.dotcodeRowsColumnsBadParity#33333) (Sum of rows and columns must be odd) //raiseerror exec</code>
+<code>        (bwipp.dotcodeRowsColumnsBadParity#33335) (Sum of rows and columns must be odd) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -33406,13 +33408,13 @@ div span:hover {
 <code>    } if</code>
 <code>    ratio -1 ne {</code>
 <code>        ratio 0 le {</code>
-<code>            (bwipp.dotcodeRatio#33344) (The ratio must be greater than 0) //raiseerror exec</code>
+<code>            (bwipp.dotcodeRatio#33346) (The ratio must be greater than 0) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
 <code>    mask -1 ne {</code>
 <code>        mask 0 lt mask 3 gt or {</code>
-<code>            (bwipp.dotcodeBadMask#33350) (Valid mask values are 0 to 3) //raiseerror exec</code>
+<code>            (bwipp.dotcodeBadMask#33352) (Valid mask values are 0 to 3) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -34024,13 +34026,13 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#33962) cws //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#33964) cws //raiseerror exec } if</code>
 <code></code>
 <code>    %</code>
 <code>    % Check that the codewords will fit in the symbol</code>
 <code>    %</code>
 <code>    nw 9 mul ndots 2 sub gt {</code>
-<code>        (bwipp.dotcodeTooLong#33968) (Maximum length exceeded) //raiseerror exec</code>
+<code>        (bwipp.dotcodeTooLong#33970) (Maximum length exceeded) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>%psc     (input.encoding) //dotcode.after exec</code>
@@ -34064,7 +34066,7 @@ div span:hover {
 <code>    % Construct the template</code>
 <code>    %</code>
 <code>    rows columns mul { array } stopped {</code>
-<code>        pop (bwipp.dotcodeSymbolTooLarge#34002) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec</code>
+<code>        pop (bwipp.dotcodeSymbolTooLarge#34004) (The resulting symbol exceeds the implementation maximum array size) //raiseerror exec</code>
 <code>    } if /outline exch def</code>
 <code>    0 1 rows 1 sub {</code>
 <code>        /y exch def</code>
@@ -34274,7 +34276,7 @@ div span:hover {
 <code></code>
 <code>        options /debugecc known</code>
 <code>%psc         /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>        { (bwipp.debugecc#34212) rscws //raiseerror exec } if</code>
+<code>        { (bwipp.debugecc#34214) rscws //raiseerror exec } if</code>
 <code></code>
 <code>%psc         (matrix.layout) //dotcode.before exec</code>
 <code></code>
@@ -34671,11 +34673,11 @@ div span:hover {
 <code></code>
 <code>    % 282 max codewords; 4x for ^NNN parse expansion</code>
 <code>    barcode length 2500 gt {</code>
-<code>        (bwipp.ultracodeinputTooLong#34609) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.ultracodeinputTooLong#34611) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    rev dup 1 ne exch 2 ne and {</code>
-<code>        (bwipp.ultracodeInvalidRevision#34613) (Valid revisions are 1 and 2) //raiseerror exec</code>
+<code>        (bwipp.ultracodeInvalidRevision#34615) (Valid revisions are 1 and 2) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    eclevel length 3 eq dup {</code>
@@ -34684,7 +34686,7 @@ div span:hover {
 <code>       } if</code>
 <code>    } if</code>
 <code>    not {</code>
-<code>        (bwipp.ultracodeInvalidErrorCorrectionLevel#34622) (Valid error correction levels are EC1 to EC5, and EC0 for legacy revision 1) //raiseerror exec</code>
+<code>        (bwipp.ultracodeInvalidErrorCorrectionLevel#34624) (Valid error correction levels are EC1 to EC5, and EC0 for legacy revision 1) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>%psc     (input.validate) //ultracode.after exec</code>
@@ -34703,14 +34705,14 @@ div span:hover {
 <code>            } forall { pop exit } if</code>
 <code>            cvi /cw exch def</code>
 <code>            cw 284 gt {</code>
-<code>                (bwipp.ultracodeBadRawCodeword#34641) (Raw codewords must be 0 to 284) //raiseerror exec</code>
+<code>                (bwipp.ultracodeBadRawCodeword#34643) (Raw codewords must be 0 to 284) //raiseerror exec</code>
 <code>            } if</code>
 <code>            dcws j cw put</code>
 <code>            /i i 4 add def</code>
 <code>            /j j 1 add def</code>
 <code>        } loop</code>
 <code>        i barcode length ne {</code>
-<code>            (bwipp.ultracodeBadRawFormat#34648) (Raw codewords must be formatted as ^NNN) //raiseerror exec</code>
+<code>            (bwipp.ultracodeBadRawFormat#34650) (Raw codewords must be formatted as ^NNN) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /dcws dcws 0 j getinterval def</code>
 <code></code>
@@ -34752,7 +34754,7 @@ div span:hover {
 <code></code>
 <code>    options /debugcws known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugcws#34690) dcws //raiseerror exec } if</code>
+<code>    { (bwipp.debugcws#34692) dcws //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (metrics.selection) //ultracode.before exec</code>
 <code></code>
@@ -34782,7 +34784,7 @@ div span:hover {
 <code>    } forall</code>
 <code></code>
 <code>    okay not {</code>
-<code>        (bwipp.ultracodeNoValidSymbol#34720) (Maximum length exceeded or invalid content) //raiseerror exec</code>
+<code>        (bwipp.ultracodeNoValidSymbol#34722) (Maximum length exceeded or invalid content) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -34824,7 +34826,7 @@ div span:hover {
 <code></code>
 <code>    options /debugecc known</code>
 <code>%psc     /uk.co.terryburton.bwipp.global_ctx dup where {exch get /enabledebug known} {pop false} ifelse</code>
-<code>    { (bwipp.debugecc#34762) ecws //raiseerror exec } if</code>
+<code>    { (bwipp.debugecc#34764) ecws //raiseerror exec } if</code>
 <code></code>
 <code>%psc     (ecc.cws) //ultracode.after exec</code>
 <code></code>
@@ -36565,16 +36567,16 @@ div span:hover {
 <code>%psc     //gs1-cc.latevars /init get exec</code>
 <code></code>
 <code>    ccversion (a) ne ccversion (b) ne and ccversion (c) ne and {</code>
-<code>        (bwipp.gs1ccBadCCversion#36503) (ccversion must be a, b or c) //raiseerror exec</code>
+<code>        (bwipp.gs1ccBadCCversion#36505) (ccversion must be a, b or c) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    cccolumns 30 gt {</code>
-<code>        (bwipp.gs1ccColumnsTooBig#36507) (The maximum number of composite component columns is 30) //raiseerror exec</code>
+<code>        (bwipp.gs1ccColumnsTooBig#36509) (The maximum number of composite component columns is 30) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    lintype () ne {</code>
 <code>        //gs1-cc.lintypecccolumns lintype known not {</code>
-<code>            (bwipp.gs1ccBadLinType#36512) (The lintype is not recognised) //raiseerror exec</code>
+<code>            (bwipp.gs1ccBadLinType#36514) (The lintype is not recognised) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -36584,10 +36586,10 @@ div span:hover {
 <code>    cccolumns -1 eq {</code>
 <code>        lintype (gs1-128) eq ccversion (c) eq and {</code>
 <code>            linwidth 0 lt {</code>
-<code>                (bwipp.gs1ccMissingLinWidth#36522) (linwidth must be set for a GS1-128 with a CC-C composite component) //raiseerror exec</code>
+<code>                (bwipp.gs1ccMissingLinWidth#36524) (linwidth must be set for a GS1-128 with a CC-C composite component) //raiseerror exec</code>
 <code>            } if</code>
 <code>            linwidth 68 lt {</code>
-<code>                (bwipp.gs1ccMinimumLinWidth#36525) (Minimum linwidth for a GS1-128 with a CC-C composite component is 68) //raiseerror exec</code>
+<code>                (bwipp.gs1ccMinimumLinWidth#36527) (Minimum linwidth for a GS1-128 with a CC-C composite component is 68) //raiseerror exec</code>
 <code>            } if</code>
 <code>            linwidth 68 eq { 1 } { linwidth 52 sub 17 idiv } ifelse  % Ensure cccolumns != 0 if minimum linwidth</code>
 <code>        } {</code>
@@ -36598,13 +36600,13 @@ div span:hover {
 <code></code>
 <code>    ccversion (c) ne {</code>
 <code>        cccolumns 2 lt cccolumns 4 gt or {</code>
-<code>            (bwipp.gs1ccBadColumns#36536) (CC-A and CC-B require 2 to 4 columns) //raiseerror exec</code>
+<code>            (bwipp.gs1ccBadColumns#36538) (CC-A and CC-B require 2 to 4 columns) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
 <code>    lintype () ne ccversion (c) ne and {</code>
 <code>        cccolumns //gs1-cc.lintypecccolumns lintype get lt {</code>
-<code>            (bwipp.gs1ccColumnsTooSmall#36542) (The cccolumns value is too small for the linear symbology) //raiseerror exec</code>
+<code>            (bwipp.gs1ccColumnsTooSmall#36544) (The cccolumns value is too small for the linear symbology) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } if</code>
 <code></code>
@@ -36871,7 +36873,7 @@ div span:hover {
 <code>        dup /raw ne {exch get} {pop} ifelse</code>
 <code>        [ exch {48 sub} forall ]</code>
 <code>        dup length dup j add gpfenc length gt {</code>
-<code>            pop pop (bwipp.gs1ccDataTooLarge#36809) (Data too large for the composite component) //raiseerror exec</code>
+<code>            pop pop (bwipp.gs1ccDataTooLarge#36811) (Data too large for the composite component) //raiseerror exec</code>
 <code>        } if</code>
 <code>        exch gpfenc exch j exch putinterval</code>
 <code>        /j exch j add def</code>
@@ -37008,7 +37010,7 @@ div span:hover {
 <code>    %</code>
 <code>    cdf length gpf length add rembits</code>
 <code>    dup -1 eq {</code>
-<code>        pop (bwipp.gs1ccDataTooLarge#36946) (Data too large for the composite component) //raiseerror exec</code>
+<code>        pop (bwipp.gs1ccDataTooLarge#36948) (Data too large for the composite component) //raiseerror exec</code>
 <code>    } if</code>
 <code>    /pad exch array def</code>
 <code>    pad length 0 gt {</code>
@@ -37185,7 +37187,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#37123) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#37125) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -37462,7 +37464,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#37400) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#37402) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -37735,7 +37737,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#37673) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#37675) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -38005,7 +38007,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#37943) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#37945) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -38277,7 +38279,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#38215) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#38217) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -38511,7 +38513,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#38449) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#38451) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -38744,7 +38746,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#38682) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#38684) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -38978,7 +38980,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#38916) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#38918) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -39211,7 +39213,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#39149) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#39151) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -39430,7 +39432,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#39368) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#39370) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -39663,7 +39665,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#39601) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#39603) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -39886,7 +39888,7 @@ div span:hover {
 <code>        pop</code>
 <code>        /comp exch def</code>
 <code>    } {</code>
-<code>        pop (bwipp.missingCompositeComponent#39824) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
+<code>        pop (bwipp.missingCompositeComponent#39826) (A Composite Component must be provided following a pipe character) //raiseerror exec</code>
 <code>    } ifelse</code>
 <code></code>
 <code>    %</code>
@@ -40118,7 +40120,7 @@ div span:hover {
 <code>    /barcode exch def</code>
 <code></code>
 <code>    barcode length 4000 gt {</code>
-<code>        (bwipp.gs1datamatrixinputTooLong#40056) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.gs1datamatrixinputTooLong#40058) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def</code>
@@ -40250,7 +40252,7 @@ div span:hover {
 <code>    /barcode exch def</code>
 <code></code>
 <code>    barcode length 4000 gt {</code>
-<code>        (bwipp.gs1datamatrixrectangularinputTooLong#40188) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.gs1datamatrixrectangularinputTooLong#40190) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def</code>
@@ -40500,7 +40502,7 @@ div span:hover {
 <code>    /barcode exch def</code>
 <code></code>
 <code>    barcode length 4000 gt {</code>
-<code>        (bwipp.gs1qrcodeinputTooLong#40438) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.gs1qrcodeinputTooLong#40440) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def</code>
@@ -40749,7 +40751,7 @@ div span:hover {
 <code>    /barcode exch def</code>
 <code></code>
 <code>    barcode length 4000 gt {</code>
-<code>        (bwipp.gs1dotcodeinputTooLong#40687) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.gs1dotcodeinputTooLong#40689) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /_render dontdraw bwipp_dontdraw $enabledontdraw or or not def</code>
@@ -40909,11 +40911,11 @@ div span:hover {
 <code>%psc     //hibccode39.latevars /init get exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibccode39emptyData#40847) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibccode39emptyData#40849) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 500 gt {</code>
-<code>        (bwipp.hibccode39inputTooLong#40851) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibccode39inputTooLong#40853) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -40921,7 +40923,7 @@ div span:hover {
 <code>    %</code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibccode39badCharacter#40859) (HIBC Code 39 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibccode39badCharacter#40861) (HIBC Code 39 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -40935,7 +40937,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibccode39.barchars checksum get ne {</code>
-<code>            (bwipp.hibccode39badCheckDigit#40873) (Incorrect HIBC Code 39 check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibccode39badCheckDigit#40875) (Incorrect HIBC Code 39 check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -41051,11 +41053,11 @@ div span:hover {
 <code>%psc     //hibccode128.latevars /init get exec</code>
 <code></code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibccode128emptyData#40989) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibccode128emptyData#40991) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 500 gt {</code>
-<code>        (bwipp.hibccode128inputTooLong#40993) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibccode128inputTooLong#40995) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    %</code>
@@ -41063,7 +41065,7 @@ div span:hover {
 <code>    %</code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibccode128badCharacter#41001) (HIBC Code 128 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibccode128badCharacter#41003) (HIBC Code 128 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -41077,7 +41079,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibccode128.barchars checksum get ne {</code>
-<code>            (bwipp.hibccode128badCheckDigit#41015) (Incorrect HIBC Code 128 check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibccode128badCheckDigit#41017) (Incorrect HIBC Code 128 check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -41191,16 +41193,16 @@ div span:hover {
 <code>    % Validate the input</code>
 <code>    %</code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibcdatamatrixEmptyData#41129) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibcdatamatrixEmptyData#41131) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 15000 gt {</code>
-<code>        (bwipp.hibcdatamatrixinputTooLong#41133) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibcdatamatrixinputTooLong#41135) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibcdatamatrixBadCharacter#41138) (HIBC Data Matrix must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibcdatamatrixBadCharacter#41140) (HIBC Data Matrix must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -41214,7 +41216,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibcdatamatrix.barchars checksum get ne {</code>
-<code>            (bwipp.hibcdatamatrixBadCheckDigit#41152) (Incorrect HIBC Data Matrix check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibcdatamatrixBadCheckDigit#41154) (Incorrect HIBC Data Matrix check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -41320,16 +41322,16 @@ div span:hover {
 <code>    % Validate the input</code>
 <code>    %</code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibcdatamatrixrectangularEmptyData#41258) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibcdatamatrixrectangularEmptyData#41260) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 15000 gt {</code>
-<code>        (bwipp.hibcdatamatrixrectangularinputTooLong#41262) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibcdatamatrixrectangularinputTooLong#41264) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibcdatamatrixrectangularBadCharacter#41267) (HIBC Data Matrix Rectangular must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibcdatamatrixrectangularBadCharacter#41269) (HIBC Data Matrix Rectangular must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -41343,7 +41345,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibcdatamatrixrectangular.barchars checksum get ne {</code>
-<code>            (bwipp.hibcdatamatrixrectangularBadCheckDigit#41281) (Incorrect HIBC Data Matrix Rectangular check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibcdatamatrixrectangularBadCheckDigit#41283) (Incorrect HIBC Data Matrix Rectangular check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -41451,16 +41453,16 @@ div span:hover {
 <code>    % Validate the input</code>
 <code>    %</code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibcpdf417EmptyData#41389) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibcpdf417EmptyData#41391) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 12500 gt {</code>
-<code>        (bwipp.hibcpdf417inputTooLong#41393) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibcpdf417inputTooLong#41395) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibcpdf417BadCharacter#41398) (HIBC PDF417 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibcpdf417BadCharacter#41400) (HIBC PDF417 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -41474,7 +41476,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibcpdf417.barchars checksum get ne {</code>
-<code>            (bwipp.hibcpdf417BadCheckDigit#41412) (Incorrect HIBC PDF417 check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibcpdf417BadCheckDigit#41414) (Incorrect HIBC PDF417 check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -41582,16 +41584,16 @@ div span:hover {
 <code>    % Validate the input</code>
 <code>    %</code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibcmicropdf417EmptyData#41520) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibcmicropdf417EmptyData#41522) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 5000 gt {</code>
-<code>        (bwipp.hibcmicropdf417inputTooLong#41524) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibcmicropdf417inputTooLong#41526) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibcmicropdf417BadCharacter#41529) (HIBC MicroPDF417 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibcmicropdf417BadCharacter#41531) (HIBC MicroPDF417 must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -41605,7 +41607,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibcmicropdf417.barchars checksum get ne {</code>
-<code>            (bwipp.hibcmicropdf417BadCheckDigit#41543) (Incorrect HIBC MicroPDF417 check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibcmicropdf417BadCheckDigit#41545) (Incorrect HIBC MicroPDF417 check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -41710,16 +41712,16 @@ div span:hover {
 <code></code>
 <code>    % Validate the input</code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibcqrcodeEmptyData#41648) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibcqrcodeEmptyData#41650) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 30000 gt {</code>
-<code>        (bwipp.hibcqrcodeinputTooLong#41652) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibcqrcodeinputTooLong#41654) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibcqrcodeBadCharacter#41657) (HIBC QR Code must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibcqrcodeBadCharacter#41659) (HIBC QR Code must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -41733,7 +41735,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibcqrcode.barchars checksum get ne {</code>
-<code>            (bwipp.hibcqrcodeBadCheckDigit#41671) (Incorrect HIBC QR Code check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibcqrcodeBadCheckDigit#41673) (Incorrect HIBC QR Code check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -41837,16 +41839,16 @@ div span:hover {
 <code>    % Validate the input</code>
 <code>    %</code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibccodablockfEmptyData#41775) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibccodablockfEmptyData#41777) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 25000 gt {</code>
-<code>        (bwipp.hibccodablockfinputTooLong#41779) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibccodablockfinputTooLong#41781) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibccodablockfBadCharacter#41784) (HIBC Codablock F must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibccodablockfBadCharacter#41786) (HIBC Codablock F must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -41860,7 +41862,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibccodablockf.barchars checksum get ne {</code>
-<code>            (bwipp.hibccodablockfBadCheckDigit#41798) (Incorrect HIBC Codablock F check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibccodablockfBadCheckDigit#41800) (Incorrect HIBC Codablock F check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -41966,16 +41968,16 @@ div span:hover {
 <code>    % Validate the input</code>
 <code>    %</code>
 <code>    barcode () eq {</code>
-<code>        (bwipp.hibcazteccodeEmptyData#41904) (The data must not be empty) //raiseerror exec</code>
+<code>        (bwipp.hibcazteccodeEmptyData#41906) (The data must not be empty) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barcode length 16000 gt {</code>
-<code>        (bwipp.hibcazteccodeinputTooLong#41908) (The input data is too long) //raiseerror exec</code>
+<code>        (bwipp.hibcazteccodeinputTooLong#41910) (The input data is too long) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    0 1 barcode length 1 sub {</code>
 <code>        barcode exch 1 getinterval charvals exch known not {</code>
-<code>            (bwipp.hibcazteccodeBadCharacter#41913) (HIBC Aztec Code must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
+<code>            (bwipp.hibcazteccodeBadCharacter#41915) (HIBC Aztec Code must contain only digits, capital letters, spaces and the symbols -.$/+%) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } for</code>
 <code></code>
@@ -41989,7 +41991,7 @@ div span:hover {
 <code>    /checksum checksum 43 mod def</code>
 <code>    validatecheck {</code>
 <code>        barcode barlen get //hibcazteccode.barchars checksum get ne {</code>
-<code>            (bwipp.hibcazteccodeBadCheckDigit#41927) (Incorrect HIBC Aztec Code check digit provided) //raiseerror exec</code>
+<code>            (bwipp.hibcazteccodeBadCheckDigit#41929) (Incorrect HIBC Aztec Code check digit provided) //raiseerror exec</code>
 <code>        } if</code>
 <code>        /barcode barcode 0 barlen getinterval def</code>
 <code>    } if</code>
@@ -42059,15 +42061,15 @@ div span:hover {
 <code></code>
 <code>    % Validate the input</code>
 <code>    barcode length 2 lt barcode length 7 gt or {</code>
-<code>        (bwipp.channelcodeBadLength#41997) (Channel Code must be 2 to 7 digits) //raiseerror exec</code>
+<code>        (bwipp.channelcodeBadLength#41999) (Channel Code must be 2 to 7 digits) //raiseerror exec</code>
 <code>    } if</code>
 <code>    barcode {</code>
 <code>        dup 48 lt exch 57 gt or {</code>
-<code>            (bwipp.channelcodeBadCharacter#42001) (Channel Code must contain only digits) //raiseerror exec</code>
+<code>            (bwipp.channelcodeBadCharacter#42003) (Channel Code must contain only digits) //raiseerror exec</code>
 <code>        } if</code>
 <code>    } forall</code>
 <code>    barcode cvi [ 26 292 3493 44072 576688 7742862 ] barcode length 2 sub get gt {</code>
-<code>        (bwipp.channelcodeTooBig#42005) (The Channel Code value is too big for the number of channels) //raiseerror exec</code>
+<code>        (bwipp.channelcodeTooBig#42007) (The Channel Code value is too big for the number of channels) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /nextb {</code>
@@ -42186,27 +42188,27 @@ div span:hover {
 <code>    /pixx exch def</code>
 <code></code>
 <code>    guardwidth 0 lt guardwidth 20 gt or {</code>
-<code>        (bwipp.renderBadGuardwidth#42124) (guardwidth must be from 0 to 20) //raiseerror exec</code>
+<code>        (bwipp.renderBadGuardwidth#42126) (guardwidth must be from 0 to 20) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardheight 0 lt guardheight 20 gt or {</code>
-<code>        (bwipp.renderBadGuardheight#42128) (guardheight must be from 0 to 20) //raiseerror exec</code>
+<code>        (bwipp.renderBadGuardheight#42130) (guardheight must be from 0 to 20) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardleftpos -50 lt guardleftpos 150 gt or {</code>
-<code>        (bwipp.renderBadGuardleftpos#42132) (guardleftpos must be from -50 to 150) //raiseerror exec</code>
+<code>        (bwipp.renderBadGuardleftpos#42134) (guardleftpos must be from -50 to 150) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardleftypos -50 lt guardleftypos 150 gt or {</code>
-<code>        (bwipp.renderBadGuardleftypos#42136) (guardleftypos must be from -50 to 150) //raiseerror exec</code>
+<code>        (bwipp.renderBadGuardleftypos#42138) (guardleftypos must be from -50 to 150) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardrightpos -50 lt guardrightpos 150 gt or {</code>
-<code>        (bwipp.renderBadGuardrightpos#42140) (guardrightpos must be from -50 to 150) //raiseerror exec</code>
+<code>        (bwipp.renderBadGuardrightpos#42142) (guardrightpos must be from -50 to 150) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardrightypos -50 lt guardrightypos 150 gt or {</code>
-<code>        (bwipp.renderBadGuardrightypos#42144) (guardrightypos must be from -50 to 150) //raiseerror exec</code>
+<code>        (bwipp.renderBadGuardrightypos#42146) (guardrightypos must be from -50 to 150) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardwhitespace {</code>
@@ -42282,7 +42284,7 @@ div span:hover {
 <code>    /pixy exch def</code>
 <code>    /pixx exch def</code>
 <code></code>
-<code>    /makeerr {  % /errname (errmsg) =&gt; (bwipp.PFXerrname#42220) (PFXerrmsg)</code>
+<code>    /makeerr {  % /errname (errmsg) =&gt; (bwipp.PFXerrname#42222) (PFXerrmsg)</code>
 <code></code>
 <code>        /makeerr.msg exch def</code>
 <code>        /makeerr.name exch 128 string cvs def</code>
@@ -42347,7 +42349,7 @@ div span:hover {
 <code>                    moveto dup length 1 eq { xoff yoff rmoveto } if show</code>
 <code>                } forall</code>
 <code>            } stopped {</code>
-<code>                (bwipp.fontTooSmall#42285) (The font size is too small) false exit</code>
+<code>                (bwipp.fontTooSmall#42287) (The font size is too small) false exit</code>
 <code>            } if</code>
 <code></code>
 <code>            true exit</code>
@@ -42562,69 +42564,69 @@ div span:hover {
 <code>    } for</code>
 <code></code>
 <code>    inkspread -1 lt inkspread 1 gt or {</code>
-<code>        (bwipp.renlinearBadInkspread#42500) (inkspread must be from -1 to 1) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadInkspread#42502) (inkspread must be from -1 to 1) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderleft -1 lt borderleft 50 gt or {</code>
-<code>        (bwipp.renlinearBadBorderleft#42504) (borderleft must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadBorderleft#42506) (borderleft must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderright -1 lt borderright 50 gt or {</code>
-<code>        (bwipp.renlinearBadBorderright#42508) (borderright must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadBorderright#42510) (borderright must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    bordertop -1 lt bordertop 50 gt or {</code>
-<code>        (bwipp.renlinearBadBordertop#42512) (bordertop must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadBordertop#42514) (bordertop must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderbottom -1 lt borderbottom 50 gt or {</code>
-<code>        (bwipp.renlinearBadBorderbottom#42516) (borderbottom must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadBorderbottom#42518) (borderbottom must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderwidth 0 lt borderwidth 10 gt or {</code>
-<code>        (bwipp.renlinearBadBorderwidth#42520) (borderwidth must be from 0 to 10) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadBorderwidth#42522) (borderwidth must be from 0 to 10) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    barratio 0.1 lt barratio 5 gt or {</code>
-<code>        (bwipp.renlinearBadBarratio#42524) (barratio must be from 0.1 to 5) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadBarratio#42526) (barratio must be from 0.1 to 5) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    spaceratio 0.1 lt spaceratio 5 gt or {</code>
-<code>        (bwipp.renlinearBadSpaceratio#42528) (spaceratio must be from 0.1 to 5) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadSpaceratio#42530) (spaceratio must be from 0.1 to 5) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    width 0 ne { width 0.01 lt width 20 gt or {</code>
-<code>        (bwipp.renlinearBadWidth#42532) (width must be 0 or from 0.01 to 20) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadWidth#42534) (width must be 0 or from 0.01 to 20) //raiseerror exec</code>
 <code>    } if } if</code>
 <code></code>
 <code>    guardwidth 0 lt guardwidth 20 gt or {</code>
-<code>        (bwipp.renlinearBadGuardwidth#42536) (guardwidth must be from 0 to 20) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadGuardwidth#42538) (guardwidth must be from 0 to 20) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardheight 0 lt guardheight 20 gt or {</code>
-<code>        (bwipp.renlinearBadGuardheight#42540) (guardheight must be from 0 to 20) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadGuardheight#42542) (guardheight must be from 0 to 20) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardleftpos -50 lt guardleftpos 150 gt or {</code>
-<code>        (bwipp.renlinearBadGuardleftpos#42544) (guardleftpos must be from -50 to 150) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadGuardleftpos#42546) (guardleftpos must be from -50 to 150) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardleftypos -50 lt guardleftypos 150 gt or {</code>
-<code>        (bwipp.renlinearBadGuardleftypos#42548) (guardleftypos must be from -50 to 150) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadGuardleftypos#42550) (guardleftypos must be from -50 to 150) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardrightpos -50 lt guardrightpos 150 gt or {</code>
-<code>        (bwipp.renlinearBadGuardrightpos#42552) (guardrightpos must be from -50 to 150) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadGuardrightpos#42554) (guardrightpos must be from -50 to 150) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    guardrightypos -50 lt guardrightypos 150 gt or {</code>
-<code>        (bwipp.renlinearBadGuardrightypos#42556) (guardrightypos must be from -50 to 150) //raiseerror exec</code>
+<code>        (bwipp.renlinearBadGuardrightypos#42558) (guardrightypos must be from -50 to 150) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    sbs length 0 ne {</code>
 <code>        sbs length 1 add 2 idiv  % nbars</code>
 <code>        bhs length 1 index lt bbs length 2 index lt or</code>
-<code>        { pop (bwipp.renlinearBadBarHeightArrays#42562) (The bar height and baseline arrays must be at least as long as the number of bars) //raiseerror exec } if</code>
+<code>        { pop (bwipp.renlinearBadBarHeightArrays#42564) (The bar height and baseline arrays must be at least as long as the number of bars) //raiseerror exec } if</code>
 <code>        pop</code>
 <code>    } if</code>
 <code></code>
@@ -42842,51 +42844,51 @@ div span:hover {
 <code>    } for</code>
 <code></code>
 <code>    inkspread -1 lt inkspread 1 gt or {</code>
-<code>        (bwipp.renmatrixBadInkspread#42780) (inkspread must be from -1 to 1) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadInkspread#42782) (inkspread must be from -1 to 1) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    inkspreadh -1 lt inkspreadh 1 gt or {</code>
-<code>        (bwipp.renmatrixBadInkspreadh#42784) (inkspreadh must be from -1 to 1) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadInkspreadh#42786) (inkspreadh must be from -1 to 1) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    inkspreadv -1 lt inkspreadv 1 gt or {</code>
-<code>        (bwipp.renmatrixBadInkspreadv#42788) (inkspreadv must be from -1 to 1) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadInkspreadv#42790) (inkspreadv must be from -1 to 1) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderleft -1 lt borderleft 50 gt or {</code>
-<code>        (bwipp.renmatrixBadBorderleft#42792) (borderleft must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadBorderleft#42794) (borderleft must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderright -1 lt borderright 50 gt or {</code>
-<code>        (bwipp.renmatrixBadBorderright#42796) (borderright must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadBorderright#42798) (borderright must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    bordertop -1 lt bordertop 50 gt or {</code>
-<code>        (bwipp.renmatrixBadBordertop#42800) (bordertop must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadBordertop#42802) (bordertop must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderbottom -1 lt borderbottom 50 gt or {</code>
-<code>        (bwipp.renmatrixBadBorderbottom#42804) (borderbottom must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadBorderbottom#42806) (borderbottom must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderwidth 0 lt borderwidth 10 gt or {</code>
-<code>        (bwipp.renmatrixBadBorderwidth#42808) (borderwidth must be from 0 to 10) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadBorderwidth#42810) (borderwidth must be from 0 to 10) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    width 0.01 lt width 50 gt or {</code>
-<code>        (bwipp.renmatrixBadWidth#42812) (width must be from 0.01 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadWidth#42814) (width must be from 0.01 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    height 0.01 lt height 50 gt or {</code>
-<code>        (bwipp.renmatrixBadHeight#42816) (height must be from 0.01 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadHeight#42818) (height must be from 0.01 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    pixx 0 le pixy 0 le or {</code>
-<code>        (bwipp.renmatrixBadDimensions#42820) (The symbol dimensions must be positive) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadDimensions#42822) (The symbol dimensions must be positive) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    pixs length pixx pixy mul lt {</code>
-<code>        (bwipp.renmatrixBadPixelData#42824) (The pixel data is shorter than the symbol dimensions require) //raiseerror exec</code>
+<code>        (bwipp.renmatrixBadPixelData#42826) (The pixel data is shorter than the symbol dimensions require) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    /xyget { pixx mul add pixs exch get} def</code>
@@ -43036,27 +43038,27 @@ div span:hover {
 <code>    inkspread null eq {/inkspread 0 def} if</code>
 <code></code>
 <code>    inkspread -1 lt inkspread 1 gt or {</code>
-<code>        (bwipp.renmaximatrixBadInkspread#42974) (inkspread must be from -1 to 1) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadInkspread#42976) (inkspread must be from -1 to 1) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderleft -1 lt borderleft 50 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBorderleft#42978) (borderleft must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBorderleft#42980) (borderleft must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderright -1 lt borderright 50 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBorderright#42982) (borderright must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBorderright#42984) (borderright must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    bordertop -1 lt bordertop 50 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBordertop#42986) (bordertop must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBordertop#42988) (bordertop must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderbottom -1 lt borderbottom 50 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBorderbottom#42990) (borderbottom must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBorderbottom#42992) (borderbottom must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderwidth 0 lt borderwidth 10 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBorderwidth#42994) (borderwidth must be from 0 to 10) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBorderwidth#42996) (borderwidth must be from 0 to 10) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    gsave</code>

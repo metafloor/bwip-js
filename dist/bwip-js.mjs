@@ -116,9 +116,12 @@ function ToSVG(opts) {
 }
 
 function FixupOptions(opts) {
+    // Fix up scale[XY]
     var scale   = opts.scale || 2;
-    var scaleX  = +opts.scaleX || scale;
-    var scaleY  = +opts.scaleY || scaleX;
+    var scaleX  = opts.scaleX || scale;
+    var scaleY  = opts.scaleY || scaleX;
+    opts.scaleX = scaleX < 1 ? 2 : scaleX;
+    opts.scaleY = scaleY < 1 ? opts.scaleX : scaleY;
 
     // Fix up padding.
     opts.paddingleft = padding(opts.paddingleft, opts.paddingwidth, opts.padding, scaleX);
@@ -162,16 +165,17 @@ function FixupOptions(opts) {
     // c is the general padding value.
     // s is the scale, either scalex or scaley
     function padding(a, b, c, s) {
+        var p;
         if (a != null) {
-            a = a >>> 0;
-            return a*s >>> 0;
+            p = a|0;
+        } else if (b != null) {
+            p = b|0;
+        } else {
+            p = c|0;
         }
-        if (b != null) {
-            b = b >>> 0;
-            return b*s >>> 0;
-        }
-        c = c >>> 0;
-        return (c*s >>> 0) || 0;
+        // Keep the padding value reasonable
+        p = p < 0 ? 0 : (p > 999 ? 999 : p); 
+        return p*s|0;
     }
 }
 
@@ -215,9 +219,8 @@ function _Render(encoder, options, drawing) {
     drawing.setopts && drawing.setopts(options);
 
     // Set the bwip-js defaults
-    var scale   = options.scale || 2;
-    var scaleX  = +options.scaleX || scale;
-    var scaleY  = +options.scaleY || scaleX;
+    var scaleX  = options.scaleX;
+    var scaleY  = options.scaleY;
     var rotate  = options.rotate || 'N';
 
     // Create a barcode writer object.  This is the interface between
@@ -1348,8 +1351,12 @@ function DrawingBuiltin() {
             width  += padl + padr;
             height += padt + padb;
 
-            if (+opts.sizelimit && +opts.sizelimit < width * height) {
-                throw new Error('Image size over limit');
+            if (+opts.sizelimit) {
+                if (+opts.sizelimit < width * height) {
+                    throw new Error('Image size over limit');
+                }
+            } else if (width * height > 8192*8192) { // 64mb
+                throw new Error('Image size over default limit');
             }
 
             // Transform indexes are: x, y, w, h
@@ -2165,7 +2172,7 @@ function DrawingSVG() {
 // fontlib.js
 var FontLib = (function() {
     var fonts = [];
-    var names = {};
+    var names = {};     // keyed by all uppercase font name
     var glyphcache = {};
     var glyphmru = {};
     var glyphcount = 0;
@@ -2204,13 +2211,18 @@ var FontLib = (function() {
             throw new Error("bwipjs: loadFont: invalid number of arguments");
         }
 
+        name = name.toUpperCase();
         var font = STBTT.InitFont(toUint8Array(data));
         font.bwipjs_name = name;
         font.bwipjs_multx = multx;
         font.bwipjs_multy = multy;
 
-        var fontid = fonts.push(font)-1;
-        names[name.toUpperCase()] = fontid;
+        var fontid = names[name];
+        if (fontid == null) {
+            names[name] = fontid = fonts.push(font)-1;
+        } else {
+            fonts[fontid] = font;
+        }
         return fontid;
     }
 

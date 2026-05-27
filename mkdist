@@ -449,4 +449,9 @@ fixupnodetypes dist/bwip-js-node.d.ts
 ##
 ./mkdesc
 
+##
+## Verify the dist
+##
+node chkdist.mjs
+
 exit 0

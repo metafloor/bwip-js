@@ -1802,7 +1802,10 @@ function PSC(pscode, flags) {
         ctxprep(exec);
         emit('try{');
         append(ctxexec(exec));
-        emit('$k[$j++]=false}catch(e){$k[$j++]=true}');
+        emit('$k[$j++]=false;');
+        emit('}catch(e){');
+        emit('$k[$j++]=true;');
+        emit('}');
     }
     $.mark = function() {
         ctxflush();

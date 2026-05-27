@@ -66,6 +66,28 @@ fi
 rm -f /tmp/*.bwipp
 
 ##
+## Verify text aliases haven't changed
+##
+##    /processoptions.aliases <<
+##        (alttext)              /text1
+##        ...
+##    >> readonly def
+##
+##    const _textAliases = {
+##        alttext:              'text1',
+##        ...
+##    };
+sed -n "/^ *\/processoptions.aliases <</,/^ *>> readonly def/{//!p}" barcode.ps | sed -e 's/[^ a-z0-9A-Z]//g' -e 's/^  *//' -e 's/  *$//' -e 's/  */ /' > /tmp/aliases-ps
+sed -n "/^ *const _textAliases = {/,/^ *};/{//!p}" barcode-hdr.js | sed -e 's/[^ a-z0-9A-Z]//g' -e 's/^  *//' -e 's/  *$//' -e 's/  */ /' > /tmp/aliases-js
+diff /tmp/aliases-[pj]s
+if [ $? != 0 ] ; then
+    echo '!!! BWIPP text aliases have changed !!!'
+    rm -f /tmp/aliases-[pj]s
+    exit 1
+fi
+rm -f /tmp/aliases-[pj]s
+
+##
 ## Replace the custom modules
 ##
 PSFUNCS=
@@ -208,11 +230,11 @@ echo "" >> src/bwipp.js
 ## Clean up.  Separate commands so they can be commented out when debugging.
 ##
 rm -f barcode.tmp  ## PS code after custom modules
-##rm -f barcode.psc  ## PS code after preprocessing
+rm -f barcode.psc  ## PS code after preprocessing
 rm -f barcode-lookup.js
-##rm -f barcode-symlist.js
-##rm -f barcode.pjs  ## JS code after psc.js
-##rm -f barcode.js   ## JS code after optimzing
+rm -f barcode-symlist.js
+rm -f barcode.pjs  ## JS code after psc.js
+rm -f barcode.js   ## JS code after optimzing
 rm -f bwipp.js     ## JS code after branding
 
 echo "success!"
