@@ -86,8 +86,12 @@ function DrawingBuiltin() {
             width  += padl + padr;
             height += padt + padb;
 
-            if (+opts.sizelimit && +opts.sizelimit < width * height) {
-                throw new Error('Image size over limit');
+            if (+opts.sizelimit) {
+                if (+opts.sizelimit < width * height) {
+                    throw new Error('Image size over limit');
+                }
+            } else if (width * height > 8192*8192) { // 64mb
+                throw new Error('Image size over default limit');
             }
 
             // Transform indexes are: x, y, w, h

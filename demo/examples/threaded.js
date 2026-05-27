@@ -37,8 +37,8 @@ const server = http.createServer(function(req, res) {
     } else {
         // Some arbitrary limit...
         if (queue.length > 16) {
-            st.res.writeHead(503, { 'Content-Type':'text/plain' });
-            st.res.end('HTTP ERROR 503 - Service Unavailable');
+            res.writeHead(503, { 'Content-Type':'text/plain' });
+            res.end('HTTP ERROR 503 - Service Unavailable');
         } else if (!workers.length) {
             queue.push({ res:res, req:req });
         } else {

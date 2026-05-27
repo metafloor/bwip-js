@@ -12,36 +12,41 @@ require('stream');  // fix for https://github.com/nodejs/node/issues/37021
 //
 // This function is asynchronous.
 function Request(req, res, extra) {
-    var opts = url.parse(req.url, true).query;
+    try {
+        var opts = url.parse(req.url, true).query;
 
-    // Convert empty !parameters to false.
-    // Convert empty parameters to true.
-    for (var id in opts) {
-        if (opts[id] === '') {
-            if (id[0] == '!') {
-                opts[id.substr(1)] = false;
-            } else {
-                opts[id] = true;
+        // Convert empty !parameters to false.
+        // Convert empty parameters to true.
+        for (var id in opts) {
+            if (opts[id] === '') {
+                if (id[0] == '!') {
+                    opts[id.substr(1)] = false;
+                } else {
+                    opts[id] = true;
+                }
             }
         }
-    }
 
-    // Add in server options/overrides
-    if (extra) {
-        for (var id in extra) {
-            opts[id] = extra[id];
+        // Add in server options/overrides
+        if (extra) {
+            for (var id in extra) {
+                opts[id] = extra[id];
+            }
         }
-    }
 
-    ToBuffer(opts, function(err, png) {
-        if (err) {
-            res.writeHead(400, { 'Content-Type':'text/plain' });
-            res.end('' + (err.stack || err), 'utf-8');
-        } else {
-            res.writeHead(200, { 'Content-Type':'image/png' });
-            res.end(png, 'binary');
-        }
-    });
+        ToBuffer(opts, function(err, png) {
+            if (err) {
+                res.writeHead(400, { 'Content-Type':'text/plain' });
+                res.end('' + err, 'utf-8');
+            } else {
+                res.writeHead(200, { 'Content-Type':'image/png' });
+                res.end(png, 'binary');
+            }
+        });
+    } catch (e) {
+        res.writeHead(400, { 'Content-Type':'text/plain' });
+        res.end('' + e, 'utf-8');
+    }
 }
 
 // bwipjs.toBuffer(options[, callback])
@@ -277,9 +282,12 @@ function ToSVG(opts) {
 }
 
 function FixupOptions(opts) {
+    // Fix up scale[XY]
     var scale   = opts.scale || 2;
-    var scaleX  = +opts.scaleX || scale;
-    var scaleY  = +opts.scaleY || scaleX;
+    var scaleX  = opts.scaleX || scale;
+    var scaleY  = opts.scaleY || scaleX;
+    opts.scaleX = scaleX < 1 ? 2 : scaleX;
+    opts.scaleY = scaleY < 1 ? opts.scaleX : scaleY;
 
     // Fix up padding.
     opts.paddingleft = padding(opts.paddingleft, opts.paddingwidth, opts.padding, scaleX);
@@ -323,16 +331,17 @@ function FixupOptions(opts) {
     // c is the general padding value.
     // s is the scale, either scalex or scaley
     function padding(a, b, c, s) {
+        var p;
         if (a != null) {
-            a = a >>> 0;
-            return a*s >>> 0;
+            p = a|0;
+        } else if (b != null) {
+            p = b|0;
+        } else {
+            p = c|0;
         }
-        if (b != null) {
-            b = b >>> 0;
-            return b*s >>> 0;
-        }
-        c = c >>> 0;
-        return (c*s >>> 0) || 0;
+        // Keep the padding value reasonable
+        p = p < 0 ? 0 : (p > 999 ? 999 : p); 
+        return p*s|0;
     }
 }
 
@@ -376,9 +385,8 @@ function _Render(encoder, options, drawing) {
     drawing.setopts && drawing.setopts(options);
 
     // Set the bwip-js defaults
-    var scale   = options.scale || 2;
-    var scaleX  = +options.scaleX || scale;
-    var scaleY  = +options.scaleY || scaleX;
+    var scaleX  = options.scaleX;
+    var scaleY  = options.scaleY;
     var rotate  = options.rotate || 'N';
 
     // Create a barcode writer object.  This is the interface between
