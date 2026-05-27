@@ -176,6 +176,8 @@ begin
     /inkspreadh inkspreadh 2 div def
     /inkspreadv inkspreadv 2 div def
 
+    gsave 
+
     %
     % Force symbol to given width
     %
@@ -224,6 +226,8 @@ begin
             pixs { key eq {1} {0} ifelse } forall
         ] dotty {drawlayerdots} {drawlayer} ifelse
     } forall
+
+    grestore
 
     %
     % Display the text
