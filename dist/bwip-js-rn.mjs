@@ -32,7 +32,7 @@
 
 import { bwipp_auspost,bwipp_azteccode,bwipp_azteccodecompact,bwipp_aztecrune,bwipp_bc412,bwipp_channelcode,bwipp_codablockf,bwipp_code11,bwipp_code128,bwipp_code16k,bwipp_code2of5,bwipp_code32,bwipp_code39,bwipp_code39ext,bwipp_code49,bwipp_code93,bwipp_code93ext,bwipp_codeone,bwipp_coop2of5,bwipp_daft,bwipp_databarexpanded,bwipp_databarexpandedcomposite,bwipp_databarexpandedstacked,bwipp_databarexpandedstackedcomposite,bwipp_databarlimited,bwipp_databarlimitedcomposite,bwipp_databaromni,bwipp_databaromnicomposite,bwipp_databarstacked,bwipp_databarstackedcomposite,bwipp_databarstackedomni,bwipp_databarstackedomnicomposite,bwipp_databartruncated,bwipp_databartruncatedcomposite,bwipp_datalogic2of5,bwipp_datamatrix,bwipp_datamatrixrectangular,bwipp_datamatrixrectangularextension,bwipp_dotcode,bwipp_ean13,bwipp_ean13composite,bwipp_ean14,bwipp_ean2,bwipp_ean5,bwipp_ean8,bwipp_ean8composite,bwipp_flattermarken,bwipp_gs1_128,bwipp_gs1_128composite,bwipp_gs1_cc,bwipp_gs1datamatrix,bwipp_gs1datamatrixrectangular,bwipp_gs1dldatamatrix,bwipp_gs1dlqrcode,bwipp_gs1dotcode,bwipp_gs1northamericancoupon,bwipp_gs1qrcode,bwipp_hanxin,bwipp_hibcazteccode,bwipp_hibccodablockf,bwipp_hibccode128,bwipp_hibccode39,bwipp_hibcdatamatrix,bwipp_hibcdatamatrixrectangular,bwipp_hibcmicropdf417,bwipp_hibcpdf417,bwipp_hibcqrcode,bwipp_iata2of5,bwipp_identcode,bwipp_industrial2of5,bwipp_interleaved2of5,bwipp_isbn,bwipp_ismn,bwipp_issn,bwipp_itf14,bwipp_japanpost,bwipp_kix,bwipp_leitcode,bwipp_mailmark,bwipp_mands,bwipp_matrix2of5,bwipp_maxicode,bwipp_micropdf417,bwipp_microqrcode,bwipp_msi,bwipp_onecode,bwipp_pdf417,bwipp_pdf417compact,bwipp_pharmacode,bwipp_pharmacode2,bwipp_planet,bwipp_plessey,bwipp_posicode,bwipp_postnet,bwipp_pzn,bwipp_qrcode,bwipp_rationalizedCodabar,bwipp_raw,bwipp_rectangularmicroqrcode,bwipp_royalmail,bwipp_sscc18,bwipp_swissqrcode,bwipp_symbol,bwipp_telepen,bwipp_telepennumeric,bwipp_ultracode,bwipp_upca,bwipp_upcacomposite,bwipp_upce,bwipp_upcecomposite,bwipp_lookup,bwipp_symlist,bwipp_encode,BWIPP_VERSION } from './bwipp.mjs';
 // exports.js
-const BWIPJS_VERSION = '4.10.1 (2026-04-22)';
+const BWIPJS_VERSION = '4.10.2 (2026-05-27)';
 
 import PNG_ZLIB from 'react-zlib-js';
 import Buffer from 'react-zlib-js/buffer.js';
@@ -156,9 +156,12 @@ function ToSVG(opts) {
 }
 
 function FixupOptions(opts) {
+    // Fix up scale[XY]
     var scale   = opts.scale || 2;
-    var scaleX  = +opts.scaleX || scale;
-    var scaleY  = +opts.scaleY || scaleX;
+    var scaleX  = opts.scaleX || scale;
+    var scaleY  = opts.scaleY || scaleX;
+    opts.scaleX = scaleX < 1 ? 2 : scaleX;
+    opts.scaleY = scaleY < 1 ? opts.scaleX : scaleY;
 
     // Fix up padding.
     opts.paddingleft = padding(opts.paddingleft, opts.paddingwidth, opts.padding, scaleX);
@@ -202,16 +205,17 @@ function FixupOptions(opts) {
     // c is the general padding value.
     // s is the scale, either scalex or scaley
     function padding(a, b, c, s) {
+        var p;
         if (a != null) {
-            a = a >>> 0;
-            return a*s >>> 0;
+            p = a|0;
+        } else if (b != null) {
+            p = b|0;
+        } else {
+            p = c|0;
         }
-        if (b != null) {
-            b = b >>> 0;
-            return b*s >>> 0;
-        }
-        c = c >>> 0;
-        return (c*s >>> 0) || 0;
+        // Keep the padding value reasonable
+        p = p < 0 ? 0 : (p > 999 ? 999 : p); 
+        return p*s|0;
     }
 }
 
@@ -255,9 +259,8 @@ function _Render(encoder, options, drawing) {
     drawing.setopts && drawing.setopts(options);
 
     // Set the bwip-js defaults
-    var scale   = options.scale || 2;
-    var scaleX  = +options.scaleX || scale;
-    var scaleY  = +options.scaleY || scaleX;
+    var scaleX  = options.scaleX;
+    var scaleY  = options.scaleY;
     var rotate  = options.rotate || 'N';
 
     // Create a barcode writer object.  This is the interface between
@@ -1388,8 +1391,12 @@ function DrawingBuiltin() {
             width  += padl + padr;
             height += padt + padb;
 
-            if (+opts.sizelimit && +opts.sizelimit < width * height) {
-                throw new Error('Image size over limit');
+            if (+opts.sizelimit) {
+                if (+opts.sizelimit < width * height) {
+                    throw new Error('Image size over limit');
+                }
+            } else if (width * height > 8192*8192) { // 64mb
+                throw new Error('Image size over default limit');
             }
 
             // Transform indexes are: x, y, w, h
@@ -2356,7 +2363,7 @@ function DrawingSVG() {
 // fontlib.js
 var FontLib = (function() {
     var fonts = [];
-    var names = {};
+    var names = {};     // keyed by all uppercase font name
     var glyphcache = {};
     var glyphmru = {};
     var glyphcount = 0;
@@ -2395,13 +2402,18 @@ var FontLib = (function() {
             throw new Error("bwipjs: loadFont: invalid number of arguments");
         }
 
+        name = name.toUpperCase();
         var font = STBTT.InitFont(toUint8Array(data));
         font.bwipjs_name = name;
         font.bwipjs_multx = multx;
         font.bwipjs_multy = multy;
 
-        var fontid = fonts.push(font)-1;
-        names[name.toUpperCase()] = fontid;
+        var fontid = names[name];
+        if (fontid == null) {
+            names[name] = fontid = fonts.push(font)-1;
+        } else {
+            fonts[fontid] = font;
+        }
         return fontid;
     }
 
