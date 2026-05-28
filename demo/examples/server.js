@@ -14,7 +14,8 @@ const http   = require('http');
 const url    = require('url');
 const bwipjs = (function() {
     try {
-        return require('bwip-js');   // for installed usage
+        return require('..');        // for development use only
+        //return require('bwip-js');   // for installed usage
     } catch (e) {
         return require('..');        // for development use only
     }
