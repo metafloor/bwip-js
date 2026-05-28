@@ -40,11 +40,11 @@ function $a(a) {
         $j=i;
     } else if (!(a instanceof Array)) {
         var len = arguments[0]|0;
-        if (len >= 1<<16) {
-            throw new Error('array-limit-check');
+        if (len >= 1<<24) {
+            throw new Error('array-size-limit');
         }
         a=new Array(len);
-        for (var i = 0, l = a.length; i < l; i++) {
+        for (var i = 0; i < len; i++) {
             a[i] = null;
         }
     }
@@ -683,6 +683,8 @@ const _textAliases = {
     alttext:              'text1',
     alttextsubspace:      'text1subspace',
     alttextsplit:         'text1split',
+    textsubspace:         'text1subspace',
+    textsplit:            'text1split',
     textlinegaps:         'text1linegaps',
     textcolor:            'text1color',
     textxalign:           'text1xalign',
@@ -693,6 +695,7 @@ const _textAliases = {
     textxoffset:          'text1xoffset',
     textyoffset:          'text1yoffset',
     textgaps:             'text1gaps',
+
     extratext:            'text2',
     extratextsubspace:    'text2subspace',
     extratextsplit:       'text2split',
@@ -717,8 +720,11 @@ const _textAliases = {
 //   (alt|extra)subspace, which requires the text to be writable.
 //
 // Invoked as:
-//      options //processoptions exec -> options
+//      options supaliases //processoptions exec -> options
+//
+// supaliases is often null
 function bwipp_processoptions() {
+    var sups = $k[--$j];
     var opts = $k[$j-1];
     if (opts instanceof Uint8Array) {
         opts = $z(opts);
@@ -745,7 +751,9 @@ function bwipp_processoptions() {
     // alttext* -> text1*, extratext* -> text2*
     for (var keys = opts.keys(), i = 0, l = opts.size; i < l; i++) { 
         var id = keys.next().value;
-        if (_textAliases[id]) {
+        if (sups && sups[id]) {
+            opts.set(sups[id], opts.get(id));
+        } else if (_textAliases[id]) {
             opts.set(_textAliases[id], opts.get(id));
             if (/^(?:alt|extra)text/.test(id)) {
                 opts.delete(id);

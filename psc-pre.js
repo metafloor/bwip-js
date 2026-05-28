@@ -15,7 +15,7 @@ modout('setuphooks');
 modout('setanycolor');
 strrep(/\/\/setanycolor exec not \{ false exit \} if/, 'setanycolor');
 
-modout('jabcode');
+//modout('jabcode');    REMOVED FROM BWIPP
 // Fix jabcode naming
 //strrep(/(jabcode\.\w+)\.(\w+)/g, '$1_$2');
 // Disable jabcode large array support (not needed by javascript and breaks our tracing)
@@ -143,8 +143,18 @@ strrep(/}\s+bind\s+for/, '} for');
 //      pdf417.coeffscache = $k[--$j];
 strrep(/(\/\w[\w-]+\.\w+) (.* \/\/fifocache exec) def/, '$2 $1 exch def'); 
 
-strrep(/\/(is..textfont) \/Courier/, '/$1 /OCR-A');
-strrep(/\/(is..textsize) 9/, '/$1 8');
+// Fix changes to symbol-specific secondary text layouts caused by the
+// uniform rendertext logic.
+modstrrep('isbn', /\/text2font .unset./, '/text2font (OCR-A)');
+modstrrep('isbn', /\/text2size 9.0/,     '/text2size 8.5');
+modstrrep('isbn', /\/text2yoffset null/, '/text2yoffset 2');
+modstrrep('ismn', /\/text2font .unset./, '/text2font (OCR-A)');
+modstrrep('ismn', /\/text2size 9.0/,     '/text2size 8.5');
+modstrrep('ismn', /\/text2yoffset null/, '/text2yoffset 2');
+modstrrep('issn', /\/text2font .unset./, '/text2font (OCR-A)');
+modstrrep('issn', /\/text2size 9.0/,     '/text2size 8.5');
+modstrrep('issn', /\/text2yoffset null/, '/text2yoffset 2');
+modstrrep('gs1northamericancoupon', /\/text1yoffset null/, '/text1yoffset 2');
 
 strrep(/\/Helvetica/, '(OCR-B)');
 strrep(/\/Courier/, '(OCR-B)');
@@ -410,6 +420,41 @@ function blockrep(re0, re1, re, sub) {
     }
 }
 
+// strrep limited to inside a module
+function modstrrep(name, re, sub) {
+    let re0 = new RegExp('^% --BEGIN [A-Z]+ ' + name + '--');
+    let re1 = new RegExp('^% --END [A-Z]+ ' + name + '--');
+    let start = 0;
+    let matches = 0;
+    for (let i = 0; i < lines.length; i++) {
+        if (re0.test(lines[i])) {
+            start = i;
+        } else if (re1.test(lines[i])) {
+            if (!matches) {
+                console.log(re, sub);
+                throw 'modstrrep: no matches';
+            }
+            return;
+        } else if (start && lines[i][0] !== '%') {
+            lines[i] = lines[i].replace(re, (...args) => {
+                debug && console.log(args[0], sub.replace(/\$\d/g, (_) => args[_[1]])
+                                                 .replace(/\$#/g, (_) => '#' + (i+1)));
+                   matches++;
+                   return sub.replace(/\$\d/g, (_) => args[_[1]])
+                             .replace(/\$#/g, (_) => '#' + (i+1));
+                });
+        }
+    }
+
+    console.log(re0);
+    console.log(re1);
+    if (start) {
+        console.log('#' + (start+1) + ': ' + lines[start]);
+        throw 'modstrrep: unexpected EOF';
+    }
+    throw 'modstrrep: module not found';
+}
+  
 // Comment out a BWIPP module
 function modout(name) {
     let re0 = new RegExp('^% --BEGIN [A-Z]+ ' + name + '--');

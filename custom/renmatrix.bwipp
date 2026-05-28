@@ -149,7 +149,7 @@ begin
     /modunit 2 def
 
     {def} forall
-    opt currentdict /opt undef /apply //processoptions exec /options exch def
+    opt currentdict /opt undef null /apply //processoptions exec /options exch def
     /global_renderer_defaults //render exec
 
     griddpi 0 ne { /gridfit true def } if
@@ -160,18 +160,18 @@ begin
 
     (input.processoptions) //renmatrix.after exec
 
-    % Default rowmult to all 1s if not provided
-    currentdict /rowmult known not {
-        /rowmult [ pixy { 1 } repeat ] def
+    % Default rowheights to all 1s if not provided
+    currentdict /rowheights known not {
+        /rowheights [ pixy { 1 } repeat ] def
     } if
 
-    /pixycomp rowmult length def
+    /pixycomp rowheights length def
     /rowcumul pixycomp 1 add array def
     rowcumul 0 0 put
-    0 1 pixycomp 1 sub {                       % i
-        dup rowcumul exch get                  % ... rowcumul[i]
-        1 index rowmult exch get add           % ... rowcumul[i] + rowmult[i]
-        exch 1 add exch rowcumul 3 1 roll put  % rowcumul[i+1] = rowcumul[i]+rowmult[i]
+    0 1 pixycomp 1 sub {                          % i
+        dup rowcumul exch get                     % ... rowcumul[i]
+        1 index rowheights exch get add           % ... rowcumul[i] + rowheights[i]
+        exch 1 add exch rowcumul 3 1 roll put     % rowcumul[i+1] = rowcumul[i]+rowheights[i]
     } for
 
     %
@@ -215,7 +215,7 @@ begin
     } if
 
     rowcumul pixycomp get pixy ne {
-        /bwipp.renmatrixRowmultMismatch (rowmult sum does not equal pixy) //raiseerror exec
+        /bwipp.renmatrixRowheightsMismatch (rowheights sum does not equal pixy) //raiseerror exec
     } if
 
     (input.validate) //renmatrix.after exec

@@ -275,6 +275,10 @@ declare namespace BwipJs {
     export function coop2of5(opts: RenderOptions, callback: ToDataURLCallback): void;
     export function coop2of5<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function coop2of5<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
+    export function d3aqr(opts: RenderOptions): Promise<DataURL>;
+    export function d3aqr(opts: RenderOptions, callback: ToDataURLCallback): void;
+    export function d3aqr<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
+    export function d3aqr<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
     export function daft(opts: RenderOptions): Promise<DataURL>;
     export function daft(opts: RenderOptions, callback: ToDataURLCallback): void;
     export function daft<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;

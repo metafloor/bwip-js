@@ -1,5 +1,5 @@
 % --REQUIRES preamble raiseerror processoptions setanycolor--
-%%BeginData:       1193 ASCII Lines
+%%BeginData:       1198 ASCII Lines
 currentglobal
 true setglobal
 /setpacking where {pop currentpacking true setpacking} if
@@ -43,6 +43,11 @@ begin
     >>
 >> readonly def
 
+% Rotation angle per direction (also serves as the direction-validity set)
+/render.directionrotate <<
+    (forward) 0  (backward) 180  (upward) 90  (downward) 270
+>> readonly def
+
 % Template for text option groups
 /render.groupoptions <<
     ()           ()
@@ -67,10 +72,6 @@ begin
 
 /render.yalignopts <<
     /above dup  /top dup  /center dup  /bottom dup  /below dup  /justify dup
->> readonly def
-
-/render.directionoptions <<
-    /forward dup  /backward dup  /upward dup  /downward dup
 >> readonly def
 
 %
@@ -120,7 +121,7 @@ begin
             } if
         } { pop } ifelse
 
-        //render.directionoptions td (direction) get known not {
+        //render.directionrotate td (direction) get known not {
             /direction ( must be forward, backward, upward or downward) mkerr false exit
         } if
 
@@ -221,14 +222,14 @@ begin
                         } if
                         2 copy /s exch def /fn exch def
                         selectfont
-                        % Ink-centre offsets for single-char positioning
+                        % Ink-centre offsets
                         (0) stringwidth pop 2 div neg /xoff exch def
                         gsave newpath 0 0 moveto (0) false charpath pathbbox grestore
                         exch pop add 2 div neg /yoff exch def pop
                     } {
                         pop pop
                     } ifelse
-                    moveto dup length 1 eq { xoff yoff rmoveto } if show
+                    moveto xoff yoff rmoveto show
                 } forall
             } stopped {
                 /bwipp.fontTooSmall (The font size is too small) false exit
@@ -270,7 +271,7 @@ begin
         } if
 
         % Split into lines
-        split () ne content () ne and {
+        split () ne {
             split length 1 ne {
                 /splitBad (split option must be a single character) makeerr false exit
             } if
@@ -288,21 +289,17 @@ begin
         font size selectfont
 
         % Find true ascent of font
-        content length 0 eq {
-            0
-        } {
-            gsave
-            newpath 0 0 moveto (0) false charpath pathbbox
-            4 1 roll pop pop pop
-            grestore
-            currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
-            currentfont /StrokeWidth known and {
-                currentfont /StrokeWidth get 2 div 0 exch
-                currentfont /FontMatrix get dtransform
-                dup mul exch dup mul add sqrt
-                add
-            } if
-        } ifelse
+        gsave
+        newpath 0 0 moveto (0) false charpath pathbbox
+        4 1 roll pop pop pop
+        grestore
+        currentfont /PaintType known {currentfont /PaintType get 2 eq} {false} ifelse
+        currentfont /StrokeWidth known and {
+            currentfont /StrokeWidth get 2 div 0 exch
+            currentfont /FontMatrix get dtransform
+            dup mul exch dup mul add sqrt
+            add
+        } if
         /textascent exch def
 
         /textwidth 0 textlines { stringwidth pop 2 copy lt {exch} if pop } forall content length 1 sub gaps mul add def
@@ -340,7 +337,7 @@ begin
         xalign yalign direction textwidth textheight positiontext exec moveto
         xoffset yoffset rmoveto
         gsave
-        << (forward) 0  (upward) 90  (backward) 180  (downward) 270 >> direction get rotate
+        //render.directionrotate direction get rotate
         currentpoint translate
         0 1 textlines length 1 sub {
             /i exch def
@@ -602,6 +599,15 @@ begin
         /default                         << /xmin 0.250                                        >>
     >>
 
+    /d3aqr <<
+        /default                         <<              /xnom 1.440                           >>
+        (15)                             <<              /xnom 0.846                           >>
+        (25)                  3 index  % <<              /xnom 1.440                           >>
+        (40)                             <<              /xnom 2.290                           >>
+        (75)                             <<              /xnom 4.320                           >>
+        (150)                            <<              /xnom 8.460                           >>
+    >>
+
     /pharmacode <<
         /default                         << /xnom 0.500                            /hnom 8.000 >>
     >>
@@ -679,13 +685,12 @@ begin
         /bwipp.renderXdimTooSmall
         [ (Effective X-dimension ) dim 20 string cvs (mm is below the minimum ) min 20 string cvs (mm for the ast) ]
     } {
-        max -1 ne dim max gt and {
-            /bwipp.renderXdimTooLarge
-            [ (Effective X-dimension ) dim 20 string cvs (mm is above the maximum ) max 20 string cvs (mm for the ast) ]
-        } {
-            null null  % Sentinel: ok
-        } ifelse
-    } ifelse
+    max -1 ne dim max gt and {
+        /bwipp.renderXdimTooLarge
+        [ (Effective X-dimension ) dim 20 string cvs (mm is above the maximum ) max 20 string cvs (mm for the ast) ]
+    } {
+        null null  % Sentinel: ok
+    } ifelse } ifelse
     dup null eq { pop pop true } {
         dup 0 exch {length add} forall string
         exch 0 exch { dup length 2 index add 3 index 4 2 roll putinterval } forall pop
@@ -1165,21 +1170,21 @@ begin
 %  Dispatcher table
 %
 /render.dispatch <<
-    /apply_ast            //render.apply_ast
-    /ast                  //render.ast
-    /groupoptions         //render.groupoptions
-    /textgroups           //render.textgroups
-    /rendertext           //render.rendertext
-    /validatetextoptions  //render.validatetextoptions
-    /gridfit              //render.gridfit
-    /global_encoder_defaults  //render.global_encoder_defaults
-    /global_renderer_defaults //render.global_renderer_defaults
-    /validate_common      //render.validate_common
-    /renderborder         //render.renderborder
-    /renderguards         //render.renderguards
-    /validate_xdim        //render.validate_xdim
-    /resolve_strictspec     //render.resolve_strictspec
-    /resolve_height       //render.resolve_height
+    /apply_ast                 //render.apply_ast
+    /ast                       //render.ast
+    /groupoptions              //render.groupoptions
+    /textgroups                //render.textgroups
+    /rendertext                //render.rendertext
+    /validatetextoptions       //render.validatetextoptions
+    /gridfit                   //render.gridfit
+    /global_encoder_defaults   //render.global_encoder_defaults
+    /global_renderer_defaults  //render.global_renderer_defaults
+    /validate_common           //render.validate_common
+    /renderborder              //render.renderborder
+    /renderguards              //render.renderguards
+    /validate_xdim             //render.validate_xdim
+    /resolve_strictspec        //render.resolve_strictspec
+    /resolve_height            //render.resolve_height
 >> readonly def
 
 /render {

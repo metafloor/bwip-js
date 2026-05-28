@@ -1,5 +1,5 @@
 % --REQUIRES preamble raiseerror processoptions setanycolor render--
-%%BeginData:        219 ASCII Lines
+%%BeginData:        225 ASCII Lines
 currentglobal
 true setglobal
 /setpacking where {pop currentpacking true setpacking} if
@@ -62,7 +62,7 @@ begin
     /modunit 1 def
 
     {def} forall
-    opt currentdict /opt undef /apply //processoptions exec /options exch def
+    opt currentdict /opt undef null /apply //processoptions exec /options exch def
     /global_renderer_defaults //render exec
 
     % Collect text options into an array
@@ -117,7 +117,10 @@ begin
     0 1 sbs length 1 add 2 idiv 2 mul 2 sub {
         /i exch def
         i 2 mod 0 eq {           % i is even
-            /d sbs i get barratio mul barratio sub 1 add def  % d = digit*r-r+1
+            /d sbs i get dup 0 eq
+                { pop 0 }                                 % 0 is zero-width regardless of ratio
+                { barratio mul barratio sub 1 add }       % d = digit*r-r+1
+            ifelse def
             sbs i get 0 ne {
                 /h bhs i 2 idiv get 72 mul def  % Height from bhs
                 /c d 2 div pixx add def         % Centre of the bar = pixx + d/2
@@ -129,7 +132,10 @@ begin
                 bars i 2 idiv -1 put            % Dummy entry
             } ifelse
         } {
-            /d sbs i get spaceratio mul spaceratio sub 1 add def  % d = digit*r-r+1
+            /d sbs i get dup 0 eq
+                { pop 0 }                                 % 0 is zero-width regardless of ratio
+                { spaceratio mul spaceratio sub 1 add }   % d = digit*r-r+1
+            ifelse def
         } ifelse
         /pixx pixx d add def  % pixx += d
     } for

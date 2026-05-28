@@ -229,6 +229,8 @@ declare namespace BwipJs {
     export function codeone<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
     export function coop2of5<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function coop2of5<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
+    export function d3aqr<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
+    export function d3aqr<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
     export function daft<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function daft<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
     export function databarexpanded<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;

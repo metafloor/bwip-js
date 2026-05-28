@@ -253,6 +253,9 @@ declare namespace BwipJs {
     export function coop2of5(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
     export function coop2of5<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function coop2of5<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
+    export function d3aqr(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
+    export function d3aqr<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
+    export function d3aqr<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
     export function daft(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
     export function daft<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function daft<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;

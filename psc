@@ -77,8 +77,8 @@ rm -f /tmp/*.bwipp
 ##        alttext:              'text1',
 ##        ...
 ##    };
-sed -n "/^ *\/processoptions.aliases <</,/^ *>> readonly def/{//!p}" barcode.ps | sed -e 's/[^ a-z0-9A-Z]//g' -e 's/^  *//' -e 's/  *$//' -e 's/  */ /' > /tmp/aliases-ps
-sed -n "/^ *const _textAliases = {/,/^ *};/{//!p}" barcode-hdr.js | sed -e 's/[^ a-z0-9A-Z]//g' -e 's/^  *//' -e 's/  *$//' -e 's/  */ /' > /tmp/aliases-js
+sed -n "/^ *\/processoptions.aliases <</,/^ *>> readonly def/{//!p}" barcode.ps | sed -e 's/[^ a-z0-9A-Z]//g' -e 's/^  *//' -e 's/  *$//' -e 's/  */ /' | grep -v '^ *$' > /tmp/aliases-ps
+sed -n "/^ *const _textAliases = {/,/^ *};/{//!p}" barcode-hdr.js | sed -e 's/[^ a-z0-9A-Z]//g' -e 's/^  *//' -e 's/  *$//' -e 's/  */ /' | grep -v '^ *$' > /tmp/aliases-js
 diff /tmp/aliases-[pj]s
 if [ $? != 0 ] ; then
     echo '!!! BWIPP text aliases have changed !!!'
