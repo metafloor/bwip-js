@@ -43321,9 +43321,9 @@ function bwipp_gs1dldatamatrix() {
     $put($_.args, "opt", $_.options); //#39535
     if ($_.includetext) { //#39541
         $put($_.args, "text1", $_.hri); //#39537
-        $put($_.args, "text1yoffset", -1); //#39538
+        $put($_.args, "text1yoffset", -3); //#39538
         $put($_.args, "text1font", "OCR-B"); //#39539
-        $put($_.args, "text1size", 5); //#39540
+        $put($_.args, "text1size", 10); //#39540
     } //#39540
     $k[$j++] = $_.args; //#39544
     if ($_._render) { //#39544
@@ -43452,9 +43452,9 @@ function bwipp_gs1dlqrcode() {
     $put($_.args, "opt", $_.options); //#39785
     if ($_.includetext) { //#39791
         $put($_.args, "text1", $_.hri); //#39787
-        $put($_.args, "text1yoffset", -4); //#39788
+        $put($_.args, "text1yoffset", -3); //#39788
         $put($_.args, "text1font", "OCR-B"); //#39789
-        $put($_.args, "text1size", 5); //#39790
+        $put($_.args, "text1size", 10); //#39790
     } //#39790
     $k[$j++] = $_.args; //#39794
     if ($_._render) { //#39794
@@ -45492,202 +45492,204 @@ function bwipp_renmatrix() {
     $_.inkspread = $_.inkspread / 2; //#42020
     $_.inkspreadh = $_.inkspreadh / 2; //#42021
     $_.inkspreadv = $_.inkspreadv / 2; //#42022
-    $$.scale(($_.width / $_.pixx) * 72, ($_.height / $_.pixy) * 72); //#42027
-    if ($_.showborder) { //#42041
-        $_.tl = $a([-$f($_.borderleft + $_.borderwidth / 2), $f($_.pixy + $_.bordertop + $_.borderwidth / 2)]) //#42033
-        $_.tr = $a([$f($_.pixx + $_.borderright + $_.borderwidth / 2), $f($_.pixy + $_.bordertop + $_.borderwidth / 2)]) //#42034
-        $_.bl = $a([-$f($_.borderleft + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)]) //#42035
-        $_.br = $a([$f($_.pixx + $_.borderright + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)]) //#42036
-    } else { //#42041
-        $_.tl = $a([$f(-$_.borderleft + $_.inkspread), $f($_.pixy + $_.bordertop - $_.inkspread)]) //#42038
-        $_.tr = $a([$f($_.pixx + $_.borderright - $_.inkspread), $f($_.pixy + $_.bordertop - $_.inkspread)]) //#42039
-        $_.bl = $a([$f(-$_.borderleft + $_.inkspread), $f(-$_.borderbottom + $_.inkspread)]) //#42040
-        $_.br = $a([$f($_.pixx + $_.borderright - $_.inkspread), $f(-$_.borderbottom + $_.inkspread)]) //#42041
-    } //#42041
-    if ($_.showborder) { //#42055
-        $$.save(); //#42050
-        $$.newpath(); //#42051
-        $aload($_.bl); //#42051
-        var _2J = $k[--$j]; //#42051
-        var _2K = $k[--$j]; //#42051
-        $$.moveto(_2K, _2J); //#42051
-        var _2O = $a([$_.br, $_.tr, $_.tl]); //#42051
-        for (var _2P = 0, _2Q = _2O.length; _2P < _2Q; _2P++) { //#42051
-            $aload($get(_2O, _2P)); //#42051
-            var _2S = $k[--$j]; //#42051
-            var _2T = $k[--$j]; //#42051
-            $$.lineto(_2T, _2S); //#42051
-        } //#42051
-        $$.closepath(); //#42051
-        if ($ne($_.bordercolor, "unset")) { //#42052
-            $$.setcolor($_.bordercolor); //#42052
-        } //#42052
-        $$.setlinewidth($f($_.borderwidth - $_.inkspread * 2)) //#42053
-        $$.stroke(); //#42053
-        $$.restore(); //#42054
-    } //#42054
-    if ($eq($_.colormap, "unset")) { //#42060
+    $$.save(); //#42024
+    $$.scale(($_.width / $_.pixx) * 72, ($_.height / $_.pixy) * 72); //#42029
+    if ($_.showborder) { //#42043
+        $_.tl = $a([-$f($_.borderleft + $_.borderwidth / 2), $f($_.pixy + $_.bordertop + $_.borderwidth / 2)]) //#42035
+        $_.tr = $a([$f($_.pixx + $_.borderright + $_.borderwidth / 2), $f($_.pixy + $_.bordertop + $_.borderwidth / 2)]) //#42036
+        $_.bl = $a([-$f($_.borderleft + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)]) //#42037
+        $_.br = $a([$f($_.pixx + $_.borderright + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)]) //#42038
+    } else { //#42043
+        $_.tl = $a([$f(-$_.borderleft + $_.inkspread), $f($_.pixy + $_.bordertop - $_.inkspread)]) //#42040
+        $_.tr = $a([$f($_.pixx + $_.borderright - $_.inkspread), $f($_.pixy + $_.bordertop - $_.inkspread)]) //#42041
+        $_.bl = $a([$f(-$_.borderleft + $_.inkspread), $f(-$_.borderbottom + $_.inkspread)]) //#42042
+        $_.br = $a([$f($_.pixx + $_.borderright - $_.inkspread), $f(-$_.borderbottom + $_.inkspread)]) //#42043
+    } //#42043
+    if ($_.showborder) { //#42057
+        $$.save(); //#42052
+        $$.newpath(); //#42053
+        $aload($_.bl); //#42053
+        var _2J = $k[--$j]; //#42053
+        var _2K = $k[--$j]; //#42053
+        $$.moveto(_2K, _2J); //#42053
+        var _2O = $a([$_.br, $_.tr, $_.tl]); //#42053
+        for (var _2P = 0, _2Q = _2O.length; _2P < _2Q; _2P++) { //#42053
+            $aload($get(_2O, _2P)); //#42053
+            var _2S = $k[--$j]; //#42053
+            var _2T = $k[--$j]; //#42053
+            $$.lineto(_2T, _2S); //#42053
+        } //#42053
+        $$.closepath(); //#42053
+        if ($ne($_.bordercolor, "unset")) { //#42054
+            $$.setcolor($_.bordercolor); //#42054
+        } //#42054
+        $$.setlinewidth($f($_.borderwidth - $_.inkspread * 2)) //#42055
+        $$.stroke(); //#42055
+        $$.restore(); //#42056
+    } //#42056
+    if ($eq($_.colormap, "unset")) { //#42062
         $_.colormap = new Map([
             [1, $_.barcolor]
-        ]); //#42059
-    } //#42059
-    var _2a = $_.colormap; //#42065
-    for (var _2f = _2a.size, _2e = _2a.keys(), _2d = 0; _2d < _2f; _2d++) { //#42071
-        var _2b = _2e.next().value; //#42071
-        var _2c = _2a.get(_2b); //#42071
-        $k[$j++] = _2b; //#42066
-        $k[$j++] = _2c; //#42066
-        if ($ne(_2c, "unset")) { //#42066
-            var _2g = $k[--$j]; //#42066
-            $$.setcolor(_2g); //#42066
-        } else { //#42066
-            $j--; //#42066
-        } //#42066
-        var _2h = $k[--$j]; //#42067
-        $_.key = _2h; //#42067
-        var _2o = []; //#42068
-        var _2i = $_.pixs; //#42069
-        for (var _2j = 0, _2k = _2i.length; _2j < _2k; _2j++) { //#42069
-            _2o[_2j] = $eq($get(_2i, _2j), $_.key) ? 1 : 0; //#42069
-        } //#42069
-        _2o = $a(_2o); //#42069
-        $k[$j++] = _2o; //#42070
-        if ($_.dotty) { //#42070
-            $_.drawlayerdots(); //#42070
-        } else { //#42070
-            var _2q = $k[--$j]; //#42070
-            $$.drawlayer(_2q, $_.pixx, $_.pixy, $_.inkspreadh, $_.inkspreadv); //#42070
-        } //#42070
-    } //#42070
-    for (var _2r = 1; _2r <= 9; _2r += 1) { //#42087
-        $_.textgrp = _2r; //#42077
-        if (($get($get($_.textopts, $_.textgrp - 1), "").length != 0) || ((($_.textgrp == 1) && ($_.txt.length > 0)) && $_.includetext)) { //#42086
-            var _31 = $get($_.textopts, $_.textgrp - 1); //#42081
-            $put(_31, "txt", $_.txt); //#42082
-            $put(_31, "content", $get(_31, "")); //#42083
-            $k[$j++] = $_.pixx; //#42084
-            $k[$j++] = $_.pixy; //#42084
-            $k[$j++] = $_.textgrp; //#42084
-            $k[$j++] = _31; //#42084
-            bwipp_rendertext(); //#42084
-            var _37 = $k[--$j]; //#42085
-            if (!_37) { //#42085
-                $$.restore(); //#42085
-                bwipp_raiseerror(); //#42085
-            } //#42085
-        } //#42085
-    } //#42085
-    $k[$j++] = $_.pixx; //#42092
-    bwipp_renderguards(); //#42092
-    $$.restore(); //#42094
-    $_ = $__; //#42096
+        ]); //#42061
+    } //#42061
+    var _2a = $_.colormap; //#42067
+    for (var _2f = _2a.size, _2e = _2a.keys(), _2d = 0; _2d < _2f; _2d++) { //#42073
+        var _2b = _2e.next().value; //#42073
+        var _2c = _2a.get(_2b); //#42073
+        $k[$j++] = _2b; //#42068
+        $k[$j++] = _2c; //#42068
+        if ($ne(_2c, "unset")) { //#42068
+            var _2g = $k[--$j]; //#42068
+            $$.setcolor(_2g); //#42068
+        } else { //#42068
+            $j--; //#42068
+        } //#42068
+        var _2h = $k[--$j]; //#42069
+        $_.key = _2h; //#42069
+        var _2o = []; //#42070
+        var _2i = $_.pixs; //#42071
+        for (var _2j = 0, _2k = _2i.length; _2j < _2k; _2j++) { //#42071
+            _2o[_2j] = $eq($get(_2i, _2j), $_.key) ? 1 : 0; //#42071
+        } //#42071
+        _2o = $a(_2o); //#42071
+        $k[$j++] = _2o; //#42072
+        if ($_.dotty) { //#42072
+            $_.drawlayerdots(); //#42072
+        } else { //#42072
+            var _2q = $k[--$j]; //#42072
+            $$.drawlayer(_2q, $_.pixx, $_.pixy, $_.inkspreadh, $_.inkspreadv); //#42072
+        } //#42072
+    } //#42072
+    $$.restore(); //#42075
+    for (var _2r = 1; _2r <= 9; _2r += 1) { //#42091
+        $_.textgrp = _2r; //#42081
+        if (($get($get($_.textopts, $_.textgrp - 1), "").length != 0) || ((($_.textgrp == 1) && ($_.txt.length > 0)) && $_.includetext)) { //#42090
+            var _31 = $get($_.textopts, $_.textgrp - 1); //#42085
+            $put(_31, "txt", $_.txt); //#42086
+            $put(_31, "content", $get(_31, "")); //#42087
+            $k[$j++] = $_.width * 72; //#42088
+            $k[$j++] = $_.height * 72; //#42088
+            $k[$j++] = $_.textgrp; //#42088
+            $k[$j++] = _31; //#42088
+            bwipp_rendertext(); //#42088
+            var _37 = $k[--$j]; //#42089
+            if (!_37) { //#42089
+                $$.restore(); //#42089
+                bwipp_raiseerror(); //#42089
+            } //#42089
+        } //#42089
+    } //#42089
+    $k[$j++] = $_.width * 72; //#42096
+    bwipp_renderguards(); //#42096
+    $$.restore(); //#42098
+    $_ = $__; //#42100
 } //bwipp_renmatrix
 function bwipp_renmaximatrix() {
     if ($_.bwipjs_rawstack) {
         $_.bwipjs_rawstack.push($k[--$j]);
         return;
     }
-    var $__ = $_; //#42120
-    $_ = Object.assign({}, $_, bwipp_renmaximatrix.globals); //#42120
-    $_.barcolor = "unset"; //#42125
-    $_.bordercolor = "unset"; //#42127
-    $_.inkspread = null; //#42128
-    $_.showborder = false; //#42129
-    $_.borderleft = 0; //#42130
-    $_.borderright = 0; //#42131
-    $_.bordertop = 0; //#42132
-    $_.borderbottom = 0; //#42133
-    $_.borderwidth = 0.5; //#42134
-    var _0 = $k[--$j]; //#42136
-    $forall(_0, function() { //#42136
-        var _1 = $k[--$j]; //#42136
-        var _2 = $k[--$j]; //#42136
-        $_[_2] = _1; //#42136
-    }); //#42136
-    $k[$j++] = $_.opt; //#42137
-    $del($_, 'opt') //#42137
-    $k[$j++] = null; //#42137
-    bwipp_processoptions(); //#42137
-    $j--; //#42137
-    if ($_.inkspread == null) { //#42139
-        $_.inkspread = 0; //#42139
-    } //#42139
-    if (($_.inkspread < -1) || ($_.inkspread > 1)) { //#42143
-        $k[$j++] = "bwipp.renmaximatrixBadInkspread#42142"; //#42142
-        $k[$j++] = "inkspread must be from -1 to 1"; //#42142
-        bwipp_raiseerror(); //#42142
-    } //#42142
-    if (($_.borderleft < -1) || ($_.borderleft > 50)) { //#42147
-        $k[$j++] = "bwipp.renmaximatrixBadBorderleft#42146"; //#42146
-        $k[$j++] = "borderleft must be from -1 to 50"; //#42146
+    var $__ = $_; //#42124
+    $_ = Object.assign({}, $_, bwipp_renmaximatrix.globals); //#42124
+    $_.barcolor = "unset"; //#42129
+    $_.bordercolor = "unset"; //#42131
+    $_.inkspread = null; //#42132
+    $_.showborder = false; //#42133
+    $_.borderleft = 0; //#42134
+    $_.borderright = 0; //#42135
+    $_.bordertop = 0; //#42136
+    $_.borderbottom = 0; //#42137
+    $_.borderwidth = 0.5; //#42138
+    var _0 = $k[--$j]; //#42140
+    $forall(_0, function() { //#42140
+        var _1 = $k[--$j]; //#42140
+        var _2 = $k[--$j]; //#42140
+        $_[_2] = _1; //#42140
+    }); //#42140
+    $k[$j++] = $_.opt; //#42141
+    $del($_, 'opt') //#42141
+    $k[$j++] = null; //#42141
+    bwipp_processoptions(); //#42141
+    $j--; //#42141
+    if ($_.inkspread == null) { //#42143
+        $_.inkspread = 0; //#42143
+    } //#42143
+    if (($_.inkspread < -1) || ($_.inkspread > 1)) { //#42147
+        $k[$j++] = "bwipp.renmaximatrixBadInkspread#42146"; //#42146
+        $k[$j++] = "inkspread must be from -1 to 1"; //#42146
         bwipp_raiseerror(); //#42146
     } //#42146
-    if (($_.borderright < -1) || ($_.borderright > 50)) { //#42151
-        $k[$j++] = "bwipp.renmaximatrixBadBorderright#42150"; //#42150
-        $k[$j++] = "borderright must be from -1 to 50"; //#42150
+    if (($_.borderleft < -1) || ($_.borderleft > 50)) { //#42151
+        $k[$j++] = "bwipp.renmaximatrixBadBorderleft#42150"; //#42150
+        $k[$j++] = "borderleft must be from -1 to 50"; //#42150
         bwipp_raiseerror(); //#42150
     } //#42150
-    if (($_.bordertop < -1) || ($_.bordertop > 50)) { //#42155
-        $k[$j++] = "bwipp.renmaximatrixBadBordertop#42154"; //#42154
-        $k[$j++] = "bordertop must be from -1 to 50"; //#42154
+    if (($_.borderright < -1) || ($_.borderright > 50)) { //#42155
+        $k[$j++] = "bwipp.renmaximatrixBadBorderright#42154"; //#42154
+        $k[$j++] = "borderright must be from -1 to 50"; //#42154
         bwipp_raiseerror(); //#42154
     } //#42154
-    if (($_.borderbottom < -1) || ($_.borderbottom > 50)) { //#42159
-        $k[$j++] = "bwipp.renmaximatrixBadBorderbottom#42158"; //#42158
-        $k[$j++] = "borderbottom must be from -1 to 50"; //#42158
+    if (($_.bordertop < -1) || ($_.bordertop > 50)) { //#42159
+        $k[$j++] = "bwipp.renmaximatrixBadBordertop#42158"; //#42158
+        $k[$j++] = "bordertop must be from -1 to 50"; //#42158
         bwipp_raiseerror(); //#42158
     } //#42158
-    if (($_.borderwidth < 0) || ($_.borderwidth > 10)) { //#42163
-        $k[$j++] = "bwipp.renmaximatrixBadBorderwidth#42162"; //#42162
-        $k[$j++] = "borderwidth must be from 0 to 10"; //#42162
+    if (($_.borderbottom < -1) || ($_.borderbottom > 50)) { //#42163
+        $k[$j++] = "bwipp.renmaximatrixBadBorderbottom#42162"; //#42162
+        $k[$j++] = "borderbottom must be from -1 to 50"; //#42162
         bwipp_raiseerror(); //#42162
     } //#42162
-    $$.save(); //#42165
-    if ($_.showborder) { //#42177
-        $_.tl = $a([-$f($_.borderleft + $_.borderwidth / 2), $f(29 + $_.bordertop + $_.borderwidth / 2)]) //#42169
-        $_.tr = $a([$f(30 + $_.borderright + $_.borderwidth / 2), $f(29 + $_.bordertop + $_.borderwidth / 2)]) //#42170
-        $_.bl = $a([-$f($_.borderleft + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)]) //#42171
-        $_.br = $a([$f(30 + $_.borderright + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)]) //#42172
-    } else { //#42177
-        $_.tl = $a([(-$_.borderleft) + $_.inkspread, (29 + $_.bordertop) - $_.inkspread]); //#42174
-        $_.tr = $a([(30 + $_.borderright) - $_.inkspread, (29 + $_.bordertop) - $_.inkspread]); //#42175
-        $_.bl = $a([(-$_.borderleft) + $_.inkspread, (-$_.borderbottom) + $_.inkspread]); //#42176
-        $_.br = $a([(30 + $_.borderright) - $_.inkspread, (-$_.borderbottom) + $_.inkspread]); //#42177
-    } //#42177
-    if ($_.showborder) { //#42191
-        $$.save(); //#42186
-        $$.newpath(); //#42187
-        $aload($_.bl); //#42187
-        var _q = $k[--$j]; //#42187
-        var _r = $k[--$j]; //#42187
-        $$.moveto(_r, _q); //#42187
-        var _v = $a([$_.br, $_.tr, $_.tl]); //#42187
-        for (var _w = 0, _x = _v.length; _w < _x; _w++) { //#42187
-            $aload($get(_v, _w)); //#42187
-            var _z = $k[--$j]; //#42187
-            var _10 = $k[--$j]; //#42187
-            $$.lineto(_10, _z); //#42187
-        } //#42187
-        $$.closepath(); //#42187
-        if ($ne($_.bordercolor, "unset")) { //#42188
-            $$.setcolor($_.bordercolor); //#42188
-        } //#42188
-        $$.setlinewidth($f($_.borderwidth - $_.inkspread * 2)) //#42189
-        $$.stroke(); //#42189
-        $$.restore(); //#42190
-    } //#42190
-    if ($ne($_.barcolor, "unset")) { //#42193
-        $$.setcolor($_.barcolor); //#42193
-    } //#42193
-    $$.showmaxicode($_.pixs); //#42195
-    $$.restore(); //#42197
-    $_ = $__; //#42199
+    if (($_.borderwidth < 0) || ($_.borderwidth > 10)) { //#42167
+        $k[$j++] = "bwipp.renmaximatrixBadBorderwidth#42166"; //#42166
+        $k[$j++] = "borderwidth must be from 0 to 10"; //#42166
+        bwipp_raiseerror(); //#42166
+    } //#42166
+    $$.save(); //#42169
+    if ($_.showborder) { //#42181
+        $_.tl = $a([-$f($_.borderleft + $_.borderwidth / 2), $f(29 + $_.bordertop + $_.borderwidth / 2)]) //#42173
+        $_.tr = $a([$f(30 + $_.borderright + $_.borderwidth / 2), $f(29 + $_.bordertop + $_.borderwidth / 2)]) //#42174
+        $_.bl = $a([-$f($_.borderleft + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)]) //#42175
+        $_.br = $a([$f(30 + $_.borderright + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)]) //#42176
+    } else { //#42181
+        $_.tl = $a([(-$_.borderleft) + $_.inkspread, (29 + $_.bordertop) - $_.inkspread]); //#42178
+        $_.tr = $a([(30 + $_.borderright) - $_.inkspread, (29 + $_.bordertop) - $_.inkspread]); //#42179
+        $_.bl = $a([(-$_.borderleft) + $_.inkspread, (-$_.borderbottom) + $_.inkspread]); //#42180
+        $_.br = $a([(30 + $_.borderright) - $_.inkspread, (-$_.borderbottom) + $_.inkspread]); //#42181
+    } //#42181
+    if ($_.showborder) { //#42195
+        $$.save(); //#42190
+        $$.newpath(); //#42191
+        $aload($_.bl); //#42191
+        var _q = $k[--$j]; //#42191
+        var _r = $k[--$j]; //#42191
+        $$.moveto(_r, _q); //#42191
+        var _v = $a([$_.br, $_.tr, $_.tl]); //#42191
+        for (var _w = 0, _x = _v.length; _w < _x; _w++) { //#42191
+            $aload($get(_v, _w)); //#42191
+            var _z = $k[--$j]; //#42191
+            var _10 = $k[--$j]; //#42191
+            $$.lineto(_10, _z); //#42191
+        } //#42191
+        $$.closepath(); //#42191
+        if ($ne($_.bordercolor, "unset")) { //#42192
+            $$.setcolor($_.bordercolor); //#42192
+        } //#42192
+        $$.setlinewidth($f($_.borderwidth - $_.inkspread * 2)) //#42193
+        $$.stroke(); //#42193
+        $$.restore(); //#42194
+    } //#42194
+    if ($ne($_.barcolor, "unset")) { //#42197
+        $$.setcolor($_.barcolor); //#42197
+    } //#42197
+    $$.showmaxicode($_.pixs); //#42199
+    $$.restore(); //#42201
+    $_ = $__; //#42203
 } //bwipp_renmaximatrix
 function bwipp_validatetext() {
     if (!bwipp_validatetext.globals) {
         var $__ = $_;
         $_ = bwipp_validatetext.globals = {};
-        //#42218
+        //#42222
         var _0 = new Map([
             ["offleft", 'offleft'],
             ["left", 'left'],
@@ -45695,8 +45697,8 @@ function bwipp_validatetext() {
             ["right", 'right'],
             ["offright", 'offright'],
             ["justify", 'justify']
-        ]); //#42222
-        $_.validatetext_xalignopts = _0; //#42223
+        ]); //#42226
+        $_.validatetext_xalignopts = _0; //#42227
         var _1 = new Map([
             ["above", 'above'],
             ["top", 'top'],
@@ -45704,137 +45706,137 @@ function bwipp_validatetext() {
             ["bottom", 'bottom'],
             ["below", 'below'],
             ["justify", 'justify']
-        ]); //#42226
-        $_.validatetext_yalignopts = _1; //#42227
+        ]); //#42230
+        $_.validatetext_yalignopts = _1; //#42231
         var _2 = new Map([
             ["forward", 'forward'],
             ["backward", 'backward'],
             ["upward", 'upward'],
             ["downward", 'downward']
-        ]); //#42230
-        $_.validatetext_directionoptions = _2; //#42231
+        ]); //#42234
+        $_.validatetext_directionoptions = _2; //#42235
         $_ = $__;
     }
-    //#42238
-    var $__ = $_; //#42240
-    $_ = Object.assign({}, $_, bwipp_validatetext.globals); //#42240
-    var _3 = $k[--$j]; //#42242
-    $_.td = _3; //#42242
-    var _4 = $k[--$j]; //#42243
-    $_.grp = _4; //#42243
-    $k[$j++] = 'pfx'; //#42250
-    if ($_.grp == 1) { //#42248
-        $k[$j++] = "text"; //#42246
-    } else { //#42248
-        if ($_.grp == 2) { //#42248
-            $k[$j++] = "extratext"; //#42247
-        } else { //#42248
-            var _7 = $s(5); //#42248
-            $puti(_7, 0, "text"); //#42248
-            $put(_7, 4, $_.grp + 48); //#42248
-            $k[$j++] = _7; //#42248
-        } //#42248
-    } //#42248
-    var _9 = $k[--$j]; //#42250
-    var _A = $k[--$j]; //#42250
-    $_[_A] = _9; //#42250
+    //#42242
+    var $__ = $_; //#42244
+    $_ = Object.assign({}, $_, bwipp_validatetext.globals); //#42244
+    var _3 = $k[--$j]; //#42246
+    $_.td = _3; //#42246
+    var _4 = $k[--$j]; //#42247
+    $_.grp = _4; //#42247
+    $k[$j++] = 'pfx'; //#42254
+    if ($_.grp == 1) { //#42252
+        $k[$j++] = "text"; //#42250
+    } else { //#42252
+        if ($_.grp == 2) { //#42252
+            $k[$j++] = "extratext"; //#42251
+        } else { //#42252
+            var _7 = $s(5); //#42252
+            $puti(_7, 0, "text"); //#42252
+            $put(_7, 4, $_.grp + 48); //#42252
+            $k[$j++] = _7; //#42252
+        } //#42252
+    } //#42252
+    var _9 = $k[--$j]; //#42254
+    var _A = $k[--$j]; //#42254
+    $_[_A] = _9; //#42254
     $_.mkerr = function() {
-        var _B = $k[--$j]; //#42253
-        $_.msgtail = _B; //#42253
-        var _C = $k[--$j]; //#42254
-        $_.prop = $cvs($s(128), _C); //#42254
-        var _G = $s(($_.pfx.length + 9) + $_.prop.length); //#42255
-        $puti(_G, 0, "bwipp."); //#42256
-        $puti(_G, 6, $_.pfx); //#42257
-        $puti(_G, $_.pfx.length + 6, "Bad"); //#42258
-        $puti(_G, $_.pfx.length + 9, $_.prop); //#42259
-        var _O = $s(($_.pfx.length + $_.prop.length) + $_.msgtail.length); //#42260
-        $puti(_O, 0, $_.pfx); //#42261
-        $puti(_O, $_.pfx.length, $_.prop); //#42262
-        $puti(_O, $_.pfx.length + $_.prop.length, $_.msgtail); //#42263
-        $k[$j++] = _G; //#42263
-        $k[$j++] = _O; //#42263
-    }; //#42263
-    for (var _V = 0; _V < 1; _V++) { //#42306
-        var _X = $get($_.td, "xalign"); //#42268
-        $k[$j++] = _X; //#42272
-        if ($ne(_X, "unset")) { //#42272
-            var _Y = $k[--$j]; //#42269
-            if (!$has($_.validatetext_xalignopts, _Y)) { //#42271
-                $k[$j++] = 'xalign'; //#42270
-                $k[$j++] = " must be offleft, left, center, right, offright or justify"; //#42270
-                $_.mkerr(); //#42270
-                $k[$j++] = false; //#42270
-                break; //#42270
-            } //#42270
-        } else { //#42272
-            $j--; //#42272
-        } //#42272
-        var _b = $get($_.td, "yalign"); //#42274
-        $k[$j++] = _b; //#42278
-        if ($ne(_b, "unset")) { //#42278
-            var _c = $k[--$j]; //#42275
-            if (!$has($_.validatetext_yalignopts, _c)) { //#42277
-                $k[$j++] = 'yalign'; //#42276
-                $k[$j++] = " must be above, top, center, bottom, below or justify"; //#42276
-                $_.mkerr(); //#42276
-                $k[$j++] = false; //#42276
-                break; //#42276
-            } //#42276
-        } else { //#42278
-            $j--; //#42278
-        } //#42278
-        if (!$has($_.validatetext_directionoptions, $get($_.td, "direction"))) { //#42282
-            $k[$j++] = 'direction'; //#42281
-            $k[$j++] = " must be forward, backward, upward or downward"; //#42281
-            $_.mkerr(); //#42281
-            $k[$j++] = false; //#42281
-            break; //#42281
-        } //#42281
-        var _i = $get($_.td, "size"); //#42284
-        if ((_i <= 0) || (_i >= 25)) { //#42286
-            $k[$j++] = 'size'; //#42285
-            $k[$j++] = " must be greater than zero and less than 25"; //#42285
+        var _B = $k[--$j]; //#42257
+        $_.msgtail = _B; //#42257
+        var _C = $k[--$j]; //#42258
+        $_.prop = $cvs($s(128), _C); //#42258
+        var _G = $s(($_.pfx.length + 9) + $_.prop.length); //#42259
+        $puti(_G, 0, "bwipp."); //#42260
+        $puti(_G, 6, $_.pfx); //#42261
+        $puti(_G, $_.pfx.length + 6, "Bad"); //#42262
+        $puti(_G, $_.pfx.length + 9, $_.prop); //#42263
+        var _O = $s(($_.pfx.length + $_.prop.length) + $_.msgtail.length); //#42264
+        $puti(_O, 0, $_.pfx); //#42265
+        $puti(_O, $_.pfx.length, $_.prop); //#42266
+        $puti(_O, $_.pfx.length + $_.prop.length, $_.msgtail); //#42267
+        $k[$j++] = _G; //#42267
+        $k[$j++] = _O; //#42267
+    }; //#42267
+    for (var _V = 0; _V < 1; _V++) { //#42310
+        var _X = $get($_.td, "xalign"); //#42272
+        $k[$j++] = _X; //#42276
+        if ($ne(_X, "unset")) { //#42276
+            var _Y = $k[--$j]; //#42273
+            if (!$has($_.validatetext_xalignopts, _Y)) { //#42275
+                $k[$j++] = 'xalign'; //#42274
+                $k[$j++] = " must be offleft, left, center, right, offright or justify"; //#42274
+                $_.mkerr(); //#42274
+                $k[$j++] = false; //#42274
+                break; //#42274
+            } //#42274
+        } else { //#42276
+            $j--; //#42276
+        } //#42276
+        var _b = $get($_.td, "yalign"); //#42278
+        $k[$j++] = _b; //#42282
+        if ($ne(_b, "unset")) { //#42282
+            var _c = $k[--$j]; //#42279
+            if (!$has($_.validatetext_yalignopts, _c)) { //#42281
+                $k[$j++] = 'yalign'; //#42280
+                $k[$j++] = " must be above, top, center, bottom, below or justify"; //#42280
+                $_.mkerr(); //#42280
+                $k[$j++] = false; //#42280
+                break; //#42280
+            } //#42280
+        } else { //#42282
+            $j--; //#42282
+        } //#42282
+        if (!$has($_.validatetext_directionoptions, $get($_.td, "direction"))) { //#42286
+            $k[$j++] = 'direction'; //#42285
+            $k[$j++] = " must be forward, backward, upward or downward"; //#42285
             $_.mkerr(); //#42285
             $k[$j++] = false; //#42285
             break; //#42285
         } //#42285
-        var _k = $get($_.td, "xoffset"); //#42288
-        if ((_k < -150) || (_k > 150)) { //#42290
-            $k[$j++] = 'xoffset'; //#42289
-            $k[$j++] = " must be from -150 to 150"; //#42289
+        var _i = $get($_.td, "size"); //#42288
+        if ((_i <= 0) || (_i >= 25)) { //#42290
+            $k[$j++] = 'size'; //#42289
+            $k[$j++] = " must be greater than zero and less than 25"; //#42289
             $_.mkerr(); //#42289
             $k[$j++] = false; //#42289
             break; //#42289
         } //#42289
-        var _m = $get($_.td, "yoffset"); //#42292
-        if ((_m < -150) || (_m > 150)) { //#42294
-            $k[$j++] = 'yoffset'; //#42293
+        var _k = $get($_.td, "xoffset"); //#42292
+        if ((_k < -150) || (_k > 150)) { //#42294
+            $k[$j++] = 'xoffset'; //#42293
             $k[$j++] = " must be from -150 to 150"; //#42293
             $_.mkerr(); //#42293
             $k[$j++] = false; //#42293
             break; //#42293
         } //#42293
-        var _o = $get($_.td, "gaps"); //#42296
-        if ((_o < -20) || (_o > 20)) { //#42298
-            $k[$j++] = 'gaps'; //#42297
-            $k[$j++] = " must be from -20 to 20"; //#42297
+        var _m = $get($_.td, "yoffset"); //#42296
+        if ((_m < -150) || (_m > 150)) { //#42298
+            $k[$j++] = 'yoffset'; //#42297
+            $k[$j++] = " must be from -150 to 150"; //#42297
             $_.mkerr(); //#42297
             $k[$j++] = false; //#42297
             break; //#42297
         } //#42297
-        var _q = $get($_.td, "linegaps"); //#42300
-        if ((_q < 0) || (_q > 20)) { //#42302
-            $k[$j++] = 'linegaps'; //#42301
-            $k[$j++] = " must be from 0 to 20"; //#42301
+        var _o = $get($_.td, "gaps"); //#42300
+        if ((_o < -20) || (_o > 20)) { //#42302
+            $k[$j++] = 'gaps'; //#42301
+            $k[$j++] = " must be from -20 to 20"; //#42301
             $_.mkerr(); //#42301
             $k[$j++] = false; //#42301
             break; //#42301
         } //#42301
-        $k[$j++] = true; //#42304
-        break; //#42304
-    } //#42304
-    $_ = $__; //#42308
+        var _q = $get($_.td, "linegaps"); //#42304
+        if ((_q < 0) || (_q > 20)) { //#42306
+            $k[$j++] = 'linegaps'; //#42305
+            $k[$j++] = " must be from 0 to 20"; //#42305
+            $_.mkerr(); //#42305
+            $k[$j++] = false; //#42305
+            break; //#42305
+        } //#42305
+        $k[$j++] = true; //#42308
+        break; //#42308
+    } //#42308
+    $_ = $__; //#42312
 } //bwipp_validatetext
 // bwip-js/barcode-ftr.js
 //

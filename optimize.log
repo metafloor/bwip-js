@@ -356672,9 +356672,9 @@ $put($_.args,"text1",$_.hri);//#39537
 
 <<<
 var _X=$_.args;//#39538
-$put(_X,"text1yoffset",-1);//#39538
+$put(_X,"text1yoffset",-3);//#39538
 >>>
-$put($_.args,"text1yoffset",-1);//#39538
+$put($_.args,"text1yoffset",-3);//#39538
 
 <<<
 var _Y=$_.args;//#39539
@@ -356684,9 +356684,9 @@ $put($_.args,"text1font","OCR-B");//#39539
 
 <<<
 var _Z=$_.args;//#39540
-$put(_Z,"text1size",5);//#39540
+$put(_Z,"text1size",10);//#39540
 >>>
-$put($_.args,"text1size",5);//#39540
+$put($_.args,"text1size",10);//#39540
 
 <<<
 var _a=$_.args;//#39542
@@ -357162,9 +357162,9 @@ $put($_.args,"text1",$_.hri);//#39787
 
 <<<
 var _X=$_.args;//#39788
-$put(_X,"text1yoffset",-4);//#39788
+$put(_X,"text1yoffset",-3);//#39788
 >>>
-$put($_.args,"text1yoffset",-4);//#39788
+$put($_.args,"text1yoffset",-3);//#39788
 
 <<<
 var _Y=$_.args;//#39789
@@ -357174,9 +357174,9 @@ $put($_.args,"text1font","OCR-B");//#39789
 
 <<<
 var _Z=$_.args;//#39790
-$put(_Z,"text1size",5);//#39790
+$put(_Z,"text1size",10);//#39790
 >>>
-$put($_.args,"text1size",5);//#39790
+$put($_.args,"text1size",10);//#39790
 
 <<<
 var _a=$_.args;//#39792
@@ -364117,1316 +364117,1316 @@ $_.inkspreadv=_1X/2;//#42022
 $_.inkspreadv=$_.inkspreadv/2;//#42022
 
 <<<
-var _1Y=$_.width;//#42027
-var _1Z=$_.pixx;//#42027
-var _1a=$_.height;//#42027
-var _1b=$_.pixy;//#42027
-$$.scale((_1Y/_1Z)*72,(_1a/_1b)*72);//#42027
+var _1Y=$_.width;//#42029
+var _1Z=$_.pixx;//#42029
+var _1a=$_.height;//#42029
+var _1b=$_.pixy;//#42029
+$$.scale((_1Y/_1Z)*72,(_1a/_1b)*72);//#42029
 >>>
-var _1Z=$_.pixx;//#42027
-var _1a=$_.height;//#42027
-var _1b=$_.pixy;//#42027
-$$.scale(($_.width/_1Z)*72,(_1a/_1b)*72);//#42027
+var _1Z=$_.pixx;//#42029
+var _1a=$_.height;//#42029
+var _1b=$_.pixy;//#42029
+$$.scale(($_.width/_1Z)*72,(_1a/_1b)*72);//#42029
 
 <<<
-var _1Z=$_.pixx;//#42027
-var _1a=$_.height;//#42027
-var _1b=$_.pixy;//#42027
-$$.scale(($_.width/_1Z)*72,(_1a/_1b)*72);//#42027
+var _1Z=$_.pixx;//#42029
+var _1a=$_.height;//#42029
+var _1b=$_.pixy;//#42029
+$$.scale(($_.width/_1Z)*72,(_1a/_1b)*72);//#42029
 >>>
-var _1a=$_.height;//#42027
-var _1b=$_.pixy;//#42027
-$$.scale(($_.width/$_.pixx)*72,(_1a/_1b)*72);//#42027
+var _1a=$_.height;//#42029
+var _1b=$_.pixy;//#42029
+$$.scale(($_.width/$_.pixx)*72,(_1a/_1b)*72);//#42029
 
 <<<
-var _1a=$_.height;//#42027
-var _1b=$_.pixy;//#42027
-$$.scale(($_.width/$_.pixx)*72,(_1a/_1b)*72);//#42027
+var _1a=$_.height;//#42029
+var _1b=$_.pixy;//#42029
+$$.scale(($_.width/$_.pixx)*72,(_1a/_1b)*72);//#42029
 >>>
-var _1b=$_.pixy;//#42027
-$$.scale(($_.width/$_.pixx)*72,($_.height/_1b)*72);//#42027
+var _1b=$_.pixy;//#42029
+$$.scale(($_.width/$_.pixx)*72,($_.height/_1b)*72);//#42029
 
 <<<
-var _1b=$_.pixy;//#42027
-$$.scale(($_.width/$_.pixx)*72,($_.height/_1b)*72);//#42027
+var _1b=$_.pixy;//#42029
+$$.scale(($_.width/$_.pixx)*72,($_.height/_1b)*72);//#42029
 >>>
-$$.scale(($_.width/$_.pixx)*72,($_.height/$_.pixy)*72);//#42027
+$$.scale(($_.width/$_.pixx)*72,($_.height/$_.pixy)*72);//#42029
 
 <<<
-var _1c=$_.showborder;//#42032
-if(_1c){//#42041
+var _1c=$_.showborder;//#42034
+if(_1c){//#42043
 >>>
-if($_.showborder){//#42041
+if($_.showborder){//#42043
 
 <<<
-var _1d=$_.borderleft;//#42033
-var _1e=$_.borderwidth;//#42033
-var _1f=$_.pixy;//#42033
-var _1g=$_.bordertop;//#42033
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f(_1d+(_1e/2))),$f((_1f+_1g)+(_1h/2))]);//#42033
+var _1d=$_.borderleft;//#42035
+var _1e=$_.borderwidth;//#42035
+var _1f=$_.pixy;//#42035
+var _1g=$_.bordertop;//#42035
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f(_1d+(_1e/2))),$f((_1f+_1g)+(_1h/2))]);//#42035
 >>>
-var _1e=$_.borderwidth;//#42033
-var _1f=$_.pixy;//#42033
-var _1g=$_.bordertop;//#42033
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f($_.borderleft+(_1e/2))),$f((_1f+_1g)+(_1h/2))]);//#42033
+var _1e=$_.borderwidth;//#42035
+var _1f=$_.pixy;//#42035
+var _1g=$_.bordertop;//#42035
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f($_.borderleft+(_1e/2))),$f((_1f+_1g)+(_1h/2))]);//#42035
 
 <<<
-var _1e=$_.borderwidth;//#42033
-var _1f=$_.pixy;//#42033
-var _1g=$_.bordertop;//#42033
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f($_.borderleft+(_1e/2))),$f((_1f+_1g)+(_1h/2))]);//#42033
+var _1e=$_.borderwidth;//#42035
+var _1f=$_.pixy;//#42035
+var _1g=$_.bordertop;//#42035
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f($_.borderleft+(_1e/2))),$f((_1f+_1g)+(_1h/2))]);//#42035
 >>>
-var _1f=$_.pixy;//#42033
-var _1g=$_.bordertop;//#42033
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((_1f+_1g)+(_1h/2))]);//#42033
+var _1f=$_.pixy;//#42035
+var _1g=$_.bordertop;//#42035
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((_1f+_1g)+(_1h/2))]);//#42035
 
 <<<
-var _1f=$_.pixy;//#42033
-var _1g=$_.bordertop;//#42033
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((_1f+_1g)+(_1h/2))]);//#42033
+var _1f=$_.pixy;//#42035
+var _1g=$_.bordertop;//#42035
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((_1f+_1g)+(_1h/2))]);//#42035
 >>>
-var _1g=$_.bordertop;//#42033
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+_1g)+(_1h/2))]);//#42033
+var _1g=$_.bordertop;//#42035
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+_1g)+(_1h/2))]);//#42035
 
 <<<
-var _1g=$_.bordertop;//#42033
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+_1g)+(_1h/2))]);//#42033
+var _1g=$_.bordertop;//#42035
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+_1g)+(_1h/2))]);//#42035
 >>>
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+$_.bordertop)+(_1h/2))]);//#42033
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+$_.bordertop)+(_1h/2))]);//#42035
 
 <<<
-var _1h=$_.borderwidth;//#42033
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+$_.bordertop)+(_1h/2))]);//#42033
+var _1h=$_.borderwidth;//#42035
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+$_.bordertop)+(_1h/2))]);//#42035
 >>>
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+$_.bordertop)+($_.borderwidth/2))]);//#42033
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+$_.bordertop)+($_.borderwidth/2))]);//#42035
 
 <<<
-var _1i=$_.pixx;//#42034
-var _1j=$_.borderright;//#42034
-var _1k=$_.borderwidth;//#42034
-var _1l=$_.pixy;//#42034
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f((_1i+_1j)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42034
+var _1i=$_.pixx;//#42036
+var _1j=$_.borderright;//#42036
+var _1k=$_.borderwidth;//#42036
+var _1l=$_.pixy;//#42036
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f((_1i+_1j)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42036
 >>>
-var _1j=$_.borderright;//#42034
-var _1k=$_.borderwidth;//#42034
-var _1l=$_.pixy;//#42034
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+_1j)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42034
+var _1j=$_.borderright;//#42036
+var _1k=$_.borderwidth;//#42036
+var _1l=$_.pixy;//#42036
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+_1j)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42036
 
 <<<
-var _1j=$_.borderright;//#42034
-var _1k=$_.borderwidth;//#42034
-var _1l=$_.pixy;//#42034
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+_1j)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42034
+var _1j=$_.borderright;//#42036
+var _1k=$_.borderwidth;//#42036
+var _1l=$_.pixy;//#42036
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+_1j)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42036
 >>>
-var _1k=$_.borderwidth;//#42034
-var _1l=$_.pixy;//#42034
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+$_.borderright)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42034
+var _1k=$_.borderwidth;//#42036
+var _1l=$_.pixy;//#42036
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+$_.borderright)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42036
 
 <<<
-var _1k=$_.borderwidth;//#42034
-var _1l=$_.pixy;//#42034
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+$_.borderright)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42034
+var _1k=$_.borderwidth;//#42036
+var _1l=$_.pixy;//#42036
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+$_.borderright)+(_1k/2)),$f((_1l+_1m)+(_1n/2))]);//#42036
 >>>
-var _1l=$_.pixy;//#42034
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f((_1l+_1m)+(_1n/2))]);//#42034
+var _1l=$_.pixy;//#42036
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f((_1l+_1m)+(_1n/2))]);//#42036
 
 <<<
-var _1l=$_.pixy;//#42034
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f((_1l+_1m)+(_1n/2))]);//#42034
+var _1l=$_.pixy;//#42036
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f((_1l+_1m)+(_1n/2))]);//#42036
 >>>
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+_1m)+(_1n/2))]);//#42034
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+_1m)+(_1n/2))]);//#42036
 
 <<<
-var _1m=$_.bordertop;//#42034
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+_1m)+(_1n/2))]);//#42034
+var _1m=$_.bordertop;//#42036
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+_1m)+(_1n/2))]);//#42036
 >>>
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+$_.bordertop)+(_1n/2))]);//#42034
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+$_.bordertop)+(_1n/2))]);//#42036
 
 <<<
-var _1n=$_.borderwidth;//#42034
-$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+$_.bordertop)+(_1n/2))]);//#42034
+var _1n=$_.borderwidth;//#42036
+$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+$_.bordertop)+(_1n/2))]);//#42036
 >>>
-$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+$_.bordertop)+($_.borderwidth/2))]);//#42034
+$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+$_.bordertop)+($_.borderwidth/2))]);//#42036
 
 <<<
-var _1o=$_.borderleft;//#42035
-var _1p=$_.borderwidth;//#42035
-var _1q=$_.borderbottom;//#42035
-var _1r=$_.borderwidth;//#42035
-$_.bl=$a([-($f(_1o+(_1p/2))),-($f(_1q+(_1r/2)))]);//#42035
+var _1o=$_.borderleft;//#42037
+var _1p=$_.borderwidth;//#42037
+var _1q=$_.borderbottom;//#42037
+var _1r=$_.borderwidth;//#42037
+$_.bl=$a([-($f(_1o+(_1p/2))),-($f(_1q+(_1r/2)))]);//#42037
 >>>
-var _1p=$_.borderwidth;//#42035
-var _1q=$_.borderbottom;//#42035
-var _1r=$_.borderwidth;//#42035
-$_.bl=$a([-($f($_.borderleft+(_1p/2))),-($f(_1q+(_1r/2)))]);//#42035
+var _1p=$_.borderwidth;//#42037
+var _1q=$_.borderbottom;//#42037
+var _1r=$_.borderwidth;//#42037
+$_.bl=$a([-($f($_.borderleft+(_1p/2))),-($f(_1q+(_1r/2)))]);//#42037
 
 <<<
-var _1p=$_.borderwidth;//#42035
-var _1q=$_.borderbottom;//#42035
-var _1r=$_.borderwidth;//#42035
-$_.bl=$a([-($f($_.borderleft+(_1p/2))),-($f(_1q+(_1r/2)))]);//#42035
+var _1p=$_.borderwidth;//#42037
+var _1q=$_.borderbottom;//#42037
+var _1r=$_.borderwidth;//#42037
+$_.bl=$a([-($f($_.borderleft+(_1p/2))),-($f(_1q+(_1r/2)))]);//#42037
 >>>
-var _1q=$_.borderbottom;//#42035
-var _1r=$_.borderwidth;//#42035
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f(_1q+(_1r/2)))]);//#42035
+var _1q=$_.borderbottom;//#42037
+var _1r=$_.borderwidth;//#42037
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f(_1q+(_1r/2)))]);//#42037
 
 <<<
-var _1q=$_.borderbottom;//#42035
-var _1r=$_.borderwidth;//#42035
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f(_1q+(_1r/2)))]);//#42035
+var _1q=$_.borderbottom;//#42037
+var _1r=$_.borderwidth;//#42037
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f(_1q+(_1r/2)))]);//#42037
 >>>
-var _1r=$_.borderwidth;//#42035
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+(_1r/2)))]);//#42035
+var _1r=$_.borderwidth;//#42037
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+(_1r/2)))]);//#42037
 
 <<<
-var _1r=$_.borderwidth;//#42035
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+(_1r/2)))]);//#42035
+var _1r=$_.borderwidth;//#42037
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+(_1r/2)))]);//#42037
 >>>
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42035
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42037
 
 <<<
-var _1s=$_.pixx;//#42036
-var _1t=$_.borderright;//#42036
-var _1u=$_.borderwidth;//#42036
-var _1v=$_.borderbottom;//#42036
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f((_1s+_1t)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42036
+var _1s=$_.pixx;//#42038
+var _1t=$_.borderright;//#42038
+var _1u=$_.borderwidth;//#42038
+var _1v=$_.borderbottom;//#42038
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f((_1s+_1t)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42038
 >>>
-var _1t=$_.borderright;//#42036
-var _1u=$_.borderwidth;//#42036
-var _1v=$_.borderbottom;//#42036
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f(($_.pixx+_1t)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42036
+var _1t=$_.borderright;//#42038
+var _1u=$_.borderwidth;//#42038
+var _1v=$_.borderbottom;//#42038
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f(($_.pixx+_1t)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42038
 
 <<<
-var _1t=$_.borderright;//#42036
-var _1u=$_.borderwidth;//#42036
-var _1v=$_.borderbottom;//#42036
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f(($_.pixx+_1t)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42036
+var _1t=$_.borderright;//#42038
+var _1u=$_.borderwidth;//#42038
+var _1v=$_.borderbottom;//#42038
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f(($_.pixx+_1t)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42038
 >>>
-var _1u=$_.borderwidth;//#42036
-var _1v=$_.borderbottom;//#42036
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f(($_.pixx+$_.borderright)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42036
+var _1u=$_.borderwidth;//#42038
+var _1v=$_.borderbottom;//#42038
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f(($_.pixx+$_.borderright)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42038
 
 <<<
-var _1u=$_.borderwidth;//#42036
-var _1v=$_.borderbottom;//#42036
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f(($_.pixx+$_.borderright)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42036
+var _1u=$_.borderwidth;//#42038
+var _1v=$_.borderbottom;//#42038
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f(($_.pixx+$_.borderright)+(_1u/2)),-($f(_1v+(_1w/2)))]);//#42038
 >>>
-var _1v=$_.borderbottom;//#42036
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f(_1v+(_1w/2)))]);//#42036
+var _1v=$_.borderbottom;//#42038
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f(_1v+(_1w/2)))]);//#42038
 
 <<<
-var _1v=$_.borderbottom;//#42036
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f(_1v+(_1w/2)))]);//#42036
+var _1v=$_.borderbottom;//#42038
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f(_1v+(_1w/2)))]);//#42038
 >>>
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+(_1w/2)))]);//#42036
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+(_1w/2)))]);//#42038
 
 <<<
-var _1w=$_.borderwidth;//#42036
-$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+(_1w/2)))]);//#42036
+var _1w=$_.borderwidth;//#42038
+$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+(_1w/2)))]);//#42038
 >>>
-$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42036
+$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42038
 
 <<<
-var _1x=$_.borderleft;//#42038
-var _1y=$_.inkspread;//#42038
-var _1z=$_.pixy;//#42038
-var _20=$_.bordertop;//#42038
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-_1x)+_1y),$f((_1z+_20)-_21)]);//#42038
+var _1x=$_.borderleft;//#42040
+var _1y=$_.inkspread;//#42040
+var _1z=$_.pixy;//#42040
+var _20=$_.bordertop;//#42040
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-_1x)+_1y),$f((_1z+_20)-_21)]);//#42040
 >>>
-var _1y=$_.inkspread;//#42038
-var _1z=$_.pixy;//#42038
-var _20=$_.bordertop;//#42038
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-$_.borderleft)+_1y),$f((_1z+_20)-_21)]);//#42038
+var _1y=$_.inkspread;//#42040
+var _1z=$_.pixy;//#42040
+var _20=$_.bordertop;//#42040
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-$_.borderleft)+_1y),$f((_1z+_20)-_21)]);//#42040
 
 <<<
-var _1y=$_.inkspread;//#42038
-var _1z=$_.pixy;//#42038
-var _20=$_.bordertop;//#42038
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-$_.borderleft)+_1y),$f((_1z+_20)-_21)]);//#42038
+var _1y=$_.inkspread;//#42040
+var _1z=$_.pixy;//#42040
+var _20=$_.bordertop;//#42040
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-$_.borderleft)+_1y),$f((_1z+_20)-_21)]);//#42040
 >>>
-var _1z=$_.pixy;//#42038
-var _20=$_.bordertop;//#42038
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f((_1z+_20)-_21)]);//#42038
+var _1z=$_.pixy;//#42040
+var _20=$_.bordertop;//#42040
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f((_1z+_20)-_21)]);//#42040
 
 <<<
-var _1z=$_.pixy;//#42038
-var _20=$_.bordertop;//#42038
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f((_1z+_20)-_21)]);//#42038
+var _1z=$_.pixy;//#42040
+var _20=$_.bordertop;//#42040
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f((_1z+_20)-_21)]);//#42040
 >>>
-var _20=$_.bordertop;//#42038
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+_20)-_21)]);//#42038
+var _20=$_.bordertop;//#42040
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+_20)-_21)]);//#42040
 
 <<<
-var _20=$_.bordertop;//#42038
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+_20)-_21)]);//#42038
+var _20=$_.bordertop;//#42040
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+_20)-_21)]);//#42040
 >>>
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+$_.bordertop)-_21)]);//#42038
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+$_.bordertop)-_21)]);//#42040
 
 <<<
-var _21=$_.inkspread;//#42038
-$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+$_.bordertop)-_21)]);//#42038
+var _21=$_.inkspread;//#42040
+$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+$_.bordertop)-_21)]);//#42040
 >>>
-$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+$_.bordertop)-$_.inkspread)]);//#42038
+$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+$_.bordertop)-$_.inkspread)]);//#42040
 
 <<<
-var _22=$_.pixx;//#42039
-var _23=$_.borderright;//#42039
-var _24=$_.inkspread;//#42039
-var _25=$_.pixy;//#42039
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f((_22+_23)-_24),$f((_25+_26)-_27)]);//#42039
+var _22=$_.pixx;//#42041
+var _23=$_.borderright;//#42041
+var _24=$_.inkspread;//#42041
+var _25=$_.pixy;//#42041
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f((_22+_23)-_24),$f((_25+_26)-_27)]);//#42041
 >>>
-var _23=$_.borderright;//#42039
-var _24=$_.inkspread;//#42039
-var _25=$_.pixy;//#42039
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+_23)-_24),$f((_25+_26)-_27)]);//#42039
+var _23=$_.borderright;//#42041
+var _24=$_.inkspread;//#42041
+var _25=$_.pixy;//#42041
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+_23)-_24),$f((_25+_26)-_27)]);//#42041
 
 <<<
-var _23=$_.borderright;//#42039
-var _24=$_.inkspread;//#42039
-var _25=$_.pixy;//#42039
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+_23)-_24),$f((_25+_26)-_27)]);//#42039
+var _23=$_.borderright;//#42041
+var _24=$_.inkspread;//#42041
+var _25=$_.pixy;//#42041
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+_23)-_24),$f((_25+_26)-_27)]);//#42041
 >>>
-var _24=$_.inkspread;//#42039
-var _25=$_.pixy;//#42039
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+$_.borderright)-_24),$f((_25+_26)-_27)]);//#42039
+var _24=$_.inkspread;//#42041
+var _25=$_.pixy;//#42041
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+$_.borderright)-_24),$f((_25+_26)-_27)]);//#42041
 
 <<<
-var _24=$_.inkspread;//#42039
-var _25=$_.pixy;//#42039
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+$_.borderright)-_24),$f((_25+_26)-_27)]);//#42039
+var _24=$_.inkspread;//#42041
+var _25=$_.pixy;//#42041
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+$_.borderright)-_24),$f((_25+_26)-_27)]);//#42041
 >>>
-var _25=$_.pixy;//#42039
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((_25+_26)-_27)]);//#42039
+var _25=$_.pixy;//#42041
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((_25+_26)-_27)]);//#42041
 
 <<<
-var _25=$_.pixy;//#42039
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((_25+_26)-_27)]);//#42039
+var _25=$_.pixy;//#42041
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((_25+_26)-_27)]);//#42041
 >>>
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+_26)-_27)]);//#42039
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+_26)-_27)]);//#42041
 
 <<<
-var _26=$_.bordertop;//#42039
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+_26)-_27)]);//#42039
+var _26=$_.bordertop;//#42041
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+_26)-_27)]);//#42041
 >>>
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+$_.bordertop)-_27)]);//#42039
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+$_.bordertop)-_27)]);//#42041
 
 <<<
-var _27=$_.inkspread;//#42039
-$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+$_.bordertop)-_27)]);//#42039
+var _27=$_.inkspread;//#42041
+$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+$_.bordertop)-_27)]);//#42041
 >>>
-$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+$_.bordertop)-$_.inkspread)]);//#42039
+$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+$_.bordertop)-$_.inkspread)]);//#42041
 
 <<<
-var _28=$_.borderleft;//#42040
-var _29=$_.inkspread;//#42040
-var _2A=$_.borderbottom;//#42040
-var _2B=$_.inkspread;//#42040
-$_.bl=$a([$f((-_28)+_29),$f((-_2A)+_2B)]);//#42040
+var _28=$_.borderleft;//#42042
+var _29=$_.inkspread;//#42042
+var _2A=$_.borderbottom;//#42042
+var _2B=$_.inkspread;//#42042
+$_.bl=$a([$f((-_28)+_29),$f((-_2A)+_2B)]);//#42042
 >>>
-var _29=$_.inkspread;//#42040
-var _2A=$_.borderbottom;//#42040
-var _2B=$_.inkspread;//#42040
-$_.bl=$a([$f((-$_.borderleft)+_29),$f((-_2A)+_2B)]);//#42040
+var _29=$_.inkspread;//#42042
+var _2A=$_.borderbottom;//#42042
+var _2B=$_.inkspread;//#42042
+$_.bl=$a([$f((-$_.borderleft)+_29),$f((-_2A)+_2B)]);//#42042
 
 <<<
-var _29=$_.inkspread;//#42040
-var _2A=$_.borderbottom;//#42040
-var _2B=$_.inkspread;//#42040
-$_.bl=$a([$f((-$_.borderleft)+_29),$f((-_2A)+_2B)]);//#42040
+var _29=$_.inkspread;//#42042
+var _2A=$_.borderbottom;//#42042
+var _2B=$_.inkspread;//#42042
+$_.bl=$a([$f((-$_.borderleft)+_29),$f((-_2A)+_2B)]);//#42042
 >>>
-var _2A=$_.borderbottom;//#42040
-var _2B=$_.inkspread;//#42040
-$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-_2A)+_2B)]);//#42040
+var _2A=$_.borderbottom;//#42042
+var _2B=$_.inkspread;//#42042
+$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-_2A)+_2B)]);//#42042
 
 <<<
-var _2A=$_.borderbottom;//#42040
-var _2B=$_.inkspread;//#42040
-$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-_2A)+_2B)]);//#42040
+var _2A=$_.borderbottom;//#42042
+var _2B=$_.inkspread;//#42042
+$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-_2A)+_2B)]);//#42042
 >>>
-var _2B=$_.inkspread;//#42040
-$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-$_.borderbottom)+_2B)]);//#42040
+var _2B=$_.inkspread;//#42042
+$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-$_.borderbottom)+_2B)]);//#42042
 
 <<<
-var _2B=$_.inkspread;//#42040
-$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-$_.borderbottom)+_2B)]);//#42040
+var _2B=$_.inkspread;//#42042
+$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-$_.borderbottom)+_2B)]);//#42042
 >>>
-$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-$_.borderbottom)+$_.inkspread)]);//#42040
+$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-$_.borderbottom)+$_.inkspread)]);//#42042
 
 <<<
-var _2C=$_.pixx;//#42041
-var _2D=$_.borderright;//#42041
-var _2E=$_.inkspread;//#42041
-var _2F=$_.borderbottom;//#42041
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f((_2C+_2D)-_2E),$f((-_2F)+_2G)]);//#42041
+var _2C=$_.pixx;//#42043
+var _2D=$_.borderright;//#42043
+var _2E=$_.inkspread;//#42043
+var _2F=$_.borderbottom;//#42043
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f((_2C+_2D)-_2E),$f((-_2F)+_2G)]);//#42043
 >>>
-var _2D=$_.borderright;//#42041
-var _2E=$_.inkspread;//#42041
-var _2F=$_.borderbottom;//#42041
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f(($_.pixx+_2D)-_2E),$f((-_2F)+_2G)]);//#42041
+var _2D=$_.borderright;//#42043
+var _2E=$_.inkspread;//#42043
+var _2F=$_.borderbottom;//#42043
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f(($_.pixx+_2D)-_2E),$f((-_2F)+_2G)]);//#42043
 
 <<<
-var _2D=$_.borderright;//#42041
-var _2E=$_.inkspread;//#42041
-var _2F=$_.borderbottom;//#42041
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f(($_.pixx+_2D)-_2E),$f((-_2F)+_2G)]);//#42041
+var _2D=$_.borderright;//#42043
+var _2E=$_.inkspread;//#42043
+var _2F=$_.borderbottom;//#42043
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f(($_.pixx+_2D)-_2E),$f((-_2F)+_2G)]);//#42043
 >>>
-var _2E=$_.inkspread;//#42041
-var _2F=$_.borderbottom;//#42041
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f(($_.pixx+$_.borderright)-_2E),$f((-_2F)+_2G)]);//#42041
+var _2E=$_.inkspread;//#42043
+var _2F=$_.borderbottom;//#42043
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f(($_.pixx+$_.borderright)-_2E),$f((-_2F)+_2G)]);//#42043
 
 <<<
-var _2E=$_.inkspread;//#42041
-var _2F=$_.borderbottom;//#42041
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f(($_.pixx+$_.borderright)-_2E),$f((-_2F)+_2G)]);//#42041
+var _2E=$_.inkspread;//#42043
+var _2F=$_.borderbottom;//#42043
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f(($_.pixx+$_.borderright)-_2E),$f((-_2F)+_2G)]);//#42043
 >>>
-var _2F=$_.borderbottom;//#42041
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-_2F)+_2G)]);//#42041
+var _2F=$_.borderbottom;//#42043
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-_2F)+_2G)]);//#42043
 
 <<<
-var _2F=$_.borderbottom;//#42041
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-_2F)+_2G)]);//#42041
+var _2F=$_.borderbottom;//#42043
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-_2F)+_2G)]);//#42043
 >>>
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-$_.borderbottom)+_2G)]);//#42041
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-$_.borderbottom)+_2G)]);//#42043
 
 <<<
-var _2G=$_.inkspread;//#42041
-$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-$_.borderbottom)+_2G)]);//#42041
+var _2G=$_.inkspread;//#42043
+$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-$_.borderbottom)+_2G)]);//#42043
 >>>
-$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-$_.borderbottom)+$_.inkspread)]);//#42041
+$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-$_.borderbottom)+$_.inkspread)]);//#42043
 
 <<<
-var _2H=$_.showborder;//#42049
-if(_2H){//#42055
+var _2H=$_.showborder;//#42051
+if(_2H){//#42057
 >>>
-if($_.showborder){//#42055
+if($_.showborder){//#42057
 
 <<<
-var _2I=$_.bl;//#42051
-$aload(_2I);//#42051
+var _2I=$_.bl;//#42053
+$aload(_2I);//#42053
 >>>
-$aload($_.bl);//#42051
+$aload($_.bl);//#42053
 
 <<<
-var _2L=$_.br;//#42051
-var _2M=$_.tr;//#42051
-var _2N=$_.tl;//#42051
-var _2O=$a([_2L,_2M,_2N]);//#42051
+var _2L=$_.br;//#42053
+var _2M=$_.tr;//#42053
+var _2N=$_.tl;//#42053
+var _2O=$a([_2L,_2M,_2N]);//#42053
 >>>
-var _2M=$_.tr;//#42051
-var _2N=$_.tl;//#42051
-var _2O=$a([$_.br,_2M,_2N]);//#42051
+var _2M=$_.tr;//#42053
+var _2N=$_.tl;//#42053
+var _2O=$a([$_.br,_2M,_2N]);//#42053
 
 <<<
-var _2M=$_.tr;//#42051
-var _2N=$_.tl;//#42051
-var _2O=$a([$_.br,_2M,_2N]);//#42051
+var _2M=$_.tr;//#42053
+var _2N=$_.tl;//#42053
+var _2O=$a([$_.br,_2M,_2N]);//#42053
 >>>
-var _2N=$_.tl;//#42051
-var _2O=$a([$_.br,$_.tr,_2N]);//#42051
+var _2N=$_.tl;//#42053
+var _2O=$a([$_.br,$_.tr,_2N]);//#42053
 
 <<<
-var _2N=$_.tl;//#42051
-var _2O=$a([$_.br,$_.tr,_2N]);//#42051
+var _2N=$_.tl;//#42053
+var _2O=$a([$_.br,$_.tr,_2N]);//#42053
 >>>
-var _2O=$a([$_.br,$_.tr,$_.tl]);//#42051
+var _2O=$a([$_.br,$_.tr,$_.tl]);//#42053
 
 <<<
-var _2R=$get(_2O,_2P);//#42051
-$aload(_2R);//#42051
+var _2R=$get(_2O,_2P);//#42053
+$aload(_2R);//#42053
 >>>
-$aload($get(_2O,_2P));//#42051
+$aload($get(_2O,_2P));//#42053
 
 <<<
-var _2U=$_.bordercolor;//#42052
-if($ne(_2U,"unset")){//#42052
+var _2U=$_.bordercolor;//#42054
+if($ne(_2U,"unset")){//#42054
 >>>
-if($ne($_.bordercolor,"unset")){//#42052
+if($ne($_.bordercolor,"unset")){//#42054
 
 <<<
-var _2V=$_.bordercolor;//#42052
-$$.setcolor(_2V);//#42052
+var _2V=$_.bordercolor;//#42054
+$$.setcolor(_2V);//#42054
 >>>
-$$.setcolor($_.bordercolor);//#42052
+$$.setcolor($_.bordercolor);//#42054
 
 <<<
-var _2W=$_.borderwidth;//#42053
-var _2X=$_.inkspread;//#42053
-$$.setlinewidth($f(_2W-(_2X*2)));//#42053
+var _2W=$_.borderwidth;//#42055
+var _2X=$_.inkspread;//#42055
+$$.setlinewidth($f(_2W-(_2X*2)));//#42055
 >>>
-var _2X=$_.inkspread;//#42053
-$$.setlinewidth($f($_.borderwidth-(_2X*2)));//#42053
+var _2X=$_.inkspread;//#42055
+$$.setlinewidth($f($_.borderwidth-(_2X*2)));//#42055
 
 <<<
-var _2X=$_.inkspread;//#42053
-$$.setlinewidth($f($_.borderwidth-(_2X*2)));//#42053
+var _2X=$_.inkspread;//#42055
+$$.setlinewidth($f($_.borderwidth-(_2X*2)));//#42055
 >>>
-$$.setlinewidth($f($_.borderwidth-($_.inkspread*2)));//#42053
+$$.setlinewidth($f($_.borderwidth-($_.inkspread*2)));//#42055
 
 <<<
-var _2Y=$_.colormap;//#42058
-if($eq(_2Y,"unset")){//#42060
+var _2Y=$_.colormap;//#42060
+if($eq(_2Y,"unset")){//#42062
 >>>
-if($eq($_.colormap,"unset")){//#42060
+if($eq($_.colormap,"unset")){//#42062
 
 <<<
-var _2Z=$_.barcolor;//#42059
-$_.colormap=new Map([[1,_2Z]]);//#42059
+var _2Z=$_.barcolor;//#42061
+$_.colormap=new Map([[1,_2Z]]);//#42061
 >>>
-$_.colormap=new Map([[1,$_.barcolor]]);//#42059
+$_.colormap=new Map([[1,$_.barcolor]]);//#42061
 
 <<<
-var _2l=$get(_2i,_2j);//#42069
-var _2m=$_.key;//#42069
-var _2n=$eq(_2l,_2m)?1:0;//#42069
+var _2l=$get(_2i,_2j);//#42071
+var _2m=$_.key;//#42071
+var _2n=$eq(_2l,_2m)?1:0;//#42071
 >>>
-var _2m=$_.key;//#42069
-var _2n=$eq($get(_2i,_2j),_2m)?1:0;//#42069
+var _2m=$_.key;//#42071
+var _2n=$eq($get(_2i,_2j),_2m)?1:0;//#42071
 
 <<<
-var _2m=$_.key;//#42069
-var _2n=$eq($get(_2i,_2j),_2m)?1:0;//#42069
+var _2m=$_.key;//#42071
+var _2n=$eq($get(_2i,_2j),_2m)?1:0;//#42071
 >>>
-var _2n=$eq($get(_2i,_2j),$_.key)?1:0;//#42069
+var _2n=$eq($get(_2i,_2j),$_.key)?1:0;//#42071
 
 <<<
-var _2p=$_.dotty;//#42070
-$k[$j++]=_2o;//#42070
-if(_2p){//#42070
+var _2p=$_.dotty;//#42072
+$k[$j++]=_2o;//#42072
+if(_2p){//#42072
 >>>
-$k[$j++]=_2o;//#42070
-if($_.dotty){//#42070
+$k[$j++]=_2o;//#42072
+if($_.dotty){//#42072
 
 <<<
-var _2s=$_.textopts;//#42078
-var _2t=$_.textgrp;//#42078
-var _2u=$get(_2s,_2t-1);//#42078
+var _2s=$_.textopts;//#42082
+var _2t=$_.textgrp;//#42082
+var _2u=$get(_2s,_2t-1);//#42082
 >>>
-var _2t=$_.textgrp;//#42078
-var _2u=$get($_.textopts,_2t-1);//#42078
+var _2t=$_.textgrp;//#42082
+var _2u=$get($_.textopts,_2t-1);//#42082
 
 <<<
-var _2t=$_.textgrp;//#42078
-var _2u=$get($_.textopts,_2t-1);//#42078
+var _2t=$_.textgrp;//#42082
+var _2u=$get($_.textopts,_2t-1);//#42082
 >>>
-var _2u=$get($_.textopts,$_.textgrp-1);//#42078
+var _2u=$get($_.textopts,$_.textgrp-1);//#42082
 
 <<<
-var _2u=$get($_.textopts,$_.textgrp-1);//#42078
-var _2v=$get(_2u,"");//#42078
+var _2u=$get($_.textopts,$_.textgrp-1);//#42082
+var _2v=$get(_2u,"");//#42082
 >>>
-var _2v=$get($get($_.textopts,$_.textgrp-1),"");//#42078
+var _2v=$get($get($_.textopts,$_.textgrp-1),"");//#42082
 
 <<<
-var _2w=$_.textgrp;//#42079
-var _2x=$_.txt;//#42079
-var _2y=$_.includetext;//#42079
-if((_2v.length!=0)||(((_2w==1)&&(_2x.length>0))&&_2y)){//#42086
+var _2w=$_.textgrp;//#42083
+var _2x=$_.txt;//#42083
+var _2y=$_.includetext;//#42083
+if((_2v.length!=0)||(((_2w==1)&&(_2x.length>0))&&_2y)){//#42090
 >>>
-var _2x=$_.txt;//#42079
-var _2y=$_.includetext;//#42079
-if((_2v.length!=0)||((($_.textgrp==1)&&(_2x.length>0))&&_2y)){//#42086
+var _2x=$_.txt;//#42083
+var _2y=$_.includetext;//#42083
+if((_2v.length!=0)||((($_.textgrp==1)&&(_2x.length>0))&&_2y)){//#42090
 
 <<<
-var _2x=$_.txt;//#42079
-var _2y=$_.includetext;//#42079
-if((_2v.length!=0)||((($_.textgrp==1)&&(_2x.length>0))&&_2y)){//#42086
+var _2x=$_.txt;//#42083
+var _2y=$_.includetext;//#42083
+if((_2v.length!=0)||((($_.textgrp==1)&&(_2x.length>0))&&_2y)){//#42090
 >>>
-var _2y=$_.includetext;//#42079
-if((_2v.length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&_2y)){//#42086
+var _2y=$_.includetext;//#42083
+if((_2v.length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&_2y)){//#42090
 
 <<<
-var _2y=$_.includetext;//#42079
-if((_2v.length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&_2y)){//#42086
+var _2y=$_.includetext;//#42083
+if((_2v.length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&_2y)){//#42090
 >>>
-if((_2v.length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&$_.includetext)){//#42086
+if((_2v.length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&$_.includetext)){//#42090
 
 <<<
-var _2z=$_.textopts;//#42081
-var _30=$_.textgrp;//#42081
-var _31=$get(_2z,_30-1);//#42081
+var _2z=$_.textopts;//#42085
+var _30=$_.textgrp;//#42085
+var _31=$get(_2z,_30-1);//#42085
 >>>
-var _30=$_.textgrp;//#42081
-var _31=$get($_.textopts,_30-1);//#42081
+var _30=$_.textgrp;//#42085
+var _31=$get($_.textopts,_30-1);//#42085
 
 <<<
-var _30=$_.textgrp;//#42081
-var _31=$get($_.textopts,_30-1);//#42081
+var _30=$_.textgrp;//#42085
+var _31=$get($_.textopts,_30-1);//#42085
 >>>
-var _31=$get($_.textopts,$_.textgrp-1);//#42081
+var _31=$get($_.textopts,$_.textgrp-1);//#42085
 
 <<<
-var _32=$_.txt;//#42082
-$put(_31,"txt",_32);//#42082
+var _32=$_.txt;//#42086
+$put(_31,"txt",_32);//#42086
 >>>
-$put(_31,"txt",$_.txt);//#42082
+$put(_31,"txt",$_.txt);//#42086
 
 <<<
-var _33=$get(_31,"");//#42083
-$put(_31,"content",_33);//#42083
+var _33=$get(_31,"");//#42087
+$put(_31,"content",_33);//#42087
 >>>
-$put(_31,"content",$get(_31,""));//#42083
+$put(_31,"content",$get(_31,""));//#42087
 
 <<<
-var _34=$_.pixx;//#42084
-var _35=$_.pixy;//#42084
-var _36=$_.textgrp;//#42084
-$k[$j++]=_34;//#42084
+var _34=$_.width;//#42088
+var _35=$_.height;//#42088
+var _36=$_.textgrp;//#42088
+$k[$j++]=_34*72;//#42088
 >>>
-var _35=$_.pixy;//#42084
-var _36=$_.textgrp;//#42084
-$k[$j++]=$_.pixx;//#42084
+var _35=$_.height;//#42088
+var _36=$_.textgrp;//#42088
+$k[$j++]=$_.width*72;//#42088
 
 <<<
-var _35=$_.pixy;//#42084
-var _36=$_.textgrp;//#42084
-$k[$j++]=$_.pixx;//#42084
-$k[$j++]=_35;//#42084
+var _35=$_.height;//#42088
+var _36=$_.textgrp;//#42088
+$k[$j++]=$_.width*72;//#42088
+$k[$j++]=_35*72;//#42088
 >>>
-var _36=$_.textgrp;//#42084
-$k[$j++]=$_.pixx;//#42084
-$k[$j++]=$_.pixy;//#42084
+var _36=$_.textgrp;//#42088
+$k[$j++]=$_.width*72;//#42088
+$k[$j++]=$_.height*72;//#42088
 
 <<<
-var _36=$_.textgrp;//#42084
-$k[$j++]=$_.pixx;//#42084
-$k[$j++]=$_.pixy;//#42084
-$k[$j++]=_36;//#42084
+var _36=$_.textgrp;//#42088
+$k[$j++]=$_.width*72;//#42088
+$k[$j++]=$_.height*72;//#42088
+$k[$j++]=_36;//#42088
 >>>
-$k[$j++]=$_.pixx;//#42084
-$k[$j++]=$_.pixy;//#42084
-$k[$j++]=$_.textgrp;//#42084
+$k[$j++]=$_.width*72;//#42088
+$k[$j++]=$_.height*72;//#42088
+$k[$j++]=$_.textgrp;//#42088
 
 <<<
-var _38=$_.pixx;//#42092
-$k[$j++]=_38;//#42092
+var _38=$_.width;//#42096
+$k[$j++]=_38*72;//#42096
 >>>
-$k[$j++]=$_.pixx;//#42092
+$k[$j++]=$_.width*72;//#42096
 
 <<<
-var _3=$_.opt;//#42137
-$k[$j++]=_3;//#42137
+var _3=$_.opt;//#42141
+$k[$j++]=_3;//#42141
 >>>
-$k[$j++]=$_.opt;//#42137
+$k[$j++]=$_.opt;//#42141
 
 <<<
-var _4=$_.inkspread;//#42139
-if(_4==null){//#42139
+var _4=$_.inkspread;//#42143
+if(_4==null){//#42143
 >>>
-if($_.inkspread==null){//#42139
+if($_.inkspread==null){//#42143
 
 <<<
-var _5=$_.inkspread;//#42141
-var _6=$_.inkspread;//#42141
-if((_5<-1)||(_6>1)){//#42143
+var _5=$_.inkspread;//#42145
+var _6=$_.inkspread;//#42145
+if((_5<-1)||(_6>1)){//#42147
 >>>
-var _6=$_.inkspread;//#42141
-if(($_.inkspread<-1)||(_6>1)){//#42143
+var _6=$_.inkspread;//#42145
+if(($_.inkspread<-1)||(_6>1)){//#42147
 
 <<<
-var _6=$_.inkspread;//#42141
-if(($_.inkspread<-1)||(_6>1)){//#42143
+var _6=$_.inkspread;//#42145
+if(($_.inkspread<-1)||(_6>1)){//#42147
 >>>
-if(($_.inkspread<-1)||($_.inkspread>1)){//#42143
+if(($_.inkspread<-1)||($_.inkspread>1)){//#42147
 
 <<<
-var _7=$_.borderleft;//#42145
-var _8=$_.borderleft;//#42145
-if((_7<-1)||(_8>50)){//#42147
+var _7=$_.borderleft;//#42149
+var _8=$_.borderleft;//#42149
+if((_7<-1)||(_8>50)){//#42151
 >>>
-var _8=$_.borderleft;//#42145
-if(($_.borderleft<-1)||(_8>50)){//#42147
+var _8=$_.borderleft;//#42149
+if(($_.borderleft<-1)||(_8>50)){//#42151
 
 <<<
-var _8=$_.borderleft;//#42145
-if(($_.borderleft<-1)||(_8>50)){//#42147
+var _8=$_.borderleft;//#42149
+if(($_.borderleft<-1)||(_8>50)){//#42151
 >>>
-if(($_.borderleft<-1)||($_.borderleft>50)){//#42147
+if(($_.borderleft<-1)||($_.borderleft>50)){//#42151
 
 <<<
-var _9=$_.borderright;//#42149
-var _A=$_.borderright;//#42149
-if((_9<-1)||(_A>50)){//#42151
+var _9=$_.borderright;//#42153
+var _A=$_.borderright;//#42153
+if((_9<-1)||(_A>50)){//#42155
 >>>
-var _A=$_.borderright;//#42149
-if(($_.borderright<-1)||(_A>50)){//#42151
+var _A=$_.borderright;//#42153
+if(($_.borderright<-1)||(_A>50)){//#42155
 
 <<<
-var _A=$_.borderright;//#42149
-if(($_.borderright<-1)||(_A>50)){//#42151
+var _A=$_.borderright;//#42153
+if(($_.borderright<-1)||(_A>50)){//#42155
 >>>
-if(($_.borderright<-1)||($_.borderright>50)){//#42151
+if(($_.borderright<-1)||($_.borderright>50)){//#42155
 
 <<<
-var _B=$_.bordertop;//#42153
-var _C=$_.bordertop;//#42153
-if((_B<-1)||(_C>50)){//#42155
+var _B=$_.bordertop;//#42157
+var _C=$_.bordertop;//#42157
+if((_B<-1)||(_C>50)){//#42159
 >>>
-var _C=$_.bordertop;//#42153
-if(($_.bordertop<-1)||(_C>50)){//#42155
+var _C=$_.bordertop;//#42157
+if(($_.bordertop<-1)||(_C>50)){//#42159
 
 <<<
-var _C=$_.bordertop;//#42153
-if(($_.bordertop<-1)||(_C>50)){//#42155
+var _C=$_.bordertop;//#42157
+if(($_.bordertop<-1)||(_C>50)){//#42159
 >>>
-if(($_.bordertop<-1)||($_.bordertop>50)){//#42155
+if(($_.bordertop<-1)||($_.bordertop>50)){//#42159
 
 <<<
-var _D=$_.borderbottom;//#42157
-var _E=$_.borderbottom;//#42157
-if((_D<-1)||(_E>50)){//#42159
+var _D=$_.borderbottom;//#42161
+var _E=$_.borderbottom;//#42161
+if((_D<-1)||(_E>50)){//#42163
 >>>
-var _E=$_.borderbottom;//#42157
-if(($_.borderbottom<-1)||(_E>50)){//#42159
+var _E=$_.borderbottom;//#42161
+if(($_.borderbottom<-1)||(_E>50)){//#42163
 
 <<<
-var _E=$_.borderbottom;//#42157
-if(($_.borderbottom<-1)||(_E>50)){//#42159
+var _E=$_.borderbottom;//#42161
+if(($_.borderbottom<-1)||(_E>50)){//#42163
 >>>
-if(($_.borderbottom<-1)||($_.borderbottom>50)){//#42159
+if(($_.borderbottom<-1)||($_.borderbottom>50)){//#42163
 
 <<<
-var _F=$_.borderwidth;//#42161
-var _G=$_.borderwidth;//#42161
-if((_F<0)||(_G>10)){//#42163
+var _F=$_.borderwidth;//#42165
+var _G=$_.borderwidth;//#42165
+if((_F<0)||(_G>10)){//#42167
 >>>
-var _G=$_.borderwidth;//#42161
-if(($_.borderwidth<0)||(_G>10)){//#42163
+var _G=$_.borderwidth;//#42165
+if(($_.borderwidth<0)||(_G>10)){//#42167
 
 <<<
-var _G=$_.borderwidth;//#42161
-if(($_.borderwidth<0)||(_G>10)){//#42163
+var _G=$_.borderwidth;//#42165
+if(($_.borderwidth<0)||(_G>10)){//#42167
 >>>
-if(($_.borderwidth<0)||($_.borderwidth>10)){//#42163
+if(($_.borderwidth<0)||($_.borderwidth>10)){//#42167
 
 <<<
-var _H=$_.showborder;//#42168
-if(_H){//#42177
+var _H=$_.showborder;//#42172
+if(_H){//#42181
 >>>
-if($_.showborder){//#42177
+if($_.showborder){//#42181
 
 <<<
-var _I=$_.borderleft;//#42169
-var _J=$_.borderwidth;//#42169
-var _K=$_.bordertop;//#42169
-var _L=$_.borderwidth;//#42169
-$_.tl=$a([-($f(_I+(_J/2))),$f((29+_K)+(_L/2))]);//#42169
+var _I=$_.borderleft;//#42173
+var _J=$_.borderwidth;//#42173
+var _K=$_.bordertop;//#42173
+var _L=$_.borderwidth;//#42173
+$_.tl=$a([-($f(_I+(_J/2))),$f((29+_K)+(_L/2))]);//#42173
 >>>
-var _J=$_.borderwidth;//#42169
-var _K=$_.bordertop;//#42169
-var _L=$_.borderwidth;//#42169
-$_.tl=$a([-($f($_.borderleft+(_J/2))),$f((29+_K)+(_L/2))]);//#42169
+var _J=$_.borderwidth;//#42173
+var _K=$_.bordertop;//#42173
+var _L=$_.borderwidth;//#42173
+$_.tl=$a([-($f($_.borderleft+(_J/2))),$f((29+_K)+(_L/2))]);//#42173
 
 <<<
-var _J=$_.borderwidth;//#42169
-var _K=$_.bordertop;//#42169
-var _L=$_.borderwidth;//#42169
-$_.tl=$a([-($f($_.borderleft+(_J/2))),$f((29+_K)+(_L/2))]);//#42169
+var _J=$_.borderwidth;//#42173
+var _K=$_.bordertop;//#42173
+var _L=$_.borderwidth;//#42173
+$_.tl=$a([-($f($_.borderleft+(_J/2))),$f((29+_K)+(_L/2))]);//#42173
 >>>
-var _K=$_.bordertop;//#42169
-var _L=$_.borderwidth;//#42169
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+_K)+(_L/2))]);//#42169
+var _K=$_.bordertop;//#42173
+var _L=$_.borderwidth;//#42173
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+_K)+(_L/2))]);//#42173
 
 <<<
-var _K=$_.bordertop;//#42169
-var _L=$_.borderwidth;//#42169
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+_K)+(_L/2))]);//#42169
+var _K=$_.bordertop;//#42173
+var _L=$_.borderwidth;//#42173
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+_K)+(_L/2))]);//#42173
 >>>
-var _L=$_.borderwidth;//#42169
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+$_.bordertop)+(_L/2))]);//#42169
+var _L=$_.borderwidth;//#42173
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+$_.bordertop)+(_L/2))]);//#42173
 
 <<<
-var _L=$_.borderwidth;//#42169
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+$_.bordertop)+(_L/2))]);//#42169
+var _L=$_.borderwidth;//#42173
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+$_.bordertop)+(_L/2))]);//#42173
 >>>
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+$_.bordertop)+($_.borderwidth/2))]);//#42169
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+$_.bordertop)+($_.borderwidth/2))]);//#42173
 
 <<<
-var _M=$_.borderright;//#42170
-var _N=$_.borderwidth;//#42170
-var _O=$_.bordertop;//#42170
-var _P=$_.borderwidth;//#42170
-$_.tr=$a([$f((30+_M)+(_N/2)),$f((29+_O)+(_P/2))]);//#42170
+var _M=$_.borderright;//#42174
+var _N=$_.borderwidth;//#42174
+var _O=$_.bordertop;//#42174
+var _P=$_.borderwidth;//#42174
+$_.tr=$a([$f((30+_M)+(_N/2)),$f((29+_O)+(_P/2))]);//#42174
 >>>
-var _N=$_.borderwidth;//#42170
-var _O=$_.bordertop;//#42170
-var _P=$_.borderwidth;//#42170
-$_.tr=$a([$f((30+$_.borderright)+(_N/2)),$f((29+_O)+(_P/2))]);//#42170
+var _N=$_.borderwidth;//#42174
+var _O=$_.bordertop;//#42174
+var _P=$_.borderwidth;//#42174
+$_.tr=$a([$f((30+$_.borderright)+(_N/2)),$f((29+_O)+(_P/2))]);//#42174
 
 <<<
-var _N=$_.borderwidth;//#42170
-var _O=$_.bordertop;//#42170
-var _P=$_.borderwidth;//#42170
-$_.tr=$a([$f((30+$_.borderright)+(_N/2)),$f((29+_O)+(_P/2))]);//#42170
+var _N=$_.borderwidth;//#42174
+var _O=$_.bordertop;//#42174
+var _P=$_.borderwidth;//#42174
+$_.tr=$a([$f((30+$_.borderright)+(_N/2)),$f((29+_O)+(_P/2))]);//#42174
 >>>
-var _O=$_.bordertop;//#42170
-var _P=$_.borderwidth;//#42170
-$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+_O)+(_P/2))]);//#42170
+var _O=$_.bordertop;//#42174
+var _P=$_.borderwidth;//#42174
+$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+_O)+(_P/2))]);//#42174
 
 <<<
-var _O=$_.bordertop;//#42170
-var _P=$_.borderwidth;//#42170
-$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+_O)+(_P/2))]);//#42170
+var _O=$_.bordertop;//#42174
+var _P=$_.borderwidth;//#42174
+$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+_O)+(_P/2))]);//#42174
 >>>
-var _P=$_.borderwidth;//#42170
-$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+$_.bordertop)+(_P/2))]);//#42170
+var _P=$_.borderwidth;//#42174
+$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+$_.bordertop)+(_P/2))]);//#42174
 
 <<<
-var _P=$_.borderwidth;//#42170
-$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+$_.bordertop)+(_P/2))]);//#42170
+var _P=$_.borderwidth;//#42174
+$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+$_.bordertop)+(_P/2))]);//#42174
 >>>
-$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+$_.bordertop)+($_.borderwidth/2))]);//#42170
+$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+$_.bordertop)+($_.borderwidth/2))]);//#42174
 
 <<<
-var _Q=$_.borderleft;//#42171
-var _R=$_.borderwidth;//#42171
-var _S=$_.borderbottom;//#42171
-var _T=$_.borderwidth;//#42171
-$_.bl=$a([-($f(_Q+(_R/2))),-($f(_S+(_T/2)))]);//#42171
+var _Q=$_.borderleft;//#42175
+var _R=$_.borderwidth;//#42175
+var _S=$_.borderbottom;//#42175
+var _T=$_.borderwidth;//#42175
+$_.bl=$a([-($f(_Q+(_R/2))),-($f(_S+(_T/2)))]);//#42175
 >>>
-var _R=$_.borderwidth;//#42171
-var _S=$_.borderbottom;//#42171
-var _T=$_.borderwidth;//#42171
-$_.bl=$a([-($f($_.borderleft+(_R/2))),-($f(_S+(_T/2)))]);//#42171
+var _R=$_.borderwidth;//#42175
+var _S=$_.borderbottom;//#42175
+var _T=$_.borderwidth;//#42175
+$_.bl=$a([-($f($_.borderleft+(_R/2))),-($f(_S+(_T/2)))]);//#42175
 
 <<<
-var _R=$_.borderwidth;//#42171
-var _S=$_.borderbottom;//#42171
-var _T=$_.borderwidth;//#42171
-$_.bl=$a([-($f($_.borderleft+(_R/2))),-($f(_S+(_T/2)))]);//#42171
+var _R=$_.borderwidth;//#42175
+var _S=$_.borderbottom;//#42175
+var _T=$_.borderwidth;//#42175
+$_.bl=$a([-($f($_.borderleft+(_R/2))),-($f(_S+(_T/2)))]);//#42175
 >>>
-var _S=$_.borderbottom;//#42171
-var _T=$_.borderwidth;//#42171
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f(_S+(_T/2)))]);//#42171
+var _S=$_.borderbottom;//#42175
+var _T=$_.borderwidth;//#42175
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f(_S+(_T/2)))]);//#42175
 
 <<<
-var _S=$_.borderbottom;//#42171
-var _T=$_.borderwidth;//#42171
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f(_S+(_T/2)))]);//#42171
+var _S=$_.borderbottom;//#42175
+var _T=$_.borderwidth;//#42175
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f(_S+(_T/2)))]);//#42175
 >>>
-var _T=$_.borderwidth;//#42171
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+(_T/2)))]);//#42171
+var _T=$_.borderwidth;//#42175
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+(_T/2)))]);//#42175
 
 <<<
-var _T=$_.borderwidth;//#42171
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+(_T/2)))]);//#42171
+var _T=$_.borderwidth;//#42175
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+(_T/2)))]);//#42175
 >>>
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42171
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42175
 
 <<<
-var _U=$_.borderright;//#42172
-var _V=$_.borderwidth;//#42172
-var _W=$_.borderbottom;//#42172
-var _X=$_.borderwidth;//#42172
-$_.br=$a([$f((30+_U)+(_V/2)),-($f(_W+(_X/2)))]);//#42172
+var _U=$_.borderright;//#42176
+var _V=$_.borderwidth;//#42176
+var _W=$_.borderbottom;//#42176
+var _X=$_.borderwidth;//#42176
+$_.br=$a([$f((30+_U)+(_V/2)),-($f(_W+(_X/2)))]);//#42176
 >>>
-var _V=$_.borderwidth;//#42172
-var _W=$_.borderbottom;//#42172
-var _X=$_.borderwidth;//#42172
-$_.br=$a([$f((30+$_.borderright)+(_V/2)),-($f(_W+(_X/2)))]);//#42172
+var _V=$_.borderwidth;//#42176
+var _W=$_.borderbottom;//#42176
+var _X=$_.borderwidth;//#42176
+$_.br=$a([$f((30+$_.borderright)+(_V/2)),-($f(_W+(_X/2)))]);//#42176
 
 <<<
-var _V=$_.borderwidth;//#42172
-var _W=$_.borderbottom;//#42172
-var _X=$_.borderwidth;//#42172
-$_.br=$a([$f((30+$_.borderright)+(_V/2)),-($f(_W+(_X/2)))]);//#42172
+var _V=$_.borderwidth;//#42176
+var _W=$_.borderbottom;//#42176
+var _X=$_.borderwidth;//#42176
+$_.br=$a([$f((30+$_.borderright)+(_V/2)),-($f(_W+(_X/2)))]);//#42176
 >>>
-var _W=$_.borderbottom;//#42172
-var _X=$_.borderwidth;//#42172
-$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f(_W+(_X/2)))]);//#42172
+var _W=$_.borderbottom;//#42176
+var _X=$_.borderwidth;//#42176
+$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f(_W+(_X/2)))]);//#42176
 
 <<<
-var _W=$_.borderbottom;//#42172
-var _X=$_.borderwidth;//#42172
-$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f(_W+(_X/2)))]);//#42172
+var _W=$_.borderbottom;//#42176
+var _X=$_.borderwidth;//#42176
+$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f(_W+(_X/2)))]);//#42176
 >>>
-var _X=$_.borderwidth;//#42172
-$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+(_X/2)))]);//#42172
+var _X=$_.borderwidth;//#42176
+$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+(_X/2)))]);//#42176
 
 <<<
-var _X=$_.borderwidth;//#42172
-$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+(_X/2)))]);//#42172
+var _X=$_.borderwidth;//#42176
+$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+(_X/2)))]);//#42176
 >>>
-$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42172
+$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42176
 
 <<<
-var _Y=$_.borderleft;//#42174
-var _Z=$_.inkspread;//#42174
-var _a=$_.bordertop;//#42174
-var _b=$_.inkspread;//#42174
-$_.tl=$a([(-_Y)+_Z,(29+_a)-_b]);//#42174
+var _Y=$_.borderleft;//#42178
+var _Z=$_.inkspread;//#42178
+var _a=$_.bordertop;//#42178
+var _b=$_.inkspread;//#42178
+$_.tl=$a([(-_Y)+_Z,(29+_a)-_b]);//#42178
 >>>
-var _Z=$_.inkspread;//#42174
-var _a=$_.bordertop;//#42174
-var _b=$_.inkspread;//#42174
-$_.tl=$a([(-$_.borderleft)+_Z,(29+_a)-_b]);//#42174
+var _Z=$_.inkspread;//#42178
+var _a=$_.bordertop;//#42178
+var _b=$_.inkspread;//#42178
+$_.tl=$a([(-$_.borderleft)+_Z,(29+_a)-_b]);//#42178
 
 <<<
-var _Z=$_.inkspread;//#42174
-var _a=$_.bordertop;//#42174
-var _b=$_.inkspread;//#42174
-$_.tl=$a([(-$_.borderleft)+_Z,(29+_a)-_b]);//#42174
+var _Z=$_.inkspread;//#42178
+var _a=$_.bordertop;//#42178
+var _b=$_.inkspread;//#42178
+$_.tl=$a([(-$_.borderleft)+_Z,(29+_a)-_b]);//#42178
 >>>
-var _a=$_.bordertop;//#42174
-var _b=$_.inkspread;//#42174
-$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+_a)-_b]);//#42174
+var _a=$_.bordertop;//#42178
+var _b=$_.inkspread;//#42178
+$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+_a)-_b]);//#42178
 
 <<<
-var _a=$_.bordertop;//#42174
-var _b=$_.inkspread;//#42174
-$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+_a)-_b]);//#42174
+var _a=$_.bordertop;//#42178
+var _b=$_.inkspread;//#42178
+$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+_a)-_b]);//#42178
 >>>
-var _b=$_.inkspread;//#42174
-$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+$_.bordertop)-_b]);//#42174
+var _b=$_.inkspread;//#42178
+$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+$_.bordertop)-_b]);//#42178
 
 <<<
-var _b=$_.inkspread;//#42174
-$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+$_.bordertop)-_b]);//#42174
+var _b=$_.inkspread;//#42178
+$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+$_.bordertop)-_b]);//#42178
 >>>
-$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+$_.bordertop)-$_.inkspread]);//#42174
+$_.tl=$a([(-$_.borderleft)+$_.inkspread,(29+$_.bordertop)-$_.inkspread]);//#42178
 
 <<<
-var _c=$_.borderright;//#42175
-var _d=$_.inkspread;//#42175
-var _e=$_.bordertop;//#42175
-var _f=$_.inkspread;//#42175
-$_.tr=$a([(30+_c)-_d,(29+_e)-_f]);//#42175
+var _c=$_.borderright;//#42179
+var _d=$_.inkspread;//#42179
+var _e=$_.bordertop;//#42179
+var _f=$_.inkspread;//#42179
+$_.tr=$a([(30+_c)-_d,(29+_e)-_f]);//#42179
 >>>
-var _d=$_.inkspread;//#42175
-var _e=$_.bordertop;//#42175
-var _f=$_.inkspread;//#42175
-$_.tr=$a([(30+$_.borderright)-_d,(29+_e)-_f]);//#42175
+var _d=$_.inkspread;//#42179
+var _e=$_.bordertop;//#42179
+var _f=$_.inkspread;//#42179
+$_.tr=$a([(30+$_.borderright)-_d,(29+_e)-_f]);//#42179
 
 <<<
-var _d=$_.inkspread;//#42175
-var _e=$_.bordertop;//#42175
-var _f=$_.inkspread;//#42175
-$_.tr=$a([(30+$_.borderright)-_d,(29+_e)-_f]);//#42175
+var _d=$_.inkspread;//#42179
+var _e=$_.bordertop;//#42179
+var _f=$_.inkspread;//#42179
+$_.tr=$a([(30+$_.borderright)-_d,(29+_e)-_f]);//#42179
 >>>
-var _e=$_.bordertop;//#42175
-var _f=$_.inkspread;//#42175
-$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+_e)-_f]);//#42175
+var _e=$_.bordertop;//#42179
+var _f=$_.inkspread;//#42179
+$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+_e)-_f]);//#42179
 
 <<<
-var _e=$_.bordertop;//#42175
-var _f=$_.inkspread;//#42175
-$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+_e)-_f]);//#42175
+var _e=$_.bordertop;//#42179
+var _f=$_.inkspread;//#42179
+$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+_e)-_f]);//#42179
 >>>
-var _f=$_.inkspread;//#42175
-$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+$_.bordertop)-_f]);//#42175
+var _f=$_.inkspread;//#42179
+$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+$_.bordertop)-_f]);//#42179
 
 <<<
-var _f=$_.inkspread;//#42175
-$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+$_.bordertop)-_f]);//#42175
+var _f=$_.inkspread;//#42179
+$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+$_.bordertop)-_f]);//#42179
 >>>
-$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+$_.bordertop)-$_.inkspread]);//#42175
+$_.tr=$a([(30+$_.borderright)-$_.inkspread,(29+$_.bordertop)-$_.inkspread]);//#42179
 
 <<<
-var _g=$_.borderleft;//#42176
-var _h=$_.inkspread;//#42176
-var _i=$_.borderbottom;//#42176
-var _j=$_.inkspread;//#42176
-$_.bl=$a([(-_g)+_h,(-_i)+_j]);//#42176
+var _g=$_.borderleft;//#42180
+var _h=$_.inkspread;//#42180
+var _i=$_.borderbottom;//#42180
+var _j=$_.inkspread;//#42180
+$_.bl=$a([(-_g)+_h,(-_i)+_j]);//#42180
 >>>
-var _h=$_.inkspread;//#42176
-var _i=$_.borderbottom;//#42176
-var _j=$_.inkspread;//#42176
-$_.bl=$a([(-$_.borderleft)+_h,(-_i)+_j]);//#42176
+var _h=$_.inkspread;//#42180
+var _i=$_.borderbottom;//#42180
+var _j=$_.inkspread;//#42180
+$_.bl=$a([(-$_.borderleft)+_h,(-_i)+_j]);//#42180
 
 <<<
-var _h=$_.inkspread;//#42176
-var _i=$_.borderbottom;//#42176
-var _j=$_.inkspread;//#42176
-$_.bl=$a([(-$_.borderleft)+_h,(-_i)+_j]);//#42176
+var _h=$_.inkspread;//#42180
+var _i=$_.borderbottom;//#42180
+var _j=$_.inkspread;//#42180
+$_.bl=$a([(-$_.borderleft)+_h,(-_i)+_j]);//#42180
 >>>
-var _i=$_.borderbottom;//#42176
-var _j=$_.inkspread;//#42176
-$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-_i)+_j]);//#42176
+var _i=$_.borderbottom;//#42180
+var _j=$_.inkspread;//#42180
+$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-_i)+_j]);//#42180
 
 <<<
-var _i=$_.borderbottom;//#42176
-var _j=$_.inkspread;//#42176
-$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-_i)+_j]);//#42176
+var _i=$_.borderbottom;//#42180
+var _j=$_.inkspread;//#42180
+$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-_i)+_j]);//#42180
 >>>
-var _j=$_.inkspread;//#42176
-$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-$_.borderbottom)+_j]);//#42176
+var _j=$_.inkspread;//#42180
+$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-$_.borderbottom)+_j]);//#42180
 
 <<<
-var _j=$_.inkspread;//#42176
-$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-$_.borderbottom)+_j]);//#42176
+var _j=$_.inkspread;//#42180
+$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-$_.borderbottom)+_j]);//#42180
 >>>
-$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-$_.borderbottom)+$_.inkspread]);//#42176
+$_.bl=$a([(-$_.borderleft)+$_.inkspread,(-$_.borderbottom)+$_.inkspread]);//#42180
 
 <<<
-var _k=$_.borderright;//#42177
-var _l=$_.inkspread;//#42177
-var _m=$_.borderbottom;//#42177
-var _n=$_.inkspread;//#42177
-$_.br=$a([(30+_k)-_l,(-_m)+_n]);//#42177
+var _k=$_.borderright;//#42181
+var _l=$_.inkspread;//#42181
+var _m=$_.borderbottom;//#42181
+var _n=$_.inkspread;//#42181
+$_.br=$a([(30+_k)-_l,(-_m)+_n]);//#42181
 >>>
-var _l=$_.inkspread;//#42177
-var _m=$_.borderbottom;//#42177
-var _n=$_.inkspread;//#42177
-$_.br=$a([(30+$_.borderright)-_l,(-_m)+_n]);//#42177
+var _l=$_.inkspread;//#42181
+var _m=$_.borderbottom;//#42181
+var _n=$_.inkspread;//#42181
+$_.br=$a([(30+$_.borderright)-_l,(-_m)+_n]);//#42181
 
 <<<
-var _l=$_.inkspread;//#42177
-var _m=$_.borderbottom;//#42177
-var _n=$_.inkspread;//#42177
-$_.br=$a([(30+$_.borderright)-_l,(-_m)+_n]);//#42177
+var _l=$_.inkspread;//#42181
+var _m=$_.borderbottom;//#42181
+var _n=$_.inkspread;//#42181
+$_.br=$a([(30+$_.borderright)-_l,(-_m)+_n]);//#42181
 >>>
-var _m=$_.borderbottom;//#42177
-var _n=$_.inkspread;//#42177
-$_.br=$a([(30+$_.borderright)-$_.inkspread,(-_m)+_n]);//#42177
+var _m=$_.borderbottom;//#42181
+var _n=$_.inkspread;//#42181
+$_.br=$a([(30+$_.borderright)-$_.inkspread,(-_m)+_n]);//#42181
 
 <<<
-var _m=$_.borderbottom;//#42177
-var _n=$_.inkspread;//#42177
-$_.br=$a([(30+$_.borderright)-$_.inkspread,(-_m)+_n]);//#42177
+var _m=$_.borderbottom;//#42181
+var _n=$_.inkspread;//#42181
+$_.br=$a([(30+$_.borderright)-$_.inkspread,(-_m)+_n]);//#42181
 >>>
-var _n=$_.inkspread;//#42177
-$_.br=$a([(30+$_.borderright)-$_.inkspread,(-$_.borderbottom)+_n]);//#42177
+var _n=$_.inkspread;//#42181
+$_.br=$a([(30+$_.borderright)-$_.inkspread,(-$_.borderbottom)+_n]);//#42181
 
 <<<
-var _n=$_.inkspread;//#42177
-$_.br=$a([(30+$_.borderright)-$_.inkspread,(-$_.borderbottom)+_n]);//#42177
+var _n=$_.inkspread;//#42181
+$_.br=$a([(30+$_.borderright)-$_.inkspread,(-$_.borderbottom)+_n]);//#42181
 >>>
-$_.br=$a([(30+$_.borderright)-$_.inkspread,(-$_.borderbottom)+$_.inkspread]);//#42177
+$_.br=$a([(30+$_.borderright)-$_.inkspread,(-$_.borderbottom)+$_.inkspread]);//#42181
 
 <<<
-var _o=$_.showborder;//#42185
-if(_o){//#42191
+var _o=$_.showborder;//#42189
+if(_o){//#42195
 >>>
-if($_.showborder){//#42191
+if($_.showborder){//#42195
 
 <<<
-var _p=$_.bl;//#42187
-$aload(_p);//#42187
+var _p=$_.bl;//#42191
+$aload(_p);//#42191
 >>>
-$aload($_.bl);//#42187
+$aload($_.bl);//#42191
 
 <<<
-var _s=$_.br;//#42187
-var _t=$_.tr;//#42187
-var _u=$_.tl;//#42187
-var _v=$a([_s,_t,_u]);//#42187
+var _s=$_.br;//#42191
+var _t=$_.tr;//#42191
+var _u=$_.tl;//#42191
+var _v=$a([_s,_t,_u]);//#42191
 >>>
-var _t=$_.tr;//#42187
-var _u=$_.tl;//#42187
-var _v=$a([$_.br,_t,_u]);//#42187
+var _t=$_.tr;//#42191
+var _u=$_.tl;//#42191
+var _v=$a([$_.br,_t,_u]);//#42191
 
 <<<
-var _t=$_.tr;//#42187
-var _u=$_.tl;//#42187
-var _v=$a([$_.br,_t,_u]);//#42187
+var _t=$_.tr;//#42191
+var _u=$_.tl;//#42191
+var _v=$a([$_.br,_t,_u]);//#42191
 >>>
-var _u=$_.tl;//#42187
-var _v=$a([$_.br,$_.tr,_u]);//#42187
+var _u=$_.tl;//#42191
+var _v=$a([$_.br,$_.tr,_u]);//#42191
 
 <<<
-var _u=$_.tl;//#42187
-var _v=$a([$_.br,$_.tr,_u]);//#42187
+var _u=$_.tl;//#42191
+var _v=$a([$_.br,$_.tr,_u]);//#42191
 >>>
-var _v=$a([$_.br,$_.tr,$_.tl]);//#42187
+var _v=$a([$_.br,$_.tr,$_.tl]);//#42191
 
 <<<
-var _y=$get(_v,_w);//#42187
-$aload(_y);//#42187
+var _y=$get(_v,_w);//#42191
+$aload(_y);//#42191
 >>>
-$aload($get(_v,_w));//#42187
+$aload($get(_v,_w));//#42191
 
 <<<
-var _11=$_.bordercolor;//#42188
-if($ne(_11,"unset")){//#42188
+var _11=$_.bordercolor;//#42192
+if($ne(_11,"unset")){//#42192
 >>>
-if($ne($_.bordercolor,"unset")){//#42188
+if($ne($_.bordercolor,"unset")){//#42192
 
 <<<
-var _12=$_.bordercolor;//#42188
-$$.setcolor(_12);//#42188
+var _12=$_.bordercolor;//#42192
+$$.setcolor(_12);//#42192
 >>>
-$$.setcolor($_.bordercolor);//#42188
+$$.setcolor($_.bordercolor);//#42192
 
 <<<
-var _13=$_.borderwidth;//#42189
-var _14=$_.inkspread;//#42189
-$$.setlinewidth($f(_13-(_14*2)));//#42189
+var _13=$_.borderwidth;//#42193
+var _14=$_.inkspread;//#42193
+$$.setlinewidth($f(_13-(_14*2)));//#42193
 >>>
-var _14=$_.inkspread;//#42189
-$$.setlinewidth($f($_.borderwidth-(_14*2)));//#42189
+var _14=$_.inkspread;//#42193
+$$.setlinewidth($f($_.borderwidth-(_14*2)));//#42193
 
 <<<
-var _14=$_.inkspread;//#42189
-$$.setlinewidth($f($_.borderwidth-(_14*2)));//#42189
+var _14=$_.inkspread;//#42193
+$$.setlinewidth($f($_.borderwidth-(_14*2)));//#42193
 >>>
-$$.setlinewidth($f($_.borderwidth-($_.inkspread*2)));//#42189
+$$.setlinewidth($f($_.borderwidth-($_.inkspread*2)));//#42193
 
 <<<
-var _15=$_.barcolor;//#42193
-if($ne(_15,"unset")){//#42193
+var _15=$_.barcolor;//#42197
+if($ne(_15,"unset")){//#42197
 >>>
-if($ne($_.barcolor,"unset")){//#42193
+if($ne($_.barcolor,"unset")){//#42197
 
 <<<
-var _16=$_.barcolor;//#42193
-$$.setcolor(_16);//#42193
+var _16=$_.barcolor;//#42197
+$$.setcolor(_16);//#42197
 >>>
-$$.setcolor($_.barcolor);//#42193
+$$.setcolor($_.barcolor);//#42197
 
 <<<
-var _17=$_.pixs;//#42195
-$$.showmaxicode(_17);//#42195
+var _17=$_.pixs;//#42199
+$$.showmaxicode(_17);//#42199
 >>>
-$$.showmaxicode($_.pixs);//#42195
+$$.showmaxicode($_.pixs);//#42199
 
 <<<
-var _5=$_.grp;//#42246
-$k[$j++]='pfx';//#42250
-if(_5==1){//#42248
+var _5=$_.grp;//#42250
+$k[$j++]='pfx';//#42254
+if(_5==1){//#42252
 >>>
-$k[$j++]='pfx';//#42250
-if($_.grp==1){//#42248
+$k[$j++]='pfx';//#42254
+if($_.grp==1){//#42252
 
 <<<
-var _6=$_.grp;//#42247
-if(_6==2){//#42248
+var _6=$_.grp;//#42251
+if(_6==2){//#42252
 >>>
-if($_.grp==2){//#42248
+if($_.grp==2){//#42252
 
 <<<
-var _8=$_.grp;//#42248
-$put(_7,4,_8+48);//#42248
+var _8=$_.grp;//#42252
+$put(_7,4,_8+48);//#42252
 >>>
-$put(_7,4,$_.grp+48);//#42248
+$put(_7,4,$_.grp+48);//#42252
 
 <<<
-var _E=$_.pfx;//#42255
-var _F=$_.prop;//#42255
-var _G=$s((_E.length+9)+_F.length);//#42255
+var _E=$_.pfx;//#42259
+var _F=$_.prop;//#42259
+var _G=$s((_E.length+9)+_F.length);//#42259
 >>>
-var _F=$_.prop;//#42255
-var _G=$s(($_.pfx.length+9)+_F.length);//#42255
+var _F=$_.prop;//#42259
+var _G=$s(($_.pfx.length+9)+_F.length);//#42259
 
 <<<
-var _F=$_.prop;//#42255
-var _G=$s(($_.pfx.length+9)+_F.length);//#42255
+var _F=$_.prop;//#42259
+var _G=$s(($_.pfx.length+9)+_F.length);//#42259
 >>>
-var _G=$s(($_.pfx.length+9)+$_.prop.length);//#42255
+var _G=$s(($_.pfx.length+9)+$_.prop.length);//#42259
 
 <<<
-var _H=$_.pfx;//#42257
-$puti(_G,6,_H);//#42257
+var _H=$_.pfx;//#42261
+$puti(_G,6,_H);//#42261
 >>>
-$puti(_G,6,$_.pfx);//#42257
+$puti(_G,6,$_.pfx);//#42261
 
 <<<
-var _I=$_.pfx;//#42258
-$puti(_G,_I.length+6,"Bad");//#42258
+var _I=$_.pfx;//#42262
+$puti(_G,_I.length+6,"Bad");//#42262
 >>>
-$puti(_G,$_.pfx.length+6,"Bad");//#42258
+$puti(_G,$_.pfx.length+6,"Bad");//#42262
 
 <<<
-var _J=$_.pfx;//#42259
-var _K=$_.prop;//#42259
-$puti(_G,_J.length+9,_K);//#42259
+var _J=$_.pfx;//#42263
+var _K=$_.prop;//#42263
+$puti(_G,_J.length+9,_K);//#42263
 >>>
-var _K=$_.prop;//#42259
-$puti(_G,$_.pfx.length+9,_K);//#42259
+var _K=$_.prop;//#42263
+$puti(_G,$_.pfx.length+9,_K);//#42263
 
 <<<
-var _K=$_.prop;//#42259
-$puti(_G,$_.pfx.length+9,_K);//#42259
+var _K=$_.prop;//#42263
+$puti(_G,$_.pfx.length+9,_K);//#42263
 >>>
-$puti(_G,$_.pfx.length+9,$_.prop);//#42259
+$puti(_G,$_.pfx.length+9,$_.prop);//#42263
 
 <<<
-var _L=$_.pfx;//#42260
-var _M=$_.prop;//#42260
-var _N=$_.msgtail;//#42260
-var _O=$s((_L.length+_M.length)+_N.length);//#42260
+var _L=$_.pfx;//#42264
+var _M=$_.prop;//#42264
+var _N=$_.msgtail;//#42264
+var _O=$s((_L.length+_M.length)+_N.length);//#42264
 >>>
-var _M=$_.prop;//#42260
-var _N=$_.msgtail;//#42260
-var _O=$s(($_.pfx.length+_M.length)+_N.length);//#42260
+var _M=$_.prop;//#42264
+var _N=$_.msgtail;//#42264
+var _O=$s(($_.pfx.length+_M.length)+_N.length);//#42264
 
 <<<
-var _M=$_.prop;//#42260
-var _N=$_.msgtail;//#42260
-var _O=$s(($_.pfx.length+_M.length)+_N.length);//#42260
+var _M=$_.prop;//#42264
+var _N=$_.msgtail;//#42264
+var _O=$s(($_.pfx.length+_M.length)+_N.length);//#42264
 >>>
-var _N=$_.msgtail;//#42260
-var _O=$s(($_.pfx.length+$_.prop.length)+_N.length);//#42260
+var _N=$_.msgtail;//#42264
+var _O=$s(($_.pfx.length+$_.prop.length)+_N.length);//#42264
 
 <<<
-var _N=$_.msgtail;//#42260
-var _O=$s(($_.pfx.length+$_.prop.length)+_N.length);//#42260
+var _N=$_.msgtail;//#42264
+var _O=$s(($_.pfx.length+$_.prop.length)+_N.length);//#42264
 >>>
-var _O=$s(($_.pfx.length+$_.prop.length)+$_.msgtail.length);//#42260
+var _O=$s(($_.pfx.length+$_.prop.length)+$_.msgtail.length);//#42264
 
 <<<
-var _P=$_.pfx;//#42261
-$puti(_O,0,_P);//#42261
+var _P=$_.pfx;//#42265
+$puti(_O,0,_P);//#42265
 >>>
-$puti(_O,0,$_.pfx);//#42261
+$puti(_O,0,$_.pfx);//#42265
 
 <<<
-var _Q=$_.pfx;//#42262
-var _R=$_.prop;//#42262
-$puti(_O,_Q.length,_R);//#42262
+var _Q=$_.pfx;//#42266
+var _R=$_.prop;//#42266
+$puti(_O,_Q.length,_R);//#42266
 >>>
-var _R=$_.prop;//#42262
-$puti(_O,$_.pfx.length,_R);//#42262
+var _R=$_.prop;//#42266
+$puti(_O,$_.pfx.length,_R);//#42266
 
 <<<
-var _R=$_.prop;//#42262
-$puti(_O,$_.pfx.length,_R);//#42262
+var _R=$_.prop;//#42266
+$puti(_O,$_.pfx.length,_R);//#42266
 >>>
-$puti(_O,$_.pfx.length,$_.prop);//#42262
+$puti(_O,$_.pfx.length,$_.prop);//#42266
 
 <<<
-var _S=$_.pfx;//#42263
-var _T=$_.prop;//#42263
-var _U=$_.msgtail;//#42263
-$puti(_O,_S.length+_T.length,_U);//#42263
+var _S=$_.pfx;//#42267
+var _T=$_.prop;//#42267
+var _U=$_.msgtail;//#42267
+$puti(_O,_S.length+_T.length,_U);//#42267
 >>>
-var _T=$_.prop;//#42263
-var _U=$_.msgtail;//#42263
-$puti(_O,$_.pfx.length+_T.length,_U);//#42263
+var _T=$_.prop;//#42267
+var _U=$_.msgtail;//#42267
+$puti(_O,$_.pfx.length+_T.length,_U);//#42267
 
 <<<
-var _T=$_.prop;//#42263
-var _U=$_.msgtail;//#42263
-$puti(_O,$_.pfx.length+_T.length,_U);//#42263
+var _T=$_.prop;//#42267
+var _U=$_.msgtail;//#42267
+$puti(_O,$_.pfx.length+_T.length,_U);//#42267
 >>>
-var _U=$_.msgtail;//#42263
-$puti(_O,$_.pfx.length+$_.prop.length,_U);//#42263
+var _U=$_.msgtail;//#42267
+$puti(_O,$_.pfx.length+$_.prop.length,_U);//#42267
 
 <<<
-var _U=$_.msgtail;//#42263
-$puti(_O,$_.pfx.length+$_.prop.length,_U);//#42263
+var _U=$_.msgtail;//#42267
+$puti(_O,$_.pfx.length+$_.prop.length,_U);//#42267
 >>>
-$puti(_O,$_.pfx.length+$_.prop.length,$_.msgtail);//#42263
+$puti(_O,$_.pfx.length+$_.prop.length,$_.msgtail);//#42267
 
 <<<
-var _W=$_.td;//#42268
-var _X=$get(_W,"xalign");//#42268
+var _W=$_.td;//#42272
+var _X=$get(_W,"xalign");//#42272
 >>>
-var _X=$get($_.td,"xalign");//#42268
+var _X=$get($_.td,"xalign");//#42272
 
 <<<
-var _a=$_.td;//#42274
-var _b=$get(_a,"yalign");//#42274
+var _a=$_.td;//#42278
+var _b=$get(_a,"yalign");//#42278
 >>>
-var _b=$get($_.td,"yalign");//#42274
+var _b=$get($_.td,"yalign");//#42278
 
 <<<
-var _e=$_.td;//#42280
-var _f=$get(_e,"direction");//#42280
+var _e=$_.td;//#42284
+var _f=$get(_e,"direction");//#42284
 >>>
-var _f=$get($_.td,"direction");//#42280
+var _f=$get($_.td,"direction");//#42284
 
 <<<
-var _f=$get($_.td,"direction");//#42280
-var _g=$has($_.validatetext_directionoptions,_f);//#42280
+var _f=$get($_.td,"direction");//#42284
+var _g=$has($_.validatetext_directionoptions,_f);//#42284
 >>>
-var _g=$has($_.validatetext_directionoptions,$get($_.td,"direction"));//#42280
+var _g=$has($_.validatetext_directionoptions,$get($_.td,"direction"));//#42284
 
 <<<
-var _h=$_.td;//#42284
-var _i=$get(_h,"size");//#42284
+var _h=$_.td;//#42288
+var _i=$get(_h,"size");//#42288
 >>>
-var _i=$get($_.td,"size");//#42284
+var _i=$get($_.td,"size");//#42288
 
 <<<
-var _j=$_.td;//#42288
-var _k=$get(_j,"xoffset");//#42288
+var _j=$_.td;//#42292
+var _k=$get(_j,"xoffset");//#42292
 >>>
-var _k=$get($_.td,"xoffset");//#42288
+var _k=$get($_.td,"xoffset");//#42292
 
 <<<
-var _l=$_.td;//#42292
-var _m=$get(_l,"yoffset");//#42292
+var _l=$_.td;//#42296
+var _m=$get(_l,"yoffset");//#42296
 >>>
-var _m=$get($_.td,"yoffset");//#42292
+var _m=$get($_.td,"yoffset");//#42296
 
 <<<
-var _n=$_.td;//#42296
-var _o=$get(_n,"gaps");//#42296
+var _n=$_.td;//#42300
+var _o=$get(_n,"gaps");//#42300
 >>>
-var _o=$get($_.td,"gaps");//#42296
+var _o=$get($_.td,"gaps");//#42300
 
 <<<
-var _p=$_.td;//#42300
-var _q=$get(_p,"linegaps");//#42300
+var _p=$_.td;//#42304
+var _q=$get(_p,"linegaps");//#42304
 >>>
-var _q=$get($_.td,"linegaps");//#42300
+var _q=$get($_.td,"linegaps");//#42304
 
 <<<
 var _E=$has($_.fncvals,'parseonly');//#461
@@ -371789,34 +371789,34 @@ $k[$j++]=_1B;//#41995
 $k[$j++]=$get($_.pixs,$f(_19+(_18*$_.pixx)));//#41995
 
 <<<
-var _2v=$get($get($_.textopts,$_.textgrp-1),"");//#42078
-if((_2v.length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&$_.includetext)){//#42086
+var _2v=$get($get($_.textopts,$_.textgrp-1),"");//#42082
+if((_2v.length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&$_.includetext)){//#42090
 >>>
-if(($get($get($_.textopts,$_.textgrp-1),"").length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&$_.includetext)){//#42086
+if(($get($get($_.textopts,$_.textgrp-1),"").length!=0)||((($_.textgrp==1)&&($_.txt.length>0))&&$_.includetext)){//#42090
 
 <<<
-var _D=$s(128);//#42254
-$_.prop=$cvs(_D,_C);//#42254
+var _D=$s(128);//#42258
+$_.prop=$cvs(_D,_C);//#42258
 >>>
-$_.prop=$cvs($s(128),_C);//#42254
+$_.prop=$cvs($s(128),_C);//#42258
 
 <<<
-var _Z=$has($_.validatetext_xalignopts,_Y);//#42269
-if(!_Z){//#42271
+var _Z=$has($_.validatetext_xalignopts,_Y);//#42273
+if(!_Z){//#42275
 >>>
-if(!$has($_.validatetext_xalignopts,_Y)){//#42271
+if(!$has($_.validatetext_xalignopts,_Y)){//#42275
 
 <<<
-var _d=$has($_.validatetext_yalignopts,_c);//#42275
-if(!_d){//#42277
+var _d=$has($_.validatetext_yalignopts,_c);//#42279
+if(!_d){//#42281
 >>>
-if(!$has($_.validatetext_yalignopts,_c)){//#42277
+if(!$has($_.validatetext_yalignopts,_c)){//#42281
 
 <<<
-var _g=$has($_.validatetext_directionoptions,$get($_.td,"direction"));//#42280
-if(!_g){//#42282
+var _g=$has($_.validatetext_directionoptions,$get($_.td,"direction"));//#42284
+if(!_g){//#42286
 >>>
-if(!$has($_.validatetext_directionoptions,$get($_.td,"direction"))){//#42282
+if(!$has($_.validatetext_directionoptions,$get($_.td,"direction"))){//#42286
 
 <<<
 $k[$j++]=_O;//#472
@@ -376234,10 +376234,10 @@ $j--;//#41498
 >>>
 
 <<<
-var _2n=$eq($get(_2i,_2j),$_.key)?1:0;//#42069
-$k[$j++]=_2n;//#42069
+var _2n=$eq($get(_2i,_2j),$_.key)?1:0;//#42071
+$k[$j++]=_2n;//#42071
 >>>
-$k[$j++]=$eq($get(_2i,_2j),$_.key)?1:0;//#42069
+$k[$j++]=$eq($get(_2i,_2j),$_.key)?1:0;//#42071
 
 <<<deadvar
 var _26=$k[--$j];//#577
@@ -381093,19 +381093,19 @@ _1z[_1x]=0;//#41267
 _1z=$a(_1z);//#41267
 
 <<<forarray
-$k[$j++]=Infinity;//#42068
-var _2i=$_.pixs;//#42069
-for(var _2j=0,_2k=_2i.length;_2j<_2k;_2j++){//#42069
-$k[$j++]=$eq($get(_2i,_2j),$_.key)?1:0;//#42069
-}//#42069
-var _2o=$a();//#42069
+$k[$j++]=Infinity;//#42070
+var _2i=$_.pixs;//#42071
+for(var _2j=0,_2k=_2i.length;_2j<_2k;_2j++){//#42071
+$k[$j++]=$eq($get(_2i,_2j),$_.key)?1:0;//#42071
+}//#42071
+var _2o=$a();//#42071
 >>>
-var _2o=[];//#42068
-var _2i=$_.pixs;//#42069
-for(var _2j=0,_2k=_2i.length;_2j<_2k;_2j++){//#42069
-_2o[_2j]=$eq($get(_2i,_2j),$_.key)?1:0;//#42069
-}//#42069
-_2o=$a(_2o);//#42069
+var _2o=[];//#42070
+var _2i=$_.pixs;//#42071
+for(var _2j=0,_2k=_2i.length;_2j<_2k;_2j++){//#42071
+_2o[_2j]=$eq($get(_2i,_2j),$_.key)?1:0;//#42071
+}//#42071
+_2o=$a(_2o);//#42071
 
 <<<var Infinity
 var _R=Infinity;//#472
@@ -393903,74 +393903,74 @@ $$.arc($f($_.x+0.5),$f(($_.pixy-$_.y)-0.5),$f(0.5-$_.inkspread),0,360,1);//#4200
 $$.arc($f($_.x + 0.5), $f($_.pixy - $_.y - 0.5), $f(0.5 - $_.inkspread), 0, 360, 1)//#42007
 
 <<<de$f
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+$_.bordertop)+($_.borderwidth/2))]);//#42033
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f(($_.pixy+$_.bordertop)+($_.borderwidth/2))]);//#42035
 >>>
-$_.tl = $a([-$f($_.borderleft + $_.borderwidth / 2), $f($_.pixy + $_.bordertop + $_.borderwidth / 2)])//#42033
+$_.tl = $a([-$f($_.borderleft + $_.borderwidth / 2), $f($_.pixy + $_.bordertop + $_.borderwidth / 2)])//#42035
 
 <<<de$f
-$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+$_.bordertop)+($_.borderwidth/2))]);//#42034
+$_.tr=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),$f(($_.pixy+$_.bordertop)+($_.borderwidth/2))]);//#42036
 >>>
-$_.tr = $a([$f($_.pixx + $_.borderright + $_.borderwidth / 2), $f($_.pixy + $_.bordertop + $_.borderwidth / 2)])//#42034
+$_.tr = $a([$f($_.pixx + $_.borderright + $_.borderwidth / 2), $f($_.pixy + $_.bordertop + $_.borderwidth / 2)])//#42036
 
 <<<de$f
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42035
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42037
 >>>
-$_.bl = $a([-$f($_.borderleft + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)])//#42035
+$_.bl = $a([-$f($_.borderleft + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)])//#42037
 
 <<<de$f
-$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42036
+$_.br=$a([$f(($_.pixx+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42038
 >>>
-$_.br = $a([$f($_.pixx + $_.borderright + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)])//#42036
+$_.br = $a([$f($_.pixx + $_.borderright + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)])//#42038
 
 <<<de$f
-$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+$_.bordertop)-$_.inkspread)]);//#42038
+$_.tl=$a([$f((-$_.borderleft)+$_.inkspread),$f(($_.pixy+$_.bordertop)-$_.inkspread)]);//#42040
 >>>
-$_.tl = $a([$f(-$_.borderleft + $_.inkspread), $f($_.pixy + $_.bordertop - $_.inkspread)])//#42038
+$_.tl = $a([$f(-$_.borderleft + $_.inkspread), $f($_.pixy + $_.bordertop - $_.inkspread)])//#42040
 
 <<<de$f
-$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+$_.bordertop)-$_.inkspread)]);//#42039
+$_.tr=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f(($_.pixy+$_.bordertop)-$_.inkspread)]);//#42041
 >>>
-$_.tr = $a([$f($_.pixx + $_.borderright - $_.inkspread), $f($_.pixy + $_.bordertop - $_.inkspread)])//#42039
+$_.tr = $a([$f($_.pixx + $_.borderright - $_.inkspread), $f($_.pixy + $_.bordertop - $_.inkspread)])//#42041
 
 <<<de$f
-$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-$_.borderbottom)+$_.inkspread)]);//#42040
+$_.bl=$a([$f((-$_.borderleft)+$_.inkspread),$f((-$_.borderbottom)+$_.inkspread)]);//#42042
 >>>
-$_.bl = $a([$f(-$_.borderleft + $_.inkspread), $f(-$_.borderbottom + $_.inkspread)])//#42040
+$_.bl = $a([$f(-$_.borderleft + $_.inkspread), $f(-$_.borderbottom + $_.inkspread)])//#42042
 
 <<<de$f
-$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-$_.borderbottom)+$_.inkspread)]);//#42041
+$_.br=$a([$f(($_.pixx+$_.borderright)-$_.inkspread),$f((-$_.borderbottom)+$_.inkspread)]);//#42043
 >>>
-$_.br = $a([$f($_.pixx + $_.borderright - $_.inkspread), $f(-$_.borderbottom + $_.inkspread)])//#42041
+$_.br = $a([$f($_.pixx + $_.borderright - $_.inkspread), $f(-$_.borderbottom + $_.inkspread)])//#42043
 
 <<<de$f
-$$.setlinewidth($f($_.borderwidth-($_.inkspread*2)));//#42053
+$$.setlinewidth($f($_.borderwidth-($_.inkspread*2)));//#42055
 >>>
-$$.setlinewidth($f($_.borderwidth - $_.inkspread * 2))//#42053
+$$.setlinewidth($f($_.borderwidth - $_.inkspread * 2))//#42055
 
 <<<de$f
-$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+$_.bordertop)+($_.borderwidth/2))]);//#42169
+$_.tl=$a([-($f($_.borderleft+($_.borderwidth/2))),$f((29+$_.bordertop)+($_.borderwidth/2))]);//#42173
 >>>
-$_.tl = $a([-$f($_.borderleft + $_.borderwidth / 2), $f(29 + $_.bordertop + $_.borderwidth / 2)])//#42169
+$_.tl = $a([-$f($_.borderleft + $_.borderwidth / 2), $f(29 + $_.bordertop + $_.borderwidth / 2)])//#42173
 
 <<<de$f
-$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+$_.bordertop)+($_.borderwidth/2))]);//#42170
+$_.tr=$a([$f((30+$_.borderright)+($_.borderwidth/2)),$f((29+$_.bordertop)+($_.borderwidth/2))]);//#42174
 >>>
-$_.tr = $a([$f(30 + $_.borderright + $_.borderwidth / 2), $f(29 + $_.bordertop + $_.borderwidth / 2)])//#42170
+$_.tr = $a([$f(30 + $_.borderright + $_.borderwidth / 2), $f(29 + $_.bordertop + $_.borderwidth / 2)])//#42174
 
 <<<de$f
-$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42171
+$_.bl=$a([-($f($_.borderleft+($_.borderwidth/2))),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42175
 >>>
-$_.bl = $a([-$f($_.borderleft + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)])//#42171
+$_.bl = $a([-$f($_.borderleft + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)])//#42175
 
 <<<de$f
-$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42172
+$_.br=$a([$f((30+$_.borderright)+($_.borderwidth/2)),-($f($_.borderbottom+($_.borderwidth/2)))]);//#42176
 >>>
-$_.br = $a([$f(30 + $_.borderright + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)])//#42172
+$_.br = $a([$f(30 + $_.borderright + $_.borderwidth / 2), -$f($_.borderbottom + $_.borderwidth / 2)])//#42176
 
 <<<de$f
-$$.setlinewidth($f($_.borderwidth-($_.inkspread*2)));//#42189
+$$.setlinewidth($f($_.borderwidth-($_.inkspread*2)));//#42193
 >>>
-$$.setlinewidth($f($_.borderwidth - $_.inkspread * 2))//#42189
+$$.setlinewidth($f($_.borderwidth - $_.inkspread * 2))//#42193
 
 <<<debool
 if($an($nt($_.parse),$nt($_.parsefnc))){//#482
@@ -394423,7 +394423,7 @@ if($nt(_h)){//#41944
 if(!_h){//#41944
 
 <<<debool
-if($nt(_37)){//#42085
+if($nt(_37)){//#42089
 >>>
-if(!_37){//#42085
+if(!_37){//#42089
 

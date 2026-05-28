@@ -176,6 +176,8 @@ begin
     /inkspreadh inkspreadh 2 div def
     /inkspreadv inkspreadv 2 div def
 
+    gsave
+
     %
     % Force symbol to given width
     %
@@ -225,6 +227,8 @@ begin
         ] dotty {drawlayerdots} {drawlayer} ifelse
     } forall
 
+    grestore    %% Removes symbol-specific scaling
+
     %
     % Display the text
     %
@@ -236,7 +240,7 @@ begin
             textopts textgrp 1 sub get
             dup (txt) txt put
             dup dup () get (content) exch put
-            pixx pixy textgrp 4 -1 roll //rendertext exec
+            width 72 mul height 72 mul textgrp 4 -1 roll //rendertext exec
             not { grestore //raiseerror exec } if
         } if
     } for
@@ -244,7 +248,7 @@ begin
     %
     % Display the guard elements
     %
-    pixx //renderguards exec
+    width 72 mul //renderguards exec
 
     grestore
 

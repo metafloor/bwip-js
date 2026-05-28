@@ -159,6 +159,10 @@ modstrrep('gs1northamericancoupon', /\/text1yoffset null/, '/text1yoffset 2');
 strrep(/\/Helvetica/, '(OCR-B)');
 strrep(/\/Courier/, '(OCR-B)');
 
+// gs1dl(datamatrix|qrcode)
+strrep(/args \(text1size\) 5 put/, 'args (text1size) 10 put');
+strrep(/args \(text1yoffset\) -[14].0 put/, 'args (text1yoffset) -3.0 put');
+
 strrep(/\/text1yoffset -7/, '/textyoffset -8');
 
 strrep(/\/inkspread 0\.[0-9]* def/, '/inkspread 0 def');

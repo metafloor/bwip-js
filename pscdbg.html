@@ -39600,9 +39600,9 @@ div span:hover {
 <code>    args (opt) options put</code>
 <code>    includetext {</code>
 <code>        args (text1) hri put</code>
-<code>        args (text1yoffset) -1.0 put</code>
+<code>        args (text1yoffset) -3.0 put</code>
 <code>        args (text1font) (OCR-B) put</code>
-<code>        args (text1size) 5 put</code>
+<code>        args (text1size) 10 put</code>
 <code>    } if</code>
 <code>    args</code>
 <code></code>
@@ -39850,9 +39850,9 @@ div span:hover {
 <code>    args (opt) options put</code>
 <code>    includetext {</code>
 <code>        args (text1) hri put</code>
-<code>        args (text1yoffset) -4.0 put</code>
+<code>        args (text1yoffset) -3.0 put</code>
 <code>        args (text1font) (OCR-B) put</code>
-<code>        args (text1size) 5 put</code>
+<code>        args (text1size) 10 put</code>
 <code>    } if</code>
 <code>    args</code>
 <code></code>
@@ -42086,6 +42086,8 @@ div span:hover {
 <code>    /inkspreadh inkspreadh 2 div def</code>
 <code>    /inkspreadv inkspreadv 2 div def</code>
 <code></code>
+<code>    gsave</code>
+<code></code>
 <code>    %</code>
 <code>    % Force symbol to given width</code>
 <code>    %</code>
@@ -42135,6 +42137,8 @@ div span:hover {
 <code>        ] dotty {drawlayerdots} {drawlayer} ifelse</code>
 <code>    } forall</code>
 <code></code>
+<code>    grestore    %% Removes symbol-specific scaling</code>
+<code></code>
 <code>    %</code>
 <code>    % Display the text</code>
 <code>    %</code>
@@ -42146,7 +42150,7 @@ div span:hover {
 <code>            textopts textgrp 1 sub get</code>
 <code>            dup (txt) txt put</code>
 <code>            dup dup () get (content) exch put</code>
-<code>            pixx pixy textgrp 4 -1 roll //rendertext exec</code>
+<code>            width 72 mul height 72 mul textgrp 4 -1 roll //rendertext exec</code>
 <code>            not { grestore //raiseerror exec } if</code>
 <code>        } if</code>
 <code>    } for</code>
@@ -42154,7 +42158,7 @@ div span:hover {
 <code>    %</code>
 <code>    % Display the guard elements</code>
 <code>    %</code>
-<code>    pixx //renderguards exec</code>
+<code>    width 72 mul //renderguards exec</code>
 <code></code>
 <code>    grestore</code>
 <code></code>
@@ -42204,27 +42208,27 @@ div span:hover {
 <code>    inkspread null eq {/inkspread 0 def} if</code>
 <code></code>
 <code>    inkspread -1 lt inkspread 1 gt or {</code>
-<code>        (bwipp.renmaximatrixBadInkspread#42142) (inkspread must be from -1 to 1) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadInkspread#42146) (inkspread must be from -1 to 1) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderleft -1 lt borderleft 50 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBorderleft#42146) (borderleft must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBorderleft#42150) (borderleft must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderright -1 lt borderright 50 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBorderright#42150) (borderright must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBorderright#42154) (borderright must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    bordertop -1 lt bordertop 50 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBordertop#42154) (bordertop must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBordertop#42158) (bordertop must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderbottom -1 lt borderbottom 50 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBorderbottom#42158) (borderbottom must be from -1 to 50) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBorderbottom#42162) (borderbottom must be from -1 to 50) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    borderwidth 0 lt borderwidth 10 gt or {</code>
-<code>        (bwipp.renmaximatrixBadBorderwidth#42162) (borderwidth must be from 0 to 10) //raiseerror exec</code>
+<code>        (bwipp.renmaximatrixBadBorderwidth#42166) (borderwidth must be from 0 to 10) //raiseerror exec</code>
 <code>    } if</code>
 <code></code>
 <code>    gsave</code>
