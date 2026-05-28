@@ -25,8 +25,8 @@ or to a canvas (browser) or as SVG (all platforms).
 
 ## Status 
 
-* Current bwip-js version is 4.10.2 (2026-05-27)
-* Current BWIPP version is 2026-04-21
+* Current bwip-js version is 4.11.0 (2026-05-28)
+* Current BWIPP version is 2026-05-28
 * Node.js compatibility: 6.0
 * Browser compatibility: Edge, Firefox, Chrome
 
@@ -656,6 +656,7 @@ for more details.
  * code93ext &#x2022; Code 93 Extended
  * codeone &#x2022; Code One
  * coop2of5 &#x2022; COOP 2 of 5
+ * d3aqr &#x2022; D3 AQR (beta)
  * daft &#x2022; Custom 4 state symbology
  * databarexpanded &#x2022; GS1 DataBar Expanded
  * databarexpandedcomposite &#x2022; GS1 DataBar Expanded Composite
@@ -735,7 +736,7 @@ for more details.
  * qrcode &#x2022; QR Code
  * rationalizedCodabar &#x2022; Codabar
  * raw &#x2022; Custom 1D symbology
- * rectangularmicroqrcode &#x2022; Rectangular Micro QR Code
+ * rectangularmicroqrcode &#x2022; Rectangular Micro QR Code (rMQR)
  * royalmail &#x2022; Royal Mail 4 State Customer Code
  * sscc18 &#x2022; SSCC-18
  * swissqrcode &#x2022; Swiss QR Code
