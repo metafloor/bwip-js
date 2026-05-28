@@ -1,4 +1,4 @@
-// Type definitions for bwip-js  4.10.2 (2026-05-27)
+// Type definitions for bwip-js  4.11.0 (2026-05-28)
 //
 // THIS DEFINITION FILE IS MACHINE GENERATED - DO NOT EDIT
 //
@@ -253,6 +253,9 @@ declare namespace BwipJs {
     export function coop2of5(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
     export function coop2of5<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function coop2of5<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
+    export function d3aqr(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
+    export function d3aqr<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
+    export function d3aqr<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
     export function daft(canvas: string | CanvasType, opts: RenderOptions): CanvasType;
     export function daft<T>(opts: RenderOptions, drawing: DrawingContext<Promise<T>>): Promise<T>;
     export function daft<T>(opts: RenderOptions, drawing: DrawingContext<T>): T;
