@@ -40,7 +40,7 @@
     }
 }(typeof self !== 'undefined' ? self : this, function () {
 // exports.js
-const BWIPJS_VERSION = '4.11.1 (2026-05-28)';
+const BWIPJS_VERSION = '4.11.2 (2026-07-01)';
 
 // Context insensitive canvas element test.
 function IsCanvas(elt) {

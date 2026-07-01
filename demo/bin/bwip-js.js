@@ -3,7 +3,6 @@
 
 var fs = require('fs');
 var bwipjs = require('..');
-var symdesc = require('../lib/symdesc');
 
 function usage(exit) {
     console.log(
@@ -266,9 +265,10 @@ for (var i = 2, l = argv.length; i < l; i++) {
 if (opts.help) {
     help();
 } else if (opts.symbols) {
+    var list = bwipjs.symbolList.slice();
     var arr = [];
-    for (var sym in symdesc) {
-        arr.push(sym + ' : ' + symdesc[sym].desc);
+    for (var i = 0; i < list.length; i++) {
+        arr.push(list[i].bcid + ' : ' + list[i].desc);
     }
     arr.sort();
     for (var i = 0; i < arr.length; i++) {
