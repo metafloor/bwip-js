@@ -31,7 +31,7 @@
 "use strict";
 
 // exports.js
-const BWIPJS_VERSION = '4.11.1 (2026-05-28)';
+const BWIPJS_VERSION = '4.11.2 (2026-07-01)';
 
 var url = require('url');
 var PNG_ZLIB = require('zlib');
