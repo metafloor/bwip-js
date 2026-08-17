@@ -1,4 +1,4 @@
-// Type definitions for bwip-js  4.11.2 (2026-07-01)
+// Type definitions for bwip-js  4.11.3 (2026-08-17)
 //
 // THIS DEFINITION FILE IS MACHINE GENERATED - DO NOT EDIT
 //
@@ -79,6 +79,8 @@ declare namespace BwipJs {
         scale?: number | undefined;
 
         rotate?: 'N' | 'R' | 'L' | 'I' | undefined;
+
+        padding?: number | undefined;
 
         paddingwidth?: number | undefined;
         paddingheight?: number | undefined;
