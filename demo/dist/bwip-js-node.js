@@ -31,7 +31,7 @@
 "use strict";
 
 // exports.js
-const BWIPJS_VERSION = '4.11.2 (2026-07-01)';
+const BWIPJS_VERSION = '4.11.3 (2026-08-17)';
 
 var url = require('url');
 var PNG_ZLIB = require('zlib');
@@ -1290,8 +1290,9 @@ function bwipp_parseinput() {
         var _0 = $a(['NUL', 'SOH', 'STX', 'ETX', 'EOT', 'ENQ', 'ACK', 'BEL', 'BS', 'TAB', 'LF', 'VT', 'FF', 'CR', "", "", 'DLE', 'DC1', 'DC2', 'DC3', 'DC4', 'NAK', 'SYN', 'ETB', 'CAN', 'EM', 'SUB', 'ESC', 'FS', 'GS', 'RS', 'US']); //#430
         $k[$j++] = 0; //#434
         for (var _1 = 0, _2 = _0.length; _1 < _2; _1++) { //#434
+            var _3 = $get(_0, _1); //#434
             var _4 = $k[--$j]; //#433
-            $k[$j++] = $get(_0, _1); //#433
+            $k[$j++] = _3; //#433
             $k[$j++] = _4; //#433
             $k[$j++] = _4 + 1; //#433
         } //#433
@@ -1425,7 +1426,8 @@ function bwipp_parseinput() {
                     bwipp_raiseerror(); //#540
                 } //#540
                 var _1Z = $k[$j - 1]; //#542
-                if ($get(_1Z, 0) == 94) { //#547
+                var _1a = $get(_1Z, 0); //#542
+                if (_1a == 94) { //#547
                     $put($_.msg, $_.j, 94); //#543
                     $_.j = $_.j + 1; //#544
                     var _1e = $k[--$j]; //#545
@@ -1439,7 +1441,8 @@ function bwipp_parseinput() {
                     bwipp_raiseerror(); //#550
                 } //#550
                 var _1h = $k[$j - 1]; //#552
-                if ($eq($geti(_1h, 0, 3), "ECI") && $_.eci) { //#569
+                var _1i = $geti(_1h, 0, 3); //#552
+                if ($eq(_1i, "ECI") && $_.eci) { //#569
                     var _1k = $k[$j - 1]; //#553
                     if (_1k.length < 9) { //#556
                         $k[$j - 1] = "bwipp.truncatedECI#555"; //#555
@@ -4466,8 +4469,9 @@ function bwipp_gs1process() {
         $k[$j++] = Infinity; //#2790
         $k[$j++] = 0; //#2792
         for (var _P1 = 0, _P2 = "#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".length; _P1 < _P2; _P1++) { //#2792
+            var _P3 = $get("#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", _P1); //#2792
             var _P4 = $k[--$j]; //#2792
-            $k[$j++] = $get("#-/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", _P1); //#2792
+            $k[$j++] = _P3; //#2792
             $k[$j++] = _P4; //#2792
             $k[$j++] = _P4 + 1; //#2792
         } //#2792
@@ -4477,8 +4481,9 @@ function bwipp_gs1process() {
         $k[$j++] = Infinity; //#2795
         $k[$j++] = 0; //#2797
         for (var _P6 = 0, _P7 = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ".length; _P6 < _P7; _P6++) { //#2797
+            var _P8 = $get("23456789ABCDEFGHJKLMNPQRSTUVWXYZ", _P6); //#2797
             var _P9 = $k[--$j]; //#2797
-            $k[$j++] = $get("23456789ABCDEFGHJKLMNPQRSTUVWXYZ", _P6); //#2797
+            $k[$j++] = _P8; //#2797
             $k[$j++] = _P9; //#2797
             $k[$j++] = _P9 + 1; //#2797
         } //#2797
@@ -4488,8 +4493,9 @@ function bwipp_gs1process() {
         $k[$j++] = Infinity; //#2800
         $k[$j++] = 0; //#2802
         for (var _PB = 0, _PC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".length; _PB < _PC; _PB++) { //#2802
+            var _PD = $get("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", _PB); //#2802
             var _PE = $k[--$j]; //#2802
-            $k[$j++] = $get("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", _PB); //#2802
+            $k[$j++] = _PD; //#2802
             $k[$j++] = _PE; //#2802
             $k[$j++] = _PE + 1; //#2802
         } //#2802
@@ -4819,9 +4825,9 @@ function bwipp_gs1process() {
         $_.isvaliddlpkeyseq = function() {
             var _Rp = $k[--$j]; //#3067
             $_.in = _Rp; //#3067
-            var _Rt = $get($_.gs1syntax, $get($_.in, 0)); //#3069
+            var _Ru = $get($get($_.gs1syntax, $get($_.in, 0)), 'dlpkey'); //#3069
             $k[$j++] = false; //#3081
-            $forall($get(_Rt, 'dlpkey'), function() { //#3081
+            $forall(_Ru, function() { //#3081
                 var _Rv = $k[--$j]; //#3070
                 $_.seq = _Rv; //#3070
                 $_.i = 1; //#3071
@@ -5040,8 +5046,9 @@ function bwipp_gs1process() {
         $_.vals = $geti($_.vals, 0, _Tu); //#3165
         $j--; //#3166
         for (var _U0 = 0, _Tz = $_.ais.length - 1; _U0 <= _Tz; _U0 += 1) { //#3180
+            var _U2 = $get($_.ais, _U0); //#3170
             $k[$j++] = _U0; //#3178
-            if ($eq($get($_.ais, _U0), "01")) { //#3178
+            if ($eq(_U2, "01")) { //#3178
                 var _U3 = $k[$j - 1]; //#3171
                 var _U5 = $get($_.vals, _U3); //#3171
                 var _U6 = _U5.length; //#3172
@@ -5272,10 +5279,10 @@ function bwipp_gs1process() {
             return true; //#3255
         } //#3255
         var _VE = $k[$j - 1]; //#3256
+        var _VF = $geti(_VE, 0, _VE.length - 2); //#3258
         $k[$j++] = _VE.length - 2; //#3258
-        var _VH = $geti(_VE, 0, _VE.length - 2); //#3258
         $k[$j++] = Infinity; //#3260
-        $forall(_VH, function() { //#3260
+        $forall(_VF, function() { //#3260
             var _VI = $k[$j - 1]; //#3259
             var _VK = $has($_.cset82, _VI); //#3259
             if (_VK) { //#3259
@@ -5327,9 +5334,11 @@ function bwipp_gs1process() {
         $astore($a($counttomark())); //#3268
         var _Vh = $k[--$j]; //#3268
         $j--; //#3268
+        var _Vk = $get(_Vh, 0); //#3269
+        var _Vl = $get(_Vh, 1); //#3269
         var _Vm = $k[--$j]; //#3269
         var _Vn = _Vm.length; //#3272
-        $k[$j++] = $f($get(_Vh, 0) * 32 + $get(_Vh, 1)) //#3272
+        $k[$j++] = $f(_Vk * 32 + _Vl) //#3272
         $k[$j++] = _Vm; //#3272
         $k[$j++] = $_.gs1process_primes; //#3272
         $k[$j++] = _Vn; //#3272
@@ -5344,8 +5353,9 @@ function bwipp_gs1process() {
         var _Vp = $k[--$j]; //#3273
         var _Vq = $geti(_Vp, 0, _Vo); //#3273
         for (var _Vr = 0, _Vs = _Vq.length; _Vr < _Vs; _Vr++) { //#3273
+            var _Vt = $get(_Vq, _Vr); //#3273
             var _Vu = $k[--$j]; //#3273
-            $k[$j++] = $get(_Vq, _Vr); //#3273
+            $k[$j++] = _Vt; //#3273
             $k[$j++] = _Vu; //#3273
         } //#3273
         var _Vv = $k[--$j]; //#3274
@@ -5594,7 +5604,8 @@ function bwipp_gs1process() {
             return true; //#3356
         } //#3356
         var _XC = $k[$j - 1]; //#3357
-        if ($cvi($geti(_XC, 6, 2)) < 1) { //#3357
+        var _XD = $geti(_XC, 6, 2); //#3357
+        if ($cvi(_XD) < 1) { //#3357
             $j -= 2; //#3357
             $k[$j++] = "bwipp.GS1badDay#3357"; //#3357
             $k[$j++] = "Invalid day of month"; //#3357
@@ -5650,7 +5661,8 @@ function bwipp_gs1process() {
             return true; //#3369
         } //#3369
         var _XU = $k[$j - 1]; //#3370
-        if ($cvi($geti(_XU, 4, 2)) < 1) { //#3370
+        var _XV = $geti(_XU, 4, 2); //#3370
+        if ($cvi(_XV) < 1) { //#3370
             $j -= 2; //#3370
             $k[$j++] = "bwipp.GS1badDay#3370"; //#3370
             $k[$j++] = "Invalid day of month"; //#3370
@@ -5688,7 +5700,8 @@ function bwipp_gs1process() {
     }; //#3383
     $_.linthhmi = function() {
         var _Xc = $k[$j - 1]; //#3387
-        if ($cvi($geti(_Xc, 0, 2)) > 23) { //#3387
+        var _Xd = $geti(_Xc, 0, 2); //#3387
+        if ($cvi(_Xd) > 23) { //#3387
             $j -= 2; //#3387
             $k[$j++] = "bwipp.GS1badHour#3387"; //#3387
             $k[$j++] = "Invalid hour of day"; //#3387
@@ -5713,7 +5726,8 @@ function bwipp_gs1process() {
             return true; //#3393
         } //#3393
         var _Xi = $k[$j - 1]; //#3395
-        if ($cvi($geti(_Xi, 0, 2)) > 59) { //#3395
+        var _Xj = $geti(_Xi, 0, 2); //#3395
+        if ($cvi(_Xj) > 59) { //#3395
             $j -= 2; //#3395
             $k[$j++] = "bwipp.GS1badMinute#3395"; //#3395
             $k[$j++] = "Invalid minute in the hour"; //#3395
@@ -5723,7 +5737,8 @@ function bwipp_gs1process() {
         var _Xk = $k[$j - 1]; //#3396
         if (_Xk.length >= 4) { //#3398
             var _Xl = $k[$j - 1]; //#3397
-            if ($cvi($geti(_Xl, 2, 2)) > 59) { //#3397
+            var _Xm = $geti(_Xl, 2, 2); //#3397
+            if ($cvi(_Xm) > 59) { //#3397
                 $j -= 2; //#3397
                 $k[$j++] = "bwipp.GS1badSecond#3397"; //#3397
                 $k[$j++] = "Invalid second in the minute"; //#3397
@@ -5856,7 +5871,8 @@ function bwipp_gs1process() {
             return true; //#3441
         } //#3441
         var _YE = $k[$j - 1]; //#3442
-        if ($get(_YE, 0) == 48) { //#3442
+        var _YF = $get(_YE, 0); //#3442
+        if (_YF == 48) { //#3442
             $j -= 3; //#3442
             $k[$j++] = "bwipp.positionZeroPrefix#3442"; //#3442
             $k[$j++] = "Position cannot have zero prefix"; //#3442
@@ -5864,7 +5880,8 @@ function bwipp_gs1process() {
             return true; //#3442
         } //#3442
         var _YH = $k[$j - 2]; //#3443
-        if ($get(_YH, 0) == 48) { //#3443
+        var _YI = $get(_YH, 0); //#3443
+        if (_YI == 48) { //#3443
             $j -= 3; //#3443
             $k[$j++] = "bwipp.endZeroPrefix#3443"; //#3443
             $k[$j++] = "End cannot have zero prefix"; //#3443
@@ -5902,8 +5919,9 @@ function bwipp_gs1process() {
             var _YP = $geti(_YO, 0, 2); //#3452
             $k[$j++] = true; //#3457
             for (var _YQ = 0, _YR = _YP.length; _YQ < _YR; _YQ++) { //#3457
+                var _YS = $get(_YP, _YQ); //#3457
                 var _YT = $s(1); //#3453
-                $put(_YT, 0, $get(_YP, _YQ)); //#3453
+                $put(_YT, 0, _YS); //#3453
                 $search("0123456789ABCDEFabcdef", _YT); //#3455
                 var _YU = $k[--$j]; //#3455
                 if (!_YU) { //#3455
@@ -6076,7 +6094,8 @@ function bwipp_gs1process() {
         $k[$j++] = _Z6; //#3582
         if (_Z6.length >= 1) { //#3582
             var _Z7 = $k[$j - 1]; //#3529
-            if ($cvi($geti(_Z7, 0, 1)) == 1) { //#3582
+            var _Z8 = $geti(_Z7, 0, 1); //#3529
+            if ($cvi(_Z8) == 1) { //#3582
                 var _Z9 = $k[--$j]; //#3530
                 var _ZA = $geti(_Z9, 1, _Z9.length - 1); //#3530
                 $k[$j++] = _ZA; //#3535
@@ -6088,7 +6107,8 @@ function bwipp_gs1process() {
                     return true; //#3534
                 } //#3534
                 var _ZB = $k[$j - 1]; //#3536
-                if ($cvi($geti(_ZB, 0, 1)) > 3) { //#3538
+                var _ZC = $geti(_ZB, 0, 1); //#3536
+                if ($cvi(_ZC) > 3) { //#3538
                     $j -= 2; //#3537
                     $k[$j++] = "bwipp.GS1couponBadAdditionalPurchaseRulesCode#3537"; //#3537
                     $k[$j++] = "Coupon Additional Purchase Rules Code must be 0-3"; //#3537
@@ -6199,7 +6219,8 @@ function bwipp_gs1process() {
         var _Ze = $k[$j - 1]; //#3585
         if (_Ze.length >= 1) { //#3629
             var _Zf = $k[$j - 1]; //#3585
-            if ($cvi($geti(_Zf, 0, 1)) == 2) { //#3629
+            var _Zg = $geti(_Zf, 0, 1); //#3585
+            if ($cvi(_Zg) == 2) { //#3629
                 var _Zh = $k[--$j]; //#3586
                 var _Zi = $geti(_Zh, 1, _Zh.length - 1); //#3586
                 $k[$j++] = _Zi; //#3591
@@ -6305,7 +6326,8 @@ function bwipp_gs1process() {
         var _a8 = $k[$j - 1]; //#3633
         if (_a8.length >= 1) { //#3653
             var _a9 = $k[$j - 1]; //#3633
-            if ($cvi($geti(_a9, 0, 1)) == 3) { //#3653
+            var _aA = $geti(_a9, 0, 1); //#3633
+            if ($cvi(_aA) == 3) { //#3653
                 var _aB = $k[--$j]; //#3634
                 var _aC = $geti(_aB, 1, _aB.length - 1); //#3634
                 $k[$j++] = _aC; //#3639
@@ -6368,7 +6390,8 @@ function bwipp_gs1process() {
         var _ab = $k[$j - 1]; //#3656
         if (_ab.length >= 1) { //#3679
             var _ac = $k[$j - 1]; //#3656
-            if ($cvi($geti(_ac, 0, 1)) == 4) { //#3679
+            var _ad = $geti(_ac, 0, 1); //#3656
+            if ($cvi(_ad) == 4) { //#3679
                 var _ae = $k[--$j]; //#3657
                 var _af = $geti(_ae, 1, _ae.length - 1); //#3657
                 $k[$j++] = _af; //#3662
@@ -6440,7 +6463,8 @@ function bwipp_gs1process() {
         var _b8 = $k[$j - 1]; //#3682
         if (_b8.length >= 1) { //#3695
             var _b9 = $k[$j - 1]; //#3682
-            if ($cvi($geti(_b9, 0, 1)) == 5) { //#3695
+            var _bA = $geti(_b9, 0, 1); //#3682
+            if ($cvi(_bA) == 5) { //#3695
                 var _bB = $k[--$j]; //#3683
                 var _bC = $geti(_bB, 1, _bB.length - 1); //#3683
                 $k[$j++] = _bC; //#3688
@@ -6469,7 +6493,8 @@ function bwipp_gs1process() {
         var _bI = $k[$j - 1]; //#3698
         if (_bI.length >= 1) { //#3714
             var _bJ = $k[$j - 1]; //#3698
-            if ($cvi($geti(_bJ, 0, 1)) == 6) { //#3714
+            var _bK = $geti(_bJ, 0, 1); //#3698
+            if ($cvi(_bK) == 6) { //#3714
                 var _bL = $k[--$j]; //#3699
                 var _bM = $geti(_bL, 1, _bL.length - 1); //#3699
                 $k[$j++] = _bM; //#3704
@@ -6508,7 +6533,8 @@ function bwipp_gs1process() {
         var _bV = $k[$j - 1]; //#3717
         if (_bV.length >= 1) { //#3753
             var _bW = $k[$j - 1]; //#3717
-            if ($cvi($geti(_bW, 0, 1)) == 9) { //#3753
+            var _bX = $geti(_bW, 0, 1); //#3717
+            if ($cvi(_bX) == 9) { //#3753
                 var _bY = $k[--$j]; //#3718
                 var _bZ = $geti(_bY, 1, _bY.length - 1); //#3718
                 $k[$j++] = _bZ; //#3723
@@ -6539,7 +6565,8 @@ function bwipp_gs1process() {
                     return true; //#3731
                 } //#3731
                 var _bf = $k[$j - 1]; //#3733
-                if ($cvi($geti(_bf, 0, 1)) > 2) { //#3735
+                var _bg = $geti(_bf, 0, 1); //#3733
+                if ($cvi(_bg) > 2) { //#3735
                     $j -= 2; //#3734
                     $k[$j++] = "bwipp.GS1couponBadSaveValueAppliesToItem#3734"; //#3734
                     $k[$j++] = "Coupon Save Value Applies to Item must be 0-2"; //#3734
@@ -6567,7 +6594,8 @@ function bwipp_gs1process() {
                     return true; //#3746
                 } //#3746
                 var _bl = $k[$j - 1]; //#3748
-                if ($cvi($geti(_bl, 0, 1)) > 1) { //#3750
+                var _bm = $geti(_bl, 0, 1); //#3748
+                if ($cvi(_bm) > 1) { //#3750
                     $j -= 2; //#3749
                     $k[$j++] = "bwipp.GS1couponBadDontMultiplyFlag#3749"; //#3749
                     $k[$j++] = "Don't Multiply Flag must be 0 or 1"; //#3749
@@ -6758,7 +6786,8 @@ function bwipp_gs1process() {
                 $k[$j++] = 0; //#3841
                 $forall(_cb, function() { //#3841
                     var _cc = $k[$j - 1]; //#3841
-                    if ($get(_cc, 'opt')) { //#3841
+                    var _cd = $get(_cc, 'opt'); //#3841
+                    if (_cd) { //#3841
                         $k[$j - 1] = 0; //#3841
                     } else { //#3841
                         var _ce = $k[--$j]; //#3841
@@ -6777,11 +6806,14 @@ function bwipp_gs1process() {
                     break; //#3842
                 } //#3842
                 var _ck = $k[$j - 1]; //#3844
-                var _cp = 0; //#3844
+                $k[$j++] = 0; //#3844
                 $forall(_ck, function() { //#3844
                     var _cl = $k[--$j]; //#3844
-                    _cp = $f(_cp + $get(_cl, 'max')) //#3844
+                    var _cm = $get(_cl, 'max'); //#3844
+                    var _cn = $k[--$j]; //#3844
+                    $k[$j++] = $f(_cn + _cm) //#3844
                 }); //#3844
+                var _cp = $k[--$j]; //#3844
                 if (_cp < $_.val.length) { //#3846
                     $j -= 2; //#3845
                     $k[$j++] = "bwipp.GS1valueTooLong#3845"; //#3845
@@ -7001,8 +7033,9 @@ function bwipp_gs1process() {
                             $k[$j++] = _ev; //#3959
                             $k[$j++] = 0; //#3959
                             for (var _ew = 0, _ex = _ev.length; _ew < _ex; _ew++) { //#3959
+                                var _ey = $get(_ev, _ew); //#3959
                                 var _ez = $k[--$j]; //#3959
-                                $k[$j++] = $f(_ez + $get(_ev, _ew).length) //#3959
+                                $k[$j++] = $f(_ez + _ey.length) //#3959
                             } //#3959
                             var _f1 = $_.ai.length + 49; //#3960
                             $k[$j++] = _f1; //#3960
@@ -7074,15 +7107,17 @@ function bwipp_rsecbinary() {
         if ($_.getdata() === true) {
             break;
         } //#4208
+        var _F = $get($_.lfsr, 0); //#4208
         var _G = $k[--$j]; //#4208
-        $k[$j++] = $xo(_G, $get($_.lfsr, 0)); //#4216
+        $k[$j++] = $xo(_G, _F); //#4216
         for (var _J = 0, _I = $_.nc - 2; _J <= _I; _J += 1) { //#4216
             var _K = $_.lfsr; //#4210
+            var _L = $get(_K, _J + 1); //#4211
             var _O = $get($_.coeffs, $f($_.nc - _J) - 1); //#4212
             var _P = $k[$j - 1]; //#4213
             $k[$j++] = _K; //#4214
             $k[$j++] = _J; //#4214
-            $k[$j++] = $get(_K, _J + 1); //#4214
+            $k[$j++] = _L; //#4214
             $k[$j++] = _O; //#4214
             $k[$j++] = _P; //#4214
             if ($_.rsprod() === true) {
@@ -7094,10 +7129,11 @@ function bwipp_rsecbinary() {
             var _U = $k[--$j]; //#4215
             $put(_U, _T, $xo(_S, _R)); //#4215
         } //#4215
+        var _Y = $get($_.coeffs, 0); //#4217
         var _Z = $k[$j - 1]; //#4217
         $k[$j++] = $_.lfsr; //#4218
         $k[$j++] = $_.nc - 1; //#4218
-        $k[$j++] = $get($_.coeffs, 0); //#4218
+        $k[$j++] = _Y; //#4218
         $k[$j++] = _Z; //#4218
         if ($_.rsprod() === true) {
             break;
@@ -7140,16 +7176,19 @@ function bwipp_rsecprime() {
         if ($_.getdata() === true) {
             break;
         } //#4266
+        var _F = $get($_.lfsr, 0); //#4266
         var _G = $k[--$j]; //#4266
-        $k[$j++] = $f(_G - $get($_.lfsr, 0) + $_.p) % $_.p //#4274
+        $k[$j++] = $f(_G - _F + $_.p) % $_.p //#4274
         for (var _L = 0, _K = $_.nc - 2; _L <= _K; _L += 1) { //#4274
             var _M = $_.lfsr; //#4268
+            var _N = $get(_M, _L + 1); //#4269
             var _Q = $get($_.coeffs, $f($_.nc - _L) - 1); //#4270
             var _R = $k[$j - 1]; //#4271
-            $put(_M, _L, $f($get(_M, _L + 1) + _Q * _R % $_.p) % $_.p) //#4273
+            $put(_M, _L, $f(_N + _Q * _R % $_.p) % $_.p) //#4273
         } //#4273
+        var _X = $get($_.coeffs, 0); //#4275
         var _Y = $k[--$j]; //#4275
-        $put($_.lfsr, $_.nc - 1, ($get($_.coeffs, 0) * _Y) % $_.p); //#4276
+        $put($_.lfsr, $_.nc - 1, (_X * _Y) % $_.p); //#4276
     } //#4277
     $_ = $__; //#4280
 } //bwipp_rsecprime
@@ -7649,8 +7688,9 @@ function bwipp_ean13() {
         $_.addcode = _2j; //#7018
         $k[$j++] = Infinity; //#7019
         $aload($_.sbs); //#7019
+        var _2n = $get($_.addcode, "sbs"); //#7019
         $k[$j++] = $_.addongap; //#7019
-        $aload($get($_.addcode, "sbs")); //#7019
+        $aload(_2n); //#7019
         $_.sbs = $a(); //#7019
         $k[$j++] = Infinity; //#7020
         $aload($_.bhs); //#7020
@@ -7930,8 +7970,9 @@ function bwipp_ean8() {
         $_.addcode = _2I; //#7277
         $k[$j++] = Infinity; //#7278
         $aload($_.sbs); //#7278
+        var _2M = $get($_.addcode, "sbs"); //#7278
         $k[$j++] = $_.addongap; //#7278
-        $aload($get($_.addcode, "sbs")); //#7278
+        $aload(_2M); //#7278
         $_.sbs = $a(); //#7278
         $k[$j++] = Infinity; //#7279
         $aload($_.bhs); //#7279
@@ -8271,8 +8312,9 @@ function bwipp_upca() {
         $_.addcode = _3S; //#7591
         $k[$j++] = Infinity; //#7592
         $aload($_.sbs); //#7592
+        var _3W = $get($_.addcode, "sbs"); //#7592
         $k[$j++] = $_.addongap; //#7592
-        $aload($get($_.addcode, "sbs")); //#7592
+        $aload(_3W); //#7592
         $_.sbs = $a(); //#7592
         $k[$j++] = Infinity; //#7593
         $aload($_.bhs); //#7593
@@ -8631,8 +8673,9 @@ function bwipp_upce() {
         $_.addcode = _4E; //#7943
         $k[$j++] = Infinity; //#7944
         $aload($_.sbs); //#7944
+        var _4I = $get($_.addcode, "sbs"); //#7944
         $k[$j++] = $_.addongap; //#7944
-        $aload($get($_.addcode, "sbs")); //#7944
+        $aload(_4I); //#7944
         $_.sbs = $a(); //#7944
         $k[$j++] = Infinity; //#7945
         $aload($_.bhs); //#7945
@@ -9661,8 +9704,9 @@ function bwipp_code128() {
         var _35 = $_.code128_reverse_priority; //#9087
         for (var _36 = 0, _37 = _35.length; _36 < _37; _36++) { //#9087
             var _38 = $get(_35, _36); //#9087
+            var _3A = $get($_.code128_latch_length_a0, _38); //#9087
             $k[$j++] = _38; //#9087
-            $k[$j++] = $get($_.code128_latch_length_a0, _38); //#9087
+            $k[$j++] = _3A; //#9087
             $k[$j++] = _38; //#9087
         } //#9087
         var _3B = $a(); //#9087
@@ -9671,8 +9715,9 @@ function bwipp_code128() {
         var _3C = $_.code128_reverse_priority; //#9088
         for (var _3D = 0, _3E = _3C.length; _3D < _3E; _3D++) { //#9088
             var _3F = $get(_3C, _3D); //#9088
+            var _3H = $get($_.code128_latch_length_a1, _3F); //#9088
             $k[$j++] = _3F; //#9088
-            $k[$j++] = $get($_.code128_latch_length_a1, _3F); //#9088
+            $k[$j++] = _3H; //#9088
             $k[$j++] = _3F; //#9088
         } //#9088
         var _3I = $a(); //#9088
@@ -9681,8 +9726,9 @@ function bwipp_code128() {
         var _3J = $_.code128_reverse_priority; //#9089
         for (var _3K = 0, _3L = _3J.length; _3K < _3L; _3K++) { //#9089
             var _3M = $get(_3J, _3K); //#9089
+            var _3O = $get($_.code128_latch_length_b0, _3M); //#9089
             $k[$j++] = _3M; //#9089
-            $k[$j++] = $get($_.code128_latch_length_b0, _3M); //#9089
+            $k[$j++] = _3O; //#9089
             $k[$j++] = _3M; //#9089
         } //#9089
         var _3P = $a(); //#9089
@@ -9691,8 +9737,9 @@ function bwipp_code128() {
         var _3Q = $_.code128_reverse_priority; //#9090
         for (var _3R = 0, _3S = _3Q.length; _3R < _3S; _3R++) { //#9090
             var _3T = $get(_3Q, _3R); //#9090
+            var _3V = $get($_.code128_latch_length_b1, _3T); //#9090
             $k[$j++] = _3T; //#9090
-            $k[$j++] = $get($_.code128_latch_length_b1, _3T); //#9090
+            $k[$j++] = _3V; //#9090
             $k[$j++] = _3T; //#9090
         } //#9090
         var _3W = $a(); //#9090
@@ -9701,8 +9748,9 @@ function bwipp_code128() {
         var _3X = $_.code128_reverse_priority; //#9091
         for (var _3Y = 0, _3Z = _3X.length; _3Y < _3Z; _3Y++) { //#9091
             var _3a = $get(_3X, _3Y); //#9091
+            var _3c = $get($_.code128_latch_length_c0, _3a); //#9091
             $k[$j++] = _3a; //#9091
-            $k[$j++] = $get($_.code128_latch_length_c0, _3a); //#9091
+            $k[$j++] = _3c; //#9091
             $k[$j++] = _3a; //#9091
         } //#9091
         var _3d = $a(); //#9091
@@ -9711,8 +9759,9 @@ function bwipp_code128() {
         var _3e = $_.code128_reverse_priority; //#9092
         for (var _3f = 0, _3g = _3e.length; _3f < _3g; _3f++) { //#9092
             var _3h = $get(_3e, _3f); //#9092
+            var _3j = $get($_.code128_latch_length_c1, _3h); //#9092
             $k[$j++] = _3h; //#9092
-            $k[$j++] = $get($_.code128_latch_length_c1, _3h); //#9092
+            $k[$j++] = _3j; //#9092
             $k[$j++] = _3h; //#9092
         } //#9092
         var _3k = $a(); //#9092
@@ -9768,10 +9817,14 @@ function bwipp_code128() {
                 $_.j = _49; //#9140
                 var _4C = $get($_.encs, $_.j); //#9141
                 var _4D = $type(_4C); //#9141
+                $k[$j++] = _4C; //#9141
                 if ($eq(_4D, 'stringtype')) { //#9141
-                    _4C = $get(_4C, 0); //#9141
+                    var _4E = $k[--$j]; //#9141
+                    $k[$j++] = $get(_4E, 0); //#9141
                 } //#9141
-                $put($get($_.charvals_legacy, $_.j), _4C, $_.i); //#9142
+                var _4I = $get($_.charvals_legacy, $_.j); //#9142
+                var _4J = $k[--$j]; //#9142
+                $put(_4I, _4J, $_.i); //#9142
             } //#9142
         } //#9142
         $_.charvals_legacy = $_.charvals_legacy; //#9145
@@ -10141,8 +10194,9 @@ function bwipp_code128() {
                         } //#9450
                     } //#9450
                 } //#9450
+                var _8b = $get($_.msg, $_.i); //#9454
                 $k[$j++] = $eq($_.cset, "setb"); //#9454
-                $k[$j++] = $get($_.msg, $_.i); //#9454
+                $k[$j++] = _8b; //#9454
                 $_.anotb(); //#9454
                 var _8c = $k[--$j]; //#9454
                 var _8d = $k[--$j]; //#9454
@@ -10165,8 +10219,9 @@ function bwipp_code128() {
                     $_.cset = "seta"; //#9464
                     break; //#9465
                 } //#9465
+                var _8p = $get($_.msg, $_.i); //#9467
                 $k[$j++] = $eq($_.cset, "seta"); //#9467
-                $k[$j++] = $get($_.msg, $_.i); //#9467
+                $k[$j++] = _8p; //#9467
                 $_.bnota(); //#9467
                 var _8q = $k[--$j]; //#9467
                 var _8r = $k[--$j]; //#9467
@@ -10432,13 +10487,15 @@ function bwipp_code128() {
         }; //#9565
         $_.get_best_prior_state = function() {
             var _B2 = $k[--$j]; //#9572
+            var _B3 = $get($_.bln_0, _B2); //#9572
             var _B4 = $k[--$j]; //#9572
-            $_.len = $f(_B4 + $get($_.bln_0, _B2)) //#9572
+            $_.len = $f(_B4 + _B3) //#9572
             var _B5 = $k[--$j]; //#9572
             $_.o = _B5; //#9572
             var _B7 = $k[--$j]; //#9573
+            var _B8 = $get($_.bln_0, _B7); //#9573
             var _B9 = $k[--$j]; //#9573
-            var _BA = $f(_B9 + $get($_.bln_0, _B7)); //#9573
+            var _BA = $f(_B9 + _B8); //#9573
             $k[$j++] = _BA; //#9573
             if (_BA < $_.len) { //#9573
                 var _BC = $k[--$j]; //#9573
@@ -10449,8 +10506,9 @@ function bwipp_code128() {
                 $j -= 2; //#9573
             } //#9573
             var _BF = $k[--$j]; //#9574
+            var _BG = $get($_.bln_0, _BF); //#9574
             var _BH = $k[--$j]; //#9574
-            var _BI = $f(_BH + $get($_.bln_0, _BF)); //#9574
+            var _BI = $f(_BH + _BG); //#9574
             $k[$j++] = _BI; //#9574
             if (_BI < $_.len) { //#9574
                 var _BK = $k[--$j]; //#9574
@@ -10461,8 +10519,9 @@ function bwipp_code128() {
                 $j -= 2; //#9574
             } //#9574
             var _BN = $k[--$j]; //#9575
+            var _BO = $get($_.bln_0, _BN); //#9575
             var _BP = $k[--$j]; //#9575
-            var _BQ = $f(_BP + $get($_.bln_0, _BN)); //#9575
+            var _BQ = $f(_BP + _BO); //#9575
             $k[$j++] = _BQ; //#9575
             if (_BQ < $_.len) { //#9575
                 var _BS = $k[--$j]; //#9575
@@ -10473,8 +10532,9 @@ function bwipp_code128() {
                 $j -= 2; //#9575
             } //#9575
             var _BV = $k[--$j]; //#9576
+            var _BW = $get($_.bln_0, _BV); //#9576
             var _BX = $k[--$j]; //#9576
-            var _BY = $f(_BX + $get($_.bln_0, _BV)); //#9576
+            var _BY = $f(_BX + _BW); //#9576
             $k[$j++] = _BY; //#9576
             if (_BY < $_.len) { //#9576
                 var _Ba = $k[--$j]; //#9576
@@ -10485,8 +10545,9 @@ function bwipp_code128() {
                 $j -= 2; //#9576
             } //#9576
             var _Bd = $k[--$j]; //#9577
+            var _Be = $get($_.bln_0, _Bd); //#9577
             var _Bf = $k[--$j]; //#9577
-            if ($f(_Bf + $get($_.bln_0, _Bd)) < $_.len) { //#9577
+            if ($f(_Bf + _Be) < $_.len) { //#9577
                 var _Bh = $k[--$j]; //#9577
                 $_.o = _Bh; //#9577
             } else { //#9577
@@ -10723,8 +10784,9 @@ function bwipp_code128() {
                 var _Ev = ((($_.state == 2) || ($_.state == 5)) && ($get($_.msg, $_.n - 1) >= 48)) ? 2 : 1; //#9654
                 $_.n = $_.n - _Ev; //#9654
                 $_.c = $get($_.msg, $_.n); //#9655
+                var _F1 = $get($_.encode, $_.state); //#9656
                 $k[$j++] = 'enc'; //#9656
-                if ($get($_.encode, $_.state)() === true) {
+                if (_F1() === true) {
                     break;
                 } //#9656
                 var _F2 = $k[--$j]; //#9656
@@ -10790,6 +10852,7 @@ function bwipp_code128() {
         _G2[_G0] = 0; //#9706
     } //#9706
     _G2 = $a(_G2); //#9706
+    var _G9 = $a([$a([$_.text, $_.text1xoffset, $_.text1yoffset, $_.text1font, $_.text1size])]); //#9707
     $k[$j++] = 'ren'; //#9715
     $k[$j++] = 'renlinear'; //#9715
     $k[$j++] = 'sbs'; //#9715
@@ -10799,7 +10862,7 @@ function bwipp_code128() {
     $k[$j++] = 'bbs'; //#9715
     $k[$j++] = _G2; //#9715
     $k[$j++] = 'txt'; //#9715
-    $k[$j++] = $a([$a([$_.text, $_.text1xoffset, $_.text1yoffset, $_.text1font, $_.text1size])]); //#9715
+    $k[$j++] = _G9; //#9715
     $k[$j++] = 'text1xalign'; //#9715
     $k[$j++] = "center"; //#9715
     $k[$j++] = 'opt'; //#9715
@@ -10974,8 +11037,9 @@ function bwipp_ean14() {
     $_.checksum = 0; //#9960
     for (var _Q = 0; _Q <= 12; _Q += 1) { //#9964
         $_.i = _Q; //#9962
+        var _U = $get($_.barcode, $_.i + 4); //#9963
         var _Y = $_.checksum; //#9963
-        var _X = $get($_.barcode, $_.i + 4) - 48; //#9963
+        var _X = _U - 48; //#9963
         if (($_.i % 2) == 0) { //#9963
             _X = _X * 3; //#9963
         } //#9963
@@ -11079,8 +11143,9 @@ function bwipp_sscc18() {
     $_.checksum = 0; //#10085
     for (var _Q = 0; _Q <= 16; _Q += 1) { //#10089
         $_.i = _Q; //#10087
+        var _U = $get($_.barcode, $_.i + 4); //#10088
         var _Y = $_.checksum; //#10088
-        var _X = $get($_.barcode, $_.i + 4) - 48; //#10088
+        var _X = _U - 48; //#10088
         if (($_.i % 2) == 0) { //#10088
             _X = _X * 3; //#10088
         } //#10088
@@ -11262,8 +11327,9 @@ function bwipp_code39() {
     $k[$j++] = 'bbs'; //#10332
     $k[$j++] = _1p; //#10332
     if ($_.includetext) { //#10332
+        var _1v = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#10330
         $k[$j++] = 'txt'; //#10331
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#10331
+        $k[$j++] = _1v; //#10331
         $k[$j++] = 'text1xalign'; //#10331
         $k[$j++] = "center"; //#10331
     } //#10331
@@ -11433,8 +11499,9 @@ function bwipp_code32() {
         $k[$j++] = _b; //#10566
         $k[$j++] = _b; //#10566
         for (var _c = 0, _d = "AEIO".length; _c < _d; _c++) { //#10566
+            var _e = $get("AEIO", _c); //#10566
             var _f = $k[--$j]; //#10566
-            if (_f >= $get("AEIO", _c)) { //#10566
+            if (_f >= _e) { //#10566
                 $k[$j - 1] += 1; //#10566
             } //#10566
             var _h = $k[$j - 1]; //#10566
@@ -11508,8 +11575,9 @@ function bwipp_pzn() {
     $_.checksum = 0; //#10665
     for (var _F = 0, _E = $_.msglen - 3; _F <= _E; _F += 1) { //#10670
         $_.i = _F; //#10667
+        var _I = $get($_.barcode, $_.i); //#10668
         var _L = $_.pzn8 ? 1 : 2; //#10668
-        $_.checksum = $f(($get($_.barcode, $_.i) - 48) * ($_.i + _L) + $_.checksum) //#10669
+        $_.checksum = $f((_I - 48) * ($_.i + _L) + $_.checksum) //#10669
     } //#10669
     $_.checksum = $_.checksum % 11; //#10671
     if ($_.checksum == 10) { //#10674
@@ -11679,8 +11747,9 @@ function bwipp_code93() {
     $k[$j++] = 'bbs'; //#10910
     $k[$j++] = _1V; //#10910
     if ($_.includetext) { //#10910
+        var _1b = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#10908
         $k[$j++] = 'txt'; //#10909
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#10909
+        $k[$j++] = _1b; //#10909
         $k[$j++] = 'text1xalign'; //#10909
         $k[$j++] = "center"; //#10909
     } //#10909
@@ -11880,7 +11949,8 @@ function bwipp_interleaved2of5() {
     var _1U = $_.barcode; //#11226
     var _1T = 0; //#11226
     var _1S = $_.includecheck && (!$_.includecheckintext) ? $_.barlen - 1 : $_.barlen; //#11226
-    $_.text = $geti(_1U, _1T, _1S); //#11226
+    var _1V = $geti(_1U, _1T, _1S); //#11226
+    $_.text = _1V; //#11226
     $k[$j++] = Infinity; //#11228
     var _1X = $_.sbs; //#11228
     for (var _1Y = 0, _1Z = _1X.length; _1Y < _1Z; _1Y++) { //#11228
@@ -11911,8 +11981,9 @@ function bwipp_interleaved2of5() {
     $k[$j++] = 'bbs'; //#11240
     $k[$j++] = _1l; //#11240
     if ($_.includetext) { //#11240
+        var _1r = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#11238
         $k[$j++] = 'txt'; //#11239
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#11239
+        $k[$j++] = _1r; //#11239
         $k[$j++] = 'text1xalign'; //#11239
         $k[$j++] = "center"; //#11239
     } //#11239
@@ -11992,8 +12063,9 @@ function bwipp_itf14() {
     $_.checksum = 0; //#11353
     for (var _M = 0; _M <= 12; _M += 1) { //#11357
         $_.i = _M; //#11355
+        var _Q = $get($_.barcode, $_.i); //#11356
         var _U = $_.checksum; //#11356
-        var _T = $get($_.barcode, $_.i) - 48; //#11356
+        var _T = _Q - 48; //#11356
         if (($_.i % 2) == 0) { //#11356
             _T = _T * 3; //#11356
         } //#11356
@@ -12079,8 +12151,9 @@ function bwipp_identcode() {
     $_.checksum = 0; //#11483
     for (var _8 = 0; _8 <= 10; _8 += 1) { //#11487
         $_.i = _8; //#11485
+        var _C = $get($_.barcode, $_.i); //#11486
         var _H = $_.checksum; //#11486
-        var _G = $get($_.barcode, $_.i) - 48; //#11486
+        var _G = _C - 48; //#11486
         if (($_.i % 2) == 0) { //#11486
             _G = _G * 4; //#11486
         } else { //#11486
@@ -12155,8 +12228,9 @@ function bwipp_leitcode() {
     $_.checksum = 0; //#11592
     for (var _8 = 0; _8 <= 12; _8 += 1) { //#11596
         $_.i = _8; //#11594
+        var _C = $get($_.barcode, $_.i); //#11595
         var _H = $_.checksum; //#11595
-        var _G = $get($_.barcode, $_.i) - 48; //#11595
+        var _G = _C - 48; //#11595
         if (($_.i % 2) == 0) { //#11595
             _G = _G * 4; //#11595
         } else { //#11595
@@ -12264,8 +12338,9 @@ function bwipp_databaromni() {
     $_.checksum = 0; //#11763
     for (var _S = 0; _S <= 12; _S += 1) { //#11767
         $_.i = _S; //#11765
+        var _W = $get($_.barcode, $_.i + 4); //#11766
         var _a = $_.checksum; //#11766
-        var _Z = $get($_.barcode, $_.i + 4) - 48; //#11766
+        var _Z = _W - 48; //#11766
         if (($_.i % 2) == 0) { //#11766
             _Z = _Z * 3; //#11766
         } //#11766
@@ -12829,7 +12904,9 @@ function bwipp_databaromni() {
             } //#12109
             var _7x = true; //#12111
             for (var _7s = 0; _7s <= 12; _7s += 1) { //#12111
-                _7x = _7x && $eq($get($_.bot, _7s + 19), $get($_.databaromni_f3pat, _7s)); //#12111
+                var _7u = $get($_.bot, _7s + 19); //#12111
+                var _7v = $get($_.databaromni_f3pat, _7s); //#12111
+                _7x = _7x && $eq(_7u, _7v); //#12111
             } //#12111
             if (_7x) { //#12114
                 $puti($_.sep3, 19, $_.databaromni_findersep); //#12113
@@ -12899,8 +12976,9 @@ function bwipp_databarstacked() {
     $_.checksum = 0; //#12231
     for (var _E = 0; _E <= 12; _E += 1) { //#12235
         $_.i = _E; //#12233
+        var _I = $get($_.barcode, $_.i + 4); //#12234
         var _M = $_.checksum; //#12234
-        var _L = $get($_.barcode, $_.i + 4) - 48; //#12234
+        var _L = _I - 48; //#12234
         if (($_.i % 2) == 0) { //#12234
             _L = _L * 3; //#12234
         } //#12234
@@ -12967,8 +13045,9 @@ function bwipp_databarstackedomni() {
     $_.checksum = 0; //#12357
     for (var _E = 0; _E <= 12; _E += 1) { //#12361
         $_.i = _E; //#12359
+        var _I = $get($_.barcode, $_.i + 4); //#12360
         var _M = $_.checksum; //#12360
-        var _L = $get($_.barcode, $_.i + 4) - 48; //#12360
+        var _L = _I - 48; //#12360
         if (($_.i % 2) == 0) { //#12360
             _L = _L * 3; //#12360
         } //#12360
@@ -13035,8 +13114,9 @@ function bwipp_databartruncated() {
     $_.checksum = 0; //#12483
     for (var _E = 0; _E <= 12; _E += 1) { //#12487
         $_.i = _E; //#12485
+        var _I = $get($_.barcode, $_.i + 4); //#12486
         var _M = $_.checksum; //#12486
-        var _L = $get($_.barcode, $_.i + 4) - 48; //#12486
+        var _L = _I - 48; //#12486
         if (($_.i % 2) == 0) { //#12486
             _L = _L * 3; //#12486
         } //#12486
@@ -13155,8 +13235,9 @@ function bwipp_databarlimited() {
     $_.checksum = 0; //#12676
     for (var _R = 0; _R <= 12; _R += 1) { //#12680
         $_.i = _R; //#12678
+        var _V = $get($_.barcode, $_.i + 4); //#12679
         var _Z = $_.checksum; //#12679
-        var _Y = $get($_.barcode, $_.i + 4) - 48; //#12679
+        var _Y = _V - 48; //#12679
         if (($_.i % 2) == 0) { //#12679
             _Y = _Y * 3; //#12679
         } //#12679
@@ -13529,14 +13610,16 @@ function bwipp_databarexpanded() {
             var _I = $strcpy($s(2), "00"); //#12994
             var _K = $cvrs($s(2), _G, 11); //#12994
             $puti(_I, 2 - _K.length, _K); //#12995
+            var _L = $get(_I, 0); //#12996
             $k[$j++] = _G; //#12996
             $k[$j++] = _I; //#12996
-            if ($get(_I, 0) == 65) { //#12996
+            if (_L == 65) { //#12996
                 var _M = $k[$j - 1]; //#12996
                 $put(_M, 0, 94); //#12996
             } //#12996
             var _N = $k[$j - 1]; //#12997
-            if ($get(_N, 1) == 65) { //#12997
+            var _O = $get(_N, 1); //#12997
+            if (_O == 65) { //#12997
                 var _P = $k[$j - 1]; //#12997
                 $put(_P, 1, 94); //#12997
             } //#12997
@@ -13768,20 +13851,24 @@ function bwipp_databarexpanded() {
             var _2S = false; //#13158
             for (var _2M = 3100; _2M <= 3109; _2M += 1) { //#13158
                 var _2O = $cvrs($s(4), _2M, 10); //#13158
-                _2S = _2S || $eq(_2O, $get($_.ais, 1)); //#13158
+                var _2Q = $get($_.ais, 1); //#13158
+                _2S = _2S || $eq(_2O, _2Q); //#13158
             } //#13158
             $_.ai310x = _2S; //#13158
             var _2a = false; //#13159
             for (var _2U = 3200; _2U <= 3209; _2U += 1) { //#13159
                 var _2W = $cvrs($s(4), _2U, 10); //#13159
-                _2a = _2a || $eq(_2W, $get($_.ais, 1)); //#13159
+                var _2Y = $get($_.ais, 1); //#13159
+                _2a = _2a || $eq(_2W, _2Y); //#13159
             } //#13159
             $_.ai320x = _2a; //#13159
             if ($_.ais.length == 3) { //#13163
                 var _2d = $a(["11", "13", "15", "17"]); //#13161
                 var _2k = true; //#13161
                 for (var _2e = 0, _2f = _2d.length; _2e < _2f; _2e++) { //#13161
-                    _2k = _2k && $ne($get(_2d, _2e), $get($_.ais, 2)); //#13161
+                    var _2g = $get(_2d, _2e); //#13161
+                    var _2i = $get($_.ais, 2); //#13161
+                    _2k = _2k && $ne(_2g, _2i); //#13161
                 } //#13161
                 $_.aibad = _2k; //#13161
             } else { //#13163
@@ -13797,17 +13884,19 @@ function bwipp_databarexpanded() {
                     $_.isNdigits(); //#13167
                     var _2w = $k[--$j]; //#13167
                     var _2x = $k[--$j]; //#13167
+                    var _2z = $get($_.vals, 2); //#13167
                     $k[$j++] = $an(_2x, _2w); //#13167
-                    $k[$j++] = $get($_.vals, 2); //#13167
+                    $k[$j++] = _2z; //#13167
                     $k[$j++] = 6; //#13167
                     $_.isNdigits(); //#13167
                     var _30 = $k[--$j]; //#13167
                     var _31 = $k[--$j]; //#13167
                     if (_31 && _30) { //#13172
                         var _34 = $geti($get($_.vals, 0), 0, 1); //#13168
+                        var _36 = $get($_.vals, 1); //#13169
                         var _3A = $cvi($geti($get($_.vals, 2), 2, 2)); //#13170
                         var _3E = $cvi($geti($get($_.vals, 2), 4, 2)); //#13171
-                        $k[$j++] = (($eq(_34, "9") && ($cvi($get($_.vals, 1)) <= 99999)) && ((_3A >= 1) && (_3A <= 12))) && ((_3E >= 0) && (_3E <= 31)); //#13171
+                        $k[$j++] = (($eq(_34, "9") && ($cvi(_36) <= 99999)) && ((_3A >= 1) && (_3A <= 12))) && ((_3E >= 0) && (_3E <= 31)); //#13171
                     } else { //#13172
                         $k[$j++] = false; //#13172
                     } //#13172
@@ -13884,11 +13973,14 @@ function bwipp_databarexpanded() {
             var _3y = false; //#13195
             for (var _3s = 3920; _3s <= 3923; _3s += 1) { //#13195
                 var _3u = $cvrs($s(4), _3s, 10); //#13195
-                _3y = _3y || $eq(_3u, $get($_.ais, 1)); //#13195
+                var _3w = $get($_.ais, 1); //#13195
+                _3y = _3y || $eq(_3u, _3w); //#13195
             } //#13195
             $_.ai392x = _3y; //#13195
-            $k[$j++] = $eq($get($_.ais, 0), "01") && $_.ai392x; //#13196
-            $k[$j++] = $get($_.vals, 0); //#13196
+            var _41 = $get($_.ais, 0); //#13196
+            var _44 = $get($_.vals, 0); //#13196
+            $k[$j++] = $eq(_41, "01") && $_.ai392x; //#13196
+            $k[$j++] = _44; //#13196
             $k[$j++] = 14; //#13196
             $_.isNdigits(); //#13196
             var _45 = $k[--$j]; //#13196
@@ -13905,18 +13997,23 @@ function bwipp_databarexpanded() {
             var _4H = false; //#13203
             for (var _4B = 3930; _4B <= 3933; _4B += 1) { //#13203
                 var _4D = $cvrs($s(4), _4B, 10); //#13203
-                _4H = _4H || $eq(_4D, $get($_.ais, 1)); //#13203
+                var _4F = $get($_.ais, 1); //#13203
+                _4H = _4H || $eq(_4D, _4F); //#13203
             } //#13203
             $_.ai393x = _4H; //#13203
-            $k[$j++] = $eq($get($_.ais, 0), "01") && $_.ai393x; //#13204
-            $k[$j++] = $get($_.vals, 0); //#13204
+            var _4K = $get($_.ais, 0); //#13204
+            var _4N = $get($_.vals, 0); //#13204
+            $k[$j++] = $eq(_4K, "01") && $_.ai393x; //#13204
+            $k[$j++] = _4N; //#13204
             $k[$j++] = 14; //#13204
             $_.isNdigits(); //#13204
             var _4O = $k[--$j]; //#13204
             var _4P = $k[--$j]; //#13204
             if (_4P && _4O) { //#13208
-                $k[$j++] = $eq($geti($get($_.vals, 0), 0, 1), "9"); //#13206
-                if ($get($_.vals, 1).length >= 3) { //#13206
+                var _4S = $geti($get($_.vals, 0), 0, 1); //#13205
+                var _4U = $get($_.vals, 1); //#13206
+                $k[$j++] = $eq(_4S, "9"); //#13206
+                if (_4U.length >= 3) { //#13206
                     $k[$j++] = $geti($get($_.vals, 1), 0, 3); //#13206
                     $k[$j++] = 3; //#13206
                     $_.isNdigits(); //#13206
@@ -13932,8 +14029,10 @@ function bwipp_databarexpanded() {
                 } //#13207
             } //#13207
         } //#13207
-        $k[$j++] = $eq($get($_.ais, 0), "01"); //#13212
-        $k[$j++] = $get($_.vals, 0); //#13212
+        var _4b = $get($_.ais, 0); //#13212
+        var _4d = $get($_.vals, 0); //#13212
+        $k[$j++] = $eq(_4b, "01"); //#13212
+        $k[$j++] = _4d; //#13212
         $k[$j++] = 14; //#13212
         $_.isNdigits(); //#13212
         var _4e = $k[--$j]; //#13212
@@ -13954,24 +14053,30 @@ function bwipp_databarexpanded() {
     $_.conv12to40 = function() {
         var _4j = $strcpy($s(40), "0000000000000000000000000000000000000000"); //#13222
         var _4k = $k[--$j]; //#13223
+        var _4l = $geti(_4j, 0, 10); //#13223
         var _4o = $cvrs($s(10), $cvi($geti(_4k, 0, 3)), 2); //#13223
-        $puti($geti(_4j, 0, 10), 10 - _4o.length, _4o); //#13223
+        $puti(_4l, 10 - _4o.length, _4o); //#13223
+        var _4p = $geti(_4j, 10, 10); //#13224
         var _4s = $cvrs($s(10), $cvi($geti(_4k, 3, 3)), 2); //#13224
-        $puti($geti(_4j, 10, 10), 10 - _4s.length, _4s); //#13224
+        $puti(_4p, 10 - _4s.length, _4s); //#13224
+        var _4t = $geti(_4j, 20, 10); //#13225
         var _4w = $cvrs($s(10), $cvi($geti(_4k, 6, 3)), 2); //#13225
-        $puti($geti(_4j, 20, 10), 10 - _4w.length, _4w); //#13225
+        $puti(_4t, 10 - _4w.length, _4w); //#13225
+        var _4x = $geti(_4j, 30, 10); //#13226
         var _50 = $cvrs($s(10), $cvi($geti(_4k, 9, 3)), 2); //#13226
-        $puti($geti(_4j, 30, 10), 10 - _50.length, _50); //#13226
+        $puti(_4x, 10 - _50.length, _50); //#13226
         $k[$j++] = _4j; //#13227
     }; //#13227
     $_.conv13to44 = function() {
         var _52 = $strcpy($s(44), "00000000000000000000000000000000000000000000"); //#13231
         var _53 = $k[--$j]; //#13232
+        var _54 = $geti(_52, 0, 4); //#13232
         var _57 = $cvrs($s(4), $cvi($geti(_53, 0, 1)), 2); //#13232
-        $puti($geti(_52, 0, 4), 4 - _57.length, _57); //#13232
+        $puti(_54, 4 - _57.length, _57); //#13232
+        var _58 = $geti(_53, 1, 12); //#13233
         $k[$j++] = _52; //#13233
         $k[$j++] = _52; //#13233
-        $k[$j++] = $geti(_53, 1, 12); //#13233
+        $k[$j++] = _58; //#13233
         $_.conv12to40(); //#13233
         var _59 = $k[--$j]; //#13233
         var _5A = $k[--$j]; //#13233
@@ -14028,9 +14133,10 @@ function bwipp_databarexpanded() {
         var _5m = $k[--$j]; //#13257
         var _5n = $k[--$j]; //#13257
         $puti(_5n, _5m, _5l); //#13257
+        var _5q = $get($_.vals, 1); //#13258
         $k[$j++] = $_.cdf; //#13258
         $k[$j++] = 40; //#13258
-        $k[$j++] = $cvi($get($_.vals, 1)); //#13258
+        $k[$j++] = $cvi(_5q); //#13258
         $k[$j++] = 15; //#13258
         $_.tobin(); //#13258
         var _5r = $k[--$j]; //#13258
@@ -14296,9 +14402,10 @@ function bwipp_databarexpanded() {
     $_.nextiso646only = $a(); //#13381
     for (var _8t = $_.gpf.length - 1; _8t >= 0; _8t -= 1) { //#13403
         $_.i = _8t; //#13383
+        var _8w = $get($_.gpf, $_.i); //#13384
         var _8y = $strcpy($s(2), "00"); //#13385
         var _91 = $get($_.gpf, $_.i); //#13386
-        $k[$j++] = $get($_.gpf, $_.i); //#13386
+        $k[$j++] = _8w; //#13386
         $k[$j++] = _8y; //#13386
         var _94 = 0; //#13386
         if (_91 == $_.fnc1) { //#13386
@@ -14650,7 +14757,8 @@ function bwipp_databarexpanded() {
         var _E4 = 0; //#13604
         for (var _Dy = 0; _Dy <= 11; _Dy += 1) { //#13604
             $_.j = _Dy; //#13604
-            _E4 = $f(_E4 + $pow(2, 11 - $_.j) * $get($_.d, $_.j)) //#13604
+            var _E2 = $get($_.d, $_.j); //#13604
+            _E4 = $f(_E4 + $pow(2, 11 - $_.j) * _E2) //#13604
         } //#13604
         $_.d = _E4; //#13604
         $_.j = 0; //#13606
@@ -15003,7 +15111,8 @@ function bwipp_databarexpanded() {
         var _JG = $_.rowheights; //#13850
         var _JL = 0; //#13850
         for (var _JH = 0, _JI = _JG.length; _JH < _JI; _JH++) { //#13850
-            _JL = $f(_JL + $get(_JG, _JH)) //#13850
+            var _JJ = $get(_JG, _JH); //#13850
+            _JL = $f(_JL + _JJ) //#13850
         } //#13850
         $_.pixy = _JL; //#13850
         $k[$j++] = new Map([
@@ -15435,8 +15544,9 @@ function bwipp_code2of5() {
     $_.checksum = 0; //#14529
     for (var _L = 0, _K = $_.barlen - 1; _L <= _K; _L += 1) { //#14533
         $_.i = _L; //#14531
+        var _P = $get($_.barcode, $_.i); //#14532
         var _U = $_.checksum; //#14532
-        var _T = $get($_.barcode, $_.i) - 48; //#14532
+        var _T = _P - 48; //#14532
         if ($f($_.barlen - $_.i) % 2 != 0) { //#14532
             _T = _T * 3; //#14532
         } //#14532
@@ -15459,18 +15569,20 @@ function bwipp_code2of5() {
     } //#14544
     $_.encs = $get($_.code2of5_versions, $_.version); //#14546
     $_.cs = $get($_.encs, 0).length; //#14548
+    var _m = $get($_.encs, 0); //#14549
     $k[$j++] = 'cw'; //#14549
     var _p = 0; //#14549
-    $forall($get($_.encs, 0), function() { //#14549
+    $forall(_m, function() { //#14549
         var _n = $k[--$j]; //#14549
         _p = $f(_p + (_n - 48)) //#14549
     }); //#14549
     var _q = $k[--$j]; //#14549
     $_[_q] = _p; //#14549
     $_.ss = $get($_.encs, 10).length; //#14550
+    var _u = $get($_.encs, 10); //#14551
     $k[$j++] = 'sw'; //#14551
     var _x = 0; //#14551
-    $forall($get($_.encs, 10), function() { //#14551
+    $forall(_u, function() { //#14551
         var _v = $k[--$j]; //#14551
         _x = $f(_x + (_v - 48)) //#14551
     }); //#14551
@@ -15542,8 +15654,9 @@ function bwipp_code2of5() {
     $k[$j++] = 'bbs'; //#14597
     $k[$j++] = _2C; //#14597
     if ($_.includetext) { //#14597
+        var _2I = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#14595
         $k[$j++] = 'txt'; //#14596
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#14596
+        $k[$j++] = _2I; //#14596
         $k[$j++] = 'text1xalign'; //#14596
         $k[$j++] = "center"; //#14596
     } //#14596
@@ -15842,8 +15955,9 @@ function bwipp_code11() {
     $k[$j++] = 'bbs'; //#15125
     $k[$j++] = _2L; //#15125
     if ($_.includetext) { //#15125
+        var _2R = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#15123
         $k[$j++] = 'txt'; //#15124
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#15124
+        $k[$j++] = _2R; //#15124
         $k[$j++] = 'text1xalign'; //#15124
         $k[$j++] = "center"; //#15124
     } //#15124
@@ -16044,8 +16158,9 @@ function bwipp_bc412() {
     $k[$j++] = 'bbs'; //#15390
     $k[$j++] = _2G; //#15390
     if ($_.includetext) { //#15390
+        var _2M = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#15388
         $k[$j++] = 'txt'; //#15389
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#15389
+        $k[$j++] = _2M; //#15389
         $k[$j++] = 'text1xalign'; //#15389
         $k[$j++] = "center"; //#15389
     } //#15389
@@ -16218,8 +16333,9 @@ function bwipp_rationalizedCodabar() {
     $k[$j++] = 'bbs'; //#15585
     $k[$j++] = _2R; //#15585
     if ($_.includetext) { //#15585
+        var _2X = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#15583
         $k[$j++] = 'txt'; //#15584
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#15584
+        $k[$j++] = _2X; //#15584
         $k[$j++] = 'text1xalign'; //#15584
         $k[$j++] = "center"; //#15584
     } //#15584
@@ -16345,7 +16461,8 @@ function bwipp_onecode() {
                 break; //#15855
             } //#15855
             var _1P = $k[$j - 1]; //#15855
-            if ($get($_.num, _1P) != 0) { //#15855
+            var _1Q = $get($_.num, _1P); //#15855
+            if (_1Q != 0) { //#15855
                 break; //#15855
             } //#15855
             $k[$j - 1] += 1; //#15855
@@ -16376,8 +16493,9 @@ function bwipp_onecode() {
         } //#15866
         $k[$j++] = $_.a; //#15868
     }; //#15868
+    var _1l = $get($_.onecode_startvals, $_.barlen); //#15874
     $k[$j++] = 'binval'; //#15874
-    $k[$j++] = $get($_.onecode_startvals, $_.barlen); //#15874
+    $k[$j++] = _1l; //#15874
     var _1s = []; //#15874
     var _1o = $geti($_.barcode, 20, $_.barlen - 20); //#15874
     for (var _1p = 0, _1q = _1o.length; _1p < _1q; _1p++) { //#15874
@@ -16399,9 +16517,10 @@ function bwipp_onecode() {
         _22[_1z] = $get(_1y, _1z) * 5; //#15876
     } //#15876
     _22 = $a(_22); //#15876
+    var _25 = $a([$get($_.barcode, 1) - 48]); //#15876
     $k[$j++] = 'binval'; //#15876
     $k[$j++] = _22; //#15876
-    $k[$j++] = $a([$get($_.barcode, 1) - 48]); //#15876
+    $k[$j++] = _25; //#15876
     $_.bigadd(); //#15876
     $k[$j++] = 10; //#15876
     $_.normalize(); //#15876
@@ -16699,8 +16818,9 @@ function bwipp_postnet() {
     $k[$j++] = 'sbs'; //#16180
     $k[$j++] = _1v; //#16180
     if ($_.includetext) { //#16180
+        var _21 = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#16178
         $k[$j++] = 'txt'; //#16179
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#16179
+        $k[$j++] = _21; //#16179
         $k[$j++] = 'text1xalign'; //#16179
         $k[$j++] = "center"; //#16179
     } //#16179
@@ -16844,8 +16964,9 @@ function bwipp_planet() {
     $k[$j++] = 'sbs'; //#16365
     $k[$j++] = _1u; //#16365
     if ($_.includetext) { //#16365
+        var _20 = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#16363
         $k[$j++] = 'txt'; //#16364
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#16364
+        $k[$j++] = _20; //#16364
         $k[$j++] = 'text1xalign'; //#16364
         $k[$j++] = "center"; //#16364
     } //#16364
@@ -16996,8 +17117,9 @@ function bwipp_royalmail() {
     $k[$j++] = 'sbs'; //#16587
     $k[$j++] = _1z; //#16587
     if ($_.includetext) { //#16587
+        var _25 = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#16585
         $k[$j++] = 'txt'; //#16586
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#16586
+        $k[$j++] = _25; //#16586
         $k[$j++] = 'text1xalign'; //#16586
         $k[$j++] = "center"; //#16586
     } //#16586
@@ -17085,11 +17207,13 @@ function bwipp_auspost() {
             $k[$j++] = $bs(1, _b); //#16697
             for (var _c = _b; _c >= 1; _c -= 1) { //#16697
                 var _d = $_.rspoly; //#16692
+                var _e = $get(_d, _c - 1); //#16692
+                var _g = $get($_.rspoly, _c); //#16693
                 var _h = $k[$j - 1]; //#16694
                 $k[$j++] = _d; //#16695
                 $k[$j++] = _c; //#16695
-                $k[$j++] = $get(_d, _c - 1); //#16695
-                $k[$j++] = $get($_.rspoly, _c); //#16695
+                $k[$j++] = _e; //#16695
+                $k[$j++] = _g; //#16695
                 $k[$j++] = _h; //#16695
                 $_.auspost_rsprod(); //#16695
                 var _i = $k[--$j]; //#16696
@@ -17099,10 +17223,11 @@ function bwipp_auspost() {
                 $put(_l, _k, $xo(_j, _i)); //#16696
             } //#16696
             var _m = $_.rspoly; //#16698
+            var _n = $get(_m, 0); //#16698
             var _o = $k[$j - 1]; //#16699
             $k[$j++] = _m; //#16700
             $k[$j++] = 0; //#16700
-            $k[$j++] = $get(_m, 0); //#16700
+            $k[$j++] = _n; //#16700
             $k[$j++] = _o; //#16700
             $_.auspost_rsprod(); //#16700
             var _p = $k[--$j]; //#16700
@@ -17255,11 +17380,13 @@ function bwipp_auspost() {
             var _2Z = $_.rscodes; //#16873
             var _2a = $k[$j - 1]; //#16873
             var _2b = $get(_2Z, $f(_2a + _2Y)); //#16873
+            var _2d = $get($_.rspoly, _2Y); //#16874
+            var _2f = $get($_.rscodes, _2a + 4); //#16875
             $k[$j++] = _2Z; //#16876
             $k[$j++] = $f(_2a + _2Y) //#16876
             $k[$j++] = _2b; //#16876
-            $k[$j++] = $get($_.rspoly, _2Y); //#16876
-            $k[$j++] = $get($_.rscodes, _2a + 4); //#16876
+            $k[$j++] = _2d; //#16876
+            $k[$j++] = _2f; //#16876
             $_.auspost_rsprod(); //#16876
             var _2g = $k[--$j]; //#16877
             var _2h = $k[--$j]; //#16877
@@ -17321,8 +17448,9 @@ function bwipp_auspost() {
     $k[$j++] = 'sbs'; //#16928
     $k[$j++] = _3k; //#16928
     if ($_.includetext) { //#16928
+        var _3s = $a([$a([$geti($_.barcode, 2, $_.barlen - 2), 0, 0, $_.text1font, $_.text1size])]); //#16926
         $k[$j++] = 'txt'; //#16927
-        $k[$j++] = $a([$a([$geti($_.barcode, 2, $_.barlen - 2), 0, 0, $_.text1font, $_.text1size])]); //#16927
+        $k[$j++] = _3s; //#16927
         $k[$j++] = 'text1xalign'; //#16927
         $k[$j++] = "center"; //#16927
     } //#16927
@@ -17435,8 +17563,9 @@ function bwipp_kix() {
     $k[$j++] = 'sbs'; //#17114
     $k[$j++] = _1F; //#17114
     if ($_.includetext) { //#17114
+        var _1L = $a([$a([$_.barcode, 0, 0, $_.text1font, $_.text1size])]); //#17112
         $k[$j++] = 'txt'; //#17113
-        $k[$j++] = $a([$a([$_.barcode, 0, 0, $_.text1font, $_.text1size])]); //#17113
+        $k[$j++] = _1L; //#17113
         $k[$j++] = 'text1xalign'; //#17113
         $k[$j++] = "center"; //#17113
     } //#17113
@@ -17610,8 +17739,9 @@ function bwipp_japanpost() {
     $k[$j++] = 'sbs'; //#17336
     $k[$j++] = _1g; //#17336
     if ($_.includetext) { //#17336
+        var _1m = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#17334
         $k[$j++] = 'txt'; //#17335
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#17335
+        $k[$j++] = _1m; //#17335
         $k[$j++] = 'text1xalign'; //#17335
         $k[$j++] = "center"; //#17335
     } //#17335
@@ -17862,8 +17992,9 @@ function bwipp_msi() {
         } //#17517
         var _1X = $k[--$j]; //#17519
         var _1Y = $k[--$j]; //#17519
+        var _1Z = $get(_1Y, _1X); //#17519
         $k[$j++] = $_.barcode; //#17519
-        if ($get(_1Y, _1X)() === true) {
+        if (_1Z() === true) {
             return true;
         } //#17519
         var _1b = $k[--$j]; //#17519
@@ -17915,8 +18046,9 @@ function bwipp_msi() {
     $k[$j++] = 'bbs'; //#17556
     $k[$j++] = _2C; //#17556
     if ($_.includetext) { //#17556
+        var _2K = $a([$a([$geti($_.barcode, 0, $_.txtlen), 0, 0, $_.text1font, $_.text1size])]); //#17554
         $k[$j++] = 'txt'; //#17555
-        $k[$j++] = $a([$a([$geti($_.barcode, 0, $_.txtlen), 0, 0, $_.text1font, $_.text1size])]); //#17555
+        $k[$j++] = _2K; //#17555
         $k[$j++] = 'text1xalign'; //#17555
         $k[$j++] = "center"; //#17555
     } //#17555
@@ -18078,8 +18210,9 @@ function bwipp_plessey() {
     $k[$j++] = 'bbs'; //#17788
     $k[$j++] = _2J; //#17788
     if ($_.includetext) { //#17788
+        var _2P = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#17786
         $k[$j++] = 'txt'; //#17787
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#17787
+        $k[$j++] = _2P; //#17787
         $k[$j++] = 'text1xalign'; //#17787
         $k[$j++] = "center"; //#17787
     } //#17787
@@ -18161,8 +18294,9 @@ function bwipp_telepen() {
                 if (((_U < 48) || (_U > 57)) || (((_W < 48) || (_W > 57)) && (!(_W == 88)))) { //#17954
                     $k[$j++] = -1; //#17950
                 } else { //#17954
+                    var _Y = $get($_.np, 0); //#17952
                     var _b = $get($_.np, 1) - 48; //#17953
-                    $k[$j++] = $get($_.np, 0) - 48; //#17953
+                    $k[$j++] = _Y - 48; //#17953
                     $k[$j++] = _b; //#17953
                     if (_b != 40) { //#17953
                         var _c = $k[--$j]; //#17953
@@ -18248,8 +18382,9 @@ function bwipp_telepen() {
     $k[$j++] = 'bbs'; //#18020
     $k[$j++] = _1m; //#18020
     if ($_.includetext) { //#18020
+        var _1s = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#18018
         $k[$j++] = 'txt'; //#18019
-        $k[$j++] = $a([$a([$_.text, 0, 0, $_.text1font, $_.text1size])]); //#18019
+        $k[$j++] = _1s; //#18019
         $k[$j++] = 'text1xalign'; //#18019
         $k[$j++] = "center"; //#18019
     } //#18019
@@ -18330,10 +18465,14 @@ function bwipp_posicode() {
                 $_.j = _1n; //#18250
                 var _1q = $get($_.encs, $_.j); //#18251
                 var _1r = $type(_1q); //#18251
+                $k[$j++] = _1q; //#18251
                 if ($eq(_1r, 'stringtype')) { //#18251
-                    _1q = $get(_1q, 0); //#18251
+                    var _1s = $k[--$j]; //#18251
+                    $k[$j++] = $get(_1s, 0); //#18251
                 } //#18251
-                $put($get($_.charvals_normal, $_.j), _1q, $_.i); //#18252
+                var _1w = $get($_.charvals_normal, $_.j); //#18252
+                var _1x = $k[--$j]; //#18252
+                $put(_1w, _1x, $_.i); //#18252
             } //#18252
         } //#18252
         $_.charvals_normal = $_.charvals_normal; //#18255
@@ -18345,10 +18484,14 @@ function bwipp_posicode() {
                 $_.j = _24; //#18269
                 var _27 = $get($_.encs, $_.j); //#18270
                 var _28 = $type(_27); //#18270
+                $k[$j++] = _27; //#18270
                 if ($eq(_28, 'stringtype')) { //#18270
-                    _27 = $get(_27, 0); //#18270
+                    var _29 = $k[--$j]; //#18270
+                    $k[$j++] = $get(_29, 0); //#18270
                 } //#18270
-                $put($get($_.charvals_limited, $_.j), _27, $_.i); //#18271
+                var _2D = $get($_.charvals_limited, $_.j); //#18271
+                var _2E = $k[--$j]; //#18271
+                $put(_2D, _2E, $_.i); //#18271
             } //#18271
         } //#18271
         $_.charvals_limited = $_.charvals_limited; //#18274
@@ -18657,7 +18800,8 @@ function bwipp_posicode() {
     } //#18571
     var _6B = 20; //#18574
     for (var _66 = 0; _66 <= 4; _66 += 1) { //#18574
-        _6B = $f(_6B - $get($_.d, _66)) //#18574
+        var _68 = $get($_.d, _66); //#18574
+        _6B = $f(_6B - _68) //#18574
     } //#18574
     $put($_.d, 5, _6B); //#18575
     if ($eq($_.version, "b") || $eq($_.version, "limitedb")) { //#18578
@@ -18708,18 +18852,21 @@ function bwipp_posicode() {
         _78[_76] = 0; //#18610
     } //#18610
     _78 = $a(_78); //#18610
+    var _7F = $a([$a([$_.text, $_.text1xoffset, $_.text1yoffset, $_.text1font, $_.text1size])]); //#18611
     var _7G = new Map([
         ["a", 0],
         ["b", 0],
         ["limiteda", 12],
         ["limitedb", 13]
     ]); //#18613
+    var _7I = $get(_7G, $_.version); //#18613
     var _7J = new Map([
         ["a", 0],
         ["b", 0],
         ["limiteda", 12],
         ["limitedb", 13]
     ]); //#18614
+    var _7L = $get(_7J, $_.version); //#18614
     $k[$j++] = 'ren'; //#18621
     $k[$j++] = 'renlinear'; //#18621
     $k[$j++] = 'sbs'; //#18621
@@ -18729,13 +18876,13 @@ function bwipp_posicode() {
     $k[$j++] = 'bbs'; //#18621
     $k[$j++] = _78; //#18621
     $k[$j++] = 'txt'; //#18621
-    $k[$j++] = $a([$a([$_.text, $_.text1xoffset, $_.text1yoffset, $_.text1font, $_.text1size])]); //#18621
+    $k[$j++] = _7F; //#18621
     $k[$j++] = 'text1xalign'; //#18621
     $k[$j++] = "center"; //#18621
     $k[$j++] = 'borderleft'; //#18621
-    $k[$j++] = $get(_7G, $_.version); //#18621
+    $k[$j++] = _7I; //#18621
     $k[$j++] = 'borderright'; //#18621
-    $k[$j++] = $get(_7J, $_.version); //#18621
+    $k[$j++] = _7L; //#18621
     $k[$j++] = 'opt'; //#18621
     $k[$j++] = $_.options; //#18621
     var _7N = $d(); //#18621
@@ -18780,10 +18927,14 @@ function bwipp_codablockf() {
                 $_.j = _2A; //#18746
                 var _2D = $get($_.encs, $_.j); //#18747
                 var _2E = $type(_2D); //#18747
+                $k[$j++] = _2D; //#18747
                 if ($eq(_2E, 'stringtype')) { //#18747
-                    _2D = $get(_2D, 0); //#18747
+                    var _2F = $k[--$j]; //#18747
+                    $k[$j++] = $get(_2F, 0); //#18747
                 } //#18747
-                $put($get($_.charvals, $_.j), _2D, $_.i); //#18748
+                var _2J = $get($_.charvals, $_.j); //#18748
+                var _2K = $k[--$j]; //#18748
+                $put(_2J, _2K, $_.i); //#18748
             } //#18748
         } //#18748
         $_.seta = $get($_.charvals, 0); //#18751
@@ -19200,8 +19351,9 @@ function bwipp_codablockf() {
                         break; //#19102
                     } //#19102
                 } //#19102
+                var _7Q = $get($_.msg, $_.i); //#19105
                 $k[$j++] = $eq($_.cset, "setb"); //#19105
-                $k[$j++] = $get($_.msg, $_.i); //#19105
+                $k[$j++] = _7Q; //#19105
                 $_.anotb(); //#19105
                 var _7R = $k[--$j]; //#19105
                 var _7S = $k[--$j]; //#19105
@@ -19227,8 +19379,9 @@ function bwipp_codablockf() {
                     $_.i = $_.i + 1; //#19118
                     break; //#19119
                 } //#19119
+                var _7j = $get($_.msg, $_.i); //#19121
                 $k[$j++] = $eq($_.cset, "seta"); //#19121
-                $k[$j++] = $get($_.msg, $_.i); //#19121
+                $k[$j++] = _7j; //#19121
                 $_.bnota(); //#19121
                 var _7k = $k[--$j]; //#19121
                 var _7l = $k[--$j]; //#19121
@@ -19354,15 +19507,19 @@ function bwipp_codablockf() {
     var _9T = $_.cws; //#19217
     var _9S = $_.cws.length - 4; //#19217
     var _9Q = $ne($_.cset, "setc") ? $_.abmap : $_.cmap; //#19217
-    $put(_9T, _9S, $get(_9Q, $_.k1)); //#19217
+    var _9R = $get(_9Q, $_.k1); //#19217
+    $put(_9T, _9S, _9R); //#19217
     var _9d = $_.cws; //#19218
     var _9c = $_.cws.length - 3; //#19218
     var _9a = $ne($_.cset, "setc") ? $_.abmap : $_.cmap; //#19218
-    $put(_9d, _9c, $get(_9a, $_.k2)); //#19218
+    var _9b = $get(_9a, $_.k2); //#19218
+    $put(_9d, _9c, _9b); //#19218
     var _9e = $_.cws; //#19223
+    var _9f = $get(_9e, 2 - 1); //#19223
     var _9l = 2; //#19223
-    var _9j = $get(_9e, 2 - 1) != 99 ? $_.abmap : $_.cmap; //#19223
-    $put(_9e, _9l, $get(_9j, $_.r - 2)); //#19223
+    var _9j = _9f != 99 ? $_.abmap : $_.cmap; //#19223
+    var _9k = $get(_9j, $_.r - 2); //#19223
+    $put(_9e, _9l, _9k); //#19223
     for (var _9p = 1, _9o = $_.r - 1; _9p <= _9o; _9p += 1) { //#19227
         $_.i = _9p; //#19225
         var _9q = $_.cws; //#19226
@@ -19371,7 +19528,8 @@ function bwipp_codablockf() {
         var _9t = $get(_9q, ((_9r * (_9s + 5)) + 2) - 1); //#19226
         var _9z = (_9r * (_9s + 5)) + 2; //#19226
         var _9x = _9t != 99 ? $_.abmap : $_.cmap; //#19226
-        $put(_9q, _9z, $get(_9x, $_.i + 42)); //#19226
+        var _9y = $get(_9x, $_.i + 42); //#19226
+        $put(_9q, _9z, _9y); //#19226
     } //#19226
     for (var _A3 = 0, _A2 = $_.r - 1; _A3 <= _A2; _A3 += 1) { //#19240
         $_.rcws = $geti($_.cws, _A3 * ($_.c + 5), $_.c + 4); //#19233
@@ -19402,9 +19560,10 @@ function bwipp_codablockf() {
         var _Ad = $_.sbs; //#19258
         $k[$j++] = 0; //#19258
         for (var _Ae = 0, _Af = _Ad.length; _Ae < _Af; _Ae++) { //#19258
+            var _Ag = $get(_Ad, _Ae); //#19258
             var _Ah = $k[$j - 1]; //#19258
             var _Ai = (_Ah == 1) ? 0 : 1; //#19258
-            for (var _Aj = 0, _Ak = $get(_Ad, _Ae); _Aj < _Ak; _Aj++) { //#19258
+            for (var _Aj = 0, _Ak = _Ag; _Aj < _Ak; _Aj++) { //#19258
                 $k[$j++] = _Ai //#19258
             } //#19258
         } //#19258
@@ -19563,10 +19722,14 @@ function bwipp_code16k() {
                 $_.j = _2b; //#19494
                 var _2e = $get($_.encs, $_.j); //#19495
                 var _2f = $type(_2e); //#19495
+                $k[$j++] = _2e; //#19495
                 if ($eq(_2f, 'stringtype')) { //#19495
-                    _2e = $get(_2e, 0); //#19495
+                    var _2g = $k[--$j]; //#19495
+                    $k[$j++] = $get(_2g, 0); //#19495
                 } //#19495
-                $put($get($_.charvals, $_.j), _2e, $_.i); //#19496
+                var _2k = $get($_.charvals, $_.j); //#19496
+                var _2l = $k[--$j]; //#19496
+                $put(_2k, _2l, $_.i); //#19496
             } //#19496
         } //#19496
         $_.charvals = $_.charvals; //#19499
@@ -20347,12 +20510,14 @@ function bwipp_code16k() {
     $_.cws = $a(); //#20121
     var _D5 = 0; //#20126
     for (var _D1 = 0, _D0 = $_.dcws; _D1 <= _D0; _D1 += 1) { //#20126
-        _D5 = $f(_D5 + (_D1 + 2) * $get($_.cws, _D1)) //#20126
+        var _D3 = $get($_.cws, _D1); //#20126
+        _D5 = $f(_D5 + (_D1 + 2) * _D3) //#20126
     } //#20126
     $_.c1 = _D5 % 107; //#20127
     var _DE = 0; //#20128
     for (var _D8 = 0, _D7 = $_.dcws; _D8 <= _D7; _D8 += 1) { //#20128
-        _DE = $f(_DE + (_D8 + 1) * $get($_.cws, _D8)) //#20128
+        var _DA = $get($_.cws, _D8); //#20128
+        _DE = $f(_DE + (_D8 + 1) * _DA) //#20128
     } //#20128
     $_.c2 = $f(_DE + $_.c1 * ($_.dcws + 2)) % 107 //#20129
     $k[$j++] = Infinity; //#20130
@@ -20374,8 +20539,9 @@ function bwipp_code16k() {
     for (var _DR = 0, _DQ = $_.r - 1; _DR <= _DQ; _DR += 1) { //#20162
         $_.i = _DR; //#20147
         $k[$j++] = Infinity; //#20148
+        var _DT = $get($_.code16k_startencs, $_.i); //#20150
         $k[$j++] = 10; //#20150
-        $forall($get($_.code16k_startencs, $_.i), function() { //#20150
+        $forall(_DT, function() { //#20150
             $k[$j - 1] -= 48; //#20150
         }); //#20150
         var _DX = $geti($_.cws, $_.i * 5, 5); //#20152
@@ -20394,9 +20560,10 @@ function bwipp_code16k() {
         var _Dh = $_.sbs; //#20159
         $k[$j++] = 1; //#20159
         for (var _Di = 0, _Dj = _Dh.length; _Di < _Dj; _Di++) { //#20159
+            var _Dk = $get(_Dh, _Di); //#20159
             var _Dl = $k[$j - 1]; //#20159
             var _Dm = (_Dl == 0) ? 1 : 0; //#20159
-            for (var _Dn = 0, _Do = $get(_Dh, _Di); _Dn < _Do; _Dn++) { //#20159
+            for (var _Dn = 0, _Do = _Dk; _Dn < _Do; _Dn++) { //#20159
                 $k[$j++] = _Dm //#20159
             } //#20159
         } //#20159
@@ -20500,21 +20667,24 @@ function bwipp_code49() {
         $_.code49_metrics = $a([$a([2, 9]), $a([3, 16]), $a([4, 23]), $a([5, 30]), $a([6, 37]), $a([7, 42]), $a([8, 49])]); //#20308
         var _B = $a([1, 9, 31, 26, 2, 12, 17, 23, 37, 18, 22, 6, 27, 44, 15, 43, 39, 11, 13, 5, 41, 33, 36, 8, 4, 32, 3, 19, 40, 25, 29, 10, 24, 30]); //#20311
         $k[$j++] = _B; //#20312
+        var _E = $geti(_B, 0, 32); //#20312
         $k[$j++] = Infinity; //#20312
         $k[$j++] = 20; //#20312
-        $aload($geti(_B, 0, 32)); //#20312
+        $aload(_E); //#20312
         var _F = $a(); //#20312
         $_.code49_weightx = _F; //#20312
         var _G = $k[$j - 1]; //#20313
+        var _J = $geti(_G, 1, 32); //#20313
         $k[$j++] = Infinity; //#20313
         $k[$j++] = 16; //#20313
-        $aload($geti(_G, 1, 32)); //#20313
+        $aload(_J); //#20313
         var _K = $a(); //#20313
         $_.code49_weighty = _K; //#20313
         var _M = $k[--$j]; //#20314
+        var _N = $geti(_M, 2, 32); //#20314
         $k[$j++] = Infinity; //#20314
         $k[$j++] = 38; //#20314
-        $aload($geti(_M, 2, 32)); //#20314
+        $aload(_N); //#20314
         var _O = $a(); //#20314
         $_.code49_weightz = _O; //#20314
         $_.code49_patterns = $a([$a(["11521132", "25112131", "14212132", "25121221", "14221222", "12412132", "23321221", "12421222", "21521221", "15112222", "15121312", "13312222", "24221311", "13321312", "11512222", "22421311", "11521312", "25112311", "14212312", "23312311", "12412312", "21512311", "16121131", "14321131", "12521131", "15212131", "15221221", "13412131", "13421221", "11612131", "16112221", "16121311", "14312221", "14321311", "12512221", "12521311", "15212311", "13412311", "11612311", "11131135", "31131133", "51131131", "21122134", "41122132", "21131224", "41131222", "11113135", "31113133", "51113131", "11122225", "31122223", "51122221", "11131315", "31131313", "51131311", "21113224", "41113222", "21122314", "41122312", "11113315", "31113313", "51113311", "12131134", "32131132", "21231133", "41231131", "22122133", "42122131", "11222134", "22131223", "42131221", "11231224", "31231222", "12113134", "32113132", "12122224", "32122222", "12131314", "32131312", "21231313", "41231311", "22113223", "42113221", "11213224", "22122313", "42122311", "11222314", "31222312", "12113314", "32113312", "21213313", "41213311", "13131133", "33131131", "22231132", "11331133", "31331131", "23122132", "12222133", "23131222", "12231223", "32231221", "21331222", "13113133", "33113131", "13122223", "33122221", "11313133", "13131313", "33131311", "11322223", "22231312", "11331313", "31331311", "23113222", "12213223", "23122312", "12222313", "32222311", "21322312", "13113313", "33113311", "22213312", "11313313", "31313311", "14131132", "23231131", "12331132", "21431131", "24122131", "13222132", "24131221", "13231222", "11422132", "22331221", "11431222", "14113132", "14122222", "12313132", "14131312", "12322222", "23231311", "12331312", "21431311", "24113221", "13213222", "24122311", "13222312", "11413222", "22322311", "11422312", "14113312", "23213311", "12313312", "21413311", "15131131", "13331131", "14222131", "14231221", "12422131", "12431221", "15113131", "15122221", "13313131", "15131311", "13322221", "11513131", "13331311", "11522221", "14213221", "14222311", "12413221", "12422311", "15113311", "13313311", "11513311", "11141134", "31141132", "21132133", "41132131", "21141223", "41141221", "11123134", "31123132", "11132224", "31132222", "11141314", "31141312", "21114133", "41114131", "21123223", "41123221", "21132313", "41132311", "11114224", "31114222", "11123314", "31123312", "21114313", "41114311", "12141133", "32141131", "21241132", "22132132", "11232133", "22141222", "11241223", "31241221", "12123133", "32123131", "12132223", "32132221", "12141313", "32141311", "21241312", "22114132", "11214133", "22123222", "11223223", "22132312", "11232313", "31232311", "12114223", "32114221", "12123313", "32123311", "21223312", "22114312", "11214313", "31214311", "13141132", "22241131", "11341132", "23132131", "12232132", "23141221", "12241222", "21341221", "13123132", "13132222", "11323132", "13141312", "11332222", "22241311", "11341312", "23114131", "12214132", "23123221", "12223222", "23132311", "12232312", "21332311", "13114222", "13123312", "11314222", "22223311", "11323312", "23114311", "12214312", "21314311", "14141131", "12341131", "13232131", "13241221", "11432131", "14123131", "14132221", "12323131", "14141311", "12332221", "12341311", "13214131", "13223221", "11414131", "13232311", "11423221", "11432311", "14114221", "14123311", "12314221", "12323311", "13214311", "11414311", "11151133", "31151131", "21142132", "21151222", "11133133", "31133131", "11142223", "31142221", "11151313", "31151311", "21124132", "21133222", "21142312", "11115133", "31115131", "11124223", "31124221", "11133313", "31133311", "21115222", "21124312", "12151132", "21251131", "22142131", "11242132", "22151221", "11251222", "12133132", "12142222", "12151312", "21251311", "22124131", "11224132", "22133221", "11233222", "22142311", "11242312", "12115132", "12124222", "12133312", "21233311", "22115221", "11215222", "22124311", "11224312", "13151131", "12242131", "12251221", "13133131", "13142221", "11333131", "13151311", "11342221", "12224131", "12233221", "12242311", "13115131", "13124221", "11315131", "13133311", "11324221", "11333311", "12215221", "12224311", "11161132", "21152131", "21161221", "11143132", "11152222", "11161312", "21134131", "21143221", "21152311", "11125132", "11134222", "11143312", "21116131", "21125221", "21134311", "12161131", "11252131", "12143131", "12152221", "12161311", "11234131", "11243221", "11252311", "12125131", "12134221", "12143311", "11216131", "11225221", "11234311", "11111236", "31111234", "51111232", "21111325", "41111323", "61111321", "11111416", "31111414", "51111412", "31211143", "51211141", "12111235", "32111233", "52111231", "21211234", "41211232", "22111324", "42111322", "11211325", "31211323", "51211321", "12111415", "32111413", "52111411", "21211414", "41211412", "12211144", "32211142", "21311143", "41311141", "13111234", "33111232", "22211233", "42211231", "11311234", "31311232", "23111323", "43111321", "12211324", "32211322", "21311323", "41311321", "13111414", "33111412", "22211413", "42211411", "11311414", "31311412", "13211143", "33211141", "22311142", "11411143", "31411141", "14111233", "34111231", "23211232", "12311233", "32311231", "21411232", "24111322", "13211323", "33211321", "22311322", "11411323", "31411321", "14111413", "34111411", "23211412", "12311413", "32311411", "21411412", "14211142", "23311141", "12411142", "21511141", "15111232", "24211231", "13311232", "22411231", "11511232", "25111321", "14211322", "23311321", "12411322", "21511321", "15111412", "24211411", "13311412", "22411411", "11511412", "15211141", "13411141", "11611141", "16111231", "14311231", "12511231", "15211321", "13411321", "11611321", "16111411", "14311411", "12511411", "21121144", "41121142", "11112145", "31112143", "51112141", "11121235", "31121233", "51121231", "21112234", "41112232", "21121324", "41121322", "11112325", "31112323", "51112321", "11121415", "31121413", "51121411", "21112414", "41112412", "22121143", "42121141", "11221144", "31221142", "12112144", "32112142", "12121234", "32121232", "21221233", "41221231", "22112233", "42112231", "11212234", "22121323", "42121321", "11221324", "31221322", "12112324", "32112322", "12121414", "32121412", "21221413", "41221411", "22112413", "42112411", "11212414", "31212412", "23121142", "12221143", "32221141", "21321142", "13112143", "33112141", "13121233", "33121231", "11312143", "22221232", "11321233", "31321231", "23112232", "12212233", "23121322", "12221323", "32221321", "21321322", "13112323", "33112321", "13121413", "33121411", "11312323", "22221412", "11321413", "31321411", "23112412", "12212413", "32212411", "21312412", "24121141", "13221142", "22321141", "11421142", "14112142", "14121232", "12312142", "23221231", "12321232", "21421231", "24112231", "13212232", "24121321", "13221322", "11412232", "22321321", "11421322", "14112322", "14121412", "12312322", "23221411", "12321412", "21421411", "24112411", "13212412", "22312411", "11412412", "14221141", "12421141", "15112141", "15121231", "13312141", "13321231", "11512141", "11521231", "14212231", "14221321", "12412231", "12421321", "15112321", "15121411", "13312321", "13321411", "11512321", "11521411", "14212411", "12412411", "21131143", "41131141", "11122144", "31122142", "11131234", "31131232", "21113143", "41113141", "21122233", "41122231", "21131323", "41131321", "11113234", "31113232", "11122324", "31122322", "11131414", "31131412", "21113323", "41113321", "21122413", "41122411", "11113414", "31113412", "22131142", "11231143", "31231141", "12122143", "32122141", "12131233", "32131231", "21231232", "22113142", "11213143", "22122232", "11222233", "22131322", "11231323", "31231321", "12113233", "32113231", "12122323", "32122321", "12131413", "32131411", "21231412", "22113322", "11213323", "22122412", "11222413", "31222411", "12113413", "32113411", "21213412", "23131141", "12231142", "21331141", "13122142", "13131232", "11322142", "22231231", "11331232", "23113141", "12213142", "23122231", "12222232", "23131321", "12231322", "21331321", "13113232", "13122322", "11313232", "13131412", "11322322", "22231411", "11331412", "23113321", "12213322", "23122411", "12222412", "21322411", "13113412", "22213411", "11313412", "13231141", "11431141", "14122141", "14131231", "12322141", "12331231", "13213141", "13222231", "11413141", "13231321", "11422231", "11431321", "14113231", "14122321", "12313231", "14131411", "12322321", "12331411", "13213321", "13222411", "11413321", "11422411", "14113411", "12313411", "21141142", "11132143", "31132141", "11141233", "31141231", "21123142", "21132232", "21141322", "11114143", "31114141", "11123233", "31123231", "11132323", "31132321", "11141413", "31141411", "21114232", "21123322", "21132412", "11114323", "31114321", "11123413", "31123411", "22141141", "11241142", "12132142", "12141232", "21241231", "22123141", "11223142", "22132231", "11232232", "22141321", "11241322", "12114142", "12123232", "12132322", "12141412", "21241411", "22114231", "11214232", "22123321", "11223322", "22132411", "11232412", "12114322", "12123412", "21223411", "12241141", "13132141", "13141231", "11332141", "11341231", "12223141", "12232231", "12241321", "13114141", "13123231", "11314141", "13132321", "11323231", "13141411", "11332321", "11341411", "12214231", "12223321", "12232411", "13114321", "13123411", "11314321", "11323411", "21151141", "11142142", "11151232", "21133141", "21142231", "21151321", "11124142", "11133232", "11142322", "11151412", "21115141", "21124231", "21133321", "21142411", "11115232", "11124322", "11133412", "11251141", "12142141", "12151231", "11233141", "11242231", "11251321", "12124141", "12133231", "12142321", "12151411", "11215141", "11224231", "11233321", "11242411", "12115231", "12124321", "12133411", "11152141", "11161231", "11134141", "11143231", "11152321", "11161411", "11116141", "11125231", "11134321", "11143411", "21111244", "41111242", "11111335", "31111333", "51111331", "21111424", "41111422", "11111515", "31111513", "51111511", "21211153", "41211151", "22111243", "42111241", "11211244", "31211242", "12111334", "32111332", "21211333", "41211331", "22111423", "42111421", "11211424", "31211422", "12111514", "32111512", "21211513", "41211511", "22211152", "11311153", "31311151", "23111242", "12211243", "32211241", "21311242", "13111333", "33111331", "22211332", "11311333", "31311331", "23111422", "12211423", "32211421", "21311422", "13111513", "33111511", "22211512", "11311513", "31311511", "23211151", "12311152", "21411151", "24111241", "13211242", "22311241", "11411242", "14111332", "23211331", "12311332", "21411331", "24111421", "13211422", "22311421", "11411422", "14111512", "23211511", "12311512", "21411511", "13311151", "11511151", "14211241", "12411241", "15111331", "13311331", "11511331", "14211421", "12411421", "15111511", "13311511", "11511511", "31121152", "21112153", "41112151", "21121243", "41121241", "11112244", "31112242", "11121334", "31121332", "21112333", "41112331", "21121423", "41121421", "11112424", "31112422", "11121514", "31121512", "21112513", "41112511", "12121153", "32121151", "21221152", "22112152", "11212153", "22121242", "11221243", "31221241", "12112243", "32112241", "12121333", "32121331", "21221332", "22112332", "11212333", "22121422", "11221423", "31221421", "12112423", "32112421", "12121513", "32121511", "21221512", "22112512", "11212513", "31212511", "13121152", "22221151", "11321152", "23112151", "12212152", "23121241", "12221242", "21321241", "13112242", "13121332", "11312242", "22221331", "11321332", "23112331", "12212332", "23121421", "12221422", "21321421", "13112422", "13121512", "11312422", "22221511", "11321512", "23112511", "12212512", "21312511", "14121151", "12321151", "13212151", "13221241", "11412151", "11421241", "14112241", "14121331", "12312241", "12321331", "13212331", "13221421", "11412331", "11421421", "14112421", "14121511", "12312421", "12321511", "13212511", "11412511", "11131153", "31131151", "21122152", "21131242", "11113153", "31113151", "11122243", "31122241", "11131333", "31131331", "21113242", "21122332", "21131422", "11113333", "31113331", "11122423", "31122421", "11131513", "31131511", "21113422", "21122512", "12131152", "21231151", "22122151", "11222152", "22131241", "11231242", "12113152", "12122242", "12131332", "21231331", "22113241", "11213242", "22122331", "11222332", "22131421", "11231422", "12113332", "12122422", "12131512", "21231511", "22113421", "11213422", "22122511", "11222512", "13131151", "11331151", "12222151", "12231241", "13113151", "13122241", "11313151", "13131331", "11322241", "11331331", "12213241", "12222331", "12231421", "13113331", "13122421", "11313331", "13131511", "11322421", "11331511", "12213421", "12222511", "11141152", "21132151", "21141241", "11123152", "11132242", "11141332", "21114151", "21123241", "21132331", "21141421", "11114242", "11123332", "11132422", "11141512", "21114331", "21123421", "21132511", "12141151", "11232151", "11241241", "12123151", "12132241", "12141331", "11214151", "11223241", "11232331", "11241421", "12114241", "12123331", "12132421", "12141511", "11214331", "11223421", "11232511", "11151151", "11133151", "11142241", "11151331", "11115151", "11124241", "11133331", "11142421", "11151511", "11111254", "31111252", "21111343", "41111341", "11111434", "31111432", "21111523", "41111521", "11111614", "31111612", "31211161", "12111253", "32111251", "21211252", "22111342", "11211343", "31211341", "12111433", "32111431", "21211432", "22111522", "11211523", "31211521", "12111613", "32111611", "21211612", "12211162", "21311161", "13111252", "22211251", "11311252", "23111341", "12211342", "21311341", "13111432", "22211431", "11311432", "23111521", "12211522", "21311521", "13111612", "22211611", "11311612", "13211161", "11411161", "14111251", "12311251", "13211341", "11411341", "14111431", "12311431", "13211521", "11411521", "14111611", "12311611", "21121162", "11112163", "31112161", "11121253", "31121251", "21112252", "21121342", "11112343", "31112341", "11121433", "31121431", "21112432", "21121522", "11112523", "31112521", "11121613", "31121611", "22121161", "11221162", "12112162", "12121252", "21221251", "22112251", "11212252", "22121341", "11221342", "12112342", "12121432", "21221431", "22112431", "11212432", "22121521", "11221522", "12112522", "12121612", "21221611", "12221161", "13112161", "13121251", "11312161", "11321251", "32121115", "52121113", "21221116", "41221114", "61221112", "22112116", "42112114", "31212115", "51212113", "13121116", "33121114", "22221115", "42221113", "11321116", "31321114", "51321112", "23112115", "43112113", "12212116", "32212114", "52212112", "21312115", "41312113", "61312111", "14121115", "34121113", "23221114", "43221112", "12321115", "32321113", "52321111", "21421114", "41421112", "24112114", "13212115", "33212113", "22312114", "42312112", "11412115", "31412113", "51412111", "15121114", "24221113", "13321114", "33321112", "22421113", "42421111", "11521114", "31521112", "25112113", "14212114", "34212112", "23312113", "43312111", "12412114", "32412112", "21512113", "41512111", "16121113", "25221112", "14321113", "34321111", "23421112", "12521113", "32521111", "15212113", "24312112", "13412113", "33412111", "22512112", "11612113", "31612111", "31131115", "51131113", "21122116", "41122114", "61122112", "31113115", "51113113", "12131116", "32131114", "52131112", "21231115", "41231113", "61231111", "22122115", "42122113", "11222116", "31222114", "51222112", "12113116", "32113114", "52113112", "21213115", "41213113", "61213111", "13131115", "33131113", "22231114", "42231112", "11331115", "31331113", "51331111", "23122114", "43122112", "12222115", "32222113", "52222111", "21322114", "41322112", "13113115", "33113113", "22213114", "42213112", "11313115", "31313113", "51313111", "14131114", "34131112", "23231113", "43231111", "12331114", "32331112", "21431113", "41431111", "24122113", "13222114", "33222112", "22322113", "42322111", "11422114", "31422112", "14113114", "34113112", "23213113", "43213111", "12313114", "32313112", "21413113", "41413111", "15131113", "24231112", "13331113", "33331111", "22431112", "25122112", "14222113", "34222111", "23322112", "12422113", "32422111", "21522112", "15113113", "24213112", "13313113", "33313111", "22413112", "11513113", "31513111", "16131112", "25231111", "14331112", "23431111", "15222112", "24322111", "13422112", "22522111", "16113112", "25213111", "14313112", "23413111", "12513112", "21613111", "11141116", "31141114", "51141112", "21132115", "41132113", "61132111", "11123116", "31123114", "51123112", "21114115", "41114113", "61114111", "12141115", "32141113", "52141111", "21241114", "41241112", "22132114", "42132112", "11232115", "31232113", "51232111", "12123115", "32123113", "52123111", "21223114", "41223112", "22114114", "42114112", "11214115", "31214113", "51214111", "13141114", "33141112", "22241113", "42241111", "11341114", "31341112", "23132113", "43132111", "12232114", "32232112", "21332113", "41332111", "13123114", "33123112", "22223113", "42223111", "11323114", "31323112", "23114113", "43114111", "12214114", "32214112", "21314113", "41314111", "14141113", "34141111", "23241112", "12341113", "32341111", "24132112", "13232113", "33232111", "22332112", "11432113", "31432111", "14123113", "34123111", "23223112", "12323113", "32323111", "21423112", "24114112", "13214113", "33214111", "22314112", "11414113", "31414111", "15141112", "24241111", "13341112", "25132111", "14232112", "23332111", "12432112", "15123112", "24223111", "13323112", "22423111", "11523112", "25114111", "14214112", "23314111", "12414112", "21514111", "16141111", "14341111", "15232111", "13432111", "16123111", "14323111", "12523111", "15214111", "13414111", "11614111", "11151115", "31151113", "51151111", "21142114", "41142112", "11133115", "31133113", "51133111", "21124114", "41124112", "11115115", "31115113", "51115111", "12151114", "32151112", "21251113", "41251111", "22142113", "42142111", "11242114", "31242112", "12133114", "32133112", "21233113", "41233111", "22124113", "42124111", "11224114", "31224112", "12115114", "32115112", "21215113", "41215111", "13151113", "33151111", "22251112", "23142112", "12242113", "32242111", "21342112", "13133113", "33133111", "22233112", "11333113", "31333111", "23124112", "12224113", "32224111", "21324112", "13115113", "33115111", "22215112", "11315113", "31315111", "14151112", "23251111", "24142111", "13242112", "22342111", "14133112", "23233111", "12333112", "21433111", "24124111", "13224112", "22324111", "11424112", "14115112", "23215111", "12315112", "21415111", "15151111", "14242111", "15133111", "13333111", "14224111", "12424111", "15115111", "13315111", "11515111", "11161114", "31161112", "21152113", "41152111", "11143114", "31143112", "21134113", "41134111", "11125114", "31125112", "21116113", "41116111", "12161113", "32161111", "22152112", "11252113", "31252111", "12143113", "32143111", "21243112", "22134112", "11234113", "31234111", "12125113", "32125111", "21225112", "22116112", "11216113", "31216111", "13161112", "23152111", "12252112", "13143112", "22243111", "11343112", "23134111", "12234112", "21334111", "13125112", "22225111", "11325112", "23116111", "12216112", "21316111", "14161111", "13252111", "14143111", "12343111", "13234111", "11434111", "14125111", "12325111", "13216111", "11416111", "31111216", "51111214", "31211125", "51211123", "32111215", "52111213", "21211216", "41211214", "61211212", "12211126", "32211124", "52211122", "21311125", "41311123", "61311121", "13111216", "33111214", "22211215", "42211213", "11311216", "31311214", "51311212", "13211125", "33211123", "22311124", "42311122", "11411125", "31411123", "51411121", "14111215", "34111213", "23211214", "43211212", "12311215", "32311213", "52311211", "21411214", "41411212", "14211124", "34211122", "23311123", "43311121", "12411124", "32411122", "21511123", "41511121", "15111214", "24211213", "13311214", "33311212", "22411213", "42411211", "11511214", "31511212", "15211123", "24311122", "13411123", "33411121", "22511122", "11611123", "31611121", "16111213", "25211212", "14311213", "34311211", "23411212", "12511213", "32511211", "21611212", "21121126", "41121124", "61121122", "31112125", "51112123", "31121215", "51121213", "21112216", "41112214", "61112212", "22121125", "42121123", "11221126", "31221124", "51221122", "12112126", "32112124", "52112122", "12121216", "32121214", "52121212", "21221215", "41221213", "61221211", "22112215", "42112213", "11212216", "31212214", "51212212", "23121124", "43121122", "12221125", "32221123", "52221121", "21321124", "41321122", "13112125", "33112123", "13121215", "33121213", "11312125", "22221214", "42221212", "11321215", "31321213", "51321211", "23112214", "43112212", "12212215", "32212213", "52212211", "21312214", "41312212", "24121123", "13221124", "33221122", "22321123", "42321121", "11421124", "31421122", "14112124", "34112122", "14121214", "34121212", "12312124", "23221213", "43221211", "12321214", "32321212", "21421213", "41421211", "24112213", "13212214", "33212212", "22312213", "42312211", "11412214", "31412212", "25121122", "14221123", "34221121", "23321122", "12421123", "32421121", "21521122", "15112123", "15121213", "13312123", "24221212", "13321213", "33321211", "11512123", "22421212", "11521213", "31521211", "25112212", "14212213", "34212211", "23312212", "12412213", "32412211", "21512212", "15221122", "24321121", "13421122", "22521121", "16112122", "16121212", "14312122", "25221211", "14321212", "12512122", "23421211", "12521212", "15212212", "24312211", "13412212", "22512211", "11612212", "21131125", "41131123", "61131121", "11122126", "31122124", "51122122", "11131216", "31131214", "51131212", "21113125", "41113123", "61113121", "21122215", "41122213", "61122211", "11113216", "31113214", "51113212", "22131124", "42131122", "11231125", "31231123", "51231121", "12122125", "32122123", "52122121", "12131215", "32131213", "52131211", "21231214", "41231212", "22113124", "42113122", "11213125", "22122214", "42122212", "11222215", "31222213", "51222211", "12113215", "32113213", "52113211", "21213214", "41213212", "23131123", "43131121", "12231124", "32231122", "21331123", "41331121", "13122124", "33122122", "13131214", "33131212", "11322124", "22231213", "42231211", "11331214", "31331212", "23113123", "43113121", "12213124", "23122213", "43122211", "12222214", "32222212", "21322213", "41322211", "13113214", "33113212", "22213213", "42213211", "11313214", "31313212", "24131122", "13231123", "33231121", "22331122", "11431123", "31431121", "14122123", "34122121", "14131213", "34131211", "12322123", "23231212", "12331213", "32331211", "21431212", "24113122", "13213123", "24122212", "13222213", "33222211", "11413123", "22322212", "11422213", "31422211", "14113213", "34113211", "23213212", "12313213", "32313211", "21413212", "25131121", "14231122", "23331121", "12431122", "15122122", "15131212", "13322122", "24231211", "13331212", "11522122", "22431211", "25113121", "14213122", "25122211", "14222212", "12413122", "23322211", "12422212", "21522211", "15113212", "24213211", "13313212", "22413211", "11513212", "15231121", "13431121", "16122121", "16131211", "14322121", "14331211", "12522121", "15213121", "15222211", "13413121", "13422211", "11613121", "16113211", "14313211", "12513211", "21141124", "41141122", "11132125", "31132123", "51132121", "11141215", "31141213", "51141211", "21123124", "41123122", "21132214", "41132212", "11114125", "31114123", "51114121", "11123215", "31123213", "51123211", "21114214", "41114212", "22141123", "42141121", "11241124", "31241122", "12132124", "32132122", "12141214", "32141212", "21241213", "41241211", "22123123", "42123121", "11223124", "22132213", "42132211", "11232214", "31232212", "12114124", "32114122", "12123214", "32123212", "21223213", "41223211", "22114213", "42114211", "11214214", "31214212", "23141122", "12241123", "32241121", "21341122", "13132123", "33132121", "13141213", "33141211", "11332123", "22241212", "11341213", "31341211", "23123122", "12223123", "23132212", "12232213", "32232211", "21332212", "13114123", "33114121", "13123213", "33123211", "11314123", "22223212", "11323213", "31323211", "23114212", "12214213", "32214211", "21314212", "24141121", "13241122", "22341121", "14132122", "14141212", "12332122", "23241211", "12341212", "24123121", "13223122", "24132211", "13232212", "11423122", "22332211", "11432212", "14114122", "14123212", "12314122", "23223211", "12323212", "21423211", "24114211", "13214212", "22314211", "11414212", "14241121", "15132121", "15141211", "13332121", "13341211", "14223121", "14232211", "12423121", "12432211", "15114121", "15123211", "13314121", "13323211", "11514121", "11523211", "14214211", "12414211", "21151123", "41151121", "11142124", "31142122", "11151214", "31151212", "21133123", "41133121", "21142213", "41142211", "11124124", "31124122", "11133214", "31133212", "21115123", "41115121", "21124213", "41124211", "11115214", "31115212", "22151122", "11251123", "31251121", "12142123", "32142121", "12151213", "32151211", "21251212", "22133122", "11233123", "22142212", "11242213", "31242211", "12124123", "32124121", "12133213", "32133211", "21233212", "22115122", "11215123", "22124212", "11224213", "31224211", "12115213", "32115211", "21215212", "23151121", "12251122", "13142122", "13151212", "11342122", "22251211", "23133121", "12233122", "23142211", "12242212", "21342211", "13124122", "13133212", "11324122", "22233211", "11333212", "23115121", "12215122", "23124211", "12224212", "21324211", "13115212", "22215211", "11315212", "13251121", "14142121", "14151211", "12342121", "13233121", "13242211", "11433121", "14124121", "14133211", "12324121", "12333211", "13215121", "13224211", "11415121", "11424211", "14115211", "12315211", "21161122", "11152123", "31152121", "11161213", "31161211", "21143122", "21152212", "11134123", "31134121", "11143213", "31143211", "21125122", "21134212", "11116123", "31116121", "11125213", "31125211", "22161121", "12152122", "12161212", "22143121", "11243122", "22152211", "11252212", "12134122", "12143212", "21243211", "22125121", "11225122", "22134211", "11234212", "12116122", "12125212", "21225211", "13152121", "13161211", "12243121", "12252211", "13134121", "13143211", "11334121", "11343211", "12225121", "12234211", "13116121", "13125211", "11316121", "11325211", "21111226", "41111224", "61111222", "31111315", "51111313", "21211135", "41211133", "61211131", "22111225", "42111223", "11211226", "31211224", "51211222", "12111316", "32111314", "52111312", "21211315", "41211313", "61211311", "22211134", "42211132", "11311135", "31311133", "51311131", "23111224", "43111222", "12211225", "32211223", "52211221", "21311224", "41311222", "13111315", "33111313", "22211314", "42211312", "11311315", "31311313", "51311311", "23211133", "43211131", "12311134", "32311132", "21411133", "41411131", "24111223", "13211224", "33211222", "22311223", "42311221", "11411224", "31411222", "14111314", "34111312", "23211313", "43211311", "12311314", "32311312", "21411313", "41411311", "24211132", "13311133", "33311131", "22411132", "11511133", "31511131", "25111222", "14211223", "34211221", "23311222", "12411223", "32411221", "21511222", "15111313", "24211312", "13311313", "33311311", "22411312", "11511313", "31511311", "25211131", "14311132", "23411131", "12511132", "21611131", "15211222", "24311221", "13411222", "22511221", "11611222", "16111312", "25211311", "14311312", "23411311", "12511312", "21611311", "31121134", "51121132", "21112135", "41112133", "61112131", "21121225", "41121223", "61121221", "11112226", "31112224", "51112222", "11121316", "31121314", "51121312", "21112315", "41112313", "61112311", "12121135", "32121133", "52121131", "21221134", "41221132", "22112134", "42112132", "11212135", "22121224", "42121222", "11221225", "31221223", "51221221", "12112225", "32112223", "52112221", "12121315", "32121313", "52121311", "21221314", "41221312", "22112314", "42112312", "11212315", "31212313", "51212311", "13121134", "33121132", "22221133", "42221131", "11321134", "31321132", "23112133", "43112131", "12212134", "23121223", "43121221", "12221224", "32221222", "21321223", "41321221", "13112224", "33112222", "13121314", "33121312", "11312224", "22221313", "42221311", "11321314", "31321312", "23112313", "43112311", "12212314", "32212312", "21312313", "41312311", "14121133", "34121131", "23221132", "12321133", "32321131", "21421132", "24112132", "13212133", "24121222", "13221223", "33221221", "11412133", "22321222", "11421223", "31421221", "14112223", "34112221", "14121313", "34121311", "12312223", "23221312", "12321313", "32321311", "21421312", "24112312", "13212313", "33212311", "22312312", "11412313", "31412311", "15121132", "24221131", "13321132", "22421131"]), $a(["22121116", "42121114", "31221115", "51221113", "32112115", "52112113", "21212116", "41212114", "61212112", "23121115", "43121113", "12221116", "32221114", "52221112", "21321115", "41321113", "61321111", "13112116", "33112114", "22212115", "42212113", "11312116", "31312114", "51312112", "24121114", "13221115", "33221113", "22321114", "42321112", "11421115", "31421113", "51421111", "14112115", "34112113", "23212114", "43212112", "12312115", "32312113", "52312111", "21412114", "41412112", "25121113", "14221114", "34221112", "23321113", "43321111", "12421114", "32421112", "21521113", "41521111", "15112114", "24212113", "13312114", "33312112", "22412113", "42412111", "11512114", "31512112", "15221113", "24321112", "13421113", "33421111", "22521112", "16112113", "25212112", "14312113", "34312111", "23412112", "12512113", "32512111", "21612112", "21131116", "41131114", "61131112", "31122115", "51122113", "21113116", "41113114", "61113112", "22131115", "42131113", "11231116", "31231114", "51231112", "12122116", "32122114", "52122112", "21222115", "41222113", "61222111", "22113115", "42113113", "11213116", "31213114", "51213112", "23131114", "43131112", "12231115", "32231113", "52231111", "21331114", "41331112", "13122115", "33122113", "22222114", "42222112", "11322115", "31322113", "51322111", "23113114", "43113112", "12213115", "32213113", "52213111", "21313114", "41313112", "24131113", "13231114", "33231112", "22331113", "42331111", "11431114", "31431112", "14122114", "34122112", "23222113", "43222111", "12322114", "32322112", "21422113", "41422111", "24113113", "13213114", "33213112", "22313113", "42313111", "11413114", "31413112", "25131112", "14231113", "34231111", "23331112", "12431113", "32431111", "15122113", "24222112", "13322113", "33322111", "22422112", "11522113", "31522111", "25113112", "14213113", "34213111", "23313112", "12413113", "32413111", "21513112", "15231112", "24331111", "13431112", "16122112", "25222111", "14322112", "23422111", "12522112", "15213112", "24313111", "13413112", "22513111", "11613112", "21141115", "41141113", "61141111", "11132116", "31132114", "51132112", "21123115", "41123113", "61123111", "11114116", "31114114", "51114112", "22141114", "42141112", "11241115", "31241113", "51241111", "12132115", "32132113", "52132111", "21232114", "41232112", "22123114", "42123112", "11223115", "31223113", "51223111", "12114115", "32114113", "52114111", "21214114", "41214112", "23141113", "43141111", "12241114", "32241112", "21341113", "41341111", "13132114", "33132112", "22232113", "42232111", "11332114", "31332112", "23123113", "43123111", "12223114", "32223112", "21323113", "41323111", "13114114", "33114112", "22214113", "42214111", "11314114", "31314112", "24141112", "13241113", "33241111", "22341112", "14132113", "34132111", "23232112", "12332113", "32332111", "21432112", "24123112", "13223113", "33223111", "22323112", "11423113", "31423111", "14114113", "34114111", "23214112", "12314113", "32314111", "21414112", "25141111", "14241112", "23341111", "15132112", "24232111", "13332112", "22432111", "25123111", "14223112", "23323111", "12423112", "21523111", "15114112", "24214111", "13314112", "22414111", "11514112", "15241111", "16132111", "14332111", "15223111", "13423111", "16114111", "14314111", "12514111", "21151114", "41151112", "11142115", "31142113", "51142111", "21133114", "41133112", "11124115", "31124113", "51124111", "21115114", "41115112", "22151113", "42151111", "11251114", "31251112", "12142114", "32142112", "21242113", "41242111", "22133113", "42133111", "11233114", "31233112", "12124114", "32124112", "21224113", "41224111", "22115113", "42115111", "11215114", "31215112", "23151112", "12251113", "32251111", "13142113", "33142111", "22242112", "11342113", "31342111", "23133112", "12233113", "32233111", "21333112", "13124113", "33124111", "22224112", "11324113", "31324111", "23115112", "12215113", "32215111", "21315112", "24151111", "13251112", "14142112", "23242111", "12342112", "24133111", "13233112", "22333111", "11433112", "14124112", "23224111", "12324112", "21424111", "24115111", "13215112", "22315111", "11415112", "14251111", "15142111", "13342111", "14233111", "12433111", "15124111", "13324111", "11524111", "14215111", "12415111", "21161113", "41161111", "11152114", "31152112", "21143113", "41143111", "11134114", "31134112", "21125113", "41125111", "11116114", "31116112", "22161112", "12152113", "32152111", "21252112", "22143112", "11243113", "31243111", "12134113", "32134111", "21234112", "22125112", "11225113", "31225111", "12116113", "32116111", "21216112", "23161111", "13152112", "22252111", "23143111", "12243112", "21343111", "13134112", "22234111", "11334112", "23125111", "12225112", "21325111", "13116112", "22216111", "11316112", "14152111", "13243111", "14134111", "12334111", "13225111", "11425111", "14116111", "12316111", "41111215", "61111213", "21211126", "41211124", "61211122", "22111216", "42111214", "31211215", "51211213", "22211125", "42211123", "11311126", "31311124", "51311122", "23111215", "43111213", "12211216", "32211214", "52211212", "21311215", "41311213", "61311211", "23211124", "43211122", "12311125", "32311123", "52311121", "21411124", "41411122", "24111214", "13211215", "33211213", "22311214", "42311212", "11411215", "31411213", "51411211", "24211123", "13311124", "33311122", "22411123", "42411121", "11511124", "31511122", "25111213", "14211214", "34211212", "23311213", "43311211", "12411214", "32411212", "21511213", "41511211", "25211122", "14311123", "34311121", "23411122", "12511123", "32511121", "21611122", "15211213", "24311212", "13411213", "33411211", "22511212", "11611213", "31611211", "31121125", "51121123", "21112126", "41112124", "61112122", "21121216", "41121214", "61121212", "31112215", "51112213", "12121126", "32121124", "52121122", "21221125", "41221123", "61221121", "22112125", "42112123", "11212126", "22121215", "42121213", "11221216", "31221214", "51221212", "12112216", "32112214", "52112212", "21212215", "41212213", "61212211", "13121125", "33121123", "22221124", "42221122", "11321125", "31321123", "51321121", "23112124", "43112122", "12212125", "23121214", "43121212", "12221215", "32221213", "52221211", "21321214", "41321212", "13112215", "33112213", "22212214", "42212212", "11312215", "31312213", "51312211", "14121124", "34121122", "23221123", "43221121", "12321124", "32321122", "21421123", "41421121", "24112123", "13212124", "24121213", "13221214", "33221212", "11412124", "22321213", "42321211", "11421214", "31421212", "14112214", "34112212", "23212213", "43212211", "12312214", "32312212", "21412213", "41412211", "15121123", "24221122", "13321123", "33321121", "22421122", "11521123", "31521121", "25112122", "14212123", "25121212", "14221213", "34221211", "12412123", "23321212", "12421213", "32421211", "21521212", "15112213", "24212212", "13312213", "33312211", "22412212", "11512213", "31512211", "16121122", "25221121", "14321122", "23421121", "12521122", "15212122", "15221212", "13412122", "24321211", "13421212", "11612122", "22521211", "16112212", "25212211", "14312212", "23412211", "12512212", "21612211", "11131126", "31131124", "51131122", "21122125", "41122123", "61122121", "21131215", "41131213", "61131211", "11113126", "31113124", "51113122", "11122216", "31122214", "51122212", "21113215", "41113213", "61113211", "12131125", "32131123", "52131121", "21231124", "41231122", "22122124", "42122122", "11222125", "22131214", "42131212", "11231215", "31231213", "51231211", "12113125", "32113123", "52113121", "12122215", "32122213", "52122211", "21222214", "41222212", "22113214", "42113212", "11213215", "31213213", "51213211", "13131124", "33131122", "22231123", "42231121", "11331124", "31331122", "23122123", "43122121", "12222124", "23131213", "43131211", "12231214", "32231212", "21331213", "41331211", "13113124", "33113122", "13122214", "33122212", "11313124", "22222213", "42222211", "11322214", "31322212", "23113213", "43113211", "12213214", "32213212", "21313213", "41313211", "14131123", "34131121", "23231122", "12331123", "32331121", "21431122", "24122122", "13222123", "24131212", "13231213", "33231211", "11422123", "22331212", "11431213", "31431211", "14113123", "34113121", "14122213", "34122211", "12313123", "23222212", "12322213", "32322211", "21422212", "24113212", "13213213", "33213211", "22313212", "11413213", "31413211", "15131122", "24231121", "13331122", "22431121", "25122121", "14222122", "25131211", "14231212", "12422122", "23331211", "12431212", "15113122", "15122212", "13313122", "24222211", "13322212", "11513122", "22422211", "11522212", "25113211", "14213212", "23313211", "12413212", "21513211", "16131121", "14331121", "15222121", "15231211", "13422121", "13431211", "16113121", "16122211", "14313121", "14322211", "12513121", "12522211", "15213211", "13413211", "11613211", "11141125", "31141123", "51141121", "21132124", "41132122", "21141214", "41141212", "11123125", "31123123", "51123121", "11132215", "31132213", "51132211", "21114124", "41114122", "21123214", "41123212", "11114215", "31114213", "51114211", "12141124", "32141122", "21241123", "41241121", "22132123", "42132121", "11232124", "22141213", "42141211", "11241214", "31241212", "12123124", "32123122", "12132214", "32132212", "21232213", "41232211", "22114123", "42114121", "11214124", "22123213", "42123211", "11223214", "31223212", "12114214", "32114212", "21214213", "41214211", "13141123", "33141121", "22241122", "11341123", "31341121", "23132122", "12232123", "23141212", "12241213", "32241211", "21341212", "13123123", "33123121", "13132213", "33132211", "11323123", "22232212", "11332213", "31332211", "23114122", "12214123", "23123212", "12223213", "32223211", "21323212", "13114213", "33114211", "22214212", "11314213", "31314211", "14141122", "23241121", "12341122", "24132121", "13232122", "24141211", "13241212", "11432122", "22341211", "14123122", "14132212", "12323122", "23232211", "12332212", "21432211", "24114121", "13214122", "24123211", "13223212", "11414122", "22323211", "11423212", "14114212", "23214211", "12314212", "21414211", "15141121", "13341121", "14232121", "14241211", "12432121", "15123121", "15132211", "13323121", "13332211", "11523121", "14214121", "14223211", "12414121", "12423211", "15114211", "13314211", "11514211", "11151124", "31151122", "21142123", "41142121", "21151213", "41151211", "11133124", "31133122", "11142214", "31142212", "21124123", "41124121", "21133213", "41133211", "11115124", "31115122", "11124214", "31124212", "21115213", "41115211", "12151123", "32151121", "21251122", "22142122", "11242123", "22151212", "11251213", "31251211", "12133123", "32133121", "12142213", "32142211", "21242212", "22124122", "11224123", "22133212", "11233213", "31233211", "12115123", "32115121", "12124213", "32124211", "21224212", "22115212", "11215213", "31215211", "13151122", "22251121", "23142121", "12242122", "23151211", "12251212", "13133122", "13142212", "11333122", "22242211", "11342212", "23124121", "12224122", "23133211", "12233212", "21333211", "13115122", "13124212", "11315122", "22224211", "11324212", "23115211", "12215212", "21315211", "14151121", "13242121", "13251211", "14133121", "14142211", "12333121", "12342211", "13224121", "13233211", "11424121", "11433211", "14115121", "14124211", "12315121", "12324211", "13215211", "11415211", "11161123", "31161121", "21152122", "21161212", "11143123", "31143121", "11152213", "31152211", "21134122", "21143212", "11125123", "31125121", "11134213", "31134211", "21116122", "21125212", "12161122", "22152121", "11252122", "22161211", "12143122", "12152212", "21252211", "22134121", "11234122", "22143211", "11243212", "12125122", "12134212", "21234211", "22116121", "11216122", "22125211", "11225212", "13161121", "12252121", "13143121", "13152211", "11343121", "12234121", "12243211", "13125121", "13134211", "11325121", "11334211", "12216121", "12225211", "31111225", "51111223", "21111316", "41111314", "61111312", "31211134", "51211132", "12111226", "32111224", "52111222", "21211225", "41211223", "61211221", "22111315", "42111313", "11211316", "31211314", "51211312", "12211135", "32211133", "52211131", "21311134", "41311132", "13111225", "33111223", "22211224", "42211222", "11311225", "31311223", "51311221", "23111314", "43111312", "12211315", "32211313", "52211311", "21311314", "41311312", "13211134", "33211132", "22311133", "42311131", "11411134", "31411132", "14111224", "34111222", "23211223", "43211221", "12311224", "32311222", "21411223", "41411221", "24111313", "13211314", "33211312", "22311313", "42311311", "11411314", "31411312", "14211133", "34211131", "23311132", "12411133", "32411131", "21511132", "15111223", "24211222", "13311223", "33311221", "22411222", "11511223", "31511221", "25111312", "14211313", "34211311", "23311312", "12411313", "32411311", "21511312", "15211132", "24311131", "13411132", "22511131", "11611132", "16111222", "25211221", "14311222", "23411221", "12511222", "21611221", "15211312", "24311311", "13411312", "22511311", "11611312", "21121135", "41121133", "61121131", "11112136", "31112134", "51112132", "11121226", "31121224", "51121222", "21112225", "41112223", "61112221", "21121315", "41121313", "61121311", "11112316", "31112314", "51112312", "22121134", "42121132", "11221135", "31221133", "51221131", "12112135", "32112133", "52112131", "12121225", "32121223", "52121221", "21221224", "41221222", "22112224", "42112222", "11212225", "22121314", "42121312", "11221315", "31221313", "51221311", "12112315", "32112313", "52112311", "21212314", "41212312", "23121133", "43121131", "12221134", "32221132", "21321133", "41321131", "13112134", "33112132", "13121224", "33121222", "11312134", "22221223", "42221221", "11321224", "31321222", "23112223", "43112221", "12212224", "23121313", "43121311", "12221314", "32221312", "21321313", "41321311", "13112314", "33112312", "22212313", "42212311", "11312314", "31312312", "24121132", "13221133", "33221131", "22321132", "11421133", "31421131", "14112133", "34112131", "14121223", "34121221", "12312133", "23221222", "12321223", "32321221", "21421222", "24112222", "13212223", "24121312", "13221313", "33221311", "11412223", "22321312", "11421313", "31421311", "14112313", "34112311", "23212312", "12312313", "32312311", "21412312", "25121131", "14221132", "23321131", "12421132", "21521131", "15112132", "15121222", "13312132", "24221221", "13321222", "11512132", "22421221", "11521222", "25112221", "14212222", "25121311", "14221312", "12412222", "23321311", "12421312", "21521311", "15112312", "24212311", "13312312", "22412311", "11512312", "15221131", "13421131", "16112131", "16121221", "14312131", "14321221", "12512131", "12521221", "15212221", "15221311", "13412221", "13421311", "11612221", "16112311", "14312311", "12512311", "21131134", "41131132", "11122135", "31122133", "51122131", "11131225", "31131223", "51131221", "21113134", "41113132", "21122224", "41122222", "21131314", "41131312", "11113225", "31113223", "51113221", "11122315", "31122313", "51122311", "21113314", "41113312", "22131133", "42131131", "11231134", "31231132", "12122134", "32122132", "12131224", "32131222", "21231223", "41231221", "22113133", "42113131", "11213134", "22122223", "42122221", "11222224", "22131313", "42131311", "11231314", "31231312", "12113224", "32113222", "12122314", "32122312", "21222313", "41222311", "22113313", "42113311", "11213314", "31213312", "23131132", "12231133", "32231131", "21331132", "13122133", "33122131", "13131223", "33131221", "11322133", "22231222", "11331223", "31331221", "23113132", "12213133", "23122222", "12222223", "23131312", "12231313", "32231311", "21331312", "13113223", "33113221", "13122313", "33122311", "11313223", "22222312", "11322313", "31322311", "23113312", "12213313", "32213311", "21313312", "24131131", "13231132", "22331131", "11431132", "14122132", "14131222", "12322132", "23231221", "12331222", "21431221", "24113131", "13213132", "24122221", "13222222", "24131311", "11413132", "13231312", "11422222", "22331311", "11431312", "14113222", "14122312", "12313222", "23222311", "12322312", "21422311", "24113311", "13213312", "22313311", "11413312", "14231131", "12431131", "15122131", "15131221", "13322131", "13331221", "11522131", "14213131", "14222221", "12413131", "14231311", "12422221", "12431311", "15113221", "15122311", "13313221", "13322311", "11513221", "11522311", "14213311", "12413311", "21141133", "41141131", "11132134", "31132132", "11141224", "31141222", "21123133", "41123131", "21132223", "41132221", "21141313", "41141311", "11114134", "31114132", "11123224", "31123222", "11132314", "31132312", "21114223", "41114221", "21123313", "41123311", "11114314", "31114312", "22141132", "11241133", "31241131", "12132133", "32132131", "12141223", "32141221", "21241222", "22123132", "11223133", "22132222", "11232223", "22141312", "11241313", "31241311", "12114133", "32114131", "12123223", "32123221", "12132313", "32132311", "21232312", "22114222", "11214223", "22123312", "11223313", "31223311", "12114313", "32114311", "21214312", "23141131", "12241132", "21341131", "13132132", "13141222", "11332132", "22241221", "11341222", "23123131", "12223132", "23132221", "12232222", "23141311", "12241312", "21341311", "13114132", "13123222", "11314132", "13132312", "11323222", "22232311", "11332312", "23114221", "12214222", "23123311", "12223312", "21323311", "13114312", "22214311", "11314312", "13241131", "14132131", "14141221", "12332131", "12341221", "13223131", "13232221", "11423131", "13241311", "11432221", "14114131", "14123221", "12314131", "14132311", "12323221", "12332311", "13214221", "13223311", "11414221", "11423311", "14114311", "12314311", "21151132", "11142133", "31142131", "11151223", "31151221", "21133132", "21142222", "21151312", "11124133", "31124131", "11133223", "31133221", "11142313", "31142311", "21115132", "21124222", "21133312", "11115223", "31115221", "11124313", "31124311", "22151131", "11251132", "12142132", "12151222", "21251221", "22133131", "11233132", "22142221", "11242222", "22151311", "11251312", "12124132", "12133222", "12142312", "21242311", "22115131", "11215132", "22124221", "11224222", "22133311", "11233312", "12115222", "12124312", "21224311", "12251131", "13142131", "13151221", "11342131", "12233131", "12242221", "12251311", "13124131", "13133221", "11324131", "13142311", "11333221", "11342311", "12215131", "12224221", "12233311", "13115221", "13124311", "11315221", "11324311", "21161131", "11152132", "11161222", "21143131", "21152221", "21161311", "11134132", "11143222", "11152312", "21125131", "21134221", "21143311", "11116132", "11125222", "11134312", "12152131", "12161221", "11243131", "11252221", "12134131", "12143221", "12152311", "11225131", "11234221", "11243311", "12116131", "12125221", "12134311", "21111235", "41111233", "61111231", "11111326", "31111324", "51111322", "21111415", "41111413", "61111411", "21211144", "41211142", "22111234", "42111232", "11211235", "31211233", "51211231", "12111325", "32111323", "52111321", "21211324", "41211322", "22111414", "42111412", "11211415", "31211413", "51211411", "22211143", "42211141", "11311144", "31311142", "23111233", "43111231", "12211234", "32211232", "21311233", "41311231", "13111324", "33111322", "22211323", "42211321", "11311324", "31311322", "23111413", "43111411", "12211414", "32211412", "21311413", "41311411", "23211142", "12311143", "32311141", "21411142", "24111232", "13211233", "33211231", "22311232", "11411233", "31411231", "14111323", "34111321", "23211322", "12311323", "32311321", "21411322", "24111412", "13211413", "33211411", "22311412", "11411413", "31411411", "24211141", "13311142", "22411141", "11511142", "25111231", "14211232", "23311231", "12411232", "21511231", "15111322", "24211321", "13311322", "22411321", "11511322", "25111411", "14211412", "23311411", "12411412", "21511411", "14311141", "12511141", "15211231", "13411231", "11611231", "16111321", "14311321", "12511321", "15211411", "13411411", "11611411", "31121143", "51121141", "21112144", "41112142", "21121234", "41121232", "11112235", "31112233", "51112231", "11121325", "31121323", "51121321", "21112324", "41112322", "21121414", "41121412", "11112415", "31112413", "51112411", "12121144", "32121142", "21221143", "41221141", "22112143", "42112141", "11212144", "22121233", "42121231", "11221234", "31221232", "12112234", "32112232", "12121324", "32121322", "21221323", "41221321", "22112323", "42112321", "11212324", "22121413", "42121411", "11221414", "31221412", "12112414", "32112412", "21212413", "41212411", "13121143", "33121141", "22221142", "11321143", "31321141", "23112142", "12212143", "23121232", "12221233", "32221231", "21321232", "13112233", "33112231", "13121323", "33121321", "11312233", "22221322", "11321323", "31321321", "23112322", "12212323", "23121412", "12221413", "32221411", "21321412", "13112413", "33112411", "22212412", "11312413", "31312411", "14121142", "23221141", "12321142", "21421141", "24112141", "13212142", "24121231", "13221232", "11412142", "22321231", "11421232", "14112232", "14121322", "12312232", "23221321", "12321322", "21421321", "24112321", "13212322", "24121411", "13221412", "11412322", "22321411", "11421412", "14112412", "23212411", "12312412", "21412411", "15121141", "13321141", "11521141", "14212141", "14221231", "12412141", "12421231", "15112231", "15121321", "13312231", "13321321", "11512231", "11521321", "14212321", "14221411", "12412321", "12421411", "15112411", "13312411", "11512411", "11131144", "31131142", "21122143", "41122141", "21131233", "41131231", "11113144", "31113142", "11122234", "31122232", "11131324", "31131322", "21113233", "41113231", "21122323", "41122321", "21131413", "41131411", "11113324", "31113322", "11122414", "31122412", "21113413", "41113411", "12131143", "32131141", "21231142", "22122142", "11222143", "22131232", "11231233", "31231231", "12113143", "32113141", "12122233", "32122231", "12131323", "32131321", "21231322", "22113232", "11213233", "22122322", "11222323", "22131412", "11231413", "31231411", "12113323", "32113321", "12122413", "32122411", "21222412", "22113412", "11213413", "31213411", "13131142", "22231141", "11331142", "23122141", "12222142", "23131231", "12231232", "21331231", "13113142", "13122232", "11313142", "13131322", "11322232", "22231321", "11331322", "23113231", "12213232", "23122321", "12222322", "23131411", "12231412", "21331411", "13113322", "13122412", "11313322", "22222411", "11322412", "23113411", "12213412", "21313411", "14131141", "12331141", "13222141", "13231231", "11422141", "11431231", "14113141", "14122231", "12313141", "14131321", "12322231", "12331321", "13213231", "13222321", "11413231", "13231411", "11422321", "11431411", "14113321", "14122411", "12313321", "12322411", "13213411", "11413411", "11141143", "31141141", "21132142", "21141232", "11123143", "31123141", "11132233", "31132231", "11141323", "31141321", "21114142", "21123232", "21132322", "21141412", "11114233", "31114231", "11123323", "31123321", "11132413", "31132411", "21114322", "21123412", "12141142", "21241141", "22132141", "11232142", "22141231", "11241232", "12123142", "12132232", "12141322", "21241321", "22114141", "11214142", "22123231", "11223232", "22132321", "11232322", "22141411", "11241412", "12114232", "12123322", "12132412", "21232411", "22114321", "11214322", "22123411", "11223412", "13141141", "11341141", "12232141", "12241231", "13123141", "13132231", "11323141", "13141321", "11332231", "11341321", "12214141", "12223231", "12232321", "12241411", "13114231", "13123321", "11314231", "13132411", "11323321", "11332411", "12214321", "12223411", "11151142", "21142141", "21151231", "11133142", "11142232", "11151322", "21124141", "21133231", "21142321", "21151411", "11115142", "11124232", "11133322", "11142412", "21115231", "21124321", "21133411", "12151141", "11242141", "11251231", "12133141", "12142231", "12151321", "11224141", "11233231", "11242321", "11251411", "12115141", "12124231", "12133321", "12142411", "11215231", "11224321", "11233411", "11161141", "11143141", "11152231", "11161321", "11125141", "11134231", "11143321", "11152411", "11111245", "31111243", "51111241", "21111334", "41111332", "11111425", "31111423", "51111421", "21111514", "41111512", "31211152", "12111244", "32111242", "21211243", "41211241", "22111333", "42111331", "11211334", "31211332", "12111424", "32111422", "21211423", "41211421", "22111513", "42111511", "11211514", "31211512", "12211153", "32211151", "21311152", "13111243", "33111241", "22211242", "11311243", "31311241", "23111332", "12211333", "32211331", "21311332", "13111423", "33111421", "22211422", "11311423", "31311421", "23111512", "12211513", "32211511", "21311512", "13211152", "22311151", "11411152", "14111242", "23211241", "12311242", "21411241", "24111331", "13211332", "22311331", "11411332", "14111422", "23211421", "12311422", "21411421", "24111511", "13211512", "22311511", "11411512", "14211151", "12411151", "15111241", "13311241", "11511241", "14211331", "12411331", "15111421", "13311421", "11511421", "14211511", "12411511", "21121153", "41121151", "11112154", "31112152", "11121244", "31121242", "21112243", "41112241", "21121333", "41121331", "11112334", "31112332", "11121424", "31121422", "21112423", "41112421", "21121513", "41121511", "11112514", "31112512", "22121152", "11221153", "31221151", "12112153", "32112151", "12121243", "32121241", "21221242", "22112242", "11212243", "22121332", "11221333", "31221331", "12112333", "32112331", "12121423", "32121421", "21221422", "22112422", "11212423", "22121512", "11221513", "31221511", "12112513", "32112511", "21212512", "23121151", "12221152", "21321151", "13112152", "13121242", "11312152", "22221241", "11321242", "23112241", "12212242", "23121331", "12221332", "21321331", "13112332", "13121422", "11312332", "22221421", "11321422", "23112421", "12212422", "23121511", "12221512", "21321511", "13112512", "22212511", "11312512", "13221151", "11421151", "14112151", "14121241", "12312151", "12321241", "13212241", "13221331", "11412241", "11421331", "14112331", "14121421", "12312331", "12321421", "13212421", "13221511", "11412421", "11421511", "14112511", "12312511", "21131152", "11122153", "31122151", "11131243", "31131241", "21113152", "21122242", "21131332", "11113243", "31113241", "11122333", "31122331", "11131423", "31131421", "21113332", "21122422", "21131512", "11113423", "31113421", "11122513", "31122511", "22131151", "11231152", "12122152", "12131242", "21231241", "22113151", "11213152", "22122241", "11222242", "22131331", "11231332", "12113242", "12122332", "12131422", "21231421", "22113331", "11213332", "22122421", "11222422", "22131511", "11231512", "12113422", "12122512", "21222511", "12231151", "13122151", "13131241", "11322151", "11331241", "12213151", "12222241", "12231331", "13113241", "13122331", "11313241", "13131421", "11322331", "11331421", "12213331", "12222421", "12231511", "13113421", "13122511", "11313421", "11322511", "21141151", "11132152", "11141242", "21123151", "21132241", "21141331", "11114152", "11123242", "11132332", "11141422", "21114241", "21123331", "21132421", "21141511", "11114332", "11123422", "11132512", "11241151", "12132151", "12141241", "11223151", "11232241", "11241331", "12114151", "12123241", "12132331", "12141421", "11214241", "11223331", "11232421", "11241511", "12114331", "12123421", "12132511", "11142151", "11151241", "11124151", "11133241", "11142331", "11151421", "11115241", "11124331", "11133421", "11142511", "21111253", "41111251", "11111344", "31111342", "21111433", "41111431", "11111524", "31111522", "21111613", "41111611", "21211162", "22111252", "11211253", "31211251", "12111343", "32111341", "21211342", "22111432", "11211433", "31211431", "12111523", "32111521", "21211522", "22111612", "11211613", "31211611", "22211161", "11311162", "23111251", "12211252", "21311251", "13111342", "22211341", "11311342", "23111431", "12211432", "21311431", "13111522", "22211521", "11311522", "23111611", "12211612", "21311611", "12311161", "13211251", "11411251", "14111341", "12311341", "13211431", "11411431", "14111521", "12311521", "13211611", "11411611", "31121161", "21112162", "21121252", "11112253", "31112251", "11121343", "31121341", "21112342", "21121432", "11112433", "31112431", "11121523", "31121521", "21112522", "21121612", "12121162", "21221161", "22112161", "11212162", "22121251", "11221252", "12112252", "12121342", "21221341", "22112341", "11212342", "22121431", "11221432", "12112432", "12121522", "21221521", "22112521", "11212522", "22121611", "11221612", "13121161", "11321161", "12212161", "12221251", "13112251", "13121341", "11312251", "11321341", "12212341", "12221431", "13112431", "13121521", "11312431", "11321521", "12212521", "12221611", "11131162", "21122161", "21131251", "11113162"])]); //#21006
@@ -20703,8 +20873,9 @@ function bwipp_code49() {
         var _24 = $k[--$j]; //#21174
         $_[_24] = _23; //#21174
         for (var _27 = 0, _26 = $_.pre - 1; _27 <= _26; _27 += 5) { //#21175
+            var _29 = $geti($_.nums, _27, 5); //#21175
             $k[$j++] = 3; //#21175
-            $k[$j++] = $geti($_.nums, _27, 5); //#21175
+            $k[$j++] = _29; //#21175
             $_.base48(); //#21175
         } //#21175
         $_.nums = $geti($_.nums, $_.pre, $f($_.nums.length - $_.pre)) //#21176
@@ -20735,14 +20906,16 @@ function bwipp_code49() {
         if (_2P == 7) { //#21184
             $k[$j++] = 3; //#21182
             $k[$j++] = Infinity; //#21182
+            var _2R = $geti($_.nums, 0, 4); //#21182
             $k[$j++] = 49; //#21182
             $k[$j++] = 48; //#21182
-            $aload($geti($_.nums, 0, 4)); //#21182
+            $aload(_2R); //#21182
             var _2S = $a(); //#21182
             $k[$j++] = _2S; //#21182
             $_.base48(); //#21182
+            var _2U = $geti($_.nums, 4, 3); //#21183
             $k[$j++] = 2; //#21183
-            $k[$j++] = $geti($_.nums, 4, 3); //#21183
+            $k[$j++] = _2U; //#21183
             $_.base48(); //#21183
         } //#21183
     }; //#21183
@@ -20775,8 +20948,9 @@ function bwipp_code49() {
             $k[$j++] = $_.cws; //#21215
             $k[$j++] = 0; //#21215
             for (var _2p = 0; _2p <= 43; _2p += 1) { //#21215
+                var _2q = $get($_.code49_samval, _2p); //#21215
                 $k[$j++] = _2p; //#21215
-                if ($get($_.code49_samval, _2p) != $_.sam) { //#21215
+                if (_2q != $_.sam) { //#21215
                     $j--; //#21215
                 } //#21215
             } //#21215
@@ -20886,7 +21060,8 @@ function bwipp_code49() {
         var _4F = ($_.i * 8) + 7; //#21303
         var _4E = 0; //#21303
         for (var _4A = 0, _4B = _49.length; _4A < _4B; _4A++) { //#21303
-            _4E = $f(_4E + $get(_49, _4A)) //#21303
+            var _4C = $get(_49, _4A); //#21303
+            _4E = $f(_4E + _4C) //#21303
         } //#21303
         $put(_4G, _4F, _4E % 49); //#21303
         $_.j = $_.j + 7; //#21304
@@ -20965,7 +21140,8 @@ function bwipp_code49() {
     var _5Y = $geti($_.ccs, $_.ccs.length - 8, 7); //#21363
     var _5d = 0; //#21363
     for (var _5Z = 0, _5a = _5Y.length; _5Z < _5a; _5Z++) { //#21363
-        _5d = $f(_5d + $get(_5Y, _5Z)) //#21363
+        var _5b = $get(_5Y, _5Z); //#21363
+        _5d = $f(_5d + _5b) //#21363
     } //#21363
     $put($_.ccs, $_.ccs.length - 1, _5d % 49); //#21364
     if ($has($_.options, 'debugcws')) { //#21368
@@ -21004,9 +21180,10 @@ function bwipp_code49() {
         var _6C = $_.sbs; //#21390
         $k[$j++] = 1; //#21390
         for (var _6D = 0, _6E = _6C.length; _6D < _6E; _6D++) { //#21390
+            var _6F = $get(_6C, _6D); //#21390
             var _6G = $k[$j - 1]; //#21390
             var _6H = (_6G == 0) ? 1 : 0; //#21390
-            for (var _6I = 0, _6J = $get(_6C, _6D); _6I < _6J; _6I++) { //#21390
+            for (var _6I = 0, _6J = _6F; _6I < _6J; _6I++) { //#21390
                 $k[$j++] = _6H //#21390
             } //#21390
         } //#21390
@@ -21140,6 +21317,7 @@ function bwipp_flattermarken() {
         _b[_Z] = 0; //#21865
     } //#21865
     _b = $a(_b); //#21865
+    var _g = $a([$a([$_.barcode, 0, 0, $_.text1font, $_.text1size])]); //#21866
     $k[$j++] = 'ren'; //#21874
     $k[$j++] = 'renlinear'; //#21874
     $k[$j++] = 'sbs'; //#21874
@@ -21149,7 +21327,7 @@ function bwipp_flattermarken() {
     $k[$j++] = 'bbs'; //#21874
     $k[$j++] = _b; //#21874
     $k[$j++] = 'txt'; //#21874
-    $k[$j++] = $a([$a([$_.barcode, 0, 0, $_.text1font, $_.text1size])]); //#21874
+    $k[$j++] = _g; //#21874
     $k[$j++] = 'text1xalign'; //#21874
     $k[$j++] = "center"; //#21874
     $k[$j++] = 'opt'; //#21874
@@ -21577,8 +21755,9 @@ function bwipp_pdf417() {
             var _1r = $k[$j - 2]; //#22626
             if ((_1q != 0) && (_1r != 0)) { //#22628
                 var _1t = $k[--$j]; //#22627
+                var _1u = $get($_.rslog, _1t); //#22627
                 var _1v = $k[--$j]; //#22627
-                $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _1t) + $get($_.rslog, _1v)) % 928) //#22627
+                $k[$j++] = $get($_.rsalog, $f(_1u + $get($_.rslog, _1v)) % 928) //#22627
             } else { //#22628
                 $j -= 2; //#22628
                 $k[$j++] = 0; //#22628
@@ -21597,22 +21776,25 @@ function bwipp_pdf417() {
                 $k[$j++] = $get($_.rsalog, _25); //#22645
                 for (var _2A = _25 - 1; _2A >= 1; _2A -= 1) { //#22645
                     var _2B = $_.coeffs; //#22640
+                    var _2C = $get(_2B, _2A); //#22640
                     var _2D = $k[$j - 1]; //#22641
                     $k[$j++] = _2B; //#22642
                     $k[$j++] = _2A; //#22642
-                    $k[$j++] = $get(_2B, _2A); //#22642
+                    $k[$j++] = _2C; //#22642
                     $k[$j++] = _2D; //#22642
                     $_.pdf417_rsprod(); //#22642
                     var _2F = $k[--$j]; //#22643
                     var _2G = $k[--$j]; //#22643
+                    var _2H = $get($_.coeffs, _2G - 1); //#22643
                     var _2I = $k[--$j]; //#22644
-                    $put(_2I, _2G, $f(_2F + $get($_.coeffs, _2G - 1)) % 929) //#22644
+                    $put(_2I, _2G, $f(_2F + _2H) % 929) //#22644
                 } //#22644
                 var _2J = $_.coeffs; //#22646
+                var _2K = $get(_2J, 0); //#22646
                 var _2L = $k[$j - 1]; //#22646
                 $k[$j++] = _2J; //#22647
                 $k[$j++] = 0; //#22647
-                $k[$j++] = $get(_2J, 0); //#22647
+                $k[$j++] = _2K; //#22647
                 $k[$j++] = _2L; //#22647
                 $_.pdf417_rsprod(); //#22647
                 var _2M = $k[--$j]; //#22647
@@ -21941,8 +22123,9 @@ function bwipp_pdf417() {
             } //#22935
             if ($get($_.iseci, $_.p)) { //#22971
                 $_.eci = $get($_.msg, $_.p); //#22937
+                var _6e = $a([$_.eci]); //#22938
                 $_.p = $_.p + 1; //#22939
-                $k[$j++] = $a([$_.eci]); //#22940
+                $k[$j++] = _6e; //#22940
                 var _6l = $_.seqlen; //#22940
                 var _6k = $_.eci <= -1810900 ? 2 : (($_.eci <= -1000900) ? 3 : 2); //#22940
                 $_.seqlen = $f(_6l + _6k) //#22940
@@ -21973,10 +22156,11 @@ function bwipp_pdf417() {
                     } else { //#22971
                         $_.b = $get($_.numbytes, $_.p); //#22960
                         if (($_.b == 1) && ($_.state == $_.pdf417_t)) { //#22971
+                            var _7P = $a([$get($_.msg, $_.p)]); //#22963
                             $_.p = $f($_.p + $_.b) //#22964
                             $_.seqlen = $_.seqlen + 2; //#22965
                             $k[$j++] = $_.pdf417_bs; //#22965
-                            $k[$j++] = $a([$get($_.msg, $_.p)]); //#22965
+                            $k[$j++] = _7P; //#22965
                         } else { //#22971
                             if (($_.b % 6) != 0) { //#22967
                                 $k[$j++] = $_.pdf417_bl; //#22967
@@ -22000,20 +22184,24 @@ function bwipp_pdf417() {
         $j--; //#22974
         $_.seq = _7f; //#22974
         $_.enca = function() {
+            var _7j = $get($_.charvals, $_.pdf417_a); //#22979
             var _7k = $k[--$j]; //#22979
-            $k[$j++] = $get($get($_.charvals, $_.pdf417_a), _7k); //#22979
+            $k[$j++] = $get(_7j, _7k); //#22979
         }; //#22979
         $_.encl = function() {
+            var _7n = $get($_.charvals, $_.pdf417_l); //#22980
             var _7o = $k[--$j]; //#22980
-            $k[$j++] = $get($get($_.charvals, $_.pdf417_l), _7o); //#22980
+            $k[$j++] = $get(_7n, _7o); //#22980
         }; //#22980
         $_.encm = function() {
+            var _7r = $get($_.charvals, $_.pdf417_m); //#22981
             var _7s = $k[--$j]; //#22981
-            $k[$j++] = $get($get($_.charvals, $_.pdf417_m), _7s); //#22981
+            $k[$j++] = $get(_7r, _7s); //#22981
         }; //#22981
         $_.encp = function() {
+            var _7v = $get($_.charvals, $_.pdf417_p); //#22982
             var _7w = $k[--$j]; //#22982
-            $k[$j++] = $get($get($_.charvals, $_.pdf417_p), _7w); //#22982
+            $k[$j++] = $get(_7v, _7w); //#22982
         }; //#22982
         $_.textencfuncs = $_.pdf417_textencfuncs; //#22983
         $_.addtotext = function() {
@@ -22514,8 +22702,9 @@ function bwipp_pdf417() {
     _F5 = $a(_F5); //#23373
     $puti(_F7, _F6, _F5); //#23373
     if ($has($_.options, 'debugcws')) { //#23377
+        var _FC = $geti($_.cws, 0, $_.n); //#23377
         $k[$j++] = "bwipp.debugcws#23377"; //#23377
-        $k[$j++] = $geti($_.cws, 0, $_.n); //#23377
+        $k[$j++] = _FC; //#23377
         bwipp_raiseerror(); //#23377
     } //#23377
     var _FD = $_.n; //#23382
@@ -22533,14 +22722,16 @@ function bwipp_pdf417() {
     $k[$j++] = 929; //#23382
     bwipp_rsecprime(); //#23382
     if ($has($_.options, 'debugecc')) { //#23386
+        var _FS = $geti($_.cws, $_.n, $_.k); //#23386
         $k[$j++] = "bwipp.debugecc#23386"; //#23386
-        $k[$j++] = $geti($_.cws, $_.n, $_.k); //#23386
+        $k[$j++] = _FS; //#23386
         bwipp_raiseerror(); //#23386
     } //#23386
     $_.cwtobits = function() {
         var _FT = $k[--$j]; //#23396
+        var _FU = $get($_.pdf417_clusters, _FT); //#23396
         var _FV = $k[--$j]; //#23396
-        $_.v = $get($get($_.pdf417_clusters, _FT), _FV); //#23396
+        $_.v = $get(_FU, _FV); //#23396
         $k[$j++] = Infinity; //#23397
         for (var _FX = 0; _FX < 17; _FX++) { //#23397
             $k[$j++] = 0; //#23397
@@ -22798,8 +22989,9 @@ function bwipp_micropdf417() {
                 var _3E = $k[$j - 2]; //#24050
                 if (_3E != 0) { //#24052
                     var _3G = $k[--$j]; //#24051
+                    var _3H = $get($_.rslog, _3G); //#24051
                     var _3I = $k[--$j]; //#24051
-                    $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _3G) + $get($_.rslog, _3I)) % 928) //#24051
+                    $k[$j++] = $get($_.rsalog, $f(_3H + $get($_.rslog, _3I)) % 928) //#24051
                 } else { //#24052
                     $j -= 2; //#24052
                     $k[$j++] = 0; //#24052
@@ -22822,22 +23014,25 @@ function bwipp_micropdf417() {
                 $k[$j++] = $get($_.rsalog, _3S); //#24069
                 for (var _3X = _3S - 1; _3X >= 1; _3X -= 1) { //#24069
                     var _3Y = $_.coeffs; //#24064
+                    var _3Z = $get(_3Y, _3X); //#24064
                     var _3a = $k[$j - 1]; //#24065
                     $k[$j++] = _3Y; //#24066
                     $k[$j++] = _3X; //#24066
-                    $k[$j++] = $get(_3Y, _3X); //#24066
+                    $k[$j++] = _3Z; //#24066
                     $k[$j++] = _3a; //#24066
                     $_.micropdf417_rsprod(); //#24066
                     var _3c = $k[--$j]; //#24067
                     var _3d = $k[--$j]; //#24067
+                    var _3e = $get($_.coeffs, _3d - 1); //#24067
                     var _3f = $k[--$j]; //#24068
-                    $put(_3f, _3d, $f(_3c + $get($_.coeffs, _3d - 1)) % 929) //#24068
+                    $put(_3f, _3d, $f(_3c + _3e) % 929) //#24068
                 } //#24068
                 var _3g = $_.coeffs; //#24070
+                var _3h = $get(_3g, 0); //#24070
                 var _3i = $k[$j - 1]; //#24071
                 $k[$j++] = _3g; //#24072
                 $k[$j++] = 0; //#24072
-                $k[$j++] = $get(_3g, 0); //#24072
+                $k[$j++] = _3h; //#24072
                 $k[$j++] = _3i; //#24072
                 $_.micropdf417_rsprod(); //#24072
                 var _3j = $k[--$j]; //#24072
@@ -23120,14 +23315,16 @@ function bwipp_micropdf417() {
                 if ((_6n == 4) && (_6o == 30)) { //#24298
                     if ($get($_.msg, 5) == 53) { //#24295
                         $k[$j++] = Infinity; //#24292
+                        var _6t = $geti($_.msg, 7, $_.msg.length - 9); //#24292
                         $k[$j++] = $_.micropdf417_m05; //#24292
-                        $aload($geti($_.msg, 7, $_.msg.length - 9)); //#24292
+                        $aload(_6t); //#24292
                         $_.msg = $a(); //#24292
                     } else { //#24295
                         if ($get($_.msg, 5) == 54) { //#24296
                             $k[$j++] = Infinity; //#24295
+                            var _6y = $geti($_.msg, 7, $_.msg.length - 9); //#24295
                             $k[$j++] = $_.micropdf417_m06; //#24295
-                            $aload($geti($_.msg, 7, $_.msg.length - 9)); //#24295
+                            $aload(_6y); //#24295
                             $_.msg = $a(); //#24295
                         } //#24295
                     } //#24295
@@ -23200,8 +23397,9 @@ function bwipp_micropdf417() {
             } else { //#24379
                 if ($get($_.iseci, $_.p)) { //#24379
                     $_.eci = $get($_.msg, $_.p); //#24345
+                    var _8K = $a([$_.eci]); //#24346
                     $_.p = $_.p + 1; //#24347
-                    $k[$j++] = $a([$_.eci]); //#24348
+                    $k[$j++] = _8K; //#24348
                     var _8R = $_.seqlen; //#24348
                     var _8Q = $_.eci <= -1810900 ? 2 : (($_.eci <= -1000900) ? 3 : 2); //#24348
                     $_.seqlen = $f(_8R + _8Q) //#24348
@@ -23232,10 +23430,11 @@ function bwipp_micropdf417() {
                         } else { //#24379
                             $_.b = $get($_.numbytes, $_.p); //#24368
                             if (($_.b == 1) && ($_.state == $_.micropdf417_t)) { //#24379
+                                var _95 = $a([$get($_.msg, $_.p)]); //#24371
                                 $_.p = $f($_.p + $_.b) //#24372
                                 $_.seqlen = $_.seqlen + 2; //#24373
                                 $k[$j++] = $_.micropdf417_bs; //#24373
-                                $k[$j++] = $a([$get($_.msg, $_.p)]); //#24373
+                                $k[$j++] = _95; //#24373
                             } else { //#24379
                                 if (($_.b % 6) != 0) { //#24375
                                     $k[$j++] = $_.micropdf417_bl; //#24375
@@ -23276,20 +23475,24 @@ function bwipp_micropdf417() {
         $k[$j++] = 917; //#24385
         $_.latchcws = $d(); //#24385
         $_.enca = function() {
+            var _9P = $get($_.charvals, $_.micropdf417_a); //#24391
             var _9Q = $k[--$j]; //#24391
-            $k[$j++] = $get($get($_.charvals, $_.micropdf417_a), _9Q); //#24391
+            $k[$j++] = $get(_9P, _9Q); //#24391
         }; //#24391
         $_.encl = function() {
+            var _9T = $get($_.charvals, $_.micropdf417_l); //#24392
             var _9U = $k[--$j]; //#24392
-            $k[$j++] = $get($get($_.charvals, $_.micropdf417_l), _9U); //#24392
+            $k[$j++] = $get(_9T, _9U); //#24392
         }; //#24392
         $_.encm = function() {
+            var _9X = $get($_.charvals, $_.micropdf417_m); //#24393
             var _9Y = $k[--$j]; //#24393
-            $k[$j++] = $get($get($_.charvals, $_.micropdf417_m), _9Y); //#24393
+            $k[$j++] = $get(_9X, _9Y); //#24393
         }; //#24393
         $_.encp = function() {
+            var _9b = $get($_.charvals, $_.micropdf417_p); //#24394
             var _9c = $k[--$j]; //#24394
-            $k[$j++] = $get($get($_.charvals, $_.micropdf417_p), _9c); //#24394
+            $k[$j++] = $get(_9b, _9c); //#24394
         }; //#24394
         $_.textencfuncs = $_.micropdf417_textencfuncs; //#24395
         $_.addtotext = function() {
@@ -23773,8 +23976,9 @@ function bwipp_micropdf417() {
     _Gq = $a(_Gq); //#24770
     $puti(_Gs, _Gr, _Gq); //#24770
     if ($has($_.options, 'debugcws')) { //#24774
+        var _Gx = $geti($_.cws, 0, $_.n); //#24774
         $k[$j++] = "bwipp.debugcws#24774"; //#24774
-        $k[$j++] = $geti($_.cws, 0, $_.n); //#24774
+        $k[$j++] = _Gx; //#24774
         bwipp_raiseerror(); //#24774
     } //#24774
     var _Gy = $_.n; //#24779
@@ -23792,14 +23996,16 @@ function bwipp_micropdf417() {
     $k[$j++] = 929; //#24779
     bwipp_rsecprime(); //#24779
     if ($has($_.options, 'debugecc')) { //#24783
+        var _HD = $geti($_.cws, $_.n, $_.k); //#24783
         $k[$j++] = "bwipp.debugecc#24783"; //#24783
-        $k[$j++] = $geti($_.cws, $_.n, $_.k); //#24783
+        $k[$j++] = _HD; //#24783
         bwipp_raiseerror(); //#24783
     } //#24783
     $_.cwtobits = function() {
         var _HE = $k[--$j]; //#24793
+        var _HF = $get($_.micropdf417_clusters, _HE); //#24793
         var _HG = $k[--$j]; //#24793
-        $_.v = $get($get($_.micropdf417_clusters, _HE), _HG); //#24793
+        $_.v = $get(_HF, _HG); //#24793
         $k[$j++] = Infinity; //#24794
         for (var _HI = 0; _HI < 17; _HI++) { //#24794
             $k[$j++] = 0; //#24794
@@ -23813,8 +24019,9 @@ function bwipp_micropdf417() {
     }; //#24795
     $_.raptobits = function() {
         var _HR = $k[--$j]; //#24802
+        var _HS = $get($_.micropdf417_raps, _HR); //#24802
         var _HT = $k[--$j]; //#24802
-        $_.v = $get($get($_.micropdf417_raps, _HR), _HT); //#24802
+        $_.v = $get(_HS, _HT); //#24802
         $k[$j++] = Infinity; //#24803
         for (var _HV = 0; _HV < 10; _HV++) { //#24803
             $k[$j++] = 0; //#24803
@@ -24201,9 +24408,10 @@ function bwipp_datamatrix() {
         var _1m = $a([$_.datamatrix_lC, $_.datamatrix_lB, $_.datamatrix_fnc1, $_.datamatrix_sapp, $_.datamatrix_prog, $_.datamatrix_usft, $_.datamatrix_m05, $_.datamatrix_m06, $_.datamatrix_lX, $_.datamatrix_lT, $_.datamatrix_lE, $_.datamatrix_eci]); //#25045
         $k[$j++] = 229; //#25045
         for (var _1n = 0, _1o = _1m.length; _1n < _1o; _1n++) { //#25045
+            var _1p = $get(_1m, _1n); //#25045
             var _1q = $k[--$j]; //#25045
             var _1r = _1q + 1; //#25045
-            $k[$j++] = $get(_1m, _1n); //#25045
+            $k[$j++] = _1p; //#25045
             $k[$j++] = _1r; //#25045
             $k[$j++] = _1r; //#25045
         } //#25045
@@ -24289,8 +24497,9 @@ function bwipp_datamatrix() {
             var _2M = _2P.next().value; //#25070
             var _2N = _2L.get(_2M); //#25070
             $k[$j++] = _2M; //#25070
+            var _2U = $get($_.CNvals, $_.datamatrix_sft1); //#25070
             $k[$j++] = Infinity; //#25070
-            $k[$j++] = $get($_.CNvals, $_.datamatrix_sft1); //#25070
+            $k[$j++] = _2U; //#25070
             $k[$j++] = _2N; //#25070
             var _2V = $a(); //#25070
             $k[$j++] = _2V; //#25070
@@ -24300,8 +24509,9 @@ function bwipp_datamatrix() {
             var _2X = _2a.next().value; //#25071
             var _2Y = _2W.get(_2X); //#25071
             $k[$j++] = _2X; //#25071
+            var _2f = $get($_.CNvals, $_.datamatrix_sft2); //#25071
             $k[$j++] = Infinity; //#25071
-            $k[$j++] = $get($_.CNvals, $_.datamatrix_sft2); //#25071
+            $k[$j++] = _2f; //#25071
             $k[$j++] = _2Y; //#25071
             var _2g = $a(); //#25071
             $k[$j++] = _2g; //#25071
@@ -24311,8 +24521,9 @@ function bwipp_datamatrix() {
             var _2i = _2l.next().value; //#25072
             var _2j = _2h.get(_2i); //#25072
             $k[$j++] = _2i; //#25072
+            var _2q = $get($_.CNvals, $_.datamatrix_sft3); //#25072
             $k[$j++] = Infinity; //#25072
-            $k[$j++] = $get($_.CNvals, $_.datamatrix_sft3); //#25072
+            $k[$j++] = _2q; //#25072
             $k[$j++] = _2j; //#25072
             var _2r = $a(); //#25072
             $k[$j++] = _2r; //#25072
@@ -24392,8 +24603,9 @@ function bwipp_datamatrix() {
             var _3E = _3H.next().value; //#25098
             var _3F = _3D.get(_3E); //#25098
             $k[$j++] = _3E; //#25098
+            var _3M = $get($_.TNvals, $_.datamatrix_sft1); //#25098
             $k[$j++] = Infinity; //#25098
-            $k[$j++] = $get($_.TNvals, $_.datamatrix_sft1); //#25098
+            $k[$j++] = _3M; //#25098
             $k[$j++] = _3F; //#25098
             var _3N = $a(); //#25098
             $k[$j++] = _3N; //#25098
@@ -24403,8 +24615,9 @@ function bwipp_datamatrix() {
             var _3P = _3S.next().value; //#25099
             var _3Q = _3O.get(_3P); //#25099
             $k[$j++] = _3P; //#25099
+            var _3X = $get($_.TNvals, $_.datamatrix_sft2); //#25099
             $k[$j++] = Infinity; //#25099
-            $k[$j++] = $get($_.TNvals, $_.datamatrix_sft2); //#25099
+            $k[$j++] = _3X; //#25099
             $k[$j++] = _3Q; //#25099
             var _3Y = $a(); //#25099
             $k[$j++] = _3Y; //#25099
@@ -24414,8 +24627,9 @@ function bwipp_datamatrix() {
             var _3a = _3d.next().value; //#25100
             var _3b = _3Z.get(_3a); //#25100
             $k[$j++] = _3a; //#25100
+            var _3i = $get($_.TNvals, $_.datamatrix_sft3); //#25100
             $k[$j++] = Infinity; //#25100
-            $k[$j++] = $get($_.TNvals, $_.datamatrix_sft3); //#25100
+            $k[$j++] = _3i; //#25100
             $k[$j++] = _3b; //#25100
             var _3j = $a(); //#25100
             $k[$j++] = _3j; //#25100
@@ -24551,8 +24765,9 @@ function bwipp_datamatrix() {
                 var _5E = $k[$j - 2]; //#25175
                 if (_5E != 0) { //#25177
                     var _5G = $k[--$j]; //#25176
+                    var _5H = $get($_.rslog, _5G); //#25176
                     var _5I = $k[--$j]; //#25176
-                    $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _5G) + $get($_.rslog, _5I)) % 255) //#25176
+                    $k[$j++] = $get($_.rsalog, $f(_5H + $get($_.rslog, _5I)) % 255) //#25176
                 } else { //#25177
                     $j -= 2; //#25177
                     $k[$j++] = 0; //#25177
@@ -24575,22 +24790,25 @@ function bwipp_datamatrix() {
                 $k[$j++] = $get($_.rsalog, _5S); //#25194
                 for (var _5X = _5S - 1; _5X >= 1; _5X -= 1) { //#25194
                     var _5Y = $_.coeffs; //#25189
+                    var _5Z = $get(_5Y, _5X); //#25189
                     var _5a = $k[$j - 1]; //#25190
                     $k[$j++] = _5Y; //#25191
                     $k[$j++] = _5X; //#25191
-                    $k[$j++] = $get(_5Y, _5X); //#25191
+                    $k[$j++] = _5Z; //#25191
                     $k[$j++] = _5a; //#25191
                     $_.datamatrix_rsprod(); //#25191
                     var _5c = $k[--$j]; //#25192
                     var _5d = $k[--$j]; //#25192
+                    var _5e = $get($_.coeffs, _5d - 1); //#25192
                     var _5f = $k[--$j]; //#25193
-                    $put(_5f, _5d, $xo(_5c, $get($_.coeffs, _5d - 1))); //#25193
+                    $put(_5f, _5d, $xo(_5c, _5e)); //#25193
                 } //#25193
                 var _5g = $_.coeffs; //#25195
+                var _5h = $get(_5g, 0); //#25195
                 var _5i = $k[$j - 1]; //#25196
                 $k[$j++] = _5g; //#25197
                 $k[$j++] = 0; //#25197
-                $k[$j++] = $get(_5g, 0); //#25197
+                $k[$j++] = _5h; //#25197
                 $k[$j++] = _5i; //#25197
                 $_.datamatrix_rsprod(); //#25197
                 var _5j = $k[--$j]; //#25197
@@ -24855,14 +25073,16 @@ function bwipp_datamatrix() {
                 if ((_8H == 4) && (_8I == 30)) { //#25430
                     if ($get($_.msg, 5) == 53) { //#25427
                         $k[$j++] = Infinity; //#25424
+                        var _8N = $geti($_.msg, 7, $_.msg.length - 9); //#25424
                         $k[$j++] = $_.datamatrix_m05; //#25424
-                        $aload($geti($_.msg, 7, $_.msg.length - 9)); //#25424
+                        $aload(_8N); //#25424
                         $_.msg = $a(); //#25424
                     } else { //#25427
                         if ($get($_.msg, 5) == 54) { //#25428
                             $k[$j++] = Infinity; //#25427
+                            var _8S = $geti($_.msg, 7, $_.msg.length - 9); //#25427
                             $k[$j++] = $_.datamatrix_m06; //#25427
-                            $aload($geti($_.msg, 7, $_.msg.length - 9)); //#25427
+                            $aload(_8S); //#25427
                             $_.msg = $a(); //#25427
                         } //#25427
                     } //#25427
@@ -25017,7 +25237,8 @@ function bwipp_datamatrix() {
                         var _AE = $a([$_.cc, $_.tc, $_.xc, $_.ec, $_.bc]); //#25501
                         var _AK = true; //#25501
                         for (var _AF = 0, _AG = _AE.length; _AF < _AG; _AF++) { //#25501
-                            _AK = _AK && ($_.ac <= $get(_AE, _AF)); //#25501
+                            var _AH = $get(_AE, _AF); //#25501
+                            _AK = _AK && ($_.ac <= _AH); //#25501
                         } //#25501
                         if (_AK) { //#25501
                             $k[$j++] = $_.datamatrix_A; //#25501
@@ -25026,7 +25247,8 @@ function bwipp_datamatrix() {
                         var _AQ = $a([$_.ac, $_.cc, $_.tc, $_.xc, $_.ec]); //#25502
                         var _AW = true; //#25502
                         for (var _AR = 0, _AS = _AQ.length; _AR < _AS; _AR++) { //#25502
-                            _AW = _AW && ($_.bc < $get(_AQ, _AR)); //#25502
+                            var _AT = $get(_AQ, _AR); //#25502
+                            _AW = _AW && ($_.bc < _AT); //#25502
                         } //#25502
                         if (_AW) { //#25502
                             if ($_.isfnc1) { //#25502
@@ -25039,7 +25261,8 @@ function bwipp_datamatrix() {
                         var _Ad = $a([$_.ac, $_.cc, $_.tc, $_.xc, $_.bc]); //#25503
                         var _Aj = true; //#25503
                         for (var _Ae = 0, _Af = _Ad.length; _Ae < _Af; _Ae++) { //#25503
-                            _Aj = _Aj && ($_.ec < $get(_Ad, _Ae)); //#25503
+                            var _Ag = $get(_Ad, _Ae); //#25503
+                            _Aj = _Aj && ($_.ec < _Ag); //#25503
                         } //#25503
                         if (_Aj) { //#25503
                             $k[$j++] = $_.datamatrix_E; //#25503
@@ -25048,7 +25271,8 @@ function bwipp_datamatrix() {
                         var _Ap = $a([$_.ac, $_.cc, $_.xc, $_.ec, $_.bc]); //#25504
                         var _Av = true; //#25504
                         for (var _Aq = 0, _Ar = _Ap.length; _Aq < _Ar; _Aq++) { //#25504
-                            _Av = _Av && ($_.tc < $get(_Ap, _Aq)); //#25504
+                            var _As = $get(_Ap, _Aq); //#25504
+                            _Av = _Av && ($_.tc < _As); //#25504
                         } //#25504
                         if (_Av) { //#25504
                             $k[$j++] = $_.datamatrix_T; //#25504
@@ -25057,7 +25281,8 @@ function bwipp_datamatrix() {
                         var _B1 = $a([$_.ac, $_.cc, $_.tc, $_.ec, $_.bc]); //#25505
                         var _B7 = true; //#25505
                         for (var _B2 = 0, _B3 = _B1.length; _B2 < _B3; _B2++) { //#25505
-                            _B7 = _B7 && ($_.xc < $get(_B1, _B2)); //#25505
+                            var _B4 = $get(_B1, _B2); //#25505
+                            _B7 = _B7 && ($_.xc < _B4); //#25505
                         } //#25505
                         if (_B7) { //#25505
                             $k[$j++] = $_.datamatrix_X; //#25505
@@ -25188,7 +25413,8 @@ function bwipp_datamatrix() {
                         var _C2 = $a([$_.cc, $_.tc, $_.xc, $_.ec, $_.bc]); //#25516
                         var _C8 = true; //#25516
                         for (var _C3 = 0, _C4 = _C2.length; _C3 < _C4; _C3++) { //#25516
-                            _C8 = _C8 && (($_.ac + 1) <= $get(_C2, _C3)); //#25516
+                            var _C5 = $get(_C2, _C3); //#25516
+                            _C8 = _C8 && (($_.ac + 1) <= _C5); //#25516
                         } //#25516
                         if (_C8) { //#25516
                             $k[$j++] = $_.datamatrix_A; //#25516
@@ -25205,7 +25431,8 @@ function bwipp_datamatrix() {
                         var _CG = $a([$_.cc, $_.tc, $_.xc, $_.ec]); //#25518
                         var _CM = true; //#25518
                         for (var _CH = 0, _CI = _CG.length; _CH < _CI; _CH++) { //#25518
-                            _CM = _CM && (($_.bc + 1) < $get(_CG, _CH)); //#25518
+                            var _CJ = $get(_CG, _CH); //#25518
+                            _CM = _CM && (($_.bc + 1) < _CJ); //#25518
                         } //#25518
                         if (_CM) { //#25518
                             if ($_.isfnc1) { //#25518
@@ -25218,7 +25445,8 @@ function bwipp_datamatrix() {
                         var _CT = $a([$_.ac, $_.cc, $_.tc, $_.xc, $_.bc]); //#25519
                         var _CZ = true; //#25519
                         for (var _CU = 0, _CV = _CT.length; _CU < _CV; _CU++) { //#25519
-                            _CZ = _CZ && (($_.ec + 1) < $get(_CT, _CU)); //#25519
+                            var _CW = $get(_CT, _CU); //#25519
+                            _CZ = _CZ && (($_.ec + 1) < _CW); //#25519
                         } //#25519
                         if (_CZ) { //#25519
                             $k[$j++] = $_.datamatrix_E; //#25519
@@ -25227,7 +25455,8 @@ function bwipp_datamatrix() {
                         var _Cf = $a([$_.ac, $_.cc, $_.xc, $_.ec, $_.bc]); //#25520
                         var _Cl = true; //#25520
                         for (var _Cg = 0, _Ch = _Cf.length; _Cg < _Ch; _Cg++) { //#25520
-                            _Cl = _Cl && (($_.tc + 1) < $get(_Cf, _Cg)); //#25520
+                            var _Ci = $get(_Cf, _Cg); //#25520
+                            _Cl = _Cl && (($_.tc + 1) < _Ci); //#25520
                         } //#25520
                         if (_Cl) { //#25520
                             $k[$j++] = $_.datamatrix_T; //#25520
@@ -25236,7 +25465,8 @@ function bwipp_datamatrix() {
                         var _Cr = $a([$_.ac, $_.cc, $_.tc, $_.ec, $_.bc]); //#25521
                         var _Cx = true; //#25521
                         for (var _Cs = 0, _Ct = _Cr.length; _Cs < _Ct; _Cs++) { //#25521
-                            _Cx = _Cx && (($_.xc + 1) < $get(_Cr, _Cs)); //#25521
+                            var _Cu = $get(_Cr, _Cs); //#25521
+                            _Cx = _Cx && (($_.xc + 1) < _Cu); //#25521
                         } //#25521
                         if (_Cx) { //#25521
                             $k[$j++] = $_.datamatrix_X; //#25521
@@ -25245,7 +25475,8 @@ function bwipp_datamatrix() {
                         var _D2 = $a([$_.ac, $_.tc, $_.ec, $_.bc]); //#25522
                         var _D8 = true; //#25522
                         for (var _D3 = 0, _D4 = _D2.length; _D3 < _D4; _D3++) { //#25522
-                            _D8 = _D8 && (($_.cc + 1) < $get(_D2, _D3)); //#25522
+                            var _D5 = $get(_D2, _D3); //#25522
+                            _D8 = _D8 && (($_.cc + 1) < _D5); //#25522
                         } //#25522
                         if (_D8) { //#25525
                             if ($_.cc < $_.xc) { //#25523
@@ -25355,7 +25586,8 @@ function bwipp_datamatrix() {
                 var _EJ = $geti($_.in, _EH, 3); //#25588
                 var _EO = 0; //#25588
                 for (var _EK = 0, _EL = _EJ.length; _EK < _EL; _EK++) { //#25588
-                    _EO = $f(_EO + $get(_EJ, _EK)) * 40 //#25588
+                    var _EM = $get(_EJ, _EK); //#25588
+                    _EO = $f(_EO + _EM) * 40 //#25588
                 } //#25588
                 var _EP = (~~(_EO / 40)) + 1; //#25589
                 $k[$j++] = ~~(_EP / 256); //#25589
@@ -25410,8 +25642,9 @@ function bwipp_datamatrix() {
                             var _FB = $has($get($_.encvals, $_.mode), _F7); //#25621
                             $k[$j++] = _F7; //#25625
                             if (_FB) { //#25624
+                                var _FE = $get($_.encvals, $_.mode); //#25622
                                 var _FF = $k[--$j]; //#25622
-                                $aload($get($get($_.encvals, $_.mode), _FF)); //#25622
+                                $aload($get(_FE, _FF)); //#25622
                             } else { //#25624
                                 $k[$j - 1] = -1; //#25624
                                 $k[$j++] = -1; //#25624
@@ -25535,7 +25768,8 @@ function bwipp_datamatrix() {
                 var _Gz = $geti($_.in, _Gx, 4); //#25717
                 var _H4 = 0; //#25717
                 for (var _H0 = 0, _H1 = _Gz.length; _H0 < _H1; _H0++) { //#25717
-                    _H4 = $or(_H4, $get(_Gz, _H0)) * 64; //#25717
+                    var _H2 = $get(_Gz, _H0); //#25717
+                    _H4 = $or(_H4, _H2) * 64; //#25717
                 } //#25717
                 var _H5 = $flr(_H4 / 64); //#25718
                 $k[$j++] = $flr(_H5 / 65536) & 255; //#25720
@@ -26268,14 +26502,19 @@ function bwipp_qrcode() {
         $_.qrcode_Kexcl = _J; //#26393
         $k[$j++] = Infinity; //#26400
         var _K = $a(["0001", "0010", "0100", "1000", "0111"]); //#26402
+        var _L = $a(["", -1, -1, -1, -1]); //#26405
+        var _M = $a(["0", "1", -1, -1, -1]); //#26406
+        var _N = $a(["00", "01", "10", "11", -1]); //#26407
+        var _O = $a(["000", "001", "010", "011", -1]); //#26408
+        var _P = $a(["001", "010", "011", "100", "111"]); //#26409
         $k[$j++] = _K; //#26410
         $k[$j++] = _K; //#26410
         $k[$j++] = _K; //#26410
-        $k[$j++] = $a(["", -1, -1, -1, -1]); //#26410
-        $k[$j++] = $a(["0", "1", -1, -1, -1]); //#26410
-        $k[$j++] = $a(["00", "01", "10", "11", -1]); //#26410
-        $k[$j++] = $a(["000", "001", "010", "011", -1]); //#26410
-        $k[$j++] = $a(["001", "010", "011", "100", "111"]); //#26410
+        $k[$j++] = _L; //#26410
+        $k[$j++] = _M; //#26410
+        $k[$j++] = _N; //#26410
+        $k[$j++] = _O; //#26410
+        $k[$j++] = _P; //#26410
         for (var _Q = 0; _Q < 31; _Q++) { //#26410
             var _R = $k[$j - 1]; //#26410
             $k[$j++] = _R; //#26410
@@ -26370,10 +26609,14 @@ function bwipp_qrcode() {
         $_.qrcode_fpat = $a([_57, _58, _59, _59, _59, _58, _57, $a([0, 0, 0, 0, 0, 0, 0, 0])]); //#26606
         var _5C = $a([1, 1, 1, 1, 1, 9, 9, 9]); //#26609
         var _5D = $a([1, 0, 0, 0, 1, 9, 9, 9]); //#26610
+        var _5E = $a([1, 0, 1, 0, 1, 9, 9, 9]); //#26611
         var _5F = $a([9, 9, 9, 9, 9, 9, 9, 9]); //#26614
-        $_.qrcode_fsubpat = $a([_5C, _5D, $a([1, 0, 1, 0, 1, 9, 9, 9]), _5D, _5C, _5F, _5F, _5F]); //#26617
+        $_.qrcode_fsubpat = $a([_5C, _5D, _5E, _5D, _5C, _5F, _5F, _5F]); //#26617
+        var _5H = $a([1, 1, 1, 9, 9, 9, 9, 9]); //#26620
+        var _5I = $a([1, 0, 9, 9, 9, 9, 9, 9]); //#26621
+        var _5J = $a([1, 9, 9, 9, 9, 9, 9, 9]); //#26622
         var _5K = $a([9, 9, 9, 9, 9, 9, 9, 9]); //#26623
-        $_.qrcode_fcorpat = $a([$a([1, 1, 1, 9, 9, 9, 9, 9]), $a([1, 0, 9, 9, 9, 9, 9, 9]), $a([1, 9, 9, 9, 9, 9, 9, 9]), _5K, _5K, _5K, _5K, _5K]); //#26628
+        $_.qrcode_fcorpat = $a([_5H, _5I, _5J, _5K, _5K, _5K, _5K, _5K]); //#26628
         var _5M = $a([9, 9, 9, 9, 9, 9, 9, 9]); //#26631
         $_.qrcode_fnullpat = $a([_5M, _5M, _5M, _5M, _5M, _5M, _5M, _5M]); //#26639
         var _5R = new Map([
@@ -26386,8 +26629,9 @@ function bwipp_qrcode() {
         var _5T = $a([1, 0, 0, 0, 1]); //#26656
         $_.qrcode_algnpatfull = $a([_5S, _5T, $a([1, 0, 1, 0, 1]), _5T, _5S]); //#26660
         var _5W = $a([1, 1, 1, 9, 9]); //#26663
+        var _5X = $a([1, 0, 1, 9, 9]); //#26664
         var _5Y = $a([9, 9, 9, 9, 9]); //#26666
-        $_.qrcode_algnpatrmqr = $a([_5W, $a([1, 0, 1, 9, 9]), _5W, _5Y, _5Y]); //#26668
+        $_.qrcode_algnpatrmqr = $a([_5W, _5X, _5W, _5Y, _5Y]); //#26668
         var _5b = $a([function() {
             $j -= 2; //#26675
             $k[$j++] = 0; //#26675
@@ -27087,9 +27331,10 @@ function bwipp_qrcode() {
                 $_.bits = 0; //#26868
                 for (var _A8 = 0; _A8 <= 7; _A8 += 1) { //#26872
                     $_.m = _A8; //#26870
+                    var _AC = $get($_.qrcode_maskfuncs, $_.m); //#26871
                     $k[$j++] = $_.i; //#26871
                     $k[$j++] = $_.j; //#26871
-                    if ($get($_.qrcode_maskfuncs, $_.m)() === true) {
+                    if (_AC() === true) {
                         break;
                     } //#26871
                     var _AD = $k[--$j]; //#26871
@@ -27150,8 +27395,9 @@ function bwipp_qrcode() {
                 var _Am = $k[$j - 2]; //#26930
                 if (_Am != 0) { //#26932
                     var _Ao = $k[--$j]; //#26931
+                    var _Ap = $get($_.rslog, _Ao); //#26931
                     var _Aq = $k[--$j]; //#26931
-                    $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _Ao) + $get($_.rslog, _Aq)) % 255) //#26931
+                    $k[$j++] = $get($_.rsalog, $f(_Ap + $get($_.rslog, _Aq)) % 255) //#26931
                 } else { //#26932
                     $j -= 2; //#26932
                     $k[$j++] = 0; //#26932
@@ -27169,27 +27415,31 @@ function bwipp_qrcode() {
             } //#26939
             $_.coeffs = $a(); //#26939
             for (var _B0 = 0, _Az = $_.ecpb - 1; _B0 <= _Az; _B0 += 1) { //#26955
+                var _B2 = $get($_.rsalog, _B0); //#26941
                 var _B3 = $_.coeffs; //#26943
                 $put(_B3, _B0 + 1, $get(_B3, (_B0 + 1) - 1)); //#26943
-                $k[$j++] = $get($_.rsalog, _B0); //#26950
+                $k[$j++] = _B2; //#26950
                 for (var _B5 = _B0; _B5 >= 1; _B5 -= 1) { //#26950
                     var _B6 = $_.coeffs; //#26945
+                    var _B7 = $get(_B6, _B5); //#26945
                     var _B8 = $k[$j - 1]; //#26946
                     $k[$j++] = _B6; //#26947
                     $k[$j++] = _B5; //#26947
-                    $k[$j++] = $get(_B6, _B5); //#26947
+                    $k[$j++] = _B7; //#26947
                     $k[$j++] = _B8; //#26947
                     $_.qrcode_rsprod(); //#26947
                     var _BA = $k[--$j]; //#26948
                     var _BB = $k[--$j]; //#26948
+                    var _BC = $get($_.coeffs, _BB - 1); //#26948
                     var _BD = $k[--$j]; //#26949
-                    $put(_BD, _BB, $xo(_BA, $get($_.coeffs, _BB - 1))); //#26949
+                    $put(_BD, _BB, $xo(_BA, _BC)); //#26949
                 } //#26949
                 var _BE = $_.coeffs; //#26951
+                var _BF = $get(_BE, 0); //#26951
                 var _BG = $k[$j - 1]; //#26952
                 $k[$j++] = _BE; //#26953
                 $k[$j++] = 0; //#26953
-                $k[$j++] = $get(_BE, 0); //#26953
+                $k[$j++] = _BF; //#26953
                 $k[$j++] = _BG; //#26953
                 $_.qrcode_rsprod(); //#26953
                 var _BH = $k[--$j]; //#26953
@@ -27439,8 +27689,9 @@ function bwipp_qrcode() {
                 var _DI = $geti($_.in, $_.k, 3); //#27171
                 $k[$j++] = 0; //#27171
                 for (var _DJ = 0, _DK = _DI.length; _DJ < _DK; _DJ++) { //#27171
+                    var _DL = $get(_DI, _DJ); //#27171
                     var _DM = $k[--$j]; //#27171
-                    $k[$j++] = $f($get(_DI, _DJ) + (_DM * 10 - 48)) //#27171
+                    $k[$j++] = $f(_DL + (_DM * 10 - 48)) //#27171
                 } //#27171
                 $k[$j++] = 10; //#27171
                 $_.tobin(); //#27171
@@ -27450,8 +27701,9 @@ function bwipp_qrcode() {
                     var _DS = $geti($_.in, $_.k, 2); //#27175
                     $k[$j++] = 0; //#27175
                     for (var _DT = 0, _DU = _DS.length; _DT < _DU; _DT++) { //#27175
+                        var _DV = $get(_DS, _DT); //#27175
                         var _DW = $k[--$j]; //#27175
-                        $k[$j++] = $f($get(_DS, _DT) + (_DW * 10 - 48)) //#27175
+                        $k[$j++] = $f(_DV + (_DW * 10 - 48)) //#27175
                     } //#27175
                     $k[$j++] = 7; //#27175
                     $_.tobin(); //#27175
@@ -27460,8 +27712,9 @@ function bwipp_qrcode() {
                     var _Da = $geti($_.in, $_.k, 1); //#27178
                     $k[$j++] = 0; //#27178
                     for (var _Db = 0, _Dc = _Da.length; _Db < _Dc; _Db++) { //#27178
+                        var _Dd = $get(_Da, _Db); //#27178
                         var _De = $k[--$j]; //#27178
-                        $k[$j++] = $f($get(_Da, _Db) + (_De * 10 - 48)) //#27178
+                        $k[$j++] = $f(_Dd + (_De * 10 - 48)) //#27178
                     } //#27178
                     $k[$j++] = 4; //#27178
                     $_.tobin(); //#27178
@@ -28034,8 +28287,9 @@ function bwipp_qrcode() {
                     } //#27411
                     $k[$j++] = $_.qrcode_modeBAbeforeE; //#27412
                     $_.AorNbeforeE(); //#27412
+                    var _KO = $get($_.qrcode_modeBAbeforeN, $_.ver); //#27412
                     var _KP = $k[--$j]; //#27412
-                    if (_KP && $le($_.numAorN, $get($_.qrcode_modeBAbeforeN, $_.ver))) { //#27414
+                    if (_KP && $le($_.numAorN, _KO)) { //#27414
                         $k[$j++] = $_.qrcode_modeBNbeforeA; //#27413
                         $_.nextNslt(); //#27413
                         var _KQ = $k[--$j]; //#27413
@@ -28144,25 +28398,30 @@ function bwipp_qrcode() {
                 var _Kw = $k[--$j]; //#27447
                 $_.mode = _Kw; //#27447
                 if ($_.mode == $_.qrcode_K) { //#27448
+                    var _L1 = $geti($_.msg, $_.i, $_.numK * 2); //#27448
                     $k[$j++] = $_.qrcode_K; //#27448
-                    $k[$j++] = $geti($_.msg, $_.i, $_.numK * 2); //#27448
+                    $k[$j++] = _L1; //#27448
                 } //#27448
                 if ($_.mode == $_.qrcode_B) { //#27449
+                    var _L6 = $geti($_.msg, $_.i, $_.numB); //#27449
                     $k[$j++] = $_.qrcode_B; //#27449
-                    $k[$j++] = $geti($_.msg, $_.i, $_.numB); //#27449
+                    $k[$j++] = _L6; //#27449
                 } //#27449
                 if ($_.mode == $_.qrcode_A) { //#27450
+                    var _LB = $geti($_.msg, $_.i, $_.numA); //#27450
                     $k[$j++] = $_.qrcode_A; //#27450
-                    $k[$j++] = $geti($_.msg, $_.i, $_.numA); //#27450
+                    $k[$j++] = _LB; //#27450
                 } //#27450
                 if ($_.mode == $_.qrcode_N) { //#27451
+                    var _LG = $geti($_.msg, $_.i, $_.numN); //#27451
                     $k[$j++] = $_.qrcode_N; //#27451
-                    $k[$j++] = $geti($_.msg, $_.i, $_.numN); //#27451
+                    $k[$j++] = _LG; //#27451
                 } //#27451
                 if ($_.mode == $_.qrcode_E) { //#27452
+                    var _LK = $geti($_.msg, $_.i, 1); //#27452
                     $_.mode = -1; //#27452
                     $k[$j++] = $_.qrcode_E; //#27452
-                    $k[$j++] = $geti($_.msg, $_.i, 1); //#27452
+                    $k[$j++] = _LK; //#27452
                 } //#27452
                 var _LL = $k[--$j]; //#27453
                 $_.dat = _LL; //#27453
@@ -28416,9 +28675,10 @@ function bwipp_qrcode() {
     for (var _PL = 0, _PK = $_.ecb1 - 1; _PL <= _PK; _PL += 1) { //#27655
         $_.i = _PL; //#27652
         $put($_.dcwsb, $_.i, $geti($_.cws, $_.i * $_.dcpb, $_.dcpb)); //#27653
+        var _PX = $get($_.dcwsb, $_.i); //#27654
         $k[$j++] = $_.ecwsb; //#27654
         $k[$j++] = $_.i; //#27654
-        $k[$j++] = $get($_.dcwsb, $_.i); //#27654
+        $k[$j++] = _PX; //#27654
         $_.rscodes(); //#27654
         var _PY = $k[--$j]; //#27654
         var _PZ = $k[--$j]; //#27654
@@ -29006,9 +29266,10 @@ function bwipp_qrcode() {
             $_.qmv(); //#28036
             var _YP = $k[--$j]; //#28036
             var _YQ = $k[--$j]; //#28036
+            var _YR = $get(_YQ, _YP); //#28036
             var _YS = $k[--$j]; //#28036
             var _YT = $k[--$j]; //#28036
-            $_[_YT] = $f(_YS + $get(_YQ, _YP)) //#28036
+            $_[_YT] = $f(_YS + _YR) //#28036
             $k[$j++] = 'dkbot'; //#28037
             $k[$j++] = $_.dkbot; //#28037
             $k[$j++] = $_.sym; //#28037
@@ -29017,9 +29278,10 @@ function bwipp_qrcode() {
             $_.qmv(); //#28037
             var _YY = $k[--$j]; //#28037
             var _YZ = $k[--$j]; //#28037
+            var _Ya = $get(_YZ, _YY); //#28037
             var _Yb = $k[--$j]; //#28037
             var _Yc = $k[--$j]; //#28037
-            $_[_Yc] = $f(_Yb + $get(_YZ, _YY)) //#28037
+            $_[_Yc] = $f(_Yb + _Ya) //#28037
         } //#28037
         if ($_.dkrhs <= $_.dkbot) { //#28042
             $k[$j++] = -(($_.dkrhs * 16) + $_.dkbot); //#28040
@@ -29370,8 +29632,9 @@ function bwipp_maxicode() {
             var _2O = $k[$j - 2]; //#28637
             if ((_2N != 0) && (_2O != 0)) { //#28639
                 var _2Q = $k[--$j]; //#28638
+                var _2R = $get($_.rslog, _2Q); //#28638
                 var _2S = $k[--$j]; //#28638
-                $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _2Q) + $get($_.rslog, _2S)) % 63) //#28638
+                $k[$j++] = $get($_.rsalog, $f(_2R + $get($_.rslog, _2S)) % 63) //#28638
             } else { //#28639
                 $j -= 2; //#28639
                 $k[$j++] = 0; //#28639
@@ -29390,22 +29653,25 @@ function bwipp_maxicode() {
                 $k[$j++] = $get($_.rsalog, _2c); //#28656
                 for (var _2h = _2c - 1; _2h >= 1; _2h -= 1) { //#28656
                     var _2i = $_.coeffs; //#28651
+                    var _2j = $get(_2i, _2h); //#28651
                     var _2k = $k[$j - 1]; //#28652
                     $k[$j++] = _2i; //#28653
                     $k[$j++] = _2h; //#28653
-                    $k[$j++] = $get(_2i, _2h); //#28653
+                    $k[$j++] = _2j; //#28653
                     $k[$j++] = _2k; //#28653
                     $_.maxicode_rsprod(); //#28653
                     var _2m = $k[--$j]; //#28654
                     var _2n = $k[--$j]; //#28654
+                    var _2o = $get($_.coeffs, _2n - 1); //#28654
                     var _2p = $k[--$j]; //#28655
-                    $put(_2p, _2n, $xo(_2m, $get($_.coeffs, _2n - 1))); //#28655
+                    $put(_2p, _2n, $xo(_2m, _2o)); //#28655
                 } //#28655
                 var _2q = $_.coeffs; //#28657
+                var _2r = $get(_2q, 0); //#28657
                 var _2s = $k[$j - 1]; //#28657
                 $k[$j++] = _2q; //#28658
                 $k[$j++] = 0; //#28658
-                $k[$j++] = $get(_2q, 0); //#28658
+                $k[$j++] = _2r; //#28658
                 $k[$j++] = _2s; //#28658
                 $_.maxicode_rsprod(); //#28658
                 var _2t = $k[--$j]; //#28658
@@ -29447,10 +29713,14 @@ function bwipp_maxicode() {
                 $_.j = _3A; //#28704
                 var _3D = $get($_.encs, $_.j); //#28705
                 var _3E = $type(_3D); //#28705
+                $k[$j++] = _3D; //#28705
                 if ($eq(_3E, 'stringtype')) { //#28705
-                    _3D = $get(_3D, 0); //#28705
+                    var _3F = $k[--$j]; //#28705
+                    $k[$j++] = $get(_3F, 0); //#28705
                 } //#28705
-                $put($get($_.charvals, $_.j), _3D, $_.i); //#28706
+                var _3J = $get($_.charvals, $_.j); //#28706
+                var _3K = $k[--$j]; //#28706
+                $put(_3J, _3K, $_.i); //#28706
             } //#28706
         } //#28706
         $_.seta = $get($_.charvals, 0); //#28709
@@ -29566,9 +29836,10 @@ function bwipp_maxicode() {
         $_.fid = ""; //#28850
         if ($_.barlen >= 9) { //#28858
             var _4Q = $_.barcode; //#28852
+            var _4R = $geti(_4Q, 0, 7); //#28852
             var _4S = $get(_4Q, 7); //#28853
             var _4T = $get(_4Q, 8); //#28854
-            if ($eq($geti(_4Q, 0, 7), "\x5b\x29\x3e\x1e\x30\x31\x1d") && (((_4S >= 48) && (_4S <= 57)) && ((_4T >= 48) && (_4T <= 57)))) { //#28857
+            if ($eq(_4R, "\x5b\x29\x3e\x1e\x30\x31\x1d") && (((_4S >= 48) && (_4S <= 57)) && ((_4T >= 48) && (_4T <= 57)))) { //#28857
                 $_.fid = $geti($_.barcode, 0, 9); //#28855
                 $_.barcode = $geti($_.barcode, 9, $_.barlen - 9); //#28856
             } //#28856
@@ -29740,8 +30011,9 @@ function bwipp_maxicode() {
                 } //#28971
                 var _5o = $k[$j - 1]; //#28972
                 var _5p = $k[$j - 2]; //#28972
+                var _5q = $get(_5p, _5o); //#28972
                 var _5r = $k[$j - 3]; //#28972
-                var _5s = $has(_5r, $get(_5p, _5o)); //#28972
+                var _5s = $has(_5r, _5q); //#28972
                 if (_5s) { //#28972
                     $k[$j - 1] += 1; //#28972
                 } else { //#28972
@@ -29824,7 +30096,8 @@ function bwipp_maxicode() {
                     var _6g = $geti($_.msg, $_.i, 9); //#29031
                     var _6l = 0; //#29031
                     for (var _6h = 0, _6i = _6g.length; _6h < _6i; _6h++) { //#29031
-                        _6l = $f(_6l + ($get(_6g, _6h) - 48)) * 10 //#29031
+                        var _6j = $get(_6g, _6h); //#29031
+                        _6l = $f(_6l + (_6j - 48)) * 10 //#29031
                     } //#29031
                     $k[$j++] = ~~(_6l / 10); //#29032
                     for (var _6m = 0; _6m < 4; _6m++) { //#29032
@@ -29893,9 +30166,10 @@ function bwipp_maxicode() {
                         _7k = _7l; //#29075
                         _7l = _; //#29075
                     } //#29075
+                    var _7m = $geti(_7g, _7h, _7l); //#29075
                     $k[$j++] = 'p'; //#29075
                     $k[$j++] = _7f; //#29075
-                    $k[$j++] = $geti(_7g, _7h, _7l); //#29075
+                    $k[$j++] = _7m; //#29075
                     $_.prefixinset(); //#29075
                     var _7n = $k[--$j]; //#29075
                     var _7o = $k[--$j]; //#29075
@@ -29987,9 +30261,10 @@ function bwipp_maxicode() {
                     _8b = _8c; //#29125
                     _8c = _; //#29125
                 } //#29125
+                var _8d = $geti(_8X, _8Y, _8c); //#29125
                 $k[$j++] = 'p'; //#29125
                 $k[$j++] = _8W; //#29125
-                $k[$j++] = $geti(_8X, _8Y, _8c); //#29125
+                $k[$j++] = _8d; //#29125
                 $_.prefixinset(); //#29125
                 var _8e = $k[--$j]; //#29125
                 var _8f = $k[--$j]; //#29125
@@ -30185,7 +30460,8 @@ function bwipp_maxicode() {
             var _AW = $geti($_.msg, $_.n, 9); //#29220
             var _Ab = 0; //#29220
             for (var _AX = 0, _AY = _AW.length; _AX < _AY; _AX++) { //#29220
-                _Ab = $f($get(_AW, _AX) - 48 + _Ab * 10) //#29220
+                var _AZ = $get(_AW, _AX); //#29220
+                _Ab = $f(_AZ - 48 + _Ab * 10) //#29220
             } //#29220
             $k[$j++] = $flr(_Ab / 16777216); //#29224
             $k[$j++] = $flr(_Ab / 262144) & 63; //#29224
@@ -30194,16 +30470,13 @@ function bwipp_maxicode() {
             $k[$j++] = _Ab & 63; //#29224
         }; //#29224
         $_.enc_sha2 = function() {
-            var _Aj = $get($_.seta, $get($_.msg, $_.n + 1)); //#29225
             $k[$j++] = $get($_.seta, $_.c); //#29225
-            $k[$j++] = _Aj; //#29225
+            $k[$j++] = $get($_.seta, $get($_.msg, $_.n + 1)); //#29225
         }; //#29225
         $_.enc_sha3 = function() {
-            var _Ar = $get($_.seta, $get($_.msg, $_.n + 1)); //#29226
-            var _Aw = $get($_.seta, $get($_.msg, $_.n + 2)); //#29227
-            $k[$j++] = $get($_.seta, $_.c); //#29227
-            $k[$j++] = _Ar; //#29227
-            $k[$j++] = _Aw; //#29227
+            $k[$j++] = $get($_.seta, $_.c); //#29226
+            $k[$j++] = $get($_.seta, $get($_.msg, $_.n + 1)); //#29226
+            $k[$j++] = $get($_.seta, $get($_.msg, $_.n + 2)); //#29227
         }; //#29227
         $k[$j++] = Infinity; //#29232
         if ($_.havei) { //#29233
@@ -30326,8 +30599,9 @@ function bwipp_maxicode() {
             }],
             ["sets", 2],
             ["enc", function() {
+                var _Bi = $get($_.seta, $_.c); //#29240
                 $k[$j++] = 59; //#29240
-                $k[$j++] = $get($_.seta, $_.c); //#29240
+                $k[$j++] = _Bi; //#29240
             }]
         ]); //#29240
         var _Bl = new Map([
@@ -30372,8 +30646,9 @@ function bwipp_maxicode() {
                 }],
                 ["sets", 1],
                 ["enc", function() {
+                    var _Bu = $get($_.setb, $_.c); //#29243
                     $k[$j++] = 59; //#29243
-                    $k[$j++] = $get($_.setb, $_.c); //#29243
+                    $k[$j++] = _Bu; //#29243
                 }]
             ]); //#29243
             $k[$j++] = _Bv; //#29243
@@ -30389,8 +30664,9 @@ function bwipp_maxicode() {
                 }],
                 ["sets", 27],
                 ["enc", function() {
+                    var _C2 = $get($_.setc, $_.c); //#29244
                     $k[$j++] = 60; //#29244
-                    $k[$j++] = $get($_.setc, $_.c); //#29244
+                    $k[$j++] = _C2; //#29244
                 }]
             ]); //#29244
             $k[$j++] = _C3; //#29244
@@ -30406,8 +30682,9 @@ function bwipp_maxicode() {
                 }],
                 ["sets", 23],
                 ["enc", function() {
+                    var _CA = $get($_.setd, $_.c); //#29245
                     $k[$j++] = 61; //#29245
-                    $k[$j++] = $get($_.setd, $_.c); //#29245
+                    $k[$j++] = _CA; //#29245
                 }]
             ]); //#29245
             $k[$j++] = _CB; //#29245
@@ -30423,8 +30700,9 @@ function bwipp_maxicode() {
                 }],
                 ["sets", 15],
                 ["enc", function() {
+                    var _CI = $get($_.sete, $_.c); //#29246
                     $k[$j++] = 62; //#29246
-                    $k[$j++] = $get($_.sete, $_.c); //#29246
+                    $k[$j++] = _CI; //#29246
                 }]
             ]); //#29246
             $k[$j++] = _CJ; //#29246
@@ -30433,8 +30711,9 @@ function bwipp_maxicode() {
         var _CK = $_.op_tab; //#29252
         $k[$j++] = 0; //#29252
         for (var _CL = 0, _CM = _CK.length; _CL < _CM; _CL++) { //#29252
+            var _CN = $get(_CK, _CL); //#29252
             var _CO = $k[--$j]; //#29252
-            $put($get(_CK, _CL), 'idx', _CO); //#29252
+            $put(_CN, 'idx', _CO); //#29252
             $k[$j++] = _CO + 1; //#29252
         } //#29252
         $k[$j - 1] = Infinity; //#29257
@@ -30445,8 +30724,9 @@ function bwipp_maxicode() {
             var _CT = $_.op_tab; //#29257
             for (var _CU = 0, _CV = _CT.length; _CU < _CV; _CU++) { //#29257
                 var _CW = $get(_CT, _CU); //#29257
+                var _CX = $get(_CW, 'sets'); //#29257
                 $k[$j++] = _CW; //#29257
-                if ($an($get(_CW, 'sets'), $_.n) == 0) { //#29257
+                if ($an(_CX, $_.n) == 0) { //#29257
                     $j--; //#29257
                 } //#29257
             } //#29257
@@ -30456,8 +30736,9 @@ function bwipp_maxicode() {
         $_.code_set_operations = $a(); //#29257
         $_.get_best_length = function() {
             $_.latch_length_s = $get($_.latch_length, $_.state); //#29263
+            var _Cf = $get($_.code_set_operations, $_.state); //#29265
             $k[$j++] = $_.maxicode_max_int; //#29279
-            $forall($get($_.code_set_operations, $_.state), function() { //#29279
+            $forall(_Cf, function() { //#29279
                 var _Cg = $k[--$j]; //#29266
                 $_.op = _Cg; //#29266
                 if ($get($_.op, 'can')() === true) {
@@ -30467,8 +30748,11 @@ function bwipp_maxicode() {
                 if (_Cj) { //#29278
                     $_.m = $f($_.n - $get($_.op, 'intake')) & 15 //#29268
                     $_.org = $get($get($_.best_origin, $_.m), $_.state); //#29269
-                    $k[$j++] = $f($get($get($_.best_length, $_.m), $_.org) + $get($_.latch_length_s, $_.org)) //#29272
-                    if ($get($_.op, 'output')() === true) {
+                    var _Cw = $get($get($_.best_length, $_.m), $_.org); //#29270
+                    var _Cz = $get($_.latch_length_s, $_.org); //#29271
+                    var _D1 = $get($_.op, 'output'); //#29272
+                    $k[$j++] = $f(_Cw + _Cz) //#29272
+                    if (_D1() === true) {
                         return true;
                     } //#29272
                     var _D2 = $k[--$j]; //#29272
@@ -30561,7 +30845,8 @@ function bwipp_maxicode() {
         $_.j = _ES; //#29331
         var _ET = $k[--$j]; //#29332
         $_.state = _ET; //#29332
-        var _EX = $get($_.maxicode_pad_code, $_.state) == 0 ? 0 : $_.state; //#29337
+        var _EV = $get($_.maxicode_pad_code, $_.state); //#29337
+        var _EX = _EV == 0 ? 0 : $_.state; //#29337
         $_.final_code_set = _EX; //#29337
         if (($get($_.maxicode_pad_code, $_.state) == 0) && $lt($_.j, $_.maxlen)) { //#29342
             var _Ee = $a($_.j + 1); //#29342
@@ -30914,22 +31199,25 @@ function bwipp_azteccode() {
                 $k[$j++] = $get($_.rsalog, _5C); //#29810
                 for (var _5H = _5C - 1; _5H >= 1; _5H -= 1) { //#29810
                     var _5I = $_.coeffs; //#29805
+                    var _5J = $get(_5I, _5H); //#29805
                     var _5K = $k[$j - 1]; //#29806
                     $k[$j++] = _5I; //#29807
                     $k[$j++] = _5H; //#29807
-                    $k[$j++] = $get(_5I, _5H); //#29807
+                    $k[$j++] = _5J; //#29807
                     $k[$j++] = _5K; //#29807
                     $_.rsprod(); //#29807
                     var _5M = $k[--$j]; //#29808
                     var _5N = $k[--$j]; //#29808
+                    var _5O = $get($_.coeffs, _5N - 1); //#29808
                     var _5P = $k[--$j]; //#29809
-                    $put(_5P, _5N, $xo(_5M, $get($_.coeffs, _5N - 1))); //#29809
+                    $put(_5P, _5N, $xo(_5M, _5O)); //#29809
                 } //#29809
                 var _5Q = $_.coeffs; //#29811
+                var _5R = $get(_5Q, 0); //#29811
                 var _5S = $k[$j - 1]; //#29811
                 $k[$j++] = _5Q; //#29811
                 $k[$j++] = 0; //#29811
-                $k[$j++] = $get(_5Q, 0); //#29811
+                $k[$j++] = _5R; //#29811
                 $k[$j++] = _5S; //#29811
                 $_.rsprod(); //#29811
                 var _5T = $k[--$j]; //#29811
@@ -30969,10 +31257,14 @@ function bwipp_azteccode() {
                 $_.j = _5i; //#29843
                 var _5l = $get($_.encs, $_.j); //#29844
                 var _5m = $type(_5l); //#29844
+                $k[$j++] = _5l; //#29844
                 if ($eq(_5m, 'stringtype')) { //#29844
-                    _5l = $get(_5l, 0); //#29844
+                    var _5n = $k[--$j]; //#29844
+                    $k[$j++] = $get(_5n, 0); //#29844
                 } //#29844
-                $put($get($_.charvals, $_.j), _5l, $_.i); //#29845
+                var _5r = $get($_.charvals, $_.j); //#29845
+                var _5s = $k[--$j]; //#29845
+                $put(_5r, _5s, $_.i); //#29845
             } //#29845
         } //#29845
         $_.charvals = $_.charvals; //#29848
@@ -31274,8 +31566,9 @@ function bwipp_azteccode() {
                             break; //#30129
                         } //#30129
                     } //#30129
+                    var _8y = $get($_.curlen, $_.x); //#30135
                     $k[$j++] = 'cost'; //#30135
-                    $k[$j++] = $get($_.curlen, $_.x); //#30135
+                    $k[$j++] = _8y; //#30135
                     $k[$j++] = $_.x; //#30135
                     $k[$j++] = $_.char; //#30135
                     $_.charsize(); //#30135
@@ -31301,9 +31594,10 @@ function bwipp_azteccode() {
                             break; //#30152
                         } //#30152
                         if ($ne($_.x, $_.y)) { //#30166
+                            var _9e = $get($_.curlen, $_.y); //#30154
                             var _9i = $get($get($_.azteccode_shftlen, $_.y), $_.x); //#30154
                             $k[$j++] = 'cost'; //#30154
-                            $k[$j++] = $f($get($_.curlen, $_.y) + _9i) //#30154
+                            $k[$j++] = $f(_9e + _9i) //#30154
                             $k[$j++] = $_.x; //#30154
                             $k[$j++] = $_.char; //#30154
                             $_.charsize(); //#30154
@@ -31466,26 +31760,30 @@ function bwipp_azteccode() {
             $puti(_DH, _DH.length - _DJ.length, _DJ); //#30292
         }; //#30292
         $_.encu = function() {
+            var _DL = $get($_.charvals, $_.azteccode_u); //#30295
             var _DM = $k[--$j]; //#30295
-            $k[$j++] = $get($get($_.charvals, $_.azteccode_u), _DM); //#30295
+            $k[$j++] = $get(_DL, _DM); //#30295
             $k[$j++] = 5; //#30295
             $_.tobin(); //#30295
         }; //#30295
         $_.encl = function() {
+            var _DP = $get($_.charvals, $_.azteccode_l); //#30296
             var _DQ = $k[--$j]; //#30296
-            $k[$j++] = $get($get($_.charvals, $_.azteccode_l), _DQ); //#30296
+            $k[$j++] = $get(_DP, _DQ); //#30296
             $k[$j++] = 5; //#30296
             $_.tobin(); //#30296
         }; //#30296
         $_.encm = function() {
+            var _DT = $get($_.charvals, $_.azteccode_m); //#30297
             var _DU = $k[--$j]; //#30297
-            $k[$j++] = $get($get($_.charvals, $_.azteccode_m), _DU); //#30297
+            $k[$j++] = $get(_DT, _DU); //#30297
             $k[$j++] = 5; //#30297
             $_.tobin(); //#30297
         }; //#30297
         $_.encd = function() {
+            var _DX = $get($_.charvals, $_.azteccode_d); //#30298
             var _DY = $k[--$j]; //#30298
-            $k[$j++] = $get($get($_.charvals, $_.azteccode_d), _DY); //#30298
+            $k[$j++] = $get(_DX, _DY); //#30298
             $k[$j++] = 4; //#30298
             $_.tobin(); //#30298
         }; //#30298
@@ -31535,8 +31833,9 @@ function bwipp_azteccode() {
                     } //#30313
                     $j--; //#30315
                 } else { //#30317
+                    var _Dv = $get($_.charvals, $_.azteccode_p); //#30317
                     var _Dw = $k[--$j]; //#30317
-                    $k[$j++] = $get($get($_.charvals, $_.azteccode_p), _Dw); //#30317
+                    $k[$j++] = $get(_Dv, _Dw); //#30317
                     $k[$j++] = 5; //#30317
                     $_.tobin(); //#30317
                 } //#30317
@@ -31792,8 +32091,9 @@ function bwipp_azteccode() {
                 var _Gw = $k[$j - 2]; //#30497
                 if (_Gw != 0) { //#30499
                     var _Gy = $k[--$j]; //#30498
+                    var _Gz = $get($_.rslog, _Gy); //#30498
                     var _H0 = $k[--$j]; //#30498
-                    $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _Gy) + $get($_.rslog, _H0)) % $_.rsgf_1) //#30498
+                    $k[$j++] = $get($_.rsalog, $f(_Gz + $get($_.rslog, _H0)) % $_.rsgf_1) //#30498
                 } else { //#30499
                     $j -= 2; //#30499
                     $k[$j++] = 0; //#30499
@@ -31995,30 +32295,34 @@ function bwipp_azteccode() {
                 $k[$j++] = (-(~~($_.size / 2))) + $_.j; //#30648
                 $k[$j++] = $_.i; //#30648
                 $_.cmv(); //#30648
+                var _KB = $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2]); //#30648
                 var _KC = $k[--$j]; //#30648
                 var _KD = $k[--$j]; //#30648
-                $puti(_KD, _KC, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#30648
+                $puti(_KD, _KC, _KB); //#30648
                 $k[$j++] = $_.npixs; //#30649
                 $k[$j++] = (-(~~($_.size / 2))) + $_.j; //#30649
                 $k[$j++] = -$_.i; //#30649
                 $_.cmv(); //#30649
+                var _KL = $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2]); //#30649
                 var _KM = $k[--$j]; //#30649
                 var _KN = $k[--$j]; //#30649
-                $puti(_KN, _KM, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#30649
+                $puti(_KN, _KM, _KL); //#30649
                 $k[$j++] = $_.npixs; //#30650
                 $k[$j++] = $_.i; //#30650
                 $k[$j++] = (-(~~($_.size / 2))) + $_.j; //#30650
                 $_.cmv(); //#30650
+                var _KV = $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2]); //#30650
                 var _KW = $k[--$j]; //#30650
                 var _KX = $k[--$j]; //#30650
-                $puti(_KX, _KW, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#30650
+                $puti(_KX, _KW, _KV); //#30650
                 $k[$j++] = $_.npixs; //#30651
                 $k[$j++] = -$_.i; //#30651
                 $k[$j++] = (-(~~($_.size / 2))) + $_.j; //#30651
                 $_.cmv(); //#30651
+                var _Kf = $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2]); //#30651
                 var _Kg = $k[--$j]; //#30651
                 var _Kh = $k[--$j]; //#30651
-                $puti(_Kh, _Kg, $a([((((~~($_.size / 2)) + $_.j) + $_.i) + 1) % 2])); //#30651
+                $puti(_Kh, _Kg, _Kf); //#30651
             } //#30651
         } //#30651
         $_.j = 0; //#30654
@@ -32048,8 +32352,9 @@ function bwipp_azteccode() {
     } //#30675
     var _Lo = $a([$a([-($_.fw + 1), $_.fw, 1]), $a([-($_.fw + 1), $_.fw + 1, 1]), $a([-$_.fw, $_.fw + 1, 1]), $a([$_.fw + 1, $_.fw + 1, 1]), $a([$_.fw + 1, $_.fw, 1]), $a([$_.fw + 1, -$_.fw, 1]), $a([$_.fw, $_.fw + 1, 0]), $a([$_.fw + 1, -($_.fw + 1), 0]), $a([$_.fw, -($_.fw + 1), 0]), $a([-$_.fw, -($_.fw + 1), 0]), $a([-($_.fw + 1), -($_.fw + 1), 0]), $a([-($_.fw + 1), -$_.fw, 0])]); //#30687
     for (var _Lp = 0, _Lq = _Lo.length; _Lp < _Lq; _Lp++) { //#30688
+        var _Lr = $get(_Lo, _Lp); //#30688
         $k[$j++] = $_.pixs; //#30688
-        $aload($get(_Lo, _Lp)); //#30688
+        $aload(_Lr); //#30688
         $r(3, 1); //#30688
         $_.cmv(); //#30688
         var _Lt = $k[--$j]; //#30688
@@ -32060,9 +32365,10 @@ function bwipp_azteccode() {
     var _Lx = $eq($_.format, "full") ? $_.azteccode_modemapfull : $_.azteccode_modemapcompact; //#30693
     $_.modemap = _Lx; //#30693
     for (var _M1 = 0, _M0 = $_.modemap.length - 1; _M1 <= _M0; _M1 += 1) { //#30697
+        var _M4 = $get($_.modemap, _M1); //#30695
         $k[$j++] = _M1; //#30695
         $k[$j++] = $_.pixs; //#30695
-        $aload($get($_.modemap, _M1)); //#30695
+        $aload(_M4); //#30695
         $_.cmv(); //#30695
         var _M6 = $k[--$j]; //#30695
         var _M7 = $k[--$j]; //#30695
@@ -32222,9 +32528,10 @@ function bwipp_codeone() {
         var _1I = $a([$_.codeone_lc, $_.codeone_lb, $_.codeone_fnc1, $_.codeone_fnc2, $_.codeone_fnc3, $_.codeone_fnc4, $_.codeone_fnc1ld]); //#31007
         $k[$j++] = 229; //#31007
         for (var _1J = 0, _1K = _1I.length; _1J < _1K; _1J++) { //#31007
+            var _1L = $get(_1I, _1J); //#31007
             var _1M = $k[--$j]; //#31007
             var _1N = _1M + 1; //#31007
-            $k[$j++] = $get(_1I, _1J); //#31007
+            $k[$j++] = _1L; //#31007
             $k[$j++] = _1N; //#31007
             $k[$j++] = _1N; //#31007
         } //#31007
@@ -32319,8 +32626,9 @@ function bwipp_codeone() {
             var _1s = _1v.next().value; //#31038
             var _1t = _1r.get(_1s); //#31038
             $k[$j++] = _1s; //#31038
+            var _20 = $get($_.cnvals, $_.codeone_sft1); //#31038
             $k[$j++] = Infinity; //#31038
-            $k[$j++] = $get($_.cnvals, $_.codeone_sft1); //#31038
+            $k[$j++] = _20; //#31038
             $k[$j++] = _1t; //#31038
             var _21 = $a(); //#31038
             $k[$j++] = _21; //#31038
@@ -32330,8 +32638,9 @@ function bwipp_codeone() {
             var _23 = _26.next().value; //#31039
             var _24 = _22.get(_23); //#31039
             $k[$j++] = _23; //#31039
+            var _2B = $get($_.cnvals, $_.codeone_sft2); //#31039
             $k[$j++] = Infinity; //#31039
-            $k[$j++] = $get($_.cnvals, $_.codeone_sft2); //#31039
+            $k[$j++] = _2B; //#31039
             $k[$j++] = _24; //#31039
             var _2C = $a(); //#31039
             $k[$j++] = _2C; //#31039
@@ -32341,8 +32650,9 @@ function bwipp_codeone() {
             var _2E = _2H.next().value; //#31040
             var _2F = _2D.get(_2E); //#31040
             $k[$j++] = _2E; //#31040
+            var _2M = $get($_.cnvals, $_.codeone_sft3); //#31040
             $k[$j++] = Infinity; //#31040
-            $k[$j++] = $get($_.cnvals, $_.codeone_sft3); //#31040
+            $k[$j++] = _2M; //#31040
             $k[$j++] = _2F; //#31040
             var _2N = $a(); //#31040
             $k[$j++] = _2N; //#31040
@@ -32428,8 +32738,9 @@ function bwipp_codeone() {
             var _2k = _2n.next().value; //#31069
             var _2l = _2j.get(_2k); //#31069
             $k[$j++] = _2k; //#31069
+            var _2s = $get($_.tnvals, $_.codeone_sft1); //#31069
             $k[$j++] = Infinity; //#31069
-            $k[$j++] = $get($_.tnvals, $_.codeone_sft1); //#31069
+            $k[$j++] = _2s; //#31069
             $k[$j++] = _2l; //#31069
             var _2t = $a(); //#31069
             $k[$j++] = _2t; //#31069
@@ -32439,8 +32750,9 @@ function bwipp_codeone() {
             var _2v = _2y.next().value; //#31070
             var _2w = _2u.get(_2v); //#31070
             $k[$j++] = _2v; //#31070
+            var _33 = $get($_.tnvals, $_.codeone_sft2); //#31070
             $k[$j++] = Infinity; //#31070
-            $k[$j++] = $get($_.tnvals, $_.codeone_sft2); //#31070
+            $k[$j++] = _33; //#31070
             $k[$j++] = _2w; //#31070
             var _34 = $a(); //#31070
             $k[$j++] = _34; //#31070
@@ -32450,8 +32762,9 @@ function bwipp_codeone() {
             var _36 = _39.next().value; //#31071
             var _37 = _35.get(_36); //#31071
             $k[$j++] = _36; //#31071
+            var _3E = $get($_.tnvals, $_.codeone_sft3); //#31071
             $k[$j++] = Infinity; //#31071
-            $k[$j++] = $get($_.tnvals, $_.codeone_sft3); //#31071
+            $k[$j++] = _3E; //#31071
             $k[$j++] = _37; //#31071
             var _3F = $a(); //#31071
             $k[$j++] = _3F; //#31071
@@ -32577,8 +32890,9 @@ function bwipp_codeone() {
                 var _4m = $k[$j - 2]; //#31145
                 if (_4m != 0) { //#31147
                     var _4o = $k[--$j]; //#31146
+                    var _4p = $get($_.rslog, _4o); //#31146
                     var _4q = $k[--$j]; //#31146
-                    $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _4o) + $get($_.rslog, _4q)) % $_.gf_1) //#31146
+                    $k[$j++] = $get($_.rsalog, $f(_4p + $get($_.rslog, _4q)) % $_.gf_1) //#31146
                 } else { //#31147
                     $j -= 2; //#31147
                     $k[$j++] = 0; //#31147
@@ -32596,27 +32910,31 @@ function bwipp_codeone() {
             } //#31154
             $_.coeffs = $a(); //#31154
             for (var _51 = 0, _50 = $_.ecpb - 1; _51 <= _50; _51 += 1) { //#31170
+                var _53 = $get($_.rsalog, _51); //#31156
                 var _54 = $_.coeffs; //#31158
                 $put(_54, _51 + 1, $get(_54, (_51 + 1) - 1)); //#31158
-                $k[$j++] = $get($_.rsalog, _51); //#31165
+                $k[$j++] = _53; //#31165
                 for (var _56 = _51; _56 >= 1; _56 -= 1) { //#31165
                     var _57 = $_.coeffs; //#31160
+                    var _58 = $get(_57, _56); //#31160
                     var _59 = $k[$j - 1]; //#31161
                     $k[$j++] = _57; //#31162
                     $k[$j++] = _56; //#31162
-                    $k[$j++] = $get(_57, _56); //#31162
+                    $k[$j++] = _58; //#31162
                     $k[$j++] = _59; //#31162
                     $_.codeone_rsprod(); //#31162
                     var _5B = $k[--$j]; //#31163
                     var _5C = $k[--$j]; //#31163
+                    var _5D = $get($_.coeffs, _5C - 1); //#31163
                     var _5E = $k[--$j]; //#31164
-                    $put(_5E, _5C, $xo(_5B, $get($_.coeffs, _5C - 1))); //#31164
+                    $put(_5E, _5C, $xo(_5B, _5D)); //#31164
                 } //#31164
                 var _5F = $_.coeffs; //#31166
+                var _5G = $get(_5F, 0); //#31166
                 var _5H = $k[$j - 1]; //#31167
                 $k[$j++] = _5F; //#31168
                 $k[$j++] = 0; //#31168
-                $k[$j++] = $get(_5F, 0); //#31168
+                $k[$j++] = _5G; //#31168
                 $k[$j++] = _5H; //#31168
                 $_.codeone_rsprod(); //#31168
                 var _5I = $k[--$j]; //#31168
@@ -32744,7 +33062,8 @@ function bwipp_codeone() {
                     break; //#31324
                 } //#31324
                 var _6d = $k[$j - 1]; //#31324
-                if ($get($_.num, _6d) != 0) { //#31324
+                var _6e = $get($_.num, _6d); //#31324
+                if (_6e != 0) { //#31324
                     break; //#31324
                 } //#31324
                 $k[$j - 1] += 1; //#31324
@@ -32810,7 +33129,8 @@ function bwipp_codeone() {
             var _7Q = $geti($_.v, $_.i * 5, 5); //#31360
             var _7V = 0; //#31361
             for (var _7R = 0, _7S = _7Q.length; _7R < _7S; _7R++) { //#31361
-                _7V = $f(_7V + $get(_7Q, _7R)) * 2 //#31361
+                var _7T = $get(_7Q, _7R); //#31361
+                _7V = $f(_7V + _7T) * 2 //#31361
             } //#31361
             $put($_.cws, $_.i, ~~(_7V / 2)); //#31362
         } //#31362
@@ -33040,7 +33360,8 @@ function bwipp_codeone() {
                         var _AJ = $a([$_.ac, $_.cc, $_.tc, $_.xc]); //#31504
                         var _AP = true; //#31504
                         for (var _AK = 0, _AL = _AJ.length; _AK < _AL; _AK++) { //#31504
-                            _AP = _AP && ($_.bc <= $ceil($get(_AJ, _AK))); //#31504
+                            var _AM = $get(_AJ, _AK); //#31504
+                            _AP = _AP && ($_.bc <= $ceil(_AM)); //#31504
                         } //#31504
                         if (_AP) { //#31504
                             $k[$j++] = $_.codeone_b; //#31504
@@ -33049,7 +33370,8 @@ function bwipp_codeone() {
                         var _AU = $a([$_.cc, $_.tc, $_.xc, $_.bc]); //#31505
                         var _Aa = true; //#31505
                         for (var _AV = 0, _AW = _AU.length; _AV < _AW; _AV++) { //#31505
-                            _Aa = _Aa && ($_.ac <= $ceil($get(_AU, _AV))); //#31505
+                            var _AX = $get(_AU, _AV); //#31505
+                            _Aa = _Aa && ($_.ac <= $ceil(_AX)); //#31505
                         } //#31505
                         if (_Aa) { //#31505
                             $k[$j++] = $_.codeone_a; //#31505
@@ -33058,7 +33380,8 @@ function bwipp_codeone() {
                         var _Ad = $a([$_.tc, $_.xc]); //#31506
                         var _Aj = true; //#31506
                         for (var _Ae = 0, _Af = _Ad.length; _Ae < _Af; _Ae++) { //#31506
-                            _Aj = _Aj && ($ceil($_.cc) <= $ceil($get(_Ad, _Ae))); //#31506
+                            var _Ag = $get(_Ad, _Ae); //#31506
+                            _Aj = _Aj && ($ceil($_.cc) <= $ceil(_Ag)); //#31506
                         } //#31506
                         if (_Aj) { //#31506
                             $k[$j++] = $_.codeone_c; //#31506
@@ -33067,7 +33390,8 @@ function bwipp_codeone() {
                         var _Al = $a([$_.xc]); //#31507
                         var _Ar = true; //#31507
                         for (var _Am = 0, _An = _Al.length; _Am < _An; _Am++) { //#31507
-                            _Ar = _Ar && ($ceil($_.tc) <= $ceil($get(_Al, _Am))); //#31507
+                            var _Ao = $get(_Al, _Am); //#31507
+                            _Ar = _Ar && ($ceil($_.tc) <= $ceil(_Ao)); //#31507
                         } //#31507
                         if (_Ar) { //#31507
                             $k[$j++] = $_.codeone_t; //#31507
@@ -33177,7 +33501,8 @@ function bwipp_codeone() {
                         var _Bd = $a([$_.ac, $_.cc, $_.tc, $_.xc]); //#31517
                         var _Bj = true; //#31517
                         for (var _Be = 0, _Bf = _Bd.length; _Be < _Bf; _Be++) { //#31517
-                            _Bj = _Bj && (($_.bc + 1) <= $ceil($get(_Bd, _Be))); //#31517
+                            var _Bg = $get(_Bd, _Be); //#31517
+                            _Bj = _Bj && (($_.bc + 1) <= $ceil(_Bg)); //#31517
                         } //#31517
                         if (_Bj) { //#31517
                             $k[$j++] = $_.codeone_b; //#31517
@@ -33186,7 +33511,8 @@ function bwipp_codeone() {
                         var _Bo = $a([$_.cc, $_.tc, $_.xc, $_.bc]); //#31518
                         var _Bu = true; //#31518
                         for (var _Bp = 0, _Bq = _Bo.length; _Bp < _Bq; _Bp++) { //#31518
-                            _Bu = _Bu && (($_.ac + 1) <= $ceil($get(_Bo, _Bp))); //#31518
+                            var _Br = $get(_Bo, _Bp); //#31518
+                            _Bu = _Bu && (($_.ac + 1) <= $ceil(_Br)); //#31518
                         } //#31518
                         if (_Bu) { //#31518
                             $k[$j++] = $_.codeone_a; //#31518
@@ -33195,7 +33521,8 @@ function bwipp_codeone() {
                         var _Bz = $a([$_.ac, $_.cc, $_.xc, $_.bc]); //#31519
                         var _C5 = true; //#31519
                         for (var _C0 = 0, _C1 = _Bz.length; _C0 < _C1; _C0++) { //#31519
-                            _C5 = _C5 && (($ceil($_.tc) + 1) <= $ceil($get(_Bz, _C0))); //#31519
+                            var _C2 = $get(_Bz, _C0); //#31519
+                            _C5 = _C5 && (($ceil($_.tc) + 1) <= $ceil(_C2)); //#31519
                         } //#31519
                         if (_C5) { //#31519
                             $k[$j++] = $_.codeone_t; //#31519
@@ -33204,7 +33531,8 @@ function bwipp_codeone() {
                         var _C8 = $a([$_.ac, $_.tc]); //#31520
                         var _CE = true; //#31520
                         for (var _C9 = 0, _CA = _C8.length; _C9 < _CA; _C9++) { //#31520
-                            _CE = _CE && (($ceil($_.cc) + 1) <= $ceil($get(_C8, _C9))); //#31520
+                            var _CB = $get(_C8, _C9); //#31520
+                            _CE = _CE && (($ceil($_.cc) + 1) <= $ceil(_CB)); //#31520
                         } //#31520
                         if (_CE) { //#31523
                             if ($ceil($_.cc) < $ceil($_.xc)) { //#31521
@@ -33227,7 +33555,8 @@ function bwipp_codeone() {
                         var _CQ = $a([$_.ac, $_.cc, $_.tc, $_.bc]); //#31524
                         var _CW = true; //#31524
                         for (var _CR = 0, _CS = _CQ.length; _CR < _CS; _CR++) { //#31524
-                            _CW = _CW && (($ceil($_.xc) + 1) <= $ceil($get(_CQ, _CR))); //#31524
+                            var _CT = $get(_CQ, _CR); //#31524
+                            _CW = _CW && (($ceil($_.xc) + 1) <= $ceil(_CT)); //#31524
                         } //#31524
                         if (_CW) { //#31524
                             $k[$j++] = $_.codeone_x; //#31524
@@ -33362,7 +33691,8 @@ function bwipp_codeone() {
                 var _EA = $geti($_.in, _E8, 3); //#31612
                 var _EF = 0; //#31612
                 for (var _EB = 0, _EC = _EA.length; _EB < _EC; _EB++) { //#31612
-                    _EF = $f(_EF + $get(_EA, _EB)) * 40 //#31612
+                    var _ED = $get(_EA, _EB); //#31612
+                    _EF = $f(_EF + _ED) * 40 //#31612
                 } //#31612
                 var _EG = (~~(_EF / 40)) + 1; //#31613
                 $k[$j++] = ~~(_EG / 256); //#31613
@@ -33449,8 +33779,9 @@ function bwipp_codeone() {
                             var _FU = $has($get($_.encvals, $_.mode), _FQ); //#31668
                             $k[$j++] = _FQ; //#31672
                             if (_FU) { //#31671
+                                var _FX = $get($_.encvals, $_.mode); //#31669
                                 var _FY = $k[--$j]; //#31669
-                                $aload($get($get($_.encvals, $_.mode), _FY)); //#31669
+                                $aload($get(_FX, _FY)); //#31669
                             } else { //#31671
                                 $k[$j - 1] = -1; //#31671
                                 $k[$j++] = -1; //#31671
@@ -33627,7 +33958,8 @@ function bwipp_codeone() {
                 var _Hz = $geti($_.msg, $_.i, 3); //#31815
                 var _I4 = 0; //#31815
                 for (var _I0 = 0, _I1 = _Hz.length; _I0 < _I1; _I0++) { //#31815
-                    _I4 = $f(_I4 + ($get(_Hz, _I0) - 48)) * 10 //#31815
+                    var _I2 = $get(_Hz, _I0); //#31815
+                    _I4 = $f(_I4 + (_I2 - 48)) * 10 //#31815
                 } //#31815
                 $k[$j++] = (~~(_I4 / 10)) + 1; //#31816
                 $k[$j++] = 10; //#31816
@@ -33645,7 +33977,8 @@ function bwipp_codeone() {
                     var _IF = $geti($_.Dbits, _ID, 8); //#31825
                     var _IK = 0; //#31825
                     for (var _IG = 0, _IH = _IF.length; _IG < _IH; _IG++) { //#31825
-                        _IK = $f(_IK + $get(_IF, _IG)) * 2 //#31825
+                        var _II = $get(_IF, _IG); //#31825
+                        _IK = $f(_IK + _II) * 2 //#31825
                     } //#31825
                     $k[$j++] = ~~(_IK / 2); //#31825
                 } //#31825
@@ -34384,8 +34717,9 @@ function bwipp_hanxin() {
                 var _Ex = $k[$j - 2]; //#32587
                 if (_Ex != 0) { //#32589
                     var _Ez = $k[--$j]; //#32588
+                    var _F0 = $get($_.rslog, _Ez); //#32588
                     var _F1 = $k[--$j]; //#32588
-                    $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _Ez) + $get($_.rslog, _F1)) % $_.rsgf_1) //#32588
+                    $k[$j++] = $get($_.rsalog, $f(_F0 + $get($_.rslog, _F1)) % $_.rsgf_1) //#32588
                 } else { //#32589
                     $j -= 2; //#32589
                     $k[$j++] = 0; //#32589
@@ -34408,22 +34742,25 @@ function bwipp_hanxin() {
                 $k[$j++] = $get($_.rsalog, _FC); //#32606
                 for (var _FH = _FC - 1; _FH >= 1; _FH -= 1) { //#32606
                     var _FI = $_.coeffs; //#32601
+                    var _FJ = $get(_FI, _FH); //#32601
                     var _FK = $k[$j - 1]; //#32602
                     $k[$j++] = _FI; //#32603
                     $k[$j++] = _FH; //#32603
-                    $k[$j++] = $get(_FI, _FH); //#32603
+                    $k[$j++] = _FJ; //#32603
                     $k[$j++] = _FK; //#32603
                     $_.hanxin_rsprod(); //#32603
                     var _FM = $k[--$j]; //#32604
                     var _FN = $k[--$j]; //#32604
+                    var _FO = $get($_.coeffs, _FN - 1); //#32604
                     var _FP = $k[--$j]; //#32605
-                    $put(_FP, _FN, $xo(_FM, $get($_.coeffs, _FN - 1))); //#32605
+                    $put(_FP, _FN, $xo(_FM, _FO)); //#32605
                 } //#32605
                 var _FQ = $_.coeffs; //#32607
+                var _FR = $get(_FQ, 0); //#32607
                 var _FS = $k[$j - 1]; //#32608
                 $k[$j++] = _FQ; //#32609
                 $k[$j++] = 0; //#32609
-                $k[$j++] = $get(_FQ, 0); //#32609
+                $k[$j++] = _FR; //#32609
                 $k[$j++] = _FS; //#32609
                 $_.hanxin_rsprod(); //#32609
                 var _FT = $k[--$j]; //#32609
@@ -34617,8 +34954,9 @@ function bwipp_hanxin() {
     for (;;) { //#32824
         if ($_.i >= $_.msglen) { //#32802
             if ($_.bytestart != -1) { //#32800
+                var _H7 = $geti($_.msg, $_.bytestart, $_.i - $_.bytestart); //#32799
                 $k[$j++] = $_.hanxin_BYT; //#32799
-                $k[$j++] = $geti($_.msg, $_.bytestart, $_.i - $_.bytestart); //#32799
+                $k[$j++] = _H7; //#32799
             } //#32799
             break; //#32801
         } //#32801
@@ -34626,13 +34964,15 @@ function bwipp_hanxin() {
         var _HF = $f($_.i + $_.d) >= $_.msglen ? 5 : 8; //#32804
         if ($_.d >= _HF) { //#32821
             if ($_.bytestart != -1) { //#32808
+                var _HL = $geti($_.msg, $_.bytestart, $_.i - $_.bytestart); //#32806
                 $_.bytestart = -1; //#32807
                 $k[$j++] = $_.hanxin_BYT; //#32807
-                $k[$j++] = $geti($_.msg, $_.bytestart, $_.i - $_.bytestart); //#32807
+                $k[$j++] = _HL; //#32807
             } //#32807
+            var _HP = $geti($_.msg, $_.i, $_.d); //#32809
             $_.i = $f($_.i + $_.d) //#32810
             $k[$j++] = $_.hanxin_NUM; //#32810
-            $k[$j++] = $geti($_.msg, $_.i, $_.d); //#32810
+            $k[$j++] = _HP; //#32810
         } else { //#32821
             if ($get($_.msg, $_.i) == $_.hanxin_fn1) { //#32821
                 if ($_.bytestart != -1) { //#32816
@@ -34670,7 +35010,8 @@ function bwipp_hanxin() {
         var _Ht = $k[$j - 1]; //#32843
         if (_Ht > 0) { //#32846
             var _Hv = $k[$j - 1]; //#32844
-            $k[$j++] = $get($_.seq, _Hv - 2) == $_.hanxin_FN1SEP; //#32844
+            var _Hw = $get($_.seq, _Hv - 2); //#32844
+            $k[$j++] = _Hw == $_.hanxin_FN1SEP; //#32844
         } else { //#32846
             $k[$j++] = false; //#32846
         } //#32846
@@ -34681,7 +35022,9 @@ function bwipp_hanxin() {
         var _Hz = $k[$j - 1]; //#32851
         if ((_Hz + 2) < $_.seq.length) { //#32856
             var _I2 = $k[$j - 1]; //#32852
-            $k[$j++] = ($get($_.seq, _I2 + 2) == $_.hanxin_FN1SEP) && (($get($_.seq, _I2 + 1).length % 3) == 0); //#32854
+            var _I3 = $get($_.seq, _I2 + 2); //#32852
+            var _I5 = $get($_.seq, _I2 + 1); //#32853
+            $k[$j++] = (_I3 == $_.hanxin_FN1SEP) && ((_I5.length % 3) == 0); //#32854
         } else { //#32856
             $k[$j++] = false; //#32856
         } //#32856
@@ -34692,7 +35035,8 @@ function bwipp_hanxin() {
         var _I8 = $k[$j - 1]; //#32861
         if ((_I8 + 2) < $_.seq.length) { //#32864
             var _IB = $k[$j - 1]; //#32862
-            $k[$j++] = $get($_.seq, _IB + 2) == $_.hanxin_NUM; //#32862
+            var _IC = $get($_.seq, _IB + 2); //#32862
+            $k[$j++] = _IC == $_.hanxin_NUM; //#32862
         } else { //#32864
             $k[$j++] = false; //#32864
         } //#32864
@@ -34703,9 +35047,11 @@ function bwipp_hanxin() {
         var _IF = $k[$j - 1]; //#32869
         if (_IF > 0) { //#32876
             var _IH = $k[$j - 1]; //#32870
-            if ($get($_.seq, _IH - 2) == $_.hanxin_NUM) { //#32873
+            var _II = $get($_.seq, _IH - 2); //#32870
+            if (_II == $_.hanxin_NUM) { //#32873
                 var _IK = $k[$j - 1]; //#32871
-                $k[$j++] = ($get($_.seq, _IK - 1).length % 3) == 0; //#32871
+                var _IL = $get($_.seq, _IK - 1); //#32871
+                $k[$j++] = (_IL.length % 3) == 0; //#32871
             } else { //#32873
                 $k[$j++] = false; //#32873
             } //#32873
@@ -34783,8 +35129,9 @@ function bwipp_hanxin() {
                     $_.gsize = _J2; //#32917
                     $k[$j++] = 0; //#32922
                     for (var _J6 = 0, _J5 = $_.gsize - 1; _J6 <= _J5; _J6 += 1) { //#32922
+                        var _J9 = $get($_.sd, _J6 + $_.gstart); //#32920
                         var _JA = $k[--$j]; //#32921
-                        $k[$j++] = $f($get($_.sd, _J6 + $_.gstart) - 48 + _JA * 10) //#32921
+                        $k[$j++] = $f(_J9 - 48 + _JA * 10) //#32921
                     } //#32921
                     $k[$j++] = 10; //#32923
                     $_.tobin(); //#32923
@@ -34834,7 +35181,9 @@ function bwipp_hanxin() {
         var _Jq = 0; //#32957
         for (var _Jk = 0, _Jl = _Jj.length; _Jk < _Jl; _Jk++) { //#32957
             var _Jm = $get(_Jj, _Jk); //#32957
-            _Jq = $f(_Jq + $get(_Jm, 0) * $get(_Jm, 2)) //#32957
+            var _Jn = $get(_Jm, 0); //#32957
+            var _Jo = $get(_Jm, 2); //#32957
+            _Jq = $f(_Jq + _Jn * _Jo) //#32957
         } //#32957
         $_.ecws = _Jq; //#32957
         $_.dcws = $f($_.ncws - $_.ecws) //#32958
@@ -35330,9 +35679,10 @@ function bwipp_hanxin() {
             $_.j = _Qf; //#33203
             for (var _Qi = 0, _Qh = $_.size - 1; _Qi <= _Qh; _Qi += 1) { //#33209
                 $_.i = _Qi; //#33205
+                var _Qn = $get($_.maskfuncs, $_.m); //#33206
                 $k[$j++] = $_.i + 1; //#33206
                 $k[$j++] = $_.j + 1; //#33206
-                if ($get($_.maskfuncs, $_.m)() === true) {
+                if (_Qn() === true) {
                     break;
                 } //#33206
                 var _Qo = $k[--$j]; //#33206
@@ -35343,8 +35693,9 @@ function bwipp_hanxin() {
                 $_.qmv(); //#33207
                 var _Qs = $k[--$j]; //#33207
                 var _Qt = $k[--$j]; //#33207
+                var _Qu = $get(_Qt, _Qs); //#33207
                 var _Qv = $k[--$j]; //#33207
-                $k[$j++] = (_Qv && ($get(_Qt, _Qs) == -1)) ? 1 : 0; //#33207
+                $k[$j++] = (_Qv && (_Qu == -1)) ? 1 : 0; //#33207
                 $k[$j++] = $_.mask; //#33208
                 $k[$j++] = $_.i; //#33208
                 $k[$j++] = $_.j; //#33208
@@ -35591,9 +35942,10 @@ function bwipp_hanxin() {
             $k[$j++] = $_.pixs; //#33359
             $aload(_UJ); //#33359
             $_.qmv(); //#33359
+            var _UM = $get($_.funbits, $_.i); //#33359
             var _UN = $k[--$j]; //#33359
             var _UO = $k[--$j]; //#33359
-            $put(_UO, _UN, $get($_.funbits, $_.i)); //#33359
+            $put(_UO, _UN, _UM); //#33359
         }); //#33359
     } //#33359
     $k[$j++] = new Map([
@@ -35706,10 +36058,14 @@ function bwipp_dotcode() {
                 $_.j = _2i; //#33538
                 var _2l = $get($_.encs, $_.j); //#33539
                 var _2m = $type(_2l); //#33539
+                $k[$j++] = _2l; //#33539
                 if ($eq(_2m, 'stringtype')) { //#33539
-                    _2l = $get(_2l, 0); //#33539
+                    var _2n = $k[--$j]; //#33539
+                    $k[$j++] = $get(_2n, 0); //#33539
                 } //#33539
-                $put($get($_.charvals, $_.j), _2l, $_.i); //#33540
+                var _2r = $get($_.charvals, $_.j); //#33540
+                var _2s = $k[--$j]; //#33540
+                $put(_2r, _2s, $_.i); //#33540
             } //#33540
         } //#33540
         $_.Avals = $get($_.charvals, 0); //#33544
@@ -35725,9 +36081,10 @@ function bwipp_dotcode() {
         var _36 = $a([$_.dotcode_sc2, $_.dotcode_sc3, $_.dotcode_sc4, $_.dotcode_sc5, $_.dotcode_sc6, $_.dotcode_sc7, $_.dotcode_tma, $_.dotcode_tmb, $_.dotcode_tmc, $_.dotcode_tms]); //#33555
         $k[$j++] = 102; //#33555
         for (var _37 = 0, _38 = _36.length; _37 < _38; _37++) { //#33555
+            var _39 = $get(_36, _37); //#33555
             var _3A = $k[--$j]; //#33555
             var _3B = _3A + 1; //#33555
-            $k[$j++] = $get(_36, _37); //#33555
+            $k[$j++] = _39; //#33555
             $k[$j++] = _3B; //#33555
             $k[$j++] = _3B; //#33555
         } //#33555
@@ -35745,8 +36102,9 @@ function bwipp_dotcode() {
                 $k[$j++] = _3I; //#33586
                 for (var _3K = $_.NC; _3K >= 1; _3K -= 1) { //#33586
                     var _3L = $_.coeffs; //#33581
+                    var _3M = $get(_3L, _3K); //#33581
                     var _3O = $k[$j - 1]; //#33582
-                    $put(_3L, _3K, $f($get(_3L, _3K) + 113 - $get($_.rsalog, _3O) * $get($_.coeffs, _3K - 1) % 113) % 113) //#33585
+                    $put(_3L, _3K, $f(_3M + 113 - $get($_.rsalog, _3O) * $get($_.coeffs, _3K - 1) % 113) % 113) //#33585
                 } //#33585
                 $j--; //#33587
             } //#33587
@@ -36045,7 +36403,8 @@ function bwipp_dotcode() {
             if ($_.CRLF) { //#33817
                 _7D = _7D + 1; //#33817
             } //#33817
-            $put(_7H, _7G, $get(_7E, _7D) + 1); //#33817
+            var _7F = $get(_7E, _7D); //#33817
+            $put(_7H, _7G, _7F + 1); //#33817
         } //#33817
         if ($_.barchar != $_.dotcode_fn3) { //#33821
             $put($_.UntilEndSeg, $_.i, $get($_.UntilEndSeg, $_.i + 1) + 1); //#33820
@@ -36140,7 +36499,8 @@ function bwipp_dotcode() {
         var _8g = $geti($_.msg, $_.i + 1, 6); //#33876
         var _8l = 0; //#33876
         for (var _8h = 0, _8i = _8g.length; _8h < _8i; _8h++) { //#33876
-            _8l = $f(_8l + ($get(_8g, _8h) - 48)) * 10 //#33876
+            var _8j = $get(_8g, _8h); //#33876
+            _8l = $f(_8l + (_8j - 48)) * 10 //#33876
         } //#33876
         var _8m = ~~(_8l / 10); //#33877
         $k[$j++] = _8m; //#33881
@@ -36158,7 +36518,8 @@ function bwipp_dotcode() {
         var _8s = $geti($_.msg, $_.i + 1, 6); //#33886
         var _8x = 0; //#33886
         for (var _8t = 0, _8u = _8s.length; _8t < _8u; _8t++) { //#33886
-            _8x = $f(_8x + ($get(_8s, _8t) - 48)) * 10 //#33886
+            var _8v = $get(_8s, _8t); //#33886
+            _8x = $f(_8x + (_8v - 48)) * 10 //#33886
         } //#33886
         var _8y = ~~(_8x / 10); //#33887
         $k[$j++] = _8y; //#33895
@@ -36817,8 +37178,9 @@ function bwipp_dotcode() {
     } //#34363
     var _LX = $_.sixedges; //#34366
     for (var _LY = 0, _LZ = _LX.length; _LY < _LZ; _LY++) { //#34368
+        var _La = $get(_LX, _LY); //#34368
         $k[$j++] = $_.outline; //#34367
-        $aload($get(_LX, _LY)); //#34367
+        $aload(_La); //#34367
         $_.dmv(); //#34367
         var _Lc = $k[--$j]; //#34367
         var _Ld = $k[--$j]; //#34367
@@ -36950,9 +37312,10 @@ function bwipp_dotcode() {
             $k[$j++] = 0; //#34462
         } //#34462
         for (var _NF = 0, _NG = $_.columns, _NE = $_.sym.length - 1; _NG < 0 ? _NF >= _NE : _NF <= _NE; _NF += _NG) { //#34467
+            var _NJ = $geti($_.sym, _NF, $_.columns); //#34465
             $k[$j++] = 0; //#34465
             $k[$j++] = 0; //#34465
-            $aload($geti($_.sym, _NF, $_.columns)); //#34465
+            $aload(_NJ); //#34465
             $k[$j++] = 0; //#34466
             $k[$j++] = 0; //#34466
         } //#34466
@@ -37086,14 +37449,16 @@ function bwipp_dotcode() {
         var _Om = $k[--$j]; //#34526
         $_.mask = _Om; //#34526
         $k[$j++] = Infinity; //#34531
+        var _Op = $get($_.dotcode_maskvals, $_.mask); //#34533
         var _Oq = $_.cws; //#34533
         $k[$j++] = $_.mask; //#34533
-        $k[$j++] = $get($_.dotcode_maskvals, $_.mask); //#34533
+        $k[$j++] = _Op; //#34533
         $k[$j++] = 0; //#34533
         for (var _Or = 0, _Os = _Oq.length; _Or < _Os; _Or++) { //#34533
+            var _Ot = $get(_Oq, _Or); //#34533
             var _Ou = $k[--$j]; //#34533
             var _Ov = $k[--$j]; //#34533
-            $k[$j++] = $f($get(_Oq, _Or) + _Ou) % 113 //#34533
+            $k[$j++] = $f(_Ot + _Ou) % 113 //#34533
             $k[$j++] = _Ov; //#34533
             $k[$j++] = $f(_Ou + _Ov) //#34533
         } //#34533
@@ -37133,9 +37498,10 @@ function bwipp_dotcode() {
                 $k[$j++] = $_.rscws; //#34558
                 $k[$j++] = $_.ND + $_.j; //#34558
                 $_.offset(); //#34558
+                var _PY = $get($_.lfsr, $_.j); //#34558
                 var _PZ = $k[--$j]; //#34558
                 var _Pa = $k[--$j]; //#34558
-                $put(_Pa, _PZ, $get($_.lfsr, $_.j)); //#34558
+                $put(_Pa, _PZ, _PY); //#34558
             } //#34558
         } //#34558
         if ($has($_.options, 'debugecc')) { //#34567
@@ -37196,8 +37562,9 @@ function bwipp_dotcode() {
         } //#34607
         for (var _QV = 0; _QV <= 5; _QV += 1) { //#34613
             $_.i = _QV; //#34610
+            var _QZ = $get($_.sixedges, $_.i); //#34611
             $k[$j++] = $_.pixs; //#34611
-            $aload($get($_.sixedges, $_.i)); //#34611
+            $aload(_QZ); //#34611
             $_.dmv(); //#34611
             var _Qd = $get($_.bits, ($_.bits.length - 6) + $_.i); //#34612
             var _Qe = $k[--$j]; //#34612
@@ -37221,8 +37588,9 @@ function bwipp_dotcode() {
         $_.litmask = $arrcpy($a(_Qr.length), _Qr); //#34632
         for (var _Qu = 0; _Qu <= 5; _Qu += 1) { //#34637
             $_.i = _Qu; //#34634
+            var _Qy = $get($_.sixedges, $_.i); //#34635
             $k[$j++] = $_.litmask; //#34635
-            $aload($get($_.sixedges, $_.i)); //#34635
+            $aload(_Qy); //#34635
             $_.dmv(); //#34635
             var _Qz = $k[--$j]; //#34636
             var _R0 = $k[--$j]; //#34636
@@ -37323,8 +37691,9 @@ function bwipp_ultracode() {
                 var _N = $k[$j - 2]; //#34857
                 if (_N != 0) { //#34859
                     var _P = $k[--$j]; //#34858
+                    var _Q = $get($_.rslog, _P); //#34858
                     var _R = $k[--$j]; //#34858
-                    $k[$j++] = $get($_.rsalog, $f($get($_.rslog, _P) + $get($_.rslog, _R)) % 282) //#34858
+                    $k[$j++] = $get($_.rsalog, $f(_Q + $get($_.rslog, _R)) % 282) //#34858
                 } else { //#34859
                     $j -= 2; //#34859
                     $k[$j++] = 0; //#34859
@@ -37347,22 +37716,25 @@ function bwipp_ultracode() {
                 $k[$j++] = $get($_.rsalog, _b); //#34876
                 for (var _g = _b - 1; _g >= 1; _g -= 1) { //#34876
                     var _h = $_.coeffs; //#34871
+                    var _i = $get(_h, _g); //#34871
                     var _j = $k[$j - 1]; //#34872
                     $k[$j++] = _h; //#34873
                     $k[$j++] = _g; //#34873
-                    $k[$j++] = $get(_h, _g); //#34873
+                    $k[$j++] = _i; //#34873
                     $k[$j++] = _j; //#34873
                     $_.ultracode_rsprod(); //#34873
                     var _l = $k[--$j]; //#34874
                     var _m = $k[--$j]; //#34874
+                    var _n = $get($_.coeffs, _m - 1); //#34874
                     var _o = $k[--$j]; //#34875
-                    $put(_o, _m, $f(_l + $get($_.coeffs, _m - 1)) % 283) //#34875
+                    $put(_o, _m, $f(_l + _n) % 283) //#34875
                 } //#34875
                 var _p = $_.coeffs; //#34877
+                var _q = $get(_p, 0); //#34877
                 var _r = $k[$j - 1]; //#34878
                 $k[$j++] = _p; //#34879
                 $k[$j++] = 0; //#34879
-                $k[$j++] = $get(_p, 0); //#34879
+                $k[$j++] = _q; //#34879
                 $k[$j++] = _r; //#34879
                 $_.ultracode_rsprod(); //#34879
                 var _s = $k[--$j]; //#34879
@@ -37539,12 +37911,12 @@ function bwipp_ultracode() {
     $_.mcc = $_.dcws.length + 3; //#35054
     $_.eclval = $get($_.eclevel, 2) - 48; //#35056
     if ($_.eclval != 0) { //#35060
-        var _2L = $get($_.ultracode_qccfact, $_.eclval); //#35058
+        var _2G = $get($_.ultracode_qccfact, $_.eclval); //#35058
         var _2K = ~~($_.mcc / 25); //#35058
         if (($_.mcc % 25) != 0) { //#35058
             _2K = _2K + 1; //#35058
         } //#35058
-        $_.qcc = (_2L * _2K) + 5; //#35058
+        $_.qcc = (_2G * _2K) + 5; //#35058
     } else { //#35060
         $_.qcc = 3; //#35060
     } //#35060
@@ -37887,14 +38259,16 @@ function bwipp_gs1_cc() {
             var _R = $strcpy($s(2), "00"); //#35322
             var _T = $cvrs($s(2), _P, 11); //#35322
             $puti(_R, 2 - _T.length, _T); //#35323
+            var _U = $get(_R, 0); //#35324
             $k[$j++] = _P; //#35324
             $k[$j++] = _R; //#35324
-            if ($get(_R, 0) == 65) { //#35324
+            if (_U == 65) { //#35324
                 var _V = $k[$j - 1]; //#35324
                 $put(_V, 0, 94); //#35324
             } //#35324
             var _W = $k[$j - 1]; //#35325
-            if ($get(_W, 1) == 65) { //#35325
+            var _X = $get(_W, 1); //#35325
+            if (_X == 65) { //#35325
                 var _Y = $k[$j - 1]; //#35325
                 $put(_Y, 1, 94); //#35325
             } //#35325
@@ -38143,8 +38517,9 @@ function bwipp_gs1_cc() {
                     $_.isnum0(); //#35496
                     var _2H = $k[--$j]; //#35496
                     var _2I = $k[--$j]; //#35496
+                    var _2K = $get($_.v, 2); //#35497
                     $k[$j++] = $an(_2I, _2H); //#35497
-                    $k[$j++] = $get($_.v, 2); //#35497
+                    $k[$j++] = _2K; //#35497
                     $_.isupper(); //#35497
                     var _2L = $k[--$j]; //#35497
                     var _2M = $k[--$j]; //#35497
@@ -38161,13 +38536,15 @@ function bwipp_gs1_cc() {
                     $_.isnum0(); //#35503
                     var _2S = $k[--$j]; //#35503
                     var _2T = $k[--$j]; //#35503
+                    var _2V = $get($_.v, 2); //#35504
                     $k[$j++] = $an(_2T, _2S); //#35504
-                    $k[$j++] = $get($_.v, 2); //#35504
+                    $k[$j++] = _2V; //#35504
                     $_.isnum0(); //#35504
                     var _2W = $k[--$j]; //#35504
                     var _2X = $k[--$j]; //#35504
+                    var _2Z = $get($_.v, 3); //#35505
                     $k[$j++] = $an(_2X, _2W); //#35505
-                    $k[$j++] = $get($_.v, 3); //#35505
+                    $k[$j++] = _2Z; //#35505
                     $_.isupper(); //#35505
                     var _2a = $k[--$j]; //#35505
                     var _2b = $k[--$j]; //#35505
@@ -38188,8 +38565,10 @@ function bwipp_gs1_cc() {
     var _2d = $k[--$j]; //#35517
     $_.npre = _2d; //#35517
     if ($eq($_.method, "10")) { //#35556
+        var _2g = $get($_.ais, 0); //#35520
+        var _2i = $get($_.ais, 0); //#35520
         var _2k = $get($_.vals, 0); //#35521
-        $k[$j++] = $eq($get($_.ais, 0), "11") || $eq($get($_.ais, 0), "17"); //#35523
+        $k[$j++] = $eq(_2g, "11") || $eq(_2i, "17"); //#35523
         $k[$j++] = _2k; //#35523
         if (_2k.length >= 6) { //#35523
             var _2l = $k[--$j]; //#35522
@@ -38208,8 +38587,11 @@ function bwipp_gs1_cc() {
         var _2r = $k[--$j]; //#35524
         if (_2r && _2q) { //#35539
             var _2t = $get($_.vals, 0); //#35525
+            var _2u = $geti(_2t, 0, 2); //#35526
+            var _2v = $geti(_2t, 2, 2); //#35527
+            var _2w = $geti(_2t, 4, 2); //#35528
             var _2y = $strcpy($s(16), "0000000000000000"); //#35529
-            var _30 = $cvrs($s(16), ($cvi($geti(_2t, 0, 2)) * 384) + ((($cvi($geti(_2t, 2, 2)) - 1) * 32) + $cvi($geti(_2t, 4, 2))), 2); //#35529
+            var _30 = $cvrs($s(16), ($cvi(_2u) * 384) + ((($cvi(_2v) - 1) * 32) + $cvi(_2w)), 2); //#35529
             $puti(_2y, 16 - _30.length, _30); //#35530
             $k[$j++] = _2y; //#35533
             $k[$j++] = Infinity; //#35531
@@ -38620,9 +39002,10 @@ function bwipp_gs1_cc() {
     $_.nextiso646only = $a(); //#35733
     for (var _7h = $_.gpf.length - 1; _7h >= 0; _7h -= 1) { //#35755
         $_.i = _7h; //#35735
+        var _7k = $get($_.gpf, $_.i); //#35736
         var _7m = $strcpy($s(2), "00"); //#35737
         var _7p = $get($_.gpf, $_.i); //#35738
-        $k[$j++] = $get($_.gpf, $_.i); //#35738
+        $k[$j++] = _7k; //#35738
         $k[$j++] = _7m; //#35738
         var _7r = 0; //#35738
         if (_7p == $_.gs1_cc_fnc1) { //#35738
@@ -38933,7 +39316,8 @@ function bwipp_gs1_cc() {
             var _C7 = $geti($_.bits, $_.i * 8, 8); //#35930
             var _CC = 0; //#35930
             for (var _C8 = 0, _C9 = _C7.length; _C8 < _C9; _C8++) { //#35930
-                _CC = $f(_CC + $get(_C7, _C8)) * 2 //#35930
+                var _CA = $get(_C7, _C8); //#35930
+                _CC = $f(_CC + _CA) * 2 //#35930
             } //#35930
             $put($_.barcode, $_.i, ~~(_CC / 2)); //#35931
         } //#35931
@@ -38954,7 +39338,8 @@ function bwipp_gs1_cc() {
             var _CU = $geti($_.bits, $_.i * 8, 8); //#35944
             var _CZ = 0; //#35944
             for (var _CV = 0, _CW = _CU.length; _CV < _CW; _CV++) { //#35944
-                _CZ = $f(_CZ + $get(_CU, _CV)) * 2 //#35944
+                var _CX = $get(_CU, _CV); //#35944
+                _CZ = $f(_CZ + _CX) * 2 //#35944
             } //#35944
             $put($_.barcode, $_.i, ~~(_CZ / 2)); //#35945
         } //#35945
@@ -39276,7 +39661,8 @@ function bwipp_ean13composite() {
     var _3Y = $_.rowheights; //#36178
     var _3d = 0; //#36178
     for (var _3Z = 0, _3a = _3Y.length; _3Z < _3a; _3Z++) { //#36178
-        _3d = $f(_3d + $get(_3Y, _3Z)) //#36178
+        var _3b = $get(_3Y, _3Z); //#36178
+        _3d = $f(_3d + _3b) //#36178
     } //#36178
     $_.pixy = _3d; //#36178
     var _3f = $_.linsym; //#36181
@@ -39748,7 +40134,8 @@ function bwipp_ean8composite() {
     var _3Y = $_.rowheights; //#36451
     var _3d = 0; //#36451
     for (var _3Z = 0, _3a = _3Y.length; _3Z < _3a; _3Z++) { //#36451
-        _3d = $f(_3d + $get(_3Y, _3Z)) //#36451
+        var _3b = $get(_3Y, _3Z); //#36451
+        _3d = $f(_3d + _3b) //#36451
     } //#36451
     $_.pixy = _3d; //#36451
     var _3f = $_.linsym; //#36454
@@ -40220,7 +40607,8 @@ function bwipp_upcacomposite() {
     var _3Y = $_.rowheights; //#36721
     var _3d = 0; //#36721
     for (var _3Z = 0, _3a = _3Y.length; _3Z < _3a; _3Z++) { //#36721
-        _3d = $f(_3d + $get(_3Y, _3Z)) //#36721
+        var _3b = $get(_3Y, _3Z); //#36721
+        _3d = $f(_3d + _3b) //#36721
     } //#36721
     $_.pixy = _3d; //#36721
     var _3f = $_.linsym; //#36724
@@ -40692,7 +41080,8 @@ function bwipp_upcecomposite() {
     var _3Y = $_.rowheights; //#36991
     var _3d = 0; //#36991
     for (var _3Z = 0, _3a = _3Y.length; _3Z < _3a; _3Z++) { //#36991
-        _3d = $f(_3d + $get(_3Y, _3Z)) //#36991
+        var _3b = $get(_3Y, _3Z); //#36991
+        _3d = $f(_3d + _3b) //#36991
     } //#36991
     $_.pixy = _3d; //#36991
     var _3f = $_.linsym; //#36994
@@ -40941,7 +41330,8 @@ function bwipp_databaromnicomposite() {
         var _p = true; //#37188
         for (var _j = 0; _j <= 12; _j += 1) { //#37188
             var _m = $get($_.bot, $f(_j + $_.fp)); //#37188
-            _p = _p && $eq(_m, $get($_.databaromnicomposite_f3pat, _j)); //#37188
+            var _n = $get($_.databaromnicomposite_f3pat, _j); //#37188
+            _p = _p && $eq(_m, _n); //#37188
         } //#37188
         if (_p) { //#37191
             $puti($_.sep, $_.fp, $_.databaromnicomposite_findersep); //#37190
@@ -41066,7 +41456,8 @@ function bwipp_databaromnicomposite() {
     var _27 = $_.rowheights; //#37243
     var _2C = 0; //#37243
     for (var _28 = 0, _29 = _27.length; _28 < _29; _28++) { //#37243
-        _2C = $f(_2C + $get(_27, _28)) //#37243
+        var _2A = $get(_27, _28); //#37243
+        _2C = $f(_2C + _2A) //#37243
     } //#37243
     $_.pixy = _2C; //#37243
     var _2E = $_.linsym; //#37246
@@ -41242,7 +41633,8 @@ function bwipp_databarstackedcomposite() {
         var _u = true; //#37429
         for (var _o = 0; _o <= 12; _o += 1) { //#37429
             var _r = $get($_.bot, $f(_o + $_.fp)); //#37429
-            _u = _u && $eq(_r, $get($_.databarstackedcomposite_f3pat, _o)); //#37429
+            var _s = $get($_.databarstackedcomposite_f3pat, _o); //#37429
+            _u = _u && $eq(_r, _s); //#37429
         } //#37429
         if (_u) { //#37432
             $puti($_.sep, $_.fp, $_.databarstackedcomposite_findersep); //#37431
@@ -41271,8 +41663,9 @@ function bwipp_databarstackedcomposite() {
     $k[$j++] = Infinity; //#37453
     for (var _1I = 0, _1J = $_.ccpixx, _1H = $_.ccpixs.length - 1; _1J < 0 ? _1I >= _1H : _1I <= _1H; _1I += _1J) { //#37457
         $_.i = _1I; //#37455
+        var _1N = $geti($_.ccpixs, $_.i, $_.ccpixx); //#37456
         $k[$j++] = 0; //#37456
-        $aload($geti($_.ccpixs, $_.i, $_.ccpixx)); //#37456
+        $aload(_1N); //#37456
     } //#37456
     $aload($_.sep); //#37458
     $k[$j++] = 0; //#37462
@@ -41350,7 +41743,8 @@ function bwipp_databarstackedcomposite() {
     var _1w = $_.rowheights; //#37475
     var _21 = 0; //#37475
     for (var _1x = 0, _1y = _1w.length; _1x < _1y; _1x++) { //#37475
-        _21 = $f(_21 + $get(_1w, _1x)) //#37475
+        var _1z = $get(_1w, _1x); //#37475
+        _21 = $f(_21 + _1z) //#37475
     } //#37475
     $_.pixy = _21; //#37475
     var _23 = $_.linsym; //#37479
@@ -41526,7 +41920,8 @@ function bwipp_databarstackedomnicomposite() {
         var _u = true; //#37662
         for (var _o = 0; _o <= 12; _o += 1) { //#37662
             var _r = $get($_.bot, $f(_o + $_.fp)); //#37662
-            _u = _u && $eq(_r, $get($_.databarstackedomnicomposite_f3pat, _o)); //#37662
+            var _s = $get($_.databarstackedomnicomposite_f3pat, _o); //#37662
+            _u = _u && $eq(_r, _s); //#37662
         } //#37662
         if (_u) { //#37665
             $puti($_.sep, $_.fp, $_.databarstackedomnicomposite_findersep); //#37664
@@ -41555,8 +41950,9 @@ function bwipp_databarstackedomnicomposite() {
     $k[$j++] = Infinity; //#37686
     for (var _1I = 0, _1J = $_.ccpixx, _1H = $_.ccpixs.length - 1; _1J < 0 ? _1I >= _1H : _1I <= _1H; _1I += _1J) { //#37690
         $_.i = _1I; //#37688
+        var _1N = $geti($_.ccpixs, $_.i, $_.ccpixx); //#37689
         $k[$j++] = 0; //#37689
-        $aload($geti($_.ccpixs, $_.i, $_.ccpixx)); //#37689
+        $aload(_1N); //#37689
     } //#37689
     $aload($_.sep); //#37691
     $k[$j++] = 0; //#37695
@@ -41634,7 +42030,8 @@ function bwipp_databarstackedomnicomposite() {
     var _1w = $_.rowheights; //#37708
     var _21 = 0; //#37708
     for (var _1x = 0, _1y = _1w.length; _1x < _1y; _1x++) { //#37708
-        _21 = $f(_21 + $get(_1w, _1x)) //#37708
+        var _1z = $get(_1w, _1x); //#37708
+        _21 = $f(_21 + _1z) //#37708
     } //#37708
     $_.pixy = _21; //#37708
     var _23 = $_.linsym; //#37712
@@ -41808,7 +42205,8 @@ function bwipp_databartruncatedcomposite() {
         var _p = true; //#37893
         for (var _j = 0; _j <= 12; _j += 1) { //#37893
             var _m = $get($_.bot, $f(_j + $_.fp)); //#37893
-            _p = _p && $eq(_m, $get($_.databartruncatedcomposite_f3pat, _j)); //#37893
+            var _n = $get($_.databartruncatedcomposite_f3pat, _j); //#37893
+            _p = _p && $eq(_m, _n); //#37893
         } //#37893
         if (_p) { //#37896
             $puti($_.sep, $_.fp, $_.databartruncatedcomposite_findersep); //#37895
@@ -41933,7 +42331,8 @@ function bwipp_databartruncatedcomposite() {
     var _27 = $_.rowheights; //#37948
     var _2C = 0; //#37948
     for (var _28 = 0, _29 = _27.length; _28 < _29; _28++) { //#37948
-        _2C = $f(_2C + $get(_27, _28)) //#37948
+        var _2A = $get(_27, _28); //#37948
+        _2C = $f(_2C + _2A) //#37948
     } //#37948
     $_.pixy = _2C; //#37948
     var _2E = $_.linsym; //#37951
@@ -42116,8 +42515,9 @@ function bwipp_databarlimitedcomposite() {
         $k[$j++] = Infinity; //#38141
         for (var _w = 0, _x = $_.ccpixx, _v = $_.ccpixs.length - 1; _x < 0 ? _w >= _v : _w <= _v; _w += _x) { //#38145
             $_.i = _w; //#38143
+            var _11 = $geti($_.ccpixs, $_.i, $_.ccpixx); //#38144
             $k[$j++] = 0; //#38144
-            $aload($geti($_.ccpixs, $_.i, $_.ccpixx)); //#38144
+            $aload(_11); //#38144
             $k[$j++] = 0; //#38144
             $k[$j++] = 0; //#38144
             $k[$j++] = 0; //#38144
@@ -42225,7 +42625,8 @@ function bwipp_databarlimitedcomposite() {
     var _1h = $_.rowheights; //#38169
     var _1m = 0; //#38169
     for (var _1i = 0, _1j = _1h.length; _1i < _1j; _1i++) { //#38169
-        _1m = $f(_1m + $get(_1h, _1i)) //#38169
+        var _1k = $get(_1h, _1i); //#38169
+        _1m = $f(_1m + _1k) //#38169
     } //#38169
     $_.pixy = _1m; //#38169
     var _1o = $_.linsym; //#38172
@@ -42446,9 +42847,10 @@ function bwipp_databarexpandedcomposite() {
     $k[$j++] = Infinity; //#38385
     for (var _1d = 0, _1e = $_.ccpixx, _1c = $_.ccpixs.length - 1; _1e < 0 ? _1d >= _1c : _1d <= _1c; _1d += _1e) { //#38389
         $_.i = _1d; //#38387
+        var _1i = $geti($_.ccpixs, $_.i, $_.ccpixx); //#38388
         $k[$j++] = 0; //#38388
         $k[$j++] = 0; //#38388
-        $aload($geti($_.ccpixs, $_.i, $_.ccpixx)); //#38388
+        $aload(_1i); //#38388
         $aload($_.ccrpad); //#38388
     } //#38388
     $aload($_.sep); //#38390
@@ -42516,7 +42918,8 @@ function bwipp_databarexpandedcomposite() {
     var _2D = $_.rowheights; //#38404
     var _2I = 0; //#38404
     for (var _2E = 0, _2F = _2D.length; _2E < _2F; _2E++) { //#38404
-        _2I = $f(_2I + $get(_2D, _2E)) //#38404
+        var _2G = $get(_2D, _2E); //#38404
+        _2I = $f(_2I + _2G) //#38404
     } //#38404
     $_.pixy = _2I; //#38404
     var _2K = $_.linsym; //#38407
@@ -42796,7 +43199,8 @@ function bwipp_databarexpandedstackedcomposite() {
     var _1w = $_.rowheights; //#38629
     var _21 = 0; //#38629
     for (var _1x = 0, _1y = _1w.length; _1x < _1y; _1x++) { //#38629
-        _21 = $f(_21 + $get(_1w, _1x)) //#38629
+        var _1z = $get(_1w, _1x); //#38629
+        _21 = $f(_21 + _1z) //#38629
     } //#38629
     $_.pixy = _21; //#38629
     var _23 = $_.linsym; //#38633
@@ -42938,8 +43342,9 @@ function bwipp_gs1_128composite() {
     $k[$j++] = _J; //#38785
     bwipp_gs1_128(); //#38785
     var _K = $k[--$j]; //#38786
+    var _L = $get(_K, "sbs"); //#38786
     var _O = 0; //#38786
-    $forall($get(_K, "sbs"), function() { //#38786
+    $forall(_L, function() { //#38786
         var _M = $k[--$j]; //#38786
         _O = $f(_O + _M) //#38786
     }); //#38786
@@ -43121,7 +43526,8 @@ function bwipp_gs1_128composite() {
     var _2M = $_.rowheights; //#38876
     var _2R = 0; //#38876
     for (var _2N = 0, _2O = _2M.length; _2N < _2O; _2N++) { //#38876
-        _2R = $f(_2R + $get(_2M, _2N)) //#38876
+        var _2P = $get(_2M, _2N); //#38876
+        _2R = $f(_2R + _2P) //#38876
     } //#38876
     $_.pixy = _2R; //#38876
     var _2U = $eq($_.linktype, "a") ? 1 : 2; //#38878
@@ -44765,7 +45171,9 @@ function bwipp_channelcode() {
         $_.mod23 = $get($a([$a([]), $a([]), $a([13, 12, 4, 9, 3, 1]), $a([13, 2, 12, 3, 18, 16, 4, 1]), $a([11, 16, 17, 8, 20, 4, 10, 2, 5, 1]), $a([1, 4, 16, 18, 3, 12, 2, 8, 9, 13, 6, 1]), $a([20, 16, 22, 13, 15, 12, 5, 4, 8, 9, 21, 3, 7, 1]), $a([2, 6, 18, 8, 1, 3, 9, 4, 12, 13, 16, 2, 6, 18, 8, 1])]), $_.barlen); //#41240
         var _1a = 0; //#41244
         for (var _1U = 0, _1T = $_.data.length - 1; _1U <= _1T; _1U += 1) { //#41244
-            _1a = $f(_1a + ($get($_.data, _1U) - 1) * $get($_.mod23, _1U)) //#41243
+            var _1W = $get($_.data, _1U); //#41243
+            var _1Y = $get($_.mod23, _1U); //#41243
+            _1a = $f(_1a + (_1W - 1) * _1Y) //#41243
         } //#41243
         $k[$j++] = _1a % 23; //#41245
         $k[$j++] = 3; //#41245
@@ -45177,8 +45585,9 @@ function bwipp_rendertext() {
         } //#41479
         if ($_.subspace.length != 0) { //#41489
             for (var _2T = 0, _2S = $_.content.length - 1; _2T <= _2S; _2T += 1) { //#41488
+                var _2V = $geti($_.content, _2T, 1); //#41484
                 $k[$j++] = _2T; //#41484
-                $search($_.subspace, $geti($_.content, _2T, 1)); //#41484
+                $search($_.subspace, _2V); //#41484
                 var _2X = $k[--$j]; //#41486
                 if (_2X) { //#41486
                     $j--; //#41485
@@ -45409,8 +45818,9 @@ function bwipp_renlinear() {
     $_[_8] = _7; //#41654
     for (var _9 = 1; _9 <= 9; _9 += 1) { //#41665
         $_.textgrp = _9; //#41662
+        var _D = $get($_.textopts, $_.textgrp - 1); //#41663
         $k[$j++] = $_.textgrp; //#41664
-        $k[$j++] = $get($_.textopts, $_.textgrp - 1); //#41664
+        $k[$j++] = _D; //#41664
         bwipp_validatetext(); //#41664
         var _E = $k[--$j]; //#41664
         if (!_E) { //#41664
@@ -45749,8 +46159,9 @@ function bwipp_renmatrix() {
     $_.pixs = $_.bufnew; //#41933
     for (var _c = 1; _c <= 9; _c += 1) { //#41945
         $_.textgrp = _c; //#41942
+        var _g = $get($_.textopts, $_.textgrp - 1); //#41943
         $k[$j++] = $_.textgrp; //#41944
-        $k[$j++] = $get($_.textopts, $_.textgrp - 1); //#41944
+        $k[$j++] = _g; //#41944
         bwipp_validatetext(); //#41944
         var _h = $k[--$j]; //#41944
         if (!_h) { //#41944
@@ -49052,7 +49463,9 @@ function DrawingSVG() {
         // to be consistent.
         fill(rgb) {
             if (path) {
-                svg += path + '" fill="#' + rgb + '" fill-rule="evenodd"' +
+                // As an optimization, do not emit fill="#000000" if barcolor is not specified.
+                svg += path + '" fill=rule="evenodd"' +
+                       (opts.barcolor ? ' fill="#' + rgb + '"' : '') + 
                        (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
                        ' />\n';
                 path = null;
