@@ -117,9 +117,21 @@ export function optmz(lines, before, after) {
 //      /*var _X = $k[--$j]; (not performed in this pass anymore) */
 //      var _X = $_.ident;
 //      var _X = $_.ident.ident;
+//
+// These are not safe as they can contain $_.refs that may be modified between
+// source and destination.
 //      var _X = $get(ident, ... );
 //      var _X = $geti(ident, ... );
 //      var _X = $a([ ... ])
+//
+// Consider this code (from pdf417):
+//      var _7P=$a([$get($_.msg,$_.p)]);//#22963
+//      $_.p = $f($_.p + $_.b)//#22964
+//      $_.seqlen=$_.seqlen+2;//#22965
+//      $k[$j++]=$_.pdf417_bs;//#22965
+//      $k[$j++]=_7P;//#22965
+//
+// Note the ref to $_.p in the get, then the increment of $_.p, then the final ref to _7P.
 //
 // [1] == var-name
 // [2] == term
@@ -128,7 +140,8 @@ function strict(lines, safe, before, after) {
     // Do not move $k[--$j] terms.  Keep them on their own line (var id = $k[--$j])
     // so that other optmizing passes don't have to look inside expressions.
     //const redecl = /^\s*var (_\w+) *= *(\$k\[--\$j\]|\$_\.\w+(?:\.\w+)?|\$geti?\([^()]+\)|\$a\(\[.*\]\));/;
-    const redecl = /^\s*var (_\w+) *= *(\$_\.\w+(?:\.\w+)?|\$geti?\([^()]+\)|\$a\(\[.*\]\));/;
+    //const redecl = /^\s*var (_\w+) *= *(\$_\.\w+(?:\.\w+)?|\$geti?\([^()]+\)|\$a\(\[.*\]\));/;
+    const redecl = /^\s*var (_\w+) *= *(\$_\.\w+(?:\.\w+)?);/;
     for (let i = 0; i < lines.length; i++) {
         let m = redecl.exec(lines[i]);
         if (m) {

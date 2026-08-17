@@ -200,6 +200,7 @@ run 1 azteccode "This is Aztec Code" "eclevel=25"
 run 1 azteccode "This is Aztec Code" "eclevel=50"
 run 1 azteccode "This is Aztec Code" "eclevel=75"
 run 1 azteccode "This is Aztec Code" "eclevel=99"
+run 1 pdf417  "r" ""        ## issue 385
 
 ## The format=value is added to get branch coverage
 run 1 azteccodecompact "1234" "format=compact"

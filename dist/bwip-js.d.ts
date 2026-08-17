@@ -76,6 +76,8 @@ declare namespace BwipJs {
 
         rotate?: 'N' | 'R' | 'L' | 'I' | undefined;
 
+        padding?: number | undefined;
+
         paddingwidth?: number | undefined;
         paddingheight?: number | undefined;
 

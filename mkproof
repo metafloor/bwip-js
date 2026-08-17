@@ -14,14 +14,14 @@ pngname=$(echo "$sym ${text:0:127} $opts" | sed -e 's/[^A-Za-z0-9_(.)=^!-]/@/g' 
 ##echo "($text)"
 ## First, use ghostscript to give us the bounding box
 BBOX=$(
-cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=bbox - 2>&1 | grep '%%HiResBoundingBox'
+cat barcode.ps - <<@EOF | gs -q -dSAFER -dNODISPLAY -dBATCH -dNOPAUSE -sDEVICE=bbox - 2>&1 | grep '%%HiResBoundingBox'
 50 50 moveto 2 2 scale
 ($text) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec showpage
 @EOF
 )
 
 ## Rerun to generate the image (rendered to US Letter page size).
-cat barcode.ps - <<@EOF | gs -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=1 -dTextAlphaBits=4 -sOutputFile=/tmp/mkproof.png -
+cat barcode.ps - <<@EOF | gs -q -dSAFER -dNODISPLAY -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=1 -dTextAlphaBits=4 -sOutputFile=/tmp/mkproof.png -
 50 50 moveto 2 2 scale
 ($text) ($opts) /$sym /uk.co.terryburton.bwipp findresource exec showpage
 @EOF

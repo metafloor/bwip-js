@@ -161,6 +161,7 @@ fi
 ##
 ## Peephole optimize barcode.pjs -> barcode.js
 ##
+##cp barcode.pjs barcode.js
 echo "optimizing..."
 rm -f barcode.js 2> /dev/null
 node optimize.mjs

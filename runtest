@@ -44,7 +44,7 @@ cat tests/barcode.ps - > tests/runtest.ps <<@EOF
 ## significant digits after the decimal place.  Normalize to three.
 ## pharmacode2 produces nulls in its arrays.  ghostscript prints null where as
 ## javascript prints nothing.  Remove nulls.
-gs -q -dSAFER -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g'  -e 's/\(\.[1-9]*\)00*\([^0-9]\)/\1\2/g' -e 's/null//g' > $GSOUT
+gs -q -dSAFER -dNODISPLAY -dBATCH -dNOPAUSE tests/runtest.ps | sed -e 's/\([0-9]\)\.0\([^0-9]\)/\1\2/g' -e 's/\(\.[0-9][0-9][0-9]\)[0-9][0-9]*/\1/g'  -e 's/\(\.[1-9]*\)00*\([^0-9]\)/\1\2/g' -e 's/null//g' > $GSOUT
 
 ## Node/bwip-js
 (
