@@ -2242,11 +2242,7 @@ function DrawingSVG() {
         fill(rgb) {
             if (path) {
                 // As an optimization, do not emit fill="#000000" if barcolor is not specified.
-<<<<<<< HEAD
-                svg += path + '" fill=rule="evenodd"' +
-=======
                 svg += path + '" fill-rule="evenodd"' +
->>>>>>> ba16e4e (Fix fill=rule typo in SVG.  v4.11.4)
                        (opts.barcolor ? ' fill="#' + rgb + '"' : '') + 
                        (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
                        ' />\n';
