@@ -40,7 +40,7 @@
     }
 }(typeof self !== 'undefined' ? self : this, function () {
 // exports.js
-const BWIPJS_VERSION = '4.11.3 (2026-08-17)';
+const BWIPJS_VERSION = '4.11.4 (2026-08-19)';
 
 // Context insensitive canvas element test.
 function IsCanvas(elt) {
@@ -49287,7 +49287,7 @@ function DrawingSVG() {
         fill(rgb) {
             if (path) {
                 // As an optimization, do not emit fill="#000000" if barcolor is not specified.
-                svg += path + '" fill=rule="evenodd"' +
+                svg += path + '" fill-rule="evenodd"' +
                        (opts.barcolor ? ' fill="#' + rgb + '"' : '') + 
                        (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
                        ' />\n';

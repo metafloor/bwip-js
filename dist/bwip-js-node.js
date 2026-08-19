@@ -31,7 +31,7 @@
 "use strict";
 
 // exports.js
-const BWIPJS_VERSION = '4.11.3 (2026-08-17)';
+const BWIPJS_VERSION = '4.11.4 (2026-08-19)';
 
 var url = require('url');
 var PNG_ZLIB = require('zlib');
@@ -49464,7 +49464,7 @@ function DrawingSVG() {
         fill(rgb) {
             if (path) {
                 // As an optimization, do not emit fill="#000000" if barcolor is not specified.
-                svg += path + '" fill=rule="evenodd"' +
+                svg += path + '" fill-rule="evenodd"' +
                        (opts.barcolor ? ' fill="#' + rgb + '"' : '') + 
                        (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
                        ' />\n';
