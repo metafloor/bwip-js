@@ -208,7 +208,7 @@ function DrawingSVG() {
         fill(rgb) {
             if (path) {
                 // As an optimization, do not emit fill="#000000" if barcolor is not specified.
-                svg += path + '" fill=rule="evenodd"' +
+                svg += path + '" fill-rule="evenodd"' +
                        (opts.barcolor ? ' fill="#' + rgb + '"' : '') + 
                        (clipid ? ' clip-path="url(#' + clipid + ')"' : '') +
                        ' />\n';
